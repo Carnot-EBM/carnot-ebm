@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2290747039951384,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:5c50a0dc2dc4f99989192d84a1d1d881f62d2f5640d4a86b5310c8b697b5c32a",
+  "human_target": null,
+  "input_tokens": 567,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:5c50a0dc2dc4f99989192d84a1d1d881f62d2f5640d4a86b5310c8b697b5c32a",
+    "feature_hash": "sha256:8fc06fcf0dd75a567eeb707a4069fa11604b5e2ccb87aa3bbd27700c456dbc92",
+    "source_normalized_hash": "cdfa1647cae2b13da4b2401e6c3e5e365ffa7d355c2cdd6dccd543124f1a01a1",
+    "values": [
+      0.23191570016436325,
+      0.5160109498344793,
+      0.3181818181818182,
+      1.0,
+      0.25,
+      0.25,
+      0.7680842998356368,
+      0.9598612172141584
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 567,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 591
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:b98bd5ffc030c3072ce91dd4912d9aec476c18e146b4d1e31c41471804144715",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095716,
+    "id": "chatcmpl-SIABWMuBQbzpTV1AQHTcK4JkASZSDYGj",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.962,
+      "predicted_n": 24,
+      "predicted_per_second": 42.48073321745533,
+      "predicted_per_token_ms": 23.54008333333333,
+      "prompt_ms": 532.395,
+      "prompt_n": 489,
+      "prompt_per_second": 918.4909700504326,
+      "prompt_per_token_ms": 1.0887423312883435
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 567,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 591
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"(The Hollywood Reporter)The original cast of Twin Peaks is backing David Lynch in his salary standoff with Showtime. The stars have teamed together for a video backing the show's co-creator with a #SaveTwinPeaks campaign that says doing the revival without Lynch is \\\"like pies without cherries,\\\" among other nods to the original drama series. Sherilyn Fenn, Sheryl Lee, James Marshall, Peggy Lipton and other familiar faces from the series appear in the video. (Some members have also set up a Facebook page.) Showtime renews 'Shameless,' orders 'Happyish' to series. Lynch announced Sunday that he was exiting Showtime's nine-episode revival over a salary dispute. He originally signed on to direct the project but noted that there was \\\"not enough money offered to do the script the way I felt needed to be done.\\\" Showtime already had a deal in place with Lynch and co-creator Mark Frost to bring back the cult hit with star Kyle MacLachlan for a run in 2016, with sources telling THR that the scripts had already been written. Showtime chief on 'Twin Peaks' plans, 'Homeland' backlash and free speech. For its part, Showtime noted that it \\\"continues to hold out hope\\\" that Twin Peaks can be brought back with both its creators at the helm. MacLachlan is the only cast member currently confirmed for the reboot. Lynch to leave 'Twin Peaks' reboot. \u00a92015 The Hollywood Reporter. All rights reserved.\\n\", \"original_answer\": \"Sure! Here's the summary within 58 words:\\n\\nThe original Twin Peaks cast has joined forces with David Lynch in a #SaveTwinPeaks campaign to pressure Showtime into meeting his salary demands. Lynch exited the revival due to insufficient funds, but Showtime remains hopeful for a resolution. The cast includes Sherilyn Fenn, Sheryl Lee, James Marshall, and Peggy Lipton.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 34,
+  "source_cluster_id": "sha256:568c9896bb58b1ddcc895736c7c2ca5e6ef6816a10bbe2c86e567fdde5c537a2",
+  "source_id": "11351",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:5c50a0dc2dc4f99989192d84a1d1d881f62d2f5640d4a86b5310c8b697b5c32a",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

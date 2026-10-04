@@ -1,0 +1,138 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.339742015930824,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:0e723fb36b9a4fe66b3d5b00e66d11f55f67c1a2f049fdb196ee35a2e7f466ab",
+  "human_target": null,
+  "input_tokens": 679,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:0e723fb36b9a4fe66b3d5b00e66d11f55f67c1a2f049fdb196ee35a2e7f466ab",
+    "feature_hash": "sha256:7d16d4534eeadaa4d58dde126d5faaa875bdb5bbd4215708f23a13d19e92a12e",
+    "source_normalized_hash": "d9998b51ad164af1c000defcdb05921f250cdff0805a41cf7a19749b08854732",
+    "values": [
+      0.3177940255049388,
+      0.608765479876161,
+      0.10714285714285714,
+      1.0,
+      0.0,
+      0.0,
+      0.6822059744950612,
+      0.9303470072239423
+    ],
+    "window_count": 28
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 679,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 702
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:9b53ae7360cb8901cdbeb858960e47bf1e4ab8574d401085cd4b0bd489fda777",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095399,
+    "id": "chatcmpl-6K6UTacV8zdLxBLKcBo0a8Sgdi4TRZVg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.559,
+      "predicted_n": 23,
+      "predicted_per_second": 42.70655582768091,
+      "predicted_per_token_ms": 23.41560869565217,
+      "prompt_ms": 615.623,
+      "prompt_n": 601,
+      "prompt_per_second": 976.2468263856288,
+      "prompt_per_token_ms": 1.0243311148086522
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 679,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 702
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"California Delivery Driver Filmed Eating Customer's Meal Before Delivery\\nIn a shocking incident, a Grubhub delivery driver in California was filmed taking bites from a customer's meal and then delivering the partially-eaten food. The owner of Mexihanas Hibachi Grill, Martin Luzanilla, immediately recognized the wrongdoing after spotting the driver indulging in the order via surveillance footage.\\nSpeaking to Nexstar affiliate KTLA in Long Beach, California, Luzanilla shared, \\\"The moment I saw him devouring the food, I was appalled. He even tried to convince me that it was his meal when confronted.\\\" The surveillance video clearly depicts the driver hastily getting into his car, tearing the food bags open, and munching away. \\\"Food was falling everywhere as he took large bites,\\\" Luzanilla added.\\nThough Luzanilla quickly attempted to alert the customer, it was too late as the half-eaten meal was already delivered. Determined to make it right, Luzanilla prepared a fresh meal and personally delivered it to the customer. As food delivery services like Doordash and Grubhub gain momentum, maintaining the quality and integrity of delivered orders is vital for restaurant owners. \\\"Nearly 40% of our business comes from these apps. A bad review due to a delivery mishap can harm our reputation,\\\" Luzanilla expressed.\\nHowever, despite the disheartening incident, Luzanilla offered a heartwarming message to all delivery drivers. \\\"If you're delivering for my restaurant and you're hungry, just let me know. I'll gladly provide you with a meal. There's no need to tamper with a customer's food.\\\"\\nGrubhub, responding to the incident, conveyed their commitment to maintaining professional standards. Their statement highlighted, \\\"While most of our orders are executed flawlessly, we take immediate action if things go awry.\\\" Following the incident, the driver involved was promptly suspended, and Grubhub reached out to the affected customer to resolve the matter.\", \"original_answer\": \"A Grubhub delivery driver in California was caught on camera eating a customer's food before delivering it. The restaurant owner, Martin Luzanilla, recognized the incident through surveillance footage and immediately alerted the driver, who had already delivered the partially-eaten meal. Despite the mistake, Luzanilla offered a kind gesture by providing the driver with a meal. Grubhub responded by suspending the driver and assuring the customer of their commitment to maintaining professional standards.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 61,
+  "source_cluster_id": "sha256:a72a0894ce3ad4c7f72ff132307f19ce074d3c153815d7fb376d8ec2d2c84986",
+  "source_id": "13560",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:0e723fb36b9a4fe66b3d5b00e66d11f55f67c1a2f049fdb196ee35a2e7f466ab",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

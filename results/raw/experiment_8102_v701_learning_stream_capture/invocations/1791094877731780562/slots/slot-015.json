@@ -1,0 +1,130 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4086736249737442,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:348bf48cf91db5d6e44f06a3dc98f1b440d4f70ba3450aa64460f34637d97321",
+  "human_target": null,
+  "input_tokens": 775,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:348bf48cf91db5d6e44f06a3dc98f1b440d4f70ba3450aa64460f34637d97321",
+    "feature_hash": "sha256:66ee5476eff736d0a2c6e5dba22e039cf97f6881dc9f6510427a2056bcae1f90",
+    "source_normalized_hash": "b1b0e45f667d6f1e6f26441be32bf4ce16d7ede10e3cdccd87810919518ef9c4",
+    "values": [
+      0.26760919023169477,
+      0.5058180154187414,
+      0.0,
+      0.0,
+      0.4000000000000001,
+      0.4,
+      0.7323908097683053,
+      0.9284951990941102
+    ],
+    "window_count": 12
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 775,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 799
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:c8f18d313da0a8ef454e51a5776a7d29893bfab9af5edff38a2e0217247afbe0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095331,
+    "id": "chatcmpl-WM8TUYvNMNhPrPCbOUI4ZyyUAzajdA9C",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 558.824,
+      "predicted_n": 24,
+      "predicted_per_second": 42.947332254878106,
+      "predicted_per_token_ms": 23.284333333333333,
+      "prompt_ms": 674.776,
+      "prompt_n": 697,
+      "prompt_per_second": 1032.9353741093341,
+      "prompt_per_token_ms": 0.9681147776183644
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 775,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 799
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"901 Embarcadero Del Mar\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Italian, Restaurants\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Sorriso Italiano\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-06-03 07:39:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"it hits the spot for when you're crazing Italian, super affordable for a decent portion\\\"},{\\\"review_date\\\":\\\"2018-05-29 05:47:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love Sorriso! The food is great and the customer service is awesome! Cute restaurant in the heart of IV.\\\"},{\\\"review_date\\\":\\\"2018-05-25 20:26:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I was feeling like I wanted Fettucini Alfredo with chicken, yet didn't want to sit down and pay $22.  There's a location downtown that's cheap and fast I work in Goleta so I decided to google \\\\\\\"Italian food, Goleta\\\\\\\" and Sorriso Italiano popped up.  A co worker and I decided to give it a go, and we were more than pleasantly surprised.  The alfredo sauce was impressive for such a quick call in order.  Highly recommend it!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sorriso Italiano is an Italian restaurant located at 901 Embarcadero Del Mar in Isla Vista, CA. It offers outdoor seating and WiFi, as well as takeout and reservation options. The restaurant has a rating of 4 stars out of 5 on Google, based on reviews from customers who appreciate its affordable prices, delicious food, and excellent customer service. The restaurant also offers a variety of dishes that cater to different dietary needs, including vegetarian options. Overall, Sorriso Italiano appears to be a popular choice for those looking for authentic Italian cuisine in Isla Vista.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 16,
+  "source_cluster_id": "sha256:1af034dc68ae4ad9778ae118300394668c718fd7853b19336fb7789e47155ed1",
+  "source_id": "14734",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:348bf48cf91db5d6e44f06a3dc98f1b440d4f70ba3450aa64460f34637d97321",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

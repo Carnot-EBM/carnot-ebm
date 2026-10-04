@@ -1,0 +1,138 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6247984520159662,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:2a3b3720eefd91f195ca6dd728da2bcaf1489e7f2a805f9cdfb69f797da8a6fe",
+  "human_target": null,
+  "input_tokens": 1064,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:2a3b3720eefd91f195ca6dd728da2bcaf1489e7f2a805f9cdfb69f797da8a6fe",
+    "feature_hash": "sha256:9279a92f52366b5b3e9b9ff927956101a19d128cbe93bac4ac8aa5ce9bd9e813",
+    "source_normalized_hash": "1127f98f55e284ab4ce4f53434de91f5b8863dcd4ed6fc9aff7eec206f108e51",
+    "values": [
+      0.21739076217983141,
+      0.42631009432049854,
+      0.32142857142857145,
+      0.8571428571428571,
+      0.14285714285714285,
+      0.14285714285714285,
+      0.7826092378201686,
+      0.9470144780556516
+    ],
+    "window_count": 28
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1064,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1087
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:9ac48d47045b2af685568667cf7da22c47a981656252c17e243e1a82eef1a124",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095710,
+    "id": "chatcmpl-uwtYPRgh6pxAnEcg9Qp5uLeI2owBcDpt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.079,
+      "predicted_n": 23,
+      "predicted_per_second": 42.42924001852129,
+      "predicted_per_token_ms": 23.56865217391304,
+      "prompt_ms": 964.68,
+      "prompt_n": 986,
+      "prompt_per_second": 1022.1005929427375,
+      "prompt_per_token_ms": 0.9783772819472616
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1064,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1087
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1212 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":true,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Cocktail Bars, Lounges, Nightlife, Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-1:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"15:0-1:0\\\",\\\"Sunday\\\":\\\"15:0-1:0\\\",\\\"Thursday\\\":\\\"16:0-1:0\\\",\\\"Tuesday\\\":\\\"16:0-1:0\\\",\\\"Wednesday\\\":\\\"16:0-1:0\\\"},\\\"name\\\":\\\"The Good Lion\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-16 07:13:58\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Pretty good place, indoor has a nice ambience but we sat outside due to COVID. There is no table service, you order at the bar & sit where you can. They have a lot of heat lamps outside so was nice & toasty.\\\\nI really enjoyed the Family Robinson drink. It was easy to drink, not too sweet & pretty refreshing. Hubby got a straight gin & tonic.\\\"},{\\\"review_date\\\":\\\"2021-11-01 01:33:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Legit cocktail bar. We stopped in for drinks while exploring State St.\\\\n\\\\nThe interior is awesome. Maybe something like Haunted Mansion - very dark lighting with upscale ornate wallpaper and decorative touches. \\\\n\\\\nThe house cocktail list was seriously impressive looking. Each one was well designed and after trying three of them, they were also well executed. I really liked the \\\\\\\"Love it when you call me big Papa\\\\\\\". Super unique and delicious.\\\\n\\\\nInterior seating is minimal, but they added lots of seating in the middle of the street thanks to vehicle traffic restrictions.\\\"},{\\\"review_date\\\":\\\"2021-10-05 03:52:14\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Great atmosphere and cool bar, however the service was incredibly slow, even just for a couple of beers. We stumbled upon this place while walking around town so we decided to pop in as it was very lively. \\\\n\\\\nI definitely prefer Test Pilot over this place, and they also had a very crowded weekend- but the service was still great. We tend to hop around to check out multiple bars to compare which ones we enjoyed the best. Probably a good idea to add more bartenders to improve the service as it seems that is what's missing in order to have a better experience at the Good Lion.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of The Good Lion:\\n\\nThe Good Lion is a popular cocktail bar located in Santa Barbara, CA. With a rating of 4.5 stars, the bar offers a unique and intimate atmosphere, particularly during the evening hours when the indoor space is filled with dim lighting and ornate decorations. While the bar does not provide table service, customers can order at the bar and find a seat wherever they please. Outdoor seating is available, and visitors have praised the heaters that keep the area warm during colder months.\\n\\nReviewers have generally enjoyed their experiences at The Good Lion, praising the creativity and execution of their cocktails. Some have noted that the service can be slow, especially during busier times, but overall, the bar seems to offer a fun and trendy atmosphere with a focus on craft cocktails. Despite some minor issues with service, visitors have recommended The Good Lion to those looking for a lively spot to enjoy a drink or two in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 30,
+  "source_cluster_id": "sha256:31fc23a3b51f5b8ca82a751294d6afa42641fc760d52856b0a9281231e45bddf",
+  "source_id": "13734",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:2a3b3720eefd91f195ca6dd728da2bcaf1489e7f2a805f9cdfb69f797da8a6fe",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

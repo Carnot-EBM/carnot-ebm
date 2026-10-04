@@ -1,0 +1,151 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7054254800314084,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:125ec7786ca24eb0e7b65c6752bbbae138e5091e96d83d6a5db843892d86f1dc",
+  "human_target": null,
+  "input_tokens": 1110,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:125ec7786ca24eb0e7b65c6752bbbae138e5091e96d83d6a5db843892d86f1dc",
+    "feature_hash": "sha256:d66456d3c3e15d618895297f2fbf2917223ef94fc1eaf5bae8cb06f681223dab",
+    "source_normalized_hash": "3df2ba9ac95fd929994652534b2d0ab14e327d80cf6c29883c695916c7b4a174",
+    "values": [
+      0.29339084118495884,
+      0.6028456837280367,
+      0.2037037037037037,
+      1.0,
+      0.32098765432098764,
+      0.3333333333333333,
+      0.7066091588150412,
+      0.9486421462524404
+    ],
+    "window_count": 54
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1110,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1133
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:31abaf53dc3cbcd6784c380a61e95ca2cda1e5cf1695d3c8621099a6bf706e41",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095338,
+    "id": "chatcmpl-pWlKMrskJGjb5736PX3BQxzIBhvbtUQZ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.376,
+      "predicted_n": 23,
+      "predicted_per_second": 42.880367503393146,
+      "predicted_per_token_ms": 23.320695652173914,
+      "prompt_ms": 987.763,
+      "prompt_n": 1032,
+      "prompt_per_second": 1044.7850344667697,
+      "prompt_per_token_ms": 0.9571346899224806
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1110,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1133
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A New Jersey auction house has removed items from its April 17 event after an uproar from the public. The items are crafts and artifacts made by Japanese-Americans confined to World War II internment camps. A grass-roots campaign of a change.org petition, a Facebook page, and mediation by \\\"Star Trek\\\" actor George Takei has resulted in Rago Arts and Auction Center agreeing to pull the items from the sale. \\\"There is an essential discussion to be had about the sale of historical items that are a legacy of man's inhumanity to man. It extends beyond what is legal. It is something auction houses, galleries and dealers are faced with regularly,\\\" the auction house said. \\\"We hope this controversy will be the beginning of a discourse on this issue.\\\" Takei, who with his family spent time in one of the camps, thanked people for working to stop the sale. According to a comment on the Facebook page \\\"Japanese American History: NOT for Sale,\\\" he was working on the issue while on a trip to Australia. \\\"It took a few calls today here in the wee hours, and I'll be issuing a formal statement later, but we can all celebrate a bit today at this news,\\\" he wrote. The auction house said 24 lots of an original collection of works of art and crafts were removed. During World War II, about 117,000 people of Japanese descent were forced to live in 10 internment camps. The government called them relocation centers. Many of the people who lived there and their descendants had another phrase for the facilities. They call them concentration camps. Two-thirds of the people who were ordered there were native born U.S. citizens, according to the National Archives. CNN affiliate KGO reported the items were given to historian Allen Eaton, who opposed internment camps. The items were inherited from the historian's estate. Miriam Tucker, a partner with the auction house, said it had hoped the items would go to someone who cared about their historical meaning. \\\"For us, there could be no better resolution than for a suitable museum, foundation or members of the Japanese-American community with the means to preserve this collection to come forward and secure it for education, display and research,\\\" she said. KGO reported the people it talked to would like items returned to family members if possible and any other artifacts put in an exhibition. \\\"This was a gift and let the gift come full circle,\\\" said Judy Hamaguchi with the San Francisco Chapter of the Japanese American Citizens League. She was referring to a letter the organization sent to the auction house. \\\"It should be returned as a gift.\\\" The lots have been packed away for now, said auction house partner David Rago in an email. \\\"Once the dust settles from this auction weekend (1,200 lots in three days) we will work with a small group of people from the Japanese-American community who have identified themselves through this process as generous, informed, voices of reason,\\\" he wrote. He said a suitable institution is the best possible home and the auction house will work with the current owner to find the right place. The seller -- known in the auction business as the consignor -- has never been in a position where the items could be donated, Rago said. \\\"But the consignor, who has been a sensitive and dedicated custodian of this collection for over 35 years, has agreed this evening to work with Rago Auctions to secure appropriate placement of Eaton's life work,\\\" he added.\\n\", \"original_answer\": \"A New Jersey auction house, Rago Arts and Auction Center, has removed crafts and artifacts made by Japanese-Americans confined to World War II internment camps from its April 17 event. The decision came after public outcry and a campaign led by a change.org petition, a Facebook page, and \\\"Star Trek\\\" actor George Takei. The auction house acknowledged the need for a discussion about the sale of historical items that represent man's inhumanity to man. Takei, who had personal experience with internment camps, thanked those involved in stopping the sale. The auction house removed 24 lots from the sale, which were originally part of a collection owned by historian Allen Eaton. The hope is now for a suitable institution or members of the Japanese-American community to secure the collection for education, display, and research.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 21,
+  "source_cluster_id": "sha256:1cccd15cff04f6406cd4d56139856f78814bde6dc00a8af70148d128c487cabe",
+  "source_id": "15762",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:125ec7786ca24eb0e7b65c6752bbbae138e5091e96d83d6a5db843892d86f1dc",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ]
+}

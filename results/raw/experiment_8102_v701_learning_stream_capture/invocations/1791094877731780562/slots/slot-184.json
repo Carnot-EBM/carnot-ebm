@@ -1,0 +1,132 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.1644130840431899,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:fbc685928817b281013ab0064c5cc6f405862a3c97a7fbd1f0540884e295dd19",
+  "human_target": null,
+  "input_tokens": 553,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:fbc685928817b281013ab0064c5cc6f405862a3c97a7fbd1f0540884e295dd19",
+    "feature_hash": "sha256:ab7f5136cf852b6e423d6cd5888e9ce1bce62c2b0a2811532c3d396af34a8d6d",
+    "source_normalized_hash": "281c16a80be7044f5b93d4e4a3f4a1dd5866244177831c825f63352c6914d935",
+    "values": [
+      0.40332520318733556,
+      0.6310637891520244,
+      0.2916666666666667,
+      0.8333333333333334,
+      0.14583333333333331,
+      0.16666666666666666,
+      0.5966747968126644,
+      0.837050476756359
+    ],
+    "window_count": 16
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 553,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 575
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:c2250e49df90d0b30bb64eff6b865be8ed10d5c36a3cd1a1db457b77483aae5e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095575,
+    "id": "chatcmpl-rmdnDlTE9N8RYBCY4sQESLshqcYmOOT4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.201,
+      "predicted_n": 22,
+      "predicted_per_second": 42.619057305197,
+      "predicted_per_token_ms": 23.46368181818182,
+      "prompt_ms": 529.568,
+      "prompt_n": 475,
+      "prompt_per_second": 896.9575200918486,
+      "prompt_per_token_ms": 1.1148799999999999
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 553,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 575
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Athens treated slaves more humanely than the Romans, and more humanely than Goreans, and even allowed their slaves certain rights. Slaves could bring a civil suit to trial or even receive income. Slaves worked in many different fields and could even run a merchant shop, most of the profits going to the owner.\\\\n\\\\npassage 2:Ancient Greece practiced slavery and Athens was considered in many ways to be the model for other city-states. During the 5th century B.C., Athens contained approximately 100,000 slaves and this constituted from 1/3 to \u00bd of the total population.\\\\n\\\\npassage 3:Many brothels were owned by the state. Poor women might be forced to take a job in the marketplace, the fields, or in an inn. They were valued even lower than prostitutes but now as low as slaves. Slaves were common in ancient Athens and performed much of the domestic work needed in the household. With no rights whatsoever, slaves were at the mercies of their masters and mistresses with no legal recourse available. The one exception to the classes of women were the priestesses.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is true about the slaves in athens\\\"}\", \"original_answer\": \"Slaves in Athens were treated more humanely compared to other societies such as the Romans and Goreans. They were granted certain rights, such as being able to bring a civil suit to trial or even receive income. They worked in many fields and could run a merchant shop, although most of the profits went to their owners. During the 5th century B.C., Athens had around 100,000 slaves, constituting from 1/3 to 1/2 of the total population. Most of the domestic work in households was performed by slaves. However, they had no legal recourse and were at the mercy of their masters and mistresses.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 185,
+  "source_cluster_id": "sha256:3a6a77576a35d16d817f94f658d035bcf6744ad1f0ccc211c8744b5921881b85",
+  "source_id": "15126",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:fbc685928817b281013ab0064c5cc6f405862a3c97a7fbd1f0540884e295dd19",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

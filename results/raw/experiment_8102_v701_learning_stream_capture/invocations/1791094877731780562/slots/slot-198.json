@@ -1,0 +1,81 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "answer_units_over_budget",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:be76a4a39daf87c29841727d99bdcdf8963aa0ef1a609c40fdcd5bfba2859c2b",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": "answer_units_over_budget",
+    "family_id": "sha256:be76a4a39daf87c29841727d99bdcdf8963aa0ef1a609c40fdcd5bfba2859c2b",
+    "feature_hash": "sha256:d463dae6a121c90eccecf2cce4ed68d133829b1b551234dae0ec228ce29e34a5",
+    "source_normalized_hash": "24d7d40952e9a439db71520c93b7f92cb9d0401d967fe289848a21f481b20c65",
+    "values": null,
+    "window_count": 16
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:70f037b7fe388d740f92e1d26854e95fad2e0250b7dbae69c8b2344e9102429a",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Knee bends \u2013 3 sets of 10 repetitions (reps). Stand a foot away from a wall with your knees hip-width apart and your feet pointing slightly outwards. Slide your back down the wall by slowly bending your knees. Let the knees point in the same direction as your toes.\\\\n\\\\npassage 2:6) TFL Distraction. The TFL (Tensor Fasciae Latae) is a small muscle located at the side of your hip just below the crest of your pelvis. When tight and bound up this nasty little bugger can affect the knee by pulling through the IT band and causing pain on the outside of the knee.\\\\n\\\\npassage 3:Thigh contraction \u2013 three sets of 15 seconds with each leg. Sit up straight on a chair. Slowly straighten and raise your right leg until straight with your foot pointing slightly outwards. Squeeze your right thigh muscles and hold this position for 10 seconds.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to strengthen muscles around knee\\\"}\", \"original_answer\": \"Based on the provided passages, here are some exercises and strategies to strengthen the muscles around the knee:\\n\\n1. Knee bends: Performing knee bends against a wall can help strengthen the muscles around the knee, specifically the quadriceps and hamstrings.\\n2. TFL distraction: Stretching and mobilizing the Tensor Fasciae Latae muscle can help reduce tension and alleviate pain on the outside of the knee.\\n3. Thigh contraction: Isolating and contracting the thigh muscles can help improve strength and stability in the knee joint.\\n\\nTo further reinforce these exercises, consider incorporating the following additional strategies:\\n\\n4. Hip flexor stretching: Tight hip flexors can contribute to knee pain and instability. Stretching the hip flexors through exercises like lunges or piriformis stretches can help improve knee health.\\n5. Quad set: Strengthening the quadriceps muscles can help improve knee stability and reduce the risk of injury. Exercises like leg extensions or squats can be effective for targeting the quads.\\n6. Single-leg balance exercises: Practicing single-leg balance exercises can help improve overall knee stability and reduce the risk of injury. Examples include standing on one leg while brushing teeth, doing a single-leg squat, or standing on one leg while balancing on a Bosu ball.\\n7. Core strengthening: A strong core can help improve knee stability and reduce the risk of injury. Exercises like planks, bridges, and Russian twists can be effective for strengthening the core muscles.\\n\\nIt's important to note that each person's knee health may be unique and require different exercises and approaches. Consulting with a healthcare professional or physical therapist can provide personalized recommendations for strengthening the muscles around the knee.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "slot": 199,
+  "source_cluster_id": "sha256:fe076ba97947eae6a8b0e65035534f3410600f3fe24c715945dffd8c4f74292e",
+  "source_id": "14472",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:be76a4a39daf87c29841727d99bdcdf8963aa0ef1a609c40fdcd5bfba2859c2b",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

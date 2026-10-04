@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4101730469847098,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:2fd6e7c36e936a4569107333902315c59807f9920f7d7741c56aca1af94006cb",
+  "human_target": null,
+  "input_tokens": 747,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:2fd6e7c36e936a4569107333902315c59807f9920f7d7741c56aca1af94006cb",
+    "feature_hash": "sha256:36f9c3b55ca1f4f4da08b49edc8992042bbd9f463eec993f599042264a41a2df",
+    "source_normalized_hash": "04ed60f79c47282b26d98deea6202353650e7698847617a314ae52beb51e44ad",
+    "values": [
+      0.28057214228266864,
+      0.45550239234449763,
+      0.07692307692307693,
+      0.07692307692307693,
+      0.5032051282051282,
+      0.5384615384615384,
+      0.7194278577173314,
+      0.9240833435570278
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 747,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 773
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:18971a1de5c115e6302d2e18729367c3f1b4857c49f185008b6ae41c7a9e2e90",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095432,
+    "id": "chatcmpl-C1kyV8YZMbwkuLQg1GlHYLwT4KP1t18k",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 619.302,
+      "predicted_n": 26,
+      "predicted_per_second": 41.9827483198827,
+      "predicted_per_token_ms": 23.819307692307692,
+      "prompt_ms": 670.17,
+      "prompt_n": 669,
+      "prompt_per_second": 998.2541743139801,
+      "prompt_per_token_ms": 1.0017488789237667
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 747,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 773
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Salt and pepper to taste. 1  Heat your grill to a surface temperature of 400 degrees. 2  Rub oil on tuna steaks and season with salt and pepper.  If you enjoy your tuna steak rare to medium rare grill your tuna approximately 3 minutes per inch of thickness.\\\\n\\\\npassage 2:Pour half of your olive oil on the bottom of the aluminum foil. Chop up your green pepper into bite-size pieces. Then grate your onion, garlic and carrots into shreds. Combine and place half of it on the bottom of the aluminum foil. Place your ahi tuna steaks on top of your oil and veggies. Cover the tuna steaks with the rest of the extra virgin olive oil and vegetables. Fold the aluminum foil up and over the ahi tuna steaks like a pouch and then close shut. How to Cook Tuna Steaks in the Oven.\\\\n\\\\npassage 3:Broil the tuna for 3 minutes per side. After 3 minutes, flip the tuna steaks over to the other side and return to the broiler for an additional 3 minutes or until done. Place the broiler pan on the top rack of the oven, roughly 4 inches (10 cm) away from the top heating element.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to bake ahi tuna steaks\\\"}\", \"original_answer\": \"Based on the provided passages, here is how to bake ahi tuna steaks:\\n\\nPassage 1 provides the basic instructions for cooking ahi tuna steaks on a grill. To bake ahi tuna steaks, you will need to heat your grill to a surface temperature of 400 degrees. Once the grill is hot, rub oil on the tuna steaks and season with salt and pepper to taste. If you prefer your tuna steak rare to medium rare, grill it for approximately 3 minutes per inch of thickness.\\n\\nPassage 2 provides additional instructions for cooking ahi tuna steaks in the oven. To prepare the oven method, pour half of your olive oil on the bottom of an aluminum foil pouch. Add chopped green peppers, grated onions, and grated garlic to the pouch, followed by the ahi tuna steaks. Cover the tuna steaks with the remaining olive oil and vegetables, and fold the aluminum foil over the top of the pouch. Broil the tuna for 3 minutes per side, or until it reaches your desired level of doneness.\\n\\nBased on the provided passages, there are no additional ingredients required beyond what is mentioned in Passage 1. Therefore, you can use the same ingredients listed in Passage 1 to bake ahi tuna steaks using the method outlined in Passage 2.\\n\\nI hope this helps! Let me know if you have any further questions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 84,
+  "source_cluster_id": "sha256:4b1955aa9c6f66b8fe20017eb9c4c4c39e2efdb5b81f0aa080191a56d6a6e236",
+  "source_id": "14465",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:2fd6e7c36e936a4569107333902315c59807f9920f7d7741c56aca1af94006cb",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

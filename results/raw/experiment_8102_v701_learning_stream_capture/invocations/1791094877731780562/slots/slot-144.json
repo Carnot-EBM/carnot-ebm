@@ -1,0 +1,140 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2853493769653141,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:b06d98ad12f53e86a2655dd1826ea8850fbd60cffb16174a42e18fdbbf2a9a9d",
+  "human_target": null,
+  "input_tokens": 634,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:b06d98ad12f53e86a2655dd1826ea8850fbd60cffb16174a42e18fdbbf2a9a9d",
+    "feature_hash": "sha256:697e16989bec85c4cacc1bacaf877015ecc2564729aed5f8afc51e3ddb6ad78e",
+    "source_normalized_hash": "f066e7e887c86ed4c992b8b32fb96d5e247abe569d9b76e3f543ecfb74100e27",
+    "values": [
+      0.30243506493506495,
+      0.55995670995671,
+      0.0,
+      0.0,
+      0.3875,
+      0.4,
+      0.6975649350649351,
+      0.8834415584415585
+    ],
+    "window_count": 32
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 634,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 658
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:548daec28605a5c26f4dad38963cb33e3f5c5e1673e2f922b7bbca2db1711fce",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095520,
+    "id": "chatcmpl-rXBePJBV7tbpM6sR1DTAkMyaaqINNpV2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.848,
+      "predicted_n": 24,
+      "predicted_per_second": 42.48930685777413,
+      "predicted_per_token_ms": 23.53533333333333,
+      "prompt_ms": 586.435,
+      "prompt_n": 556,
+      "prompt_per_second": 948.10166514618,
+      "prompt_per_token_ms": 1.0547392086330933
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 634,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 658
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A measles outbreak that affected more than 130 Californians since December is over, the California Department of Public Health declared Friday. It has been 42 days since the last known case of B3 strain of measles, the equivalent of two successive incubation periods, said Dr. Karen Smith, director of the health department. The department said in its latest update that 131 people came down with the B3 strain, and five who had a different genotype than the outbreak strain. Of the 131 cases, the state was able to obtain the vaccination status for 81 patients. Of the 81, 70% were unvaccinated. \\\"Prompt investigation of cases, interviewing hundreds of contacts of infected people, vaccinating hundreds of at risk people, and increasing awareness among health care providers about measles, helped to control this outbreak,\\\" Smith said. The outbreak began with dozens of visitors to two Disney theme parks in the state. The health department said 42 of the cases occurred from December 17-20. Two patients with rashes have been identified in April, but they have a different measles genotype. The Centers for Disease Control and Prevention said on its website that 19 different strains have been discovered since 1990. Measles is a highly contagious respiratory disease. It causes fever, red and sore eyes, runny nose, cough and a rash. It can cause deadly health complications, including pneumonia and encephalitis. It  is spread by contact with an infected person through coughing or sneezing. It can remain in the air and on surfaces for up to two hours. CNN's Debra Goldschmidt contributed to this report.\\n\", \"original_answer\": \"A measles outbreak that affected over 130 people in California has ended, according to the state's health department. This is the second outbreak in the state in just under a year. The last case of B3 strain of measles was reported 42 days ago, which is equivalent to two incubation periods. The majority of those infected were unvaccinated. Prompt investigation of cases, vaccinations of at-risk individuals, and increased awareness among healthcare providers helped control the outbreak.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 145,
+  "source_cluster_id": "sha256:fc931d408915902dd22f36cac82e03cd487931fe8e7d6dd86ddb3d8693b68bee",
+  "source_id": "15647",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:b06d98ad12f53e86a2655dd1826ea8850fbd60cffb16174a42e18fdbbf2a9a9d",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

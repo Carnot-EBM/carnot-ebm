@@ -1,0 +1,180 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 2.280508511001244,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:2c49bea3dc73ba8c720653a456224aa77be122a68bee78c76c6dc9e9bfe7e703",
+  "human_target": null,
+  "input_tokens": 1948,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:2c49bea3dc73ba8c720653a456224aa77be122a68bee78c76c6dc9e9bfe7e703",
+    "feature_hash": "sha256:2b408fe014ec7c9abde651410196723842ab3214ab7722fca0412a4a728c7042",
+    "source_normalized_hash": "7c2a7b3e21b27af8d219796a506b3da57a26b37225ac2d7d67258cc1e14139c2",
+    "values": [
+      0.2729616541707776,
+      0.49508419212366583,
+      0.41964285714285715,
+      0.8,
+      0.0,
+      0.0,
+      0.7270383458292224,
+      0.9522257012852988
+    ],
+    "window_count": 112
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1948,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1971
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:abdacd23fab29d573b4c023abfe83c54199a3dc810522a303ea3ea4b58a05afc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095643,
+    "id": "chatcmpl-BDSnqa35l0B5j3pcXEK42jYlsaNyRnpR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.937,
+      "predicted_n": 23,
+      "predicted_per_second": 42.362189351619065,
+      "predicted_per_token_ms": 23.60595652173913,
+      "prompt_ms": 1619.798,
+      "prompt_n": 1870,
+      "prompt_per_second": 1154.4649394554137,
+      "prompt_per_token_ms": 0.8662021390374331
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1948,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1971
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Charleston, South Carolina (CNN)The casket is draped with an American flag, and Walter Scott is dressed in a dark suit. A white banner with a blue star refers to his favorite NFL team. It says: \\\"Tradition, the Cowboys way.\\\" A few mourners trickled into the Fielding Home For Funerals in Charleston, South Carolina. Charleston Mayor Joseph Riley comes by to pay his respects and show support for the Scott family. They are not at Friday night's visitation, the mayor says.  The stress of the past week since Scott was fatally shot in the back by a North Charleston police Officer Michael Slager is too much. They went by the funeral home earlier but they are exhausted, he says. They need their privacy now and at Saturday's funeral and burial, he says. \\\"This is a heartbreaking tragedy for everyone in our community,\\\" he says, adding they share the grief of their neighbors in North Charleston and with the Scott family. \\\"It breaks everyone's hearts, wherever we live.\\\" Meanwhile, police continue to investigate the incident in which Scott ran from his car after a traffic stop then was shot while fleeing from Slager. On Friday afternoon, police met with a man who was in Scott's car when Slager pulled it over for a broken taillight. The passenger's name wasn't in a police report obtained by CNN. The passenger was detained briefly after the shooting, one officer wrote in the report. Scott family attorney Chris Stewart said the man with Scott was a co-worker and friend. But he did not identify the friend by name, nor did Thom Berry, a South Carolina Law Enforcement Division spokesman, who confirmed Friday's meeting. Slager has been fired and faces life in prison or the death penalty if convicted on a murder charge. Video shot by a witness shows the officer shooting Scott in the back as he runs away. Slager had told investigators he feared for his safety after he and Scott tussled over his Taser. His lawyer, Andy Savage, said Friday he \\\"has not received the cooperation from law enforcement that the media has.\\\" Savage's office said in a written statement that it has yet to receive \\\"any investigative documents, audio or video tapes, other than a copy of Mr. Slager's arrest warrant.\\\" The news release added that the lawyer has been advised that the police union that Slager belongs to \\\"is no longer involved in the case.\\\" On Thursday, dash cam video and a new witness emerged from the day Scott died. The dash cam footage shows Slager talking calmly to Scott during the traffic stop. Scott apparently says he has no insurance on the vehicle, and Slager returns to his car to do paperwork. Moments later, Scott gets out of his car and bolts. A foot chase ensues. Scott never reappears on the dash cam video, but a witness later takes video of the officer shooting Scott several times in the back as he is running away. \\\"Nothing in this video demonstrates that the officer's life or the life of another was threatened,\\\" National Urban League President Marc Morial said. \\\"The question here is whether the use of force was excessive.\\\" On Thursday, a new witness emerged in the case. Gwen Nichols told CNN's Brian Todd that she saw a scuffle between Scott and Slager at the entrance to a vacant lot. \\\"It was like a tussle type of thing, like, you know, like, 'What do you want?' or 'What did I do?' type of thing,\\\" Nichols said. \\\"I didn't hear Mr. Slager saying: 'Stop!' \\\" Scott was the subject of a bench warrant over $18,104.43 in unpaid child support at the time of the stop, according to court records. That may be why he ran, an attorney for the family said. Criminal defense attorney Paul Callan said he believes Slager's defense will play up the reported scuffle in arguing that this is not a murder case. \\\"Defense attorneys will say this was a heat of passion shooting -- (that) this was something that he did suddenly after some kind of an altercation, a physical altercation with a suspect,\\\" Callan said. \\\"And that would constitute manslaughter under law, as opposed to murder, and it makes a huge difference in sentencing.\\\" In South Carolina, a murder conviction requires a measure of premeditation. What we know about Officer Slager. The investigation has been turned over to the South Carolina Law Enforcement Division, or SLED. In a statement released Thursday, SLED said its investigators found troubling inconsistencies from the very start. \\\"We believed early on that there was something not right about what happened in that encounter,\\\" SLED Chief Mark Keel said in a statement. \\\"The cell phone video shot by a bystander confirmed our initial suspicions.\\\" Feidin Santana, who took the video of the shooting, told CNN's Anderson Cooper that he was walking to work when he saw Slager on top of Scott, who was on the ground. He said he could hear the sound of a Taser in use. Santana said he didn't see Scott go after the Taser, as Slager initially claimed. He said he believes Scott was trying to get away. \\\"Mr. Scott never tried to fight,\\\" Santana said. Neither the struggle nor the use of a Taser was captured on video, because Santana started recording shortly after that. His video shows Scott running away from Slager before the officer aims his gun. Slager fires eight shots toward Scott, striking him five times. A timeline of events. While the initial traffic stop may have seemed to be perfectly normal and professional, and the foot chase a reasonable choice, an analyst saw little justification for that last act. \\\"I'm not familiar with South Carolina police training, but I guarantee you that they do not teach to shoot a fleeing unarmed man in the back,\\\" said Jim Bueermann, president of the Police Foundation, a Washington-based nonprofit. There are several claims in the initial police reports that are not supported in Santana's video. And there may be more to the investigation than just whether Scott's killing was justified, CNN legal analyst Danny Cevallos said. \\\"If it's determined that multiple officers attempted to cover for the shooting officer, and it's shown that those reports were false, this will be a devastating blow for law enforcement everywhere,\\\" he said. Who was Walter Scott? CNN's Polo Sandoval reported from Charleston and Steve Almasy reported and wrote in Atlanta. CNN's Jim Sciutto, Jason Carroll and Holly Yan contributed to this report.\\n\", \"original_answer\": \"The funeral for Walter Scott, who was fatally shot by a North Charleston police officer, took place on Saturday in Charleston, South Carolina. The Scott family did not attend the visitation on Friday, as they were reportedly too exhausted from the stress of the past week. Charleston Mayor Joseph Riley expressed his support for the Scott family and called the incident a \\\"heartbreaking tragedy.\\\" The police are still investigating the incident, and on Friday, they met with a man who was in Scott's car during the traffic stop. The passenger was briefly detained after the shooting and is said to be a co-worker and friend of Scott. Officer Michael Slager, who shot Scott, has been fired and faces a murder charge that could result in life in prison or the death penalty. A video shot by a witness shows Slager shooting Scott in the back as he runs away. Slager had claimed that he feared for his safety after a tussle with Scott over his Taser, but the video does not support this claim. The South Carolina Law Enforcement Division (SLED) is now investigating the case and has found troubling inconsistencies. The video of the incident has raised questions about the use of force and whether it was excessive. There are also claims that multiple officers may have attempted to cover for Slager, which, if true, would be a devastating blow for law enforcement.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 236,
+  "source_cluster_id": "sha256:f134a941a85d7f5ae50f9a3ab20f2d53d3550b2c8eadcf70f1af8a66177d73b4",
+  "source_id": "12038",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:2c49bea3dc73ba8c720653a456224aa77be122a68bee78c76c6dc9e9bfe7e703",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56
+  ]
+}

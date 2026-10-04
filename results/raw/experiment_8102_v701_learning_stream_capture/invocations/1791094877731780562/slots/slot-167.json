@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.528029141947627,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:af27484e5f83e83b1591006f3665f10ff129622a205ec1a1949867a35cb425a9",
+  "human_target": null,
+  "input_tokens": 890,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:af27484e5f83e83b1591006f3665f10ff129622a205ec1a1949867a35cb425a9",
+    "feature_hash": "sha256:5c742b1d63c48cd888801ca44da4575b6ff474db600bea47827a984ae97c8935",
+    "source_normalized_hash": "414c7e7ae6dccbba46e79d13f48b6d37d626fefd18cf0e643a54e34e8610f49a",
+    "values": [
+      0.1984355301131617,
+      0.4057906128958761,
+      0.25,
+      1.0,
+      0.20000000000000004,
+      0.2,
+      0.8015644698868383,
+      0.9933333333333334
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 890,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 914
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:c38dfa6ba867f6b32a463857227b2377451288641b6ef37656dd14e8017a11e2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095553,
+    "id": "chatcmpl-XVaT34EABmIDFK93PiqvMLcIyoGKklFx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.346,
+      "predicted_n": 24,
+      "predicted_per_second": 42.4518790262954,
+      "predicted_per_token_ms": 23.556083333333333,
+      "prompt_ms": 845.476,
+      "prompt_n": 812,
+      "prompt_per_second": 960.4057359404643,
+      "prompt_per_token_ms": 1.0412266009852216
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 890,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 914
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2710 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Sushi Bars, Japanese\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:30\\\",\\\"Saturday\\\":\\\"17:0-21:30\\\",\\\"Thursday\\\":\\\"17:0-21:30\\\",\\\"Tuesday\\\":\\\"17:0-21:30\\\",\\\"Wednesday\\\":\\\"17:0-21:30\\\"},\\\"name\\\":\\\"Edomasa\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 22:12:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I've finally found my sushi spot in town! & it's close to the newer Handlebar coffee. My husband only eats rice dishes and I love a little bit of both sushi and Japanese homey dishes. In most places in town, they are only good at one or the other. This place is great at both. The family feel of this restaurant is great. They were all so friendly and we felt really welcomed.  We can't wait to go back!  I've also had their food delivered and it travels really well.\\\"},{\\\"review_date\\\":\\\"2021-12-24 21:08:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best santa barbara Uni sushi in United State.\\\\nAn authentic hole in a wall Japanese restaurant owned by a very nice Japanese owner.\\\\nOther pupus and entrees are very good as well.\\\\nTemporary they are serving food with plastic containers which is understandable too.\\\"},{\\\"review_date\\\":\\\"2021-11-08 23:10:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My girlfriend and i were both craving japanese food, and this was the perfect spot. A very laid back place with a diverse menu, fresh fish, and great entrees. Not to mention lovely staff! We ordered quite a few things, and our favorites were the tuna crispy rice, yakiniku, and katsu curry rice! I would certainly suggest coming here!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Edomas is a popular Japanese restaurant located in Santa Barbara, California, offering a range of traditional sushi and other Japanese dishes. With a rating of 3.5 stars, the business has received positive reviews for its delicious food, friendly service, and cozy atmosphere. Customers appreciate the variety of options available, including sushi, entrees, and desserts, as well as the freshness of the ingredients used. Some reviewers have noted that the restaurant has a relaxed, hole-in-the-wall vibe, while others have praised the attentive service. While there have been some minor complaints about the quality of the food, overall, Edomas appears to be a top choice for those looking for authentic Japanese cuisine in the area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 168,
+  "source_cluster_id": "sha256:642ed21ff2b126501f310e79d4557b478fdc93020f3cb30dfebb2018dd974bda",
+  "source_id": "13621",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:af27484e5f83e83b1591006f3665f10ff129622a205ec1a1949867a35cb425a9",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

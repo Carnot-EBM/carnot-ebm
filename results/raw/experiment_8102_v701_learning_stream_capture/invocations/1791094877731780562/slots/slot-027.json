@@ -1,0 +1,167 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 2.4867836959892884,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:c3622ca31d44652b4fe36d3be1b9ecf89a78058be462867987b11387fb8f4a5e",
+  "human_target": null,
+  "input_tokens": 2033,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:c3622ca31d44652b4fe36d3be1b9ecf89a78058be462867987b11387fb8f4a5e",
+    "feature_hash": "sha256:29a1cd8c1fec6360d0fe37d5784e07ea2e1329204185a05006320a533b072451",
+    "source_normalized_hash": "bf1366563b1012ec74fb10ed7f3d4d5619c98a2733118190eae6a7b5b083d924",
+    "values": [
+      0.20948553514071538,
+      0.43259062040895657,
+      0.3372093023255814,
+      0.8888888888888888,
+      0.3333333333333333,
+      0.3333333333333333,
+      0.7905144648592846,
+      1.0
+    ],
+    "window_count": 86
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 2033,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 2056
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:660cbb392b3d29c9984fe76789a5f4555bceffa5777ba8fc4acfb783796cf4f4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095349,
+    "id": "chatcmpl-MGcgefb6bWkWE6s41qXTpFGydTBf8XlL",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 544.913,
+      "predicted_n": 23,
+      "predicted_per_second": 42.20857274463997,
+      "predicted_per_token_ms": 23.69186956521739,
+      "prompt_ms": 1663.993,
+      "prompt_n": 1955,
+      "prompt_per_second": 1174.8847501161363,
+      "prompt_per_token_ms": 0.8511473145780051
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 2033,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 2056
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"800 Alvarado Pl\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":true},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":true,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Seafood, Nightlife, Hotels, Event Planning & Services, American (New), Bars, Diners, Restaurants, Hotels & Travel, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-22:0\\\",\\\"Monday\\\":\\\"7:0-22:0\\\",\\\"Saturday\\\":\\\"7:0-22:0\\\",\\\"Sunday\\\":\\\"7:0-22:0\\\",\\\"Thursday\\\":\\\"7:0-22:0\\\",\\\"Tuesday\\\":\\\"7:0-22:0\\\",\\\"Wednesday\\\":\\\"7:0-22:0\\\"},\\\"name\\\":\\\"Belmond El Encanto Dining Room\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-29 05:08:14\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"We called twice to make sure we could sit in the lounge and have something to eat they said yes come on in I said do you need a reservation They said no. \\\\nSo we drove an hour to get there because the traffic was terrible and when we got there they said no we're not seating any people in the lounge I said well that's funny because I called twice, and they said come on in. And, there were people seated in the lounge. \\\\n    So after talking to the bartender who is supposed to be the manager and  two other suits and a waiter they said OK go sit over there so we sat and we sat and for a half an hour we sat and we got no service no nothing.\\\\n    We tried flagging people down there weren't very many people there they were all these suits behind the bar all busy busy with something. Finally my husband got up and said some thing to one of the suits. 10 minutes later this very rude waiter, Came over with his rude attitude and we ordered. He somehow thought it was funny that we had been waiting for a half an hour I said I don't think it's funny. \\\\n    Our order wasn't difficult but apparently it was too difficult for him to make the effort to put it in because it took another half an hour,  two phone calls to the concierge And a call to management. \\\\n    Then guess what, my husband got his drink tonic and bitters but in an hour they couldn't seem to bring a club soda to our table, even though the table to our left had three rounds of drinks and food and meanwhile another couple came and sat next to us . The Rude Waiter took their order really quickly and then 20-25 minutes later they still had not gotten their Coke and a glass of wine, that's pretty pathetic. They left!\\\\n     If you're still reading I'll tell you what finally happened: a manager finally came over, eventually I got my club soda and then he put in the wrong order for a burger because the very  rude waiter didn't put it in, and this is what I think really happened.\\\\n     The bartender who is supposed to be a manager was just a jerk, and  had no intention of getting us our drinks,  the waiter who was also a jerk and incompetent couldn't get us our drinks and couldn't get the other people their drinks because he was also an incompetent idiot , because he never put a order in. He was just plain mean spirited and incompetent. \\\\nAnd I think they  I think they did it on purpose because they were mean-spirited, misogynists. \\\\nThe manager finally Came over and said blah blah blah Covid blah blah blah people are quitting blah blah blah ONE CLUB SODA!!!!!!!!!! ONE HOUR!!!!!!! That was not the problem. The bartender was looking straight at me for an hour and did it on purpose because he's unprofessional and shouldn't be working at a place like Encanto that has terrible food and terrible service\\\\n     DON'T GO HERE!!! \\\\n     GO TO THE MIRAMAR. They are professional kind nice competent intelligent and service is great!\\\"},{\\\"review_date\\\":\\\"2021-11-20 02:20:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Quick Summary\\\\nHad a wonderful return to the Belmond. Excellent service, food and ambiance throughout the night. The El Encanto Dining Room is back!\\\\n\\\\nFood- 5 stars\\\\nThey also had their Free-range chicken and tomahawk displayed to the table before bringing it back to being cut (we didn't have that experience when they restaurant first reopened earlier in the pandemic, but it's returned!)\\\\n\\\\nRoasted beet salad- very good. plated well and they even separated and plated two individual dishes for my girlfriend and I\\\\n\\\\nMaple Farms Duck Breast- this was pretty good, but the star of the show was the California Surf and Turf\\\\n\\\\nCalifornia Surf and Turf- everything about this dish was phenomenal. I usually prefer ribeyes over filets, but this was one of the best filets I've ever had. Perfectly seasoned and so buttery. The oysters along with the spinach were mouth-watering as well. This was ridiculously good\\\\n\\\\nGoleta Lemon- I liked this dessert more than the Floating Island and the tacos. It's good but not memorable\\\\n\\\\nTres Leches Chocolate Tacos- I would pass on these tacos in the future. It's a good idea and good ingredients. But it's very sloppy to eat and your hands get all sticky because the chocolate shell melts on your fingers\\\\n\\\\n\\\\nService- 5 stars\\\\nPhenomenal service from our waiters. Really appreciated that they split our salad into individual plates and even nicely plated each of them. Very helpful without being overbearing. Had a wonderful birthday dinner\\\\n\\\\nAmbiance/Value- 5 stars\\\\nExcellent views from the terrace. Lovely band in the background. It doesn't get much better\\\\n\\\\nBottom Line\\\\nOne of the best cooked filets I've had. Excellent food, service and ambiance. Will be returning!\\\"},{\\\"review_date\\\":\\\"2021-10-30 21:29:11\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We had a exceptional Anniversary Dinner on the Patio Terrace under the stars.  The service was wonderful and attentive.  I had the salmon and it was very tender and flavorful. We finished dinner with the Floating Island and it was delicious. I loved the fruit (blackberries and raspberries) with the meringue and ginger cookies. I was glad since I don't like custard. We also loved the Charcoal Apricot bread. Everything was very fresh and healthy.  I can't wait to return!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Belmond El Encanto Dining Room, located at 800 Alvarado Pl, Santa Barbara, CA, is a multi-cuisine establishment offering seafood, American (New), breakfast, brunch, and more. It is also known for its nightlife and event planning services. The business operates from 7:00 AM to 10:00 PM, throughout the week. The restaurant has an upscale and classy ambiance, offers free Wi-Fi, outdoor seating, and valet parking. However, it does not offer take-out services. The restaurant generally receives good reviews for its food and service, but there have been instances of customers experiencing poor service. Some customers praised the restaurant for its excellent food, particularly the California Surf and Turf and the Roasted Beet Salad, and its attentive service. Others were disappointed with the service, citing long wait times and unprofessional staff. Despite the mixed reviews, the restaurant holds an average business star rating of 3.0.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 28,
+  "source_cluster_id": "sha256:cb60c4b63d3abc0a779f7f6ce7880ea287dc89260451eaae3fb41dd8a089d3b9",
+  "source_id": "14164",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:c3622ca31d44652b4fe36d3be1b9ecf89a78058be462867987b11387fb8f4a5e",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43
+  ]
+}

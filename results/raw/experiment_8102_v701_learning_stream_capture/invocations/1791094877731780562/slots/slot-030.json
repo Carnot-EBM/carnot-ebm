@@ -1,0 +1,153 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.803648196044378,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:41b7659d1cada4e2ffa86099a33de035867ac2fd5305e6467f201b8d9506924b",
+  "human_target": null,
+  "input_tokens": 1299,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:41b7659d1cada4e2ffa86099a33de035867ac2fd5305e6467f201b8d9506924b",
+    "feature_hash": "sha256:332817def6a805a28dc10943af293ec8071fe4c34f05eb35d2b8954ddf3629fb",
+    "source_normalized_hash": "9a49894544724cc00e5cb1af0bcaac7e109a9d9555592ce831ac49a2bc50f053",
+    "values": [
+      0.31133085418075274,
+      0.5389879183996831,
+      0.06896551724137931,
+      1.0,
+      0.2222222222222222,
+      0.2222222222222222,
+      0.6886691458192472,
+      0.9297856011091304
+    ],
+    "window_count": 58
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1299,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1322
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:5760b4e52e375db744e80c0f34fe9bd43a6b845dec9632ac91d923de846fbd20",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095355,
+    "id": "chatcmpl-kBUtoKMYoFnlj3wZnVwuAy4rCy7Xzu7w",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.853,
+      "predicted_n": 23,
+      "predicted_per_second": 42.76261357657204,
+      "predicted_per_token_ms": 23.38491304347826,
+      "prompt_ms": 1123.861,
+      "prompt_n": 1221,
+      "prompt_per_second": 1086.4332866786906,
+      "prompt_per_token_ms": 0.9204430794430796
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1299,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1322
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Giovanni Lo Porto put himself in harm's way to help, heading to Pakistan to work on a much needed reconstruction project following deadly flooding there. His work and his life, as he knew it then, came to a halt on January 19, 2012. That's when, according to Italy's state-run ANSA news agency, four armed men burst into the building where Lo Porto lived and abducted him along with colleague Bernd Muehlenbeck. Two years later, Lo Porto was dead -- killed accidentally by a U.S. drone strike, according to American authorities. The native of the Sicilian city of Palermo died along with a fellow al Qaeda hostage, American Warren Weinstein. That same counterterrorism operation in a border region of Afghanistan and Pakistan killed at least one al Qaeda leader, Ahmed Farouq, who was also a U.S. citizen. His family members, including his four brothers, called him Giancarlo. Lo Porto grew up in Sicily and then studied at London Metropolitan University, getting his undergraduate degree there in Peace and Conflict Studies in 2010, according to the school. A professor there remembers him as \\\"passionate, friendly (and) open-minded,\\\" according to an ANSA report. And the university, in a statement, described him as \\\"a popular student who was committed to helping others.\\\" \\\"We are tremendously proud of him and the humanitarian work he did,\\\" the school said. At the time he was taken captive, Lo Porto worked with the German aid organization Welthungerlife, a 53-year-old group dedicated to fighting hunger and poverty worldwide. Such work means going to places where the need is most -- places like Multan in Pakistan. That community was one of many in Pakistan devastated by major flooding in 2010, which covered about one-fifth of the country and left more than 1,500 people dead. These conditions are all too common in the South Asian nation, as evidenced by flooding one year later that forced upwards of 660,000 into refugee camps and killed more than 430 people, about a quarter of whom were children. \\\"He told me, 'I'm pleased to have returned to Asia and Pakistan, I love the people, culture and food in this part of the world,' \\\" said the London Metropolitan University professor. Specifically, Lo Porto was a project manager with Welthungerlife's clean water and sanitation program, working with 8 to 10 fellow international staffers and 100 to 200 locals starting in October 2011, according to Simone Pott, a spokeswoman for the aid group. Pott described Lo Porto as a lively, very positive man who made friends all over the world. Some of those friends in Italy, England and beyond pressed for Lo Porto's release after he was taken captive, urging Italy's government and newspaper editors to get his story out, ANSA reported. The same story said that al Qaeda (after first claiming he was being held) denied abducting Lo Porto, as did the Pakistani Taliban. Muehlenbeck, a German national, was freed last October, at which time he said that he and his colleague had been separated, according to ANSA. But Lo Porto never got the chance to savor freedom again, like his German counterpart. Italian Foreign Minister Paolo Gentiloni said his country's government \\\"carried out every effort possible to trace and try to return Giovanni to his loved ones.\\\" \\\"Unfortunately, the conclusion is now different (than we wanted) because of the tragic and fatal mistake of our American allies, which has been recognized by President Obama,\\\" Gentiloni said. \\\"The responsibility of his death and (that) of Warren Weinstein ... is that of the terrorists.\\\" On Thursday, after the U.S. government reported Lo Porto's death, Italian Prime Minister Matteo Renzi expressed his \\\"deepest sorrow for the death of an Italian who dedicated his life to the service of others.\\\" Lo Porto's death left those at his former charity Welthungerlife speechless and confused, Pott said. And then there are his family members like his mother, who ANSA reports became \\\"another person\\\" after her son's kidnapping. \\\"Her only hope was to embrace Giovanni,\\\" a neighbor said. CNN's Hadia Messia contributed to this report.\\n\", \"original_answer\": \"Giovanni Lo Porto, a charity worker from Italy, was kidnapped in Pakistan in 2012 and was then killed in a US drone strike in 2015. Lo Porto had gone to Pakistan to work on a reconstruction project following flooding in the country. He and his German colleague, Bernd Muehlenbeck, were abducted by four armed men. Muehlenbeck was released in 2014, but Lo Porto was killed in a drone strike along with fellow hostage, Warren Weinstein. The drone strike also killed al Qaeda leader, Ahmed Farouq. Lo Porto had been working for German aid organisation, Welthungerlife. He was a project manager for the group\u2019s clean water and sanitation programme. His friends and family had campaigned for his release after his abduction. The Pakistani Taliban and al Qaeda both denied kidnapping him.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 31,
+  "source_cluster_id": "sha256:a52874a0904ee4f8555b66b918076011587c4b59033646d5649fcf115042cc5f",
+  "source_id": "15697",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:41b7659d1cada4e2ffa86099a33de035867ac2fd5305e6467f201b8d9506924b",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ]
+}

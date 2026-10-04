@@ -1,0 +1,142 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5541118180844933,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:6c597ed6e7adceca4cf6c76a0ff9b5c7b1f3f3cc7db6dccd5d9b1dc3029f3833",
+  "human_target": null,
+  "input_tokens": 895,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:6c597ed6e7adceca4cf6c76a0ff9b5c7b1f3f3cc7db6dccd5d9b1dc3029f3833",
+    "feature_hash": "sha256:46eb364885193b4bdba146f6c290b1ee5b13830da796260f4cbb5f08cf87af92",
+    "source_normalized_hash": "c6e58dd048b3d12fbd0711da7f64eaff5a8c3fdd592a26ec64f66a28c47fcb1e",
+    "values": [
+      0.3081679894179894,
+      0.5839285714285714,
+      0.2222222222222222,
+      1.0,
+      0.0,
+      0.0,
+      0.6918320105820106,
+      0.944047619047619
+    ],
+    "window_count": 36
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 14,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 895,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 920
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:442ea26602b33b16f5ccf72e43f5682ba26fee3572624c51d14fff5e7c0d4c09",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 14\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095679,
+    "id": "chatcmpl-40G58Js4JyFUf83MPhavMsoEnDHc5vY6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 589.923,
+      "predicted_n": 25,
+      "predicted_per_second": 42.37841209785006,
+      "predicted_per_token_ms": 23.59692,
+      "prompt_ms": 848.039,
+      "prompt_n": 817,
+      "prompt_per_second": 963.3990889569938,
+      "prompt_per_token_ms": 1.0379914320685435
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 895,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 920
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Here\u2019s who Meghan McCain misses from The View \u2014 and it\u2019s not her co-hosts\\nMeghan McCain is familiar to viewers of The View since she was a controversial co-host from 2017 to 2021.\\nThe 38-year-old daughter of the late Senator John McCain has been speaking out lately on various things.\\nHer new podcast, Meghan McCain Has Entered the Chat, premiers October 17, 2023.\\nThe podcast is her first large project since she left The View in 2021. It is reported to be part hard news and part entertainment.\\nMeghan has created her own production company even though she is so done with television and finds it superficial.\\nBut that clearly won\u2019t stop her from talking about it on her podcast and as she promotes that podcast, she cannot stop talking about and throwing shade at her former show, The View.\\nMeghan cannot stop talking about The View\\nFor a talk show aimed at women, The View has had its share of former co-hosts speaking out about their experiences.\\nMeghan McCain and Rosie O\u2019Donnell are the most recent ladies taking their grievances public.\\nRosie O\u2019Donnell had a terrible time and accused the producers of giving preferential treatment to specific hosts and moderators.\\nMeghan, in an interview about her new company and podcast, revealed who she misses on The View.\\nFirst, she clarified that she doesn\u2019t \u201cwatch it at all.\u201d Telling The Messenger that it is like \u201cgoing through an ex-boyfriend\u2019s Instagram.\u201d\\nAnd while Meghan does miss some of the people from The View, she certainly wasn\u2019t talking about her former co-hosts.\\nInstead, she claims to miss the wardrobe crew, calling them \u201cvery kind.\u201d She also pointed out the real reason why she missed them.\\nIn a contradiction of her comments about working in television as being \u201csuperficial,\u201d she said that she likes \u201cgetting dressed up.\u201d\\nSunny thinks Meghan would be great on this television show\\nThere is a certain amount of animosity between the ladies. Meghan has said terrible things about her time on The View in the media.\\nAs previously reported by Monsters and Critics, Meghan is quoted as saying, \u201cAs for me \u2013 may the bridges I burn light the way.\u201d\\nFor Sunny to even mention Meghan during an interview could mean that she is trying to get a dig in on her ex-colleague.\\nAccording to Sunny, Meghan\u2019s husband mean-tweeted her on social media even though Sunny considered Meghan a friend.\\nSunny suggested to Andy Cohen on Watch What Happens Live that Meghan would be perfect in a Bravo show, The Real Housewives of Potomac.\\nThe View airs weekdays at 11/10c on ABC.\", \"original_answer\": \"Meghan McCain, former co-host of The View, has been speaking out about her experience on the show and her feelings towards her former colleagues. In an interview, she revealed that she doesn't miss her co-hosts, but instead misses the wardrobe crew, whom she described as \\\"very kind.\\\" She also expressed her fondness for \\\"getting dressed up,\\\" which contradicts her previous statements about television being \\\"superficial.\\\" Meanwhile, Sunny Hostin, another former co-host, suggested that Meghan would be a good fit for the reality TV show The Real Housewives of Potomac, despite their apparent animosity towards each other.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 8,
+  "source_cluster_id": "sha256:8dc777682eaa2156d0cdfb9c68ce0f8d1d9ec8af3f2dcb5286ba587c181c3dd8",
+  "source_id": "13514",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:6c597ed6e7adceca4cf6c76a0ff9b5c7b1f3f3cc7db6dccd5d9b1dc3029f3833",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

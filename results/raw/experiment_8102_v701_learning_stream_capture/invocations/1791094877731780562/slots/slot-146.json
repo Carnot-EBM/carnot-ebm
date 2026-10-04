@@ -1,0 +1,139 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.303728324943222,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:3fad303c8f4adaa55d2e5c8b4e1c4680ab340e12d40b98a66d03b6019e83e90f",
+  "human_target": null,
+  "input_tokens": 600,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:3fad303c8f4adaa55d2e5c8b4e1c4680ab340e12d40b98a66d03b6019e83e90f",
+    "feature_hash": "sha256:04468202baf11003a92361a6cd5dbaffa27aa5a884425a834775346f21a1db06",
+    "source_normalized_hash": "3de5ea37918ac35b56a9f443a191b2782fb3b7a5a1f4eac848b1a69f9644868a",
+    "values": [
+      0.2519140989729225,
+      0.742530345471522,
+      0.0,
+      0.0,
+      0.6666666666666666,
+      0.6666666666666666,
+      0.7480859010270774,
+      0.939386865857454
+    ],
+    "window_count": 30
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 600,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 621
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:aed05f3dda34ec52b9bfe321f014b517af0e6bafee0aaaed15f7eb15ed7ef00b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095523,
+    "id": "chatcmpl-nRO4sg45M9BMvDTWvfJT166HIOtsDIMw",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.254,
+      "predicted_n": 21,
+      "predicted_per_second": 42.66090270470123,
+      "predicted_per_token_ms": 23.44066666666667,
+      "prompt_ms": 589.516,
+      "prompt_n": 522,
+      "prompt_per_second": 885.472150034944,
+      "prompt_per_token_ms": 1.1293409961685823
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 600,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 621
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Place the hens in a little roasting pan and shmear the mixture all over the birds, under the skin, around the breasts, and into the cavity. 2  Roast, breast side down for 25 minutes then flip and roast for another 25-35 minutes, or until done. 3  Remove from the oven and let rest at least 10 minutes.\\\\n\\\\npassage 2:Directions. Place parsley, rosemary, thyme, garlic, lemon, salt, and pepper in a food processor. Blend until finely chopped. With machine running, add olive oil. Loosen skin from the hens. Put 1 tablespoon of herb mixture under skin of each hen, smoothing to cover breasts. Place the birds on a large rimmed baking sheet, cover with plastic wrap, and refrigerate overnight. Remove hens from refrigerator and bring to room temperature (about 1 hour). Preheat oven to 400 degrees.\\\\n\\\\npassage 3:Directions. 1  Preheat the oven to 400 degrees. 2  Rinse and dry the hens. 3  In the bowl of a mini food processor, add the mustard, wine, rosemary, thyme, oil, salt and pepper. 4  Pulse until all is a smooth paste. 5  It will be more of a liquid form than a paste.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to roast a cornish hen\\\"}\", \"original_answer\": \"To roast a Cornish hen, place the hens in a little roasting pan and spread a mixture consisting of parsley, rosemary, thyme, garlic, lemon, salt, and pepper all over their bodies, under the skin, around the breasts, and into the cavity. Roast the birds breast side down for 25 minutes before flipping and roasting for an additional 25-35 minutes or until cooked. Once done, remove the hens from the oven and let them rest at least 10 minutes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 147,
+  "source_cluster_id": "sha256:abf54c96736f10698d05f45f1a4f172269cebc3bca05628c807f19ca6029659f",
+  "source_id": "12396",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:3fad303c8f4adaa55d2e5c8b4e1c4680ab340e12d40b98a66d03b6019e83e90f",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3001444980036467,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:daf19508c202de717f0f3493826d22daa409efdfaa9534a4850b5b6dbd64e9f0",
+  "human_target": null,
+  "input_tokens": 558,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:daf19508c202de717f0f3493826d22daa409efdfaa9534a4850b5b6dbd64e9f0",
+    "feature_hash": "sha256:77ec5bff2ef9f89571a727c534c13015dc6f4c0adea9f713515260cdcbe85af6",
+    "source_normalized_hash": "cf6c0a23171680fff3052e800662a0400bcdc7001bb306074ee63a21f3e40da3",
+    "values": [
+      0.28165584415584416,
+      0.5741341991341992,
+      0.0,
+      0.0,
+      0.3333333333333333,
+      0.3333333333333333,
+      0.7183441558441558,
+      0.9352453102453103
+    ],
+    "window_count": 16
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 558,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 582
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:a851425ebd726df588fdcf0dead1c1d94a2996d0c1e7ca9316ce8b8f1d9934b5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095407,
+    "id": "chatcmpl-i18W0pU5z2nCUuDMd06IRciqMqNYlSUI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 562.801,
+      "predicted_n": 24,
+      "predicted_per_second": 42.643847470064905,
+      "predicted_per_token_ms": 23.450041666666667,
+      "prompt_ms": 528.536,
+      "prompt_n": 480,
+      "prompt_per_second": 908.1689799748741,
+      "prompt_per_token_ms": 1.1011166666666665
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 558,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 582
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Differences between ATVs and UTVs[edit] UTVs differ from all-terrain vehicles (ATVs) in that UTVs typically have a side-by-side seating arrangement, many have seat belts and roll-over protection, and most have a cargo box at the rear of the vehicle. UTVs generally have a higher payload capability and are longer and wider than ATVs. While most ATVs can carry 125 to 200 lbs. of cargo in addition to the operator's weight, UTV payloads run from 800 to 1350 lbs. above the operator/passenger's weight.\\\\n\\\\npassage 2:yeya's blog. Difference between quad bike and ATV. Well, they both those terms: quad and ATV usually refer to the same thing \u2013 quad bike or ATV machine, an off-road motorbike \u2013 like vehicle with handle bars and more than 2 wheels. ATV is any bike with more wheels, like 3 wheeler, 4 wheeler and even 6 wheeler.\\\\n\\\\npassage 3:The ATV is more physically demanding to ride, and the rider must use balance to manipulate and control the vehicle, Kaiser says. It's fun, and they're small enough to really manhandle around, whereas a UTV is large enough that you're just strapped in and along for the ride.\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between utv and atv\\\"}\", \"original_answer\": \"Based on the provided passages, here is the difference between UTV and ATV:\\n\\nUTVs have a side-by-side seating arrangement, while ATVs have a single-seat configuration. Additionally, UTVs tend to have more features such as seat belts and roll-over protection, and a larger payload capacity compared to ATVs. According to passage 3, ATVs are more physically demanding to ride and require more balance and control, while UTVs provide a smoother and more comfortable ride.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 66,
+  "source_cluster_id": "sha256:747c493510cc616fb593b8ecb3d89d5e8aff7b641f96b98437707b47dfc5d013",
+  "source_id": "15401",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:daf19508c202de717f0f3493826d22daa409efdfaa9534a4850b5b6dbd64e9f0",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

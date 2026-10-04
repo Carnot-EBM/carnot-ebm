@@ -1,0 +1,159 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7843143669888377,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:defbb083240b94ba63d236d83b08e10ffe0a41fc33876a1144c29e67ccf41fea",
+  "human_target": null,
+  "input_tokens": 1142,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:defbb083240b94ba63d236d83b08e10ffe0a41fc33876a1144c29e67ccf41fea",
+    "feature_hash": "sha256:eb8e8ee8bb14272c87d8555224a68323f66c892c129dcba72785eddd0844ed9b",
+    "source_normalized_hash": "d6bad5e6ca0dfa8b005071eace39bc99ce1221ffc11d6bc01c0b92e51c169708",
+    "values": [
+      0.2187309523809524,
+      0.45492857142857146,
+      0.2714285714285714,
+      1.0,
+      0.0,
+      0.0,
+      0.7812690476190477,
+      1.0
+    ],
+    "window_count": 70
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1142,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1168
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:233db167f2360b102f0c99aa44673de182536bf3f6b5f50d912840b5ac6db284",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095458,
+    "id": "chatcmpl-2XQdc47sL5hCW0lO9UFbuOuL5fdj1L6P",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 614.193,
+      "predicted_n": 26,
+      "predicted_per_second": 42.33197056951154,
+      "predicted_per_token_ms": 23.622807692307692,
+      "prompt_ms": 1027.16,
+      "prompt_n": 1064,
+      "prompt_per_second": 1035.8658826278281,
+      "prompt_per_token_ms": 0.9653759398496241
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1142,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1168
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The new emojis are here! On Thursday, Apple released a new version of its mobile operating system that includes more diversity than ever when it comes to the race, ethnicity and sexual orientation of its emojis -- those cute little images that users can insert into text messages or emails when words alone just won't cut it. The reaction to this new lineup is, as should be expected with almost anything new in today's hypersensitive climate, a range of cheers and jeers. Why is any of this important, you may ask? For many, these images are far more than tiny clip art for texting. Rather they are seen as recognition that their own ethnicity, sexual orientation, race or even hair color is part of mainstream America -- despite what others might say. This matters in a digital age where texting is how most people communicate and represent themselves dozens -- if not hundreds -- of times every day. Think receiving a text of an image of a person smiling. Or more accurately, think of a white face smiling because up until Thursday's update, all the emojis had pale skin. But that has all changed. Now there's a range of emoji skin tones to pick from, including yellow, brown and black.  I'm sure few people will be upset with this development. But how about in December? Why? Now that will be able to choose the skin tones for each human emoji, and that will also include ... Santa Claus. That shrieking sound you may have heard was from Fox News' Megyn Kelly, who famously stated in 2013 that Santa Claus is absolutely, definitely and without a doubt a white guy.  In fact, thanks to Apple, we may even see Brown Santa emojis this December. (Could that mean he's a Muslim Santa?! Cue even more shrieking from Fox News.) There is more. Apple has now given us gay and lesbian couple emojis, kissing with a heart over their heads. This inclusiveness was cheered by at least one gay news service on Twitter. It's not yet clear if a person who likes to use same-sex kissing emoji couples can be denied service by a person who objects on grounds of \\\"religious liberty.\\\" But it would be interesting to hear what any of the 2016 GOP presidential candidates might have to say about \\\"gay emojis.\\\" And I would predict some conservative will claim that the kissing gay emojis will turn children gay. The fact is, when you embrace diversity, you will still leave out other minority groups. Redheads, for example, are pretty pissed off because there are no emojis featuring their hair color. In fact, supporters of a redheaded emoji have started a petition that has already garnered several thousand signatures. Even expanding the flags represented by emojis, as Apple has done, comes at some peril. Apparently Canada is overjoyed that finally Apple has included it. But Armenians are not happy they were left out. I must admit that being partially of Palestinian heritage, it's heartening to see that despite the fact that some refuse to recognize a Palestinian state, Apple has chosen to now include a Palestinian flag emoji. Armenia, I feel your pain. Of course the bigger question in the whole diverse-emoji issue is: What took Apple so long? How hard could it have been to add different skin colors to pick from? That the company (finally) did is a step in the right direction: America's demographics are changing, so our representations of who we are -- even representations as tiny as emojis -- should reflect this. Apple has \\\"evolved\\\" in showing diversity -- from brown people to same-sex couples. Maybe \\\"religious liberty\\\" conservatives who discriminate will follow.\\n\", \"original_answer\": \"Apple recently released an update to its mobile operating system that includes more diverse emojis, including a range of skin tones for human emojis and a Santa Claus emoji with a brown skin tone. This change has sparked both cheers and jeers, with some seeing it as a positive recognition of diversity while others are criticizing it for promoting a particular agenda. The emojis have become an important representation of identity in the digital age, where texting is a common way of communication. However, the inclusion of certain emojis may be controversial, such as the gay couple emojis, which could potentially lead to discrimination against LGBTQ individuals. Despite this controversy, the move towards greater diversity in emojis is seen as a step in the right direction, as it reflects the changing demographics of America.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 102,
+  "source_cluster_id": "sha256:7ed5131f7052b989759a91ad86ad53688500f96e6fe0060f51e7a538ed670914",
+  "source_id": "15637",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:defbb083240b94ba63d236d83b08e10ffe0a41fc33876a1144c29e67ccf41fea",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+  ]
+}

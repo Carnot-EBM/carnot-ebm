@@ -1,0 +1,140 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.617902138037607,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:ca6077a13f58569fd04d60e512bc62c87fa7b4d3c909147fbfb310f4120b7144",
+  "human_target": null,
+  "input_tokens": 1007,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:ca6077a13f58569fd04d60e512bc62c87fa7b4d3c909147fbfb310f4120b7144",
+    "feature_hash": "sha256:ff026f7b5774c9face18d08fd53c6a4ad520c3c92aec048389ca94c5921ab25d",
+    "source_normalized_hash": "ec2413b04d1a333dec0a39fa0f859dd1740a5003dfe06717a2351b33be0be091",
+    "values": [
+      0.2257482250238152,
+      0.4136045318630458,
+      0.40625,
+      0.8,
+      0.2,
+      0.2,
+      0.7742517749761848,
+      0.9816666666666667
+    ],
+    "window_count": 32
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1007,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1031
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:3c69735fa99c92236e7b49f6747e5df45eee8fcd7e5216d3d6e1628499553e9b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095604,
+    "id": "chatcmpl-xfP2sbyJAWekWb0M8YyNU5HX2mxGWS33",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 572.484,
+      "predicted_n": 24,
+      "predicted_per_second": 41.92256901502924,
+      "predicted_per_token_ms": 23.8535,
+      "prompt_ms": 928.084,
+      "prompt_n": 929,
+      "prompt_per_second": 1000.9869796268442,
+      "prompt_per_token_ms": 0.9990139935414424
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1007,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1031
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"830 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Chinese, Vegetarian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:30-20:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"16:30-20:0\\\",\\\"Sunday\\\":\\\"16:30-20:0\\\",\\\"Thursday\\\":\\\"16:30-20:0\\\",\\\"Wednesday\\\":\\\"16:30-20:0\\\"},\\\"name\\\":\\\"Shang Hai\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-28 23:28:06\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Delicious food.  Had the Kung Pao tofu and the Tofu with Eggplant.  We'll-cooked, tasty, and large portions.\\\"},{\\\"review_date\\\":\\\"2021-11-27 02:57:14\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Finally found a really awesome Chinese place in Santa Barbara!!\\\\n\\\\nIt seems the best are always these small unassuming storefronts with not much more than an open sign. \\\\n\\\\nWe ordered to go by phone and told them we wanted it ready for a pickup time of about 45 minutes. They were super friendly, the food was piping hot exactly on time.\\\\n\\\\nThe food tasted great!! Large portions, lots of options and reasonable price! My girlfriend was also happy about the abundant vegetarian options. We will definitely be getting takeout here again soon! \\\\n\\\\np.s. the plain fried rice is... *really* plain lol\\\"},{\\\"review_date\\\":\\\"2021-10-07 02:57:40\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I'm obsessed with any Chinese food I can find in SB. Like obsessed since it isn't as easy as you would think to come by. I've had a few items to go from Shang Hai and every time it is quick, hot, and easy to order and pick up. My favorite is the Hot and Sour soup when I'm not feeling 100%. It comes a large to-go bowl so sit by the TV, curl up, and slurp away. The hot is both peppery and heat, but not too much to overwhelm the senses. Yum yum.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Shang Hai is a restaurant located at 830 N Milpas St in Santa Barbara, CA. The business offers Chinese cuisine and is categorized as a restaurant. Shang Hai is open Monday through Sunday from 4:00 PM to 8:00 PM. The business does not offer parking services, but street parking is available. Shang Hai does not accept reservations, and there is no outdoor seating or Wi-Fi available. However, they do offer takeout and catering services.\\n\\nCustomers have praised Shang Hai for its delicious food, which includes vegetarian options. They have also noted that the restaurant is easy to order from and pick up, with friendly service and timely delivery. The Hot and Sour soup is a particular favorite among customers who appreciate its spicy and filling nature. Overall, Shang Hai appears to be a popular choice for Chinese cuisine in Santa Barbara, offering quality food and convenient takeout options.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 210,
+  "source_cluster_id": "sha256:b2f6f02bcfdd1d7d1957cf699f61126697a92208fd1f887450d9e52ce8589916",
+  "source_id": "15084",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:ca6077a13f58569fd04d60e512bc62c87fa7b4d3c909147fbfb310f4120b7144",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

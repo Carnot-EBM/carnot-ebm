@@ -1,0 +1,138 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3583102360134944,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:41313511b4b17923149f4fc5b00eef4ae07248ff2e91cd8409a3bdf3bd0c1188",
+  "human_target": null,
+  "input_tokens": 748,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:41313511b4b17923149f4fc5b00eef4ae07248ff2e91cd8409a3bdf3bd0c1188",
+    "feature_hash": "sha256:f122318d646cceb69f919a0eec364415b7f9f49ede30e8258013bcc6484796e3",
+    "source_normalized_hash": "ec6cbb9a0e8b942adefd7f14322ceb28b98c2d36967981857e65d07b6faee660",
+    "values": [
+      0.34951567426631097,
+      0.5477504244482173,
+      0.14285714285714285,
+      1.0,
+      0.4642857142857143,
+      0.5,
+      0.6504843257336891,
+      0.9031196943972836
+    ],
+    "window_count": 28
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 748,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 771
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:128fcaf80abd1247a41e0706faea655b53ec17da6086d16926f670a56c73ac5b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095578,
+    "id": "chatcmpl-r48axoDT0kbd2lXXKCz0VMT76Okd09G1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 547.632,
+      "predicted_n": 23,
+      "predicted_per_second": 41.99900663219096,
+      "predicted_per_token_ms": 23.810086956521737,
+      "prompt_ms": 670.201,
+      "prompt_n": 670,
+      "prompt_per_second": 999.7000899730082,
+      "prompt_per_token_ms": 1.0003
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 748,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 771
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Gaza Crying for Help: Why Isn't Egypt Offering Refuge Amid Israeli Strikes?\\nAs Israeli military aircraft strike Gaza, sabotaging constructions in response to the Hamas\u2019 shock attack at the music fest last weekend, Egypt becomes concerned that Israeli bombardments will drive displacement.\\nEgypt closed the Rafah Border Crossing, which is the main point of exit to the outside world for Gazans after the Israeli assault.\\nFatalities Rise Above 1,500!\\nAfter the Hamas attack, Israel\u2019s leadership has recurrently advised civilians to abscond the region while they still can, before the Israel government unleashes the complete power of the military in the land.\\nThe death toll after Israeli air strikes. The only practical exit is the Rafah Border Crossing into Egypt, but Egypt is keeping it inflexibly closed.\\nIsrael Says It has Dropped 6000 Bombs on Gaza\\nPresident el-Sisi urges Gazans to stay in their land\\nIsrael forces ahead with a brutal siege that is swiftly intensifying into an awful humanitarian crisis. President Abdel Fattah el-Sisi said on Thursday in response to growing calls that the people of Gaza must \u201cstay steadfast\u201d and that they should \u201cremain on their land\u201d.\\nIt is noted that this was President el-Sisi\u2019s response not only to the Gazans but also to the American officials when they pleaded with Cairo to permit a secure course for civilians fleeing Gaza.\\nWill the UN be able to evacuate 1,100,000 residents?\\nIsrael cut down the electric supply and barred food, fuel, and water supplies from entering Gaza after proclaiming a \\\"complete siege\\\" of the commune, which had already been under a stringent Israeli restriction, supported by Egypt, for the last sixteen years. More than 263,900 people have been displaced in Gaza since the 2023 war began.\\nIsrael has told the UN to move 1.1 million residents out of north Gaza within 24 hours, as 27 Americans died as a result of the war. Biden has claimed to have told he told Benjamin Netanyahu that with all the rage and frustration, it is vital that Israel acts according to the rules of war in its operations in Gaza.\", \"original_answer\": \"As Israeli strikes continue in Gaza, Egypt has closed the Rafah Border Crossing, the main exit point for Gazans. The Israeli government has advised civilians to leave the region as the military response intensifies, causing fatalities to exceed 1,500. However, Egyptian President Abdel Fattah el-Sisi is urging Gazans to stay put, even in the face of American officials requesting a safe passage for civilians fleeing Gaza. Meanwhile, Israel has told the UN to evacuate 1.1 million residents from northern Gaza within 24 hours.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 187,
+  "source_cluster_id": "sha256:4c7d49b975994a65b399ce6cae42576146306fe67c0a8425352df201101db613",
+  "source_id": "13878",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:41313511b4b17923149f4fc5b00eef4ae07248ff2e91cd8409a3bdf3bd0c1188",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2710852180607617,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:b572ec3f8b641587d20d4efd54d8989d725e6d9a8e7b9730b41ef7c5144391be",
+  "human_target": null,
+  "input_tokens": 732,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:b572ec3f8b641587d20d4efd54d8989d725e6d9a8e7b9730b41ef7c5144391be",
+    "feature_hash": "sha256:1bb407233e7ae64c927f223793d8c8c700a5531b22866f0fbbd090a89b3cf995",
+    "source_normalized_hash": "24913e98c933fd708cec97501c28ebfb641c3f51852ffaf3290e3b8c51bd2f59",
+    "values": [
+      0.44738277326351017,
+      0.761008115367359,
+      0.0,
+      0.0,
+      0.4697802197802198,
+      0.5,
+      0.5526172267364898,
+      0.8193845778404603
+    ],
+    "window_count": 26
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 732,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 753
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:1b0dd151534636bcd022d6d9b282be93587c5a41852a8f06a81fb0efb8d3d901",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095333,
+    "id": "chatcmpl-is9skpHprXWDKEzzJHZaAj11y15DC6cu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 486.712,
+      "predicted_n": 21,
+      "predicted_per_second": 43.146665790035996,
+      "predicted_per_token_ms": 23.176761904761904,
+      "prompt_ms": 653.102,
+      "prompt_n": 654,
+      "prompt_per_second": 1001.3749766498954,
+      "prompt_per_token_ms": 0.9986269113149847
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 732,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 753
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Sinigang Cooking Instructions: Boil sampalok in water until the shell shows cracks. Let cool then peal off the shells and with a strainer, pour samplalok (including water) into a bowl. Gently massage the sampalok meat off the seeds, strain again. In a pot, saut garlic and onion then add the tomatoes. Let simmer for 5 minutes. Add pork and fish sauce then add the rice wash. Bring to a boil then simmer for 15 minutes then add the gabi. Continue to simmer for another 15 minutes or until the pork is tender. Add the horse radish and simmer for 10 minutes then add the string beans, kangkong and sili (for spice-optional). Let boil for 2 minutes.\\\\n\\\\npassage 2:1 Next add pork, cover, and let it simmer for 3 minutes. 2  Remove scum from the broth and then add onions, tomatoes, siling mahaba, (finger peppers) msg, (vetsin) and the sinigang mix and let cook for 10 minutes.\\\\n\\\\npassage 3:1 Add eggplant and cook it for an additional 10 minutes after adding the eggplant wait five minutes then add the string beans (sitaw). 2  Finally add the water spinach (Kangkong) and add salt if needed. 3  Let it cook for three more minutes and it\u2019s ready. 4  Serve with rice.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook sinigang na baboy\\\"}\", \"original_answer\": \"To cook sinigang na baboy, start by boiling sampalok in water until the shells crack. Let it cool, peel off the shells, and strain the sampalok meat off the seeds. In a pot, saut\u00e9 garlic and onion, then add tomatoes and simmer for 5 minutes. Add pork, fish sauce, and rice wash, then bring to a boil and simmer for 15 minutes. Add gabi and continue simmering until the pork is tender. Add horse radish and simmer for 10 minutes, then add string beans, kangkong, and sili. Let it boil for 2 minutes. Next, add pork and simmer for 3 minutes. Remove scum from the broth and add onions, tomatoes, siling mahaba, MSG, and sinigang mix. Cook for 10 minutes. Add eggplant and cook for an additional 10 minutes. After adding the eggplant, wait five minutes and add string beans. Finally, add water spinach and salt if needed. Cook for three more minutes and serve with rice.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 17,
+  "source_cluster_id": "sha256:c8b523c72362cf4ef70321e232f4751f2e50b4de47946fce4301343e02f62ffd",
+  "source_id": "12383",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:b572ec3f8b641587d20d4efd54d8989d725e6d9a8e7b9730b41ef7c5144391be",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

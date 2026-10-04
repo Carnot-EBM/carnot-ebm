@@ -1,0 +1,92 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "answer_units_over_budget",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:829ce1d999ea1c35416b67097b3e54fab3630b2d9adb57862ce4b71cc7e73cb7",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": "answer_units_over_budget",
+    "family_id": "sha256:829ce1d999ea1c35416b67097b3e54fab3630b2d9adb57862ce4b71cc7e73cb7",
+    "feature_hash": "sha256:c977d032d299af9c54023b373e9174f7d7d8fe964df2f113e72670eb9626e046",
+    "source_normalized_hash": "352d0a8347e4c278b5603f67eba7201e328bfb7206b19bf27d8eed61164b87c0",
+    "values": null,
+    "window_count": 33
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:74aef12f0383e469b63aa41f8573725b4c40bb7c80d7d75b01c158ca36781606",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Directions. 1  Brush chicken breast with olive oil on both sides. 2  season with garlic powder, seasoned salt and pepper. 3  Preheat grill on medium heat. 4  Place seasoned breasts on the grill, close the lid and set a timer for 4 minutes. Preheat grill on medium heat. 2  Place seasoned breasts on the grill, close the lid and set a timer for 4 minutes. 3  After 4 minutes, flip the chicken breast, close the lid again and set timer for another 4 minutes.\\\\n\\\\npassage 2:1 season with garlic powder, seasoned salt and pepper. 2  Preheat grill on medium heat. 3  Place seasoned breasts on the grill, close the lid and set a timer for 4 minutes. 4  After 4 minutes, flip the chicken breast, close the lid again and set timer for another 4 minutes. Preheat grill on medium heat. 2  Place seasoned breasts on the grill, close the lid and set a timer for 4 minutes. 3  After 4 minutes, flip the chicken breast, close the lid again and set timer for another 4 minutes.\\\\n\\\\npassage 3:1 Preheat grill on medium heat. 2  Place seasoned breasts on the grill, close the lid and set a timer for 4 minutes. 3  After 4 minutes, flip the chicken breast, close the lid again and set timer for another 4 minutes.4  Remove from grill, allow to sit for 2 or 3 minutes. 5  Pour on some BBQ sauce and serve. Preheat grill on medium heat. 2  Place seasoned breasts on the grill, close the lid and set a timer for 4 minutes. 3  After 4 minutes, flip the chicken breast, close the lid again and set timer for another 4 minutes.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook boneless chicken breasts on the grill\\\"}\", \"original_answer\": \"Based on the provided passages, here is how to cook boneless chicken breasts on the grill:\\n\\nPassage 1:\\n\\n* Directions:\\n\\t+ Brush chicken breast with olive oil on both sides.\\n\\t+ Season with garlic powder, seasoned salt, and pepper.\\n\\t+ Preheat grill on medium heat.\\n\\t+ Place seasoned breasts on the grill, close the lid, and set a timer for 4 minutes.\\n\\t+ After 4 minutes, flip the chicken breast, close the lid again, and set timer for another 4 minutes.\\n\\nPassage 2:\\n\\n* Same as Passage 1, but without the explicit mention of preheating the grill.\\n\\nPassage 3:\\n\\n* Same as Passage 1, but with a slightly different wording and without the step of pouring BBQ sauce and serving.\\n\\nTherefore, to cook boneless chicken breasts on the grill, follow these steps:\\n\\n1. Brush the chicken breasts with olive oil on both sides and season with garlic powder, seasoned salt, and pepper.\\n2. Preheat the grill on medium heat.\\n3. Place the seasoned breasts on the grill, close the lid, and set a timer for 4 minutes.\\n4. Flip the chicken breast and close the lid after 4 minutes, then set the timer for another 4 minutes.\\n5. After 8 minutes, remove the chicken breasts from the grill and let them sit for 2-3 minutes before serving.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "slot": 177,
+  "source_cluster_id": "sha256:be7ec7ad3b7ff7b50e787506fd303a0aa2576e1502417ef6e4a755615f59c507",
+  "source_id": "15536",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:829ce1d999ea1c35416b67097b3e54fab3630b2d9adb57862ce4b71cc7e73cb7",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

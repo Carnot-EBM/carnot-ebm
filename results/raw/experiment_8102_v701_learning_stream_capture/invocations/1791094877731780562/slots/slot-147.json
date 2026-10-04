@@ -1,0 +1,138 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3082582359202206,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:59328b79f0f36927e22b5b5f3830337cd24347b2178a2d2be5a13925882fa6bc",
+  "human_target": null,
+  "input_tokens": 691,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:59328b79f0f36927e22b5b5f3830337cd24347b2178a2d2be5a13925882fa6bc",
+    "feature_hash": "sha256:11b4b83e3920e0b2c7c6e6a7be792de6a185c9f501eadde2bdc152d28c0530a1",
+    "source_normalized_hash": "1fd8ac7d93865424c1f4cd985267ea747347c67950dca7428dea2f5e8bfeaded",
+    "values": [
+      0.3470531204906205,
+      0.533459595959596,
+      0.5,
+      0.5,
+      0.25,
+      0.25,
+      0.6529468795093795,
+      0.9053932178932178
+    ],
+    "window_count": 28
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 4,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 691,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 715
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:a67a1c4c88a56a16d7f126f8d2004349238d4365ba0c46eb8db9679c61eaa5ac",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 4\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095524,
+    "id": "chatcmpl-cGKBzQQmupxmHam15R1CdI01CDVzB6Ck",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.333,
+      "predicted_n": 24,
+      "predicted_per_second": 42.52808182402943,
+      "predicted_per_token_ms": 23.513875,
+      "prompt_ms": 628.701,
+      "prompt_n": 613,
+      "prompt_per_second": 975.026284354566,
+      "prompt_per_token_ms": 1.0256133768352367
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 691,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 715
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Denver Mayor Urges Texas Not to Send More Migrants\\nDenver Mayor Mike Johnston has barely been in office for three months. Now he is feeling the pressure of handling the migrant crisis in his own city. Last week, he voiced his concerns over the migrant crisis in his own City.\\nSince Texas began bussing migrants to Denver last December, former Mayor Michael Hancock was in charge to handle the arrival and their support.\\nGovernor Jared Polis was planning to bus migrants to the sanctuary cities of Chicago and New York City. Both mayors complained and the plan to bus them there ended.\\nNow that Mayor Johnston is running the City, he was interviewed by CNN on October 6 to discuss the currency situation and the 23,390 migrants the City supports.\\nMayor Johnson said in the interview according to Denver 7:\\n\u201cThey\u2019re not asking for help. They\u2019re not asking for charity. What they want is just the chance that everyone wants, to chase the American Dream and be able to work.\u201d\\n\u201cWe have people here who want to work, we have employers who want to hire them, we have a Congress who stood in the way of their ability to do that. I think that's the biggest challenge we see right now.\u201d\\n\u201cWe know if people are here without work authorization, we are going to need more federal support to support them. But our focus is really trying to get them access to work.\u201d\\n\u201cWe think if you bring someone to the country and tell them they can't work, there's no choice but to either encourage them to break the law or to make them survive on public subsidy and we think neither of those are good options.\u201d\\nIn addition, Denver sent letters to border town officials asking migrants not to come to the City. Letters were sent to Brownsville, El Paso, Houston, and Dallas according to Daily Mail.\\nDenver is struggling to handle the current crisis.\\nYou can see more details in this video:\\nDo you think Denver can support more migrants?\", \"original_answer\": \"Denver Mayor Mike Johnston has urged Texas not to send more migrants to his city, as he struggles to handle the influx. Since Texas began bussing migrants to Denver last December, the city has been supporting 23,390 migrants. Johnston stated that the migrants are looking for work rather than charity, and called for Congress to allow them to work legally. The city has also sent letters to border towns including Brownsville, El Paso, Houston, and Dallas, asking them not to send migrants to Denver.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 148,
+  "source_cluster_id": "sha256:6e57c04bd6c765d13e72dca8ecca05a3805ada00e2d760051a4f1c9e415cffb8",
+  "source_id": "13890",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:59328b79f0f36927e22b5b5f3830337cd24347b2178a2d2be5a13925882fa6bc",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

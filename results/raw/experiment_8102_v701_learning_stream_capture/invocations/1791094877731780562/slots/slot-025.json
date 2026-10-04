@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3232894899556413,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:1950fbbcc3d9238969d49b4531f83fc06a2741231444c82fffb74fac19572434",
+  "human_target": null,
+  "input_tokens": 619,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:1950fbbcc3d9238969d49b4531f83fc06a2741231444c82fffb74fac19572434",
+    "feature_hash": "sha256:f351278eab83143c38bc8bf395fc0f1b9fdeb222b774af0baafea713baffaae0",
+    "source_normalized_hash": "52ae6c79dc729baad26b73eef34b26f72df50a681426e7f88eaa53099151c9c9",
+    "values": [
+      0.1908339239310182,
+      0.32019844082211196,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.8091660760689817,
+      0.9198834553901882
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.15,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 619,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 643
+    }
+  },
+  "probability": 0.15,
+  "public_eligible": true,
+  "public_hash": "sha256:25ab6a1dc880cfd133d682db7b622c31934464c81c3fd067bc65eb6293108f57",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.15,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095345,
+    "id": "chatcmpl-CaAscsklrR0fE2DO8eyUQ8nyDhIf8bmG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 559.437,
+      "predicted_n": 24,
+      "predicted_per_second": 42.90027295298666,
+      "predicted_per_token_ms": 23.309875,
+      "prompt_ms": 572.007,
+      "prompt_n": 541,
+      "prompt_per_second": 945.7926214189688,
+      "prompt_per_token_ms": 1.057314232902033
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 619,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 643
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:BLACK-Black feathers give the mystical wisdom that comes with true spiritual initiation. 1  Black, iridescent feathers give mystical insight. Black and white mixed feathers give union and protection. 2  Black (or gray) feathers banded or mixed with white give hope, balance and harmony.\\\\n\\\\npassage 2:PINK-Pink feathers attract love. GRAY-Gray feathers symbolize peace and neutrality. BROWN-Brown feathers give stability and respect. They also symbolize the home and grounding. 1  Brown feathers striped in black, like the tail feathers of a pheasant, give a balance between the physical and spiritual life.\\\\n\\\\npassage 3:FEATHER COLOR & MEANING. WHITE-White feathers symbolize purification, spirituality, hope, protection, peace, and blessings of the Moon. RED-Red feathers symbolize physical vitality, courage, good fortune, and life. BLUE-Blue feathers symbolize mental abilities, peace, protection. And psychic awareness. YELLOW-Yellow feathers bring cheerfulness, mental alertness, prosperity, and blessings from the Sun.\\\\n\\\\n\\\",\\\"question\\\":\\\"color of feathers meaning\\\"}\", \"original_answer\": \"The color of feathers can have various meanings depending on the culture and belief system. Based on the given passages, here are some possible meanings of different colored feathers:\\n\\n* Black: Mystical wisdom, spiritual initiation, protection, hope, balance, and harmony\\n* Pink: Attracts love\\n* Gray: Peace, neutrality, balance, stability, respect, and grounding\\n* Brown: Stability, respect, grounding, physical and spiritual balance\\n* White: Purification, spirituality, hope, protection, peace, and blessings of the Moon\\n* Red: Physical vitality, courage, good fortune, life, and passion\\n* Blue: Mental abilities, peace, protection, and psychic awareness\\n* Yellow: Cheerfulness, mental alertness, prosperity, and blessings from the Sun\\n\\nIt's worth noting that the meanings associated with feather colors can vary across cultures and belief systems, and the passages provided only offer one interpretation. Additionally, some feather colors may have different meanings depending on the specific context or tradition.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 26,
+  "source_cluster_id": "sha256:43f5907ddf55b519955a7e0fd6f70d07db1b33a33d7db836add8eeb0de2dba08",
+  "source_id": "15295",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:1950fbbcc3d9238969d49b4531f83fc06a2741231444c82fffb74fac19572434",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

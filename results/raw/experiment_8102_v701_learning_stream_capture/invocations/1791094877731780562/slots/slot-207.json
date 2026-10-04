@@ -1,0 +1,148 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5255813079420477,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:3027408c64fbbdfabb0fc5f8e79615be5c9c4731377017551e5dbaf0d109d900",
+  "human_target": null,
+  "input_tokens": 869,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:3027408c64fbbdfabb0fc5f8e79615be5c9c4731377017551e5dbaf0d109d900",
+    "feature_hash": "sha256:a49518c898b6b1e506749713fa343df40fb70c5feb9378c6255a32a694674747",
+    "source_normalized_hash": "7737d418e952eb10c9ccd39096e2297d169eed3458ffda2fda511fb75e7d639c",
+    "values": [
+      0.2039224481658692,
+      0.4000736105999264,
+      0.3541666666666667,
+      0.75,
+      0.0,
+      0.0,
+      0.7960775518341308,
+      0.9430898049319102
+    ],
+    "window_count": 48
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 869,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 894
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:0c75aa103ec7fdfb91feb314e85300293302eeeba1c9a6a34f59be589eeea10c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095601,
+    "id": "chatcmpl-HPmmhMc1uw74yv6P9EL4nu3wILVEaMcn",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 589.79,
+      "predicted_n": 25,
+      "predicted_per_second": 42.38796859899286,
+      "predicted_per_token_ms": 23.5916,
+      "prompt_ms": 822.762,
+      "prompt_n": 791,
+      "prompt_per_second": 961.395883621266,
+      "prompt_per_token_ms": 1.0401542351453854
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 869,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 894
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The Young and the Restless spoilers: Jack and Diane are the toast of the town\\nThe Young and the Restless spoilers tease that a vow renewal celebrates a couple that not everyone thinks is the real deal.\\nLast week ended with people gathering to watch Jack (Peter Bergman) and Diane (Susan Walters) get married.\\nWell, they are already married, but they initially wed privately, and now they want to celebrate their love.\\nThere\u2019s no question that many people of Genoa City question Diane and Jack\u2019s relationship.\\nHowever, the couple is determined to prove the haters wrong.\\nThe latest Y&R preview video teases its smiles all around for Jack and Diane\u2019s wedding celebration.\\nKyle marries his parents\\nIn the footage is a voiceover of Kyle (Michael Mealor) officiating his parent\u2019s vow renewal while Jack and Diane dance alone at the end of the festivities. A flip of the scene takes Y&R viewers to the ceremony with Kyle talking about celebrating the happy couple.\\nSummer (Allison Lanier) and Mamie (Veronica Redd) watch from seated tables as Diane breaks down crying over her love for Jack. Diane gives him props for showing her what it means to be a partner.\\nWhen it is Jack\u2019s turn to speak his vows, he lets Diane and everyone else watching know his heart belongs to her forever.\\nCheers to Jack and Diane\\nThe vows have Abby (Melissa Ordway) and Devon (Bryton James) feeling all the love feels. They exchange happy glances at each other during the ceremony.\\nLater, Traci (Beth Maitland) gives a toast to his brother and his wife. The video footage ends with Jack, Diane, Billy (Jason Thompson), Summer, and Abby seen raising a glass to the happy couple.\\nIt\u2019s not all about celebrating Diane and Jack this week on the hit CBS soap opera.\\nThe Young and the Restless spoilers reveal that there\u2019s a whole lot of unhappiness going down, too. Nick (Joshua Morrow) reevaluates his relationship with Sally (Courtney Hope), while the Newman family comes together out of concern for Victor\u2019s (Eric Braeden) health.\\nA previous promo video for Y&R also revealed that confrontation is the name of the game this week. Phyllis (Michelle Stafford) puts Danny (Michael Damian) in the hot seat over his feelings for Christine (Lauralee Bell).\\nPlus, Devon wants answers from Tucker (Trevor St. John) about his connection to Mamie.\\nNovember sweeps are coming, and the hit daytime drama is pulling out all the stops for a month filled with twists and turns.\\nWho\u2019s ready for a must-see drama on Y&R this week?\\nThe Young and the Restless airs weekdays on CBS.\", \"original_answer\": \"Spoiler alert! The Young and the Restless featured a vow renewal for couples Jack and Diane, as well as Kyle and his parents. In the episode, Diane broke down with tears while Jack spoke his heartfelt vows, making the occasion a moving and emotional experience for all involved. While the renewal was not without some doubts or criticisms, the couple's determination to prove the skeptics wrong ultimately prevailed.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 208,
+  "source_cluster_id": "sha256:63970e16a969a14801197b70a44284e4d8dadb027e6d3a7ee2dd495de6473c3a",
+  "source_id": "13976",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:3027408c64fbbdfabb0fc5f8e79615be5c9c4731377017551e5dbaf0d109d900",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ]
+}

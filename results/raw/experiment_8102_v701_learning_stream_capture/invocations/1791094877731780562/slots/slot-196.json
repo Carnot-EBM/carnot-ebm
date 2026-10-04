@@ -1,0 +1,91 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "answer_units_over_budget",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:afb7edca8a5158ba02a3071feeec26331c98a2ff003508dce23d478d513c43ee",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": "answer_units_over_budget",
+    "family_id": "sha256:afb7edca8a5158ba02a3071feeec26331c98a2ff003508dce23d478d513c43ee",
+    "feature_hash": "sha256:568a94fe423b39315b9a3da961f5928f8f6e0f7608d5b1c1eeba5610f1656411",
+    "source_normalized_hash": "5cf0e42921d9c552439661f23058dc45658c4669e1cf4138c45d82cef87c4d53",
+    "values": null,
+    "window_count": 34
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:560ad3a278a92db691ef20dd9391cd6390bc4d66e32d90a50317855556d4ad37",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:\u00bb VirtualBox Download. \u00bb Ubuntu Download (ISO). After Downloading, start installing VirtualBox on your windows 7 machine. Step 1 \u00bb VirtualBox installation is very simple, just double click the downloaded setup file and install with default setup options (I mean \u201cNext\u201d for ALL).Step 2 \u00bb New. Step 3 \u00bb Now Click \u201c Hide Description \u201d for more options.fter Downloading, start installing VirtualBox on your windows 7 machine. Step 1 \u00bb VirtualBox installation is very simple, just double click the downloaded setup file and install with default setup options (I mean \u201cNext\u201d for ALL). Step 2 \u00bb New.\\\\n\\\\npassage 2:3. Select the amount of memory your VM will use and click \u201cNext. \u201d When you chose your operating system in the previous step, VirtualBox automatically recommends the proper amount of memory to use. If you feel this amount isn\u2019t correct, you can move the slider or type a new amount in the box.Click \u201cNext\u201d when you\u2019re done.. In next window you will see Install Options. You can choose to try ubuntu without installing, you can choose install ubuntu option, you can also check for disk and memory for defects and problems and you can also choose to boot from existing hard disk. Choose to install ubuntu option here.\\\\n\\\\npassage 3:Back to Oracle VM VirtualBox Manager, click on the new Ubuntu virtual machine and hit 'Start' button. Now you shall see a 'Welcome' screen. Click 'Install Ubuntu' button. Note that the installation process may differ a little bit from version to version.ack to Oracle VM VirtualBox Manager, click on the new Ubuntu virtual machine and hit 'Start' button. Now you shall see a 'Welcome' screen. Click 'Install Ubuntu' button. Note that the installation process may differ a little bit from version to version.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to install ubuntu in virtualbox\\\"}\", \"original_answer\": \"Sure, I can help you with that! Here are the steps to install Ubuntu in VirtualBox based on the given passages:\\n\\n1. Download VirtualBox and the Ubuntu ISO file.\\n2. Install VirtualBox on your Windows 7 machine by double-clicking the downloaded setup file and following the default setup options.\\n3. Create a new virtual machine in VirtualBox by clicking \\\"New\\\" and selecting the amount of memory you want to allocate to the VM.\\n4. Choose \\\"Ubuntu\\\" as the operating system and click \\\"Next.\\\" VirtualBox will automatically recommend the proper amount of memory to use.\\n5. In the next window, select the \\\"Install Ubuntu\\\" option and click \\\"Next.\\\"\\n6. You will now see the Ubuntu installation menu. Choose your language and keyboard layout, and then click \\\"Next.\\\"\\n7. The installation process will begin, and you will see the \\\"Welcome\\\" screen. Click \\\"Install Ubuntu\\\" to start the installation process.\\n8. Follow the prompts to complete the installation process, which may differ slightly depending on the version of Ubuntu you are installing.\\n\\nThat's it! You should now have Ubuntu installed in VirtualBox.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "slot": 197,
+  "source_cluster_id": "sha256:8d126cdb470236cd61f37d826ce9c3cc23f66ad268f184ca8408118e13022d84",
+  "source_id": "12281",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:afb7edca8a5158ba02a3071feeec26331c98a2ff003508dce23d478d513c43ee",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

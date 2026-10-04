@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2970190290361643,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:93e583bff915e60da1ca4daa48f06740e710f25ee606436d1f37fc46277e4be9",
+  "human_target": null,
+  "input_tokens": 633,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:93e583bff915e60da1ca4daa48f06740e710f25ee606436d1f37fc46277e4be9",
+    "feature_hash": "sha256:08c33acc8dc5fc91d9d856a5025debb6104d641f146630cc032e7aa1a8491318",
+    "source_normalized_hash": "e187a30bcfd8090a66c583b8199f586474671916076f7ab372cfeb401c69d277",
+    "values": [
+      0.166497975708502,
+      0.3157894736842105,
+      1.0,
+      1.0,
+      0.9230769230769231,
+      1.0,
+      0.833502024291498,
+      0.9605263157894737
+    ],
+    "window_count": 26
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 633,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 656
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:22ea82b063b71e964fa431dd17379b7f2b06436f8d5284dbb9db7c348b2f6465",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095311,
+    "id": "chatcmpl-5t6PFwSEo2yAwxKIs9ooOgSd16brBFFF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 533.365,
+      "predicted_n": 23,
+      "predicted_per_second": 43.12243960514844,
+      "predicted_per_token_ms": 23.18978260869565,
+      "prompt_ms": 570.609,
+      "prompt_n": 555,
+      "prompt_per_second": 972.645016114362,
+      "prompt_per_token_ms": 1.0281243243243243
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 633,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 656
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The eyes are also a good indicator of TMJ conditions. Below are eye symptoms to look out for: 1  Pressure behind the eye sockets and sometimes blurry vision may point towards the disorder. 2  This may be brought about by the frequent headaches. 3  Besides pressure, you may also experience some pain around the eyes.\\\\n\\\\npassage 2:Jaw pain: Introduction. Jaw pain: Pain affecting the jaw or jawbone. See detailed information below for a list of 73 causes of Jaw pain, Symptom Checker, Assessment Questionnaire, including diseases and drug side effect causes. \u00bb Review Causes of Jaw pain: Causes | Symptom Checker \u00bb | Assessment Questionnaire \u00bb.\\\\n\\\\npassage 3:Other conditions often seen with jaw pain and TMJ symptoms include: 1  atypical facial pain. 2  cardiovascular diseases. 3  chronic fatigue syndrome. 4  equilibrium (balancing) disorder. 5  irritable bowel syndrome. 6  migraine headache. 7  multiple chemical sensitivity. 8  smell and taste disorders.\\\\n\\\\n\\\",\\\"question\\\":\\\"symptoms of jaw and eye pain\\\"}\", \"original_answer\": \"Based on the given passages, here are the symptoms of jaw and eye pain:\\n\\nFor jaw pain:\\n\\n* Pain affecting the jaw or jawbone ( passage 2)\\n\\nFor eye pain:\\n\\n* Pressure behind the eye sockets ( passage 1)\\n* Blurry vision ( passage 1)\\n* Pain around the eyes ( passage 1)\\n\\nAdditionally, there are other conditions often seen with jaw pain and TMJ symptoms, such as:\\n\\n* Atypical facial pain ( passage 3)\\n* Cardiovascular diseases ( passage 3)\\n* Chronic fatigue syndrome ( passage 3)\\n* Equilibrium (balancing) disorder ( passage 3)\\n* Irritable bowel syndrome ( passage 3)\\n* Migraine headache ( passage 3)\\n* Multiple chemical sensitivity ( passage 3)\\n* Smell and taste disorders ( passage 3)\\n\\nPlease note that these symptoms and conditions are not exhaustive and may not be present in every individual with jaw or eye pain.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 4,
+  "source_cluster_id": "sha256:4aa4c508df260cb7f5abf47749a95f4bd94f0fb785cee57780212b5610747e12",
+  "source_id": "15154",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:93e583bff915e60da1ca4daa48f06740e710f25ee606436d1f37fc46277e4be9",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

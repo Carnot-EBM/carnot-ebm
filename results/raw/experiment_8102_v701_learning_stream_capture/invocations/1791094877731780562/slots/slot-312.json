@@ -1,0 +1,132 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2342146679293364,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:2ee78cef6876a5edf294697436640770d8ee841ee7a0b012733e8aaf0ff3f032",
+  "human_target": null,
+  "input_tokens": 534,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:2ee78cef6876a5edf294697436640770d8ee841ee7a0b012733e8aaf0ff3f032",
+    "feature_hash": "sha256:0a141eb6741135bdaad08f746bb135a7063fd2a7d69d46ec08ca2c96b344194c",
+    "source_normalized_hash": "9f87423fa6dc10b697018de90a80cea019d62d7400f3d936459623d93a897700",
+    "values": [
+      0.2605528846153846,
+      0.4514615384615384,
+      0.0,
+      0.0,
+      0.5,
+      0.6,
+      0.7394471153846154,
+      0.8996153846153847
+    ],
+    "window_count": 16
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 534,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 558
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:31385939352eb0a088cd026576a929b3f6f6f5c28885b936b1f85a3f0fd72227",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095749,
+    "id": "chatcmpl-oLDZrSugdOAcLgP0dORBrcns9BmHQQ8u",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.121,
+      "predicted_n": 24,
+      "predicted_per_second": 42.46878102211738,
+      "predicted_per_token_ms": 23.54670833333333,
+      "prompt_ms": 525.392,
+      "prompt_n": 456,
+      "prompt_per_second": 867.9233791150226,
+      "prompt_per_token_ms": 1.1521754385964913
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 534,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 558
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Keep your feet soak in vinegar solution for about 30-40 minutes and do this daily for best results. Applying vinegar foot soak for fungus infection is best to do twice or thrice if you want to quickly remove fungus infection from feet. You will find it best and effective remedy to treat fungus infection.\\\\n\\\\npassage 2:Apply small amount of turmeric powder over the infected wound and cover it with sterile gauze piece. Honey is time tested home remedy for treating small cut wounds on leg and other areas of body. This natural remedy has hidden antibacterial and anti-inflammatory qualities. Use it by applying it over the cut wound.\\\\n\\\\npassage 3:FOOT CORNS- Treatment, Cure and Home remedies. Corns and callus are one of the most common problems seen by Podiatrists. They can occur on any part of the foot and vary in symptoms from a mild callus under the foot, to an infected ulcer that can develop under a corn on a toe. Other names for corns and callus are hyperkeratosis, clavus, heloma and tyloma).\\\\n\\\\n\\\",\\\"question\\\":\\\"remedies for infected foot\\\"}\", \"original_answer\": \"Here are brief answers to the question based on the provided passages:\\n\\nQ: What are some remedies for infected feet?\\n\\nA: According to passage 1, soaking the feet in a vinegar solution for 30-40 minutes daily can help effectively remove fungus infections. Passage 2 suggests applying turmeric powder over an infected wound and covering it with sterile gauze, which has antibacterial and anti-inflammatory properties. For corn and callus treatment, passage 3 provides various home remedies such as using apple cider vinegar, applying banana peel, and using tea tree oil.\\n\\nUnable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 57,
+  "source_cluster_id": "sha256:49d61d81778f4ca2d6ba87d725095143b99a70cfdfbe81af71bd57416583a9cc",
+  "source_id": "15159",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:2ee78cef6876a5edf294697436640770d8ee841ee7a0b012733e8aaf0ff3f032",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

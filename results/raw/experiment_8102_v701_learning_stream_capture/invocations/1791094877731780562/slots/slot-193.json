@@ -1,0 +1,131 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.096937398891896,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:53db8801576fa1cec6bda5455a4286344aaf08be5debbc72d1424b75a7da5864",
+  "human_target": null,
+  "input_tokens": 454,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:53db8801576fa1cec6bda5455a4286344aaf08be5debbc72d1424b75a7da5864",
+    "feature_hash": "sha256:064aa437c06dca126fc2533291b29ce0d2078153ad183651010bee3c53797bcf",
+    "source_normalized_hash": "3d28e54abdc99901b36b59ab204142d1a1d3d4b9257e4985efe8f1586584fa9e",
+    "values": [
+      0.3538205980066445,
+      0.7209302325581395,
+      0.2857142857142857,
+      1.0,
+      1.0,
+      1.0,
+      0.6461794019933554,
+      0.9069767441860466
+    ],
+    "window_count": 14
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 454,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 477
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:eac0ec05d62121b5c72756af1265df8f72d36d6295c066185ab5aef5faf59bc5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.95,\n\"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095586,
+    "id": "chatcmpl-7USqCfpTwuyyzPPFqfE2YhMBmPPl26rs",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.881,
+      "predicted_n": 23,
+      "predicted_per_second": 42.60198080688152,
+      "predicted_per_token_ms": 23.473086956521737,
+      "prompt_ms": 447.402,
+      "prompt_n": 376,
+      "prompt_per_second": 840.4075082364407,
+      "prompt_per_token_ms": 1.1898989361702128
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 454,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 477
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Live weather in Buenos Aires. The latest and today's weather in Buenos Aires, Argentina updated regularly. Monday 17 April. 00:50 GMT | 21:50 ART.\\\\n\\\\npassage 2:Winter temperatures in Buenos Aires drop to between 7 and 17 degrees Celsius (45 to 63 degrees Fahrenheit) from late May to early September. Average daylight hours in winter range eleven hours in early and late winter, and ten daylight hours each day in mid-winter. Summer is the rainy season in Argentina.\\\\n\\\\npassage 3:Buenos Aires has a warm humid temperate climate with hot summers and no dry season. The temperature typically varies from 47\u00b0F to 83\u00b0F over the course of the year, and is rarely below 39\u00b0F or above 90\u00b0F. The warm season lasts for 105 days, from November 29 to March 14, with an average daily high temperature above 77\u00b0F.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather in buenos aires argentina\\\"}\", \"original_answer\": \"Based on the given passages, the current weather in Buenos Aires, Argentina is 21:50 ART (Argentina Time) on Monday, April 17th, and the temperature is between 45-63 degrees Fahrenheit (7-17 degrees Celsius) during the winter months (late May to early September).\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 194,
+  "source_cluster_id": "sha256:7b9fecd4f5baf1b6eaef2327bf25f9bf9f18f440fe41771eeb4d21e0a418e2c3",
+  "source_id": "15292",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:53db8801576fa1cec6bda5455a4286344aaf08be5debbc72d1424b75a7da5864",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

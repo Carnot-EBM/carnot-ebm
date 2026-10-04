@@ -1,0 +1,133 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.1771260759560391,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:45dbe9846895ef23ef86fc75b72b734a260daf19a5b64a2edc78145aa7ad3eda",
+  "human_target": null,
+  "input_tokens": 485,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:45dbe9846895ef23ef86fc75b72b734a260daf19a5b64a2edc78145aa7ad3eda",
+    "feature_hash": "sha256:1cd6e318a179273641007f34f0958d282a5e48cb56a15f1628023e46e4456b3f",
+    "source_normalized_hash": "6c17d0a2409d18bc943c25c9db27a2ec068c23cde6dd87677a5e5c9eb854a62c",
+    "values": [
+      0.3663707285783309,
+      0.5677088019193283,
+      0.4444444444444444,
+      0.6666666666666666,
+      0.12962962962962962,
+      0.16666666666666666,
+      0.6336292714216691,
+      0.8617408906882592
+    ],
+    "window_count": 18
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 485,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 508
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:81e4e55cdc412ca7a2949f7bdb7d3a5a7038c26f14fa062590a1d1273fe66ad5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095507,
+    "id": "chatcmpl-Z52jmuYWqi8DYoRm1JPzXDx4PuvJHKgo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.889,
+      "predicted_n": 23,
+      "predicted_per_second": 42.60134953666402,
+      "predicted_per_token_ms": 23.473434782608695,
+      "prompt_ms": 489.619,
+      "prompt_n": 407,
+      "prompt_per_second": 831.2585908635082,
+      "prompt_per_token_ms": 1.202995085995086
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 485,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 508
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A SkyWest Airlines flight made an emergency landing in Buffalo, New York, on Wednesday after a passenger lost consciousness, officials said. The passenger received medical attention before being released, according to Marissa Snow, spokeswoman for SkyWest. She said the airliner expects to accommodate the 75 passengers on another aircraft to their original destination -- Hartford, Connecticut -- later Wednesday afternoon. The Federal Aviation Administration initially reported a pressurization problem and said it would investigate. Snow said there was no indication of any pressurization issues, and the FAA later issued a statement that did not reference a pressurization problem. SkyWest also said there was no problem with the plane's door, which some media initially reported. Flight 5622 was originally scheduled to fly from Chicago to Hartford. The plane descended 28,000 feet in three minutes. \\\"It would feel like a roller coaster -- when you're coming over the top and you're going down,\\\" CNN aviation analyst Mary Schiavo said, describing how such a descent would feel. \\\"You know that these pilots knew they were in a very grave and very serious situation.\\\"\\n\", \"original_answer\": \"A SkyWest Airlines flight made an emergency landing in Buffalo, New York, after a passenger lost consciousness. The passenger received medical attention and was released. The flight is expected to accommodate the 75 passengers to their original destination later in the afternoon. The Federal Aviation Administration initially reported a pressurization problem but later issued a statement that did not reference it. There was also no problem with the plane's door. The plane descended rapidly, causing a roller coaster-like sensation.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 135,
+  "source_cluster_id": "sha256:6c4e45234fcbf8984818e1eae383043e67a20762226d02f39e5df1e46d9cbdc1",
+  "source_id": "15684",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:45dbe9846895ef23ef86fc75b72b734a260daf19a5b64a2edc78145aa7ad3eda",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

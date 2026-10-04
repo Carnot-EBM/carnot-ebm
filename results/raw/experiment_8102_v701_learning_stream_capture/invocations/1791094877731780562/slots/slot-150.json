@@ -1,0 +1,142 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.728705556015484,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:5cb34581ba59bab8f034a06bfc10a48145caacde639670469b9a6fb91c55fef0",
+  "human_target": null,
+  "input_tokens": 1185,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:5cb34581ba59bab8f034a06bfc10a48145caacde639670469b9a6fb91c55fef0",
+    "feature_hash": "sha256:0482cf2b2c239e7703a711170dbea1dafbf704584af0db56a7564f26f8ab4ae8",
+    "source_normalized_hash": "4d3c30be0e41ba0b66b3c16acf56d5ffec4aee67b27ea86882b8fdaabcbf8cf1",
+    "values": [
+      0.23829268098909592,
+      0.4294303903571638,
+      0.4294871794871795,
+      0.9230769230769231,
+      0.23076923076923078,
+      0.23076923076923078,
+      0.761707319010904,
+      0.9344054146971768
+    ],
+    "window_count": 36
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1185,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1209
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:cc9010097624ec36e31aef45fab5fff5b975434d5778949c0973ee29f6734c07",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095528,
+    "id": "chatcmpl-Owp5n2WY2I2LlW4oW7RoVOzDnB0jkI2s",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.962,
+      "predicted_n": 24,
+      "predicted_per_second": 42.405673879165036,
+      "predicted_per_token_ms": 23.58175,
+      "prompt_ms": 1051.051,
+      "prompt_n": 1107,
+      "prompt_per_second": 1053.2314797283861,
+      "prompt_per_token_ms": 0.9494588979223125
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1185,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1209
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"955 Embarcadero Del Mar\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":null,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Pizza, Restaurants, Chicken Wings, Sandwiches\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-1:0\\\",\\\"Monday\\\":\\\"10:30-1:0\\\",\\\"Saturday\\\":\\\"10:30-1:0\\\",\\\"Sunday\\\":\\\"10:30-1:0\\\",\\\"Thursday\\\":\\\"10:30-1:0\\\",\\\"Tuesday\\\":\\\"10:30-1:0\\\",\\\"Wednesday\\\":\\\"10:30-1:0\\\"},\\\"name\\\":\\\"Domino's Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-09 03:32:32\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"OK hear me out. Yes, they couldn't find my address, yes, they gave me the wrong order...at first. But they were kind, apologetic, and were quick to correct the mistake, crediting my entire order. We live in hard times, where there is a shortage of staff literally everywhere. Expect that errors will happen EVERYWHERE. The difference in your experience ordering Dominos or anywhere else right now is the attitude you choose to have. You have the opportunity to be kind no matter what, and in choosing to be kind, you get to bless the short-staffed crew trying to help you, and you in turn will be blessed! I could have had a bad attitude. I chose not to. My pizza and pasta and breadsticks were delicious. Shout out to Wilbur, Raul, and the crew for handling a huge volume of orders, with very little staff, but with great attitudes, and delivery with a smile.\\\"},{\\\"review_date\\\":\\\"2021-09-17 07:51:17\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I've ordered from this place several times, And each time, it's taken over an hour for delivery (with initial ETA being closer to 30 minutes); not only that, but the app says it's been delivered after about 30 minutes, with no other updates after. When I called them about this, they basically said it's up to the driver's discretion. This means that when the food finally arrives, it's usually cold. In addition, last time, they charged me for a ranch dipping sauce, but forgot to include it in the order. I'm over this place.\\\"},{\\\"review_date\\\":\\\"2021-07-18 22:18:51\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Got half pepperoni and half multiple toppings because my toddler is a picky eater. They put all of the toppings on one side. This pizza looks like it's been sitting out for a week. Tracker said order complete but the order was not delivered for about 20 mins after. Missing one of the toppings as well.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Domino's Pizza is a restaurant located at 955 Embarcadero Del Mar in Goleta, California. It offers pizza, chicken wings, sandwiches and other food items. The restaurant is open seven days a week from 10:30 am to 1:00 pm. The business has a rating of 2.5 stars out of 5. \\n\\nThe business provides outdoor seating and take-out options. However, they do not offer reservations, Wi-Fi, or validated parking. The ambiance of the restaurant is casual, and they offer music and good food for groups. The business also has a good reputation for having friendly staff who are always ready to assist their customers.\\n\\nOne customer had a positive experience with the business and appreciated the kindness and support of the staff during a difficult time. Another customer had a negative experience with long delivery times and cold food. A third customer had an issue with the toppings on their pizza and the delivery time. Despite these issues, the customer still appreciated the casual atmosphere and good food of the restaurant. Overall, Domino's Pizza offers a variety of food items and a casual dining experience, with a focus on friendly service and good food.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 151,
+  "source_cluster_id": "sha256:78ee9b430ae4406a55260e3859cb02f198346b936b93cc202d31b11af019d5cb",
+  "source_id": "14811",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:5cb34581ba59bab8f034a06bfc10a48145caacde639670469b9a6fb91c55fef0",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2543721559923142,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:f923a0cbf5f7e5125b9046de726bf38e2c4799a2b9689f1dc065397b5e97c528",
+  "human_target": null,
+  "input_tokens": 616,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:f923a0cbf5f7e5125b9046de726bf38e2c4799a2b9689f1dc065397b5e97c528",
+    "feature_hash": "sha256:7fefd7a8859489ba8b51ca003c3ad404b319755c6c043a49c61ebafd7f25abf3",
+    "source_normalized_hash": "ebd53be495c46cdca8549d91d05298b361dcb2117042f055de14e42c1b1f5eaf",
+    "values": [
+      0.41925361273187356,
+      0.693167701863354,
+      0.4393939393939394,
+      0.6666666666666666,
+      0.6363636363636364,
+      0.6666666666666666,
+      0.5807463872681264,
+      0.8773636991028296
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 8,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 616,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 640
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:468c9ed00db614596c6627b6645cd57314c179cee439247e790eab97bb5454cb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 8\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095455,
+    "id": "chatcmpl-r98xPrKNY5IWLCnjiz4nuvLZYsmSL0Rw",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.244,
+      "predicted_n": 24,
+      "predicted_per_second": 42.53478991358348,
+      "predicted_per_token_ms": 23.510166666666667,
+      "prompt_ms": 576.236,
+      "prompt_n": 538,
+      "prompt_per_second": 933.6452425742231,
+      "prompt_per_token_ms": 1.0710706319702603
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 616,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 640
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Prince William Disturbed by Meghan's Missing Engagement Ring\\nMeghan Markle Continues to Don Princess Diana's Treasured Artifacts\\nIn a recent public appearance, Meghan Markle, Duchess of Sussex, was seen wearing the late Princess Diana's Cartier watch.\\nThis event came amidst concerns from Prince William about the absence of Meghan's engagement ring, which holds gems from his mother's collection.\\nThe Duchess donned the watch in a video with the Fisher House Foundation, following the Invictus Games in Dusseldorf, Germany, where she was noticeably not wearing her engagement ring.\\nThe absence of the ring has reportedly caused unease within the palace, with Prince William expressing his concerns through mutual friends. \\\"Not knowing where they are is disturbing for William,\\\" an anonymous source revealed.\\nRecent information from royal insiders suggests that a loose setting on the ring, which required servicing, might be the reason for its absence during the Invictus Games. Despite this, Meghan was seen wearing her wedding ring and an eternity band, a gift from Prince Harry in 2019.\\nThe Cartier Tank Louis Cartier watch, worn by Meghan, was a gift from Princess Diana's father, the 8th Earl Spencer.\\nThe princess began wearing it more frequently after her divorce in 1996. The watch was passed down to Prince Harry after Princess Diana's death, and is now worn by his wife, Meghan.\\nMeghan's engagement ring, given to her by Prince Harry in 2017, features two smaller stones from Princess Diana's collection and a larger, ethically sourced stone from Botswana.\\nFollowing the birth of their first child, Prince Archie, in 2019, the ring was reset on a thin micro-pav\u00e9 band.\", \"original_answer\": \"Here is a summary of the news in 66 words:\\n\\nMeghan Markle wore Princess Diana's Cartier watch at a recent event, raising eyebrows as she was not wearing her engagement ring. The absence of the ring has reportedly caused unease within the palace, with Prince William expressing his concerns. Meghan has been wearing the watch, a gift from Princess Diana's father, more frequently since her divorce in 1996.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 100,
+  "source_cluster_id": "sha256:09679b346a9901fc21ceca1b3baa57371b9c0dc34bfb423c8d3ef64102e5d644",
+  "source_id": "13942",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:f923a0cbf5f7e5125b9046de726bf38e2c4799a2b9689f1dc065397b5e97c528",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

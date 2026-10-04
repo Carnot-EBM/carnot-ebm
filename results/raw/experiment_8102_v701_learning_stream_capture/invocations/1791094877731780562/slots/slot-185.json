@@ -1,0 +1,143 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6710812989622355,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:cd69b93be71832b09dba30259c7f0c3a36754a815616556a2ead6fcea6828faa",
+  "human_target": null,
+  "input_tokens": 1160,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:cd69b93be71832b09dba30259c7f0c3a36754a815616556a2ead6fcea6828faa",
+    "feature_hash": "sha256:340e4943002dc388c12aaae5726408c04dfe37c538a3367eeaec7c08744b43cc",
+    "source_normalized_hash": "061054087727c7052a6ce006bed77a680c4f5d89a0e4e89e16ba964b8fd83a5c",
+    "values": [
+      0.31002132196162047,
+      0.6119402985074627,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.6899786780383795,
+      0.9552238805970149
+    ],
+    "window_count": 35
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1160,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1182
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:6513394cfd84ecc73598a1b84c8b174655739bde7d77f4dc7d2696d3c15eb15c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095577,
+    "id": "chatcmpl-ni73u83CulxHYN07mwuo4tfNYXiwIimf",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 517.474,
+      "predicted_n": 22,
+      "predicted_per_second": 42.51421327448335,
+      "predicted_per_token_ms": 23.521545454545457,
+      "prompt_ms": 1039.328,
+      "prompt_n": 1082,
+      "prompt_per_second": 1041.057298562148,
+      "prompt_per_token_ms": 0.9605619223659889
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1160,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1182
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Foods Containing Potassium. Fruits rich in potassium include bananas, apricots, prunes, dates, cantaloupe, watermelon and strawberries. Foods such as salmon, beans, turkey and fish also contain potassium as do peas, greens, spinach and tomatoes.If you are consuming three of these items a day, you are probably getting enough potassium.o do dark leafy vegetables. Kale, turnip greens, broccoli, brussel sprouts and cabbage are rich sources of calcium. Canned fish (with bones), such as salmon, sardines and mackerel are also good choices. Fruits rich in potassium include bananas, apricots, prunes, dates, cantaloupe, watermelon and strawberries.\\\\n\\\\npassage 2:Foods Rich In Calcium. Foods such as milk, cheese and yogurt contain calcium. So do dark leafy vegetables. Kale, turnip greens, broccoli, brussel sprouts and cabbage are rich sources of calcium. Canned fish (with bones), such as salmon, sardines and mackerel are also good choices.Fruits rich in potassium include bananas, apricots, prunes, dates, cantaloupe, watermelon and strawberries.Foods such as salmon, beans, turkey and fish also contain potassium as do peas, greens, spinach and tomatoes. If you are consuming three of these items a day, you are probably getting enough potassium.o do dark leafy vegetables. Kale, turnip greens, broccoli, brussel sprouts and cabbage are rich sources of calcium. Canned fish (with bones), such as salmon, sardines and mackerel are also good choices. Fruits rich in potassium include bananas, apricots, prunes, dates, cantaloupe, watermelon and strawberries.\\\\n\\\\npassage 3:Food. Magnesium is widely distributed in plant and animal foods and in beverages. Green leafy vegetables, such as spinach, legumes, nuts, seeds, and whole grains, are good sources [ 1, 3 ]. In general, foods containing dietary fiber provide magnesium.Magnesium is also added to some breakfast cereals and other fortified foods.Some types of food processing, such as refining grains in ways that remove the nutrient-rich germ and bran, lower magnesium content substantially [ 1 ]. Selected food sources of magnesium are listed in Table 2.n general, foods containing dietary fiber provide magnesium. Magnesium is also added to some breakfast cereals and other fortified foods. Some types of food processing, such as refining grains in ways that remove the nutrient-rich germ and bran, lower magnesium content substantially [ 1 ].\\\\n\\\\n\\\",\\\"question\\\":\\\"food rich in potassium magnesium and calcium\\\"}\", \"original_answer\": \"Based on the given passages, here are some foods that are rich in potassium, magnesium, and calcium:\\n\\nPotassium:\\n\\n* Bananas\\n* Apricots\\n* Prunes\\n* Dates\\n* Cantaloupe\\n* Watermelon\\n* Strawberries\\n* Salmon\\n* Beans\\n* Turkey\\n* Fish\\n* Peas\\n* Greens\\n* Spinach\\n* Tomatoes\\n\\nCalcium:\\n\\n* Milk\\n* Cheese\\n* Yogurt\\n* Dark leafy vegetables (such as kale, turnip greens, broccoli, brussels sprouts, and cabbage)\\n* Canned fish (with bones) (such as salmon, sardines, and mackerel)\\n\\nMagnesium:\\n\\n* Spinach\\n* Legumes\\n* Nuts\\n* Seeds\\n* Whole grains\\n* Breakfast cereals (fortified)\\n* Other fortified foods\\n\\nTherefore, some foods that are rich in potassium, magnesium, and calcium include:\\n\\n* Spinach (potassium, magnesium, calcium)\\n* Salmon (potassium, magnesium, calcium)\\n* Kale (potassium, magnesium, calcium)\\n* Apricots (potassium, magnesium)\\n* Bananas (potassium, magnesium)\\n* Prunes (potassium, magnesium)\\n* Dates (potassium, magnesium)\\n* Cantaloupe (potassium, magnesium)\\n* Watermelon (potassium, magnesium)\\n* Strawberries (potassium, magnesium)\\n* Beans (potassium, magnesium)\\n* Turkey (potassium, magnesium)\\n* Fish (potassium, magnesium)\\n* Peas (potassium, magnesium)\\n* Greens (potassium, magnesium)\\n* Tomatoes (potassium, magnesium)\\n* Milk (calcium)\\n* Cheese (calcium)\\n* Yogurt (calcium)\\n* Broccoli (calci\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 186,
+  "source_cluster_id": "sha256:358306f465f9056394683820a4846b2506507400156dc47549ce5a6aabb8b7be",
+  "source_id": "14298",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:cd69b93be71832b09dba30259c7f0c3a36754a815616556a2ead6fcea6828faa",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4169598349835724,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8f5a3e00a052dc5b3497e521d161f39e1db031689e4966d88a87ce0407a35187",
+  "human_target": null,
+  "input_tokens": 760,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8f5a3e00a052dc5b3497e521d161f39e1db031689e4966d88a87ce0407a35187",
+    "feature_hash": "sha256:c666a8f8f1c7ca26556c76a787ca8affd2c4108bcfea75485103fda5ffd2ca94",
+    "source_normalized_hash": "08ddcc006ce0bd94cfb2f4bd813467d88cb8dcc30303366a6553f3b611914558",
+    "values": [
+      0.15834534320141516,
+      0.39860207462406366,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.6416666666666666,
+      0.6666666666666666,
+      0.8416546567985849,
+      0.9741669905787846
+    ],
+    "window_count": 20
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 760,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 783
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:eda7939796ae90ec23415dc24f9213e186da19a2402a605ec077131045623029",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095371,
+    "id": "chatcmpl-kbO3o2T1zSGMeYLZAWRDik3nCobAbmwM",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 543.927,
+      "predicted_n": 23,
+      "predicted_per_second": 42.28508605015011,
+      "predicted_per_token_ms": 23.649,
+      "prompt_ms": 678.092,
+      "prompt_n": 682,
+      "prompt_per_second": 1005.7632297682321,
+      "prompt_per_token_ms": 0.9942697947214076
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 760,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 783
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"22 N Milpas St, Ste B\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Donuts, Restaurants, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"5:0-15:0\\\",\\\"Monday\\\":\\\"5:0-15:0\\\",\\\"Saturday\\\":\\\"5:0-15:0\\\",\\\"Sunday\\\":\\\"5:0-14:0\\\",\\\"Thursday\\\":\\\"5:0-15:0\\\",\\\"Tuesday\\\":\\\"5:0-15:0\\\",\\\"Wednesday\\\":\\\"5:0-15:0\\\"},\\\"name\\\":\\\"Eller's Donut House\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-09-04 17:12:09\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Wife and I split a cinnamon roll and an apple fritter.  Huge, fresh, awesome!  Most cinnamon I've ever seen in a roll.  Coffee could be better though.  Otherwise, excellent.\\\"},{\\\"review_date\\\":\\\"2021-08-23 15:49:24\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"A nice version of a LA doughnut shop.  Good donuts, very reasonable prices.  Recommended.\\\"},{\\\"review_date\\\":\\\"2021-08-18 03:21:36\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Visiting SB and found this Pink Box donut gem! ABSOLUTELY amazing and super fresh! Went two days in a row and already want to go back! The OG glazed were a 10/10! Highly recommend!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Eller's Donut House is a well-rated local business located at 22 N Milpas St, Ste B, Santa Barbara, CA. The business, which operates from 5:00 to 15:00 on most days and until 14:00 on Sundays, specializes in donuts and also provides other food options. Customers particularly praised the freshness and size of their cinnamon rolls and apple fritters. Their donuts, especially the original glazed, have been referred to as \\\"a 10/10\\\" and \\\"absolutely amazing.\\\" However, one customer mentioned that their coffee could be improved. The donut house provides take-out services and has a parking lot and a garage, but does not offer valet or street parking. It currently holds an impressive overall rating of 4.5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 42,
+  "source_cluster_id": "sha256:99c3be62f7d04c0e6f6c452df4b1e04c4d81469ce157c0ea0f5717498cf05658",
+  "source_id": "14992",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8f5a3e00a052dc5b3497e521d161f39e1db031689e4966d88a87ce0407a35187",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

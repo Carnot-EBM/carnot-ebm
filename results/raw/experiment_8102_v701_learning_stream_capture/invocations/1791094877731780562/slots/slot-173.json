@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5738786529982463,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:2ec1236895b8aa809e88e0973ba042b0e675ca51d1175b77439b286f19e14f33",
+  "human_target": null,
+  "input_tokens": 964,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:2ec1236895b8aa809e88e0973ba042b0e675ca51d1175b77439b286f19e14f33",
+    "feature_hash": "sha256:22515c47289e9db63e14e33eeea7542f7ca28c8d255431466053e58031810715",
+    "source_normalized_hash": "c1ae713929ccc278c5f945e7bf5a0b0c79ec6723c48e65fb5bd6779ddcdffde2",
+    "values": [
+      0.23956181073828134,
+      0.4995903900021547,
+      0.6363636363636364,
+      0.8,
+      0.1,
+      0.1,
+      0.7604381892617187,
+      0.9592857142857143
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 964,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 987
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:4516547cd00ff94f2b9ef67a1f3f03741327755c33c936f2b8ff7570cd1dd1fe",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095562,
+    "id": "chatcmpl-eW8AwRnLKzOCB6QOWfqn1gJggtMyM7Vi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.55,
+      "predicted_n": 23,
+      "predicted_per_second": 42.549255388030716,
+      "predicted_per_token_ms": 23.502173913043475,
+      "prompt_ms": 881.176,
+      "prompt_n": 886,
+      "prompt_per_second": 1005.4745022560759,
+      "prompt_per_token_ms": 0.9945553047404063
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 964,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 987
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3925 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":null,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Fast Food, Restaurants, Pizza, Salad\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-22:0\\\",\\\"Sunday\\\":\\\"11:0-22:0\\\",\\\"Thursday\\\":\\\"11:0-22:0\\\",\\\"Tuesday\\\":\\\"11:0-18:0\\\",\\\"Wednesday\\\":\\\"11:0-22:0\\\"},\\\"name\\\":\\\"Blaze Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-08 20:58:09\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Loooove coming here! I get the allergy GF crust build your own pizza. The staff is really nice & they are pretty fast at cooking your pizza. I checked their ingredients online for the sauce & crust- no additives!\\\"},{\\\"review_date\\\":\\\"2021-12-14 21:41:49\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"The pizza is great there but the customer service could need a lot of improvement. In a couple of occasions I've gone there and the person that rings is up has this type of attitude like he is bugged that were there doesn't want to help us with our scan code and gets bothered if I ask if we ask for ranch or anything else. So definitely I need some improvement they need really need to work on their customer service they need to be a little bit more humble and maybe not everyone that goes there gets treated that way but definitely all customers should be treated with kindness and respect.\\\"},{\\\"review_date\\\":\\\"2021-11-13 21:52:43\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"The first time we ordered from here it was really good. Now, not so much. The toppings tasted good but the cheese was barely there. What is pizza without cheese? The gf crust was rolled as thin as a tortilla. I had to roll the slices like a tortilla to eat them as they would not hold the toppings. It was sad pizza.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Blaze Pizza based on the provided structured data:\\n\\nBlaze Pizza is a fast food restaurant located in Santa Barbara, CA. They offer pizza, salads, and other menu items. The restaurant has a 3.5-star rating based on reviews from customers. The hours of operation are Monday through Sunday from 11am to 10pm. The restaurant offers outdoor seating and takeout, but does not have WiFi or reservations available. The atmosphere is casual and the staff is known for being friendly and efficient.\\n\\nOne reviewer praised the restaurant for having no additives in their sauce and crust, while another noted that the customer service could use improvement. A third reviewer expressed disappointment with the amount of cheese on their pizza and found the crust to be too thin. Overall, the reviews suggest that Blaze Pizza is a solid option for quick, casual dining with good food and friendly service, but may require some improvement in terms of customer service and consistency in their dishes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 174,
+  "source_cluster_id": "sha256:19d6bc2ce67ffc21ca876bd12c0fe5cdc6a46f44798ccbf3fea5e319e6ce827e",
+  "source_id": "14880",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:2ec1236895b8aa809e88e0973ba042b0e675ca51d1175b77439b286f19e14f33",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

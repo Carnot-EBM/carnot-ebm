@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6900328260380775,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:787b0da863b71e93afe785173e354f7274e313b6db8c0ef97eb9f886a4fedafb",
+  "human_target": null,
+  "input_tokens": 1081,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:787b0da863b71e93afe785173e354f7274e313b6db8c0ef97eb9f886a4fedafb",
+    "feature_hash": "sha256:46f5ad86ef5e6125759d6c2d7ef40cf55c8e8d74c39cf7e796fcf1c6e9479425",
+    "source_normalized_hash": "98e1f22fc66db283a20fda0e6b2b534b30f6b19311fc4478ca1396dd1dd93261",
+    "values": [
+      0.19005620395195494,
+      0.34973201993156094,
+      0.18181818181818182,
+      0.18181818181818182,
+      0.0,
+      0.0,
+      0.8099437960480451,
+      0.974841048828203
+    ],
+    "window_count": 26
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1081,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1105
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:b68da96f786c7ab0fae5c656524b7bbb00785d3fd7e081799fde8f2cb25a2f91",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095360,
+    "id": "chatcmpl-7LmUD4FrgHmCLQ39WT7plQdfbxJY6HLv",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 561.828,
+      "predicted_n": 24,
+      "predicted_per_second": 42.71770007902775,
+      "predicted_per_token_ms": 23.409499999999998,
+      "prompt_ms": 953.511,
+      "prompt_n": 1003,
+      "prompt_per_second": 1051.9018658410862,
+      "prompt_per_token_ms": 0.9506590229312063
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1081,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1105
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"633 E Cabrillo Blvd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"paid\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Bars, Hotels, Restaurants, Steakhouses, Hotels & Travel, Seafood, Nightlife, Event Planning & Services, Wine Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-22:0\\\",\\\"Tuesday\\\":\\\"17:0-22:0\\\",\\\"Wednesday\\\":\\\"17:0-22:0\\\"},\\\"name\\\":\\\"Rodney's Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-11-24 18:54:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Amazing dinner at Rodney's Grill.  The foie gras was the best I've ever eaten! And the steak with chantrells was heavenly!  Kudos to this new chef, Chef Moissin!!!  Thanks for making our Thanksgiving dinner so awesome!  Our waitress from Montenegro was super nice also!\\\"},{\\\"review_date\\\":\\\"2018-11-23 02:15:24\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I know the chef is new and that the Hilton just took over this location, but we had our Thanksgiving dinner there today, and it felt like they had always been there. From the greeting at the door, to the service, the cocktails, the meals, it was excellent. Can't wait to go back for dinner on a non holiday. FYI the picky eater ate every single bit of his Turkey dinner... the lobster risotto was flawless with the fish course.\\\"},{\\\"review_date\\\":\\\"2017-11-11 03:48:11\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I got the Pecan crusted halibut and it was amazingly scrumptious delicious awesomeness.   Whatever the buttery sauce was that comes with it literally made fireworks go off inside of me when I ate it.  \\\\n\\\\nMy wife had the Kansas City strip steak and it also was really good.  Her sauce was a red wine reduction and it was also incredible.  \\\\n\\\\nWe had the Parker station Pino Noir red wine and it was smooth and delicious.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Rodney's Grill is a stylish steakhouse located in the heart of Santa Barbara, offering an intimate and cozy atmosphere perfect for a night out with friends or a romantic evening. With a menu that boasts top-quality steaks, fresh seafood, and delicious appetizers, this restaurant is sure to impress even the most discerning palates. The service is exceptional, with friendly and attentive staff who will cater to your every need.\\n\\nThe restaurant's recent change in management has not affected the quality of the food, with reviews praising the new chef's expertise in creating dishes that are both flavorful and visually appealing. The foie gras and steak with chantrells are standout options, and the lobster risotto is a must-try for seafood lovers. The menu also includes a variety of vegetarian and gluten-free options, ensuring that everyone can enjoy a delicious meal at Rodney's Grill.\\n\\nThe ambiance is sophisticated yet relaxed, with a classy decor that sets the tone for a special occasion. Although the restaurant does not have outdoor seating, the comfortable and spacious interior makes up for it. Additionally, Rodney's Grill offers takeout and delivery options for those who prefer to enjoy their meals at home.\\n\\nOverall, Rodney's Grill is an excellent choice for anyone looking for a high-quality dining experience in Santa Barbara. With its talented chefs, exceptional service, and cozy atmosphere, this restaurant is sure to leave a lasting impression on all who visit.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 35,
+  "source_cluster_id": "sha256:5bcae19b01fba0feecc4753593cf7077e9ff66df346f84beb13763fadce61581",
+  "source_id": "13741",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:787b0da863b71e93afe785173e354f7274e313b6db8c0ef97eb9f886a4fedafb",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2368694669567049,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:7d67036d632ea1c7e86186d20d0aa23ea7898b83fb0ba43d8f1ab5f06400711d",
+  "human_target": null,
+  "input_tokens": 564,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:7d67036d632ea1c7e86186d20d0aa23ea7898b83fb0ba43d8f1ab5f06400711d",
+    "feature_hash": "sha256:e5f2b75ab963612c9f497a7ec3579ee572b6b8ad091bc2eccc7b7f6dc6e9f559",
+    "source_normalized_hash": "bc438895fb04ef9f72639d50563d253c4faa37526d3b0185f2d0c1a868230373",
+    "values": [
+      0.30951240978700933,
+      0.554321422284809,
+      0.0,
+      0.0,
+      0.225,
+      0.25,
+      0.6904875902129907,
+      0.9067417708149974
+    ],
+    "window_count": 30
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 4,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 564,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 589
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:4cdb060e419a6b94b93240036a24c709c3012d7151e749dca203e4e40d2bd8d4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 4\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095358,
+    "id": "chatcmpl-ASlplR35eUIa0kqISpEI9WEnQEyPkf0F",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 584.554,
+      "predicted_n": 25,
+      "predicted_per_second": 42.767648497829114,
+      "predicted_per_token_ms": 23.38216,
+      "prompt_ms": 524.407,
+      "prompt_n": 486,
+      "prompt_per_second": 926.7610844248836,
+      "prompt_per_token_ms": 1.0790267489711936
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 564,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 589
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"An Alaska Airlines flight was forced to make an emergency landing Monday after its pilot reported hearing unusual banging. Flight 448, which had been bound for Los Angeles, returned to Seattle. Upon landing, a ramp agent was discovered inside the front cargo hold, according to a statement from the airline. The agent, who is an employee of Alaska contractor Menzies Aviation, told authorities he had fallen asleep, the statement said. He appeared to be in OK condition. The cargo hold is pressurized and temperature controlled. The plane was also only in the air for 14 minutes, Alaska Airlines said. CNN affiliate KOMO spoke to Marty Collins, a passenger on the plane. \\\"We just took off for L.A. regular and then about, oh, about five minutes into the flight the captain came on and said we were going back and we'd land within five to seven minutes, and we did,\\\" Collins said. \\\"When we landed was when all the trucks and the police and the fire trucks surrounded the plane.\\\" The agent was taken to an area hospital as a precaution. He passed a drug test and was discharged, Alaska Airlines said. He'd been on a four-person team loading baggage onto the flight. All ramp employees have security badges, and undergo full criminal background checks before being hired, said Alaska Airlines. A total of 170 passengers and six crew members were on Flight 448. After returning to Seattle, the aircraft took off again, arriving in Los Angeles on Monday evening.\\n\", \"original_answer\": \"An Alaska Airlines flight made an emergency landing after the pilot heard strange noises coming from the front cargo hold. An employee of the cargo company was found inside the hold, unresponsive. He later passed a drug test and was discharged. The incident occurred on Flight 448, which was traveling from Seattle to Los Angeles with 170 passengers and six crew members.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 34,
+  "source_cluster_id": "sha256:0383c51e3cfa37550240173c4b0e4775c802a98f4839d0dedb4cb3b5d3a58e1c",
+  "source_id": "11901",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:7d67036d632ea1c7e86186d20d0aa23ea7898b83fb0ba43d8f1ab5f06400711d",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

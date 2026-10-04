@@ -1,0 +1,170 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.8203874860191718,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:a95f6330e5cc89113144e0796a07a8d6c2f650e807cdfe75ef61308fc6afe520",
+  "human_target": null,
+  "input_tokens": 1186,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:a95f6330e5cc89113144e0796a07a8d6c2f650e807cdfe75ef61308fc6afe520",
+    "feature_hash": "sha256:bfdfb911a430f0327d85d63af9ecd976c9c6b75db3e0b10674a86564dcfcf147",
+    "source_normalized_hash": "e1a16e039bf3e381608d770d9362a4d4de902f824a722e343e6f98edd1b8076b",
+    "values": [
+      0.20896910567272756,
+      0.4078385619220465,
+      0.4782608695652174,
+      0.6,
+      0.3826086956521739,
+      0.4,
+      0.7910308943272725,
+      0.9449745052285887
+    ],
+    "window_count": 92
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1186,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1209
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:350b63cd8a0dc9a7a60c33ef83e3495c3b31d210c37e9392cc03b7170867f621",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095387,
+    "id": "chatcmpl-j5DfYoBJr7X6VEX9JBsrHytXMiEM0dXm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.21,
+      "predicted_n": 23,
+      "predicted_per_second": 42.65499527085922,
+      "predicted_per_token_ms": 23.44391304347826,
+      "prompt_ms": 1043.867,
+      "prompt_n": 1108,
+      "prompt_per_second": 1061.437903487705,
+      "prompt_per_token_ms": 0.9421182310469314
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1186,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1209
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Kathmandu, Nepal (CNN)We came on a commercial flight to Kathmandu. Blue tarps were visible from the sky for people to hide under -- signs that there was something wrong. We had to circle the airport for a couple of hours. There were a couple of issues. There was an aftershock this afternoon, so they were checking the runway for damage. Military and aid flights have priority, and a few military planes -- Indian military planes -- were going in, trying to bring in aid. Whether they did is unclear. When we landed at the airport, it was wet and cold. A couple of thousand people were lining the road to the entrance to the airport trying to get out. But there's no way to get out, really. There were torrential rainstorms for a couple of hours, and with the strong aftershock a couple of hours ago, no one wants to go inside. The residents of Kathmandu sure don't. You can see some structural damage to buildings. Most buildings are not up to high construction standards. Fallen: Nepal's historic landmarks. Driving through the city, there's not a huge amount of visible damage. There's some damage to houses and buildings, but it's not as visual as the Haiti earthquake (of 2010). We were able to drive the main road to the hotel we're staying at, but they're not allowing anyone inside because of the aftershocks. The guests are in a big tent used for functions on the lawn. People are squeezed in. There are probably about 100 people in there. The tents are covered, but water is seeping in from streets puddled with water, especially around the edges of the tent. So people are outside in the rain with no shelter. It's visually stark, with people in the streets. It's colder than usual this time of year. I'm cold and damp. When it's almost May, it's usually much hotter. There's very little power in the city -- no power to speak of, no drinking water. For the residents, it's really bad. Very soon, they will need shelter. Temporary shelters have been put up, but very few -- 16 -- by the government. It looks like a city where buildings have been abandoned. People are hanging out in public squares and at intersections to avoid rubble from buildings. Those who survived -- and those who didn't. There are issues with fuel in the city, and driving in, all the stores were shuttered. You occasionally see a cart with food or a few bottles of drinking water, but for the most part, nothing is being sold in the city. I don't think they're very concerned about looting, and there's no military in the streets, but they will have to get water and food in the city soon. Communal kitchens have been set up for cooking. Not by the government -- people set them up on their own. People are beside themselves in shock. Their biggest concern now is the structures, needing a place for shelter, to hide from the elements and sleep. Food will become the biggest concern in the coming days. Kathmandu isn't the epicenter though. No one's sure what it's like at the epicenter. People haven't been able to get to outlying areas. We haven't been able to corroborate this, but the people we're talking to here say there's damage to the villages outside Kathmandu -- thousands of houses damaged to the north, closer to the epicenter. CNN's Ingrid Formanek reported from Kathmandu and Mark Morgenstein wrote in Atlanta.\\n\", \"original_answer\": \"CNN reports on the devastation in Nepal, stating that the damage is not visually comparable to the Haiti earthquake of 2010. With further aftershocks, residents are fearful of entering buildings, and aid efforts are being hampered by torrential rainstorms. The lack of basic supplies such as food, water and shelter is of major concern; the report says that the government has only provided 16 temporary shelters so far. There are also fuel shortages, and most stores in the city are closed. The report suggests that the situation may be even worse in outlying areas and closer to the epicentre, but this has not been confirmed due to the lack of access to these areas.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 52,
+  "source_cluster_id": "sha256:abb2a5d4bddab1656aab672a7126723c9f2b96297d47a589f2af04d23696813c",
+  "source_id": "11793",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:a95f6330e5cc89113144e0796a07a8d6c2f650e807cdfe75ef61308fc6afe520",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4049454749329016,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:a21a513d3155b485e549230531cbea6001afba065051e0f224bb0d18209771a2",
+  "human_target": null,
+  "input_tokens": 772,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:a21a513d3155b485e549230531cbea6001afba065051e0f224bb0d18209771a2",
+    "feature_hash": "sha256:f036812eef27c4a97cb7ad9d195f080332f280a682aaf20e7c7439c6fc51adfa",
+    "source_normalized_hash": "1d666d49913c0ff8480fa8a071aae32d098d4b1956e2506db0b18ca4f77d2e2e",
+    "values": [
+      0.297326834045584,
+      0.6468571937321937,
+      0.0,
+      0.0,
+      0.20625,
+      0.25,
+      0.702673165954416,
+      0.9419960826210827
+    ],
+    "window_count": 40
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 772,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 796
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:20cdcc2c2621a109d7f23e1d44cd0057bbf4ebcfde78d6f40e78fd0d92b04e46",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095430,
+    "id": "chatcmpl-8JigX3FCc4l6CwfnexqAi6nzIFgaUMMv",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.385,
+      "predicted_n": 24,
+      "predicted_per_second": 42.52416346997174,
+      "predicted_per_token_ms": 23.516041666666666,
+      "prompt_ms": 687.929,
+      "prompt_n": 694,
+      "prompt_per_second": 1008.8250386304401,
+      "prompt_per_token_ms": 0.9912521613832853
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 772,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 796
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Rome (CNN)Muslims who were among migrants trying to get from Libya to Italy in a boat this week threw 12 fellow passengers overboard -- killing them -- because the 12 were Christians, Italian police said Thursday. Italian authorities have arrested 15 people on suspicion of murdering the Christians at sea, police in Palermo, Sicily, said. Why migrants are dying to get to Italy. The original group of 105 people left Libya on Tuesday in a rubber boat. Sometime during the trip north across the Mediterranean Sea, the alleged assailants -- Muslims from the Ivory Coast, Mali and Senegal -- threw the 12 overboard, police said. Other people on the voyage told police that they themselves were spared \\\"because they strongly opposed the drowning attempt and formed a human chain,\\\" Palermo police said. The boat was intercepted by an Italian navy vessel, which transferred the passengers to a Panamanian-flagged ship. That ship docked in Palermo on Wednesday, after which the arrests were made, police said. 'I enter Europe or I die': Desperate migrants rescued this week off Italy. The 12 who died were from Nigeria and Ghana, police said. Thousands of people each year make the dangerous sea journey from North Africa to Europe's Mediterranean coast, often aboard vessels poorly equipped for the trip. Many of them attempt the voyage to flee war and poverty in Africa and the Middle East. More than 10,000 people have arrived on Italian shores from Libya since last weekend alone, according to the Italian coast guard. Many die each year while attempting the voyage, often when boats capsized. Last year at least 3,200 died trying to make the trip. Since 2000, according to the International Organization for Migration, almost 22,000 people have died fleeing across the Mediterranean. The IOM reported Thursday the latest boat to sink in trying to make the journey. Only four people survived from the original 45 on board, bringing the estimated death toll so far this year close to a thousand. CNN's Hada Messia reported from Rome, and CNN's Livia Borghese reported from Augusta, Sicily. CNN's Jason Hanna wrote in Atlanta. CNN's Ben Wedeman contributed to this report.\\n\", \"original_answer\": \"Fifteen people have been arrested on suspicion of murdering 12 fellow passengers on a boat from Libya to Italy because they were Christians, according to Italian police. The Muslims from Ivory Coast, Mali, and Senegal allegedly threw the Christians overboard during the journey. Those who survived said they were spared because they opposed the drowning attempt and formed a human chain. Thousands of people attempt the dangerous sea journey from North Africa to Europe each year to escape war and poverty, with many dying in the process.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 83,
+  "source_cluster_id": "sha256:288b2b651355ecbe384893fe6df2e86a5e8da383a1627ed97bc9ad28bda4b34a",
+  "source_id": "11983",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:a21a513d3155b485e549230531cbea6001afba065051e0f224bb0d18209771a2",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

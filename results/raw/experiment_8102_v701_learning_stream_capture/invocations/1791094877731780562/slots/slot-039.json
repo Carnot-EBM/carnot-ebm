@@ -1,0 +1,126 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2042698150034994,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:0259268f9af7a73a225ef92a6d166df3a9b8393402b5b1bf32a218761ed4cd6c",
+  "human_target": null,
+  "input_tokens": 419,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:0259268f9af7a73a225ef92a6d166df3a9b8393402b5b1bf32a218761ed4cd6c",
+    "feature_hash": "sha256:348bd5f77e07450f5e762212a2a420d53e845b8629ef920ff246a04367ab88be",
+    "source_normalized_hash": "b3b94b122ab77e8d415d2a2f20b4de988760b0b4e5d963014283b08b82d839a1",
+    "values": [
+      0.5,
+      0.7149758454106281,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      0.6714975845410629
+    ],
+    "window_count": 4
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 419,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 443
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:fdf6395ce9112e773680ea28d9e6e203e8f00e51e8876444208e49c01c53f706",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095368,
+    "id": "chatcmpl-iGOCq3BujVwhcVKt23QS93R0V5IzWmzP",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 560.665,
+      "predicted_n": 24,
+      "predicted_per_second": 42.8063103635861,
+      "predicted_per_token_ms": 23.361041666666665,
+      "prompt_ms": 434.575,
+      "prompt_n": 341,
+      "prompt_per_second": 784.6746821607318,
+      "prompt_per_token_ms": 1.2744134897360704
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 419,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 443
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:In electrical wiring, a light switch is a switch, most commonly used to operate electric lights, permanently connected equipment, or electrical outlets. Portable lamps such as table lamps may have a light switch mounted on the socket, base, or in-line with the cord. Manually operated on/off switches may be substituted by dimmer switches that allow controlling the brightness of lamps as well as turning them on or off, time-controlled switches, occupancy-sensing switches, and remotely controlled switches and dimmers.\\\\n\\\\npassage 2:Product - Instapark SRC-T1R3 Indoor Programmable Wireless Light Socket On/Off Switch Remote Control Kit with 1 Remote Control and 3 E27 Light Bulb Sockets\\\\n\\\\npassage 3:AU US Plug On/Off Switch E27 Screw Light Bulb Base Lamp Holder Socket Adapter Product - Refrigerator Light Bulb Socket for General Electric AP2060923 PS299782, WR2X9391 Product Image\\\\n\\\\n\\\",\\\"question\\\":\\\"what is a lamp socket switch?\\\"}\", \"original_answer\": \"Based on the given passages, a lamp socket switch is a switch that controls the power supply to a lamp or light fixture through an electrical socket. It can be manually operated, dimmer, timed, or remotely controlled to turn the lamp on or off.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 40,
+  "source_cluster_id": "sha256:937e4fcb49277b3480d11086d67dbef7a5c8e5d4cf46ad57a5a484acfe03ab2f",
+  "source_id": "15346",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:0259268f9af7a73a225ef92a6d166df3a9b8393402b5b1bf32a218761ed4cd6c",
+  "visible_ids": [
+    0,
+    1,
+    2
+  ]
+}

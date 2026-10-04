@@ -1,0 +1,147 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.321062118979171,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:2090295e95b66dfe3183e8e683ee0727f996e10b7cd44cf16aace6b8dc026f60",
+  "human_target": null,
+  "input_tokens": 746,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:2090295e95b66dfe3183e8e683ee0727f996e10b7cd44cf16aace6b8dc026f60",
+    "feature_hash": "sha256:259c02653e7c58ed74c324b785adce4c7bc60001e0fcdfa016c96270953434a2",
+    "source_normalized_hash": "69729b2edc85e175c501ebcf6d2582cd82fe6e0b541540dbe3fd236554929901",
+    "values": [
+      0.24483733488310144,
+      0.44445836814257866,
+      0.17391304347826086,
+      1.0,
+      0.2,
+      0.2,
+      0.7551626651168984,
+      0.9389445836814257
+    ],
+    "window_count": 46
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 746,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 769
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:783e6c1a4ca4af966f2f98c95c2d505fff08c924df428492e5ca9c05cafb41be",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095565,
+    "id": "chatcmpl-GkNAXfdJ3osHreNA6SnzsLc3MFwxxNN6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.413,
+      "predicted_n": 23,
+      "predicted_per_second": 42.560042041919786,
+      "predicted_per_token_ms": 23.49621739130435,
+      "prompt_ms": 669.653,
+      "prompt_n": 668,
+      "prompt_per_second": 997.5315573886774,
+      "prompt_per_token_ms": 1.0024745508982036
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 746,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 769
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"'Young and the Restless' Spoilers: Nick Threatens Adam, Breaks Up With Sally Over The Kiss?\\nThe Young and the Restless (Y&R) spoilers tease that Nick Newman (Joshua Morrow) will reach his boiling point with Adam Newman (Mark Grossman) and Sally Spectra (Courtney Hope). She Knows Soaps reports that Nick will learn that Sally and Nick kissed, which leads to another heated confrontation between the Newman brothers.\\nSally admits Adam kissed her when Nick was away on business. She tells Nick that she's having conflicting feelings about it. That leads to Nick concluding that Sally is still in love with Adam, which could be a dealbreaker for him.\\nSoaps Spoilers reports that Nick confronts Adam about kissing his girlfriend. He wonders what Adam's goal could be with Sally. Y&R spoilers say that Adam informs Nick that Sally kissed him back, and he's confident she has unresolved feelings for him. Nick threatens Adam, telling him to stay \\\"far away\\\" from Sally.\\nNick knows Adam is right. After all, Sally admitted to Nick that she wasn't in love with him yet. She said she loves him but is not in love with him. The bombshell hurt him, but he respected Sally's honesty.\\nThe Young and the Restless spoilers say that he calls Sally after Nick chats with Adam. He wants to meet to talk about Adam. He decides that his relationship with Sally is going nowhere and decides to end their relationship. He points out that they've been dating long enough that she should be in love with him.\\nNick decides to walk away, allowing Adam to make his move to mend his relationship with Sally. But Sally may not be ready to open her heart to Adam, at least not yet.\\nY&R fans, do you think Sally and Adam will reunite? Keep watching The Young and the Restless, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"original_answer\": \"Sure! Here's a summary of the article in 84 words or less:\\n\\nNick Newman (Joshua Morrow) learns that his girlfriend Sally Spectra (Courtney Hope) kissed his brother Adam Newman (Mark Grossman) and confronts them both. Adam says Sally kissed him back and has unresolved feelings for him. Nick threatens Adam to stay away from Sally and later ends his relationship with her, feeling that she should be in love with him by now. The door may be open for Adam and Sally to reunite, but it's unclear if Sally is ready.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 176,
+  "source_cluster_id": "sha256:7933ead027e74cf95ab5ac76d40e08e3118627041477ee2797df5e61e4ef9437",
+  "source_id": "13500",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:2090295e95b66dfe3183e8e683ee0727f996e10b7cd44cf16aace6b8dc026f60",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

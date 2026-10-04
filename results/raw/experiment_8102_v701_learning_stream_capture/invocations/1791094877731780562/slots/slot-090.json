@@ -1,0 +1,154 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4811078270431608,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:6f253491315aff94a76fb07b054e6dbefe0705ab876e9574be084012ac01043a",
+  "human_target": null,
+  "input_tokens": 862,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:6f253491315aff94a76fb07b054e6dbefe0705ab876e9574be084012ac01043a",
+    "feature_hash": "sha256:0a0b899679f87c203a1d2f4dd271604ebfc5dbbfb804dc31387ae02f312a4223",
+    "source_normalized_hash": "d1dece80b92420a50563253a29c4406b4c10110d16cea4b0b2e67334de2c1416",
+    "values": [
+      0.2407005772005772,
+      0.47424242424242424,
+      0.13333333333333333,
+      1.0,
+      0.2,
+      0.2,
+      0.7592994227994228,
+      0.9575324675324675
+    ],
+    "window_count": 60
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 862,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 885
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:b14ce2784f643d72a09d8bb593a5075efbf0933a539ed88bb12f9b12d01abe2a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095442,
+    "id": "chatcmpl-CAX55mXxL9EHcHEZoidNHSDSNTpZFc99",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.586,
+      "predicted_n": 23,
+      "predicted_per_second": 42.54642184592276,
+      "predicted_per_token_ms": 23.503739130434784,
+      "prompt_ms": 818.428,
+      "prompt_n": 784,
+      "prompt_per_second": 957.9339905281832,
+      "prompt_per_token_ms": 1.0439132653061225
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 862,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 885
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"'Young and the Restless' Spoilers: Ashley Plots Against Tucker, Fakes A Reunion To Get Dirt On Him?\\nThe Young and the Restless (Y&R) spoilers for Wednesday, October 25, tease that Ashley Abbott (Eileen Davidson) returns to Genoa City with a plot to take down Tucker McCall (Trevor St. John). Soaps Spoilers reports that Ashley wants to use Tucker's love for her to get dirt on his place for Jabot, promising to keep Jack Abbott (Peter Bergman) in the loop.\\nAshley surprises Diane Jenkins (Susan Walters) in the Abbott living room. Diane tells Ashley that Jack will be happy to see her. Later, Jack shows up with Billy Abbott (Jason Thompson) to greet Ashley. They fill her in on Tucker's plan to take over Jabot. Ashley doesn't seem surprised, adding without her help, they will fail to stop him.\\nShe Knows Soaps reports that Ashley has a plan. She wants to fake a reunion with Tucker. She's sure he would trust her enough to spill his plan. That way, they would know how to stop and drive him out of Genoa City for good.\\nThe Young and the Restless spoilers say that Jack opposes Ashley's plan. He doesn't want his sister anywhere near Tucker, as he is unpredictable and unstable. Ashley informs Jack that she's not asking; she's telling him her plan. She can handle Tucker as long as she can earn his trust.\\nAshley shares that Tucker is why she's back. He called her and asked to reunite. She agreed to talk to him about it. She believes this is their best shot at defeating him and protecting their father's legacy.\\nMeanwhile, at Audra Charles' (Zuleyka Silver) suite, Tucker asks her if she's managed to bring Kyle Abbott (Michael Mealor) into the fold. She confirms Kyle is on board with the idea and will help them get control of Jabot.\\nThe Young and the Restless spoilers say Kyle wants to succeed at Jabot. He doesn't believe his father will ever give him a chance at the top spot. He agrees to work with Audra and Tucker, only to take his family's company from Jack's grasp.\\nY&R fans, do you think Ashley is working with Tucker? Do you think Jack will discover Kyle's betrayal? Keep watching The Young and the Restless, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"original_answer\": \"Sure! Here's the summary within 102 words:\\n\\nOn The Young and the Restless, Ashley Abbott returns to Genoa City with a plan to take down Tucker McCall. She fakes a reunion with him to get dirt on his plans for Jabot. Jack opposes the plan, but Ashley goes ahead anyway. Meanwhile, Kyle Abbott agrees to work with Audra Charles and Tucker to take control of Jabot from his father.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 91,
+  "source_cluster_id": "sha256:ac94cf7ec590fd44ac44102bc298dc00c67cffb460e33560f52e5de59efdc02c",
+  "source_id": "13549",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:6f253491315aff94a76fb07b054e6dbefe0705ab876e9574be084012ac01043a",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30
+  ]
+}

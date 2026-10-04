@@ -1,0 +1,142 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3733292220858857,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:26125059be9fe537e03f3f3559c22ad1891971d32d58c0bda1b0f17664c3a0f6",
+  "human_target": null,
+  "input_tokens": 817,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:26125059be9fe537e03f3f3559c22ad1891971d32d58c0bda1b0f17664c3a0f6",
+    "feature_hash": "sha256:6bc245b9826e9117e624abd3cdc0da933a4c90968df720af93520ab5785e55dc",
+    "source_normalized_hash": "4b61c64bab309b31865285fe6551fc4bb49438a86ef239c19ce3943a26c3c9c8",
+    "values": [
+      0.311248897707231,
+      0.5168650793650793,
+      0.3055555555555556,
+      0.75,
+      0.25,
+      0.25,
+      0.6887511022927689,
+      0.8990079365079365
+    ],
+    "window_count": 36
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 817,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 840
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:2d2c93b85a1dfcf2565efb6d4a47e390362fb9045eeef9d0309e95ed0b6bb2b1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095541,
+    "id": "chatcmpl-GNxRLs0R44k6IfE0Xwe3qMtUljrCUtUq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.779,
+      "predicted_n": 23,
+      "predicted_per_second": 42.53123734464541,
+      "predicted_per_token_ms": 23.51213043478261,
+      "prompt_ms": 714.094,
+      "prompt_n": 739,
+      "prompt_per_second": 1034.8777611911037,
+      "prompt_per_token_ms": 0.9662976995940461
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 817,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 840
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Kelly Harris, a bright 13-year-old from Jackson, Michigan, mysteriously vanished in 1984.\\nOnly after 22 years did her stepfather, Leonard Hugall, confess to her tragic death\\nThe tragic case of Kelly Harris serves as a haunting reminder of the unpredictable nature of crime and the profound effects it can have on families.\\nIn 1984, 13-year-old Kelly Harris disappeared mysteriously from Jackson, Michigan, where she was visiting her mother and stepfather. This was after a disagreement about attending a local fair. As with many cases involving missing children, the initial assumption by law enforcement was that she ran away, especially when they found evidence suggesting she bought a bus ticket to Detroit.\\nHowever, as the case developed, her stepfather, Leonard Hugall, became a significant person of interest, not least because of his documented history of child molestation and violence. Kelly's mother, Carol Hugall, deeply suspected her husband's involvement, a belief that persisted for decades.\\nThe darkness of Hugall's character was further revealed when he was convicted in 1993 for horrific crimes in Florida. Only in 2006, after repeated questioning, did Hugall finally confess to the harrowing details of Kelly's last moments. He admitted to luring, kidnapping, assaulting, and finally murdering the teenager, providing chilling specifics that sent shivers down the spine of investigators.\\nWhile Hugall is imprisoned for other crimes, justice for Kelly remains a challenge. Authorities have been unable to locate her remains, and Hugall's claims about where he buried her body proved unsuccessful. Despite blood evidence that somewhat corroborated his confession, the exact nature of this evidence remains ambiguous.\\nFor Carol, the pain is evident. The loss of her daughter plunged her into deep despair, a feeling only amplified by the acknowledgment of Kelly at The Fallen Victims of Homicide Memorial. Kelly's details, from her appearance to her personality, serve as a testament to the vibrant young girl whose life was tragically cut short.\\nThe case remains an open wound, and the call for any information related to it underscores the importance of community involvement in helping bring closure to such grievous events. Whether it's a hint about Hugall's actions or an unknown detail about Kelly's final moments, every piece of information is invaluable.\\nThose with any knowledge about this heart-wrenching case should contact the Jackson County Sheriff\u2019s Office, or their local authorities, so that justice might finally be served for Kelly Harris and her grieving family.\", \"original_answer\": \"Here is a summary of the article in 99 words:\\n\\nKelly Harris, a 13-year-old girl from Michigan, went missing in 1984 after arguing with her stepfather, Leonard Hugall, about going to a fair. After decades of silence, Hugall confessed to killing Kelly, revealing gruesome details. Although Hugall is in prison for other crimes, Kelly's remains have never been found. Authorities urge anyone with information to come forward to help bring closure to the Harris family.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 160,
+  "source_cluster_id": "sha256:4154c17abba81878f35fe70ca7b9adea70ea7c41575726e1f4b03cd6d99e3df5",
+  "source_id": "13830",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:26125059be9fe537e03f3f3559c22ad1891971d32d58c0bda1b0f17664c3a0f6",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

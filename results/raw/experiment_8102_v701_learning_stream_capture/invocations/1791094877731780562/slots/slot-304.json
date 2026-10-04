@@ -1,0 +1,133 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2133449669927359,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:6357d36cc9ac09581eb05eddb164e932b3c8755563897c76ac958c7b5b02efb4",
+  "human_target": null,
+  "input_tokens": 552,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:6357d36cc9ac09581eb05eddb164e932b3c8755563897c76ac958c7b5b02efb4",
+    "feature_hash": "sha256:5cbeeaf30f6d5814548b5a2f57ead108ec200991502ef150e7a52f6a16011465",
+    "source_normalized_hash": "0add87fc94bda0dfa82f1e18375edf83e75302537a718ed5b51b8dfe603ceadc",
+    "values": [
+      0.39765369760639796,
+      0.6860140547447049,
+      0.462962962962963,
+      0.8333333333333334,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.602346302393602,
+      0.8251937032122791
+    ],
+    "window_count": 18
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 552,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 576
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:df6b6c6d824955e9092eb0efef61a32e28a58baec3cb1a29f8c6168e934400c1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095737,
+    "id": "chatcmpl-gO2pMNYfaTXqVh07iPEDTSukJy7SSfbQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.963,
+      "predicted_n": 24,
+      "predicted_per_second": 42.48065802539281,
+      "predicted_per_token_ms": 23.540125,
+      "prompt_ms": 528.731,
+      "prompt_n": 474,
+      "prompt_per_second": 896.4861148674846,
+      "prompt_per_token_ms": 1.1154662447257384
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 552,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 576
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Transfers are free on Metro buses, however if you are paying with cash and use more than one transit system you will have to pay a fare each time you board a different bus (including Metro-operated Sound Transit buses).\\\\n\\\\npassage 2:You can also use the Metro Transit mobile app to pay for your fare. If you have a SuperSaver, insert it (arrow pointing down) into the reader next to the farebox. Your transfer is automatically built in the card. Note: You can use a SuperSaver 31-Day Pass on a train as long as it has been activated on a bus.\\\\n\\\\npassage 3:However, you cannot use a SuperSaver Stored Value Card if you transfer from bus to light rail. Get a Go-To Card for an easier way to pay your fare. If you pay with cash, drop your money in the farebox next to the driver. Fareboxes accept dollar bills, coins or tokens, but change is not available. On most buses, you pay when you get on. However, on many express buses leaving downtown during afternoon rush hours, you pay as you leave. The same fares are charged for buses and METRO lines and vary by time of day and type of service.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to pay metro bus fare\\\"}\", \"original_answer\": \"Based on the given passages, you can pay your Metro bus fare in several ways. If you are paying with cash, you will need to drop your money in the farebox next to the driver. The farebox accepts dollar bills, coins, or tokens, but cannot provide change. You can also use a SuperSaver 31-Day Pass or the Metro Transit mobile app to pay your fare. Another option is a Go-To Card. Note that if you transfer to different transit systems, you will need to pay a fare each time you board a different bus.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 49,
+  "source_cluster_id": "sha256:41f3fe1d97c84cf1d149f10c2cbc6f4ace60563068fc611bf68822f1675f9bfb",
+  "source_id": "12420",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:6357d36cc9ac09581eb05eddb164e932b3c8755563897c76ac958c7b5b02efb4",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

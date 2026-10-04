@@ -1,0 +1,128 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5893461050000042,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:b2627a325435cf874f7727a5ad30d68fd26a57fcf2035adaba7200eaa389634d",
+  "human_target": null,
+  "input_tokens": 937,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:b2627a325435cf874f7727a5ad30d68fd26a57fcf2035adaba7200eaa389634d",
+    "feature_hash": "sha256:aaf3b81b5ce12a32c16fedc360907ca38fb554c8ff52fd08999c87a736058a2e",
+    "source_normalized_hash": "9e9a527204e5330364046cf40dc45860274985f7eb3f03f27b93e7d781ad23fe",
+    "values": [
+      0.28726712976033625,
+      0.4791127883790927,
+      0.0,
+      0.0,
+      0.08333333333333333,
+      0.08333333333333333,
+      0.7127328702396637,
+      0.9565978251485499
+    ],
+    "window_count": 8
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 937,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 961
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:ed33923b2c36957dd30e6c1a081a82e16b5f489e2d52c6e10ddf39175cf3816b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095448,
+    "id": "chatcmpl-Dkz7FPGKd1Slk5subYcB13rNsvXicDaP",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.46,
+      "predicted_n": 24,
+      "predicted_per_second": 42.51851326931934,
+      "predicted_per_token_ms": 23.519166666666667,
+      "prompt_ms": 876.41,
+      "prompt_n": 859,
+      "prompt_per_second": 980.1348683835191,
+      "prompt_per_token_ms": 1.0202677532013968
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 937,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 961
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"415 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Barbeque, Chinese\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-21:30\\\",\\\"Monday\\\":\\\"11:30-21:30\\\",\\\"Saturday\\\":\\\"11:30-21:30\\\",\\\"Sunday\\\":\\\"11:30-21:30\\\",\\\"Thursday\\\":\\\"11:30-21:30\\\",\\\"Tuesday\\\":\\\"11:30-21:30\\\",\\\"Wednesday\\\":\\\"11:30-21:30\\\"},\\\"name\\\":\\\"Stone Age Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-08-18 00:08:48\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"We ordered a cup of milk tea, which tasted sour. When the clerk checked it out and found that the milk had gone bad, they quickly recalled the milk tea and only refunded us $5 for the milk tea. Since we've already drunk a third, we don't know if we'll have diarrhea.\\\"},{\\\"review_date\\\":\\\"2019-08-08 03:43:56\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"\u4e2d\u56fd\u4eba\u5f00\u7684\u9910\u9986\uff0c\u83dc\u8fd8\u4e0d\u9519\uff0c\u5c24\u5176\u662f\u5bf9\u591a\u65e5\u88ab\u897f\u9910\u8650\u7684\u4eba\u6765\u8bf4\u3002\u670d\u52a1\u4eba\u5458\u4e5f\u662f\u4e2d\u56fd\u4eba\uff0c\u5176\u4e2d\u4e00\u4e2a\u6709\u4e9b\u5c0f\u5c4c\uff0c\u57fa\u672c\u4e0a\u662f\\\\\\\"\u4f60\u4eec\u6765\u8fd9\u513f\u53ef\u9009\u7684\u4f59\u5730\u4e5f\u4e0d\u5927\uff0c\u6211\u4eec\u5c31\u8fd9\u6837\\\\\\\"\u7684\u6001\u5ea6\u3002\\\\n\\\\n\u76f8\u5bf9\u4e8e\u56fd\u5185\uff0c\u996d\u83dc\u591a\u5c11\u90fd\u6709\u4e9b\u53d8\u5f02\uff0c\u4e0d\u53ef\u5962\u6c42\u8fc7\u591a\uff0c\u5403\u9971\u5403\u597d\u5c31\u884c\u3002\\\"},{\\\"review_date\\\":\\\"2019-07-13 20:02:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I am a tourist here for the first time, my friend from UCSB recommended this Chinese restaurant to me, actually it's really authentic. I ordered the stir fried lamb and Mapo tofu. yummy!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Stone Age Restaurant is a Chinese restaurant located in Santa Barbara, CA. According to their business listing, they are open seven days a week from 11:30am to 9:30pm. They offer both dine-in and takeout options and have a capacity for large groups. The restaurant has a casual atmosphere and provides free WiFi for its patrons.\\n\\nThe restaurant's menu offers a variety of traditional Chinese dishes such as stir-fries, noodles, and soups. They also serve milk tea and other beverages. One customer review praised the authenticity of the food, particularly the stir-fried lamb and Mapo tofu. However, another review expressed disappointment with the quality of the milk tea, stating that it tasted sour and the restaurant only offered a partial refund.\\n\\nThe service at Stone Age Restaurant has received mixed reviews. One customer noted that the service was slow and the staff seemed unfriendly, while another reviewer had a positive experience with the staff.\\n\\nOverall, Stone Age Restaurant appears to be a decent option for those looking for traditional Chinese cuisine in the Santa Barbara area. While there have been some issues with the quality of certain dishes and service, the restaurant generally receives positive reviews for its authentic food and convenient location.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 95,
+  "source_cluster_id": "sha256:1afe0d4c35f23040302b0652311aecf2630f4fad8c2a13608016c4040265a3c6",
+  "source_id": "14653",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:b2627a325435cf874f7727a5ad30d68fd26a57fcf2035adaba7200eaa389634d",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

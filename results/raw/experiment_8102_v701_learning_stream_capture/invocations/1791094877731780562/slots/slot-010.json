@@ -1,0 +1,139 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4961394070414826,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:5fce929c658f9c607c695334051e4aafb43b901e1dd6fcff2c0734f21bdeb4ad",
+  "human_target": null,
+  "input_tokens": 851,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:5fce929c658f9c607c695334051e4aafb43b901e1dd6fcff2c0734f21bdeb4ad",
+    "feature_hash": "sha256:dc202e36d467d2218c7201418ea4621e933ac12da3d33d7e9bf489cdbd76ad5e",
+    "source_normalized_hash": "8ff44ee3b912b21edb76385813a27beb0765a59adc7a412258fb12829d5d0f01",
+    "values": [
+      0.4906393701645418,
+      0.7122789557886812,
+      0.39333333333333337,
+      0.9,
+      0.0,
+      0.0,
+      0.5093606298354583,
+      0.9299885831178738
+    ],
+    "window_count": 30
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 851,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 874
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:94de8c7d1f50c30af2238c40b8dfe1caba989566dffebc3defea8313c303e731",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095323,
+    "id": "chatcmpl-7n04xu6RHOFl5wxChrivOcZ003iBychC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 534.697,
+      "predicted_n": 23,
+      "predicted_per_second": 43.01501598101355,
+      "predicted_per_token_ms": 23.247695652173913,
+      "prompt_ms": 797.443,
+      "prompt_n": 773,
+      "prompt_per_second": 969.3482794381542,
+      "prompt_per_token_ms": 1.031620957309185
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 851,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 874
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:First make sure your computer is connected to your network. If your printer is not currently connected to your computer, connect the USB cable between the computer and the printer. Make sure your HP printer software is installed on your computer.If your HP printer software is installed, use Windows XP, Windows Vista or Windows 7: For Windows 8/8.1: 1  Launch the Printer Software from the Start screen (using the icon for your printer model) or from the tile named for your printer.2  Select (click or touch) Utilities on the top of the Printer Software screen. 3  Select Printer Setup & Software. 4  Select Convert a USB connected printer to Wireless. 5  Mac OS X:f your printer is not currently connected to your computer, connect the USB cable between the computer and the printer. Make sure your HP printer software is installed on your computer. If your HP printer software is installed, use Windows XP, Windows Vista or Windows 7:\\\\n\\\\npassage 2:Click Start, choose Printers and Faxes, and then select Add a Printer from Printer Tasks in the left pane. Related Reading: How to Determine if a Printer is Compatible With Windows XP.Step 3. Click Next on the Welcome to the Add Printer Wizard screen.Select A Network Printer, or a Printer Attached to Another Computer, and then click Next.. Step 4. Choose Connect to a Printer on the Internet or on a Home or Office Network from the options.lick Start, choose Printers and Faxes, and then select Add a Printer from Printer Tasks in the left pane. Related Reading: How to Determine if a Printer is Compatible With Windows XP.\\\\n\\\\npassage 3:If your printer attaches to your computer with a parallel port (LPT port), connect the printer to your computer, and then open Printers and Faxes Double-click Add Printer to start the Add Printer Wizard, and then click Next.. If you could not install your printer using Plug and Play, or if the printer is attached to your computer with a serial (COM) port, then open Printers and Faxes. 4. Double-click Add Printer to start the Add Printer Wizard, and then click Next.\\\\n\\\\n\\\",\\\"question\\\":\\\"add my wireless printer to xp computer\\\"}\", \"original_answer\": \"To add a wireless printer to your XP computer, start by ensuring your computer is connected to your network. Then, connect the USB cable between the computer and the printer. Install your HP printer software on your computer if it is not already installed. Navigate to the start screen and launch the Printer Software using the icon for your printer model or from the tile named for your printer. Select \\\"Utilities\\\" on the top of the Printer Software screen and then select \\\"Printer Setup & Software\\\". Choose \\\"Convert a USB connected printer to Wireless\\\". Alternatively, you can click \\\"Start\\\", choose \\\"Printers and Faxes\\\", then select \\\"Add a Printer\\\" from \\\"Printer Tasks\\\" in the left pane. Click \\\"Next\\\" on the Welcome to the Add Printer Wizard screen. Select \\\"A Network Printer, or a Printer Attached to Another Computer\\\", then click \\\"Next\\\". Choose \\\"Connect to a Printer on the Internet or on a Home or Office Network\\\" from the options.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 11,
+  "source_cluster_id": "sha256:4d0b7a4c9bcfc37b75f1244ff506181c6c60176fe5fe548f3bc7597bd9219691",
+  "source_id": "15490",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:5fce929c658f9c607c695334051e4aafb43b901e1dd6fcff2c0734f21bdeb4ad",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6902851280756295,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:03ebc7e0a8b7e0c2a6d58700f55e1930bc64b64ef96b11f1d93e11d9ffd5ea48",
+  "human_target": null,
+  "input_tokens": 1044,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:03ebc7e0a8b7e0c2a6d58700f55e1930bc64b64ef96b11f1d93e11d9ffd5ea48",
+    "feature_hash": "sha256:cb58875470d0379d974eb8568fad85b99b30256a5150e733f1365f6944e0b1ec",
+    "source_normalized_hash": "c011909a59dbf7477eb9807fdce71308f93758385c55e441ddc41e65f661907c",
+    "values": [
+      0.20591086088618984,
+      0.365334008097166,
+      0.45,
+      0.75,
+      0.25,
+      0.25,
+      0.7940891391138102,
+      0.9450552462887989
+    ],
+    "window_count": 40
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1044,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1065
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:76127067ed2cc2df6e8c7dc3d3306ea6243052d599ff203dfc23f7cfcfb24e2d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095365,
+    "id": "chatcmpl-IUUZM4r4EA5WA9kGRSwWxNZmv8KcFzyX",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 489.89,
+      "predicted_n": 21,
+      "predicted_per_second": 42.86676600869583,
+      "predicted_per_token_ms": 23.328095238095237,
+      "prompt_ms": 950.266,
+      "prompt_n": 966,
+      "prompt_per_second": 1016.5574691717899,
+      "prompt_per_token_ms": 0.9837122153209109
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1044,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1065
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"21 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":null,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":2.0,\\\"categories\\\":\\\"Restaurants, Pizza\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Little Caesars Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 12:22:01\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"My boyfriend called and ordered a pizza, he waited for about 15 minutes then went over to pick it up. Somehow he was there for an hour waiting for a medium pepperoni pizza and breadsticks and a soda. The only reason i would give it two stars is because the pizza and breadsticks were actually super bomb, not sure why it took over an hour to make.\\\"},{\\\"review_date\\\":\\\"2022-01-07 02:17:11\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This place is a joke! Nothing but immature, ignorant, street punk kids. Manager is as ignorant and absent minded as the kids. They serve burnt crazy bread, then when asked how they could serve something like this, they respond with, \\\\\\\" Oh you don't like it like that...?\\\\\\\" I hope this place closes.  Places like this that make their money by Volume, ripping us off, and have the nerve to treat us like dirt need to be boycotted. Stop keeping them open and enabling them to keep these kind of business antics. Take your money elsewhere!\\\"},{\\\"review_date\\\":\\\"2021-12-02 04:25:12\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This will be the 5th time I have gone here for crazy bread and they tell me that they don't have any. Pregnancy hormones are to blame for this craving. There is no reason why they shouldn't be out of their menu items all the time. Tonight I got lucky and had \\\\\\\" the last one\\\\\\\". I saw the cashier guy who had just counted back my cash, go straight to them with no gloves on and not washing his hands. As I waited two different customers came in to order some pizza, and the same cashier told them that they only have thin crust. Customer walked out. The other one looked and me and said that they are always out of items or they are just to lazy to bake them. I stood there watching the lady in the back prepare a pizza without gloves on.  This place needs a new manager....  Oh and btw I did get my crazy bread and the breadsticks where harder than a rock ...... and cold. Smh\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Little Caesars Pizza, located at 21 N Milpas St, Santa Barbara, CA, is a restaurant specializing in pizza. Despite its offerings, this establishment has an average business rating of only 2 stars based on customer reviews. Customers have reported long waiting times for orders, with one customer stating they waited for over an hour for a medium-sized pizza and breadsticks. The customer service has been described as disappointing with staff being labelled as 'ignorant' and 'absent minded'. Furthermore, there have been instances of burnt food being served and menu items being unavailable. Concerns have also been raised about the hygiene practices of the staff, with reports of food being handled without gloves. Despite these complaints, one customer did commend the taste of the pizza and breadsticks. The establishment offers takeout but does not have WiFi, outdoor seating, or reservations.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 38,
+  "source_cluster_id": "sha256:e90e9767bdc88f4b4cf3e29fa640f9c28ec58e9926d77693fe878acf50216e15",
+  "source_id": "15065",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:03ebc7e0a8b7e0c2a6d58700f55e1930bc64b64ef96b11f1d93e11d9ffd5ea48",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

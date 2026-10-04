@@ -1,0 +1,144 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7500044360058382,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:d8c5e372c263351ea6c3452ec710d1be97e375f80e081193664b2dcdc677b0a8",
+  "human_target": null,
+  "input_tokens": 1254,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:d8c5e372c263351ea6c3452ec710d1be97e375f80e081193664b2dcdc677b0a8",
+    "feature_hash": "sha256:8d820153d63c864d5fc549192d5e634daa5e6ceb40ff94a9276143f066848f6c",
+    "source_normalized_hash": "e341df61e470de0cad9ced1089a8a22dcf13e229b36b1153c212a4125d186927",
+    "values": [
+      0.25594508861236803,
+      0.52108700123406,
+      0.44000000000000006,
+      0.9,
+      0.2,
+      0.2,
+      0.744054911387632,
+      0.9546275538187302
+    ],
+    "window_count": 40
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1254,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1277
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:5a6fdcf04b319ea5d862c68b8a0b5e5013eef6ff7a3376ebd544edde51348ad3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095379,
+    "id": "chatcmpl-eOwIvM2nlc3Z2jfr0XJOxzNEdlZj8cby",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.496,
+      "predicted_n": 23,
+      "predicted_per_second": 42.63238281655471,
+      "predicted_per_token_ms": 23.456347826086954,
+      "prompt_ms": 1094.837,
+      "prompt_n": 1176,
+      "prompt_per_second": 1074.1324964355424,
+      "prompt_per_token_ms": 0.9309838435374149
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1254,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1277
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"214 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Breweries, Bars, Burgers, Mexican, Tacos, Cocktail Bars, Club Crawl, Breakfast & Brunch, Beer Bar, Nightlife, Restaurants, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"The Project -- Coraz\u00f3n Cocina & Taproom\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-02 16:15:44\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Wanted to have a great experience here when they reopened but it was pretty ok. \\\\n\\\\nWe arrived and we're seated quickly which was great and they accommodated getting us in a spot where a baby car seat could easily fit next to our table outside. \\\\n\\\\nThe menu seems to be a lot smaller and different than the previous menu at the project which we were bummed about. \\\\n\\\\nWhen our waiter first came over I let them know I had a few dietary restrictions, he seemed unsure about how to answer my questions so bc of his uncertainties he just said I shouldn't order basically anything. When I asked him to check with the kitchen he initially said no. After much pressing on this he finally went back and asked. I learned that the blue corn tortillas (which are gluten free at corazon) are not gluten free at the project. When he finally asked the kitchen they let him know they did have some pre made gluten free corn tortillas on hand that they could use to make a taco. It always is odd to me when restaurants make corn tortillas which are traditionally gluten free with gluten, this should be more clearly identified on a menu and staff should be more knowledgeable and willing to accommodate. \\\\n\\\\nOnce we finally got through the pain of ordering with our waiter we got our appetizer. We ordered the \\\\\\\"avocado\\\\\\\" which we assumed would be chips and guac. It was a little different but was delicious! The avocado dip had some sort of different season in it which made it delightful, would definitely recommend this! \\\\n\\\\nAs for the tacos, we all thought the old project menu had better options and decided we'd prefer to just get the tacos at corazon as we thought they are ultimately better.\\\\n\\\\nLove the fun vibe of the project, but we'll keep going to Corazon at public market where they have everything down to an art and customer service seems to be be more on par.\\\"},{\\\"review_date\\\":\\\"2021-10-10 17:32:30\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Went here for dinner and had the steak and fries, as well as the mussels and clams. The steak had a chimichurri sauce that really overpowered the whole plate. I left most of it because of the overpowering taste, and it was not tender. The mussels and clams were pretty good, but not great (maybe a 3.5 out of 5 review, for that plate). The restaurant wasn't too busy and we never got a water refill. 2 stars for the pricey chewy steak  and subpar service.\\\"},{\\\"review_date\\\":\\\"2021-09-25 02:55:18\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This was exceptional Mexican food. Wonderful, complex flavors that I never experienced before. A real treat.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"The Project -- Coraz\u00f3n Cocina & Taproom\\\" is a local business located at 214 State St, Santa Barbara, CA. This establishment is known for its wide variety of food and drink offerings, including burgers, tacos, and cocktails, along with breakfast, brunch, and a beer bar. It falls under several categories such as breweries, bars, Mexican cuisine, cocktail bars, nightlife, and restaurants. They offer free WiFi, outdoor seating, and takeout options. The venue is suited for groups and has a trendy, casual, and hipster ambience. \\n\\nCustomer reviews indicate a rating of 4.0 stars overall. However, there have been mixed reviews about the menu and service. One reviewer noted that the menu seemed smaller and different than it used to be and the staff were uncertain about dietary restrictions. Another reviewer was not satisfied with the steak dish and found the service to be subpar. On the other hand, there were also positive reviews about the unique and complex flavors of their Mexican food.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 47,
+  "source_cluster_id": "sha256:9dcac2d6bdba6f904a7fe8f42f73a4f915f3a23b09ae6ae9e6a99dddcc164d78",
+  "source_id": "15060",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:d8c5e372c263351ea6c3452ec710d1be97e375f80e081193664b2dcdc677b0a8",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

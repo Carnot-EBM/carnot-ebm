@@ -1,0 +1,145 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6447873370489106,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:be571b9ca7bdf49bd1ae97bf17a8d567dab1a60dd225d4617c5d786a4da13217",
+  "human_target": null,
+  "input_tokens": 1064,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:be571b9ca7bdf49bd1ae97bf17a8d567dab1a60dd225d4617c5d786a4da13217",
+    "feature_hash": "sha256:0775033ad28ba1035e68310fb42ae16d5973dd199c3efcfb2b85c80475bc2bd6",
+    "source_normalized_hash": "592c8697dda4abd47be2cea3c1078a8c0700b65142cadf18be3ff26234a578a8",
+    "values": [
+      0.20786903792856173,
+      0.3953525641025641,
+      0.17857142857142858,
+      0.875,
+      0.0,
+      0.0,
+      0.7921309620714383,
+      0.937050044862545
+    ],
+    "window_count": 42
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1064,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1088
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:30502d6538074681cd575b81a830366b10e4ac6630179436b1ac0c7dc459acb6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095508,
+    "id": "chatcmpl-yfd0GLIhJmOvMlBLO5RT1fQ9PuyNBaw3",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.104,
+      "predicted_n": 24,
+      "predicted_per_second": 42.39503695434054,
+      "predicted_per_token_ms": 23.587666666666667,
+      "prompt_ms": 965.041,
+      "prompt_n": 986,
+      "prompt_per_second": 1021.7182482402301,
+      "prompt_per_token_ms": 0.9787434077079108
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1064,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1088
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1072 Casitas Pass Rd, Ste 235\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Restaurants, Event Planning & Services, Caterers, Shopping, Arts & Crafts, Barbeque, Cooking Classes\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"0:0-0:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"0:0-0:0\\\",\\\"Sunday\\\":\\\"0:0-0:0\\\",\\\"Thursday\\\":\\\"0:0-0:0\\\",\\\"Tuesday\\\":\\\"0:0-0:0\\\",\\\"Wednesday\\\":\\\"0:0-0:0\\\"},\\\"name\\\":\\\"Simply Marvelous BBQ Catering\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-08-26 04:07:46\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Steph and his team catered my wedding in august 2021. His crew did an amazing job. We got the tri tip and smoked turkey, garlic mashed potatoes, asparagus, salad with bread, and people won't stop telling me how good the food was. He also served appetizers during cocktail hour. He was super easy going, service was great from beginning to end, made sure everything clicked and was taken care of and looked great. He and his staff were so friendly. He was so organized, professional and completely reliable. Steph will make sure you get exactly what you want. His prices are fair and if you like bbq I totally recommend him in a heart beat. He makes bbq look like fine dining. He's the bbq man!\\\"},{\\\"review_date\\\":\\\"2019-09-18 03:28:25\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"At fairly short notice, we decided on a small family-and-friends celebration for our golden anniversary. Simply Marvelous BBQ, and others, were already booked for the weekend. But reviews indicated Simply Marvelous would also do drop off. They did and they were fabulous. Stephan was a delight to work with. Drop off included setup in our kitchen, they provided serving dishes, utensils and everything promised. They were on time, totally professional and discrete as guests had already arrived. The food was absolutely delicious and generous. We were more than happy and looking for the next excuse to use Simply Marvelous BBQ again. Because they were.\\\"},{\\\"review_date\\\":\\\"2019-02-18 04:58:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I just want to say the Stephan Franklin is just amazing at catering, he just recently catered my daughters wedding at my home and I still hear the raves about his wonderful food and staff, Stephan and his team were such a god send to my family and his food omg is sooo delicious. Everyone loved the beautiful set up and I thoroughly enjoyed how much love they put into what they serve, so professional and courteous, I could not have asked for a more. You made my daughters wedding a day to remember, Thank You from The Maharaj Family\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Simply Marvelous BBQ Catering is a restaurant located in Carpinteria, California. They offer services for event planning and catering, and specialize in barbecue and cooking classes. Their hours of operation vary by day, but they are open every day of the week. They do not provide any parking spaces or offer any online reservation options. However, they have received excellent reviews for their food, organization, and professionalism. They are known for providing delicious, generous portions of food that can be delivered directly to customers' homes or set up on site for events. They also offer appetizers and a variety of sides to complement their main dishes. Overall, Simply Marvelous BBQ Catering appears to be a reliable and reputable choice for those looking for quality catering and event planning services.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 136,
+  "source_cluster_id": "sha256:506b27b1598c1e5ec6119f1fb91d93b01f7945954e72720cbe201e091e02d363",
+  "source_id": "14239",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:be571b9ca7bdf49bd1ae97bf17a8d567dab1a60dd225d4617c5d786a4da13217",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.562563828076236,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:ef23a0f845c0b2428e860194849f624ea8ef341dc8e2dde4a3c8d6d5c9935f92",
+  "human_target": null,
+  "input_tokens": 971,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:ef23a0f845c0b2428e860194849f624ea8ef341dc8e2dde4a3c8d6d5c9935f92",
+    "feature_hash": "sha256:84c5a53c8cfa6926e2696de8324c4791e725076ec341bc5e068508dc22dae229",
+    "source_normalized_hash": "e93f8befd7a0818b79230bba73644804dd54c3a7b5c11da930c22c50006642dc",
+    "values": [
+      0.152506997916937,
+      0.3425238204287139,
+      0.1,
+      1.0,
+      0.125,
+      0.125,
+      0.847493002083063,
+      0.9648909647573402
+    ],
+    "window_count": 30
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 971,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 995
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:646d203fe410dc04e2c1f90b638c9d9cecdf0405ce1625a8ef03a51550b2bb2e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095590,
+    "id": "chatcmpl-RirlInFlk8w4opI4oC5BIXe2m6Kzw1wZ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.068,
+      "predicted_n": 24,
+      "predicted_per_second": 42.47276433986706,
+      "predicted_per_token_ms": 23.5445,
+      "prompt_ms": 882.929,
+      "prompt_n": 893,
+      "prompt_per_second": 1011.4063531722256,
+      "prompt_per_token_ms": 0.9887222844344905
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 971,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 995
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1905 Cliff Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Restaurants, Gastropubs, Cocktail Bars, Bars, American (New), Nightlife, Beer Bar, American (Traditional)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"12:0-22:0\\\",\\\"Sunday\\\":\\\"10:0-20:0\\\",\\\"Thursday\\\":\\\"16:0-21:0\\\",\\\"Tuesday\\\":\\\"16:0-21:0\\\",\\\"Wednesday\\\":\\\"16:0-21:0\\\"},\\\"name\\\":\\\"Corner Tap Room\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-24 20:48:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We were looking for a good meal on a rainy night and found the perfect spot at the Corner Tap Room. The food was tremendous, I had the Teriyaki Sliders, and the atmosphere was friendly and inviting. Oh yeah, they have a lot of great beers to choose from\\\"},{\\\"review_date\\\":\\\"2021-10-30 15:46:13\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Good location on the Mesa. Ambiance was nice outside. Service was great. The meat lovers flatbread was amazing, but I wasn't a big fan of the prosciutto flatbread.  The kids pasta was decent but it tasted very spicy for some reason. The mojito was decent, too. Will probably come back at some point!\\\"},{\\\"review_date\\\":\\\"2021-10-21 03:56:27\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Corner Tap is a welcome addition to the Mesa.  Staff are friendly and responsive. Should have ordered beer. Wine prices way too high. Paid $16 tonight for glass of Qupe Chardonnay which is pedestrian at best. Cauliflower hot and tasty. Flat bread cold and cheese not toasted. If you go, avoid wine and order one dish at a time!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of the Corner Tap Room based on the provided structured data:\\n\\nThe Corner Tap Room is a popular gastropub and cocktail bar located in the heart of Santa Barbara, offering a diverse selection of craft beers and delicious American-style cuisine. With a rating of 4.8 out of 5 stars based on 3 reviews, this establishment has gained a reputation for providing exceptional service, mouth-watering dishes, and a welcoming atmosphere.\\n\\nAccording to recent customer reviews, the food at the Corner Tap Room is nothing short of fantastic, with standout dishes like the Teriyaki Sliders and Meat Lovers Flatbread receiving high praise. The atmosphere is warm and inviting, with friendly staff and a cozy ambiance that makes it the perfect spot for a relaxing evening out or a casual meetup with friends.\\n\\nWhile the wine selection is somewhat limited and prices may be considered steep by some standards, the beer selection is vast and varied, featuring a range of local and international brews. Additionally, the Corner Tap Room offers outdoor seating and takes reservations, making it a versatile option for diners with different preferences. Overall, the Corner Tap Room is an excellent choice for those seeking a top-notch dining experience in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 200,
+  "source_cluster_id": "sha256:27ef4088caeaa830f78c36922c375c02d9878d0b0edd7512988dfc00e0ecb490",
+  "source_id": "13606",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:ef23a0f845c0b2428e860194849f624ea8ef341dc8e2dde4a3c8d6d5c9935f92",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

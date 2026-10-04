@@ -1,0 +1,138 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6036705930018798,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:6656702d302a5e2d9c316742bc6a391de4781173664d5a198ceb4ec6c2721108",
+  "human_target": null,
+  "input_tokens": 958,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:6656702d302a5e2d9c316742bc6a391de4781173664d5a198ceb4ec6c2721108",
+    "feature_hash": "sha256:33a43a886b2c38f8ee34f892de3d053d71e80cf4cbc73311373d14d8fb9fabbd",
+    "source_normalized_hash": "67ba20e2076b05c5572facd9e08cc64dfe2d29f9a84b7a0e3c6e757f32c9447e",
+    "values": [
+      0.25074151455453975,
+      0.43251364648423474,
+      0.17857142857142858,
+      0.875,
+      0.375,
+      0.375,
+      0.7492584854454603,
+      0.9625
+    ],
+    "window_count": 28
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 958,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 982
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:512ffbac58b847742cbb4a99cd4359bd765a76f0407d308b71fc1852812ded68",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095380,
+    "id": "chatcmpl-OdJWWlOSIiNaRjyEoljLD1H5YcTaEJeF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 562.367,
+      "predicted_n": 24,
+      "predicted_per_second": 42.67675734884871,
+      "predicted_per_token_ms": 23.43195833333333,
+      "prompt_ms": 870.736,
+      "prompt_n": 880,
+      "prompt_per_second": 1010.6392752797634,
+      "prompt_per_token_ms": 0.9894727272727273
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 958,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 982
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"734 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":true,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"French, Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-21:30\\\",\\\"Saturday\\\":\\\"10:0-21:30\\\",\\\"Sunday\\\":\\\"10:0-20:30\\\",\\\"Thursday\\\":\\\"12:0-20:30\\\",\\\"Tuesday\\\":\\\"12:0-20:30\\\",\\\"Wednesday\\\":\\\"12:0-20:30\\\"},\\\"name\\\":\\\"Relais de Paris\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-11-05 04:09:12\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I had a of really good meal experience here a couple of years ago. I wanted to go back this month, but Open Table is reporting this restaurant as \\\\\\\"Permanently Closed\\\\\\\". Does anyone know if this is true? Such a shame, if that's the case. ;/\\\"},{\\\"review_date\\\":\\\"2016-10-12 14:52:27\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My husband and I had our wedding rehearsal dinner for 35 people at this wonderful restaurant in April. \\\\nWe had only eaten here once previously, but knew we wanted to treat our families to French cuisine as it is one of our favorites. We have tried other French restaurants in SB, but have enjoyed the food from here the most. We had such a great experience and definitely recommend this restaurant for a rehearsal dinner. \\\\nLilia was an absolute pleasure to work with and was very accommodating. She created a delightful menu and beautiful atmosphere in the back patio for our event. The service, food, atmosphere and everything was exactly what we hoped for and more!\\\"},{\\\"review_date\\\":\\\"2016-07-23 21:29:51\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"The entrecote frite and mussels were good. Fresh and warm baguette with butter is a plus. The Price is okay at lunch and service is good and quick. Overall a good experience. We will probably come back.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Relais de Paris is a French restaurant located at 734 State St in Santa Barbara, California. The restaurant serves food and falls under the categories of French, Restaurants, and Food. Customers can park their cars on the street or use the outdoor parking option, which is validated. The restaurant also offers indoor seating and takes reservations, making it ideal for group dining. There is no WiFi available, and the restaurant does not offer takeout services. However, they do cater to large groups, making them a great choice for special occasions like weddings and parties. The ambiance is romantic, and the restaurant has a good rating of 4.0 out of 5 stars. The business hours are from 12 pm to 10:30 pm on weekdays, 10 am to 10:30 pm on Saturdays, and 10 am to 9:30 pm on Sundays.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 48,
+  "source_cluster_id": "sha256:5047111b53753ea9faecf8416f001e5624c22868f6d841578ee88b1b4badc753",
+  "source_id": "14772",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:6656702d302a5e2d9c316742bc6a391de4781173664d5a198ceb4ec6c2721108",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

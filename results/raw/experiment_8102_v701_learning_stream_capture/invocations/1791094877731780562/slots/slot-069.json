@@ -1,0 +1,130 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3762344020651653,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:5427092962638bba6d6dfd61a516a78ae842cc3da17c34b297e743c78d3f08dc",
+  "human_target": null,
+  "input_tokens": 839,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:5427092962638bba6d6dfd61a516a78ae842cc3da17c34b297e743c78d3f08dc",
+    "feature_hash": "sha256:df7f195989b423a34825115d9ed0d08d60f48b92e6c33d0a75ed8d9902a89ca2",
+    "source_normalized_hash": "64b9cb3c20b88d3dcb51a45f4ae61538f6183874c6c221dd76d2c1dcf11f6fcd",
+    "values": [
+      0.27163643235071805,
+      0.5445200302343159,
+      0.3333333333333333,
+      1.0,
+      0.14285714285714285,
+      0.14285714285714285,
+      0.728363567649282,
+      0.9470332577475434
+    ],
+    "window_count": 12
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 839,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 862
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:7d2005dd3032a4b3fff22d4c5dd833460ac90c897dca631996b66d9d3f09dba4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095413,
+    "id": "chatcmpl-IvnNinYWzTFdbzkQ0sBEhn69MQjyrMEo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.886,
+      "predicted_n": 23,
+      "predicted_per_second": 42.60158626080321,
+      "predicted_per_token_ms": 23.473304347826087,
+      "prompt_ms": 728.743,
+      "prompt_n": 761,
+      "prompt_per_second": 1044.2638900133516,
+      "prompt_per_token_ms": 0.9576123521681998
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 839,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 862
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7038 Market Pl Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Seafood, Breakfast & Brunch, American (Traditional), Restaurants, Burgers\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-14:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-20:0\\\",\\\"Sunday\\\":\\\"8:0-20:0\\\",\\\"Thursday\\\":\\\"8:0-20:0\\\",\\\"Tuesday\\\":\\\"8:0-20:0\\\",\\\"Wednesday\\\":\\\"8:0-20:0\\\"},\\\"name\\\":\\\"On The Alley - Goleta\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 02:31:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love their fish and chips, clam chowder, taste just like New England.. they are the best place for fish and chips, and Clam chowder\\\"},{\\\"review_date\\\":\\\"2022-01-10 17:02:59\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great vegetarian options surprisingly! The avocado tacos and veggie burger are both awesome!\\\"},{\\\"review_date\\\":\\\"2021-12-10 19:21:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I rescind my previous 1 star rating due to the most professional and kind manager at this establishment. Not only did they reach out to me after I had left my bad experience, but they went the extra mile of taking care of my next meal with a personal apology and explanation of how they corrected the person whom I had the bad experience with. I will continue my usual Friday lunches here knowing I'm cared for. Thank you Kerry B. for reaching out and the manager at the establishment for personally talking with me and sorting it out.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"On The Alley - Goleta\\\" is a well-rated local business located at 7038 Market Pl Dr, Goleta, CA. Open every day except Monday, it specializes in a variety of categories such as Seafood, Breakfast & Brunch, American Traditional, and Burgers. The restaurant offers features like free WiFi, outdoor seating, takeout, and is also suitable for groups. It provides a casual ambience and has convenient parking options, including street parking and a parking lot. The business has received high praise from customers for their food, particularly for their fish and chips and clam chowder that are said to taste like New England. In addition, they offer great vegetarian options including avocado tacos and veggie burgers. The restaurant has also been commended for its professional and kind management, indicating good customer service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 70,
+  "source_cluster_id": "sha256:fcac2a6ab90da5cff81d1b5b5f352c59dff1a334120a94ea3a717a511148626d",
+  "source_id": "14564",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:5427092962638bba6d6dfd61a516a78ae842cc3da17c34b297e743c78d3f08dc",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

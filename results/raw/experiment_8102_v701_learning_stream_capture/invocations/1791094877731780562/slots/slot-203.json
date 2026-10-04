@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6171105949906632,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:f67836f7c3969423e08514b38d6b257ced3bb72a8ddd273ee16fb41324e3ea61",
+  "human_target": null,
+  "input_tokens": 1032,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:f67836f7c3969423e08514b38d6b257ced3bb72a8ddd273ee16fb41324e3ea61",
+    "feature_hash": "sha256:0e5c5ed1861d5869787d3a7b4e9f03fa099f8f65504e6862d38ad547606d0b87",
+    "source_normalized_hash": "bd7a7012cacc961caf350c89fc030d44eccd0b5bb5c0b3f1ba2f155c95d75c76",
+    "values": [
+      0.22504779990226562,
+      0.4029851948512235,
+      0.3409090909090909,
+      0.8181818181818182,
+      0.0909090909090909,
+      0.09090909090909091,
+      0.7749522000977344,
+      0.9920798898071624
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1032,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1056
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:b7690d3be9afc10d90857df93d34dbb2efa1871459edccab12dc0f52e6b49d8d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095595,
+    "id": "chatcmpl-Y7unMvHbgR5q8zTmjCPL3DAhLYeB10H0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.993,
+      "predicted_n": 24,
+      "predicted_per_second": 42.40335127819601,
+      "predicted_per_token_ms": 23.58304166666667,
+      "prompt_ms": 934.76,
+      "prompt_n": 954,
+      "prompt_per_second": 1020.5828233985195,
+      "prompt_per_token_ms": 0.979832285115304
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1032,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1056
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Restaurants, Event Planning & Services, Caterers, Pizza, Food Trucks, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"0:0-0:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"0:0-0:0\\\",\\\"Sunday\\\":\\\"0:0-0:0\\\",\\\"Thursday\\\":\\\"0:0-0:0\\\",\\\"Tuesday\\\":\\\"0:0-0:0\\\",\\\"Wednesday\\\":\\\"0:0-0:0\\\"},\\\"name\\\":\\\"Lucca Truck\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-09-24 16:21:35\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Lucca Truck Woodfired Pizza was incredible!  Mark & Melissa were delightful, professional, and very easy to work with.  The selection of pizzas and salads is amazing and truly delicious.  Their staff was so nice and very efficient.  We never waited for food -- the pizzas kept coming!  The truck really sets the tone for the party and enhances the experience.  We added their mini s'mores for dessert at the last minute, which was a great call!  This is how to throw a party!\\\"},{\\\"review_date\\\":\\\"2021-09-12 03:17:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We attended a wedding rehearsal dinner this evening on the beach with Lucca providing the pizza and salad. It was delicious!  The various pizzas were incredible as was the salad and the awesome mini s'mores for dessert which were also made in the pizza oven.  The Lucca staff was friendly and efficient with keeping hot pizza always available. \\\\n\\\\nIf I lived in Santa Barbara I would definitely use this food truck for parties!\\\"},{\\\"review_date\\\":\\\"2021-07-03 04:24:44\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I tried Lucca pizza at an event a while back and it was really good pizza and the staff was very friendly. I highly recommend.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Lucca Truck:\\n\\nLucca Truck is a locally owned food truck operating in Santa Barbara, California, offering a variety of dining options including Restaurants, Event Planning & Services, Caterers, Pizza, Food Trucks, and Food. With a rating of 5.0 stars, the business has established itself as a top choice among customers.\\n\\nThe truck provides a cozy and intimate atmosphere, with no outdoor seating available. However, WiFi is not offered, which may be a drawback for some customers. The business is open seven days a week, with varying hours throughout the day.\\n\\nAccording to customer reviews, Lucca Truck offers delicious woodfired pizzas and salads, with a focus on quality ingredients and exceptional service. Customers have praised the staff for being professional, friendly, and efficient, with one reviewer mentioning that the staff kept hot pizzas constantly available throughout the event.\\n\\nAdditionally, the truck has received high marks for its catering services, with customers appreciating the convenience of having a fully equipped kitchen on site. Some reviewers have also mentioned the unique and personalized touches, such as adding mini s'mores for dessert, which can enhance the overall party experience.\\n\\nIn conclusion, Lucca Truck appears to be a top-notch food truck in Santa Barbara, offering high-quality dining options and exceptional service. Its convenient location and versatility make it an ideal choice for a wide range of events, from small gatherings to large parties.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 204,
+  "source_cluster_id": "sha256:e5be8bb83f54fc92953f09c49925f6811d1de76d3bafff9835d54dde550482bb",
+  "source_id": "15033",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:f67836f7c3969423e08514b38d6b257ced3bb72a8ddd273ee16fb41324e3ea61",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

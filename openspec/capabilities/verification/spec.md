@@ -48069,3 +48069,20 @@ Private stub transport tests SHALL precede loading. Test prompt identity, fixed
 answers, cyclic sources, label rejection, truncation, invalid probabilities,
 timeouts, interrupted checkpoint recovery, budget censoring and cold reductions.
 Count independent original sources, never duplicate or altered-source calls.
+## REQ-VERIFY-8102: Seal learning features before future labels
+
+Exp8102 SHALL read only authenticated Exp8098 public stream256 and retention64
+manifests. It SHALL preserve public order, reject evaluator fields and duplicate
+source clusters, and reuse the Exp7995 complete-source risk prompt and parser.
+The frozen decoder allows at most320 calls,96 output tokens per call,30720 total,
+120 seconds per call and no launch after3150 seconds. Started calls never retry.
+Uncertain interrupted calls remain failed under their original invocation scope.
+Features contain the clipped Qwen logit and eight Exp7980 lexical measurements.
+Missing features SHALL retain their original slots and release slot+20. Retention
+features SHALL seal separately. No labels, class support or H1 result gates capture.
+
+### SCENARIO-VERIFY-8102-PRIVATE
+
+Private tests SHALL reject future labels and duplicate roles, recover an orphaned
+ledger start without generation, preserve context exclusions and missing clocks,
+and cold-reduce readiness at224 complete stream and48 retention features.

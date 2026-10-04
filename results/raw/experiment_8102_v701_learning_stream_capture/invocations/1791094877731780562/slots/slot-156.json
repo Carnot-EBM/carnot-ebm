@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2443441799841821,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:c7b26af9cb106f3ac9dca09edc325323c9cb37e869689586bc384700ea70b4e9",
+  "human_target": null,
+  "input_tokens": 587,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:c7b26af9cb106f3ac9dca09edc325323c9cb37e869689586bc384700ea70b4e9",
+    "feature_hash": "sha256:6d7c7ffe30dd9f3892086d27dcf42e3916d46954235ceb3ac756f66b4a837d71",
+    "source_normalized_hash": "b1801075dfa842f7e8d838226b062e81fa8dfe3d07c08d388d09aa6dbeadbe5c",
+    "values": [
+      0.2812671703296703,
+      0.46458333333333335,
+      0.0,
+      0.0,
+      0.47115384615384615,
+      0.5,
+      0.7187328296703297,
+      0.9168154761904762
+    ],
+    "window_count": 26
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 12,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 587,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 612
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:14ac5f7a0c1cb62041a9bafda7cdbb1ef33cf44475f3af09be5f39c1be34128e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 12\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095536,
+    "id": "chatcmpl-MLwiL0aMFOI7SA4CSUrATDkGX6QIKr0y",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 589.062,
+      "predicted_n": 25,
+      "predicted_per_second": 42.440354326030196,
+      "predicted_per_token_ms": 23.56248,
+      "prompt_ms": 536.809,
+      "prompt_n": 509,
+      "prompt_per_second": 948.1957269717907,
+      "prompt_per_token_ms": 1.0546345776031434
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 587,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 612
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Bake for 20 minutes, then flip the tofu and fries, and then bake for another 15-20 minutes until crispy. 2  Remove tofu and broil the fries for a few minutes, watching carefully, until golden and charred in some spots. 3  Remove and serve with ketchup!\\\\n\\\\npassage 2:1 Bake tofu on middle rack and fries on bottom rack at 400F. 2  Bake for 20 minutes, then flip the tofu and fries, and then bake for another 15-20 minutes until crispy. 3  Remove tofu and broil the fries for a few minutes, watching carefully, until golden and charred in some spots. 4  Remove and serve with ketchup!\\\\n\\\\npassage 3:Directions. Preheat over to 400 degrees. Slice Tofu into 1 x 1 x 3 in. sticks. In a medium bowl, mix together flour, garlic powder, salt and pepper and set aside. Add beaten eggs to a small bowl, and cornflakes to a third bowl. To coat Tofu sticks, lightly roll in seasoned flour, dip in egg, and roll in cornflakes, turning to coat all sides. Repeat for remaining Tofu sticks and place on baking sheet. Bake for approximately 15 minutes, or until golden brown and crispy.\\\\n\\\\n\\\",\\\"question\\\":\\\"crispy tofu sticks\\\"}\", \"original_answer\": \"The crispy tofu sticks can be prepared by preheating the oven to 400 degrees, slicing the tofu into 1 x 1 x 3 in. sticks, and coating them in a mixture of flour, garlic powder, salt, and pepper. They should then be dipped in beaten eggs and rolled in cornflakes to coat all sides. After placing them on a baking sheet, they should be baked for approximately 15 minutes or until they are golden brown and crispy.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 157,
+  "source_cluster_id": "sha256:c87444512f5c9a63ffad59718e1c379dabdf53135b0f0f1aaf8c5b418a43cb18",
+  "source_id": "15146",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:c7b26af9cb106f3ac9dca09edc325323c9cb37e869689586bc384700ea70b4e9",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.8693353349808604,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:a524ae13a22417c80bb31610c216c11a89e02126356acd182881c0f7c239c157",
+  "human_target": null,
+  "input_tokens": 1346,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:a524ae13a22417c80bb31610c216c11a89e02126356acd182881c0f7c239c157",
+    "feature_hash": "sha256:884312bb7416050bdd8b2a586b8d769a00453df6a3c251fec2fbb9b05c2a6ec1",
+    "source_normalized_hash": "cfa25d211cedb37cce119a91dd8977b9a39b9c7db6c244420549ba1891c05d96",
+    "values": [
+      0.2927931627665766,
+      0.503379463195523,
+      0.12121212121212122,
+      1.0,
+      0.47222222222222227,
+      0.5,
+      0.7072068372334234,
+      0.9259146263188597
+    ],
+    "window_count": 66
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1346,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1369
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:b7125107eac0d1e2b7f6dabf74385ca38e0efa64c7dfe047e6a58ef72c0fa21b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095406,
+    "id": "chatcmpl-Mjw10cNBCFFGlqi0aCSx3ggiEqgxBu9J",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.075,
+      "predicted_n": 23,
+      "predicted_per_second": 42.58667777623478,
+      "predicted_per_token_ms": 23.481521739130436,
+      "prompt_ms": 1162.953,
+      "prompt_n": 1268,
+      "prompt_per_second": 1090.327812043995,
+      "prompt_per_token_ms": 0.9171553627760252
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1346,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1369
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"When Hong Kong police answered a call in the early hours of a Saturday morning last November, they encountered a grisly scene and an alleged crime that shocked the city. One woman was lying on the floor with cuts to her neck and buttocks. Another was stuffed inside a suitcase on the balcony. A former banker, 29-year-old Briton Rurik Jutting, was charged with two counts of murder. On Thursday, a court hearing that was to determine whether there was enough evidence to proceed to trial was adjourned until May. Here's what we know so far about the victims and their alleged attacker. Jutting allegedly lived at the murder scene, an upmarket apartment in the middle of Wan Chai, an inner-city suburb that's home to an eclectic mix of late-night bars, residential tower blocks and local markets selling groceries and assorted cheap goods. In the early hours of Saturday morning, November 1, police say Jutting called them to the apartment.  There they found a woman lying on the blood-splattered floor, later identified as 29-year-old Seneng Mujiasih. During a search of the apartment, officers uncovered another body hidden in a suitcase on the balcony. It's alleged 25-year-old Sumarti Ningsih was killed on October 27, five days before her body was found. Sumarti Ningsih was from Cilacap, in Central Java, and was the mother of a five-year-old girl. In a statement, her cousin, Jumiati, described her as  \\\"just an ordinary woman from Indonesia\\\" who, like many others, was \\\"forced to work abroad to feed her poor family and make her dream comes (sic) true.\\\" \\\"She wanted to work as professional so she can earn money and dignity for her family,\\\" Jumiati wrote. \\\"She is good girl and did not deserve this treatment.\\\" According to the Asian Migrant Coordinating Body, Ningsih was visiting Hong Kong as a tourist and had been due to fly back to Jakarta the day after her body was found. Last year, her grieving father, Ahmad Khaliman, told Agence France-Presse that his daughter had worked in Hong Kong as a domestic helper between 2011 and 2013. She'd since returned on two occasions, Khaliman said. He said the family had been shocked by her murder, and called for the perpetrator to be executed. \\\"If not, I cannot accept it. He has already taken my daughter's life, so he has to pay with his life,\\\" he told CNN affiliate Trans7. Seneng Mujiasih had more recently worked as a domestic worker in Hong Kong but had overstayed her visa, according to the Asian Migrant Co-ordinating Body. Also known as Jesse Lorena, Mujiasih was from the city of Muna in Sulawesi province, in southeast Indonesia. Other than that, few details are known about her life and why she stayed on in Hong Kong. After news of their death spread, fellow domestic workers held a vigil in Hong Kong's Victoria Park. Around 200 people gathered to sing and pray, and lay flowers besides photos of the two women. The victims' bodies were buried after being repatriated to Indonesia in November. Before being taken into custody, Rurik Jutting lived in the upmarket J Residence in Wan Chai.  He was detained at the scene, where police found the bodies of two women and seized a knife during a search of the premises. It's unclear when Jutting left his job as a trader at the Bank of America Merrill Lynch; a BoA spokesman would only confirm that a man of the same name had worked there in the past. Jutting's profile on LinkedIn said he haad been employed at the bank's structured equity finance and trading division in Hong Kong since July 2013. Before that, he worked in the same unit in London for three years. According to the profile, Jutting previously worked in capital markets for the British bank Barclays and studied history and law at the prestigious University of Cambridge, between 2004 and 2008. As part of the trial process, tests were conducted to determined if Jutting was psychologically fit to enter a plea. He was. The case was then adjourned to allow for more than 200 pieces of forensic and DNA evidence to be analyzed.\\n\", \"original_answer\": \"In November, a former banker named Rurik Jutting was charged with two counts of murder after police discovered two women's bodies in his upscale Hong Kong apartment. One victim, Seneng Mujiasih, was found on the floor with cuts to her neck and buttocks, while the other, Sumarti Ningsih, was found stuffed inside a suitcase on the balcony. Ningsih, a 25-year-old mother from Indonesia, had been visiting Hong Kong as a tourist and was due to fly back to Jakarta the day after her body was found. Mujiasih, also from Indonesia, had recently worked as a domestic worker in Hong Kong but had overstayed her visa. Jutting, a 29-year-old British citizen, was detained at the scene and later charged with two counts of murder. His trial was adjourned until May to allow for the analysis of over 200 pieces of forensic and DNA evidence.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 65,
+  "source_cluster_id": "sha256:077e73ebf13af2f3b08b4be6ae80a60897564f4f9dc3e482a63bed0fc3911ea6",
+  "source_id": "15600",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:a524ae13a22417c80bb31610c216c11a89e02126356acd182881c0f7c239c157",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33
+  ]
+}

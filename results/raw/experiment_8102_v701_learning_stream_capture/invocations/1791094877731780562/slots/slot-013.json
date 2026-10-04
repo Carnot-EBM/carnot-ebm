@@ -1,0 +1,141 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6628917910857126,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:b39ce0df6cee3a7179ee45e9a56d02ddf055d3f42d8cb991b43c1f2760fdcb10",
+  "human_target": null,
+  "input_tokens": 905,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:b39ce0df6cee3a7179ee45e9a56d02ddf055d3f42d8cb991b43c1f2760fdcb10",
+    "feature_hash": "sha256:3fe38759cca0a7641a60f8a46dbb21e5588658c960e3bc6394d75f7c769e266f",
+    "source_normalized_hash": "2a41bdf4ce0e13cf16d0bb27396054d549729f1c5854330094ee90437ed837b9",
+    "values": [
+      0.32780136833010953,
+      0.5706528373397158,
+      0.0,
+      0.0,
+      0.42424242424242425,
+      0.42857142857142855,
+      0.6721986316698905,
+      0.8750786928327555
+    ],
+    "window_count": 33
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 905,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 931
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:f07711ccf15011f92849d3cc4bb89307d717f68a47f70f1beabb2c0754c0164c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095328,
+    "id": "chatcmpl-infrAEbxcWQYQ1FGAIMiL2zoR7ioxF0z",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 607.593,
+      "predicted_n": 26,
+      "predicted_per_second": 42.79180306553894,
+      "predicted_per_token_ms": 23.368961538461537,
+      "prompt_ms": 833.59,
+      "prompt_n": 827,
+      "prompt_per_second": 992.0944349140465,
+      "prompt_per_token_ms": 1.0079685610640872
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 905,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 931
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Below are 40 facts about Recycling. Fact 1: Recycling is a process to create new items from old and used materials. This helps in reducing energy and potentially useful materials from being wasted. Fact 2: Recycling is a part of waste disposal hierarchy \u2013 Reduce, Reuse, Recycle.Fact 3: Aluminium cans can actually be recycled and put back onto the shelf at your local grocery store in just about 2 months. Fact 4: Aluminium cans are probably the most recycled item, at least in the United States.act 1: Recycling is a process to create new items from old and used materials. This helps in reducing energy and potentially useful materials from being wasted. Fact 2: Recycling is a part of waste disposal hierarchy \u2013 Reduce, Reuse, Recycle.\\\\n\\\\npassage 2:1 Recycling one ton of newspaper saves 15 trees. 2  Every ton of newspaper recycled saves 4100 kWh or enough energy to power a TV for 31 hours. 3  Recycling a soda can saves 96 percent of the energy used to make a can from ore and produces 95 percent less air pollution and 97 percent less water pollution. Recycling one ton of cardboard saves over nine cubic yards of landfill space. 2  Number of landfills in operation in 1978: 14,000; in 1988: 7,924; in 2001: 1,858; in 2006: 1,754. 3  Recycling one ton of newspaper saves 15 trees. 4  Every ton of newspaper recycled saves 4100 kWh or enough energy to power a TV for 31 hours.\\\\n\\\\npassage 3:There are many fun facts about recycling. Here are a number of fun and interesting recycling facts: If you know a fun recycling fact, please share it! 1  It takes 80-100 years for an aluminum can to decompose (break down) in a landfill.2  Aluminum cans can be recycled into: soda cans, pie plates, license plates, thumbtacks, aluminum foil, and many other items. Glass takes over 1,000,000 (one million) years to decompose in a landfill. 2  Glass can be recycled into jars, jewelry, bottles, dishes, drinking glasses, coffee mugs and many other items. 3  It can take up to 700 years for plastic to decompose (break down) in a landfill.\\\\n\\\\n\\\",\\\"question\\\":\\\"important facts about recycling\\\"}\", \"original_answer\": \"Important facts about recycling:\\n\\n* Recycling is a process of creating new items from old and used materials.\\n* Recycling helps reduce energy consumption and prevent waste.\\n* The most commonly recycled item in the US is aluminium cans, which can be recycled in just about 2 months.\\n* Aluminium cans are also the most recycled item.\\n* Recycling one ton of newspaper saves 15 trees, 4100 kWh of energy, 96% of the energy used to make a can from ore, and reduces air and water pollution by 95%.\\n* Recycling one ton of cardboard saves over 9 cubic yards of landfill space.\\n* Landfill use has decreased significantly over time due to recycling efforts.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 14,
+  "source_cluster_id": "sha256:1d472d44845c78b65c9444eca019112495bad054c3d0d0b5de37596e3c00df5c",
+  "source_id": "12324",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:b39ce0df6cee3a7179ee45e9a56d02ddf055d3f42d8cb991b43c1f2760fdcb10",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

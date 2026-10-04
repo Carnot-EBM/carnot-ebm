@@ -1,0 +1,132 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.307294795056805,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:48c8406c28648322ca8c184182ed6cc6c8eb8135e0b43aeba3dcdbf3f9b8b742",
+  "human_target": null,
+  "input_tokens": 552,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:48c8406c28648322ca8c184182ed6cc6c8eb8135e0b43aeba3dcdbf3f9b8b742",
+    "feature_hash": "sha256:7fb33300f6065a3a7d919f96028d52dbfc9e877fd867140b78fac88bbee55a65",
+    "source_normalized_hash": "c2e395467501fc41b7994aa7ff699d621bb4100a928ffc7a1096cfbdb12dfdb7",
+    "values": [
+      0.33882575757575756,
+      0.5234848484848484,
+      0.1875,
+      1.0,
+      0.0,
+      0.0,
+      0.6611742424242425,
+      0.8707070707070708
+    ],
+    "window_count": 16
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 4,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 552,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 576
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:b42daa47e22ee05f8055fc131fe68c8c0f4c9ac4364d1dc80f2df6b80ced4289",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 4\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095669,
+    "id": "chatcmpl-byybf091EdwAM7xgk7VpOmTkb4Bh1rgH",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.11,
+      "predicted_n": 24,
+      "predicted_per_second": 42.46960768699899,
+      "predicted_per_token_ms": 23.54625,
+      "prompt_ms": 527.963,
+      "prompt_n": 474,
+      "prompt_per_second": 897.7901860547047,
+      "prompt_per_token_ms": 1.1138459915611814
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 552,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 576
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:\u2022 The negatively charged bottom part of the storm sends out an invisible charge toward the ground. When the charge gets close to the ground, it is attracted by all the positively charged objects, and a channel develops. The subsequent electrical transfer in the channel is lightning.\\\\n\\\\npassage 2:What happens when lightning hits? You have to be quite unlucky to be killed by lightning \u2013 only about 10% of the people hit each year die \u2013 but being struck by lightning is a far from pleasant experience as Roy Sullivan can attest. A park ranger, he was struck seven times between 1942 and 1977 and suffered a range of disabling injuries.\\\\n\\\\npassage 3:Lightning is a very d\u00adangerous force that, yes, can even reach you indoors if you're in contact with the telephone or plumbing. \u00adIf lightning strikes the phone line outside your house, the strike will travel to every phone on the line -- and potentially to you if you are holding the phone. So, if you are indoors during a lightning storm, stay off the phone. If you must call someone, use a cordless or cell phone -- that way, you're not in contact with any wires that run outdoors. Stay away from plumbing pipes like your bath tub or shower, as well.\\\\n\\\\n\\\",\\\"question\\\":\\\"what happens when lightning hits your phone\\\"}\", \"original_answer\": \"Based on the given passages, it appears that if lightning hits your phone while you are using it, the electrical current from the lightning strike will travel through the phone line and potentially harm you. It is advised to avoid using landline phones during a lightning storm and instead use cordless or cell phones to minimize the risk of injury. Therefore, the answer to the question \\\"What happens when lightning hits your phone?\\\" is that it can potentially cause harm or injury if you are using a landline phone during a lightning storm.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 256,
+  "source_cluster_id": "sha256:528fb322eea78aae2b566a626340f3b11c593cbd655c32330da71c339b81a3da",
+  "source_id": "15270",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:48c8406c28648322ca8c184182ed6cc6c8eb8135e0b43aeba3dcdbf3f9b8b742",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

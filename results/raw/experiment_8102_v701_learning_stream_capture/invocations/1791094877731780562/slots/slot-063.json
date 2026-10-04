@@ -1,0 +1,151 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6406195249874145,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:bffe3b285738011d27b0da7c0f790b5cd072fad73263802708959e588ac9d395",
+  "human_target": null,
+  "input_tokens": 1105,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:bffe3b285738011d27b0da7c0f790b5cd072fad73263802708959e588ac9d395",
+    "feature_hash": "sha256:a5f82bc2db10d3e6c0c289bbfda5c37e321c2d654af6a521cc4ad7a8a1d7bd6d",
+    "source_normalized_hash": "a57add623b613f402a03734abe4d15eb5e8d4e6dda5a05d70e1a7e8e8b05b40b",
+    "values": [
+      0.28647803082585693,
+      0.6989476690226315,
+      0.3,
+      0.8,
+      0.2,
+      0.2,
+      0.7135219691741431,
+      0.9496541015206683
+    ],
+    "window_count": 54
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1105,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1128
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:2d0797d8638ce1c04b088a4721fa677ee2b7cbbcc914d3a6f7077e8cbcef7137",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095404,
+    "id": "chatcmpl-aitaWhKJUcwEKzUTS9Q5aIbFYYDfvkvn",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.764,
+      "predicted_n": 23,
+      "predicted_per_second": 42.61121527185955,
+      "predicted_per_token_ms": 23.468,
+      "prompt_ms": 967.765,
+      "prompt_n": 1027,
+      "prompt_per_second": 1061.2080412083512,
+      "prompt_per_token_ms": 0.9423222979552094
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1105,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1128
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The Indonesian government has ordered preparations for the execution of 10 inmates on death row, including Filipino maid Mary Jane Veloso and Australians Andrew Chan and Myuran Sukumaran. Jakarta has advised consular officials to travel to Indonesia's \\\"execution island\\\" -- Nusa Kambangan -- where the ten are being held, though a spokesman for the Attorney General, Tony Spontana, told CNN Friday this is not the required 72-hour notice given to death row convicts before the actual execution. But he said, \\\"the time is approaching.\\\" The 10 inmates, from Australia, France, Ghana, the Philippines, Brazil, Nigeria and Indonesia, had their petitions for clemency denied by President Joko Widodo in late 2014. The executions, which will be carried out by firing squad, were planned for earlier this year but were postponed after several inmates filed separate legal challenges. On Tuesday, the Indonesian Supreme Court rejected reviews filed by French national Serge Atlaoui and Ghanaian Martin Anderson. \\\"We're just waiting for one more decision on the judicial review filed by Zainal Abidin and we hope the Supreme Court's decision will come out tomorrow (Friday),\\\" Spontana added. Abidin is also a drug convict and the only Indonesian citizen in the group. Chan and Sukumaran, members of the so-called \\\"Bali Nine\\\" convicted for their role in a failed 2005 heroin smuggling plot, tried to challenge the President's decision earlier this month but lost an appeal for the State Administrative Court to hear their case. Their lawyers have since filed another review at the Constitutional Court. The Attorney General's office has said they would respect all ongoing court proceedings but insisted the inmates have exhausted all their legal options. Australia has repeatedly appealed for clemency for the pair and has unsuccessfully proposed a prisoner swap with Indonesia as a way of avoiding their deaths. In another sign that the execution date may be announced soon, Spontana said Veloso, 30, was moved Friday to Nusa Kambangan, which lies off the coast of West Java. She has been held in a prison in Yogyakarta, Central Java since 2010. The Supreme Court rejected her petition for a judicial review in March but her lawyers were still preparing to file a second review on Monday. OPINION: Why executions won't win Indonesia's drug war. According to her lawyers, Veloso unknowingly carried drugs into Indonesia and that she was set up by members of a drug syndicate. Her entire family has traveled to Indonesia to fulfill her last wish. Older sister Marites Laurente told CNN Friday that Veloso wants to see parents, siblings and two young sons before facing the firing squad. Laurente said that while her sister seemed resigned to her fate, the family still hopes for a stay in her execution. \\\"The chances are slim but we're hoping for a miracle. That's what we need, a miracle,\\\" she said. \\\"If President Widodo kills her, he would kill an innocent person. So please stop them from executing her.\\\" At the time of the interview, lawyers had not informed the family about news of the attorney general's orders. Veloso's father, Cesar Veloso, 59, suffers from a heart ailment and seemed distraught about his daughter's situation. \\\"If I find out that my daughter will be executed the next day, I will kill myself first,\\\" he told CNN late Thursday. \\\"It's like throwing my child away. She is innocent. I cannot accept it.\\\" No date has been set for the execution.\\n\", \"original_answer\": \"Here is a summary of the article in 141 words:\\n\\nIndonesia has ordered preparations for the execution of 10 death row inmates, including a Filipina maid and two Australians. The country's Attorney General has advised consular officials to travel to the execution island, but the exact date of the executions has not been set. The inmates have had their petitions for clemency denied, and the Supreme Court has rejected some of their legal challenges. The Indonesian government has rejected appeals for clemency from Australia, and the families of the inmates are seeking a stay of execution. One of the inmates, Mary Jane Veloso, has been moved to the execution island and her family has traveled to Indonesia to fulfill her last wish.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 64,
+  "source_cluster_id": "sha256:6533597d79b3d7792083b45f8ee449e07b20864998b1c2e1bcff5c721ea7b46d",
+  "source_id": "15811",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:bffe3b285738011d27b0da7c0f790b5cd072fad73263802708959e588ac9d395",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ]
+}

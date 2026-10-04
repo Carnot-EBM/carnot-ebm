@@ -1,0 +1,87 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "answer_units_over_budget",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:9fdcc68979e50d18af3548ca701b25f004df59ad1c3741bb9a642f6fd06e8104",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": "answer_units_over_budget",
+    "family_id": "sha256:9fdcc68979e50d18af3548ca701b25f004df59ad1c3741bb9a642f6fd06e8104",
+    "feature_hash": "sha256:fb983e347bb3212925c3cd894d090625d44f54c18a62a0df63ae7c942ca4cb79",
+    "source_normalized_hash": "350908b013b7264757abbbee70192405e3634affdb673f427e4b78956340dd9d",
+    "values": null,
+    "window_count": 26
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:5548c2d42872e551e76682f20ecea563f801234270946b75e39162bd66840b22",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Basics. Getting started selling on eBay Set up your seller account, and then create and manage your listing. Using the quick listing tool The quick listing tool helps you get your item up for sale quickly by providing guidance on how to price and ship your item.elling with a reserve price Learn how to set a minimum or reserve price on your item. [ more\u2026 ]. Selling multiple items Find out how to sell multiple items. Selling Get It Fast items Get quick sales when you give buyers the option to receive your item within one business day.\\\\n\\\\npassage 2:Many old items can be worth serious cash. But to really get the eBay cash rolling in, you need to know the etiquette and shortcuts. This is a crash course on how to sell. It explains how to cut fees, the best time to close auctions, profit from bizarre items you never thought you'd sell and more.any old items can be worth serious cash. But to really get the eBay cash rolling in, you need to know the etiquette and shortcuts. This is a crash course on how to sell. It explains how to cut fees, the best time to close auctions, profit from bizarre items you never thought you'd sell and more.\\\\n\\\\npassage 3:1 For example, if you're selling an iPod, put  MP3 player  in your title. 2  However, eBay's search will automatically account for variant phrasings; it will also sometimes check category names in addition to the auction title. 3  Do a search on specific terms and look at the titles of the auctions that come up.et your price according to how much you paid for the item, your time, eBay fees, and how much it costs to ship. Remember that once someone buys an item from you or the auction ends, it constitutes a binding agreement to sell, and it is difficult to get past this unless both parties agree to cancel the sale.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i sell stuff on ebay\\\"}\", \"original_answer\": \"Sure, I can help you with that! Based on the given passages, here's a brief guide on how to sell stuff on eBay:\\n\\n1. Set up your seller account and create a listing for your item using eBay's quick listing tool. The tool will guide you on how to price and ship your item.\\n2. Consider setting a minimum or reserve price for your item to ensure you get the price you want.\\n3. If you're selling multiple items, you can list them separately or use eBay's multi-item listing feature.\\n4. Use keywords in your title and description to make it easier for buyers to find your item. For example, if you're selling an iPod, include \\\"MP3 player\\\" in your title.\\n5. Research similar items on eBay to determine a fair starting price and shipping cost.\\n6. Be aware that once someone buys an item from you or the auction ends, it constitutes a binding agreement to sell, and it can be difficult to cancel the sale without both parties agreeing.\\n\\nThat's a basic outline of how to sell on eBay. Good luck with your sales!\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "slot": 119,
+  "source_cluster_id": "sha256:013397e0084ae0cde7ab4d1fee5fe05291afbf5fa646351f9db855a300da52c5",
+  "source_id": "15352",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:9fdcc68979e50d18af3548ca701b25f004df59ad1c3741bb9a642f6fd06e8104",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.214921778999269,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:f555e118d65e60e4a3131d1d983ea7a9d05e453318777bd7e6b04830ffc3130a",
+  "human_target": null,
+  "input_tokens": 595,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:f555e118d65e60e4a3131d1d983ea7a9d05e453318777bd7e6b04830ffc3130a",
+    "feature_hash": "sha256:1d8947a0a4430ad3863416fbb7c931c0884deccf530c9df766f2f34d6aa066df",
+    "source_normalized_hash": "13a0ee0836544b454b6fe0e1f4ac57531179a8cdccbc20315b1c1d232f9238af",
+    "values": [
+      0.34725906277630414,
+      0.6277701149425288,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.6527409372236957,
+      0.9135402298850576
+    ],
+    "window_count": 26
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 595,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 618
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:695ae6771b59f7c86101e0cc9b8014554c2790502ecc65996f2d8dce2543dbe9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095499,
+    "id": "chatcmpl-RbqYKbLmbO3Y2KjRDDipfYKjMESWIevT",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.415,
+      "predicted_n": 23,
+      "predicted_per_second": 42.55988453318283,
+      "predicted_per_token_ms": 23.496304347826086,
+      "prompt_ms": 559.622,
+      "prompt_n": 517,
+      "prompt_per_second": 923.8378762807753,
+      "prompt_per_token_ms": 1.0824410058027079
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 595,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 618
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A helicopter crash Saturday in Malaysia killed six people, including the nation's former ambassador to the United States and a high-ranking member of the prime minister's staff, the Malaysian state news agency Bernama reported. The helicopter crashed near Kampung Pasir Baru in Semenyih, at 4:55 p.m. Saturday (4:55 a.m. ET), Bernama said. Prime Minister Najib Razak ordered an investigation. Among the victims were Azlin Alias, who worked on the prime minister's staff, and Jamaluddin Jarjis, former Malaysian ambassador to the United States and chairman of PR1MA Malaysia, Bernama said. PR1MA is an organization that develops housing in urban centers. \\\"We have lost two figures who had made great contributions to the government, party and country in this tragedy,\\\" Najib told reporters after visiting the crash site. Jamaluddin Jarjis was \\\"a person of high caliber, who had sacrificed much for the government, party and country,\\\" he said. \\\"He had many acquaintances here and abroad.\\\" The state news agency called Azlin the prime minister's private secretary general, but Najib referred to him as chief of staff. \\\"Personally he had agreed to leave his career in the corporate sector to serve the government as his national service,\\\" Najib said. The helicopter's flight recorder has been found in good condition, Bernama reported Sunday, citing police. The news agency said Malaysian civil aviation authorities are expected to release a preliminary report on the crash within seven days. CNN's Jethro Mullen contributed to this report.\\n\", \"original_answer\": \"A helicopter crash in Malaysia has killed six people, including the former ambassador to the United States and a high-ranking member of the prime minister's staff. The crash occurred near Kampung Pasir Baru in Semenyih. Prime Minister Najib Razak has ordered an investigation into the incident. The victims include Azlin Alias, a member of the prime minister's staff, and Jamaluddin Jarjis, former ambassador to the US and chairman of PR1MA Malaysia. The flight recorder has been recovered in good condition.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 130,
+  "source_cluster_id": "sha256:11cdc87588ca3f24da3da52d1236f749badec4a8d01562d770c4cbd181741bc6",
+  "source_id": "11896",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:f555e118d65e60e4a3131d1d983ea7a9d05e453318777bd7e6b04830ffc3130a",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

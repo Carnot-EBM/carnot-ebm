@@ -1,0 +1,129 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.14447834296152,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:fd1593cdc17dba807b9d2a17e65a378a36b8e295da39b738622e9afd7e6c3796",
+  "human_target": null,
+  "input_tokens": 457,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:fd1593cdc17dba807b9d2a17e65a378a36b8e295da39b738622e9afd7e6c3796",
+    "feature_hash": "sha256:61e433f473dc736c333ca7436fc32af8693f0849770c502f40279cdbd2acda5c",
+    "source_normalized_hash": "5a9688595ebf12999125eb785944b1b3439afc8198e28096ff41e38379573abf",
+    "values": [
+      0.33334415584415583,
+      0.4583333333333333,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.6666558441558441,
+      0.850108225108225
+    ],
+    "window_count": 10
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 457,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 481
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:b9db27d7d2fc14de0797a99947d7165d9f2d43bc0a7e9b36d88b487fbae5181f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095449,
+    "id": "chatcmpl-vwhFwR2unmFRHAlrJ07kOR8d7FFtgQ8t",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.296,
+      "predicted_n": 24,
+      "predicted_per_second": 42.60637391353746,
+      "predicted_per_token_ms": 23.47066666666667,
+      "prompt_ms": 447.6,
+      "prompt_n": 379,
+      "prompt_per_second": 846.7381590705987,
+      "prompt_per_token_ms": 1.1810026385224275
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 457,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 481
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Selective breeding is a method of breeding that allows only those individual organisms with desired characteristics to produce the next generation. Humans use selective breeding, which takes advantage of naturally occurring genetic variation, to pass desired traits on to the next generation of organisms.\\\\n\\\\npassage 2:Selective breeding is a method of breeding that allows only those individual organisms with desired characteristics to produce the next generation. Humans use selective breedi \u2026 ng, which takes advantage of naturally occurring genetic variation, to pass desired traits on to the next generation of organisms.\\\\n\\\\npassage 3:New varieties. Natural selection and selective breeding can both cause changes in animals and plants. The difference between the two is that natural selection happens naturally, but selective breeding only occurs when humans intervene. For this reason selective breeding is sometimes called artificial selection.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between inbreeding and selective breeding\\\"}\", \"original_answer\": \"Based on the provided passages, here's the difference between inbreeding and selective breeding:\\n\\nInbreeding refers to the mating of individuals that are closely related, resulting in offspring that have a higher chance of inheriting the same genetic traits from their parents. Selective breeding, on the other hand, is a method of breeding that involves intentionally selecting and mating individuals with specific desirable traits, while avoiding or excluding individuals with undesirable traits.\\n\\nIn other words, inbreeding focuses on the genetic relationship between individuals, while selective breeding focuses on the specific traits that are desired in the offspring.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 96,
+  "source_cluster_id": "sha256:3af0da9e179df2641a47bba3210b4e55fa239572ceb805445566d9bccb9f6c99",
+  "source_id": "12224",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:fd1593cdc17dba807b9d2a17e65a378a36b8e295da39b738622e9afd7e6c3796",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

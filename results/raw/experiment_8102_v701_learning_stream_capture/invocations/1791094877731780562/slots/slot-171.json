@@ -1,0 +1,147 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7686629079980776,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:b1a517601aa034868a219f63b80ab93f51172428f04dbec1ee29fd3aa77b4e69",
+  "human_target": null,
+  "input_tokens": 1256,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:b1a517601aa034868a219f63b80ab93f51172428f04dbec1ee29fd3aa77b4e69",
+    "feature_hash": "sha256:ff5da83cc026360a412ca443f21a9a68f25f4332de8814107f0c97af66212cbe",
+    "source_normalized_hash": "126d56966f2d80bb33d250ab49afd6b34f176ffbad9cbd3ddae5d9be7b123b8a",
+    "values": [
+      0.23271602980561,
+      0.4407664940423561,
+      0.30434782608695654,
+      1.0,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.76728397019439,
+      0.9579616647720096
+    ],
+    "window_count": 46
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1256,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1279
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:44bb387f312961cb7db7d4538528d545ec7ca6f4baed8d57e054b4f80fc3a728",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095559,
+    "id": "chatcmpl-eXEXMWxxAeZqqgs1KHsoD2IWxH2iPhyB",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.403,
+      "predicted_n": 23,
+      "predicted_per_second": 42.48221749787127,
+      "predicted_per_token_ms": 23.53926086956522,
+      "prompt_ms": 1108.89,
+      "prompt_n": 1178,
+      "prompt_per_second": 1062.3235848461072,
+      "prompt_per_token_ms": 0.941332767402377
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1256,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1279
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6990 Market Pl Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":null,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Vegetarian, Salad, Restaurants, Cafes, American (Traditional), Burgers, Juice Bars & Smoothies\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-15:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Natural Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-19 04:31:54\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"If you are tired of heavy, greasy food, try Natural Cafe. It's located in a spacious area with easy and free parking. I've avoided coming here because I thought it was a hippie vegan place, but, boy was I wrong by Judging a book by its cover! Natural Cafe serves salmon and chicken, and non-vegetarian items too. For the vegans, there are items to choose from...but for those craving clean and fresh protein, you can also be satisfied by dining here. Basically, everyone in your family can be happy, no matter what their diet may be.\\\\n\\\\nThey have quite a large menu of items to consider, from soups, salads, sandwiches, bowls, salmon, and even, enchiladas and burritos. I like their variety. There is a commonality between all the dishes: you won't have to suffer from a toxic food coma because the food I've experimented with so far, is served fresh and the food is pretty clean. (Little grease, no deep fried stuff, not overly salted, etc.) The service is also very quick and the portions are quite generous. The prices are average for a casual, California restaurant. \\\\n\\\\nIf I were to describe classic California cuisine to an International friend, I would probably refer to Natural Cafe to describe the kind of various and healthy food that Californians gravitate towards. Come here if you don't know what to eat but want to leave without feeling guilty!\\\"},{\\\"review_date\\\":\\\"2021-11-11 21:06:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"It's rare you find a restaurant that is so consistent, reasonably priced, and healthy. This is my go to for everything especially during Covid when restaurants were closed or things were off menu they always made a great environment for customers and kept everything on the menu and staff employed! I eat here about 3 times a week and have been for many years now\\\"},{\\\"review_date\\\":\\\"2021-11-11 01:14:12\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"BEST PLACE EVER. Since moving to SB I have found it lacks healthy and quick food places!!! It's mostly just fast food or heavier sit down places. The Natural Cafe is an amazing place to grab and quick bite to eat that is healthy or make a sit down meal out of it!!! The quality is fresh and clean! THE side CHICKEN is fresh and moist, And SUPER GOOD. Tuna Sandwich is also great, and the Caesar salad is bomb (the dressing is really good). HIGHLY RECOMMEND. My favorite restaurant in SB. Deserves 5 starts. No complaints.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, Natural Cafe is a popular eatery located in Goleta, California, offering a variety of food options including vegetarian, salad, burgers, and smoothies. The cafe has a rating of 4.0 stars and receives positive reviews for its clean and fresh food, generous portions, quick service, and reasonable prices. Reviewers appreciate the diverse menu options, including non-vegetarian choices, and enjoy the ambiance of the outdoor seating area. One reviewer describes the cafe as the perfect example of classic California cuisine, while another highlights the consistency and quality of the restaurant's offerings. A third reviewer raves about the chicken and tuna sandwiches, and notes that the cafe is their go-to spot for quick and healthy meals. Overall, Natural Cafe appears to be a great choice for those looking for fresh and flavorful food in a relaxed setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 172,
+  "source_cluster_id": "sha256:4939e1c89564a97bcfec53acdeb55af172d9b3191fcbeb15fe6308fa8bf8dea0",
+  "source_id": "14871",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:b1a517601aa034868a219f63b80ab93f51172428f04dbec1ee29fd3aa77b4e69",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

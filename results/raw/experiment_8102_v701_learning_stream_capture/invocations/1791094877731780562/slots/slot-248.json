@@ -1,0 +1,84 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "answer_units_over_budget",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:2082d1342cb519899298851bc6eff17246e8290879e2de449500bc0efee7f085",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": "answer_units_over_budget",
+    "family_id": "sha256:2082d1342cb519899298851bc6eff17246e8290879e2de449500bc0efee7f085",
+    "feature_hash": "sha256:333f0f0d3a23fe36c6e54d5400374bc2932a49b913c6050c78580b7a61fd2de9",
+    "source_normalized_hash": "71397206798a910a42e834e198e6f602d6d3ddb7c114c0a01e06f0588dcdf4cf",
+    "values": null,
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:1ea3ef84ef79ecaca4866ddd3ebaad00e36070f8f4ff51126107e849eb8f8ece",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:To add videos, first you need a YouTube account. Then you need to link your YouTube account to your Steam profile. You can do this on your profile page. Then make a video, and upload it to YouTube.Then go to your profile, then the link for videos, and there will be a link to add a video.This will bring up a list of all your public YouTube videos.Pick the video you want to add to the hub, then pick the game from the drop down list. It will now be listed on the hub.hen go to your profile, then the link for videos, and there will be a link to add a video. This will bring up a list of all your public YouTube videos. Pick the video you want to add to the hub, then pick the game from the drop down list. It will now be listed on the hub.\\\\n\\\\npassage 2:These is a fast tutorial on how to upload videos from YouTube into your Steam hope it helps you all.hese is a fast tutorial on how to upload videos from YouTube into your Steam hope it helps you all.\\\\n\\\\npassage 3:To add the videos in steam, you need to create an account anonymously and then upload the same videos there. Later granting the permission on that account from steam and adding the videos in steam from that account that has been created anonymously.It will do the job for the time being.share | improve this answer.o add the videos in steam, you need to create an account anonymously and then upload the same videos there. Later granting the permission on that account from steam and adding the videos in steam from that account that has been created anonymously. It will do the job for the time being. share | improve this answer.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to upload a video to steam\\\"}\", \"original_answer\": \"Based on the given passages, here are the steps to upload a video to Steam:\\n\\n1. Create a YouTube account if you don't already have one.\\n2. Link your YouTube account to your Steam profile by going to your profile page and selecting the \\\"Link YouTube Account\\\" option.\\n3. Upload your video to YouTube.\\n4. Go to your Steam profile and select the \\\"Videos\\\" tab.\\n5. Click on the \\\"Add Video\\\" button, which will bring up a list of all your public YouTube videos.\\n6. Select the video you want to add to the Steam hub and choose the game from the drop-down list.\\n7. The video will now be listed on the Steam hub.\\n\\nNote that according to passage 1, you need to have a YouTube account linked to your Steam profile to upload videos to Steam. Passage 2 provides additional information that the process is relatively simple and quick, while passage 3 suggests creating an anonymous account and uploading the videos there before granting permission to Steam to add them to your hub. However, it is unclear whether this method is recommended or effective, so I cannot provide an answer based on passage 3.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "slot": 249,
+  "source_cluster_id": "sha256:a985b9d169dde9ad404aa05a5c53463ac9fd3d124f27ae710fd2e0a054808de5",
+  "source_id": "14381",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:2082d1342cb519899298851bc6eff17246e8290879e2de449500bc0efee7f085",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

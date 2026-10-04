@@ -1,0 +1,141 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.8146804920397699,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:86e290b59b089eef7842db1ab704d1ebf83ddef8ea114d999b63253c11f8a6db",
+  "human_target": null,
+  "input_tokens": 1237,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:86e290b59b089eef7842db1ab704d1ebf83ddef8ea114d999b63253c11f8a6db",
+    "feature_hash": "sha256:0737cc4bc5b593a2a5f59af91540534fe38fa83491c4c254ce2261f7ff0d07cf",
+    "source_normalized_hash": "318cc4943fe682bf8437b838135ed92ec608378e2295ec35874ca9dedbd69161",
+    "values": [
+      0.20007968884148086,
+      0.37481744803184436,
+      0.31176470588235294,
+      0.9,
+      0.2,
+      0.2,
+      0.7999203111585191,
+      0.95
+    ],
+    "window_count": 34
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1237,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1261
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:d5c7b5d6200a898422c697ba861e17b4915d039cca171236b0e51aed420f96b3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095638,
+    "id": "chatcmpl-YI0tKYWkItyVPQWfBvjl29HuQ0NYl44Q",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.286,
+      "predicted_n": 24,
+      "predicted_per_second": 42.38141151291045,
+      "predicted_per_token_ms": 23.595249999999997,
+      "prompt_ms": 1106.043,
+      "prompt_n": 1159,
+      "prompt_per_second": 1047.8796936466304,
+      "prompt_per_token_ms": 0.9543080241587575
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1237,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1261
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"901 E Cabrillo Blvd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":true,\\\"validated\\\":true},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Bars, Mediterranean, Restaurants, Nightlife, Moroccan, Event Planning & Services, Venues & Event Spaces, Italian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-22:0\\\",\\\"Monday\\\":\\\"7:0-21:0\\\",\\\"Saturday\\\":\\\"7:0-22:0\\\",\\\"Sunday\\\":\\\"7:0-21:0\\\",\\\"Thursday\\\":\\\"7:0-21:0\\\",\\\"Tuesday\\\":\\\"7:0-21:0\\\",\\\"Wednesday\\\":\\\"15:0-21:0\\\"},\\\"name\\\":\\\"Convivo Restaurant and Bar\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-14 17:48:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Good food! We ordered the Margherita pizza and bucatini, both were so tasty. Noodles were al dente and loved the pizza crust. Will order  both entr\u00e9e again! Definitely recommend.\\\"},{\\\"review_date\\\":\\\"2021-12-29 21:44:13\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"We have been big supporters here but I am shocked it when people don't look at the situation with empathy.\\\\n\\\\nWe've been coming here for meals throughout the year and forgot to use the Axxess Card. We called up and asked about putting an order in for pick up. We go through all that and I let them know that will be using the Axxess Card finally. They said sorry you have to eat inside. I said we cannot somebody has a compromised system and they are not supposed to be eating indoors at this time given him COVID omicron.   Due to the weather the patio is closed. The manager said they would not make any exception. Even though they can see in the record buck we have been coming here a lot.\\\\n\\\\nI think I even asked about the Axxess and the waiter  didn't know what I was talking about. But bottom line is do you want to work with your customers who are long time supporters or do you say to them well sorry you have to take the risk and eat inside or else we won't honor it. It doesn't make any sense. I'm waiting for the general manager to call me back because Ernesto the manager said well basically ignore your doctors orders and eat inside it if you want the Axxess - we won't make an exception. He didn't put it in those words but I said that's exactly what his messaging is relaying.  The merchants  should spell it out more clearly. Otherwise again we're talking about inaccurate  advertising.\\\"},{\\\"review_date\\\":\\\"2021-12-27 16:37:09\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Positives: Great ambience, beautiful architecture inside, nicely decorated for Christmas, delicious (not outstanding) Pizzas, good soup;\\\\nNegatives: burnt flat bread, bad appetizer (\\\\\\\"Carrot\\\\\\\") with over cooked veggies and Baba Ghanoush that tasted nothing like a real Baba Ghanoush, and an arrogant server (Phillip) that was too full of himself!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Convivo Restaurant and Bar based on the provided structured data:\\n\\nConvivo Restaurant and Bar is a Mediterranean restaurant located in Santa Barbara, California. The restaurant offers a variety of dishes including pizza, pasta, and soups, and has a rating of 4.0 stars out of 5.0 based on customer reviews. The restaurant has a cozy and intimate atmosphere, with free WiFi and outdoor seating available. The menu includes vegetarian and gluten-free options, and takeout and delivery services are also offered.\\n\\nAccording to customer reviews, the restaurant serves delicious food, particularly the Margherita pizza and bucatini. However, some customers have experienced issues with the service, such as an arrogant server and poor appetizers. Additionally, one customer reported that the restaurant did not accommodate their request to use the Axxess Card for pickup due to COVID-19 restrictions.\\n\\nOverall, Convivo Restaurant and Bar appears to be a popular spot for Mediterranean cuisine in Santa Barbara, with positive reviews for its food and ambiance. However, there have been some issues with service and accommodation for customers' requests during the pandemic.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 233,
+  "source_cluster_id": "sha256:43d9e8572947b51f5fb2ce09de975b86d20e89cac67bf4b5421f6bd07eb21ee1",
+  "source_id": "14570",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:86e290b59b089eef7842db1ab704d1ebf83ddef8ea114d999b63253c11f8a6db",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

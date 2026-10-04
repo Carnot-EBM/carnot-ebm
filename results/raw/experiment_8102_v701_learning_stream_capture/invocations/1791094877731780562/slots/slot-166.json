@@ -1,0 +1,132 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3121619429439306,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:649d89544446a3db065bc37e6c34418f68f628a154e11bf60cc0925b9072ba6b",
+  "human_target": null,
+  "input_tokens": 706,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:649d89544446a3db065bc37e6c34418f68f628a154e11bf60cc0925b9072ba6b",
+    "feature_hash": "sha256:f3f09715b8dcde18fe507e9bd4fdd7027a2ccf1a33f50d0901f92e7e3c45f2b3",
+    "source_normalized_hash": "90a473f59853232faaf41e441f45bbc537881268b2dc353f42a28256a373f915",
+    "values": [
+      0.4175460264751062,
+      0.5480518659076534,
+      0.53125,
+      0.75,
+      0.0,
+      0.0,
+      0.5824539735248938,
+      0.7410074997741032
+    ],
+    "window_count": 16
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 706,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 730
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:85b6749c017ae29b0ce2cde2fc078321f74da8ede02dc32e1ff57feb0861d948",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095552,
+    "id": "chatcmpl-6gkVzDw2ABPElSy1rreeR5N2sZZSvrAd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.532,
+      "predicted_n": 24,
+      "predicted_per_second": 42.513090489113104,
+      "predicted_per_token_ms": 23.522166666666667,
+      "prompt_ms": 633.109,
+      "prompt_n": 628,
+      "prompt_per_second": 991.9302995218833,
+      "prompt_per_token_ms": 1.0081353503184713
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 706,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 730
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Broken blood vessels on face can be caused by scrubbing the face too hard, using the wrong face exfoliator, or for rinsing the face with excessively hot water. Excessive sun damage may also cause broken capillaries and lead to unsightly red spots on face.Pregnancy and childbirth are also associated with broken blood vessels on face, due to increased blood pressure. Some birth control pills will also cause blood vessels to break as well as some estrogen therapies.he capillaries do not disappear immediately, but are absorbed and dismantled by the body. When laser treatments are conducted to get rid of broken blood vessels on face, most physicians will anesthetize the skin. Then the laser is applied, which will treat the broken capillaries and not damage the rest of the face.\\\\n\\\\npassage 2:A petechia, plural petechiae, is a small (1\u20132 mm) red or purple spot on the skin, caused by a minor bleed (from broken capillary blood vessels).Petechia refers to one of the three descriptive types of bleeding into the skin differentiated by size, the other two being purpura and ecchymosis. petechia, plural petechiae, is a small (1\u20132 mm) red or purple spot on the skin, caused by a minor bleed (from broken capillary blood vessels).\\\\n\\\\npassage 3:It's easy to spot broken capillaries, particularly on someone's face. Dozens of tiny veins twist, dilate and break, creating red, bruise-like spots on the face.But unlike bruises, broken capillaries don't heal and disappear over time. They are also difficult to treat.ozens of tiny veins twist, dilate and break, creating red, bruise-like spots on the face. But unlike bruises, broken capillaries don't heal and disappear over time.\\\\n\\\\n\\\",\\\"question\\\":\\\"red spot on face broken blood vessel\\\"}\", \"original_answer\": \"Based on the provided passages, here is the answer to the question:\\n\\nThe red spot on the face could be a broken blood vessel caused by excessive sun damage, pregnancy and childbirth, or using the wrong face exfoliator. The broken capillaries do not heal and disappear over time, but laser treatments can be used to remove them. However, it is important to note that laser treatments can only improve the appearance of the skin, but they cannot completely eliminate the broken capillaries.\\n\\nTherefore, the answer to the question is: Broken blood vessels on the face can cause red spots, and while laser treatments can help improve their appearance, they cannot completely eliminate the broken capillaries.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 167,
+  "source_cluster_id": "sha256:f91ab4e43be1c64b77d488801dc408c8fbf6bcec1307d8186aecfb187b047ef5",
+  "source_id": "15391",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:649d89544446a3db065bc37e6c34418f68f628a154e11bf60cc0925b9072ba6b",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

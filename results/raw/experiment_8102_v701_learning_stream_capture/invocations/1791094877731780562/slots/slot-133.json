@@ -1,0 +1,169 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.9880720850778744,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:c5b7cf08189f4c3ec950304e7acfca83608a404520971c40935b8f274676e6d7",
+  "human_target": null,
+  "input_tokens": 1416,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:c5b7cf08189f4c3ec950304e7acfca83608a404520971c40935b8f274676e6d7",
+    "feature_hash": "sha256:cd7f39d1026e7184d6be2763d8d83be858de48d6f617a2c69a3e14c11c0a83e4",
+    "source_normalized_hash": "041dfba23cd7f444cb32b32e50584223d8b076a2346a328a86c541c34039c60b",
+    "values": [
+      0.18973646723646723,
+      0.4085531135531135,
+      0.13333333333333333,
+      1.0,
+      0.48333333333333334,
+      0.5,
+      0.8102635327635328,
+      1.0
+    ],
+    "window_count": 90
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 43,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1416,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1442
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:3aad12c9b12585d923929f8aea01ad11f7612a4673a8475e1e103a430bbea858",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 43\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095506,
+    "id": "chatcmpl-3USs9HBG8Js7JK3KmrfgIcpNKmHDhWQ5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 614.714,
+      "predicted_n": 26,
+      "predicted_per_second": 42.29609216643837,
+      "predicted_per_token_ms": 23.642846153846158,
+      "prompt_ms": 1230.45,
+      "prompt_n": 1338,
+      "prompt_per_second": 1087.4070462026089,
+      "prompt_per_token_ms": 0.9196188340807175
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1416,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1442
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Doing weird stuff to your body in the name of beauty isn't anything new. Humans have been changing the shape of our skulls, inking ourselves up and sticking things through various protuberances since before we figured out how to write. But now we have Twitter and Facebook and hashtags, so these things seem to sweep around the world faster than a quick trip to the piercing joint. And somehow, many trends these days seem to somehow involve a member of the Kardashian clan. The latest: Lip plumping. By sucking on a jar. To look like Kylie Jenner. Seriously. It even has a hashtag: #KylieJennerChallenge. Don't worry, we said, \\\"What the ... ?\\\" too. But, we are, after all, in the business of providing you, dear reader, with information about the news, events and trends that surround you. So please read on to learn more about this and other \\\"beauty\\\" trends inspired by the Kardashians:. Used to be, YouTube would teach the kiddos how to put on eyeliner or style their hair like a favorite star. That's so old-school. Now, the nets say you should stick your lips in a shot glass, suck all the air out and then pull it off to reveal your all-new plump kisser, just like Kylie Jenner. Except, well, see for yourself. The hashtag #KylieJennerChallenge has been trending on Twitter in recent days, with posters showing off the often disturbing results of their efforts. \\\"Made my chin look like a hickey a week ago and I'll say iv never felt so dumb,\\\" Twitter user emmaburkie posted Monday. Plenty of folks shared the sentiment. Many were people who'd tried it. Others were just shaking their heads. Surgeon Dr. Dendy Engelman told Seventeen that the trend is dangerous. \\\"Not only can significant pain, swelling, and bruising result from these suction techniques, but there is potential risk for scarring and permanent disfigurement with repeated attempts,\\\" Engelman said. Jenner has tweeted her disapproval of the lip-plumping trend she inspired. It's a trend that predates the Kardashians, but they certainly gave us a lot of it: the sideboob, the flash of breast from the side of a dress, shirt or just about anything else that can be draped on a woman's body. According to Google, the arbiter of all things, search interest in sideboob has fallen off since its 2012 peak, when Huffington Post dutifully reported \\\"another day, another sideboob\\\" shot from Kim Kardashian. How about something newer? Surely you've heard of the \\\"belfie\\\"? A term reportedly coined by Kim Kardashian herself, this charming practice -- a butt selfie -- involves posting self-photography of one's posterior, thusly:. The trend took off last year, with a deluge of broadcast butts and not a little derision, but may have reached its peak with the apparently real belfie stick -- a device for taking \\\"perfect belfies simply and quickly.\\\" Butt never fear, Kylie Jenner is here to keep the trend going, with a belfie taken just this month liked by 1.4 million people:. Here's a fact for you: In 2014, the number of women undergoing \\\"buttock augmentation\\\" rose by a mountainous 86%, according to the American Society for Aesthetic Plastic Surgery Reports. Why? Kim Kardashian, of course, say the doctors. \\\"While a rounder, more curvaceous derriere has been in vogue for a number of years, celebrities like (Nicki) Minaj and Kim Kardashian have brought the attention to the rear to an all-time high influencing more women to undergo buttock augmentation to achieve the hourglass look,\\\" Dr. Constantino Mendieta said in an ASAPS statement. And he should know. He bills himself a \\\"butt augmentation specialist.\\\" Back in the day, folks who wanted to look like Rachel from \\\"Friends\\\" got her haircut. Now, they get surgery. Well, some of them. Meet Jordan James Parke, who made news this year with an interview with Britain's The Sun newspaper in which he reportedly said he spent $150,000 to look like, you guessed it, Kim Kardashian. He later told US Magazine he doesn't want to look exactly like Kim. But he'd die for her butt. \\\"I'd like to get a bum as big as hers, but I won't get implants,\\\" the magazine quoted him as saying. \\\"I've been looking at body contour -- I want to get lipo on my stomach and back and then they put the fat back into your bum.\\\"\\n\", \"original_answer\": \"The latest beauty trend inspired by the Kardashians is lip plumping, where individuals suck on a jar to make their lips look like Kylie Jenner's. However, the trend has gained controversy as it can lead to significant pain, swelling, and bruising, as well as potential risk of scarring and permanent disfigurement. Other trends include the \\\"belfie,\\\" or butt selfie, and butt augmentation surgery, which saw an 86% increase in 2014 according to the American Society for Aesthetic Plastic Surgery Reports. Some individuals take it to an extreme, such as Jordan James Parke, who spent $150,000 to resemble Kim Kardashian, including getting lip implants.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 134,
+  "source_cluster_id": "sha256:ff15daa38898141b27830950f84edee5c4b1aa3c15ce66be9b61e4215f49c9d7",
+  "source_id": "11771",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:c5b7cf08189f4c3ec950304e7acfca83608a404520971c40935b8f274676e6d7",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45
+  ]
+}

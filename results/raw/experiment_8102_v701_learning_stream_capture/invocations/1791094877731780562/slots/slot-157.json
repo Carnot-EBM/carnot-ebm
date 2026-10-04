@@ -1,0 +1,147 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5254152949200943,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:0762c652926d54275253836416962aa28e56de2da8862a8f1a7a8c9f6f801322",
+  "human_target": null,
+  "input_tokens": 894,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:0762c652926d54275253836416962aa28e56de2da8862a8f1a7a8c9f6f801322",
+    "feature_hash": "sha256:b4ebed75d18f1430fe3ee7499a2b39ebf4e9e14dc6eaa051ae402dedee2522ce",
+    "source_normalized_hash": "82ff7dcbeceb54b762a7fc322a847c0c3ab1f28826b525f59a895890bc91b8f7",
+    "values": [
+      0.2672652536124721,
+      0.45505767524401064,
+      0.06521739130434782,
+      1.0,
+      0.0,
+      0.0,
+      0.732734746387528,
+      0.941719658878044
+    ],
+    "window_count": 46
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 894,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 918
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:7509541751dd20b239f7534467cb5ec5f03d435df7e4e9cd1e54e906222db253",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095538,
+    "id": "chatcmpl-xF1ZYRHPaG63nPvBu1bCHyEvbuA3JLAH",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.411,
+      "predicted_n": 24,
+      "predicted_per_second": 42.44699873189592,
+      "predicted_per_token_ms": 23.558791666666664,
+      "prompt_ms": 845.578,
+      "prompt_n": 816,
+      "prompt_per_second": 965.0203765944716,
+      "prompt_per_token_ms": 1.036247549019608
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 894,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 918
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Obock, Djibouti (CNN)Amina Ali Qassim is sitting with her youngest grandchild on her lap, wiping away tears with her headscarf. Only a few months old, this is the baby girl whose ears she desperately tried to cover the night the aerial bombardment started. She lay awake, she says, in a village mosque on the Yemeni island of Birim, counting explosions as the baby cried. It could have been worse though. They could have still been in their house when the first missile landed. \\\"Our neighbor shouted to my husband 'you have to leave, they're coming.' And we just ran. As soon as we left the house, the first missile fell right by it and then a second on it. It burned everything to the ground,\\\" Qassim tells us. Qassim and her family fled Birim at first light, piling in with three other families. Twenty-five of them squeezed into one boat setting sail through the Bab al-Mandab Strait to Djibouti. Bab al-Mandab is one of the busiest waterways in the world, a thoroughfare for oil tankers and cargo ships. It's now being crossed by desperate Yemenis in rickety fishing boats seeking refuge from the conflict threatening to engulf their country. Qassim's son Mohamed describes the families' journey across this part of the Red Sea as \\\"a window into hell.\\\" \\\"The women were violently ill,\\\" he tells us. \\\"It was a catastrophe.\\\" It took them five hours to cross into the north of Djibouti, where the government is providing the refugees with temporary shelter in this unfinished orphanage here in Obock. And the U.N. says thousands more refugees are expected. Qassim and her family will soon have to move to the plastic tents that have been prepared for them on the dusty outskirts of the town, taking with them only the collection of plastic mats and pots neatly stacked in the corner. It's all that remains of everything they once owned. Her two daughters are trapped back in Yemen, in Taiz. She hasn't been able to reach them and the worry she says is almost unbearable. I ask her how many days it was after the Saudi aerial bombardment began that they left. She looks at me and laughs, \\\"How many days would you have stayed?\\\" Then she goes quiet, looking down at the granddaughter in her lap. Finally she tells me, \\\"I thought she would never be able to stop screaming. That the fear would stay with her forever.\\\" \\\"May God please have mercy on Yemen.\\\"\\n\", \"original_answer\": \"Amina Ali Qassim, an elderly grandmother, recounts her and her family's experience fleeing from Yemen due to the ongoing conflict. The bombardment forced the family to leave their home and their belongings behind, with only the clothes on their backs. They were among several families who fled to Djibouti via a rickety fishing boat. Many of the passengers suffered seasickness, and one child died during the journey. Once in Djibouti, the families were provided with temporary shelter in an unfinished orphanage. However, they must soon be relocated to plastic tents on the outskirts of the town. Despite being grateful for the aid they receive, Qassim can't help but worry about her two daughters stuck in Taiz.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 158,
+  "source_cluster_id": "sha256:c98f52ce34a0b61ccecb2cf3c84ff483594dd67df9e602b2ef8676b97a56df9f",
+  "source_id": "11364",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:0762c652926d54275253836416962aa28e56de2da8862a8f1a7a8c9f6f801322",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

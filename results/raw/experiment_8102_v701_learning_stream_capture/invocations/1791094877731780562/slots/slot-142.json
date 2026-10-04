@@ -1,0 +1,126 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.1079063710058108,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:6113d365d899099699317eabd7c1e56ce2ea7803438527f27c51ce677da44b94",
+  "human_target": null,
+  "input_tokens": 352,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:6113d365d899099699317eabd7c1e56ce2ea7803438527f27c51ce677da44b94",
+    "feature_hash": "sha256:154614322f147bbeec34515bdf0987ab7f7e086607a5ad88ed0e3b55a5887336",
+    "source_normalized_hash": "863f9471b571db13f53fbc3020f166ac11c3fcb14bcbc832ff2b5ce951d8a7f8",
+    "values": [
+      0.6630434782608695,
+      0.9130434782608695,
+      0.0,
+      0.0,
+      0.75,
+      1.0,
+      0.3369565217391305,
+      0.6086956521739131
+    ],
+    "window_count": 4
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 2,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 352,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 376
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:ee6c8731dccf9ec43c67fe2bc2c59d90b899532a8c9024276de392bf05800bf5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 2\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095517,
+    "id": "chatcmpl-aa1ZLgNyxkABFTmBKPWdiTjTBvCgMRjo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.965,
+      "predicted_n": 24,
+      "predicted_per_second": 42.55583236548367,
+      "predicted_per_token_ms": 23.498541666666668,
+      "prompt_ms": 386.355,
+      "prompt_n": 274,
+      "prompt_per_second": 709.1923231225168,
+      "prompt_per_token_ms": 1.4100547445255476
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 352,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 376
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:During the first month of recreational marijuana sales, Colorado's licensed dispensaries generated a total of more than $14 million, putting about $2 million of tax revenue into state coffers in the process.\\\\n\\\\npassage 2:Colorado voters overwhelmingly supported state taxes on marijuana, and the state collected tens of millions of dollars in the first year of legalization. But in a strange twist, all those taxes raised from pot may have to be refunded because of a quirk in the state's constitution.\\\\n\\\\npassage 3:A stack of cash collected from a Colorado marijuana store sits on a table at a security firm in this file photo. Marijuana businesses in Colorado have generated about $63 million in taxes in 2014, the first year of legal recreational marijuana sales.\\\\n\\\\n\\\",\\\"question\\\":\\\"what has colorado done with weed money\\\"}\", \"original_answer\": \"Colorado has collected tens of millions of dollars in tax revenue from marijuana sales, generating about $63 million in taxes in 2014 alone.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 143,
+  "source_cluster_id": "sha256:33f8fed5a7fc579c8514a65bd79f45cdb874e5b6af3ea3c67866b6a9e97b55fc",
+  "source_id": "12168",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:6113d365d899099699317eabd7c1e56ce2ea7803438527f27c51ce677da44b94",
+  "visible_ids": [
+    0,
+    1,
+    2
+  ]
+}

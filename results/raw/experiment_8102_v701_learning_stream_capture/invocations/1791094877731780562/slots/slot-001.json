@@ -1,0 +1,159 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7470542400842533,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8b83ccf2511820e6b8a93285ee3e3d4b32a966655d136bcf0c7f005d5f71daec",
+  "human_target": null,
+  "input_tokens": 1172,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8b83ccf2511820e6b8a93285ee3e3d4b32a966655d136bcf0c7f005d5f71daec",
+    "feature_hash": "sha256:ecc87e54d19d490cde8dee7b4b15dce8fcbb1dd5bbbbd49cdafdcb330865d7f8",
+    "source_normalized_hash": "7b6ab24afa28f738800d4730c6a71456b70fff3d1071f6ab4c5c826ac5f97d28",
+    "values": [
+      0.28369437808568243,
+      0.5676811594202898,
+      0.15714285714285714,
+      1.0,
+      0.5857142857142857,
+      0.6,
+      0.7163056219143176,
+      0.9414752879970271
+    ],
+    "window_count": 70
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1172,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1198
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:80f60748027064902927a31622a48671134e243e754cc42bfbcccbb265051303",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095309,
+    "id": "chatcmpl-IqFKbMkJfTL7aY2ts9s7KSNFqbKtUPbZ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 605.797,
+      "predicted_n": 26,
+      "predicted_per_second": 42.918667474417994,
+      "predicted_per_token_ms": 23.299884615384617,
+      "prompt_ms": 1013.751,
+      "prompt_n": 1094,
+      "prompt_per_second": 1079.1604644533027,
+      "prompt_per_token_ms": 0.9266462522851919
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1172,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1198
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Nairobi (CNN)An elite police commando unit waited hours for transport from Nairobi, Kenya, to Garissa, where Al-Shabaab terrorists had taken over a university on April 2, according to one of the commandos who participated in the response operation. The commando asked not to be identified for fear of reprisals and because he was not authorized to speak. Al-Shabaab slaughtered 147 people at the school. Of the fatalities, 142 were students at the university, and the rest were security forces and campus security. At 7:00 a.m. local time, the response team was told to assemble for a mission to Garissa, the police commando told CNN.  At 8:00 a.m., he said, the team was told there were no police aircraft available to take them. A reserve team was then sent by road, while the main commando team waited in Nairobi for air transport, he said. Once told aircraft would be available, it took the commando team nearly two hours to travel the roughly 22 miles (35 kilometers) to the airport because of the heavy traffic, the commando source said. But Kenya's Police Air Wing Chief Col. Rogers Mbithi denied that his unit caused any delay in the response to the university attack. Mbithi told CNN two fixed wing aircraft were ready and waiting for the commandos 45 minutes before the police commandos were ready to depart around 12:30 p.m. local time. Government names Kenya attack mastermind. Mbithi conceded that one of the two aircraft ultimately used to transport the commandos to Garissa left Nairobi at 7:30 a.m. to fly to Mombasa on a scheduled flight, hours after the Garissa terror attack began. That plane picked up the chief's daughter-in-law and two children, and returned to Nairobi at its scheduled time of 11:39 a.m., Mbithi said. The first aircraft carrying police commandos eventually departed for Garissa at 12:30 p.m., followed by a second aircraft about 10 minutes later, Mbithi said. Inside college dorm's scene of slaughter. After arriving in Garissa by plane, the commando team rehearsed the assault on the university compound for about two-and-a-half hours, the commando source told CNN. The police assault to retake the university compound began around 5 p.m. and lasted about 15 minutes. One commando was killed in the assault.  All four Al-Shabaab attackers were killed. Another law enforcement source told CNN that by 7:00 a.m. the Al-Shabaab terrorists had already killed most of the students, saying: \\\"It was never a hostage situation.\\\" The problems plaguing Kenya's security efforts. Other Kenyan officials have previously defended the response to the university attack. Manoah Esipisu, a spokesman for Kenya's President and deputy president, told CNN last week that in emergency situations there is always criticism regarding whether governments reacted as fast as they could have or should have. \\\"With the benefit of hindsight, you can always say things could have been done better,\\\" he said. Kenyan authorities saved a lot of students and \\\"got the job done,\\\" he said. Foreign Minister Amina Mohamed told CNN the response was sufficient and denied reports that it was the elite rapid response team alone that brought an end to the situation. \\\"We have a military garrison in Garissa, and the work began immediately after the attack was reported and continued for a number of hours until we were able to rescue 663 students of the 800 students that had been taken hostage by these terrorists. So the response was adequate,\\\" she said. Lillian Leposo reported in Nairobi. Lonzo Cook reported in Atlanta. CNN's Jethro Mullen also contributed to this report.\\n\", \"original_answer\": \"An elite police commando unit waited for hours for transportation to Garissa, Kenya, to respond to an Al-Shabaab terrorist attack on a university. The unit arrived by plane and began a 2 hour wait before two aircraft became available to transport them. A government official later denied that the Police Air Wing caused any delays in the response to the attack. The police assault to retake the university compound began around 5 p.m. and lasted 15 minutes resulting in the killing of one commando and all four attackers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 2,
+  "source_cluster_id": "sha256:027e42044ab38cba5f4e1d90721a7d74bc218a0891ac584e64867ea4d4673359",
+  "source_id": "15794",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8b83ccf2511820e6b8a93285ee3e3d4b32a966655d136bcf0c7f005d5f71daec",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.1250352469505742,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:09744144c5e57ad64a3cda5a238927b5fab95f2e1e075578d73e904cc9701a3e",
+  "human_target": null,
+  "input_tokens": 447,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:09744144c5e57ad64a3cda5a238927b5fab95f2e1e075578d73e904cc9701a3e",
+    "feature_hash": "sha256:419864b9fa95826ef481a4c0a477c3e16a2f86b12bc1efd219c185cf9fc2e944",
+    "source_normalized_hash": "e750ade43b209c1d59b82a2e628db9acaef5c02384e8ee20d62cc48d774ffb62",
+    "values": [
+      0.29663469017371014,
+      0.6057592256503327,
+      0.2857142857142857,
+      1.0,
+      0.3095238095238095,
+      0.3333333333333333,
+      0.7033653098262899,
+      0.9576285541439806
+    ],
+    "window_count": 14
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 447,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 471
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:0dd9fee397026dae048ce2675ca6471bbccf52ae30480cfe5890816d86a4c307",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095467,
+    "id": "chatcmpl-LyQANA0UJq2iR1ZTzOBrQE2M3jRwt1tZ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.89,
+      "predicted_n": 24,
+      "predicted_per_second": 42.56149248966997,
+      "predicted_per_token_ms": 23.495416666666667,
+      "prompt_ms": 445.459,
+      "prompt_n": 369,
+      "prompt_per_second": 828.3590633481421,
+      "prompt_per_token_ms": 1.2072059620596205
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 447,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 471
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Changes in drug use in the U.S. after 1970 have at times resulted in amendments to the Act. The Drug Enforcement Agency, or DEA, is the agency of the federal government responsible for enforcing controlled substance laws, including the Comprehensive Drug Abuse Prevent and Control Act.\\\\n\\\\npassage 2:Title II-Controlled Substances Act. An important part of the Comprehensive Drug Abuse Prevention and Control Act is the Title II section, the Controlled Substances Act (CSA).\\\\n\\\\npassage 3:In response to these problems, Congress in 1970 enacted the Controlled Substances Act (CSA) as Title II of the Comprehensive Drug Abuse Prevention and Control Act, Pub. L. No. 91-513, 84 Stat. 1242.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the comprehensive drug abuse prevention and control act of 1970\\\"}\", \"original_answer\": \"The Comprehensive Drug Abuse Prevention and Control Act of 1970 is a federal law that established the Controlled Substances Act (CSA), which regulates and prohibits the manufacture, distribution, and possession of controlled substances. The CSA categorizes drugs into one of five schedules based on their potential for abuse, currently accepted medical use, and safety under medical supervision. The Act also established the Drug Enforcement Administration (DEA) as the agency responsible for enforcing controlled substance laws.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 108,
+  "source_cluster_id": "sha256:ae0fa758416d02b0ad71146b1bcd1ac13b277df154560c1b5c165ab724257144",
+  "source_id": "12242",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:09744144c5e57ad64a3cda5a238927b5fab95f2e1e075578d73e904cc9701a3e",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

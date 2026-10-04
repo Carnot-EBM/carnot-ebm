@@ -1,0 +1,142 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.729762827977538,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:ecc8b963a5580849b7a27fa1d453c957f72eba935f7751f3ebd2ec484abb02a6",
+  "human_target": null,
+  "input_tokens": 1206,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:ecc8b963a5580849b7a27fa1d453c957f72eba935f7751f3ebd2ec484abb02a6",
+    "feature_hash": "sha256:cd42be40a7bfbab7ec9dd19b5f08a633814f579301e671bc0c4b843a7d51c4c0",
+    "source_normalized_hash": "77077cb12a695de102d8cdd7b73b88987830eebe30a998101e9c376ddacb7bac",
+    "values": [
+      0.1931130488257681,
+      0.39489467079379353,
+      0.2777777777777778,
+      1.0,
+      0.25,
+      0.25,
+      0.8068869511742318,
+      0.9266895068868752
+    ],
+    "window_count": 36
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1206,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1229
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:ec28f17b82555a52a215b16b6a6f67d7dede894bb87ddcf3e1d15b6e5e87be0e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095697,
+    "id": "chatcmpl-m7CM1LdNUjSCkrasPIsyWNblHIrpKAfE",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.122,
+      "predicted_n": 23,
+      "predicted_per_second": 42.42587461862828,
+      "predicted_per_token_ms": 23.570521739130434,
+      "prompt_ms": 1069.021,
+      "prompt_n": 1128,
+      "prompt_per_second": 1055.1710396708766,
+      "prompt_per_token_ms": 0.9477136524822695
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1206,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1229
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"600 Olive St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Breakfast & Brunch, Bocce Ball, Event Planning & Services, Beer, Wine & Spirits, Venues & Event Spaces, Italian, Active Life, Food, Wedding Planning, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:0\\\",\\\"Monday\\\":\\\"17:0-21:0\\\",\\\"Saturday\\\":\\\"17:0-21:0\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Arnoldi's Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 00:22:07\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This one star is for the eggplant parmigiana only. The service is great, 5 stars for that. \\\\n\\\\nOther dishes we have tired are amazing: chicken parmigiana, ravioli and lasagna... All 5 stars.\\\\n\\\\nHowever, I love my eggplant and let me tell you-I was not sure if it was eggplant or jerky. It was so hard and over fried that I couldn't eat more than a bite. I hate returning dishes, so I just drank tea and took the dish home to throw it away :(\\\"},{\\\"review_date\\\":\\\"2022-01-16 23:16:45\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We love this restaurant.  The chicken parmigiana is we have ever had anywhere, ever.  It is delicious.   I wish I had a photo.   Next time!!!\\\"},{\\\"review_date\\\":\\\"2021-11-21 17:25:53\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Awful experience. \\\\nIgnored the reservation request. And then we waited more than twenty minutes for a server to appear. Mask three quarters down his face, and only over his mouth. \\\\n\\\\nGot a half-hearted \\\\\\\"oh, sorry\\\\\\\" when we said we'd been sitting twenty minutes with servers ignoring us. Then lots of rudeness. Claimed to be the manager after telling us there was no manager. \\\\n\\\\nWent to Ca'Dario instead and we're greeted with \\\\\\\"good evening\\\\\\\", and \\\\\\\"welcome back\\\\\\\". And great food and service. \\\\n\\\\nHave been a customer at Arnoldi's for more than eighteen years, but really watched its decline.\\\\n\\\\nJust worth going there any longer when there are so many MUCH better alternatives in Santa Barbara\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Arnoldi's Cafe is a local business located at 600 Olive St in Santa Barbara, CA. It offers a wide range of services and amenities including breakfast and brunch, bocce ball, event planning, beer and wine, event spaces, Italian cuisine, and active life activities. The business operates from 17:00 to 21:00 every day of the week.\\n\\nAccording to customer reviews, Arnoldi's Cafe has received mixed feedback. While some customers praise the excellent service provided by the staff, others express dissatisfaction with their experience. One customer specifically mentions the delicious dishes they have tried, such as the chicken parmigiana, ravioli, and lasagna, all of which they rated five stars. However, they were disappointed with the eggplant parmigiana, describing it as over-fried and difficult to eat.\\n\\nAnother customer expresses their love for the restaurant, particularly highlighting the delicious chicken parmigiana as the best they have ever had. However, a different customer had a negative experience, stating that their reservation was ignored and they had to wait for more than twenty minutes for a server to assist them. They also describe encountering rudeness from the staff.\\n\\nConsidering the overall rating of 4.0 stars, it is evident that Arnoldi's Cafe has both satisfied and dissatisfied customers. It is important for potential visitors to weigh the positive and negative reviews before deciding to dine at this establishment.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 20,
+  "source_cluster_id": "sha256:432589fc5bf07497d5f440a780b2b3246c50cd134f4465899e69a68c24619e6e",
+  "source_id": "14184",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:ecc8b963a5580849b7a27fa1d453c957f72eba935f7751f3ebd2ec484abb02a6",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

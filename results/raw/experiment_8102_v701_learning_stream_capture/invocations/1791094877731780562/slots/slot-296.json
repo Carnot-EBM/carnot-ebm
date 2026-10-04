@@ -1,0 +1,134 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3275132450507954,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:2f343a194b082ba865c3d86ecaee22dc4a3656155de6591e893c7823947c8f71",
+  "human_target": null,
+  "input_tokens": 697,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:2f343a194b082ba865c3d86ecaee22dc4a3656155de6591e893c7823947c8f71",
+    "feature_hash": "sha256:f3c1560db541f59e67cf2f38f5a944629a06f6242f68a4a8c15fac91d35c1ac1",
+    "source_normalized_hash": "aba710b30e7c37a6e53b07b61ae937b102a43ec3ae0a0b9b3eb633a2034e0b94",
+    "values": [
+      0.3699351408825093,
+      0.5937905369484316,
+      0.26,
+      0.8,
+      0.0,
+      0.0,
+      0.6300648591174907,
+      0.8913503455608719
+    ],
+    "window_count": 20
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 2,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 697,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 721
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:e360d18a66da7a84be00fcec35fe879c834f8114c298f213abcf019e8a1f1dbc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 2\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095726,
+    "id": "chatcmpl-HdPifBcSl2bsYtwWy5DkdbMyaKdfsnFq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.903,
+      "predicted_n": 24,
+      "predicted_per_second": 42.48517002033978,
+      "predicted_per_token_ms": 23.537625000000002,
+      "prompt_ms": 629.927,
+      "prompt_n": 619,
+      "prompt_per_second": 982.6535455695661,
+      "prompt_per_token_ms": 1.0176526655896607
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 697,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 721
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Meghan Markle: Not a Chance to Be US President\\nHigh-Profile Endorsement Meets Skepticism Amid Speculations of a Royal Bid for Presidency\\nMeghan Markle, the Duchess of Sussex, has been endorsed for the US presidency by none other than Valerie Biden Owens, President Joe Biden's sister and political strategist.\\nThis announcement has stirred up quite a debate, particularly on Sky News Australia, where the validity of this endorsement was questioned.\\nThe former actress, has been speculated to harbor political ambitions for some time now, and this endorsement by a major political figure has added fuel to the fire.\\nShe has also emerged as a favorite among Democrats in a poll asking them to choose female candidates they would vote for, reportedly tying with Vice President Kamala Harris and surpassing former Presidential nominee Hillary Clinton.\\nHowever, despite this endorsement and poll result, some analysts remain skeptical about Meghan's chances of securing the presidency.\\nKosha Gada, a contributor for Sky News Australia, stated, \\\"I think they want a little bit of that 'Markle Sparkle', given all his other troubles that we have discussed before, but I don't think she has a chance.\\\"\\nSince stepping down as senior working members of the Royal Family and relocating to the US in 2020, Meghan and her husband, Prince Harry, have been at the center of much speculation.\\nSome suggest that Meghan may follow in the footsteps of other actors-turned-politicians like Arnold Schwarzenegger and Ronald Reagan, perhaps by running for a high-ranking position such as the Governor of California.\\nMeghan has been active in US politics, lobbying for changes to parental leave and climate policy. Furthermore, she has been linked with the Hollywood talent agency William Morris Endeavour (WME), sparking rumors of her intention to become a \\\"Hollywood power player\\\".\\nHowever, the future remains uncertain. With the recent end of her $20 million deal with Spotify and Prince Harry focusing on his Heart of Invictus documentary, speculation about Meghan's next move continues to grow.\", \"original_answer\": \"Valerie Biden Owens, President Joe Biden\u2019s sister and political strategist, has announced that Meghan Markle, the Duchess of Sussex, has been endorsed for the US presidency. This endorsement has stirred up a lot of debate, particularly with Kosha Gada from Sky News Australia questioning its validity. Despite this endorsement, some analysts believe that Meghan does not have a chance of securing the presidency. It is unclear what Meghan's next move will be. She has previously lobbied for changes to parental leave and climate policy and been linked to the Hollywood talent agency WME.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 41,
+  "source_cluster_id": "sha256:383d32328c0affe6ae28a111bcba9d933368583ea74a15c9232647395bf5721a",
+  "source_id": "13965",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:2f343a194b082ba865c3d86ecaee22dc4a3656155de6591e893c7823947c8f71",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

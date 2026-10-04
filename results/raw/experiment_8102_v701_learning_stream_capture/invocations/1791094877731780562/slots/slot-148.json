@@ -1,0 +1,125 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2159677789313719,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:ee1e155d0bb4529f02aae997d4678c0702c614d3e0521f3466cdd3a6df04c24a",
+  "human_target": null,
+  "input_tokens": 573,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:ee1e155d0bb4529f02aae997d4678c0702c614d3e0521f3466cdd3a6df04c24a",
+    "feature_hash": "sha256:88212f4235a868a1521dc3d97881166de4c454a1ddafd536528d94d094a603ce",
+    "source_normalized_hash": "5211b248231a59d0920ef345207bf7623b9b4c32d17f1eb01eca863000f26191",
+    "values": [
+      0.5345389304915514,
+      0.7356099590373784,
+      0.0,
+      0.0,
+      0.625,
+      0.75,
+      0.46546106950844857,
+      0.6665320980542755
+    ],
+    "window_count": 2
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 573,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 597
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:bd64d5aed35af65bd3f43e371bc301937b732291d4568f26ad1cdee100e374e1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095525,
+    "id": "chatcmpl-mXJ6xoKDm25LSxIi2NDD3zcRFzZwUx08",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.436,
+      "predicted_n": 24,
+      "predicted_per_second": 42.520321170159235,
+      "predicted_per_token_ms": 23.51816666666667,
+      "prompt_ms": 532.692,
+      "prompt_n": 495,
+      "prompt_per_second": 929.2424140028385,
+      "prompt_per_token_ms": 1.0761454545454545
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 573,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 597
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:In sociology and social psychology, racial identity and the acquisition of that identity, is often used as a variable in racism studies. Racial ideologies and racial identity affect individuals' perception of race and discrimination.\\\\n\\\\npassage 2:Racism often takes the form of social actions, practices or beliefs, or political systems that consider different races to be ranked as inherently superior or inferior to each other, based on presumed shared inheritable traits, abilities, or qualities.\\\\n\\\\npassage 3:Bigotry is a state of mind where a person views other groups with fear, distrust, prejudice or hatred solely on the basis of ethnicity, race, religion, national origin, gender, disability, sexual orientation, socioeconomic status, or other group characteristics.\\\\n\\\\n\\\",\\\"question\\\":\\\"define bigotry vs racism\\\"}\", \"original_answer\": \"Based on the provided passages, here are my answers to the question:\\n\\n1. Define bigotry: Bigotry is a state of mind where a person views other groups with fear, distrust, prejudice, or hatred solely on the basis of ethnicity, race, religion, national origin, gender, disability, sexual orientation, socioeconomic status, or other group characteristics (Passage 3).\\n2. Define racism: Racism is a complex concept that encompasses various forms of discriminatory behavior, including social actions, practices, or beliefs, or political systems that consider different races to be ranked as inherently superior or inferior to each other based on presumed shared inherent traits, abilities, or qualities (Passage 2).\\n3. Key differences between bigotry and racism: While both bigotry and racism involve discrimination and prejudice towards certain groups, the key difference lies in the basis for these attitudes. Bigotry is based solely on group characteristics such as ethnicity, race, religion, etc., whereas racism is based on the belief that one race is inherently superior or inferior to another (Passage 1).\\n\\nTherefore, while bigotry is a form of discrimination that targets specific groups based on surface-level characteristics, racism is a more systemic and ingrained form of discrimination that is rooted in beliefs about the inherent worth or value of different races.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 149,
+  "source_cluster_id": "sha256:e9383f540e1a2b062d0d0898bfa6f54d9041a85011777b9e51646a06718dae4e",
+  "source_id": "15368",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:ee1e155d0bb4529f02aae997d4678c0702c614d3e0521f3466cdd3a6df04c24a",
+  "visible_ids": [
+    0,
+    1
+  ]
+}

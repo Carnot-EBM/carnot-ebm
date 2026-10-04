@@ -1,0 +1,130 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.1841259220382199,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:29a1c25df10ab903ba31b9f334154c7d877c98b253f99b74936c5700ca942eb3",
+  "human_target": null,
+  "input_tokens": 468,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:29a1c25df10ab903ba31b9f334154c7d877c98b253f99b74936c5700ca942eb3",
+    "feature_hash": "sha256:608f41540fdf309f47263667fdc05c66fb88c594733ad9da5cec824a03e0c9d7",
+    "source_normalized_hash": "5193f21ecb6d785214668504a7d65796dd5a279c668d3c42d0e7929a5d394fa9",
+    "values": [
+      0.3548280423280423,
+      0.7825396825396825,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.6451719576719577,
+      0.9154761904761906
+    ],
+    "window_count": 12
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.15,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 468,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 492
+    }
+  },
+  "probability": 0.15,
+  "public_eligible": true,
+  "public_hash": "sha256:e640f42dbdf6e0a56eca09e0bb28fc1dbf9c48a591fec1a9cd6da35be9cd3637",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.15,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095591,
+    "id": "chatcmpl-gG3HIl4DwaF742JvzZ2HQ7e5b98nv5Pc",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.578,
+      "predicted_n": 24,
+      "predicted_per_second": 42.585054775026705,
+      "predicted_per_token_ms": 23.482416666666666,
+      "prompt_ms": 487.165,
+      "prompt_n": 390,
+      "prompt_per_second": 800.5501216220378,
+      "prompt_per_token_ms": 1.2491410256410258
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 468,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 492
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The body stops this blood loss through a complex clotting process called hemostasis. During hemostasis, the injured blood vessel constricts to reduce blood flow, platelets adhere to the injury site and clump (aggregate) together to form a loose platelet plug, and the coagulation cascade is initiated.\\\\n\\\\npassage 2:When a blood vessel is injured, the coagulation cascade is initiated and each coagulation factor is activated in a specific order to lead to the formation of the blood clot. Coagulation factors are identified with Roman numerals (e.g. factor I or FI). Watch Dr. Roshni Kulkarni\u2019s interactive animation.\\\\n\\\\npassage 3:When blood vessels are cut or damaged, the loss of blood from the system must be stopped before shock and possible death occur. This is accomplished by solidification of the blood, a process called coagulation or clotting.\\\\n\\\\n\\\",\\\"question\\\":\\\"process of clotting blood\\\"}\", \"original_answer\": \"The process of clotting blood involves several steps. When a blood vessel is injured, the body initiates a cascade of coagulation factors that eventually lead to the formation of a blood clot. This process is called hemostasis. During hemostasis, the injured blood vessel constricts to reduce blood flow, platelets adhere to the injury site and aggregate together to form a loose platelet plug. Once formed, the clot will become denser and more rigid, helping to seal the injury and stop bleeding.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 201,
+  "source_cluster_id": "sha256:6d0c80140d8ab1064bb7b96b8e6904e35aea1a9772c794984cc5f5dc04f42baf",
+  "source_id": "15465",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:29a1c25df10ab903ba31b9f334154c7d877c98b253f99b74936c5700ca942eb3",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

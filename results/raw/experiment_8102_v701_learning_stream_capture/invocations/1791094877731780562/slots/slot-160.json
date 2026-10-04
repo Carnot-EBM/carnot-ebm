@@ -1,0 +1,146 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4791793960612267,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8b36abb9ef6843de4eb1e709d0e7b844910fd0fcaec2a26e742b9d86b2dd0efe",
+  "human_target": null,
+  "input_tokens": 854,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8b36abb9ef6843de4eb1e709d0e7b844910fd0fcaec2a26e742b9d86b2dd0efe",
+    "feature_hash": "sha256:03ca2a0fac07abcfff6ef571a68d1ca26ef1755b7ee2d0591614957919f71d89",
+    "source_normalized_hash": "0cc65994a936190290731b16815f9de9238488655f9b788ebe79e1a156babb8e",
+    "values": [
+      0.26004835862139547,
+      0.5136297964161741,
+      0.09090909090909091,
+      1.0,
+      0.2,
+      0.2,
+      0.7399516413786045,
+      0.9410957875973356
+    ],
+    "window_count": 44
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 854,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 877
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:ad4bc975d87e57f24d34f7780570a6d1a66bebd912e6fac261dea4ad169446a9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095542,
+    "id": "chatcmpl-mSMv3iSm1SBYDISbondnsiaKUkfptWZI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.177,
+      "predicted_n": 23,
+      "predicted_per_second": 42.499958423953714,
+      "predicted_per_token_ms": 23.529434782608696,
+      "prompt_ms": 818.653,
+      "prompt_n": 776,
+      "prompt_per_second": 947.898560195834,
+      "prompt_per_token_ms": 1.054965206185567
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 854,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 877
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"ISIS on Wednesday released more than 200 Yazidis, a minority group whose members were killed, captured and displaced when the Islamist terror organization overtook their towns in northern Iraq last summer, officials said. Most of those released were women and children; the rest were ill or elderly, said Rassol Omar, a commander in the Peshmerga force that defends  northern Iraq's semi-autonomous Kurdish region. Omar didn't say what led to the release, other than asserting that Arab tribal leaders helped to coordinate it. The freed Yazidis were received by Peshmerga, who sent them to the Kurdish regional capital, Irbil, said Nuri Osman, an official with Iraq's Kurdistan Regional Government. It wasn't immediately clear what motivated Wednesday's release, Osman said. Osman said 217 Yazidis were released. Omar, the Peshmerga commander, had a higher count: 228. ISIS previously released scores of other Yazidis -- largely children and the elderly -- since attacking the group's towns last year. The Sunni Islamist militant group steamrolled into Iraq's north last summer, forcing hundreds of thousands of minorities -- Yazidis among them -- from their homes. Yazidis are of Kurdish descent, and their religion is considered a pre-Islamic sect that draws from Christianity, Judaism and Zoroastrianism. One of the oldest religious communities in the world, the Yazidis have long suffered persecution, with many Muslims referring to them as devil worshipers. ISIS' cruelty to them has been extraordinary. ISIS' conquest of the town of Sinjar, in particular, provoked a major humanitarian crisis as some Yazidis fled into the mountains -- where many became trapped for a time without food and water -- and others fled by foot into neighboring Syria. ISIS slaughtered Yazidis by the hundreds, Yian Dakhil, the only lawmaker representing the Yazidis in Iraq's Parliament, told CNN last year. Reports emerged from some Yazidi survivors that ISIS raped and enslaved female Yazidi captives. An international coalition responded, first by airdropping supplies in the mountains. Rescues came next. And then, starting in August, the United States and other nations conducted airstrikes targeting ISIS in Iraq and Syria. The U.S. State Department estimates that 500,000 Yazidis live in northern Iraq, accounting for less than 1% of the country's population. CNN's Raja Razek reported from Beirut. CNN's Jason Hanna wrote from Atlanta. CNN's Hamdi Alkshali, Faith Karimi and Yousuf Basil contributed to this report.\\n\", \"original_answer\": \"Here is a summary of the article in 96 words:\\n\\nISIS released more than 200 Yazidis, a minority group that was attacked and displaced last year in northern Iraq. The releases occurred after Arab tribal leaders helped coordinate the effort. The freed Yazidis were received by the Kurdish Peshmerga forces and taken to the Kurdish regional capital, Irbil. The exact reason for the releases is unclear, but it comes after international pressure and airstrikes against ISIS. The Yazidis have faced extreme persecution at the hands of ISIS, including slavery and mass killings.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 161,
+  "source_cluster_id": "sha256:841dde60642d7f65a3b4172e1d357ce8a171cd21b9c09547fe57799c37a3b1a8",
+  "source_id": "12051",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8b36abb9ef6843de4eb1e709d0e7b844910fd0fcaec2a26e742b9d86b2dd0efe",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

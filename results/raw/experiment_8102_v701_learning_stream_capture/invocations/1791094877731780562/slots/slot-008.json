@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7429927020566538,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8fbdc695b5a993c4462db18c25bdc8ad4826e33bccf7e6cee9433894612b9973",
+  "human_target": null,
+  "input_tokens": 991,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8fbdc695b5a993c4462db18c25bdc8ad4826e33bccf7e6cee9433894612b9973",
+    "feature_hash": "sha256:3bd43cb891db122a135fcfeb3132e39a1d43f182e55bc4682988380195f53b3d",
+    "source_normalized_hash": "aa64c263bdec949f73fc7506b24bd31d32aa5288378cc64c611f9c50edd6b3d2",
+    "values": [
+      0.19861423193087954,
+      0.35353081108229845,
+      0.25,
+      1.0,
+      0.10000000000000002,
+      0.1,
+      0.8013857680691205,
+      0.9281482544068357
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 991,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1015
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:ff7f3b06aee5c0d054b3a7453868b75604e6a9a4bfe90df91b4742262197d101",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095321,
+    "id": "chatcmpl-krqUCDWMiqiDMPrVV30nlImOdnHfL7MK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 558.732,
+      "predicted_n": 24,
+      "predicted_per_second": 42.95440390025988,
+      "predicted_per_token_ms": 23.2805,
+      "prompt_ms": 899.901,
+      "prompt_n": 913,
+      "prompt_per_second": 1014.5560456094614,
+      "prompt_per_token_ms": 0.9856527929901423
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 991,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1015
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"14 W Calle Laureles\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Pizza, Italian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:30-20:0\\\",\\\"Monday\\\":\\\"16:30-20:0\\\",\\\"Saturday\\\":\\\"16:30-20:0\\\",\\\"Sunday\\\":\\\"16:30-20:0\\\",\\\"Thursday\\\":\\\"16:30-20:0\\\",\\\"Tuesday\\\":\\\"16:30-20:0\\\",\\\"Wednesday\\\":\\\"16:30-20:0\\\"},\\\"name\\\":\\\"Petrini's Italian Restaurant - Santa Barbara\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-10 04:43:45\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Had lunch there today, and although the food is usually good, today was disappointing. My wife had the Salmon and vegetables for 18.95 and the Salmon was over cooked and burnt. I argued with her to send it back , but it was close to their lunch closing time, so she resisted and suffered with it. My chicken Parm sandwich was overly cooked and dry. For a 40.00 lunch it was awful. We will not return.\\\"},{\\\"review_date\\\":\\\"2021-10-17 03:07:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My boyfriend and I happened to stumble upon this place last minute for a dinner date. The service was absolutely amazing, the lady helping us was extremely kind. The food was delicious as well. We were very pleased with our visit and will definitely be back soon.\\\"},{\\\"review_date\\\":\\\"2021-10-11 00:49:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Yum! My friend's husband picked up to go for my friend's birthday and it was so good! The meat lasagna was my favorite. I haven't been here for years, but this may prompt another visit in the near future! Everything was cooked perfectly.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Petrini's Italian Restaurant in Santa Barbara based on the provided structured data:\\n\\nPetrini's Italian Restaurant is a popular Italian eatery located in the heart of Santa Barbara. With a rating of 4.0 stars out of 5.0, this cozy restaurant offers a variety of delicious dishes, including pizza, pasta, and seafood options. The menu features a range of prices, making it suitable for both casual and special occasion dining. The restaurant has a cozy and intimate atmosphere, with outdoor seating available for those who prefer al fresco dining.\\n\\nAccording to customer reviews, the service at Petrini's is exceptional, with friendly and attentive staff providing top-notch service. The food is also praised for its flavorful and fresh ingredients, with some reviewers raving about the meat lasagna and other dishes. However, one reviewer had a disappointing experience with overcooked and burnt food, highlighting the need for consistency in the kitchen.\\n\\nOverall, Petrini's Italian Restaurant seems like a great choice for those looking for authentic Italian cuisine in a cozy setting. While there may be some inconsistencies in the food quality, the excellent service and delicious dishes make it a worthwhile visit for fans of Italian food.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 9,
+  "source_cluster_id": "sha256:6222ada47c5cc819d9df35f17964bafefece4153a783c9578fe763693c894482",
+  "source_id": "14763",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8fbdc695b5a993c4462db18c25bdc8ad4826e33bccf7e6cee9433894612b9973",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

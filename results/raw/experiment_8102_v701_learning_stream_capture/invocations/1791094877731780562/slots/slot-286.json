@@ -1,0 +1,129 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5828664939617738,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:a2e4669fb614fbc1d3c7cd3f663dbf40566cfe90d0438877fbf20f69a27e413a",
+  "human_target": null,
+  "input_tokens": 963,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:a2e4669fb614fbc1d3c7cd3f663dbf40566cfe90d0438877fbf20f69a27e413a",
+    "feature_hash": "sha256:e6fa000ce0ce1538cfd7113f1421e02c4c9ffa131061b977a1d26f6636ba04ef",
+    "source_normalized_hash": "5cef8e49036a13b876f3f96c1f3217a41e593ba19b0654c69cef2b22cfaf6b42",
+    "values": [
+      0.3041107173107843,
+      0.4855439777532666,
+      0.5,
+      0.8181818181818182,
+      0.18181818181818182,
+      0.18181818181818182,
+      0.6958892826892156,
+      0.9601579767323402
+    ],
+    "window_count": 10
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 963,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 987
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:2eedefe34244431ee82ad4c227bbc09b65b561f949b782c5b465275e45f7acb3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095712,
+    "id": "chatcmpl-x1WwOY4r9cFIKvIlCLDAofLFLJVrUWCv",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.534,
+      "predicted_n": 24,
+      "predicted_per_second": 42.43776678325264,
+      "predicted_per_token_ms": 23.563916666666668,
+      "prompt_ms": 881.453,
+      "prompt_n": 885,
+      "prompt_per_second": 1004.0240375833991,
+      "prompt_per_token_ms": 0.9959920903954802
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 963,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 987
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"686 Linden Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Bars, Seafood, Food, Cocktail Bars, Steakhouses, Nightlife, Restaurants\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"15:0-22:0\\\",\\\"Monday\\\":\\\"15:0-21:0\\\",\\\"Saturday\\\":\\\"9:0-22:0\\\",\\\"Sunday\\\":\\\"9:0-21:0\\\",\\\"Thursday\\\":\\\"15:0-21:0\\\",\\\"Tuesday\\\":\\\"15:0-21:0\\\",\\\"Wednesday\\\":\\\"15:0-21:0\\\"},\\\"name\\\":\\\"Sly's\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-08-26 16:17:12\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We are so sad to hear of Chef James Sly's passing.  Rest In Peace, Chef  \\\\nWe enjoyed many grand culinary experiences at Sly's and treasured conversations about the south of France.\\\"},{\\\"review_date\\\":\\\"2019-03-17 21:23:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Hi Sly's account. Loved this place! Not sure if u are still checking this but I have a $140 gift card that I wanted to use but just drove to Carp and saw that you are no longer around I have the card as well as the receipt.\\\"},{\\\"review_date\\\":\\\"2018-09-20 00:35:30\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Our final dinner our favorite restaurant in Santa Barbara County. So sad to hear that James and Annie are shutting their doors this weekend  But we wish them the best on the new chapter in their lives\\\\n\\\\nWe celebrated many occasion's at Sly's including our 10 year wedding anniversary, New Year's Eve birthdays etc\\\\n\\\\n Best cocktails we never had amazing steaks great service for going to miss the food the people the ambience\\\\n\\\\nGood bye Sly's... until we meet again\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here is an objective overview of the local business \\\"Sly's\\\" based on the provided structured data in JSON format:\\n\\nSly's is a restaurant located in Carpinteria, CA that offers a variety of cuisines such as Bars, Seafood, Food, Cocktail Bars, Steakhouses, Nightlife, and Restaurants. They have a rating of 3.5 out of 5 stars based on 3 reviews. The restaurant is open Monday through Sunday from 15:00 to 21:00, with extended hours on Friday and Saturday. They offer free WiFi, reservations, takeout, and are good for groups. The ambiance is casual and there is no music or outdoor seating. The restaurant has a validated parking lot, but no valet or street parking.\\n\\nThe reviews highlight the delicious food, great service, and memorable experiences at Sly's. One reviewer expressed sadness at the closure of the restaurant and mentioned the excellent cocktails and steaks. Another reviewer had a positive experience using a gift card and appreciated the goodbye message from the owners. The third review was a farewell message from a customer who enjoyed the food and ambiance, but will miss the restaurant after its closure.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 31,
+  "source_cluster_id": "sha256:1e843a55e7c48ba9fc4592ec25952aecea085b944ae03b44a72dbcb84500c093",
+  "source_id": "14572",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:a2e4669fb614fbc1d3c7cd3f663dbf40566cfe90d0438877fbf20f69a27e413a",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

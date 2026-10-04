@@ -1,0 +1,124 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.1726864540250972,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:c4f343dd8eb11a1465bc6f2193b179469dc2837a653ef7a8c9e58b45c19917f0",
+  "human_target": null,
+  "input_tokens": 499,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:c4f343dd8eb11a1465bc6f2193b179469dc2837a653ef7a8c9e58b45c19917f0",
+    "feature_hash": "sha256:4ee8ed4246dd5445ffe60fd3a82c528b0f2c1847983d6e8373041da273e6f7d2",
+    "source_normalized_hash": "c0e18d8b54a5878c2ba8755d776937c57bcdec86b82d673eff7846b1741006ab",
+    "values": [
+      0.5916666666666667,
+      0.5916666666666667,
+      0.0,
+      0.0,
+      0.75,
+      0.75,
+      0.4083333333333333,
+      0.4083333333333333
+    ],
+    "window_count": 1
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 499,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 523
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:0eb388374ce2aec61f594f10ae9c2e81f3d55adacdf474b3f03bd167213f50b7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095357,
+    "id": "chatcmpl-zmm3MR4v1nw5p2KKGSGTxDNq8Sc9vymJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 567.103,
+      "predicted_n": 24,
+      "predicted_per_second": 42.3203545035029,
+      "predicted_per_token_ms": 23.629291666666663,
+      "prompt_ms": 487.158,
+      "prompt_n": 421,
+      "prompt_per_second": 864.1960103292977,
+      "prompt_per_token_ms": 1.157144893111639
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 499,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 523
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Butcher Shop - Hayward 826 B Street, Hayward CA 94541 Phone Number: (510) 889-8690\\\\n\\\\npassage 2:Butcher Shop - Lakefield 212 Main Street, Lakefield MN 56150 Phone Number: (507) 662-6281\\\\n\\\\npassage 3:Some More Phone Numbers Related To The Butcher Shop The Local Butcher Shop phone number : (510) 845-6328 Boones Butcher Shop phone number : (502) 348-3668 Ye Ole Butcher Shop phone number : (972) 423-1848 J Ms Butcher Shop phone number : (865) 483-9228\\\\n\\\\n\\\",\\\"question\\\":\\\"butcher shop phone number\\\"}\", \"original_answer\": \"The phone numbers for several butcher shops are mentioned in the passages. Butcher Shop in Hayward can be reached at (510) 889-8690. Butcher Shop in Lakefield can be contacted at (507) 662-6281. The Local Butcher Shop's number is (510) 845-6328, Boones Butcher Shop can be reached at (502) 348-3668, Ye Ole Butcher Shop's number is (972) 423-1848, and J Ms Butcher Shop's phone number is (865) 483-9228.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 33,
+  "source_cluster_id": "sha256:fb9619760ea88d827751bccdce4fa6c2ae40e013a65d0284fd0621122533f38b",
+  "source_id": "14292",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:c4f343dd8eb11a1465bc6f2193b179469dc2837a653ef7a8c9e58b45c19917f0",
+  "visible_ids": [
+    0
+  ]
+}

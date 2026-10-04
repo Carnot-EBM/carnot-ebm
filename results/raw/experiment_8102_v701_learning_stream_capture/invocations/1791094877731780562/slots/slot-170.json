@@ -1,0 +1,138 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3115936618996784,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8c2ce93a1d7a980bd997cbc641f493100749459d3cdff2004de9b75b0e9f6694",
+  "human_target": null,
+  "input_tokens": 694,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8c2ce93a1d7a980bd997cbc641f493100749459d3cdff2004de9b75b0e9f6694",
+    "feature_hash": "sha256:c421f14ced00cc6f842989b5455f75493e0df2a2032ccd02d45ba532fd094e0d",
+    "source_normalized_hash": "6c521acd83b8510c1257dbacd6a68d4173a310d84682e93011410ce4b61f548e",
+    "values": [
+      0.28416855422872506,
+      0.5863965485859896,
+      0.0,
+      0.0,
+      0.5612244897959183,
+      0.5714285714285714,
+      0.7158314457712749,
+      0.9503000665655945
+    ],
+    "window_count": 28
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 694,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 718
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:70ed9e2926e0169b52d4bea763a93f3f3163d65e80c575d3861d1a46afd7a68b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095557,
+    "id": "chatcmpl-mWWILA4UVdHi6qTsxCCxwQ5DbmUdUkbN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.461,
+      "predicted_n": 24,
+      "predicted_per_second": 42.51843794345402,
+      "predicted_per_token_ms": 23.519208333333335,
+      "prompt_ms": 630.059,
+      "prompt_n": 616,
+      "prompt_per_second": 977.6862166876435,
+      "prompt_per_token_ms": 1.022823051948052
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 694,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 718
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:I usually place the fish into a pre-heated oven at 180C for 15 \u2013 20 minutes. However, the time greatly depends on the thickness of the salmon. I found this great post about how to cook salmon in the oven - http://magazine.siansplan... - helped me a lot, definitely worth a read :)\\\\n\\\\npassage 2:Preheat oven to 350. Heat a medium ovenproof nonstick skillet over medium-high heat. Add olive oil. Pat salmon dry with paper towels. Season the flesh-side of the salmon with salt. When the oil is hot, add salmon skin-side down. Sear until the skin is golden brown and crispy, about 5 minutes. Turn and transfer to oven and cook until a cake tester or tip of a paring knife is just warm to the touch when inserted into the middle of the salmon; about 5 minutes for medium-rare and 9 minutes for fully cooked through.\\\\n\\\\npassage 3:3. Brush top of salmon with remaining olive oil and place in oven about 20 minutes, until medium-rare in center. (An instant-read thermometer inserted in thickest part should register 100 to 110 degrees.) Remove from oven, and serve with citrus yogurt sauce. For sauce: \u00bd cup drained yogurt. 1 T olive oil.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to bake salmon med rare in the oven\\\"}\", \"original_answer\": \"Based on the given passages, here's a brief answer to the question \\\"How to bake salmon med rare in the oven\\\":\\n\\nPreheat the oven to 350\u00b0F (180\u00b0C). Season the salmon with salt and place it skin-side down in a medium ovenproof nonstick skillet over medium-high heat. Sear the salmon until the skin is golden brown and crispy, about 5 minutes. Transfer the skillet to the preheated oven and cook the salmon for 5-7 minutes for medium-rare, or 9 minutes for fully cooked through. Use a cake tester or a paring knife to check if the salmon is cooked to your desired doneness.\\n\\nNote: The cooking time may vary depending on the thickness of the salmon. It's important to use a meat thermometer to ensure the salmon has reached a safe internal temperature of 145\u00b0F (63\u00b0C) for medium-rare or 160\u00b0F (71\u00b0C) for fully cooked.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 171,
+  "source_cluster_id": "sha256:bf5ad58dba93f3ddab01dfa48a5c5dada87c103e3f3e8c154bfcee612feb756f",
+  "source_id": "15106",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8c2ce93a1d7a980bd997cbc641f493100749459d3cdff2004de9b75b0e9f6694",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

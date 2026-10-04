@@ -1,0 +1,128 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.027359846048057,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:99d0f471c14db77d2e2fe106fd3c914d8a071d3ceace0bb71cc8aebf2bcee700",
+  "human_target": null,
+  "input_tokens": 333,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:99d0f471c14db77d2e2fe106fd3c914d8a071d3ceace0bb71cc8aebf2bcee700",
+    "feature_hash": "sha256:76de2bd70151119c735d0385e33ff9b870fdad2d1e076a645cd40db6c9003e5f",
+    "source_normalized_hash": "eb9e5c800966758cdd2949d42c30c742d3c7a204fde30b53715e4bd0e7408999",
+    "values": [
+      0.296875,
+      0.375,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.703125,
+      0.75
+    ],
+    "window_count": 8
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 333,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 356
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:b32b1abf5dd3f9b417da6c95e1527c605e6d931eafb64fdd8c129255d9ecc5f8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095342,
+    "id": "chatcmpl-S48EpvJedWm8jMiiDTP6POg3DnVn5beg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 534.415,
+      "predicted_n": 23,
+      "predicted_per_second": 43.03771413601789,
+      "predicted_per_token_ms": 23.235434782608696,
+      "prompt_ms": 293.532,
+      "prompt_n": 255,
+      "prompt_per_second": 868.7298148072442,
+      "prompt_per_token_ms": 1.1511058823529412
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 333,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 356
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Unauthorized immigration has been a major political issue at least for the past 30 years, and is one of the most difficult to... Illegal immigration, Illegal immigration to the United States, Maquiladora 1271 Words | 4 Pages.\\\\n\\\\npassage 2:1 Why is the issue of illegal immigration a good example of the intergovernmental relations mess in the US. 2  How does administrative responsibility contribute to the attainment of public interest.\\\\n\\\\npassage 3:Immigration Benefits and Costs. An honest assessment acknowledges that illegal immigrants bring real benefits to the supply side of the American economy, which is why the business community is opposed to a simple crackdown. There are economic costs as well, given America's generous social insurance institutions.\\\\n\\\\n\\\",\\\"question\\\":\\\"why is illegal immigration an intergovernmental issue\\\"}\", \"original_answer\": \"Unable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 24,
+  "source_cluster_id": "sha256:3761b7132f92ca134a8c5fdd000299385e97bd89688039e1429384d3afd72560",
+  "source_id": "12225",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:99d0f471c14db77d2e2fe106fd3c914d8a071d3ceace0bb71cc8aebf2bcee700",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

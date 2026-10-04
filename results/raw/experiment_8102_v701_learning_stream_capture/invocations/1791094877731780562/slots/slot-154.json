@@ -1,0 +1,133 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.192520187003538,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:670839343ba9c8eaf57b62ebcae14412979afadd0df3ffa7f150e4c20c81f7fb",
+  "human_target": null,
+  "input_tokens": 595,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:670839343ba9c8eaf57b62ebcae14412979afadd0df3ffa7f150e4c20c81f7fb",
+    "feature_hash": "sha256:7527a7f052b7c45f26af8a839361aa00253ba8e22ea7f7e65de63b967e7eb7ff",
+    "source_normalized_hash": "466382006b6a02ed61e34f2a674c403dc5fc518c0e5b48dc947d3465063c40ed",
+    "values": [
+      0.5837371109834878,
+      0.7671932704976183,
+      0.1,
+      0.1,
+      0.9833333333333333,
+      1.0,
+      0.4162628890165122,
+      0.60492598223033
+    ],
+    "window_count": 18
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 595,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 617
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:9041d6e43c8fc8de158129dedf6122b465100624ad36d902f14197922440ed45",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.95,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095534,
+    "id": "chatcmpl-rVVuFYzbws04f2gIchmcaI7KKIbEzQtu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 515.468,
+      "predicted_n": 22,
+      "predicted_per_second": 42.679661977077146,
+      "predicted_per_token_ms": 23.430363636363634,
+      "prompt_ms": 560.292,
+      "prompt_n": 517,
+      "prompt_per_second": 922.7331462880069,
+      "prompt_per_token_ms": 1.0837369439071567
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 595,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 617
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Bake for 45 minutes for sweet potatoes/yams that are 2-3 inches in diameter. 2  For sweet potatoes that are up to 4 inches in diameter, bake for an hour. 3  For super large sweet potatoes, bake for an hour and 15 minutes. 4  After the time has elapsed, don't open the oven but turn it off.\\\\n\\\\npassage 2:1 For super large sweet potatoes, bake for an hour and 15 minutes. 2  After the time has elapsed, don't open the oven but turn it off. 3  Let the sweet potatoes sit in the oven for at least 30 minutes but up to an hour. 4  Remove from the oven and eat immediately, or remove the skin and store in a container in the fridge.\\\\n\\\\npassage 3:1 For sweet potatoes that are up to 4 inches in diameter, bake for an hour. 2  For super large sweet potatoes, bake for an hour and 15 minutes. 3  After the time has elapsed, don't open the oven but turn it off. 4  Let the sweet potatoes sit in the oven for at least 30 minutes but up to an hour.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to bake the best sweet potato\\\"}\", \"original_answer\": \"To bake the best sweet potato, follow these steps: \\n1. Preheat the oven to the specified temperature mentioned in passage 1.\\n2. Place sweet potatoes in the oven and bake for the recommended time mentioned in passage 1 or 3, depending on the diameter of the sweet potatoes.\\n3. After baking, turn off the oven without opening it, as mentioned in passage 1 or 2.\\n4. Let the sweet potatoes sit in the oven for at least 30 minutes but up to an hour, as stated in passage 2 or 3.\\n5. Remove the sweet potatoes from the oven and either eat them immediately or store them in a container in the fridge, as mentioned in passage 2.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 155,
+  "source_cluster_id": "sha256:a17805e97c742121843014d11c4b024db8357d5728a1e69d1a8dee4a144061da",
+  "source_id": "12313",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:670839343ba9c8eaf57b62ebcae14412979afadd0df3ffa7f150e4c20c81f7fb",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

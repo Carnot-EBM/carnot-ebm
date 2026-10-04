@@ -1,0 +1,130 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3712852329481393,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:842d1ebbce27627e39ee5db8ea978e1670018766fff3571e82906daa5ab9de3c",
+  "human_target": null,
+  "input_tokens": 731,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:842d1ebbce27627e39ee5db8ea978e1670018766fff3571e82906daa5ab9de3c",
+    "feature_hash": "sha256:1ffe796f290f021668eb6c5934e8c6fc8d92aa2b52583b10bd042f91b38ef0d3",
+    "source_normalized_hash": "3e8e479bc1ea59d227e04e579ca70fef7a087fdb05a74408a3fb61450d467c26",
+    "values": [
+      0.4849861310187397,
+      0.7328322583213888,
+      0.0,
+      0.0,
+      0.5833333333333334,
+      0.6,
+      0.5150138689812603,
+      0.8139227982162766
+    ],
+    "window_count": 12
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 731,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 755
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:27c191121a4343c78e63f9b1611990804ca00e670dfdd36c4af6e848d627153f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095476,
+    "id": "chatcmpl-Shm86zQFzCMz6uWmeSB8iH3b2eCRnKmh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.012,
+      "predicted_n": 24,
+      "predicted_per_second": 42.476973940376496,
+      "predicted_per_token_ms": 23.542166666666663,
+      "prompt_ms": 666.557,
+      "prompt_n": 653,
+      "prompt_per_second": 979.6611542598757,
+      "prompt_per_token_ms": 1.0207611026033692
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 731,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 755
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Recent estimates on materials used to construct chain link fence is as follows: Plain silver galvanized steel 3 foot high fence is $75 to $100 per 50 foot roll. At six feet high the same gauge fence is $150 to $200 per 50 foot roll, and at 12 feet it is $350 to $400 for a 50 foot roll. Vinyl chain link at 3 foot high goes for $150 to $200 per 50 foot roll , The same type at 6 feet high will fetch around $350 per roll and 12 foot high fences go for $600 to $700. Installation will work out to be around $250 for half day and double that for the full day.\\\\n\\\\npassage 2:Chain-link fence prices change when the cost of steel fluctuates. Generally, materials for a typical residential chain link fence (2 mesh, 9 or 11 gauge) might cost $3-$6 a linear foot for 4' high or $8-$15 a foot for 6' high, depending on whether it's galvanized or vinyl coated. A gate can add $100-$350 or more, depending on size (walking or driving width), gauge and mesh.\\\\n\\\\npassage 3:The cost for a wooden fence can vary from $3 -$9 a foot for do-it-yourself installation of a ranch-style rail fence, to $10 -$30 or more a foot for professional installation of a basic 6' wood privacy fence. For details, see How Much Does a Wood Fence Cost.\\\\n\\\\n\\\",\\\"question\\\":\\\"how much does a chain link fence cost\\\"}\", \"original_answer\": \"Based on the information provided in the passages, the cost of a chain link fence can vary depending on the height and material. The prices range from $75 to $100 per 50 foot roll for a plain silver galvanized steel fence at 3 feet high, $150 to $200 per 50 foot roll at 6 feet high, and $350 to $400 per 50 foot roll at 12 feet high. Vinyl chain link fences range from $150 to $200 per 50 foot roll at 3 feet high, $350 per roll at 6 feet high, and $600 to $700 per roll at 12 feet high. Installation costs are around $250 for half a day and double that for a full day. It is important to note that the cost may also vary depending on factors such as steel prices and the addition of gates.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 114,
+  "source_cluster_id": "sha256:4fd078623381e1d0f575bcde31fe75633ddabe5ba384bb75de746c877df47c40",
+  "source_id": "15174",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:842d1ebbce27627e39ee5db8ea978e1670018766fff3571e82906daa5ab9de3c",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

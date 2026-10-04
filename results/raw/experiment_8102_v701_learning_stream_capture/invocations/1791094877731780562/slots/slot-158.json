@@ -1,0 +1,152 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.403205431997776,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:f0027ee2cc69fc052e711f4e07f2daddecc951cc867e38c10272e56179f134de",
+  "human_target": null,
+  "input_tokens": 797,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:f0027ee2cc69fc052e711f4e07f2daddecc951cc867e38c10272e56179f134de",
+    "feature_hash": "sha256:8f436e1c2ded39ece703bedea9161b256539d8260a1c0a9625570b83fd489a74",
+    "source_normalized_hash": "12621cbb3a04af2fa789493ff9fcd3cddaaaf6dbc04c5eedc67c75fcb92317f8",
+    "values": [
+      0.20262204733672126,
+      0.4638833992094862,
+      0.32142857142857145,
+      1.0,
+      0.25,
+      0.25,
+      0.7973779526632787,
+      1.0
+    ],
+    "window_count": 56
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 797,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 821
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:9c90584a96593b44ce59099e2244d5c6b625bcc9de80e081e028505043f8ac49",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095539,
+    "id": "chatcmpl-c7alPFIiHSvBwTlQno2jeJCsmzpT7v5w",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.276,
+      "predicted_n": 24,
+      "predicted_per_second": 42.457135983130364,
+      "predicted_per_token_ms": 23.553166666666666,
+      "prompt_ms": 708.471,
+      "prompt_n": 719,
+      "prompt_per_second": 1014.8615821960249,
+      "prompt_per_token_ms": 0.9853560500695411
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 797,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 821
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A new manager is not what the Padres need right now\\nThe San Diego Padres may need to look for another manager, and that is not a good thing.\\nIt is rumored that Bob Melvin may be on his way out of town.\\nThe San Francisco Giants are interested in the veteran skipper, and apparently, the Padres are letting him interview for the job.\\nThat worked well for the Padres last time as Bruce Bochy left San Diego to manage the Giants and won three World Series with the franchise. SMH.\\nWhat are the Padres thinking? Really? What in the world are you doing? To the Giants?\\nIs the franchise in that much dismay that Bob Melvin cannot wait to get out of town? The veteran skipper will enter 2024 in the last year of a contract with the Padres, and apparently, he is not happy in America's Finest City. Can you blame him? The Padres were a mess in 2023, a year after making it all the way to the NLCS.\\nMelvin is from the Bay Area and is reportedly interested in returning to his home.\\nIf the Padres are seriously considering a new skipper, then it will surely set the organization back a few more seasons.\\nWhat has always been needed in San Diego is stability. A Padres way. That mantra has not echoed through the halls of Petco Park since the Andy Green era. The Padres desperately need continuity, and naming a new manager will not bring that immediately.\\nMike Shildt and Ryan Flaherty are named as possible replacements. Both men worked under Bob Melvin in 2023. Shildt has managerial experience, while Flaherty is a young coach.\\nThe Padres have major issues this winter with free agency as Josh Hader and Blake Snell are both due for free agency. Juan Soto is also entering his last year under contract, and reports are that the Padres would love to extend him. The timing of this is bizarre but not unusual for the Padres and the way they conduct business.\\nLosing Bob Melvin to a division rival would be careless. Especially a manager of that ilk.\\nPlease embrace tradition and build a brand internally. The Padres need stability.\", \"original_answer\": \"The San Diego Padres may be considering replacing manager Bob Melvin, who is reportedly interested in returning to his home in the Bay Area. This move could set the team back several seasons, as Melvin has provided stability and leadership since taking over in 2020. The team faces several challenges this offseason, including losing key players to free agency and extending star slugger Juan Soto. Instead of looking outside the organization for a new manager, the Padres should prioritize building from within and embracing their traditional values of stability and continuity.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 159,
+  "source_cluster_id": "sha256:21f365db85f74758c74494d9a53ca3014bf53bf30a0a79d9b95c8b2b440c4bb7",
+  "source_id": "13936",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:f0027ee2cc69fc052e711f4e07f2daddecc951cc867e38c10272e56179f134de",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ]
+}

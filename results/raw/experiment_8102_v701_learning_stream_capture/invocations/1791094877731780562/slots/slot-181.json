@@ -1,0 +1,130 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3956070259446278,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:4a8258a96a7f20bf7f21c90717cb71ba8d9e761f324d10f1cde20a6cce8cbed4",
+  "human_target": null,
+  "input_tokens": 763,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:4a8258a96a7f20bf7f21c90717cb71ba8d9e761f324d10f1cde20a6cce8cbed4",
+    "feature_hash": "sha256:9dabc7c7950854fef2d00f34482d97c24df3223a4c556ac4d263d65e3afa47ea",
+    "source_normalized_hash": "e6b1538bb99e3b339b046ea821f380d84f613afd0bd9faf9af8695eb64e2aaf6",
+    "values": [
+      0.23484580341077052,
+      0.3539549662082557,
+      0.125,
+      0.125,
+      0.125,
+      0.125,
+      0.7651541965892296,
+      0.9375
+    ],
+    "window_count": 12
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 763,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 787
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:048b00063a0eff72c35c489def4054e8a0d1ecd1bd725dc05ba288b01ecbee73",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095571,
+    "id": "chatcmpl-4Ym26jICOjoNepOq1Ir0XOzaXOQkpVoA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 572.322,
+      "predicted_n": 24,
+      "predicted_per_second": 41.934435510079986,
+      "predicted_per_token_ms": 23.84675,
+      "prompt_ms": 688.855,
+      "prompt_n": 685,
+      "prompt_per_second": 994.4037569590116,
+      "prompt_per_token_ms": 1.0056277372262774
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 763,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 787
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"634 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Nightlife, Dance Clubs, Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"20:0-2:0\\\",\\\"Saturday\\\":\\\"20:0-2:0\\\",\\\"Thursday\\\":\\\"20:0-2:0\\\"},\\\"name\\\":\\\"Tonic Nightclub\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-01-29 00:07:18\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This place closed down for good last night. Its done! You could see it coming for a while now. They wouldn't have liquor in stock and seriously said they didn't carry Jack Daniels or Clicquot at one point.\\\"},{\\\"review_date\\\":\\\"2018-01-17 00:50:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Went to checkout this place while in SB for the weekend and had a great night. Great music, great drinks, and overall a fun night. One of the bartenders, Joel, gave us great service and made us great drinks throughout the night despite the busy bar. Will definitely be back on our next visit!\\\"},{\\\"review_date\\\":\\\"2017-12-24 07:31:20\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Left a tab open at the bar, when it came time to closing out and paying for my drinks the bar tender had lost my card.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here is an objective overview of Tonic Nightclub based on the provided structured data:\\n\\nTonic Nightclub is a trendy dance club located in downtown Santa Barbara, California. It offers a variety of drinks and hosts live DJs and events on Thursdays, Fridays, and Saturdays from 8pm to 2am. The club features both indoor and outdoor seating areas and provides free WiFi. Reservations are accepted for parties of six or more, and takeout is not available. The ambiance is described as trendy and upscale, with a DJ playing Top 40 and house music. According to reviews, the club has a lively atmosphere and great drinks, but may have issues with inventory management and losing track of customer tabs. Overall, Tonic Nightclub appears to be a popular spot for nightlife enthusiasts in the Santa Barbara area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 182,
+  "source_cluster_id": "sha256:5d1019323799549302e84062daf72674b60e5a9ecb738a2171e4de42f46f1c5b",
+  "source_id": "14269",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:4a8258a96a7f20bf7f21c90717cb71ba8d9e761f324d10f1cde20a6cce8cbed4",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

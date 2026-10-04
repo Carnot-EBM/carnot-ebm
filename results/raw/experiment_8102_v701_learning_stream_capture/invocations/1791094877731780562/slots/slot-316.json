@@ -1,0 +1,129 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5922266840934753,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:3ef4c9f8f8ba2e5111215cd69926f6cb9b293a679cb5395c5de325986b3a9975",
+  "human_target": null,
+  "input_tokens": 1015,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:3ef4c9f8f8ba2e5111215cd69926f6cb9b293a679cb5395c5de325986b3a9975",
+    "feature_hash": "sha256:7c037f8c6fd75e877752982d2f179d022f318c182afda7e3ea550749776518d8",
+    "source_normalized_hash": "4a3c2db35b429a6eb9f270ca93c22a97fefc0704a86e6580073a9081ef2e5092",
+    "values": [
+      0.4098463320903084,
+      0.6013067071574273,
+      0.7,
+      1.0,
+      0.2,
+      0.2,
+      0.5901536679096916,
+      0.9134575939159328
+    ],
+    "window_count": 10
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1015,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1038
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:25745b9b1f6fadc9f0e4fc7b9b7e67f4d55b48c5f18f29d380b08ec300be5dce",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095755,
+    "id": "chatcmpl-HEfd7RrnbzNmgLBBtEAdpD4p6cZcPH8E",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 548.598,
+      "predicted_n": 23,
+      "predicted_per_second": 41.925052588598575,
+      "predicted_per_token_ms": 23.852086956521738,
+      "prompt_ms": 929.724,
+      "prompt_n": 937,
+      "prompt_per_second": 1007.8259784624254,
+      "prompt_per_token_ms": 0.9922347918890075
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1015,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1038
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"34 Anacapa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Art Galleries, Wine Bars, Shopping, Nightlife, Restaurants, Wineries, Bars, Food, Arts & Entertainment\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"The Funk Zone\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-04-29 03:58:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Covid was tough in businesses  soo glad this is are looking up. Thst most survived  thank you.\\\"},{\\\"review_date\\\":\\\"2021-01-19 18:41:22\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"The Funk Zone is where I usually go when I visit SB. This little area is very hip and artsy with tons of eateries, shopping but most importantly lots of wineries and breweries. I never had an issue parking and I could spend the entire day here just drowning myself in booze.\\\"},{\\\"review_date\\\":\\\"2020-12-29 01:44:14\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"It's been obviously been years and years since I've been to Santa Barbara because when I was here last, there were only a few restaurants and a couple of hotels on this end of State Street, not enough for the local businesses to team and label themselves \\\\\\\"The Funk Zone\\\\\\\".\\\\n\\\\nNo complaints here.\\\\n\\\\nThis super trendy area is reminiscent of LA's Arts District with beautiful murals, fantastic new restaurants with instagrammable walls and foods and plenty of wine bars to choose from.\\\\n\\\\nThey even have more hotels and a couple of museums now. And even an art installation right. there on State Street!\\\\n\\\\nSome of the best new restaurants in town can even be found here.\\\\n\\\\nIf you're mobile, the Funk Zone is very walkable from a lot of points of interest in town like the beach, the wharf, the Public Market and the Presidio.\\\\n\\\\nParking might not be the best, but like I mentioned before, it's within walking distance of a lot of places you'd be walking to/from anyway.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Funk Zone is a local business located at 34 Anacapa St, Santa Barbara, CA. It offers a variety of services and amenities, including art galleries, wine bars, shopping, nightlife, restaurants, wineries, bars, food, and arts & entertainment. Customers have mentioned positive experiences in their reviews, praising the business for its resilience during the challenging times of Covid-19.\\n\\nThe area is described as hip and artsy, with a vibrant atmosphere and a wide selection of eateries, wineries, and breweries. Parking is reported to be convenient, and visitors have expressed their enjoyment of spending an entire day exploring the Funk Zone and indulging in the various offerings, particularly the alcoholic beverages.\\n\\nThe Funk Zone has evolved over the years, with more restaurants, hotels, and museums now present in the area. It is compared to LA's Arts District, with beautiful murals, trendy restaurants, and plenty of wine bars. The location is also highlighted for its proximity to other points of interest in Santa Barbara, such as the beach, wharf, public market, and presidio.\\n\\nWhile parking may be a challenge, the Funk Zone remains highly accessible on foot from many nearby locations. Overall, it is a trendy and vibrant destination for those seeking a unique and diverse experience in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 61,
+  "source_cluster_id": "sha256:341ab97bf8edd9192a7e0cbbb46eeddd6383e3da441817e6d932420ecaea589f",
+  "source_id": "14222",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:3ef4c9f8f8ba2e5111215cd69926f6cb9b293a679cb5395c5de325986b3a9975",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

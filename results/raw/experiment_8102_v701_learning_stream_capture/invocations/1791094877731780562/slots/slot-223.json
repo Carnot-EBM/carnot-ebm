@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6117981849238276,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:c6f1922a3614e35396a38d205af26d9c4ba5ebb2878ffe135cc62bf5ea74c4b6",
+  "human_target": null,
+  "input_tokens": 1029,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:c6f1922a3614e35396a38d205af26d9c4ba5ebb2878ffe135cc62bf5ea74c4b6",
+    "feature_hash": "sha256:013d912d7f1f0603e3cced5763a9326bd6b9deefc2fb6d14c0d9affc70c06c21",
+    "source_normalized_hash": "a69fa6b60b49b195d78338ce565700d50c84419b031a246c7387e19fdbe8c31f",
+    "values": [
+      0.23518354538478375,
+      0.4691126906193986,
+      0.15384615384615385,
+      1.0,
+      0.18974358974358976,
+      0.2,
+      0.7648164546152162,
+      0.9321683541394583
+    ],
+    "window_count": 26
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1029,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1052
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:44eaee32f7ac7f79b6d01a6e378a41ded38ecc6e40fb8ea3087c73b9bcc4170c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095623,
+    "id": "chatcmpl-aiXTkVGoOgB3cURGCDAeLpM5FTL0uRXh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.689,
+      "predicted_n": 23,
+      "predicted_per_second": 42.45978781182561,
+      "predicted_per_token_ms": 23.551695652173912,
+      "prompt_ms": 935.618,
+      "prompt_n": 951,
+      "prompt_per_second": 1016.4404703629044,
+      "prompt_per_token_ms": 0.9838254468980021
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1029,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1052
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"434 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":true,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Nightlife, Dance Clubs\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-1:30\\\",\\\"Saturday\\\":\\\"17:0-1:30\\\",\\\"Thursday\\\":\\\"17:0-1:30\\\",\\\"Wednesday\\\":\\\"17:0-1:30\\\"},\\\"name\\\":\\\"Indochine\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-15 07:06:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Indochine use to be the most fun during my college years. It's a place where you pregame before hitting the other hole in the wall bars and the dance floor is good place to warm up your moves before waiting in line to get into a bigger place. It's  also a great place to end the since most people are dancing and thinking the same thing. New Management tells they will be getting a face-lift and I welcome it. Hope it's restored to it's former glory.\\\"},{\\\"review_date\\\":\\\"2022-01-04 23:44:09\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Stoked that Nelson is here now! The spot is a SB institution. Intimate inside bar with a intrinsically dope patio. The asiatic theme is exotic and fun. Strong drinks and attractive bartenders is always a winner!\\\"},{\\\"review_date\\\":\\\"2021-12-16 22:02:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is a Santa Barbara landmark. It's boutique nature makes it selective and exclusive. It's Black Market liquor selection is second to none. One should arrive around 10 ish to avoid the lines or be prepared to wait or tip for entry (but worth not waiting). Currently open Thurs thru Sat but i hear more days to come. Keep in eye on this one!!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Indochine is a local nightlife spot located at 434 State St in Santa Barbara, CA. It falls under the categories of Nightlife and Dance Clubs. The business operates from Wednesday to Saturday, with opening hours from 17:00 to 1:30. \\n\\nCustomers have left positive reviews about Indochine, mentioning various aspects of the establishment. One customer reminisces about the fun times they had during their college years, describing it as a place to pregame before exploring other bars in the area. The dance floor is praised as a good place to warm up before heading to larger venues. The customer also mentions that the management plans to give the place a face-lift, which they welcome in the hopes of restoring it to its former glory.\\n\\nAnother review highlights the presence of Nelson, who seems to be a popular figure at Indochine. The bar is described as intimate, with an intriguing Asian theme and a charming patio. Strong drinks and attractive bartenders are appreciated by the reviewer.\\n\\nA third review emphasizes that Indochine is a Santa Barbara landmark with a boutique nature, giving it an air of exclusivity. The liquor selection is highly regarded, particularly the Black Market selection. To avoid waiting in line, the reviewer suggests arriving around 10 pm or tipping for entry.\\n\\nOverall, Indochine has received positive feedback for its fun and intimate atmosphere, strong drinks, and unique Asian theme. The management's plans to improve the establishment are eagerly anticipated by customers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 224,
+  "source_cluster_id": "sha256:9a91cc1763845d0f0ca811754228e30f3fbac17364d06b2ce85d45d1c4c27c7d",
+  "source_id": "13760",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:c6f1922a3614e35396a38d205af26d9c4ba5ebb2878ffe135cc62bf5ea74c4b6",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5462900580605492,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:f9330509977f8be124bf61609ba6b7a3a0670f7f816f095ff2265e6dbc773041",
+  "human_target": null,
+  "input_tokens": 1009,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:f9330509977f8be124bf61609ba6b7a3a0670f7f816f095ff2265e6dbc773041",
+    "feature_hash": "sha256:35cd94a549f72030c9f2ce646a5242d7cc3e6bd25665e3d9c62364804659c0cf",
+    "source_normalized_hash": "4ee0f66e87a03e6c8a8f05e2d9d83c488d9fdd7bc1106969a5a0310b175747a4",
+    "values": [
+      0.20375255224711916,
+      0.3879472960282751,
+      0.453125,
+      0.75,
+      0.25,
+      0.25,
+      0.7962474477528808,
+      0.9542444663502132
+    ],
+    "window_count": 32
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1009,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1030
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:a6564e8b30ca42be13a9990cfb6eff53878e1ccc686be8c8158a79590aed7f89",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095570,
+    "id": "chatcmpl-PsZYaXVE1d0WssSzXy4RajjCvPlSLD4g",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 500.343,
+      "predicted_n": 21,
+      "predicted_per_second": 41.97120775148248,
+      "predicted_per_token_ms": 23.825857142857142,
+      "prompt_ms": 927.996,
+      "prompt_n": 931,
+      "prompt_per_second": 1003.2370829184608,
+      "prompt_per_token_ms": 0.9967733619763695
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1009,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1030
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6850 Pardall Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Restaurants, Mexican\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-23:0\\\",\\\"Monday\\\":\\\"8:0-23:0\\\",\\\"Saturday\\\":\\\"8:0-23:0\\\",\\\"Sunday\\\":\\\"8:0-23:0\\\",\\\"Thursday\\\":\\\"8:0-23:0\\\",\\\"Tuesday\\\":\\\"8:0-23:0\\\",\\\"Wednesday\\\":\\\"8:0-23:0\\\"},\\\"name\\\":\\\"El Sitio\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2017-06-11 01:41:18\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"This place has descent Mexican food. I thinks it's the best place to get tacos and a burrito in IV. I personally like it better than Lily's. Not sure why more people don't go here, it's better than the other places in IV. They also sell Jarritos :)\\\"},{\\\"review_date\\\":\\\"2017-05-23 09:33:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Flavor and quality! I was raised on spanish food, so coming to IV was a struggle. This place is small and not well advertised (I've lived down the street from this place for three years and didn't even notice them). But man oh man, this place is awesome! Arguably my number one hispanic food joint out here. I've eaten at almost all the mexican places established in old town Goleta to IV to Downtown Santa Babara. This place is by far the most flavorful and bang for your buck. The gentleman who mans the cash register is always so kind. I salsas and condiments are fresh and delicious. Everything down to the vegetables in a vegetarian burrito is sooo tasty! I could eat their vegetable burrito everyday for the rest of my life. I am going to be eating here regularly from here on out.\\\"},{\\\"review_date\\\":\\\"2017-05-05 05:06:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Second best burrito I've had in IV, didn't make me sick so that was a win, no pinto beans thank god. Overall delish\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"El Sitio is a Mexican restaurant located at 6850 Pardall Rd, Isla Vista, CA, that is open every day from 8:00 to 23:00. The restaurant does not offer WiFi or outdoor seating, and does not take reservations, but it does offer takeout options and is suitable for groups. It does not provide parking amenities such as a garage, valet, or lot, but street parking is available. The restaurant has a 4-star business rating. Reviews indicate that El Sitio offers decent Mexican food and is considered a good place for tacos and burritos. Despite its low-key appearance and lack of advertising, the food is praised for its flavor and quality, with one reviewer noting it as their number one Hispanic food joint offering value for money. The service is also appreciated, with the staff, particularly the cash register operator, mentioned as kind. The salsas, condiments, and even the vegetables in the vegetarian burrito are appreciated for their freshness and taste.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 180,
+  "source_cluster_id": "sha256:5d08cf3136642658eee3319326119b8fab0b54ad903fe8a004537c3512d4349e",
+  "source_id": "14852",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:f9330509977f8be124bf61609ba6b7a3a0670f7f816f095ff2265e6dbc773041",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

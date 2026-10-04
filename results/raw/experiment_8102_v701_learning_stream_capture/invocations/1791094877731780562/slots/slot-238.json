@@ -1,0 +1,146 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3137308639707044,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:925e573401cf532a7fc1ea54d6b362efeb8be9fdab4a05e9985d34d10b7f792c",
+  "human_target": null,
+  "input_tokens": 703,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:925e573401cf532a7fc1ea54d6b362efeb8be9fdab4a05e9985d34d10b7f792c",
+    "feature_hash": "sha256:01e62a0d66315853453fc28ef103d77d4bc23bc2659e2daa8555922ef00b4eef",
+    "source_normalized_hash": "cc3e5104a330ea168228f33df2e4df9bc3fc30dc1b57b2bc2fbc7e8a35d33300",
+    "values": [
+      0.32650313115676893,
+      0.5902767027863777,
+      0.2727272727272727,
+      1.0,
+      0.0,
+      0.0,
+      0.6734968688432311,
+      0.93984455624355
+    ],
+    "window_count": 44
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 703,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 727
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:926b6dbee131d07c23189ed22b3188acdb1433c4b0f0e2845436781aadf6e6df",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095647,
+    "id": "chatcmpl-FPcivj5fEkFO3hwYdT7G6tZAlel8wzfV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.781,
+      "predicted_n": 24,
+      "predicted_per_second": 42.49434736650136,
+      "predicted_per_token_ms": 23.532541666666663,
+      "prompt_ms": 631.406,
+      "prompt_n": 625,
+      "prompt_per_second": 989.8543884600401,
+      "prompt_per_token_ms": 1.0102495999999999
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 703,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 727
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Then come back and slide the cast stone post over top of the 4\u00d74 wood post. The front of the cast stone post will lay flat against the front of the 4\u00d74 post. This way, when you screw in the mailbox holder and mailbox to the front of the cast stone post, it will join the two together making the post sturdy.\\\\n\\\\npassage 2:According to standard postal service codes, a mailbox should not sit any higher than 45 inches from street level. Place the post in the hole. Level it and attach two support beams at the center to keep the post standing up straight. Place one at the side of the post, and then add another to the back. This will ensure the post does not move while pouring the concrete and it remains level while the concrete is drying. Pour the dry concrete straight into the hole leaving 3 to 4 inches of space from the top of the hole.\\\\n\\\\npassage 3:1. Use shovel or posthole digger to dig a hole for the mailbox post; place dirt onto a tarp. 2. Keep in mind that bottom of mailbox must be 41 to 45 inches above street, and front of mailbox must be no more than 8 inches from curb. 3. Set mailbox post in hole and use a post level to hold it perfectly plumb. 4. Backfill around the post with 10 or 12 inches of soil. 5. Use a sledgehammer or long 2x4 to tamp down the soil around the post. 6. Add a little more soil and tamp again; repeat until hole is completely filled. 7. Remove the post level and attach the diagonal brace with galvanized decking screws. 8. Attach the mailbox to the post with galvanized decking screws.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to level mailbox post\\\"}\", \"original_answer\": \"To level a mailbox post, you should first dig a hole for the post using a shovel or posthole digger. Place the post in the hole and use a post level to ensure it is perfectly plumb. Backfill the hole with soil, tamping it down with a sledgehammer or a long 2x4. Attach a diagonal brace to the post using galvanized decking screws and then attach the mailbox to the post using galvanized decking screws as well.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 239,
+  "source_cluster_id": "sha256:8a12ce0e5ea7a4a691851b7ef72ecbe7a09db4c679bfa741b3c3aeb4cac7d6e1",
+  "source_id": "12320",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:925e573401cf532a7fc1ea54d6b362efeb8be9fdab4a05e9985d34d10b7f792c",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

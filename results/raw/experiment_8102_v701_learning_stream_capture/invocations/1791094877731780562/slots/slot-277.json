@@ -1,0 +1,139 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2604352999478579,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8728a16987d3ac850bc74ff82b0d24156e681cafbf261257c8e673749f9fe20a",
+  "human_target": null,
+  "input_tokens": 671,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8728a16987d3ac850bc74ff82b0d24156e681cafbf261257c8e673749f9fe20a",
+    "feature_hash": "sha256:c925e78aa498d1b486e0f713686884f43aa5bb7e16a07407c3d224fa5b49537a",
+    "source_normalized_hash": "f388ff53b01f388e78827457ea29d015738213d5a1bd3b5bff09138bc77339f6",
+    "values": [
+      0.27768865121806297,
+      0.4590017825311943,
+      0.4,
+      0.6666666666666666,
+      0.6666666666666666,
+      0.6666666666666666,
+      0.7223113487819369,
+      0.9108734402852049
+    ],
+    "window_count": 30
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 671,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 694
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:e2668a288916509a12aef5dca82a9505cbfb8ccbccbb15590087539e191a0c67",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095700,
+    "id": "chatcmpl-9uODnP3AT3eQnCyXFoE2i6TJEqWPU8qC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.996,
+      "predicted_n": 23,
+      "predicted_per_second": 42.51417755399301,
+      "predicted_per_token_ms": 23.521565217391302,
+      "prompt_ms": 608.709,
+      "prompt_n": 593,
+      "prompt_per_second": 974.1929230551874,
+      "prompt_per_token_ms": 1.0264907251264754
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 671,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 694
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"About a quarter of a million Australian homes and businesses have no power after a \\\"once in a decade\\\" storm battered Sydney and nearby areas. About 4,500 people have been isolated by flood waters as \\\"the roads are cut off and we won't be able to reach them for a few days,\\\" Michael Langley, spokesman for the New South Wales State Emergency Service said. Devastating winds lashed cars and homes. The storm system also brought destructive flooding that washed away houses and brought down trees onto streets and buildings. The emergency services have been slammed with 13,000 calls for help due to flooding and have carried out 144 rescue tasks. The powerful storm has already claimed four lives, according to New South Wales Police. The dangerous conditions have prompted the police department to issue pleas on social media for people to not attempt driving through flooded areas. The heavy flooding prompted school and college closures and disruptions to public transportation. The adverse weather was caused by an intense low pressure system, said Australia's Bureau of Meteorology. The strongest wind gusts peaked at 135 km/h (85 mph) and it was estimated that about 200 millimeters (7.87 inches) of rainfall fell in the area on Tuesday. Transport NSW, which provides public transportation throughout the New South Wales area, issued a warning that many public services across the region have been disrupted because of the weather. It also posted a video on its Facebook page showing CCTV footage of a flood waters rising in a train station. Samantha Mancuso was driving in her neighborhood of Liverpool, a suburb in Sydney on Wednesday, when she noticed gallons of water pouring into the streets. She said Joe Broad Reserve, a nearby park, was flooded. The severe weather caused a local creek to break its banks and now the flooding is seeping into the neighborhood. Water levels at the park reached 2.6 meters (8.5 feet) earlier in the morning, but have slightly receded, she said.\\n\", \"original_answer\": \"A severe storm hit Sydney and surrounding areas, leaving over 250,000 homes and businesses without power and isolating 4,500 people. Destructive winds and flooding have caused four deaths and prompted over 13,000 calls for help. Schools and public transportation have been disrupted, and a local creek overflowed into a neighborhood, causing flooding.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 22,
+  "source_cluster_id": "sha256:dd06f1a0305afb951d0d5dd841b0ff64b0a7d7bdae3b13317cd30db3f7bd84ba",
+  "source_id": "15675",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8728a16987d3ac850bc74ff82b0d24156e681cafbf261257c8e673749f9fe20a",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

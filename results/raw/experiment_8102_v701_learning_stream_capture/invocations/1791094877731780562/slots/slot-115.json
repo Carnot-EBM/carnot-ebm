@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3473667330108583,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:51cd76f860618bfe81ea52979a51ea4094c05b02b3c83d51ae23daf2e6608456",
+  "human_target": null,
+  "input_tokens": 724,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:51cd76f860618bfe81ea52979a51ea4094c05b02b3c83d51ae23daf2e6608456",
+    "feature_hash": "sha256:3bcb63704a2e2d641bbc95b19c56f129da178d9e711141a16424ebf7d70d10dc",
+    "source_normalized_hash": "c9c6d24cd6d5902c77c2c80d4b02a1e7b5e718dd58beb149cd6ab4556f35ec6d",
+    "values": [
+      0.33622906155606785,
+      0.5613621233212106,
+      0.5833333333333334,
+      0.75,
+      0.0,
+      0.0,
+      0.6637709384439322,
+      0.9269193630916683
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.15,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 724,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 747
+    }
+  },
+  "probability": 0.15,
+  "public_eligible": true,
+  "public_hash": "sha256:84c08bf1192d8184d88ade9b2b5881145764b7ee3b2e0f4c79685aad83837ec0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.15,\n \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095479,
+    "id": "chatcmpl-vmx3UBq2Al46znaesXFdemqIl5G6nGFt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.635,
+      "predicted_n": 23,
+      "predicted_per_second": 42.54256568664626,
+      "predicted_per_token_ms": 23.50586956521739,
+      "prompt_ms": 666.643,
+      "prompt_n": 646,
+      "prompt_per_second": 969.0344007212257,
+      "prompt_per_token_ms": 1.0319551083591332
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 724,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 747
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"NHL Player Defies Pride Tape Ban\\nRecently, the NHL took a step backwards and refused to allow players to use prose themed stick tape and jerseys during warm ups.\\nArizona Coyotes defenseman Travis Dermott decided to ignore the ban and played with the pride tape anyway, making Dermott the first player to do so.\\nPride Tape, a gesture to support the LGBTQIA+ community, could be seen on the top of his stick during the Coyotes 2-1 win over the Anaheim Ducks.\\nThis past June, the NHL said that players could not use Pride themed paraphernalia during games, kowtowing to players who refused to wear the Night Hight jerseys.\\nThe NHL doubled down on this ban stating before the season started they players could not use any specialty theme night equipment or tape even during warmups.\\nThe NHL, per ESPN has not yet said if they will punish Dermott, and Dermott has not yet heard himself if any punishments are coming.\\nDermott has been a supporter of the LGBTQ community saying in a 2021 interview, that he has \u201csome family that is involved in the LGBTQ community. So, I'd like to step forward and in the future take part in supporting them more vigorously.\\\"\\nIt does not seem like Dermott plans on stopping. Jeff McLean, one of the co-founders of Pride Tape said that he is still sending shipments of tape to Dermott saying, \u201cHe sent me a text to get topped up because he had run out. We're always more than happy to support Travis.\u201d\\nLongtime GM and NHL personality Brian Burke has been vehemently speaking out against the NHL\u2019s decision to ban the tape. He is on record saying that it:\\n\u201cThis is not inclusion or progress. Fans look to teams and the league to show they are welcome, and this directive closes a door that\u2019s been open for the last decade. Make no mistake, this is a surprising and serious setback.\u201d\\nBurke has offered to pay the fines of players who choose to keep using the tape.\", \"original_answer\": \"Arizona Coyotes defenseman Travis Dermott defied the NHL's ban on Pride tape during a recent game, becoming the first player to do so. Dermott played with the tape on his stick despite the NHL's decision to refuse players from using any specialty theme night equipment or tape, including during warm-ups. The ban was implemented after some players refused to wear the NHL's \\\"Night Hockey\\\" jerseys during a previous game. The NHL has not yet commented on whether Dermott will be punished for his action, but longtime GM and NHL personality Brian Burke has offered to pay the fines of any other players who choose to continue using the tape in support of the LGBTQ community.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 116,
+  "source_cluster_id": "sha256:9fc8b745fa4865ef80934f7f706d0b2b98f5989df8eff9ade863bfb3931d123c",
+  "source_id": "13990",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:51cd76f860618bfe81ea52979a51ea4094c05b02b3c83d51ae23daf2e6608456",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.530862411018461,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:51894a745dc46301c7a7f1a547f9e9ba38bce19c9f304ee807f0882866692afd",
+  "human_target": null,
+  "input_tokens": 856,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:51894a745dc46301c7a7f1a547f9e9ba38bce19c9f304ee807f0882866692afd",
+    "feature_hash": "sha256:2235c4ca5c122e1928ea211453a404c2c1cfd17dff0dd8bd13c106604b77772e",
+    "source_normalized_hash": "8ebe8cebae3ce3559cbed6984f7e1e268ebd587f1651f7a55741f6ecf0c9718f",
+    "values": [
+      0.23202725382323086,
+      0.48350771195598785,
+      0.23333333333333334,
+      0.8333333333333334,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.7679727461767691,
+      0.945175524773226
+    ],
+    "window_count": 20
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 856,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 880
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:210b47b7680340aae6ca66332b8850c788f2da48709ffb4f5b0b30ece32da7fa",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095422,
+    "id": "chatcmpl-AoqPGRELGojNRIRCCtpskfP2bmZpdHSS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.124,
+      "predicted_n": 24,
+      "predicted_per_second": 42.54383787961512,
+      "predicted_per_token_ms": 23.505166666666668,
+      "prompt_ms": 816.235,
+      "prompt_n": 778,
+      "prompt_per_second": 953.156872714353,
+      "prompt_per_token_ms": 1.0491452442159384
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 856,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 880
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2001 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Breakfast & Brunch, Sandwiches, American (Traditional)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-14:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-14:0\\\",\\\"Sunday\\\":\\\"7:30-14:0\\\",\\\"Thursday\\\":\\\"8:0-14:0\\\",\\\"Tuesday\\\":\\\"8:0-14:0\\\",\\\"Wednesday\\\":\\\"8:0-14:0\\\"},\\\"name\\\":\\\"Garrett's Old Fashioned Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-15 17:50:34\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"What a treat! Been overlooking this spot for far too long. We were there on a particularly busy morning and you could tell they were a little stressed but nevertheless the food was great prices were reasonable and the service was friendly. Something about sitting having breakfast at the counter in a bustling diner that is a nice reminder to slow down and enjoy the world around you.\\\"},{\\\"review_date\\\":\\\"2022-01-02 21:37:59\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Lots of food. Great friendly service. I had eggs Benedict delish.  Hubby had eggs with 2 giant italian sausage. Had to take extra home.\\\"},{\\\"review_date\\\":\\\"2021-12-30 20:15:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This was our first time at Garrett's and we will definitely return when we're back in town. The service was friendly and fast, and everyone was pleased with their food. Blueberry pancakes were delicious and got 5 star ratings by grown ups and kids alike. The French toast and breakfast burrito were also winners.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Garrett's Old Fashioned Restaurant is a popular breakfast and brunch spot located in Santa Barbara, CA. According to customer reviews, the restaurant offers delicious food at reasonable prices, with generous portions and friendly service. The menu includes classic breakfast dishes such as eggs Benedict, Italian sausage, blueberry pancakes, French toast, and breakfast burritos, all of which have received high praise from customers. The restaurant has a casual atmosphere and offers outdoor seating, making it a great spot for a quick and easy meal. While the restaurant does not offer reservations or take-out, it is a great option for those looking for a no-frills, traditional breakfast experience. With a 4.0-star rating and glowing customer reviews, Garrett's Old Fashioned Restaurant is a must-try for anyone in the area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 78,
+  "source_cluster_id": "sha256:d7bc0668b20f74504019d5ba70a1c79e96d3bcedfb77896f8214d1d4e7353cde",
+  "source_id": "13784",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:51894a745dc46301c7a7f1a547f9e9ba38bce19c9f304ee807f0882866692afd",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

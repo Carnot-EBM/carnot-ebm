@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3530234239296988,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:a44ec516777530e799f255510f26985e46ef7f650f10f8cc388c7f86c1898130",
+  "human_target": null,
+  "input_tokens": 752,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:a44ec516777530e799f255510f26985e46ef7f650f10f8cc388c7f86c1898130",
+    "feature_hash": "sha256:3b68a904f7efc839c5cceeb9c721fe23697ed46498c9abb3207593a975f96525",
+    "source_normalized_hash": "ec71933e938eb34ecf628d7306ed0dabc9c7abc8ffea6a4c3c69db299e6551e0",
+    "values": [
+      0.3899464933344667,
+      0.5191511387163561,
+      0.3701298701298701,
+      0.8571428571428571,
+      0.5422077922077922,
+      0.5714285714285714,
+      0.6100535066655334,
+      0.7415815531448671
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 752,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 775
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:9e140b120e475c5ad2d41138b1cd43191108eae836400985f54f40b5ce542a85",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095568,
+    "id": "chatcmpl-VpHlpLqIvpVLlFwGnK8PGSK1D0FtML7p",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 547.405,
+      "predicted_n": 23,
+      "predicted_per_second": 42.01642294096693,
+      "predicted_per_token_ms": 23.800217391304347,
+      "prompt_ms": 672.335,
+      "prompt_n": 674,
+      "prompt_per_second": 1002.4764440345958,
+      "prompt_per_token_ms": 0.9975296735905045
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 752,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 775
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Your remote starter will allow you to turn the car and some accessories on without being in the vehicle, but you cannot actually put the car in gear and drive until you put the key into the ignition and turn it to the on position. Other People Are Reading.our remote starter will allow you to turn the car and some accessories on without being in the vehicle, but you cannot actually put the car in gear and drive until you put the key into the ignition and turn it to the on position. Other People Are Reading.\\\\n\\\\npassage 2:RE: Remote Starter Install 2008 Honda Accord. Yes, take it to an alarm shop for them to install. I installed mine and it was a headache and voided the alarms warranty in the end. Your car is still under warranty, Im sure youd void a portion of that as well.E: Remote Starter Install 2008 Honda Accord. i have all the wiring diagrams that you will need to install it. email me at audionmotionink@aol.com and i will send them to you as i can't post them in the forum for some reason.\\\\n\\\\npassage 3:Instructions. Start the Accord, ensuring that all lights and accessories are in proper working order before you begin the installation. Everything must be in proper working order to complete a successful installation. Thoroughly read the instructions that came with your remote starter kit before you begin.our remote starter will allow you to turn the car and some accessories on without being in the vehicle, but you cannot actually put the car in gear and drive until you put the key into the ignition and turn it to the on position. Other People Are Reading.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to install remote start honda accord\\\"}\", \"original_answer\": \"Based on the provided passages, here is how to install a remote start system on a 2008 Honda Accord:\\n\\n1. Take the car to an alarm shop for installation. According to Passage 2, installing the remote start system yourself may void the alarm warranty, so it's best to seek professional help.\\n2. Ensure that all lights and accessories are in proper working order before starting the installation. This is stated in Passage 3.\\n3. Read the instructions that came with the remote starter kit thoroughly before beginning the installation. This is also mentioned in Passage 3.\\n4. The remote starter will allow you to turn the car and some accessories on without being in the vehicle, but you cannot actually put the car in gear and drive until you put the key into the ignition and turn it to the on position. This is repeated in Passages 1 and 3.\\n\\nUnable to answer based on given passages. The passages do not provide detailed instructions on how to install the remote start system or address any specific questions related to the installation process.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 179,
+  "source_cluster_id": "sha256:45441fa1be45c8f954a59ab87a39d8903462072a736dec610df4d56e3dcfcac7",
+  "source_id": "15491",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:a44ec516777530e799f255510f26985e46ef7f650f10f8cc388c7f86c1898130",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

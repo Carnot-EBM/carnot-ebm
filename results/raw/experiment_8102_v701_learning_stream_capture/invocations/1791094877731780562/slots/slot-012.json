@@ -1,0 +1,147 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6828655429417267,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:ec5610e3576aee52397ed7fe72eadf3d05fd598a3516374d9958b61b764ca117",
+  "human_target": null,
+  "input_tokens": 1074,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:ec5610e3576aee52397ed7fe72eadf3d05fd598a3516374d9958b61b764ca117",
+    "feature_hash": "sha256:c006fb572b62bb090eb0f9fdca17c74a3fbd3edc65cfe5f95a1cda06657c87fb",
+    "source_normalized_hash": "68eda85e3c5bef35dbdfe2112b5f9ef18f1068d038a9a6f0b3275028a6f353eb",
+    "values": [
+      0.19461122613296528,
+      0.37110955493308434,
+      0.1956521739130435,
+      1.0,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.8053887738670348,
+      1.0
+    ],
+    "window_count": 46
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1074,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1098
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:e95e323ee3b46e70c8f5e4497133abc2178a9f73af922e2bf66008a34fe72a20",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095327,
+    "id": "chatcmpl-jtflCV51Hu0LtxQoDFu5htO57hqhzyN6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 559.7,
+      "predicted_n": 24,
+      "predicted_per_second": 42.88011434697159,
+      "predicted_per_token_ms": 23.320833333333336,
+      "prompt_ms": 940.265,
+      "prompt_n": 996,
+      "prompt_per_second": 1059.2758424486715,
+      "prompt_per_token_ms": 0.9440411646586345
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1074,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1098
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1111 E Cabrillo Blvd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"paid\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Tapas/Small Plates, Restaurants, Breakfast & Brunch, Seafood, American (New)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Monday\\\":\\\"17:0-22:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Sunday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-22:0\\\",\\\"Tuesday\\\":\\\"17:0-22:0\\\",\\\"Wednesday\\\":\\\"17:0-22:0\\\"},\\\"name\\\":\\\"Marbella\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-08-24 02:29:48\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We were tired and hungry.  The manager at Hyatt was kind of enough to serve us a great dinner.  I am fairly happy with the pasta, chicken salad especially the avocado toast.  Great flavor and it's not greasy either.  Everything is seasoned perfectly.  A little spice goes a long way.\\\"},{\\\"review_date\\\":\\\"2019-07-06 00:29:17\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Methinks not indeed. This place is so gross. The food has small, cold portions. The wait staff is a bunch of bus boys, who speak very poor English. It's as if they've fired their regular wait staff to save money, and then dragooned the dish washer into serving.\\\\n Don't be penny wise and pound foolish, and this nonsense includes the tip.  One of the buffets was an $18 TERRIBLE hamburger and cold fries. Why? \\\\nI had a grilled chicken sandwich that was apparently taken out of the ice box minutes before it found its way to my plate. It may have been left over from the previous day. Soooooo gross. The hotel is undergoing a renovation, according to the manger. START WITH THE RESTAURANT.\\\"},{\\\"review_date\\\":\\\"2019-04-13 23:50:55\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"My boyfriend and I wanted a late lunch/ snack. We decided to stay in the hotel to eat at this restaurant.  The vibe and food WASN'T inviting. We just thought, \\\\\\\"let's give this place a try.\\\\\\\"  SUPER DISAPPOINTED ON THE FOOD AND COST for this HOTEL!! Its pretty dry, tasteless, and expensive. (We ordered Nachos, Brussels sprouts, & Mahi Mahi fish taco). Did i mentioned that it was expensive too? GO ELSE WHERE FOR BETTER FOOD.Service was ok but we were there for food, Not the the service.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Marbella is a local restaurant in Santa Barbara, California, offering a variety of cuisines including tapas, seafood, breakfast, and brunch. The establishment has a rating of 3.5 stars and provides outdoor seating, Wi-Fi, and takeout options. Customers can reserve a table through the restaurant's website, and parking is available nearby. While opinions are mixed, many reviewers praise the restaurant's food quality and flavors, particularly the pasta and avocado toast. However, some customers have complained about the small portion sizes, poor English-speaking waitstaff, and high prices. Overall, Marbella appears to offer good food and ambiance, although service and value could be improved.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 13,
+  "source_cluster_id": "sha256:0a6d9b28a492a149a0d4fcc0e1a0baa5ae33242ed4b796e4f86aa7b16e80b882",
+  "source_id": "14998",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:ec5610e3576aee52397ed7fe72eadf3d05fd598a3516374d9958b61b764ca117",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

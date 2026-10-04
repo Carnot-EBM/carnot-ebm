@@ -1,0 +1,143 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5103907069424167,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:4758df1868cfc74648b97f409f88e79fba94efaa1416db745e2b763f174cd63c",
+  "human_target": null,
+  "input_tokens": 890,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:4758df1868cfc74648b97f409f88e79fba94efaa1416db745e2b763f174cd63c",
+    "feature_hash": "sha256:036c8f8d2b84fc3709044f66cfb50c5be96285350078b88a24cf5196ff53b87a",
+    "source_normalized_hash": "3dd3e2a9a61a25391e15f0a8f9c42633bbad86d9ef0f45d8a641c9d9e87075e5",
+    "values": [
+      0.3456228428816148,
+      0.5679112554112554,
+      0.0,
+      0.0,
+      0.30701754385964913,
+      0.3333333333333333,
+      0.6543771571183852,
+      1.0
+    ],
+    "window_count": 38
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 890,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 913
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:79a612b76c1ad723d6ef9c84cb71bfba25071565452718dd6b10836c43fb071d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095425,
+    "id": "chatcmpl-TJkCYDO55pqzV5c39Bwx0LFYMZVegT7f",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.065,
+      "predicted_n": 23,
+      "predicted_per_second": 42.58746632349809,
+      "predicted_per_token_ms": 23.481086956521743,
+      "prompt_ms": 841.955,
+      "prompt_n": 812,
+      "prompt_per_second": 964.4220890665179,
+      "prompt_per_token_ms": 1.03689039408867
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 890,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 913
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Eisenhower's name puts a stop to the Army's century-long Confederate tribute\\nThe former namesake of this base was shot five times by American soldiers when he attempted to conquer Maryland.\\nFormer slaveowner John Brown Gordon survived the Civil War to become the leader of the Ku Klux Klan in Georgia despite taking five bullets at Antietam in 1862 and three more wounds in different engagements as he progressed from captain to major general in the Confederate army.\\nAs a member of the U.S. Senate, Gordon helped negotiate the end of Reconstruction in 1877, which rehabilitated the white Southern elite and permitted a new age of racial tyranny to arise. A two-term governor of Georgia, Gordon was also the first commander of the United Confederate Veterans.\\nThe position was formerly named after General John Gordon, but on Friday morning, just outside of Augusta, a ceremony took place honoring Dwight D. Eisenhower. Eisenhower was a five-star commander during World War II who helped lead the downfall of Nazi Germany and a president who supervised significant racial integration achievements. When Arkansas's governor tried to prevent nine Black students from enrolling at Little Rock Central High School in 1957, Eisenhower sent the 101st Airborne Division and federalized the state's National Guard.\\nMembers of the former president's family were in attendance, and Army Secretary Christine Wormuth gave a statement lauding Eisenhower's accomplishments.\\nIn a nearly three-year process that began when Congress established the bipartisan Naming Commission in the fiscal 2021 defense policy bill to rename the military's locations and objects that honored Confederates, the Army completed its final installation-level renaming on Friday. The final redesignation took place at Eisenhower, and four members of the commission were present.\\nIn his speech, Wormuth noted that the renaming process arose from the \\\"unrest and significant division in our country\\\" that arose after the 2020 killing of George Floyd spurred racial justice rallies. The new namesakes, however, \\\"unquestionably represent\\\" the qualities the Army seeks in its future soldiers and leaders, which she praised.\\nRetired Army Brigadier General Ty Seidule, the commission's vice chair, shared these sentiments in a phone interview on Wednesday.\\nTrue American heroes... who uphold the ideals of our great nation should be honored at any time in their lives, he said.\\nHowever, more than only the names were altered. More than 1,100 Defense Department items, from the USS Chancellorsville to street names, had their labels deemed worthy of reevaluation by the Naming Commission, changing the memorial landscape of military stations around the United States.\\nEdited by Newsbreak Contributor Denys Shybinskiy\\nSource\", \"original_answer\": \"The Army has renamed a military base in Georgia, formerly named after Confederate General John Gordon, to honor Dwight D. Eisenhower. Eisenhower was a five-star commander during World War II and a president who promoted racial integration. The renaming process was part of an effort to address racial injustice and unrest following the killing of George Floyd in 2020. The Army Secretary, Christine Wormuth, praised Eisenhower's accomplishments and stated that the new namesakes represent the qualities the Army values in its soldiers and leaders. This renaming is part of a larger initiative that has reevaluated over 1,100 Defense Department items, including street names and ships, across the country.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 80,
+  "source_cluster_id": "sha256:326379e46be6ea85961cbd71a9e114757d93e5335d168a79d2798c32849a89d7",
+  "source_id": "13598",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:4758df1868cfc74648b97f409f88e79fba94efaa1416db745e2b763f174cd63c",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

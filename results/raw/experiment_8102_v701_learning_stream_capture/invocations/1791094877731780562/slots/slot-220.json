@@ -1,0 +1,151 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7162478080717847,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8c622dfde1645e014f86d596754bbb3c1393d22ac5046359e53cea3091a9f092",
+  "human_target": null,
+  "input_tokens": 1162,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8c622dfde1645e014f86d596754bbb3c1393d22ac5046359e53cea3091a9f092",
+    "feature_hash": "sha256:67803a10b1f237fa06c2ab86853bc8b6fbeb1d9f95b9718cfb1627a1c2c15fbb",
+    "source_normalized_hash": "9b50c92ea32f7162163682f7cbcd594a9a3a4f24aacae53c886dd8820f7cb526",
+    "values": [
+      0.2854675422121317,
+      0.4674098286461996,
+      0.22633744855967078,
+      0.8888888888888888,
+      0.0,
+      0.0,
+      0.7145324577878682,
+      0.9898785425101215
+    ],
+    "window_count": 54
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1162,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1185
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:9137154690505196e0dd92022a55fe68240e708fe7b511f56152caad8a1064fd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095618,
+    "id": "chatcmpl-uH8jT5F2XUF18CMBIHodXMFlib92iklZ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.469,
+      "predicted_n": 23,
+      "predicted_per_second": 42.398736148978095,
+      "predicted_per_token_ms": 23.585608695652176,
+      "prompt_ms": 1039.67,
+      "prompt_n": 1084,
+      "prompt_per_second": 1042.6385295334096,
+      "prompt_per_token_ms": 0.9591051660516606
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1162,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1185
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Johannesburg (CNN)He checked the series of stills on his camera. It was then that photographer James Oatway realized the entire attack had taken less than two minutes. It was the morning after a night of unrest in Johannesburg's Alexandra Township that saw foreign-owned shops looted and destroyed. Mozambican Emmanuel Sithole was walking down a street when four South Africans surrounded him. Sithole pleaded for mercy, but it was already too late. The attackers bludgeoned him with a wrench, stabbed him with knives, all in broad daylight. And Oatway had captured it all on his camera. \\\"They looked like hardened thugs, just by their intensity, the way they moved, the expressions on their faces,\\\" Oatway told CNN. \\\"They wanted one thing and that was to kill Emmanuel. They wanted his blood and nothing was going to stop them from doing that.\\\" Oatway says he tried to get as close as possible, conscious that the attackers were aware of his presence. \\\"When the attack started I was 20 meters (65 feet) away, but at one point I was 4 or 5 meters away,\\\" he said. \\\"I did think that maybe they would leave him alone.\\\" The attackers finally did move on and leave Sithole alone. Oatway and his fellow journalist Beauregard Tromp quickly put the injured man in the back of the car and rushed him to a hospital, where he later died. \\\"I still remember him looking straight into my eyes,\\\" said Oatway. \\\"He had a kind of a dazed, shocked look in his face.\\\" Oatway's series of images of the ordeal landed on the front page of South Africa's Sunday Times under the headline, \\\"Kill thy neighbor: Alex attack brings home SA's shame.\\\" It's a shame that South Africa continues to confront. Seven people have been killed in the latest round of xenophobic violence against poorer immigrants, many from South Africa's neighbors. Xenophobic attacks: How did we get here? Local media alleged that the attacks were a consequence of Zulu King Goodwill Zwelithini reportedly saying at a recent gathering that foreigners \\\"should pack their bags and go\\\" because they are taking jobs from citizens. Shortly after his reported comments, violence against immigrants erupted in the port city of Durban. But on Monday, Zwelithini said he had not called for a war on immigrants. \\\"This war I am calling for today is to protect everyone of foreign origin in this country irrespective of which country they are from.\\\" The United Nations said the attacks actually began in March after a labor dispute between citizens and foreign workers. OPINION: Labeling South Africa violence as xenophobia misses the point. But it was Oatway's photos of the violent attack on Sithole that have seemingly encapsulated the true horror of the situation -- and South Africa's leaders have begun to take notice. \\\"Terrible picture. People who live in rough townships have never seen such a scene,\\\" said President Jacob Zuma about the photos in a televised news conference. \\\"And I was sitting and I was saying to myself, what are we telling the world about ourselves?\\\" Police announced they've now arrested all four suspects -- the last caught overnight Tuesday -- with help from Oatway's photos, which is little solace for the photographer who captured a level of depravity rarely seen. \\\"I'm sickened by it,\\\" said Oatway. \\\"And I'm extremely angry, angry with the men that did this, and ultimately I'm upset that our efforts weren't successful in saving Emmanuel's life.\\\"\\n\", \"original_answer\": \"Photographer James Oatway captured a brutal attack on camera in Johannesburg's Alexandra Township. Mozambican Emmanuel Sithole was surrounded by four South Africans and brutally beaten and stabbed in broad daylight. Oatway tried to get as close as possible to document the attack, but the attackers were aware of his presence. He managed to capture the entire incident on camera. Oatway and fellow journalist Beauregard Tromp quickly took Sithole to the hospital, but he later died from his injuries. Oatway's photos of the attack were published on the front page of South Africa's Sunday Times, bringing attention to the ongoing xenophobic violence in the country. South Africa's President Jacob Zuma expressed his shock at the photos and questioned what they were telling the world about the country. All four suspects have since been arrested with the help of Oatway's photos. Oatway expressed his anger and sadness at not being able to save Sithole's life.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 221,
+  "source_cluster_id": "sha256:082cfadb9f17f13ccef8418c8e57a41e031fc0f0168214ee72882b4a6613b62b",
+  "source_id": "11918",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8c622dfde1645e014f86d596754bbb3c1393d22ac5046359e53cea3091a9f092",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ]
+}

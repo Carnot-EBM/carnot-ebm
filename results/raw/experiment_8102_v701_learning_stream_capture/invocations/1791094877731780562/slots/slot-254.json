@@ -1,0 +1,151 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.8005654599983245,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:64a2fef9a4ab973431f79c01d72b01838aea5d674f0756240fa2e3db59c437be",
+  "human_target": null,
+  "input_tokens": 1258,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:64a2fef9a4ab973431f79c01d72b01838aea5d674f0756240fa2e3db59c437be",
+    "feature_hash": "sha256:568f773316a84c7204811fdad3c653af9d1d4118575ad65e882f49570d3d9c44",
+    "source_normalized_hash": "cd7ee5c7c04dc26e92643ad3d6baaf9e83fe5eb0fd5382d97fa97b795c2cdb7a",
+    "values": [
+      0.2267789764859245,
+      0.4395856168554378,
+      0.14814814814814814,
+      1.0,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.7732210235140755,
+      0.9527909714610482
+    ],
+    "window_count": 54
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1258,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1281
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:5ef86ab86c8e2b9400ec84c4a7d52f160ab96c230dfde899492d76064bf121eb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095667,
+    "id": "chatcmpl-qWYxQ2weDuJwcgNvXpSAgvBjrliikt0C",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.813,
+      "predicted_n": 23,
+      "predicted_per_second": 42.52856347757913,
+      "predicted_per_token_ms": 23.513608695652174,
+      "prompt_ms": 1110.855,
+      "prompt_n": 1180,
+      "prompt_per_second": 1062.2448474373343,
+      "prompt_per_token_ms": 0.9414025423728813
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1258,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1281
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"113 W De La Guerra St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Juice Bars & Smoothies, Restaurants, Food, Vegan, Cafes, Bakeries, Coffee & Tea, Gluten-Free, Vegetarian, Acai Bowls\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-15:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"9:0-15:0\\\",\\\"Sunday\\\":\\\"10:0-14:0\\\",\\\"Thursday\\\":\\\"9:0-15:0\\\",\\\"Tuesday\\\":\\\"9:0-15:0\\\",\\\"Wednesday\\\":\\\"9:0-15:0\\\"},\\\"name\\\":\\\"Green Table\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 05:49:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Cute cafe with delicious healthy options.  Decided to stop in on our drive from LA to Santa Cruz. We specifically yelped in advance for healthy breakfast and lunch options as it's easy to eat junk when you are doing a long drive.  We had avocado toast and a banana strawberry  smoothie. Both were great.  Looking forward to trying it out again.\\\"},{\\\"review_date\\\":\\\"2021-11-27 20:47:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is simply one of the best places in Santa Barbara. I am so grateful to have discovered it. Before commenting on the excellent food, even better are the amazing women who work here. Having traveled the world, I've never seen a group of people more joyful and more delighted to be at work - in ANY profession. Whatever's going on in your life, you can be sure that their warm radiant welcome will lift your spirits. Whether you are a daily regular, as I have become, or a newcomer, as I once was, their enthusiasm that you have entered their spectacular oasis to share in it and their food, is unparalleled. They all take immense pride and joy in what they do.\\\\n\\\\nI've often read that food prepared with love infuses that love into what you are eating. I never believed that until eating here. The food is fantastic. There are my favorites, from their Mamma Maca smoothie to the delicious Pesto Panini. Their fresh juices are unparalleled, clean in their taste and flavor combinations. And then there's the daily flavor of banana bread.  The other day I was there when the chef brought out a whole raw apple pie specially ordered for someone's Thanksgiving. She was glowing with pride for her creation, and the care the other women took in boxing it up was a sight to see. It wasn't just a pie, but rather something made special for someone's holiday.\\\\n\\\\nI am vegan so I especially appreciate their vegan offerings. Their menu is organic, gluten-free, and locally sourced. You can really feel and taste the difference between food created at a chain by exhausted workers with cheaply-sourced, chemically-laden products, and food created by people with an exuberance for what they are doing and care in picking the perfect fresh ingredients for it. This should be a model for the world over.\\\"},{\\\"review_date\\\":\\\"2021-11-14 16:40:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Wonderful team and fabulous food. Their smoothies are to die for. The matcha lattee wow!!! Always smiling and helpful. My kids favorite place in Santa Barbara. I wish they would open another in Goleta.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Green Table is a popular local business in Santa Barbara, California, that offers a variety of healthy and delicious options for breakfast and lunch. With a rating of 4.5 stars, the business is known for its friendly staff, welcoming atmosphere, and high-quality food. Customers praise the caf\u00e9 for its organic, gluten-free, and locally sourced ingredients, as well as its vegan options. The business is particularly famous for its smoothies, which are described as \\\"to die for,\\\" and its matcha latte, which is a customer favorite. Green Table is also kid-friendly, making it a family-favorite in the area. Despite its small size, the business has gained a loyal following and is highly recommended by locals and visitors alike.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 255,
+  "source_cluster_id": "sha256:df1480168db9e698feac82c7a68ac3bf57664a74c1cacafa246ba52067729674",
+  "source_id": "14684",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:64a2fef9a4ab973431f79c01d72b01838aea5d674f0756240fa2e3db59c437be",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5033410659525543,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:92ce3a402af1b3c84554c9a739652e31b19e97e4d4069b79f2e3fe30a87e5c65",
+  "human_target": null,
+  "input_tokens": 864,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:92ce3a402af1b3c84554c9a739652e31b19e97e4d4069b79f2e3fe30a87e5c65",
+    "feature_hash": "sha256:19ab7e2451b3b9607614c2542cf1c2168b1a5bb44464ba7b1b65514bd3da8b3e",
+    "source_normalized_hash": "924a102dd4c07048d888c985c84b6e2a0fb5af184391a536f9cd680a143f7c72",
+    "values": [
+      0.27919768784706867,
+      0.5033788515406162,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.7208023121529313,
+      0.9647525676937441
+    ],
+    "window_count": 38
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 864,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 888
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:6b2ebe43c344fc886102c409ee7668a61c0c5dddd1cf0ac7a83cabdc82d283c2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095613,
+    "id": "chatcmpl-wB7iRVgiIXbBCvQ8HR1fWfmZ8GQAsi22",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.665,
+      "predicted_n": 24,
+      "predicted_per_second": 42.503077045681955,
+      "predicted_per_token_ms": 23.527708333333333,
+      "prompt_ms": 821.769,
+      "prompt_n": 786,
+      "prompt_per_second": 956.473169467332,
+      "prompt_per_token_ms": 1.0455076335877862
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 864,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 888
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:2. Prevent DNA Damage. Tomatoes are high in important antioxidants such as vitamin C and Vitamin A. These vitamins work to fend of DNA damage from free radicals. Consequently, tomatoes may help to ward off age related diseases such as atherosclerosis and diabetes.ere are some of the health benefits of tomatoes. 1. Ward off Cancer. Numerous studies have concluded that the more tomatoes people eat the lower their risks of certain cancers, especially lung, stomach and prostate cancers.\\\\n\\\\npassage 2:1. Eating tomatoes is thought to reduce the risk of prostate cancer as well as other cancers like throat, pharynx, esophagus, mouth, cervical, lung, stomach, colon and ovarian cancers. Lycopene is the ingredient that promotes these health benefits.s you can see there are many health benefits to the common tomato. But tomatoes aren\u2019t just good for you, they are actually lovely to eat. They are an adaptable fruit that can be eaten in salads, on sandwiches, in soups, curries and casseroles.\\\\n\\\\npassage 3:6/13/2011 \u2013 There is more to eating Florida tomatoes than good taste, they are great for your health! 10 good reasons to eat more! Tomatoes are full of health enhancing properties, read on to discover how the humble tomato can improve your health.Tomatoes are loaded with many, many health benefits. In fact, they are incredibly versatile and can be prepared in a seemingly endless number of dishes, as well as being great to eat alone.Keep reading to find out why you need to stop neglecting tomatoes as a part of your regular balanced diet.10 Health Benefits from Eating Tomatoes. 1. Tomatoes are good for your skin.Tomatoes contain a high level of lycopene, which is a substance that is used in some of the more pricy facial cleansers that are available for purchase over-the-counter.n fact, they are incredibly versatile and can be prepared in a seemingly endless number of dishes, as well as being great to eat alone. Keep reading to find out why you need to stop neglecting tomatoes as a part of your regular balanced diet. 10 Health Benefits from Eating Tomatoes. 1. Tomatoes are good for your skin.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are nutrition benefits eating tomatoes\\\"}\", \"original_answer\": \"Based on the given passages, it appears that eating tomatoes has several health benefits, including preventing DNA damage, reducing the risk of certain types of cancer, improving heart health, and supporting brain function. Specifically, the passages mention that tomatoes are high in antioxidants such as vitamin C and vitamin A, which help to protect against damage caused by free radicals. Additionally, the passages suggest that lycopene, an ingredient found in tomatoes, may help to reduce the risk of certain types of cancer, including prostate, throat, pharynx, esophagus, mouth, cervical, lung, stomach, and ovarian cancers. Furthermore, the passages suggest that tomatoes may also be beneficial for heart health, as they are rich in potassium, and may support brain function due to their high levels of antioxidants and anti-inflammatory compounds. Overall, eating tomatoes appears to have numerous potential health benefits.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 218,
+  "source_cluster_id": "sha256:7d84844fa844daf7c37e8608e3edb6ebe54837125100b1e50467f703ce4755e4",
+  "source_id": "12460",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:92ce3a402af1b3c84554c9a739652e31b19e97e4d4069b79f2e3fe30a87e5c65",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

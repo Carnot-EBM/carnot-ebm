@@ -1,0 +1,145 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7949812420411035,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:9d6d1b32bd649abe68ec088aa31fcbd84d0798c5877ef611a0ce69396b374b7a",
+  "human_target": null,
+  "input_tokens": 1265,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:9d6d1b32bd649abe68ec088aa31fcbd84d0798c5877ef611a0ce69396b374b7a",
+    "feature_hash": "sha256:5c4dd455be82907524e6a6d73678a4c9095566d35b2ae21074d21cccb7028fe2",
+    "source_normalized_hash": "6f1025f6862b3415242036e2699c8692b6dab0b0d50e0c6585090843150d7da5",
+    "values": [
+      0.2177560675313209,
+      0.5130955651264576,
+      0.0,
+      0.0,
+      0.282312925170068,
+      0.2857142857142857,
+      0.7822439324686792,
+      1.0
+    ],
+    "window_count": 42
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1265,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1288
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:62fedd161c8f37696e633d7b8acc3f8458291411ea72e36288477d388fd451b0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095504,
+    "id": "chatcmpl-VNmFkou6IyyJVuWhnySoIy22p8KZ00yL",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 548.54,
+      "predicted_n": 23,
+      "predicted_per_second": 41.929485543442595,
+      "predicted_per_token_ms": 23.8495652173913,
+      "prompt_ms": 1112.491,
+      "prompt_n": 1187,
+      "prompt_per_second": 1066.9749238420807,
+      "prompt_per_token_ms": 0.937229149115417
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1265,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1288
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"832 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Mexican, Restaurants, Bakeries\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-17:0\\\",\\\"Saturday\\\":\\\"7:0-17:0\\\",\\\"Sunday\\\":\\\"7:0-14:0\\\",\\\"Thursday\\\":\\\"7:0-17:0\\\",\\\"Tuesday\\\":\\\"7:0-17:0\\\",\\\"Wednesday\\\":\\\"7:0-17:0\\\"},\\\"name\\\":\\\"La Tapatia Bakery\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-05 07:34:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"For Hispanic Heritage month I wanted to review one of my favorite bakeries in town. \\\\nLa Tapatia Bakery has been in business for over 40 years. \\\\nThe variety of Pan dulce decorates the glass shelves, my favorite being the conchas. Which do you chose, vanilla or chocolate? Both!!! You be the judge, especially when they are warm right out of the oven!!\\\\nMake sure to pick up the empanadas as well, pumpkin filling or pineapple, even vanilla pudding. They are all delicious. Polvorones and the marranitos are my families favorites. \\\\nIf Pan Dulce is too sweet for you, La Tapatia also offers menudo and pozole on weekends, along with other delicious Mexican dishes which they serve on a daily basis. \\\\nI love supporting  my neighborhood and the LatinX community, they work hard to serve Santa Barbara and Goleta county. \\\\nAlways greeting you with a smile, La Tapatia Bakery is a great choice for any craving you may have.\\\"},{\\\"review_date\\\":\\\"2021-10-04 17:22:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best Mexican food I've found in town. There's a long line out the door for a reason. I almost don't want to leave this review because I want to keep this place for myself!  Caldo de Res, burritos, nachos (fantastic), tortes are all just delicious. It's once of those places where you really want to try other things but you're so in love with what you've already tried it makes for difficult decisions.\\\"},{\\\"review_date\\\":\\\"2021-10-02 12:18:22\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Would you like to pay $26 + $4 or tip for a burnt torta, two drinks and terrible presentation? Then check out La\\\\nTapatia! $26 dollars shouldn't look like this. I'm this picture, the camarones a la diabla were around $13. Came with gummy tortillas. The flavor was there yes but the presentation was terrible. It seriously looks like you lift the lid up on the throne and this is what you see inside after a long night. \\\\n\\\\nNever coming back again.\\\\n\\\\nNo vale la pena comer algo que est\u00e1 quemado y se parece mal.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"La Tapatia Bakery is a local business located at 832 N Milpas St, Santa Barbara, CA. This bakery offers a variety of Mexican food items and baked goods. They have been serving the community for over 40 years. The bakery is known for its delicious Pan dulce, with conchas being a favorite among customers. The bakery also offers other treats such as empanadas with various fillings including pumpkin, pineapple, and vanilla pudding. Additionally, they serve traditional Mexican dishes like menudo and pozole on weekends, along with other daily specials.\\n\\nCustomers have praised the bakery for its tasty food and friendly service. Many appreciate the warm and welcoming atmosphere created by the staff. The business has received an average rating of 4.0 stars.\\n\\nLa Tapatia Bakery is open from 7:00 AM to 5:00 PM from Tuesday to Friday, from 7:00 AM to 2:00 PM on Sundays, and closed on Mondays. They offer free WiFi and takeout services. The bakery has street parking and a parking lot available for customers.\\n\\nOverall, La Tapatia Bakery is a popular choice among locals and visitors alike for its delicious Mexican food and baked goods. It is a great place to satisfy your cravings and support the LatinX community in Santa Barbara and Goleta county.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 133,
+  "source_cluster_id": "sha256:501e357111e974cef071bd8aa4982f873e8ae2de9cc7eba7cb19821a5ca08f6b",
+  "source_id": "14227",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:9d6d1b32bd649abe68ec088aa31fcbd84d0798c5877ef611a0ce69396b374b7a",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.307984436978586,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:f12d290d2ffdae84aa3397e24fcaac892bc84b1f344283c964dc5a3f99660dd0",
+  "human_target": null,
+  "input_tokens": 617,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:f12d290d2ffdae84aa3397e24fcaac892bc84b1f344283c964dc5a3f99660dd0",
+    "feature_hash": "sha256:e352bcfdad5f28468a62f5d2b930ef54df9311baa63af368491143635b9d3355",
+    "source_normalized_hash": "1c0960f8c7d9eac2643114d4c0bc10c025c253a461f706c9047eed2e484e399a",
+    "values": [
+      0.31785714285714284,
+      0.5741071428571428,
+      0.06666666666666667,
+      1.0,
+      0.0,
+      0.0,
+      0.6821428571428572,
+      0.9258928571428571
+    ],
+    "window_count": 30
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 617,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 640
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:0a567848345b3a5600af605b9c68a2a1373091bf3bb5713ac982ce9edfd62ea1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095337,
+    "id": "chatcmpl-bHoHzrrSkkSfpksgBqwXj0qrkHzlg3vU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 535.081,
+      "predicted_n": 23,
+      "predicted_per_second": 42.98414632550959,
+      "predicted_per_token_ms": 23.26439130434783,
+      "prompt_ms": 565.826,
+      "prompt_n": 539,
+      "prompt_per_second": 952.589665374161,
+      "prompt_per_token_ms": 1.049769944341373
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 617,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 640
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Madonna has a thing for making out with fellow performers on stage. First it was Britney and Christina, and now rapper Drake has been on the receiving end of a little lip action from Madge. While the blondes had fun with it, Drake appeared less than enthused after Madonna's prolonged smooch onstage at the Coachella music festival in California on Sunday. In an update Monday from \\\"champagnepapi\\\" himself on Instagram, the rapper clarified his reaction: \\\"Don't misinterpret my shock!! I got to make out with the queen Madonna and I feel 100 about that forever. Thank you @Madonna.\\\" After the kiss, though, he seemed dazed. \\\"Oh, s***. What the f*** just happened?\\\" he asked moments later from the stage. It all went down after Drake performed  \\\"Madonna,\\\" a song named for the megastar off his new mixtape \\\"If You're Reading This It's Too Late,\\\" according to Billboard. He welcomed Madonna onstage as a special guest to perform a few songs. While wrapping up \\\"Human Nature,\\\" the Material Girl, 56, planted one on the seated Drake, 28, who began to flail his arms after a while in an apparent attempt to escape. His sour face after the encounter led many to speculate that he didn't enjoy the kiss. Of course, Drake and Madonna's little makeout sesh got the web talking and meme-ing:. \\\"So @Drake proves that kissing @Madonna is about as ghastly as I always imagined it would be,\\\" wrote former CNN personality Piers Morgan. \\\"Grandma: give Nana some suga. Drake: no no noooooo!!!\\\" wrote another Tweeter.\\n\", \"original_answer\": \"Madonna kissed rapper Drake onstage at the Coachella music festival in California, but Drake appeared less than enthused afterwards. However, he later clarified on Instagram that he was happy about the kiss. Drake was performing his song \\\"Madonna\\\" when he invited Madonna onstage as a special guest. Many people speculated that Drake didn't enjoy the kiss, leading to discussions and memes on the internet.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 20,
+  "source_cluster_id": "sha256:0b788acc41ea8483313e40af62c6f0a1955a382f52825ed41d914c3aeae228ff",
+  "source_id": "15790",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:f12d290d2ffdae84aa3397e24fcaac892bc84b1f344283c964dc5a3f99660dd0",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

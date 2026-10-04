@@ -1,0 +1,146 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6955259350361302,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:32d3ec89dd083119efd5cf0d901e9cfcea039aaa90f405b19550b6fdd64334bc",
+  "human_target": null,
+  "input_tokens": 1156,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:32d3ec89dd083119efd5cf0d901e9cfcea039aaa90f405b19550b6fdd64334bc",
+    "feature_hash": "sha256:3a10736ab3f0db450b584a48db4c800a6bdc8528470db6435e0882fc5730bf0f",
+    "source_normalized_hash": "eaae78e7d62d3aeec78088b348a6be14ef0af36b6d021a1e5cb881851ab3144b",
+    "values": [
+      0.1953510271060776,
+      0.4542274597830153,
+      0.537878787878788,
+      0.7777777777777778,
+      0.3333333333333333,
+      0.3333333333333333,
+      0.8046489728939225,
+      0.9424897119341564
+    ],
+    "window_count": 44
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1156,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1177
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:d69c5694b54a306a4586752e2aa55eeef699c6388550505b5d71c3d317b37a7e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095390,
+    "id": "chatcmpl-24ma99UrI262LFSiTWmqCH0sRdVvnEmr",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.091,
+      "predicted_n": 21,
+      "predicted_per_second": 42.761932106269505,
+      "predicted_per_token_ms": 23.385285714285715,
+      "prompt_ms": 1028.79,
+      "prompt_n": 1078,
+      "prompt_per_second": 1047.832891066204,
+      "prompt_per_token_ms": 0.9543506493506493
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1156,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1177
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1187 Coast Village Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Desserts, Gelato, Ice Cream & Frozen Yogurt, Food, Cafes, Restaurants\\\",\\\"city\\\":\\\"Montecito\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-22:0\\\",\\\"Monday\\\":\\\"13:0-21:0\\\",\\\"Saturday\\\":\\\"12:0-22:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"13:0-21:0\\\",\\\"Tuesday\\\":\\\"13:0-21:0\\\",\\\"Wednesday\\\":\\\"13:0-21:0\\\"},\\\"name\\\":\\\"Here's the Scoop\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-16 15:54:41\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I just checked my credit card after reading the many horrible comments about the owner adding his own tip and even though I gave him $0 on the receipt, he added his own $3 tip. This place is an absolute disgrace. DO NOT GO HERE.\\\"},{\\\"review_date\\\":\\\"2021-11-13 03:55:00\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Inedible ice cream. My ice cream tasted like water and was icy and melted. The owner looked miserable and was upset when he gave me the wrong ice cream and when I said I ordered pumpkin he rolled his eyes. He did not wear gloves and the ice cream cone did not have a paper wrapping. His fingers were bloody and he had dirt under his finger nails. I was grossed out when he handed me the ice cream and I had to throw the entire thing out. Disgusting. This store is completely unsanitary. DO NOT GO. He did not even wear a mask\\\"},{\\\"review_date\\\":\\\"2021-07-16 16:51:17\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Upon walking into Here's the Scoop with my mother and two daughter's we were excited to try a scoop of gelato in the quaint town of Montecito. We walked in and smiled and said hello to the owner an older man who did not respond or greet us upon arrival. He looked miserable and we didn't feel welcome at all. Even my toddler noticed that he wasn't friendly. There weren't any seats to sit outside so we opted to sit inside as I had my two younger children with me. The entire time we were sitting inside it was extremely awkward and quite. For it being an ice cream shop you would expect some cheerfulness. Not here. I also noticed he gave himself a three dollar tip which I did NOT authorize. I wouldn't have normally disputed a charge like this but it's the principle. He definitely has a reputation for this after reading all of his bad reviews. Please DO NOT support this small business.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Here's the Scoop is a local business located at 1187 Coast Village Rd in Montecito, CA. It offers a variety of desserts, gelato, ice cream, frozen yogurt, and food. Additionally, it operates as a cafe and restaurant. The business has specific operating hours, with Monday to Thursday opening from 13:00 to 21:00, Friday and Saturday from 12:00 to 22:00, and Sunday from 12:00 to 21:00.\\n\\nHowever, the business has received negative reviews from customers. One customer mentioned that the owner added a $3 tip to their credit card payment, despite the customer giving $0 as a tip. Another customer complained about the quality and cleanliness of the ice cream, stating that it tasted like water, was icy and melted, and that the owner did not wear gloves or a mask, making the experience unsanitary. Another reviewer mentioned that the owner appeared unfriendly and miserable, and also added a tip without authorization.\\n\\nBased on the provided structured data and customers' reviews, it is important to consider these negative experiences when deciding whether to visit Here's the Scoop.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 54,
+  "source_cluster_id": "sha256:80a5d2fa61d5d6d683a6fb0e47367b57fac2e8c05c8fbbc0fee3bb031bc1a8e3",
+  "source_id": "13685",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:32d3ec89dd083119efd5cf0d901e9cfcea039aaa90f405b19550b6fdd64334bc",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.52995896700304,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:465652f01187968b8b4665cd122226ce73e2cad2505b0bab917461a0add96f75",
+  "human_target": null,
+  "input_tokens": 908,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:465652f01187968b8b4665cd122226ce73e2cad2505b0bab917461a0add96f75",
+    "feature_hash": "sha256:c9c2e5795be5dce8f89b28c643d12627881738eb6575ebcfacc854040bd735fd",
+    "source_normalized_hash": "803b9de4d3658c709ca06ceeb65fcf8d30616e934ae6cc0140c89d23ec794665",
+    "values": [
+      0.18671579743008312,
+      0.400182379349046,
+      0.5,
+      1.0,
+      0.3333333333333333,
+      0.3333333333333333,
+      0.8132842025699168,
+      0.9085297418630751
+    ],
+    "window_count": 28
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 908,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 932
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:b7f25173002a55624c390eaea68feb2ff34f7caa6bf64f17b43e5fa8bbcd593c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095724,
+    "id": "chatcmpl-WcLIa6xJczzZ9fhrFYpiG5K0a98ZsPKV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.719,
+      "predicted_n": 24,
+      "predicted_per_second": 42.423888891834984,
+      "predicted_per_token_ms": 23.571625,
+      "prompt_ms": 849.791,
+      "prompt_n": 830,
+      "prompt_per_second": 976.7107441712138,
+      "prompt_per_token_ms": 1.023844578313253
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 908,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 932
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3313 State St, Ste B\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Event Planning & Services, American (Traditional), Venues & Event Spaces\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Harry's Plaza Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-09 00:37:37\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"We came in really excited to try Harrys, as we saw great reviews on Facebook. Immediately as we came in we were ignored by the host. Our server started off decent but within minutes had a change of attitude. She was quick to snatch the menus out of our hands while we were in the middle of ordering. When asking for condiments, she slammed it down on our table and rushed away. Overall felt unwelcome and uncomfortable. \\\\n\\\\nAs for the food, it was all extremely under seasoned. Each item tasted very bland and some items were undercooked. We ordered the pork chops and spaghetti, neither of which were good at all. Definitely would not go again.\\\"},{\\\"review_date\\\":\\\"2022-01-08 03:20:17\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Classic Santa Barbara staple. Proper cocktails, Classic portions. Not fancy, just a great place!\\\"},{\\\"review_date\\\":\\\"2021-12-02 06:39:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Went in with the family this evening.  We go about once a week.  It never disappoints, food menu is all the classics and the drinks are large and strong.  If you don't like Harry's, it's you not them.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Harry's Plaza Cafe is a restaurant located at 3313 State St, Ste B, in Santa Barbara, CA. They offer event planning and services, American cuisine, and venue rentals. They serve breakfast, lunch, and dinner. Their hours are Monday through Sunday from 11:00 AM to 9:00 PM. They have outdoor seating and accept takeout orders. They also have a business rating of 3.5 stars, based on customer feedback. Customers have mixed reviews of their experience at Harry's Plaza Cafe. Some customers have reported feeling unwelcome and uncomfortable due to poor service, while others have praised their classic cocktails and hearty portions. The restaurant serves the typical American cuisine that customers expect.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 40,
+  "source_cluster_id": "sha256:8d178dec5267b9d51b1b9475d54ce3f55b74b02aabd49e6f65369dab778a99e1",
+  "source_id": "14065",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:465652f01187968b8b4665cd122226ce73e2cad2505b0bab917461a0add96f75",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

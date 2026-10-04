@@ -1,0 +1,129 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2122218910371885,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:77faa7221aeb0389117a547d384575686c1ecc534c4423c481a58c9eb046ded4",
+  "human_target": null,
+  "input_tokens": 567,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:77faa7221aeb0389117a547d384575686c1ecc534c4423c481a58c9eb046ded4",
+    "feature_hash": "sha256:de2de3c7731007ccbac6e428777be30b054340b9a2ef370aa4d6b68fde6d7193",
+    "source_normalized_hash": "f54c7e3019bf6f469b6339e22e23544d09396392493d43119b76d9dbb1328023",
+    "values": [
+      0.4142592592592592,
+      0.7388888888888889,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5857407407407408,
+      0.9037037037037038
+    ],
+    "window_count": 10
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 567,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 590
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:09c3c9ffb06ae63888a3ab181957fcbac081621c66aff264c196e2bba43e084f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095723,
+    "id": "chatcmpl-DPc2WMb9GaBPgLj44Grr32ea5eBYXP3G",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.882,
+      "predicted_n": 23,
+      "predicted_per_second": 42.523138133640984,
+      "predicted_per_token_ms": 23.51660869565217,
+      "prompt_ms": 533.75,
+      "prompt_n": 489,
+      "prompt_per_second": 916.1592505854801,
+      "prompt_per_token_ms": 1.0915132924335378
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 567,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 590
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Foods that create a lot of gas in the gut during digestion should also be avoided by people with colitis. Many of these foods are also high in fiber. Gas-causing foods to avoid include broccoli, cauliflower, cabbage, raw fruits, raw fruit juices, popcorn, dried fruits, legumes, foods made with sorbitol and oat bran.\\\\n\\\\npassage 2:Some people with colitis may have difficulty digesting foods with lactose, according to the Mayo Clinic. Lactose is a sugar found in dairy foods. To limit colitis symptoms, like diarrhea, people with colitis should avoid foods containing lactose, or use an enzyme to help digest the lactose called called lactase. Dairy foods with lactose include milk, some cheeses, ice cream, half and half, yogurt, condensed milk, nonfat dried milk powder and cream cheese.\\\\n\\\\npassage 3:High fiber foods that people with colitis may need to avoid include apples, bananas, blueberries, figs, grapefruits, pears, raspberries, avocados, carrots, kale, popcorn, potatoes with the skin, bran, oats, brown rice, whole wheat breads, legumes, peas and nuts.\\\\n\\\\n\\\",\\\"question\\\":\\\"what foods to avoid with ulcerative colitis\\\"}\", \"original_answer\": \"To avoid worsening symptoms of ulcerative colitis, individuals should avoid foods that create gas in the gut such as broccoli, cauliflower, cabbage, raw fruits, raw fruit juices, popcorn, dried fruits, legumes, foods made with sorbitol, and oat bran. They should also limit or avoid foods with lactose, including milk, certain cheeses, ice cream, yogurt, and cream cheese. Additionally, high fiber foods like apples, bananas, blueberries, figs, grapefruits, pears, raspberries, avocados, carrots, kale, popcorn, potatoes with the skin, bran, oats, brown rice, whole wheat breads, legumes, peas, and nuts should be avoided.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 39,
+  "source_cluster_id": "sha256:f44c3a40754c0e08b48c3842e1d036c44b5c0a2866babf1f241404dbc980701a",
+  "source_id": "15283",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:77faa7221aeb0389117a547d384575686c1ecc534c4423c481a58c9eb046ded4",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

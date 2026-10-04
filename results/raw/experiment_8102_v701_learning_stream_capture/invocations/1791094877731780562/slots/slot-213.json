@@ -1,0 +1,132 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3293996460270137,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:20f89d415f26525773c7289d57b055cece99fa8adc662cd7f8d98cfc561396bf",
+  "human_target": null,
+  "input_tokens": 742,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:20f89d415f26525773c7289d57b055cece99fa8adc662cd7f8d98cfc561396bf",
+    "feature_hash": "sha256:81af8ed854513c7362f8d85ae873bf2eed6b1fd3391f8d1612ebd94feaaf86a3",
+    "source_normalized_hash": "7d5fb31ec78625bda825c30fecdd4fb9b23ce1df833d125ce217b65c3fd17c05",
+    "values": [
+      0.24592216147822765,
+      0.5188182242594007,
+      0.3125,
+      0.75,
+      0.25,
+      0.25,
+      0.7540778385217723,
+      0.9507210763093116
+    ],
+    "window_count": 16
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 8,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 742,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 765
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:053a7409be807b611d6dc2db882b0b00dfa6ece5549b35ae4dc0c84e01a23bf4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": 8\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095609,
+    "id": "chatcmpl-pgjoNe2RphnNUUQZTWTRKAd8pS5yiVoH",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.383,
+      "predicted_n": 23,
+      "predicted_per_second": 42.56240481288271,
+      "predicted_per_token_ms": 23.494913043478263,
+      "prompt_ms": 670.479,
+      "prompt_n": 664,
+      "prompt_per_second": 990.3367592422729,
+      "prompt_per_token_ms": 1.009757530120482
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 742,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 765
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"15 E Figueroa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Coffee & Tea, Restaurants, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Finestra Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2008-09-16 05:15:28\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Not sure when the last reviewer was here, but Finestra has been CLOSED since July of this year.\\\\n\\\\nFor what it's worth, I think this spot will reopen as a Jeaninne's Bakery.\\\"},{\\\"review_date\\\":\\\"2008-06-17 23:04:59\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Jesus needs the internet. He can get connected here. As for the rest, well ... it's clean and seemingly reliable. Praise Him!\\\"},{\\\"review_date\\\":\\\"2008-03-27 05:03:05\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"If your coffee needs to be \\\\\\\"Jesus-approved,\\\\\\\" you'll love Finestra. If you're an atheist or agnostic however, I'd watch out - it might be toxic to you. Of course I'm kidding, but the truth is that I don't want my coffee dollars going to Calvary Chapel. And I don't like that they don't just come out and say they're a Christian coffeehouse. But that's just me.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Finestra Cafe is a local business located at 15 E Figueroa St in Santa Barbara, CA. The establishment falls under the categories of Coffee & Tea, Restaurants, and Food. The cafe has a rating of 3.0 stars, based on customer reviews. \\n\\nOne customer mentioned that the cafe has been closed since July of the current year and speculated that it may reopen as Jeaninne's Bakery. Another customer commented on the availability of WiFi, stating that it is reliable and allows for internet connectivity. \\n\\nHowever, there was a negative review from a customer who expressed concern about the cafe's affiliation with Calvary Chapel. They mentioned that if someone prefers their coffee to be \\\"Jesus-approved,\\\" they would enjoy Finestra Cafe, but if they are atheist or agnostic, they should be cautious as it might not align with their beliefs. \\n\\nUnfortunately, there is no information available about the cafe's hours of operation or specific attributes such as parking availability, reservations, outdoor seating, music, or ambience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 214,
+  "source_cluster_id": "sha256:0fd731445de7ba7581c0ac1fb80e72bf74b9828e3652432c7bbfd2f23ff24ed9",
+  "source_id": "13738",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:20f89d415f26525773c7289d57b055cece99fa8adc662cd7f8d98cfc561396bf",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

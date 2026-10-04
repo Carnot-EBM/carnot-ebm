@@ -1,0 +1,133 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3233199539827183,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:36e6f54acea75e97c904f911c460446b19e78e20d6dc9729dcac8b6e4df3da32",
+  "human_target": null,
+  "input_tokens": 684,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:36e6f54acea75e97c904f911c460446b19e78e20d6dc9729dcac8b6e4df3da32",
+    "feature_hash": "sha256:c9f2e7c47e00d7380c920b427d96f18f1d7f9579803b6b6548a1dd12b9a7714e",
+    "source_normalized_hash": "2e6525809df936196eea237bd9cd54383cc7f931fad9dcd63dcae0b7492f45de",
+    "values": [
+      0.4921311023284708,
+      0.7157979082321188,
+      0.5555555555555556,
+      0.75,
+      0.19444444444444445,
+      0.25,
+      0.5078688976715292,
+      0.8832538075959129
+    ],
+    "window_count": 18
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 2,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 684,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 708
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:708b27d3c4de356db27eeca78cfeb9cd89c3e4e1f4df78f629d5c53fa719b8c4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 2\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095658,
+    "id": "chatcmpl-MmleZEgMGw4ZKivfBgB7aQoWzR8k2p9n",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.603,
+      "predicted_n": 24,
+      "predicted_per_second": 42.50774437967918,
+      "predicted_per_token_ms": 23.525125,
+      "prompt_ms": 621.163,
+      "prompt_n": 606,
+      "prompt_per_second": 975.589338064244,
+      "prompt_per_token_ms": 1.0250214521452146
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 684,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 708
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The contribution limits are the same as the traditional 401(k) limits, so with the Roth 401(k) you can get much more money into the plan than into an IRA, says Dean Barber, founder and president of Barber Financial Group. Roth 401(k) and a Roth IRA sound similar -- and they are. Contributions are made after taxes and earnings can be taken out tax-free after either five years or at age 59\u00bd.\\\\n\\\\npassage 2:Roth IRA contributions are taxed (although the individual's contribution may still qualify for the Saver's Credit) but the assets in the account grow tax-free and qualified distributions are not taxed. IRA contribution limits are set by the IRS, whereas 401(k) limits are set by the employer.401(k) contributions are taken from an employee's paychecks on a pre-tax basis, which means that payroll taxes aren't paid on them. Roth 401(k) contributions are taxable but qualified distributions are not.oth IRA contributions are taxed (although the individual's contribution may still qualify for the Saver's Credit) but the assets in the account grow tax-free and qualified distributions are not taxed. IRA contribution limits are set by the IRS, whereas 401(k) limits are set by the employer.\\\\n\\\\npassage 3:A: The Roth IRA was established in 1996 as the newest addition to the individual retirement accounts (IRAs) available to individuals. Its tax treatment differs greatly from most other IRAs. Contribution limits are the same as those for Traditional IRAs, but tax deductions are not available on contributions to Roth IRAs.owever, age 70.5 withdrawal requirements apply. The Traditional IRA is the most common type of IRA. Millions of 401(k) and other company retirement plans are rolled over into Traditional IRAs each year when workers retire or change employers.\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between an ira and a roth ira\\\"}\", \"original_answer\": \"The main difference between an IRA and a Roth IRA is the tax treatment. Contributions to a traditional IRA may be tax-deductible, while contributions to a Roth IRA are made with after-tax dollars. Earnings in a traditional IRA grow tax-deferred, meaning they are taxed when withdrawn, while earnings in a Roth IRA grow tax-free and qualified distributions are not taxed. Additionally, there are differences in contribution limits, with IRA limits set by the IRS and 401(k) limits set by the employer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 248,
+  "source_cluster_id": "sha256:82d7cceac5d2c474aab4a546a580c869ec960ea876f389f432942edcef095cb8",
+  "source_id": "15427",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:36e6f54acea75e97c904f911c460446b19e78e20d6dc9729dcac8b6e4df3da32",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

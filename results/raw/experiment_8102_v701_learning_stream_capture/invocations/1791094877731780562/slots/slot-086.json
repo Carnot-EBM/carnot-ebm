@@ -1,0 +1,129 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3213031609775499,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:d4346ba55f11ee97dcd6e8c34d9895e3321bddcbc9afcda86f1266c8540630f7",
+  "human_target": null,
+  "input_tokens": 757,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:d4346ba55f11ee97dcd6e8c34d9895e3321bddcbc9afcda86f1266c8540630f7",
+    "feature_hash": "sha256:4b6cdbf0af1df795ff41c9120615fc9480d69bc1a632a8ea6a785ab57d305725",
+    "source_normalized_hash": "648fa296fbc72bffcc5505025cd7540f281ad0c45a577ff268138e55ec54f725",
+    "values": [
+      0.2545256916996047,
+      0.43630873956960914,
+      0.3,
+      1.0,
+      0.4,
+      0.4,
+      0.7454743083003953,
+      0.8534584980237154
+    ],
+    "window_count": 10
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 757,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 778
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:993c5c0ad1cf8319c5f7c54008348a80cab341423499ce0ffca3b646e325901f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095436,
+    "id": "chatcmpl-fptEOdgD8Z1dgpWpzt6lkElKotRniYRo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 498.587,
+      "predicted_n": 21,
+      "predicted_per_second": 42.11902837418545,
+      "predicted_per_token_ms": 23.742238095238093,
+      "prompt_ms": 685.98,
+      "prompt_n": 679,
+      "prompt_per_second": 989.8247762325432,
+      "prompt_per_token_ms": 1.010279823269514
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 757,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 778
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6543 Pardall Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":null,\\\"divey\\\":true,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":null,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":null},\\\"Music\\\":true,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Bars, Nightlife\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"18:0-0:0\\\",\\\"Monday\\\":\\\"19:0-0:0\\\",\\\"Saturday\\\":\\\"16:0-0:0\\\",\\\"Thursday\\\":\\\"18:0-0:0\\\",\\\"Tuesday\\\":\\\"18:0-0:0\\\",\\\"Wednesday\\\":\\\"18:0-0:0\\\"},\\\"name\\\":\\\"The Study Hall\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-04-18 20:43:05\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The owner/manager was drunk on the job and kept trying to touch me so gross and was interrupting me and my friend in conversation. Also the drinks were horrible I will not be back\\\"},{\\\"review_date\\\":\\\"2020-08-21 17:02:46\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Why is this bar still open during the COVID-19 pandemic when there is a statewide order for bars to remain closed. There are always creepy men sitting outside in the new patio area on Pardall staring at girls and catcalling. This place shows the worst side of Isla Vista.\\\"},{\\\"review_date\\\":\\\"2020-02-20 07:52:18\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Horrible scary place. Multiple friends I know have been drugged here and we think it was the bartenders. Please stay away for your safety and tell friends to avoid here.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, The Study Hall appears to be a local bar and nightlife spot located in Isla Vista, California. The business has received mixed reviews from customers, with some mentioning poor service and unsafe conditions. One reviewer reported being touched inappropriately by the owner or manager while visiting the establishment, while another noted that the bar was open during the COVID-19 pandemic despite a statewide order for bars to remain closed. Additionally, multiple reviewers have expressed concerns about the safety of the bar, including instances of druggings and creepy behavior from male patrons. Despite these issues, The Study Hall maintains a rating of 3 out of 5 stars and offers free WiFi to its customers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 87,
+  "source_cluster_id": "sha256:59fd238bae4dc897d736a9294bb07da04df37a4c31fe90a7f4d74c2eaaba8a89",
+  "source_id": "14493",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:d4346ba55f11ee97dcd6e8c34d9895e3321bddcbc9afcda86f1266c8540630f7",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

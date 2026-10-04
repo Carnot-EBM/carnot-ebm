@@ -1,0 +1,133 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3450672189937904,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:41c31487baffb9c55e2fbdc119c26b9b78287a9e8066c91800893228e16a9f62",
+  "human_target": null,
+  "input_tokens": 756,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:41c31487baffb9c55e2fbdc119c26b9b78287a9e8066c91800893228e16a9f62",
+    "feature_hash": "sha256:54f5d1301fffd4681fbce030eccb0baacef0854921b270abf37b8acd38edee30",
+    "source_normalized_hash": "6ec04eaf570979b696f2231a50df216caeae7124192bd96d1702b6589acb0666",
+    "values": [
+      0.21900673400673398,
+      0.3386363636363636,
+      0.4444444444444444,
+      1.0,
+      0.2,
+      0.2,
+      0.780993265993266,
+      0.9175757575757576
+    ],
+    "window_count": 18
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 756,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 778
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:2b3ee4cbe3ec765f106bc4200165137d4a444c2782bd778960e46c34deec1adb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095549,
+    "id": "chatcmpl-2DVVryjXr003JpElHholJh9zZHOtlTk4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 523.466,
+      "predicted_n": 22,
+      "predicted_per_second": 42.02756243958538,
+      "predicted_per_token_ms": 23.793909090909093,
+      "prompt_ms": 687.241,
+      "prompt_n": 678,
+      "prompt_per_second": 986.5534797836567,
+      "prompt_per_token_ms": 1.0136297935103245
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 756,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 778
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"138 S Salinas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Ethnic Food, Restaurants, Mexican, Specialty Food, Imported Food, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"El Sitio\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-08-24 19:43:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Can't go wrong here. Sounds boring but I actually think the chicken quesadilla with onion is pretty standout. The chicken is super peppery - would also recommend just chicken and onion tacos. Burritos are always a big hit too.\\\"},{\\\"review_date\\\":\\\"2021-07-29 02:20:20\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This used to be one of our favorite little take-out places pre-COVID. It's just gone downhill on food plus higher prices.  Gave it a few tries to be fair but not going back.\\\"},{\\\"review_date\\\":\\\"2021-03-14 17:50:58\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"If you enjoy over paying for burritos and eating tastes tasteless starches..this will be your go to. I live around the corner as always try to give this family shop The benefit of the doubt. But the truth is this food fucking sucks. Sorry excuse for anyone trying to reach Mexican food and don't need their call themselves authentic. Horrible anyone who truly enjoys his spot a has never been south of the border and B must have the tongue amputated because I can't take the damn thing every time I've eaten here\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"El Sitio is a local restaurant in Santa Barbara, California, that offers a variety of Mexican dishes and specialties. According to customer reviews, the establishment is known for its good quality food, particularly the chicken quesadillas with onions, which are highly recommended. However, some customers have expressed disappointment with the taste of the food, citing a lack of authenticity and bland flavors. Despite these criticisms, El Sitio remains a popular spot for takeout and is praised for its convenient parking and outdoor seating options. The business has received a rating of 4.0 stars based on six reviews.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 165,
+  "source_cluster_id": "sha256:95bd8e8847789321201840dca44dc19867f3cd627b35676e56f2cb262abab359",
+  "source_id": "13692",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:41c31487baffb9c55e2fbdc119c26b9b78287a9e8066c91800893228e16a9f62",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

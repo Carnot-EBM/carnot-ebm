@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3648999029537663,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:221909019e6e3d34a046430feb3f22bb91a25f665d3ecbcbab2ccf1a51393e4e",
+  "human_target": null,
+  "input_tokens": 730,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:221909019e6e3d34a046430feb3f22bb91a25f665d3ecbcbab2ccf1a51393e4e",
+    "feature_hash": "sha256:b3081eae35dc16a2f3bda44ea6dbad6c3b4b5f8b3be42512371b3e7a3082954e",
+    "source_normalized_hash": "74ae39ade74dfd5fbe2e4d1828c41884ff353d3528374cd803755d16fb76a113",
+    "values": [
+      0.4044915157717776,
+      0.601756599378882,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5955084842282224,
+      0.9500441134952005
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 730,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 753
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:8dd98128e2321a3d726053c37727c0904344036dc0d5e35992bdc367de1e6ecd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095419,
+    "id": "chatcmpl-KpxLmgv7UsrHK3K6UGBIAljmkFip2z0m",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.294,
+      "predicted_n": 23,
+      "predicted_per_second": 42.6483513630784,
+      "predicted_per_token_ms": 23.447565217391304,
+      "prompt_ms": 664.513,
+      "prompt_n": 652,
+      "prompt_per_second": 981.1696686144589,
+      "prompt_per_token_ms": 1.0191917177914112
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 730,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 753
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:If the artist or copyright holder has a deal with another publishing company, you may have to contact the company and sub-contract with them for a smaller percentage. Step 3. Prepare a music catalog, which is a list of the songs and music products you have contracted to sell or license.Step 4. Market your services and make contact with retailers, musicians, radio stations, film makers, video game manufacturers and other buyers of music or licenses to use music.he publishing company may own exclusive selling or licensing rights to music they have created or purchased or share royalties with a contracted copyright owner.\\\\n\\\\npassage 2:Other individuals start music publishing companies in order to represent songs and compositions written by writers other than themselves. Regardless of whether your goal is to publish your own songs\u2014or those written by others\u2014the process of opening a music publishing company is easy.f you have followed the steps outlined above, you have now established a music publishing company. As a music publisher, you will be required to issue licenses (such as mechanical/recording licenses, print licenses, and synchronization licenses) for the songs you represent.\\\\n\\\\npassage 3:3. Register Songs with the Copyright Office. Register the songs with the Copyright Office in the name of your publishing company. If the songs have already been copyrighted in your name, you will need to file an assignment transferring them to the publisher\u2019s name. Visit http://www.copyright.gov/ for more information.f you will be publishing other people\u2019s songs as well as your own, and unless all of your writers are affiliated with the same society, you will need affiliations with two publishing companies: BMI and ASCAP. 2. Create a Business Entity or File a Fictitious Name Statement.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to set up a music publishing company\\\"}\", \"original_answer\": \"To set up a music publishing company, you first need to create a business entity or file a fictitious name statement. If you plan to publish songs written by different artists, you may need to affiliate with two publishing companies: BMI and ASCAP. After establishing the company, register the songs with the Copyright Office under the publishing company's name. If the songs are already copyrighted under your name, file an assignment to transfer them to the publisher's name. Prepare a music catalog that lists the songs and music products contracted to sell or license. You may need to sub-contract with other publishing companies if the artist or copyright holder has an existing deal. Lastly, market your services and establish contact with retailers, musicians, radio stations, film makers, video game manufacturers and other potential buyers of music or licenses to use music. As a music publisher, issue licenses like mechanical/recording licenses, print licenses, and synchronization licenses for the songs you represent.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 76,
+  "source_cluster_id": "sha256:9bb152c935cca874d96ff513d3d6b1c0828aef501ed3ef87ba64ca3306fd90dd",
+  "source_id": "15360",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:221909019e6e3d34a046430feb3f22bb91a25f665d3ecbcbab2ccf1a51393e4e",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

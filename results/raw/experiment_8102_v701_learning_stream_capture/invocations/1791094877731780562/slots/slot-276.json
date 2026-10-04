@@ -1,0 +1,130 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.1506752040004358,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:28be4fa1430984a5b69cf4ecf2c86805e5782ba13a505399ca1057a5e453e5f5",
+  "human_target": null,
+  "input_tokens": 454,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:28be4fa1430984a5b69cf4ecf2c86805e5782ba13a505399ca1057a5e453e5f5",
+    "feature_hash": "sha256:396ff73eedc7ccdb8797d4fcf7ebc0f47110efe363ff06206c5c447b72d93243",
+    "source_normalized_hash": "a69063078c3e26fa1737271f24379b899838f4929fcd36a094ef0b08a04df3ab",
+    "values": [
+      0.3189711065519872,
+      0.6055768168547305,
+      0.5,
+      0.5,
+      0.25,
+      0.25,
+      0.6810288934480129,
+      0.8771344590862464
+    ],
+    "window_count": 12
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 454,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 478
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:2ab4e14eec5cdcc4ce3fcb6e40eb91d37c9085106c3ae88a4d3dced8cb6ec5db",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095698,
+    "id": "chatcmpl-wV0lFapFFDjQ3cOPnN4ZdTg7iTN9qHHb",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.189,
+      "predicted_n": 24,
+      "predicted_per_second": 42.53893642024215,
+      "predicted_per_token_ms": 23.507875,
+      "prompt_ms": 446.804,
+      "prompt_n": 376,
+      "prompt_per_second": 841.5323049927933,
+      "prompt_per_token_ms": 1.1883085106382978
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 454,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 478
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Once you have elected to participate in the Penn State Alternate Retirement plan, a mandatory employee contribution of 5% of your gross salary is required and Penn State will contribute 9.29% of your gross salary.\\\\n\\\\npassage 2:If you have money in other employer's plans, you may be able to transfer or roll it over to the The Pennsylvania State University retirement plan to increase your maximum loan amount. This is only if the The Pennsylvania State University retirement plan accepts rollovers.\\\\n\\\\npassage 3:Quick Guide to Pennsylvania Retirement Income Taxes. 1  Pennsylvania is tax-friendly toward retirees. 2  Social security income is not taxed. 3  Withdrawals from retirement accounts are not taxed. 4  Wages are taxed at normal rates, your marginal state tax rate is 5.0%. 5  Public pension income is not taxed, private pension income is not taxed.\\\\n\\\\n\\\",\\\"question\\\":\\\"penn state retirement benefits\\\"}\", \"original_answer\": \"Penn State offers an Alternate Retirement plan, where employees are required to contribute 5% of their gross salary, while Penn State contributes 9.29% of the employee's gross salary. The plan may accept rollovers from other employer's plans, which can increase the maximum loan amount. In terms of taxes, Pennsylvania is tax-friendly towards retirees, does not tax social security income or withdrawals from retirement accounts. Both public and private pension income are not taxed.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 21,
+  "source_cluster_id": "sha256:01cbc65abdc815abc070db3f2e4d4866f60277354204effaa5fb188e8554d037",
+  "source_id": "15521",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:28be4fa1430984a5b69cf4ecf2c86805e5782ba13a505399ca1057a5e453e5f5",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

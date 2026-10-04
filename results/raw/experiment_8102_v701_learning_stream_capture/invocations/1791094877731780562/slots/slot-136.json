@@ -1,0 +1,143 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6923445930005983,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:c2f55c70b294b64d091222a7cc19eec81fd49997a0c46ee38e5de30304fdf7c1",
+  "human_target": null,
+  "input_tokens": 1199,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:c2f55c70b294b64d091222a7cc19eec81fd49997a0c46ee38e5de30304fdf7c1",
+    "feature_hash": "sha256:abf7dad3f0c9ab3e5e97cb6ebbbb6f4d17c8061484c471248e69ad9c5e40572a",
+    "source_normalized_hash": "23583979577a2f5e03273f9cfcd1ebdfd0f026fc561e0a055036d3285af081aa",
+    "values": [
+      0.23103001634956521,
+      0.46446458303601157,
+      0.2556390977443609,
+      0.8571428571428571,
+      0.2857142857142857,
+      0.2857142857142857,
+      0.7689699836504348,
+      0.9737571951857665
+    ],
+    "window_count": 38
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1199,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1220
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:74eae964dc4bf368114833985982464fcfec8ce53778045e5f62cabfa5cb52f2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095510,
+    "id": "chatcmpl-8dBy9FbKG1P1hnVwhtG4FyIKLec8zEWw",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.998,
+      "predicted_n": 21,
+      "predicted_per_second": 42.59652168974316,
+      "predicted_per_token_ms": 23.476095238095237,
+      "prompt_ms": 1061.237,
+      "prompt_n": 1121,
+      "prompt_per_second": 1056.314470754412,
+      "prompt_per_token_ms": 0.9466877787689564
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1199,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1220
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7014 Marketplace Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Food, Juice Bars & Smoothies, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-18:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-22:0\\\",\\\"Sunday\\\":\\\"8:0-22:0\\\",\\\"Thursday\\\":\\\"7:0-22:0\\\",\\\"Tuesday\\\":\\\"7:0-22:0\\\",\\\"Wednesday\\\":\\\"7:0-22:0\\\"},\\\"name\\\":\\\"Blenders in the Grass\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-11 02:18:03\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This place is a sweet treat for anyone wanting a fruit smoothie type of drink. And for the price, what a steal! I love that it's non-pretentious and makes smoothies accessible to everyone. It's great that you get a free supplement (we went for immunity boost, you know, for covid) added to your drink. Some are definitely way healthier than others, so beware when you order. \\\\n\\\\nRed Mango - 5/5 Yummy! Really loved this as a fruity, refreshing drink. \\\\nDate - 3/5 I would just get something else. It didn't taste of dates at all - just like a plain ol' sweet milkshake.\\\"},{\\\"review_date\\\":\\\"2022-01-01 19:14:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Whether you're completing a morning workout or finishing up finals week, getting a smoothie is the perfect way to celebrate no matter the occasion!\\\\n\\\\nJamba doesn't have a large presence in Santa Barbara, which I quickly found out soon after moving here for undergrad. Instead, there's a local chain when it comes to blended drinks... and it's a hundred times better.\\\\n\\\\nYou have the option of customizing your own smoothie or choosing from their pre-set menu. Most of their blends are a mix of fruits, juice, and sherbet/yogurt/ice milk.\\\\n\\\\nEvery drink comes with one free supplement. You can add chia seeds, probiotic, calcium, antioxidants, etc.\\\\n\\\\nPre-COVID, I loved their reusable cups and how they would give a small discount for bringing it in.\\\\n\\\\nMy all time favorite has to be Blue Banana, which is a creamy concoction of milk, blueberries, banana, and \\\\\\\"ice milk\\\\\\\". Great consistency, decently sweet, and super refreshing.\\\\n\\\\nPeanut Butter is a close second, which is an indulging blend of chocolate, peanut butter, milk, banana. It's super sweet, basically a milkshake.\\\\n\\\\nI don't know if they still use ice cream to make their creamy smoothies, but that's probably why it's super delicious. Drink responsibility and in moderation.\\\\n\\\\nHappy New Year!\\\"},{\\\"review_date\\\":\\\"2021-12-15 18:08:04\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Green smoothie with chia was so energizing that it's my \\\\\\\"go to\\\\\\\" snack. I bought 3 and redistributed them into 5 home containers. Mental clarity, energy and ... other benefits if green. Very reasonably priced and worth the drive.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Blenders in the Grass, located at 7014 Marketplace Dr in Goleta, CA, is a popular spot for food, juice bars, smoothies, and dining out. The establishment, which boasts a 4.5-star rating, is open seven days a week, with varying hours across the week. The business is appreciated for its affordability, with customers praising the value for money particularly in relation to the fruit smoothies on offer. Notable menu items include the Red Mango and Blue Banana smoothies, which have been highly rated by customers. A unique feature of this restaurant is the option for a free supplement to be added to your drink, with choices like immunity boost, chia seeds, probiotics, calcium, and antioxidants. Blenders in the Grass is a non-pretentious establishment that does not offer WiFi, but does provide ample parking and the option for take-out. It is also suitable for group visits.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 137,
+  "source_cluster_id": "sha256:5ad7b6bd654aa440d50a3942db5a4e99dcd4196fa0131ee791200b4417a0939b",
+  "source_id": "14143",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:c2f55c70b294b64d091222a7cc19eec81fd49997a0c46ee38e5de30304fdf7c1",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

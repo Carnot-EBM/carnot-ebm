@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2696310000028461,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:a4b296006e229cd4853c06f182a3cce6f7f035f740d69238c7b329b8d16b8d38",
+  "human_target": null,
+  "input_tokens": 597,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:a4b296006e229cd4853c06f182a3cce6f7f035f740d69238c7b329b8d16b8d38",
+    "feature_hash": "sha256:a93975df0cb5a0d3a30b1480a496b06a60ba58ddfd365675f08b0f46abb52afd",
+    "source_normalized_hash": "556dcc0bd9dce49b059036d8c6eb9651546a6bd06e640ae79935570a86dbba4d",
+    "values": [
+      0.3298591503267974,
+      0.49069815805109923,
+      0.0,
+      0.0,
+      0.36800000000000005,
+      0.4,
+      0.6701408496732025,
+      0.8463777480689245
+    ],
+    "window_count": 25
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 597,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 621
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:b54c6c73727e7a4039358cc6a6e96b684b0b6f6cc6f2514163da7d7e4e0811b3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095494,
+    "id": "chatcmpl-VIBYHr7T3qFhpLu5S89pSUrqS6ZrNBhq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.4,
+      "predicted_n": 24,
+      "predicted_per_second": 42.523033309709426,
+      "predicted_per_token_ms": 23.516666666666666,
+      "prompt_ms": 572.278,
+      "prompt_n": 519,
+      "prompt_per_second": 906.9018903400096,
+      "prompt_per_token_ms": 1.1026551059730252
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 597,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 621
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Get in touch with us by filling out the form below. Paid for by Donald J. Trump for President, Inc. Contact The Campaign - Privacy Policy - Tel: 646-736-1779. *By entering your mobile number you are agreeing to receive periodic text messages from Donald J. Trump for President, Inc. Message and data rates may apply.\\\\n\\\\npassage 2:10 thoughts on \u201cTrump Supporters \u2013 Show Your Support for Donald Trump\u201d. 1  Mr. Trump, thank you for having what it takes to confront the politicians and issues facing America in a frank way. 2  America will be great again 3  . I think Mr. Trump will do a great job for the country based on what I see so far.\\\\n\\\\npassage 3:Donald Trump continues to make waves as his poll numbers surge to the top of the GOP pack. Both the latest CNN/ORC and Public Policy Polling (PPP) polls find Trump leading with 19 percent of Republican voters. An ABC/Washington Post poll that includes \u201cleaners\u201d finds Trump with as high as 23 percent of the GOP vote.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to show support for donald trump\\\"}\", \"original_answer\": \"Based on the provided passages, here is how to show support for Donald Trump:\\n\\n1. Get in touch with the campaign by filling out the form on their website or by contacting them at 646-736-1779. This will allow you to provide your contact information to the campaign and stay updated on their efforts.\\n2. Express your support for Donald Trump on social media using the hashtag #TrumpSupporters. Share your thoughts and reasons why you support him, and encourage others to join you.\\n3. Participate in public events and rallies held in support of Donald Trump's presidential campaign. These events can be a great opportunity to show your enthusiasm and demonstrate your commitment to his cause.\\n\\nUnable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 126,
+  "source_cluster_id": "sha256:46ff2036b74def8246da4937eed080d331f66faac27287bb3bc80d03ab0cdf87",
+  "source_id": "12370",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:a4b296006e229cd4853c06f182a3cce6f7f035f740d69238c7b329b8d16b8d38",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

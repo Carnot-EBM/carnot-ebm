@@ -1,0 +1,164 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 2.2052316210465506,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8ed4937c53aa62a251753403f4959fe6ccbd8f77cb13e8d186f81cec30d000cd",
+  "human_target": null,
+  "input_tokens": 1793,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8ed4937c53aa62a251753403f4959fe6ccbd8f77cb13e8d186f81cec30d000cd",
+    "feature_hash": "sha256:3e4e1c2b2b9b773a1bdd4b797ff037c6af8b21b27f52a3f590862335ebc8b17b",
+    "source_normalized_hash": "98534bdd2419de4ad669731002d32365a261c3b90d36b57611b089ac7af5f879",
+    "values": [
+      0.24722787882704345,
+      0.4153729370874668,
+      0.3,
+      1.0,
+      0.3,
+      0.3076923076923077,
+      0.7527721211729566,
+      0.9555044113093648
+    ],
+    "window_count": 80
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1793,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1816
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:afc4fcaaf502ce2af625ef38be17846f4b2e75cc67d86644031c83e2193d0d1f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095516,
+    "id": "chatcmpl-tq1hhgKPuLE4ECSfvdaDD2LgCeEjFVyH",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.597,
+      "predicted_n": 23,
+      "predicted_per_second": 42.38873418024796,
+      "predicted_per_token_ms": 23.591173913043477,
+      "prompt_ms": 1510.042,
+      "prompt_n": 1715,
+      "prompt_per_second": 1135.7299995629262,
+      "prompt_per_token_ms": 0.8804909620991254
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1793,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1816
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6878 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":true,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"American (New), Restaurants, Bars, Nightlife, Burgers, Tapas/Small Plates\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:0\\\",\\\"Saturday\\\":\\\"16:0-21:0\\\",\\\"Thursday\\\":\\\"16:0-21:0\\\",\\\"Tuesday\\\":\\\"16:0-21:0\\\",\\\"Wednesday\\\":\\\"16:0-21:0\\\"},\\\"name\\\":\\\"Roof Top Bistro & Bar\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-09 00:26:22\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I came here for a quick drink on a Friday night. It was such a nice little rooftop bar on top of the Hilton hotel in Goleta! The atmosphere was nice. There was plenty of seating and a fireplace on each side of the rooftop. The bar was fully stocked and had 3 TVs. They had a good food menu but I only ended up ordering chicken wings. I ordered the Paloma drink which tasted good and a little strong, just the way I like!\\\"},{\\\"review_date\\\":\\\"2021-11-07 15:13:53\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Rooftop bistro and Bar with great Mountain View in search of decent management. We stopped in to attend a gathering for a co workers retirement. The rooftop is spacious with a couple fireplaces and some sofas. It was a great place to relax, have a drink and still be able to move around and visit.  Drinks were ok and food was average for the prices. Erin our server was efficient, friendly and did a fabulous job waiting on us. \\\\nHowever, that is where we have to end our compliments. \\\\nI could not give more than one star due to the management of this Bistro. Victor Cortez approached us with an attitude from the minute we arrived and although I understand businesses need some policies let's listen to our customer base and evaluate situations. We did have reservations for a large group. We could not split the bill in anyway, it all had to be tallied together and paid with one credit card. \\\\nThis makes things very difficult with a large number of coworkers and people arriving at different times. Our coworker also brought a retirement cake and was informed by Victor that (we don't do cakes) and if you expect to have that cake it will be an extra charge of $4 a person. Victor also told one of our party they should leave immediately when they tried to approach him to discuss the situation. \\\\nAll of us at this gathering work in the service industry and have dealt with many customers. We were all appalled at the lack of effective management and his lack of management training. Because of this I cannot recommend this place for any party over two and not sure if anyone should come back here. \\\\nWhat I discovered here:  although a great rooftop with an awesome Mountain View it turns out to be just another mediocre poorly managed hotel bar.\\\"},{\\\"review_date\\\":\\\"2021-11-06 04:24:26\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"We had made reservations for a group of 15+ to celebrate a friends retirement at the Roof Top Bistro and Bar. Speaking with friends we agreed that this restaurant /bar would be a great venue due to the open space, good food and drinks, and how accommodating the staff have  always been for other gatherings we've had there.\\\\n\\\\nAs I was setting up by the fireplace I was approached by the manager, and was  informed that our reservation was set up at a specific table. I asked if we can switch it so we can have the fireplace. He informed me that the area I was requesting cannot  accommodate 15+ people. I agreed but asked if we can still be sat by the fireplace. He begrudgingly agreed and noticed I was setting up to display a cake for the celebrant. He for some reason was annoyed at me from the get go but when he laid eyes on the cake he turned it up a notch.\\\\n\\\\nHe informed me that there was a $4/person charge for the cake if we were to plate and serve it at this establishment. I told him I was unaware of this rule since I've thrown a baby shower at this Bistro in the past and had not been charged the cake  fee. \\\\n\\\\nBut, wow, just wow! Victor Cortez needs a lesson in customer service. I appreciate rules and sticking to them, but to throw attitude is uncalled for. I work in a service industry, I'm a nurse. If I treated my patients the was he did me and my friends I would be fired. The only light to my interaction with Victor was our attentive and wonderful waitress, Erin. She is a true gem and handled herself gracefully with our large group.\\\\n\\\\nAfter being closed for 14 months, I would've thought he would be appreciative having the restaurant open. No, not Victor. I felt as if I was putting him out. So the 2 stars goes to Victor.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Roof Top Bistro & Bar is a local business located at 6878 Hollister Ave in Goleta, CA. It is a rooftop bar situated on top of the Hilton hotel, offering a nice atmosphere with plenty of seating and fireplaces on each side of the rooftop. The bar is fully stocked and equipped with three TVs. The business serves American (New) cuisine, along with burgers and tapas/small plates.\\n\\nAccording to customer reviews, the business has received mixed feedback. One customer had a positive experience, enjoying the Paloma drink and chicken wings while appreciating the rooftop ambiance. However, other customers were dissatisfied with the management. They encountered difficulties in splitting the bill for a large group and were informed that bringing a retirement cake would incur an additional charge of $4 per person. The customers felt that the manager, Victor Cortez, displayed a lack of effective management and customer service skills.\\n\\nDespite the mixed reviews, Roof Top Bistro & Bar offers outdoor seating and free WiFi. It is open from Tuesday to Saturday, with operating hours from 4:00 PM to 9:00 PM on weekdays and 5:00 PM to 9:00 PM on Fridays. The business has a rating of 3.5 stars. Overall, visitors may enjoy the rooftop setting and the food and drink options, but may want to consider the potential management issues before planning a larger gathering at this establishment.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 142,
+  "source_cluster_id": "sha256:050bff7d4c95777042ef83ac37924cec167404c3567b70a35fd03bfb7f894b95",
+  "source_id": "14751",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8ed4937c53aa62a251753403f4959fe6ccbd8f77cb13e8d186f81cec30d000cd",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40
+  ]
+}

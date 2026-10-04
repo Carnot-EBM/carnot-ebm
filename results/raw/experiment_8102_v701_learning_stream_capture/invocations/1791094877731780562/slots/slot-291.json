@@ -1,0 +1,151 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.754073112970218,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:cc51f375355428799ae0f49addf1aa8e7ec1da4623b5c8055a64512139c97122",
+  "human_target": null,
+  "input_tokens": 1308,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:cc51f375355428799ae0f49addf1aa8e7ec1da4623b5c8055a64512139c97122",
+    "feature_hash": "sha256:655cdf5197a8e3c7f47f0270b8c3f2406421e1c0b2a621e28efa344a8cc7f23d",
+    "source_normalized_hash": "2e7e64c2b3fb8a1dc50ccb8148d8d3f89944c7ce2f04a267c4d0a8d5139c56ef",
+    "values": [
+      0.27448614443093394,
+      0.4681948141575471,
+      0.12962962962962962,
+      1.0,
+      0.4206349206349206,
+      0.42857142857142855,
+      0.7255138555690661,
+      0.956940747313418
+    ],
+    "window_count": 54
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1308,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1329
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:7e2e706b2c8a37c71e08fe10aff87ab79c27421109c02ccb927b91dbfdb080b7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095719,
+    "id": "chatcmpl-J0ZijxzTJDdhmKA7wZJ6z0cp41RtsFXF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.636,
+      "predicted_n": 21,
+      "predicted_per_second": 42.541467802186226,
+      "predicted_per_token_ms": 23.506476190476192,
+      "prompt_ms": 1147.697,
+      "prompt_n": 1230,
+      "prompt_per_second": 1071.7114360323326,
+      "prompt_per_token_ms": 0.9330869918699186
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1308,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1329
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Saturday's deadly earthquake in Nepal was the \\\"big one\\\" experts were waiting for based on the region's history. Earthquakes are a fact of life in the South Asian country, with tremors of magnitude 4 or 5 occurring several times each year, geologist and science journalist Kate Ravilious said. With the last major earthquake in 1934, the concern was not if, but when the next \\\"great\\\" earthquake would hit, said Ravilious, author of the 2014 article, \\\"Kathmandu's earthquake nightmare.\\\" In a landlocked country like Nepal, where infrastructure is fragile to begin with, the consequences of such an earthquake had the potential to be \\\"much more serious,\\\" Ravilious told CNN. Those fears were realized when a magnitude-7.8 earthquake centered less than 50 miles from the national capital of Kathmandu rocked Nepal, toppling homes, historic buildings and leaving more 1,400 dead, authorities said. \\\"This event, while large and tragic, is not unusual for that region of the world as the whole mountain range stretching from Tibet almost to Caspian Sea is an area of major collision between continental plates,\\\" said geological engineer Nicholas Sitar with the University of California, Berkeley's Department of Civil and Environmental Engineering. What's different this time from 1934 is the size and density of Kathmandu, which suffered the brunt of damage in both earthquakes. \\\"The population has exploded in several decades,\\\" U.S. Geological Survey spokesman Gavin Hayes told CNN. \\\"When you get a vast population in the kind of building infrastructure that isn't equipped to handle shaking of an earthquake this size, that's when you see the scale of disaster we're seeing now.\\\" The big unknown is what happens next, now that the initial rumbles of the quake have passed, Ravilious said. How will emergency response teams enter the landlocked country, whose single international airport is closed? How will transports carrying aid move through the country if roads are destroyed? If and when landslides start, how will mountainside villages in the Himalayan range fare? And, will it all be resolved before monsoon season starts? \\\"The worry now is to get Nepal up and running again on feet,\\\" Ravilious said. \\\"The monsoons in a couple of months could make things worse if we don't sort things out before then.\\\" An earthquake is the ground shaking caused by a sudden slip on a fault, according to the U.S. Geological Survey. Stresses in the earth's outer layer push the sides of the fault together, releasing energy in waves that travel through the earth's crust and cause the shaking felt during an earthquake. Nepal is located on a major plate boundary between India and Eurasia, where collisions have been in progress for about 50 million years. Those collisions are responsible for the construction of the Himalayas, which has the tallest and some of the fastest growing mountains in the world, said Chris Goldfinger, director of Oregon State University's Active Tectonics and Seafloor Mapping Laboratory. India is moving northward into Eurasia at a rate of about 45 millimeters a year, with earthquakes of a magnitude from 8 to 9 occurring on average in the Himalaya every 500 to 1,000 years, said Marin K. Clark, associate professor of Geological Sciences with the University of Michigan's Department of Earth and Environmental Sciences. The last major earthquake to affect this part of the Himalayas was in the 1500s, and Kathmandu was badly damaged in an earthquake that occurred farther east of Saturday's quake in 1934. A major concern for this earthquake is damage from landslides generated by the strong shaking, Clark said. The entire area that experienced shaking was in steep, mountainous topography where landsliding is a significant hazard. Clark compared the circumstances to the 2008 earthquake in Sichuan Province, China. The magnitude-7.9  earthquake generated more 200,000 landslides, many of which blocked roads, slowing response and recovery efforts. The landslides also blocked river valleys, which created significant flood hazard. \\\"We might anticipate a similar situation for Nepal.\\\"\\n\", \"original_answer\": \"On Saturday, a devastating earthquake struck Nepal, killing over 1,400 people and causing widespread destruction. The earthquake, which measured a magnitude of 7.8, was considered the \\\"big one\\\" that experts had been predicting due to the region's seismic history. Nepal is located on a major plate boundary between India and Eurasia, where tectonic collisions have been happening for 50 million years. These collisions have created the Himalayan mountain range, which is prone to earthquakes of varying magnitudes. While earthquakes occur frequently in the region, the concern this time around is the severity of the damage caused by the landslide activity triggered by the earthquake. The situation is made worse by the country's fragile infrastructure and the fact that the entire area affected by the earthquake is located in steep, mountainous terrain, making it susceptible to landslides. Experts are concerned about the response and recovery efforts, especially given the approaching monsoon season, which could exacerbate the situation.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 36,
+  "source_cluster_id": "sha256:2bab869f1f334831ba053811e22f05a8dc929aa8edb4f0ea8f087936975359cf",
+  "source_id": "15837",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:cc51f375355428799ae0f49addf1aa8e7ec1da4623b5c8055a64512139c97122",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ]
+}

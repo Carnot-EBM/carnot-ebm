@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3567517909687012,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:dc4dea6de08903416e69619816554731f91b5cdc70c9800bdf627983043a8071",
+  "human_target": null,
+  "input_tokens": 736,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:dc4dea6de08903416e69619816554731f91b5cdc70c9800bdf627983043a8071",
+    "feature_hash": "sha256:5812081fc5e4c71ea33e18fe6482621a2952745352f72eb77a904dde802176d2",
+    "source_normalized_hash": "280468cdceca5b53b18e85e467114737fb4b988700376b2594ad56fb421d999e",
+    "values": [
+      0.43882682512132976,
+      0.6792482596441022,
+      0.2857142857142857,
+      0.8571428571428571,
+      0.31785714285714284,
+      0.35714285714285715,
+      0.5611731748786702,
+      0.9935950988582568
+    ],
+    "window_count": 20
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 736,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 760
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:6aadb431b729b8ee09f3f251cfa72a119c6b9e06946436947f57b60b654f25d0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095491,
+    "id": "chatcmpl-bfdW65oFDGAnLFqpcdTVAHaJO1v1VlDe",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.834,
+      "predicted_n": 24,
+      "predicted_per_second": 42.490359999575105,
+      "predicted_per_token_ms": 23.53475,
+      "prompt_ms": 669.238,
+      "prompt_n": 658,
+      "prompt_per_second": 983.2077676402116,
+      "prompt_per_token_ms": 1.0170790273556232
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 736,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 760
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:This instructable will walk you through how to cream butter and sugar together by hand, as well as by mixer. Steps for using a mixer are in bold. 1. Place the butter out on the counter for at least an hour, or until it becomes room temperature.reaming simply means mixing your butter and sugar(s) together until well blended, leaving you with a fluffy light yellow mix. Just do not over mix! Butter and sugars are over-mixed when the butter begins to separate.\\\\n\\\\npassage 2:Many recipes for baked goods instruct to \u201ccream\u201d the butter. This helps incorporate air into the batter, giving a light and tender texture. 1  Measure the amount of butter you need and soften it just enough that your finger easily leaves an impression in the butter when you press it.any recipes for baked goods instruct to \u201ccream\u201d the butter. This helps incorporate air into the batter, giving a light and tender texture. 1  Measure the amount of butter you need and soften it just enough that your finger easily leaves an impression in the butter when you press it.\\\\n\\\\npassage 3:1 Place the butter in a large bowl and use a wooden spoon or an electric mixer to stir or beat the butter until it is smooth, creamy and a uniform texture.2  Add the sugar or other ingredients called for in the recipe to further cream them together.any recipes for baked goods instruct to \u201ccream\u201d the butter. This helps incorporate air into the batter, giving a light and tender texture. 1  Measure the amount of butter you need and soften it just enough that your finger easily leaves an impression in the butter when you press it.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you cream butter\\\"}\", \"original_answer\": \"To cream butter, you can either use a wooden spoon or an electric mixer to beat the butter until it's smooth, creamy, and has a uniform texture. You can also add sugar or other ingredients to the butter while creaming to incorporate them into the mixture. It's important not to overmix the butter, as this can cause it to separate and become grainy.\\n\\nBased on the given passages, here's a step-by-step guide to creaming butter:\\n\\n1. Soften the butter to room temperature.\\n2. Place the butter in a large bowl.\\n3. Use a wooden spoon or electric mixer to beat the butter until it's smooth and creamy.\\n4. Add sugar or other ingredients called for in the recipe and continue beating until well combined.\\n5. Stop mixing before the butter becomes too fluffy or separates.\\n\\nSo, to summarize, creaming butter involves beating the butter until it's smooth and well mixed with any added ingredients, while taking care not to overmix it.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 124,
+  "source_cluster_id": "sha256:d924cb2dcbebc431073d324d1eafd06ebd263e67fa7284203d3bb02791369709",
+  "source_id": "15431",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:dc4dea6de08903416e69619816554731f91b5cdc70c9800bdf627983043a8071",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

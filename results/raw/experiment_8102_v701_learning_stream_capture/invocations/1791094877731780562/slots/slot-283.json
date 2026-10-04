@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2689723699586466,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:a2e0c9cf884210a6038fb0d078c66f70ce351fb169d2d02088a90e128acf0f71",
+  "human_target": null,
+  "input_tokens": 600,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:a2e0c9cf884210a6038fb0d078c66f70ce351fb169d2d02088a90e128acf0f71",
+    "feature_hash": "sha256:eeb58e9d00c50d43ccd2928a0026b291c0d07def9921b73e91d0565e27149b16",
+    "source_normalized_hash": "f4b611e060cea97a2386d2729a003261436388dee7aae4577386fa24e21e35ce",
+    "values": [
+      0.22543956043956043,
+      0.4164285714285714,
+      0.3269230769230769,
+      0.75,
+      0.25,
+      0.25,
+      0.7745604395604395,
+      0.9596428571428571
+    ],
+    "window_count": 26
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 600,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 623
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:a99233fa94e4bdb97f440cb365180796bacdcc3e4794de2bc2c08af529fab8e1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095707,
+    "id": "chatcmpl-iC4jvVUuH3nrsUrfPWmOkZND8hrSZZmR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.696,
+      "predicted_n": 23,
+      "predicted_per_second": 42.61658415107764,
+      "predicted_per_token_ms": 23.46504347826087,
+      "prompt_ms": 589.343,
+      "prompt_n": 522,
+      "prompt_per_second": 885.7320779240612,
+      "prompt_per_token_ms": 1.1290095785440613
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 600,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 623
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Imprisoned soldier Chelsea Manning can now communicate with the world  -- in 140 characters or less. Manning, who is serving a 35-year prison sentence for leaking thousands of classified documents, appears to have joined Twitter this week. In a series of tweets, the prisoner formerly known as Bradley Manning said she will be using a voice phone to dictate her tweets to  communications firm Fitzgibbon Media, which will post them on her behalf. She is not allowed Internet access in prison, according to The Guardian. \\\"It will be hard, but I don't want this Twitter feed to be a one-way street/conversation,\\\" Manning posted to her nearly 26,000-plus followers. Manning was sentenced in 2013, and in August of that year, she said she wanted to transition to a female. The Fort Leavenworth Disciplinary Barracks in Kansas, where she is serving her sentence, has authorized hormone therapy for her treatment. Manning said she suffers from gender dysphoria. Her  lawyers describe it as \\\"the medical diagnosis given to individuals whose gender identity -- their innate sense of being male or female -- differs from the sex they were assigned at birth, causing clinically significant distress.\\\" Last year, a Kansas judge granted her request to be formally known as Chelsea Elizabeth Manning. The former Army intelligence analyst was convicted of stealing and disseminating 750,000 pages of documents and videos to WikiLeaks in what has been described as the largest leak of classified material in U.S. history. She was found guilty of 20 of the 22 charges, including violations of the U.S. Espionage Act. Manning has written opinion pieces for The New York Times and The Guardian from prison.\\n\", \"original_answer\": \"Sure! Here's the summary in 68 words:\\n\\nChelsea Manning, imprisoned for leaking classified documents, has joined Twitter to communicate with the world. She will use a voice phone to dictate tweets to a communications firm, despite not having internet access in prison. Manning identifies as transgender and has been granted hormone therapy for gender dysphoria.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 28,
+  "source_cluster_id": "sha256:6065d1b84d7c3e7e9e737084b8d8ed394159e41ceca4116a346bff6cd4fe6817",
+  "source_id": "15710",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:a2e0c9cf884210a6038fb0d078c66f70ce351fb169d2d02088a90e128acf0f71",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

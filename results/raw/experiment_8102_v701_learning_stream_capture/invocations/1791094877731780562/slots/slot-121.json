@@ -1,0 +1,148 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7464760730508715,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:feb27fb4cff18cc3b41f65c8810ae05b12195986dd75c3cf8117b32f375e2fed",
+  "human_target": null,
+  "input_tokens": 1185,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:feb27fb4cff18cc3b41f65c8810ae05b12195986dd75c3cf8117b32f375e2fed",
+    "feature_hash": "sha256:154daa28b2b29e70e9760f04865fd1d3e42fc79c30865fb37d172ce74d2d65c1",
+    "source_normalized_hash": "9c5ff7046be4cc96d3553d786a02d625b1a4e3323a199f083063d760ec03fa63",
+    "values": [
+      0.17788228913739348,
+      0.44583351464022974,
+      0.2619047619047619,
+      0.8571428571428571,
+      0.2857142857142857,
+      0.2857142857142857,
+      0.8221177108626065,
+      1.0
+    ],
+    "window_count": 48
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1185,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1208
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:6e081ad40f233adea2f0ece52f7353c3dc9b0d401c141ab7bfb8b8f170ac552f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095488,
+    "id": "chatcmpl-BniWk568dxpcq5gQqbcISOtr9TOoTWwv",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.744,
+      "predicted_n": 23,
+      "predicted_per_second": 42.45547712572728,
+      "predicted_per_token_ms": 23.55408695652174,
+      "prompt_ms": 1050.383,
+      "prompt_n": 1107,
+      "prompt_per_second": 1053.9012912432893,
+      "prompt_per_token_ms": 0.9488554652213189
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1185,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1208
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"633 E Cabrillo Blvd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":true,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":true,\\\"validated\\\":true},\\\"Music\\\":\\\"{dj: False, live: None, jkebox: None, video: False, backgrond_msic: False, karaoke: None, no_msic: False}\\\",\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"American (Traditional), Restaurants, Bars, Cocktail Bars, Nightlife, American (New), Sandwiches\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-23:0\\\",\\\"Monday\\\":\\\"11:30-22:0\\\",\\\"Saturday\\\":\\\"11:30-23:0\\\",\\\"Sunday\\\":\\\"11:30-22:0\\\",\\\"Thursday\\\":\\\"11:30-22:0\\\",\\\"Tuesday\\\":\\\"11:30-22:0\\\",\\\"Wednesday\\\":\\\"11:30-22:0\\\"},\\\"name\\\":\\\"The Set\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-16 21:08:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Stayed at the Hilton with my husband and our 2 dogs. I was skeptical to eat at this restaurant because of the yelp reviews but I'm soo glad we gave it a shot. The food was delicious, the view was amazing & the service was great. We had the clam chowder, wings & fries. Everything was very tasty but the clam chowder was definitely my favorite. Our dogs enjoyed the outside patio as well. I'm glad we went. Don't let those bad Yelp reviews run away from this gem.\\\"},{\\\"review_date\\\":\\\"2021-12-27 00:13:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"What an amazing place wit great people! My wife and I cancelled our reservation for Convivo at the Santa Barbara Inn due to an issue with the previous evenings dinner on Christmas Eve. We stopped in to the Hilton and asked the hostess at the Hilton if she had any tables for dinner and she was so kind and gracious and stated yes, no problem. She took us to a table and my wife asked for the Hightower booth and she graciously accommodated the request. She was so nice and graceful..thanks so much. We had a wonderful server who brought us some great cocktails. We ordered the specials on the Christmas menu and I had the pumpkin ravioli and my wife had the organic chicken dish. Both were awesome. I commend and thank the staff and management for a job well done and we had a great time. Highly recommended.\\\"},{\\\"review_date\\\":\\\"2021-10-01 23:49:06\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Cute restaurant within the hotel. Don't really have anything bad to say aside from you may have to wait cause they can get busy and you may be waiting like 20 mins for your check or your box. \\\\n\\\\nAnyways. I ordered the kids Mac and cheese. Looked pretty but literally had no taste. And on game days they have a special menu which I ordered nachos from. Were yummy! Plus with a nice cold dr. Pepper.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Located at 633 E Cabrillo Blvd, Santa Barbara, CA, \\\"The Set\\\" is a traditional and modern American restaurant that also operates as a cocktail bar and a nightlife spot. It is open every day of the week, offering validated and valet parking, outdoor seating, free WiFi, and is suitable for groups. Despite not taking reservations, the restaurant is known for its good service, pleasant ambience and amazing views. Based on customer reviews, the food is highly regarded, with items like clam chowder, wings, fries, pumpkin ravioli, and organic chicken dishes frequently praised. Special menus on game days and a friendly, accommodating staff add to the overall positive experience. However, some reviews mention occasional wait times due to the restaurant's popularity. With a business rating of 3.5 stars, \\\"The Set\\\" is well-received by its patrons.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 122,
+  "source_cluster_id": "sha256:897c017db3499f22b32aee468b9db43236a8c7d591c1754fed42f55e8ae21f35",
+  "source_id": "14949",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:feb27fb4cff18cc3b41f65c8810ae05b12195986dd75c3cf8117b32f375e2fed",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ]
+}

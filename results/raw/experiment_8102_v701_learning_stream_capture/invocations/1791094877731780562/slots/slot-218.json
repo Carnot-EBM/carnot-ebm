@@ -1,0 +1,145 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3670442149741575,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:2d4911eb4833d1c0994deb90247eab3205437e9ad904e24cc9925642db435def",
+  "human_target": null,
+  "input_tokens": 776,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:2d4911eb4833d1c0994deb90247eab3205437e9ad904e24cc9925642db435def",
+    "feature_hash": "sha256:953a9b5cd79dc17883d15356386b412d0a482d048500eafd997ea4065d3c58a4",
+    "source_normalized_hash": "f87ceb29bb2e670b178228bed346b46121d66e9e47fc01ce0aaa24fe570d11ec",
+    "values": [
+      0.4262032047746333,
+      0.6508110936682365,
+      0.05405405405405406,
+      1.0,
+      0.0,
+      0.0,
+      0.5737967952253666,
+      0.8331240188383047
+    ],
+    "window_count": 37
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 776,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 799
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:dbb1c6fca1a49356013ee48768626aa3a882783ed709fc2b1cc8d10b2862bffb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095615,
+    "id": "chatcmpl-DhhMXJ3bgy5Ap7Sd0LfkQqk3bNi2g8cV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.08,
+      "predicted_n": 23,
+      "predicted_per_second": 42.50757743771716,
+      "predicted_per_token_ms": 23.52521739130435,
+      "prompt_ms": 691.883,
+      "prompt_n": 698,
+      "prompt_per_second": 1008.841090184323,
+      "prompt_per_token_ms": 0.9912363896848138
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 776,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 799
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:If your washing machine is not perfectly level--with all four legs touching the floor--it can bang and rock back and forth. This isn't good for the machine and may damage anything near the machine. Washing machines have adjustable, front leveling legs with a lock nut.You should adjust each leg to the proper height and then tighten the lock nut up against the body of the machine to keep the leg from rotating.ashing machines have adjustable, front leveling legs with a lock nut. You should adjust each leg to the proper height and then tighten the lock nut up against the body of the machine to keep the leg from rotating.\\\\n\\\\npassage 2:Instructions. Place the level on the front of the washer's top cover. Place it parallel to the washer's face panel. Observe the reading on the level. Place the level on the edge of the washer's top cover.Place it perpendicular to the washer's face panel. Observe the reading on the level. Move the washer away from the wall a few inches if it needs to be leveled. Tip the washer back and slip the block under the front to hold the front feet off the floor.lace it parallel to the washer's face panel. Observe the reading on the level. Place the level on the edge of the washer's top cover. Place it perpendicular to the washer's face panel. Observe the reading on the level. Move the washer away from the wall a few inches if it needs to be leveled.\\\\n\\\\npassage 3:8. Push the washer back into its position. Check the level on the washer again, first parallel and then perpendicular to the front of the machine. Readjust the foot screws on the front of the machine if necessary.You may need to check the level and adjust the feet and screws several times until the washer is perfectly level.. Push the washer back into its position. Check the level on the washer again, first parallel and then perpendicular to the front of the machine. Readjust the foot screws on the front of the machine if necessary.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you level a washing machine\\\"}\", \"original_answer\": \"To level a washing machine, you should first adjust each leg to the proper height using the adjustable front leveling legs. Then, tighten the lock nut to prevent the legs from rotating. Place a level on the front of the washer's top cover, parallel to the face panel, and observe the reading. If needed, move the washer a few inches away from the wall and tip it back, placing a block under the front to hold the front feet off the floor. Check the level again, both parallel and perpendicular to the front of the machine. If necessary, readjust the foot screws on the front of the machine. Repeat these steps until the washer is perfectly level.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 219,
+  "source_cluster_id": "sha256:3d6354f760f55a1cc511a85d62fab41b7d586d5a09add9d8167cf4837b77cdfb",
+  "source_id": "15173",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:2d4911eb4833d1c0994deb90247eab3205437e9ad904e24cc9925642db435def",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

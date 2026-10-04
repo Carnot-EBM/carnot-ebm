@@ -1,0 +1,131 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.411188860074617,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:f4e8727f6ab19263d747179f17c3439e9548c955ad3c1ad750e42c27cce8bcd7",
+  "human_target": null,
+  "input_tokens": 797,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:f4e8727f6ab19263d747179f17c3439e9548c955ad3c1ad750e42c27cce8bcd7",
+    "feature_hash": "sha256:7d56cdf5a6dbbb80e955b75273a3674dfe7a3c4ebcc53cb49a8045903a60cdf6",
+    "source_normalized_hash": "9d30261c9e2361e6e14f89864904ade3afa97364aea0961a05c25a5ebae0c789",
+    "values": [
+      0.2175536881419234,
+      0.38800381263616557,
+      0.4642857142857143,
+      0.75,
+      0.25,
+      0.25,
+      0.7824463118580766,
+      0.9332107843137255
+    ],
+    "window_count": 14
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 797,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 821
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:c2ec629922577bb4353a702b677044377d9b36226a3ed09c2c474a1a07f7fe15",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095629,
+    "id": "chatcmpl-7rGHPaw1E831FAbuOovQewkk6sjgcaMh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.44,
+      "predicted_n": 24,
+      "predicted_per_second": 42.444821731748725,
+      "predicted_per_token_ms": 23.560000000000002,
+      "prompt_ms": 709.663,
+      "prompt_n": 719,
+      "prompt_per_second": 1013.1569491434667,
+      "prompt_per_token_ms": 0.9870139082058415
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 797,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 821
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"901 Linden Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Desserts, Sandwiches, Food, Italian\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-20:30\\\",\\\"Saturday\\\":\\\"11:30-20:30\\\",\\\"Sunday\\\":\\\"11:30-20:30\\\",\\\"Thursday\\\":\\\"11:30-20:30\\\",\\\"Tuesday\\\":\\\"11:30-20:30\\\",\\\"Wednesday\\\":\\\"11:30-20:30\\\"},\\\"name\\\":\\\"Guicho's Eatery\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-08 01:21:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Authentic marinara-- you wait even if they are not busy.... no food sits simmering in a pan until someone walks in. It is NOT fast food, but I think the way mom would make it--- if she were a good cook.\\\"},{\\\"review_date\\\":\\\"2022-01-06 19:02:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Staff is always so nice when I come in and their food is delicious! On cold days I always go for their chicken soup. The pesto fusilli is also good but very very creamy. Grilled chicken salad is also an amazing healthy alternative. Similar to Zookers, but more affordable.\\\"},{\\\"review_date\\\":\\\"2021-12-31 21:50:29\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Re surprised that their food was so delicious- guicho's is a modern sparse takeout with high quality restaurant food. \\\\nWish they were friendlier and served filtered water instead of paper cups filled with faucet water( where they wash stuff)\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Guicho's Eatery is a locally owned restaurant located in Carpinteria, California, serving a variety of dishes including Italian favorites like sandwiches, pasta, and desserts. The business has received positive reviews for its authentic flavors and high-quality ingredients, with customers praising the marinara sauce and chicken soup. The restaurant offers indoor and outdoor seating and takes reservations, though Wi-Fi is not available. Although some customers have noted that the service can be slow and the water is served from a faucet rather than being filtered, the overall rating for Guicho's Eatery is 4.5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 228,
+  "source_cluster_id": "sha256:7771fdc5f4a3d64b069f93b0c6b8f2c30355a787cb5be728af6da9fbb387959e",
+  "source_id": "14015",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:f4e8727f6ab19263d747179f17c3439e9548c955ad3c1ad750e42c27cce8bcd7",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7425236590206623,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:b84656e41ec387d7b8e5b362262bbb5296b80fe432f9972607c8b474692626a3",
+  "human_target": null,
+  "input_tokens": 1195,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:b84656e41ec387d7b8e5b362262bbb5296b80fe432f9972607c8b474692626a3",
+    "feature_hash": "sha256:2f78782bba84fb84d89cd2aa8c76aa8439c4f0e765ceb8afa0c053d96232b20b",
+    "source_normalized_hash": "fe82f439c4db368dd4e7ba1d62d322d867743cdadf205a493078e04649f3c5b8",
+    "values": [
+      0.22790171671967033,
+      0.47648569262432583,
+      0.4411764705882353,
+      1.0,
+      0.23076923076923078,
+      0.23076923076923078,
+      0.7720982832803296,
+      0.9258195191971913
+    ],
+    "window_count": 34
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1195,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1218
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:0aff7c6a056180667ce51258d0a3d64879804fb2e4c7414e0497dcab0b649644",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095427,
+    "id": "chatcmpl-cVI9EXxXNn0n61mwDl6pHFFsyCB7sSjz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.582,
+      "predicted_n": 23,
+      "predicted_per_second": 42.54673666529777,
+      "predicted_per_token_ms": 23.503565217391305,
+      "prompt_ms": 1056.668,
+      "prompt_n": 1117,
+      "prompt_per_second": 1057.0964579224506,
+      "prompt_per_token_ms": 0.9459874664279319
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1195,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1218
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"282 Orange Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Chinese\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:0\\\",\\\"Monday\\\":\\\"17:0-21:0\\\",\\\"Saturday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Red Pepper Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-03 00:17:54\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Got Spicy chicken with only bones in it like I couldn't even eat it and the Orange chicken wad soggy and way to chewy and honestly all the food is just greasy DO NOT GO. They only take cash and Venmo which is strange\\\"},{\\\"review_date\\\":\\\"2021-11-16 08:57:32\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Was looking for Chinese for lunch while in Santa Barbara/Goleta this weekend. Used my Yelp app to find the Red Pepper Restaurant. Kind of off the main streets but what a great place for Chinese. I tried the Szechuan Pork with Fried Dumplings.\\\\nThe Szechuan Pork was excellent. Good amount of pork, peppers, strip bamboo, cloud ear in a nice spicy sauce. Had a nice zing to it.\\\\nAlso loved their Fried Pork Dumplings. Good juicy filling with a nicely pan fried skin. Skin was not doughy.\\\\nEnjoyed my lunch. Look forward to the next time I'm in the area\\\"},{\\\"review_date\\\":\\\"2021-11-09 01:41:08\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Today was a bad day for red pepper.\\\\nwas sucked in by Door Dash B.S. offer of 25% off. Didn't get it. Payed full price even though I put there bs discount code on the order.\\\\n ordered potstickers with potstickers sauce which is extra. Didn't get sauce.\\\\npotstickers were burnt.\\\\n ordered fried wontons, they were not in order.\\\\negg drop soup had peas in it, WTF I hate peas.\\\\nordered wor wonton soup. Had NO shrimp or chicken. Mushrooms onions and wontons.\\\\n I ordered chow main extra spicy. Was bland and NOT spicy.\\\\nWas a total fricking disappointing experience.\\\\n This place is a crap shoot as to if they rock or suck.\\\\nToday was suck. Not sure if ill ever go back.\\\\nIf you want consistent good Chinese go down to chapala st.\\\\nDoor Dash lies, will never trust again.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Red Pepper Restaurant is a Chinese restaurant located at 282 Orange Ave in Goleta, CA. The restaurant is open from 5:00 PM to 9:00 PM every day of the week. It offers dine-in and takeout services, and reservations can be made. The restaurant has a rating of 4.0 stars.\\n\\nBased on customer reviews, the Red Pepper Restaurant has received both positive and negative feedback. One customer mentioned that they had a disappointing experience with their order, as the spicy chicken had only bones and the orange chicken was soggy and chewy. They also noted that all the food was greasy and the restaurant only accepts cash and Venmo.\\n\\nOn the other hand, another customer had a great experience at the restaurant. They enjoyed the Szechuan Pork with Fried Dumplings, which had a nice spicy sauce and a good amount of ingredients. They also praised the Fried Pork Dumplings for their juicy filling and nicely pan-fried skin.\\n\\nOverall, the Red Pepper Restaurant offers Chinese cuisine in Goleta, CA. While some customers have had negative experiences, others have enjoyed their meals. It may be worth trying for those in the area looking for Chinese food, but it's recommended to check payment options and be aware of potential greasiness in the dishes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 81,
+  "source_cluster_id": "sha256:1125d8d4d13b4b6cdd625becd1ef9cdf6f1eed7a3ee278f63a0de2d3c3b438b9",
+  "source_id": "14231",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:b84656e41ec387d7b8e5b362262bbb5296b80fe432f9972607c8b474692626a3",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

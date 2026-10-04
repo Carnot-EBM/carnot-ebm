@@ -1,0 +1,156 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.9262211140012369,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:7e3b15b4b576e30d6595c8e8f0bf589d65380dd021bd29a4209360e73ddc5dc0",
+  "human_target": null,
+  "input_tokens": 1484,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:7e3b15b4b576e30d6595c8e8f0bf589d65380dd021bd29a4209360e73ddc5dc0",
+    "feature_hash": "sha256:e2997aed73d28a60211230125d103e3fe4c76c950e437d5377790a42cf95dc84",
+    "source_normalized_hash": "316d60d5dcbc855f1fa8f47a5038ce495cd8c7edebdb41fa8020b82fd70bb7ea",
+    "values": [
+      0.3321351008904888,
+      0.5306820765441456,
+      0.45625,
+      0.6,
+      0.2,
+      0.2,
+      0.6678648991095112,
+      0.9313982569154984
+    ],
+    "window_count": 64
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1484,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1507
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:bc4d0fbcfb006ad02a7e11f26d9ffe91a2d5f0ecee25d435dfafc87c3086143b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095472,
+    "id": "chatcmpl-gZsjQNwLDZDkLba5crG3Km0d22a5jdDp",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.869,
+      "predicted_n": 23,
+      "predicted_per_second": 42.44568336627487,
+      "predicted_per_token_ms": 23.559521739130435,
+      "prompt_ms": 1263.887,
+      "prompt_n": 1406,
+      "prompt_per_second": 1112.4412229890806,
+      "prompt_per_token_ms": 0.8989238975817923
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1484,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1507
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Washington (CNN)Judge Jeffrey Sutton doesn't have a lot of company on the appeals courts these days. Sutton, who sits on the 6th U.S. Circuit Court of Appeals in Cincinnati, penned the only recent appellate court decision to uphold state bans on same-sex marriage. His opinion, issued in November, goes up against an avalanche of judicial rulings striking down such bans. The split helped pave the way for the U.S. Supreme Court to take up a case on Tuesday that could ultimately decide whether gay and lesbian couples nationwide have a constitutional right to marry. And it provides important insight into the legal arguments that could be made before the court by states seeking to uphold bans at a time when the national sentiment is quickly shifting in favor of same-sex marriage. \\\"It's an ideal piece of judicial craftsmanship,\\\" said Ryan T. Anderson of the Heritage Foundation, who believes that state bans on same-sex marriage are constitutional. Sutton \\\"more or less takes each and every argument that the other side has made, and then one by one by one, he explains why it doesn't work.\\\" Critics call the opinion an outlier and don't believe it will carry much weight, considering the number of courts that have overturned same-sex marriage bans in the nearly two years since the Supreme Court struck down the core of the federal Defense of Marriage Act. \\\"Judge Sutton's opinion stands alone,\\\" said Jon W. Davidson, legal director of Lambda Legal, a gay rights advocacy group. Sutton, 54, is the former state solicitor for Ohio, where he handled appeals for the state's attorney general. He clerked for Justices Antonin Scalia and Lewis Powell -- Scalia once called Sutton \\\"one of the very best law clerks I ever had.\\\" Appointed to the bench by President George W. Bush, Sutton is considered a conservative jurist with a keen interest in states' rights. Here are the central arguments from his opinion that states seeking to uphold their same-sex marriage bans are expected to echo on Tuesday. It is \\\"dangerous and demeaning,\\\" Sutton wrote, to the citizenry to assume that only judges \\\"can fairly understand\\\" the arguments for and against same-sex marriage. \\\"Isn't the goal to create a culture in which a majority of citizens dignify and respect the rights of minority groups?\\\" he asked in the opinion joined by Judge Deborah L. Cook, also a Bush appointee. Critics such as Davidson have roundly condemned such reasoning. \\\"The people don't get to decide what the Constitution safeguards,\\\" Davidson said. \\\"They don't get to vote to violate the Constitution.\\\" Sutton pointed  to the drafters and their views of the 14th Amendment. \\\"Nobody in this case,\\\" he wrote, \\\"argues that the people who adopted the Fourteenth Amendment understood it to require the States to change the definition of marriage.\\\" It's an argument made to enforce the idea that there is no fundamental right to marriage for same-sex couples in the Constitution. \\\"From the founding of the Republic to 2003, every state defined marriage as a relationship between a man and a woman,\\\" he wrote, noting that the \\\"Fourteenth Amendment permits, though does not require, States to define marriage that way.\\\" He said that the same-sex marriage bans rationally advance a legitimate government policy. \\\"By creating a status (marriage) and by subsidizing it (e.g. with tax-filing privileges and deductions), the States created an incentive for two people who procreate together to stay together for purposes of rearing offspring.\\\" He said that states should not be accused of \\\"irrationality,\\\" but only the awareness that same-sex couples don't have children in the same way as couples of the opposite sex. Sutton pushes back on any suggestion that those who oppose same-sex marriage have negative feelings about gay and lesbian couples. He said that ballot initiatives banning same sex-marriage were not driven by hostility but were passed by \\\"real people who teach our children, create our jobs, and defend our shores.\\\" Gene Schaerr, a Washington appellate lawyer who help to defend Utah's ban on same-sex marriage, calls Sutton's opinion a road map for whoever might write an opinion supporting state bans. \\\"He's very much willing both in the result and in his analysis to leave the issue to the people without suggesting an answer one way or another,\\\" Schaerr said. But attached to Sutton's opinion was a harsh dissent from a third member of the three-judge panel that heard the case in the 6th Circuit. Judge Martha Craig Daughtrey, a Bill Clinton appointee, dismissed the opinion as an \\\"engrossing TED talk\\\" and a \\\"largely irrelevant discourse on democracy and federalism.\\\" Daughtrey said that Sutton failed to see the plaintiffs as individuals \\\"suffering actual harm.\\\" \\\"These plaintiffs are not political zealots trying to push reform on their fellow citizens, \\\" she wrote, but committed same-sex couples seeking equal status. Her harshest language was for Sutton's premise that the decision should be left to the democratic process. \\\"If we in the judiciary do not have the authority, and indeed the responsibility, to right fundamental wrongs left excused by a majority of the electorate, our whole intricate, constitutional system of checks and balances, as well as the oaths to which we swore, prove to be nothing but shams.\\\"\\n\", \"original_answer\": \"Here is a summary of the article in 200 words or less:\\n\\nJudge Jeffrey Sutton of the 6th U.S. Circuit Court of Appeals in Cincinnati recently ruled in favor of state bans on same-sex marriage, going against a wave of judicial decisions overturning such bans. Sutton's opinion argues that the Constitution does not guarantee a fundamental right to same-sex marriage, and that states have the right to define marriage as they see fit. Critics of the opinion say it is an outlier and that it demeans the citizenry by assuming they cannot understand the arguments for and against same-sex marriage. Sutton's opinion highlights the divided opinions on same-sex marriage and sets the stage for the upcoming Supreme Court case that could ultimately decide the issue nationwide.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 111,
+  "source_cluster_id": "sha256:01c56958e56b8df66701562ab013cda4150ae3dc2c0a9fd614a15eeeecfa8f01",
+  "source_id": "11912",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:7e3b15b4b576e30d6595c8e8f0bf589d65380dd021bd29a4209360e73ddc5dc0",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32
+  ]
+}

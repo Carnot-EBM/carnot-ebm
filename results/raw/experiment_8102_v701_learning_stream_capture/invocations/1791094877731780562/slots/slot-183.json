@@ -1,0 +1,143 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3706977299880236,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:17076ff58e5c5e28f25d07f15960c7214a2f3aa98ee53e73e1227adb3769fa1b",
+  "human_target": null,
+  "input_tokens": 783,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:17076ff58e5c5e28f25d07f15960c7214a2f3aa98ee53e73e1227adb3769fa1b",
+    "feature_hash": "sha256:de9032b14a45cd103d37734592d355c9c82ce10a901f7b687203016656145ba8",
+    "source_normalized_hash": "4163736d740990df8c44ef454d1bb91fb51bd0c7a7378c8f08d3862071fb471c",
+    "values": [
+      0.1825059235733011,
+      0.3840996168582375,
+      0.3026315789473684,
+      0.75,
+      0.4868421052631579,
+      0.5,
+      0.8174940764266989,
+      1.0
+    ],
+    "window_count": 38
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 783,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 806
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:20d9cadfe71ca182d2414c7fd5959ecb9bd51955e8f87827c860c73f0d89c135",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095574,
+    "id": "chatcmpl-qpaAAtQoncEn5F7uSp0J9rksBIxUFpTb",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.063,
+      "predicted_n": 23,
+      "predicted_per_second": 42.50891301013006,
+      "predicted_per_token_ms": 23.524478260869564,
+      "prompt_ms": 692.302,
+      "prompt_n": 705,
+      "prompt_per_second": 1018.3417063651412,
+      "prompt_per_token_ms": 0.9819886524822695
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 783,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 806
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Coast Guard Vet and Wife Convicted in Identity Theft Case by Jury\\nA jury in Hawaii found a married couple guilty of conspiracy, passport fraud, and identity theft for using the names of deceased infants for decades.\\nAccording to the court documents, the jury deliberated for roughly two hours before returning guilty verdicts on Monday.\\nBobby Fort and Julie Montague were the names used by the presiding judge in their trial in U.S. District Court in Honolulu. In court, the pair claimed that no one was harmed by their conduct.\\nAssistant U.S. Attorney Tom Muehleck testified at trial's outset that the \\\"real\\\" Bobby Fort had been dead for over 50 years. The baby had \\\"a bad cough\\\" and lived 3 months, Muehleck claimed.\\nTonda Montague Ferguson, one of the witnesses, said that her mother had her sister, Julie Montague, in 1968, while she was in the eighth grade. However, Ferguson claimed, the baby was born with deformities and passed away around three weeks later.\\nMuehleck said the two graves where the infants were laid to rest were located 15 miles (24 kilometers) apart in Texas.\\nProsecutors say the couple's real identities are Walter Glenn Primrose and Gwynn Darle Morrison.\\nThey went to the same high school in Texas, and Muehleck says a friend who kept in touch with them afterward recalls that they stayed with him for a while and stated they planned to change their identities because of significant debt.\\nThe prosecutor said that the spouse had joined the Coast Guard under a false identity that made him appear to be 12 years younger.\\nWhen they're sentenced in March, they face maximum 10-year prison terms for counts of making false statements in the application and use of a passport. Both accusations, conspiracy and aggravated identity theft, carry mandatory consecutive two-year sentences.\\nAfter their arrests in December of last year, authorities hinted that the case involved more than just identity theft, and it quickly received widespread media attention. Polaroids of the couple wearing what appear to be actual KGB jackets were introduced early on by the prosecution. The couple's attorneys said they donned the matching jackets on a lark, and prosecutors eventually dropped all spying charges.\\nEdited by Newsbreak Contributor Denys Shybinskiy\", \"original_answer\": \"Sure! Here is the summary within 93 words:\\n\\nA jury convicted a married couple in Hawaii of conspiracy, passport fraud, and identity theft for using the names of deceased infants. They could face up to 10 years in prison and mandatory consecutive two-year sentences for making false statements in their passport applications. The couple, who used the names Bobby Fort and Julie Montague, claimed no harm was done, but prosecutors presented evidence of significant debt and fake KGB jackets.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 184,
+  "source_cluster_id": "sha256:9cd89a4f0fbed8de373b93ed1d770fe2677978944a121e206f1bb9a07199194c",
+  "source_id": "13958",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:17076ff58e5c5e28f25d07f15960c7214a2f3aa98ee53e73e1227adb3769fa1b",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

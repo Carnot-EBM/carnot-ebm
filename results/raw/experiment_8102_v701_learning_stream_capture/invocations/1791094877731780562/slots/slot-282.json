@@ -1,0 +1,152 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7596324519254267,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:941fe1cafb17c8663ec7c162541f067a3869b36d989dc7f0e1e8df61a32dac2b",
+  "human_target": null,
+  "input_tokens": 1223,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:941fe1cafb17c8663ec7c162541f067a3869b36d989dc7f0e1e8df61a32dac2b",
+    "feature_hash": "sha256:66343718e974c9ae4ccb5b50a8fadb37278ec626178c595652596b50a97cfe2c",
+    "source_normalized_hash": "d2bc29e3fea9e6be17a6cb4aca221a688d439e4cf7e501250eaf05f1367e71d5",
+    "values": [
+      0.18893002255847394,
+      0.3769107643057223,
+      0.2959183673469387,
+      0.8571428571428571,
+      0.42857142857142855,
+      0.42857142857142855,
+      0.8110699774415261,
+      1.0
+    ],
+    "window_count": 56
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1223,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1246
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:57aef1fea81ca1a294cee1cf9d1c86ab308a40757cb33ec822ac2e8a3370b6c6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095706,
+    "id": "chatcmpl-j4oMtzHxsmzmwxmdb0lNOYSyRApGfqA5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.841,
+      "predicted_n": 23,
+      "predicted_per_second": 42.44787677565928,
+      "predicted_per_token_ms": 23.558304347826088,
+      "prompt_ms": 1081.144,
+      "prompt_n": 1145,
+      "prompt_per_second": 1059.0633625123019,
+      "prompt_per_token_ms": 0.9442305676855896
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1223,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1246
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3427 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Breakfast & Brunch, Burgers, American (Traditional), American (New), Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-14:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:0-14:0\\\",\\\"Sunday\\\":\\\"7:0-14:0\\\",\\\"Thursday\\\":\\\"7:0-14:0\\\",\\\"Tuesday\\\":\\\"7:0-14:0\\\",\\\"Wednesday\\\":\\\"7:0-14:0\\\"},\\\"name\\\":\\\"Farmer Boy\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 21:29:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best place in SB for breakfast. The food and staff are always great. My family and I love coming here.\\\"},{\\\"review_date\\\":\\\"2022-01-10 13:41:58\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Great food but worst OJ in town...\u00a0Menu says \\\\\\\"fresh OJ\u00a0\\\\\\\" wtf that's false advertising... I ended up paying $9 after tip and tax for a 99 cent OJ of fake canned/Tropicana/Minute Maid airline or Denny/MCD type OJ. Definitely not fresh nor pressed. C'est se foutre du monde \u00e7a. This is the garbage mass produced low cost loaded with artificial sugars OJ you buy in supermarkets. Definitely not Naked or Odwalla where you have pulp. If you want real OJ go to Jeannine's, The Shop or Tre Lune/D'Angelos. Now for good the Mediterranean & Baja scramble & omelette are phenomenal and the diner atmosphere & decoration is great as is service very nice/professional. This feels like a real classic American diner that you get on east coast or in Midwest and always has. Only one in SB now that Essau's is gone. Worker Bee in Carp is phenomenal old school diner too highly recommend. Momma bear would bring me here as a kid after school with my nerd folder organizer box in 80's for chocolate milkshakes at the counter, they had best in town. They still have real milkshakes made with those special classic blenders here so that's great. This is under new ownership from group that owns Brophy. I love all their restaurants but this OJ here has to go. Also my toast was served cold. The food is very good just disgusting OJ, not fresh at all and way overpriced. This was always a true locals spot and still has that vibe so that's a good thing. The new owners did a great job respecting the history of restaurant while also modernizing it. This is one of oldest eateries in town with Joe's. Nostalgia 101.\\\"},{\\\"review_date\\\":\\\"2022-01-05 06:38:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Farmer Boy is a staple in Santa Barbara. Been coming here for years and the service as well as the food is always consistently tasty and great!! I highly recommend this place always!! To anyone and everyone. It's easy to make a plate vegan and or vegetarian. They will work with you.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Farmer Boy, located at 3427 State St in Santa Barbara, CA, is a popular local business offering a wide variety of food categories including Breakfast & Brunch, Burgers, American (Traditional), and American (New). The restaurant is open from 7:00 am to 2:00 pm from Tuesday to Sunday and is known for its casual ambience, outdoor seating, and free WiFi. Customers can take their orders to-go and the restaurant also accommodates groups. Based on reviews, the food and staff are consistently praised, with the establishment being a favourite among locals and visitors alike. However, some customers have expressed dissatisfaction with certain aspects such as the orange juice quality. The business has a rating of 4.0 stars and does not take reservations. Street parking is available.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 27,
+  "source_cluster_id": "sha256:120d6817448dd101163433c05edfb3790fc566151d5078d3af0ccc2974b277ae",
+  "source_id": "13787",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:941fe1cafb17c8663ec7c162541f067a3869b36d989dc7f0e1e8df61a32dac2b",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ]
+}

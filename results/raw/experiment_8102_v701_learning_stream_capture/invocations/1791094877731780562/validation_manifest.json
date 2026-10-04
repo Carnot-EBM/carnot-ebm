@@ -1,0 +1,225 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8102-validation-vtwnm208/.coverage.unit",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8102_v701_learning_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_learning_stream_capture_8102.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8102_v701_learning_stream_capture.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_learning_stream_capture_8102.py"
+      ],
+      "classification": "required",
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "focused_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8102-validation-vtwnm208/.coverage.success",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8102_v701_learning_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_learning_stream_capture_8102.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8102_v701_learning_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8102_v701_learning_stream_capture.py",
+        "--date",
+        "20261004",
+        "--fixture",
+        "/tmp/carnot-8102-validation-vtwnm208/public.json",
+        "--output",
+        "/tmp/carnot-8102-validation-vtwnm208/success/experiment_8102_v701_learning_stream_capture.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "external_cwd": true,
+      "name": "cli_success"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8102-validation-vtwnm208/.coverage.blocked",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8102_v701_learning_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_learning_stream_capture_8102.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8102_v701_learning_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8102_v701_learning_stream_capture.py",
+        "--date",
+        "20261004",
+        "--fixture",
+        "/tmp/carnot-8102-validation-vtwnm208/absent.json",
+        "--output",
+        "/tmp/carnot-8102-validation-vtwnm208/blocked/experiment_8102_v701_learning_stream_capture.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "external_cwd": true,
+      "name": "cli_blocked"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8102-validation-vtwnm208/.coverage.mutation",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8102_v701_learning_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_learning_stream_capture_8102.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8102_v701_learning_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8102_v701_learning_stream_capture.py",
+        "--date",
+        "20261004",
+        "--fixture",
+        "/tmp/carnot-8102-validation-vtwnm208/bad.json",
+        "--output",
+        "/tmp/carnot-8102-validation-vtwnm208/mutation/experiment_8102_v701_learning_stream_capture.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "external_cwd": true,
+      "name": "cli_mutation"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8102_v701_learning_stream_capture.py",
+        "--date",
+        "20261004",
+        "--cold-replay",
+        "/tmp/carnot-8102-validation-vtwnm208/success/experiment_8102_v701_learning_stream_capture.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "external_cwd": true,
+      "name": "cli_cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_current_work_receipt.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_qwen_development_capture_7995.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_source_boundary_7852.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "classification": "required",
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "consumer_tests_e2e015_019"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8102-validation-vtwnm208/.coverage.all",
+        "/tmp/carnot-8102-validation-vtwnm208/.coverage.unit",
+        "/tmp/carnot-8102-validation-vtwnm208/.coverage.success",
+        "/tmp/carnot-8102-validation-vtwnm208/.coverage.blocked",
+        "/tmp/carnot-8102-validation-vtwnm208/.coverage.mutation"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8102-validation-vtwnm208/.coverage.all",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8102_v701_learning_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_learning_stream_capture_8102.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8102_v701_learning_stream_capture.py",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot-8102-validation-vtwnm208/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "changed_code_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8102_v701_learning_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_learning_stream_capture_8102.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8102_v701_learning_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_learning_stream_capture_8102.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8102_v701_learning_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_learning_stream_capture_8102.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8102_v701_learning_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_learning_stream_capture_8102.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8102_v701_learning_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_learning_stream_capture_8102.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/check_spec_coverage.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_learning_stream_capture_8102.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "spec_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "diagnostic",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "repository_full_suite"
+    }
+  ]
+}

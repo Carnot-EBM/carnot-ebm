@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.606610349030234,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:07ab9495f1f914ed3776a9d1643d9db83d6497bea6b9ac792f01823a6e3a6693",
+  "human_target": null,
+  "input_tokens": 1012,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:07ab9495f1f914ed3776a9d1643d9db83d6497bea6b9ac792f01823a6e3a6693",
+    "feature_hash": "sha256:0febb5e80b3eeb5128be75b9d460a5042bcfa38fd3659beedbcf564cdd09605b",
+    "source_normalized_hash": "067c69a4db754e28944d5150c07df4dbb9ce29e0a7ab0e29a375bc56b29bd3ac",
+    "values": [
+      0.2415933786179986,
+      0.4680517257322285,
+      0.15384615384615385,
+      0.9230769230769231,
+      0.3076923076923077,
+      0.3076923076923077,
+      0.7584066213820013,
+      0.9970414201183432
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1012,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1035
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:f2743f830cca66344b5338d6bfb160fb0313454856c41a78340432bcc078d265",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095435,
+    "id": "chatcmpl-Wc5mrjsQs0e53VImzXwxGPu7AiD07Rp2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 547.366,
+      "predicted_n": 23,
+      "predicted_per_second": 42.01941662434276,
+      "predicted_per_token_ms": 23.798521739130432,
+      "prompt_ms": 925.097,
+      "prompt_n": 934,
+      "prompt_per_second": 1009.6238556605415,
+      "prompt_per_token_ms": 0.9904678800856531
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1012,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1035
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2611 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"American (New), Pizza, Pubs, Nightlife, Bars, Restaurants, American (Traditional), Breakfast & Brunch, Beer Bar\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-20:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"16:30-20:0\\\",\\\"Tuesday\\\":\\\"16:30-20:0\\\",\\\"Wednesday\\\":\\\"16:30-20:0\\\"},\\\"name\\\":\\\"Yellow Belly\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-14 16:52:07\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Great neighborhood spot that never disappoints when we come to town. Always listen to recommendations from locals at the bar- they steered us right last night on the Mai Tai IPA and the Saison. We shared the seasonal apple, walnut and kale salad and the mand arugula pizza. Fantastic! I've previously had a fantastic burger there, too.\\\"},{\\\"review_date\\\":\\\"2022-01-07 02:41:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Outstanding customer service! Great food, the fried chicken sandwich was so good! Relaxed atmosphere. This is a bar where you can relax and have a few good craft beers with tasty food. 10/10 would recommend and I will be coming back!\\\"},{\\\"review_date\\\":\\\"2021-12-18 05:52:37\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We got a couple delicious IPAs while we decided on food. The specials were great- Tri tip salad, curry chicken wings and flatiron steak- all perfectly grilled and prepared, with sauces on the side. Staff is knowledgeable and friendly. We always enjoy dinners at Yellow Belly.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Yellow Belly is a local business located at 2611 De La Vina St in Santa Barbara, CA. It offers a variety of cuisines such as American (New), Pizza, and Breakfast & Brunch. Additionally, it is also a pub, bar, and a nightlife spot. The business has a rating of 4.0 stars. \\n\\nYellow Belly's operating hours are as follows: on weekdays (Tuesday to Thursday) it opens from 16:30 to 20:00, and on Fridays from 12:00 to 20:30. On Saturdays, it opens from 12:00 to 21:00. The business does not open on Mondays. \\n\\nCustomers have praised Yellow Belly for its great food and outstanding customer service. The bar offers a wide selection of craft beers, and the menu includes dishes like the seasonal apple, walnut, and kale salad, mand arugula pizza, and a fantastic burger. Specials such as Tri tip salad, curry chicken wings, and flatiron steak are also available, all perfectly grilled and prepared with sauces on the side. \\n\\nThe staff at Yellow Belly is knowledgeable and friendly, and locals often recommend their favorite drinks. The atmosphere is relaxed, making it a great place to unwind and enjoy a few good craft beers. Overall, Yellow Belly is a popular neighborhood spot that consistently delivers a satisfying dining experience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 86,
+  "source_cluster_id": "sha256:d4d9f2618a3eee2d0bd09b7fa7cb2f21e191ae136058299e98d8945d2d2340c8",
+  "source_id": "15054",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:07ab9495f1f914ed3776a9d1643d9db83d6497bea6b9ac792f01823a6e3a6693",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3643706559669226,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:25730afd929fc0fcffaad67462a5ba7624502278bc7228dc75fe82013803bd5f",
+  "human_target": null,
+  "input_tokens": 812,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:25730afd929fc0fcffaad67462a5ba7624502278bc7228dc75fe82013803bd5f",
+    "feature_hash": "sha256:8127fa796c332a6cceade25c0a732c16b17a86f957a0cd808b35fdc57e726992",
+    "source_normalized_hash": "12313d8b8046e4d174a63cbb81e373faa5afdc1456f5f83f9f00a19799a03368",
+    "values": [
+      0.27383115228131866,
+      0.4343100660262638,
+      0.5,
+      0.5,
+      0.3,
+      0.3,
+      0.7261688477186814,
+      0.8878810646653206
+    ],
+    "window_count": 6
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 812,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 834
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:315f7c8fa13f2cdafa25510d821c044e584733ac6fb1ad3f72c7081c8f780302",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095756,
+    "id": "chatcmpl-nJ4aQPlG9pbaaRDI9l2Y9kVC5NbIz4Xl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 517.042,
+      "predicted_n": 22,
+      "predicted_per_second": 42.549734837788804,
+      "predicted_per_token_ms": 23.50190909090909,
+      "prompt_ms": 711.639,
+      "prompt_n": 734,
+      "prompt_per_second": 1031.4218304505516,
+      "prompt_per_token_ms": 0.9695354223433242
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 812,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 834
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"555 Storke Rd, 3301\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Cafes, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"0:0-0:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"0:0-0:0\\\",\\\"Sunday\\\":\\\"0:0-0:0\\\",\\\"Thursday\\\":\\\"0:0-0:0\\\",\\\"Tuesday\\\":\\\"0:0-0:0\\\",\\\"Wednesday\\\":\\\"0:0-0:0\\\"},\\\"name\\\":\\\"Tori's Oatmeal Lounge\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-03-15 02:03:25\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Pretty sure this place doesn't exist. If you go to the address there's just student housing.\\\"},{\\\"review_date\\\":\\\"2016-03-14 19:15:42\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"WHERE IS THIS PLACE??? The address led me to university housing and I was sorely disappointed by the lack of a lounge...I'll reform my rating when I can actually locate this place.\\\"},{\\\"review_date\\\":\\\"2016-02-27 20:34:41\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Seems that there's only one regular that goes to the lounge. People come during random hours of the night\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Tori's Oatmeal Lounge:\\n\\nTori's Oatmeal Lounge is a cafe or restaurant located at 555 Storke Rd, Goleta, CA 3301. According to their hours, they are open every day from 0:00 am to 0:00 pm, but there may be variations in their opening and closing times. They have outdoor seating, free WiFi, and no validated parking. Reservations are available, and takeout is not offered. The ambiance is casual with no romantic or upscale atmosphere.\\n\\nThe business has a rating of 2.5 stars based on three reviews. One reviewer expressed confusion about the location of the lounge and another could not find it despite searching for it. A third reviewer noted that there may be only one regular customer who visits the lounge during random hours.\\n\\nIt appears that Tori's Oatmeal Lounge may have limited hours and may not be easily accessible or visible to customers, as some reviewers had difficulty finding it. However, they offer free WiFi and outdoor seating, which may appeal to some customers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 62,
+  "source_cluster_id": "sha256:c220990832f867f820ef61caee43505b2883cc19cfc85139ae6b678cb786417d",
+  "source_id": "14214",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:25730afd929fc0fcffaad67462a5ba7624502278bc7228dc75fe82013803bd5f",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3
+  ]
+}

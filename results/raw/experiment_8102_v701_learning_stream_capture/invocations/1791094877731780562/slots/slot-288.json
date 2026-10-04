@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.533444227068685,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:3a1c1cbc3f7b55e967b032c7f3d536758881e237b3f81248c167329fcbfb6346",
+  "human_target": null,
+  "input_tokens": 925,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:3a1c1cbc3f7b55e967b032c7f3d536758881e237b3f81248c167329fcbfb6346",
+    "feature_hash": "sha256:8d4d2db67a87d70b93b8aee00383eac31e478236cc63efd893c7e8f7ccaae6ed",
+    "source_normalized_hash": "41cd2e09b246981c7d4c39d04a5618c5c45705e37251f8c0372448920c64ceab",
+    "values": [
+      0.19807892539606933,
+      0.42756700858481045,
+      0.4166666666666667,
+      0.6666666666666666,
+      0.3333333333333333,
+      0.3333333333333333,
+      0.8019210746039307,
+      0.9370340089477086
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 925,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 949
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:b03dbc981dfe56bad19853c2a05e261ac019078d132d58deda12c2614f7bc9e8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095714,
+    "id": "chatcmpl-zJl7QrWo87gYPlx1Y0iTbjOuGstwhpIA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.549,
+      "predicted_n": 24,
+      "predicted_per_second": 42.43664121057592,
+      "predicted_per_token_ms": 23.564541666666667,
+      "prompt_ms": 856.277,
+      "prompt_n": 847,
+      "prompt_per_second": 989.1658890756146,
+      "prompt_per_token_ms": 1.0109527744982292
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 925,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 949
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7038 Market Pl Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Pizza\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Gina's Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-12-13 17:03:39\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"They get two stars! Pizza looks amazing.... I haven't bitten into a slice just yet. I've been waiting over an hour for plates, forks ect... I'm staying in a very nice hotel after a long day and I called Gina's two minutes later to say.. You forgot the utensils I ordered a salad. What poor customer service!\\\"},{\\\"review_date\\\":\\\"2015-01-13 18:11:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Gina's has really good hearty Italian entrees & pizza at very reasonable prices.\\\\nWhen I am not in town visiting elderly relatives & I have food delivered from here to them.  They love the food which is always delivered very promptly and the people I have spoken to on the phone have all been very nice & accommodating.\\\"},{\\\"review_date\\\":\\\"2014-11-29 19:17:00\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Your basic, small pizza parlor.  My wife ordered a pizza with pesto and artichoke heart on one half and Hawaiian on the other.  We carried the order out.  It was okay--the crust was a bit thick for me--I've tasted better.  I would try other items on the menu if we visit again.  We're just passing through.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Gina's Pizza based on the provided structured data in JSON format:\\n\\nGina's Pizza is a restaurant located in Goleta, California that serves Italian cuisine, specifically pizza and pasta dishes. According to their structured data, they have a rating of 3.5 out of 5 stars based on 3 reviews. One reviewer gave them 2 stars and complained about poor customer service, stating that they had to wait over an hour for utensils and plates. Another reviewer gave them 5 stars and praised the restaurant for its reasonable prices and good quality Italian entrees and pizza. A third reviewer gave them 3 stars and found the pizza to be decent but with a thick crust.\\n\\nThe restaurant offers takeout and outdoor seating, but does not have validated parking or valet parking. They do not offer WiFi or reservations, but accept credit cards. The ambiance is casual and there is no live music or upscale atmosphere. The restaurant is open for lunch and dinner, but their hours are not specified.\\n\\nBased on the reviews, Gina's Pizza seems to have mixed reviews, with some customers praising the food and others criticizing the customer service and slow delivery. However, the restaurant appears to be a good option for those looking for affordable Italian cuisine with a casual atmosphere.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 33,
+  "source_cluster_id": "sha256:04250b2097c4c686bc624a829cfa7e2efe2a331ca7b33585ee33769e1498ad00",
+  "source_id": "14033",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:3a1c1cbc3f7b55e967b032c7f3d536758881e237b3f81248c167329fcbfb6346",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

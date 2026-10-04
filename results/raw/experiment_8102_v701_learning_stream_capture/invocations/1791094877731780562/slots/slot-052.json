@@ -1,0 +1,142 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.8013144209980965,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:9082e251eaf4d2dad907d3d48a598fdf7dc417c3129d215048708b42910251a6",
+  "human_target": null,
+  "input_tokens": 1122,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:9082e251eaf4d2dad907d3d48a598fdf7dc417c3129d215048708b42910251a6",
+    "feature_hash": "sha256:a70ed84da2ae2ee17abdb8a898357932d651f096aff94719fa8e92e96d672a02",
+    "source_normalized_hash": "5bb0dc28093ee629e6a0b9a079bb73d633d4135e6e62f24b96a4432957145dd9",
+    "values": [
+      0.19993958587708588,
+      0.4612293956043956,
+      0.5416666666666666,
+      0.75,
+      0.25,
+      0.25,
+      0.8000604141229142,
+      0.9256524725274725
+    ],
+    "window_count": 36
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1122,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1145
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:5d600942b10784eb9b8463c090a0ae55e2a8659cb3f0326aebcd85f0f67b6ce6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095389,
+    "id": "chatcmpl-uGsqYF8C9UJsgCj2yzUaJrRFOONFwkg6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.288,
+      "predicted_n": 23,
+      "predicted_per_second": 42.648825859281125,
+      "predicted_per_token_ms": 23.447304347826087,
+      "prompt_ms": 1009.955,
+      "prompt_n": 1044,
+      "prompt_per_second": 1033.709422697051,
+      "prompt_per_token_ms": 0.9673898467432951
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1122,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1145
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1180 UCen Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, Sandwiches, American (New)\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-17:0\\\",\\\"Monday\\\":\\\"10:0-19:0\\\",\\\"Saturday\\\":\\\"10:0-16:0\\\",\\\"Thursday\\\":\\\"10:0-19:0\\\",\\\"Tuesday\\\":\\\"10:0-19:0\\\",\\\"Wednesday\\\":\\\"10:0-19:0\\\"},\\\"name\\\":\\\"Root 217\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-11-04 20:08:49\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I've ordered different things from here in the past which ranged from okay to good, never too outstanding but eh it's the UCen so you shouldn't expect too much. However today was a big shock, I had a breakfast burrito which at first seemed to be fine but the potatoes inside were totally uncooked, as if they had been slapped on a grill for 30 seconds and scooped onto the burrito. The other thing was that there was some kind of sour sauce inside of the burrito, which I assume should not have been sour. The reason I assume so is because not more than 15 minutes later that burrito had made me very sick, and I had to miss part of my class because I was in the bathroom with severe stomach pain. Wish I could have my money back; maybe this is why everyone goes to Panda instead.\\\"},{\\\"review_date\\\":\\\"2019-10-29 23:50:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"There's a great atmosphere in the bottom floor of the UCen. Root 217 offers healthy options with big servings at a decent price.\\\"},{\\\"review_date\\\":\\\"2019-05-29 19:01:58\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I had a horrific experience here about a month ago and I have decided to write a review. I ordered the chickenless wrap, explicitly stating I wanted the vegan \\\\\\\"chickenless\\\\\\\"wrap. Once my order was ready I took a bite and immediately thought it was real chicken. I went back to the counter and the cashiers INSISTED it was vegan. I took it back not wanting to waste money and continued to eat it. My friend who is not a vegetarian had a bite and said that it was definitely real chicken. Again I went back and the cashier insisted. Then they brought the chef out and he looked at it and immediately said it was real. All they said was \\\\\\\"oh sorry\\\\\\\". Having not eaten meat in years I ended up being sick all night since my body was not used to digesting meat. No one who worked here cared or thought it was significant they made this mistake. They ended up giving me a refund only after I asked. This place is horribly mismanaged and if you are a vegetarian/vegan. DO NOT GO HERE !!!!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Root 217 is a casual restaurant located at 1180 UCen Rd, Goleta, CA. Open throughout the week, the eatery offers American (New) cuisine and sandwiches. While reservations are not accepted, the restaurant does provide free WiFi, takeout services and is suitable for groups. However, it does not offer outdoor seating or parking facilities. Despite its average 3-star rating, customer reviews are mixed. Some customers appreciate the healthy options, the ample serving sizes, and the decent pricing. However, there are negative reviews about the quality of the food, with incidents of uncooked ingredients and incorrect food orders leading to health issues reported. The restaurant's management was criticized for its handling of these situations.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 53,
+  "source_cluster_id": "sha256:c7d058e0c1086d39962ad3a867f9555b9afe76b18f82fa62d8729c199bad09d4",
+  "source_id": "14226",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:9082e251eaf4d2dad907d3d48a598fdf7dc417c3129d215048708b42910251a6",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

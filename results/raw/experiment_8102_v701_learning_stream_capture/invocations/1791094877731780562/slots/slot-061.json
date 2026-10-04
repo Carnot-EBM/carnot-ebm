@@ -1,0 +1,138 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6077638020506129,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:28c6ab10325eb13a0579ebe1eea1aa0ce20883a7db031acd4f4a4bb954e6e382",
+  "human_target": null,
+  "input_tokens": 986,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:28c6ab10325eb13a0579ebe1eea1aa0ce20883a7db031acd4f4a4bb954e6e382",
+    "feature_hash": "sha256:a5bac42bd6df4b08676170e9de3d22df80d03bb8139c40e76e13aa2bfafc1eaa",
+    "source_normalized_hash": "899e8db45427340dc41a9096e79ff733db2c9a282c752ed70b49ff0740d4d223",
+    "values": [
+      0.18070099057494016,
+      0.3457125663008016,
+      0.14285714285714285,
+      1.0,
+      0.11111111111111109,
+      0.1111111111111111,
+      0.8192990094250598,
+      0.9495820084055379
+    ],
+    "window_count": 28
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 986,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1010
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:3aeea5b8e335baa968a6530c718b95a995da0f09e69c48e7d861c0c64b196075",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095401,
+    "id": "chatcmpl-vuN764uje2SFeX5OklYtxrhjzha7fOn1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.404,
+      "predicted_n": 24,
+      "predicted_per_second": 42.59820661550149,
+      "predicted_per_token_ms": 23.475166666666667,
+      "prompt_ms": 915.944,
+      "prompt_n": 908,
+      "prompt_per_second": 991.3269806887757,
+      "prompt_per_token_ms": 1.008748898678414
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 986,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1010
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"8 E Cota St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Seafood, Cajun/Creole, American (New), Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-21:0\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"The Palace Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 02:38:27\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is my new favorite restaurant. Their food is insanely good (my favorites so far are the crawfish pasta and the chocolate souffl\u00e9). The customer service is super nice. On my boyfriends birthday we came here because we couldn't find any restaurant that was open late at night, and the server Mondo saw us and helped us out. They were closing the kitchen but they reopened it for us and made us dinner. I love this place and I love Mondo. Thank you!\\\"},{\\\"review_date\\\":\\\"2021-12-31 03:05:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The food was delicious and the service was great! I had the crawfish ettouffee and my husband had the shrimp and crawfish pasta. We are half and switched plates so that we could enjoy both meals. They were rich and filling and satisfied the palette. Our kid had butter pasta and he ate it all. We ended with the Louisiana Bread Pudding. It was a delightful Creole experience in California.\\\"},{\\\"review_date\\\":\\\"2021-12-08 00:13:47\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Cajun is not my favorite but, all the same the food is good. Fun place for an occasion. If you lucky, a magician will stop by your table.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of The Palace Grill based on the provided structured data in JSON format:\\n\\nThe Palace Grill is a highly-recommended restaurant in Santa Barbara, CA that serves Seafood, Cajun/Creole, and American cuisine. With an average rating of 4.5 stars and a 97% recommendation rate, it's clear that this restaurant has impressed many of its patrons. The menu offers a variety of dishes, including crawfish pasta and chocolate souffl\u00e9, which have received rave reviews from customers. One reviewer even called it their \\\"new favorite restaurant.\\\"\\n\\nIn addition to its delectable food, The Palace Grill also provides excellent customer service. One customer recounted how the server, Mondo, went above and beyond to accommodate their needs on a busy night. The restaurant's atmosphere is cozy and intimate, with outdoor seating and free WiFi available. While some reviewers noted that the prices are a bit high, most agreed that the quality of the food and service justifies the cost. Overall, The Palace Grill is a great choice for anyone looking for a unique and satisfying dining experience in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 62,
+  "source_cluster_id": "sha256:032970d7a58eb8dd9d8c00f6b6af17f46902fa9492c4375e9474780c753cfe4e",
+  "source_id": "14845",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:28c6ab10325eb13a0579ebe1eea1aa0ce20883a7db031acd4f4a4bb954e6e382",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

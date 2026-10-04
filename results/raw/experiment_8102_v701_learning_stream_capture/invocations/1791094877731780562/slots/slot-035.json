@@ -1,0 +1,134 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4410978630185127,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:3ff4ebc11903b2529dcbfb59f7a7635809d164aa1a6bda5141835bc11b01fdb8",
+  "human_target": null,
+  "input_tokens": 712,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:3ff4ebc11903b2529dcbfb59f7a7635809d164aa1a6bda5141835bc11b01fdb8",
+    "feature_hash": "sha256:aa95be490125fac7b945bfda49600a304f671422a8684afe695b5ed04917096c",
+    "source_normalized_hash": "26c7b66da460c62ad766d3166513a5d9a39d2fb06f54e9b725bc712d26fc2b08",
+    "values": [
+      0.3310710395269219,
+      0.4843210200746965,
+      0.275,
+      0.875,
+      0.24375,
+      0.25,
+      0.6689289604730781,
+      0.9266335006224712
+    ],
+    "window_count": 20
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 712,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 736
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:3688060db19e27b524b75c90d00d6306428b9fa38e018cd9dcfa9d9dba3092db",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095362,
+    "id": "chatcmpl-prKrRpO3lR5WEoElwiU4pLx95omCip1w",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 560.448,
+      "predicted_n": 24,
+      "predicted_per_second": 42.82288454950326,
+      "predicted_per_token_ms": 23.352,
+      "prompt_ms": 634.651,
+      "prompt_n": 634,
+      "prompt_per_second": 998.9742393851109,
+      "prompt_per_token_ms": 1.0010268138801262
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 712,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 736
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:A lot of college grads opt to delay their entry into the workforce however, and instead enroll in graduate school. Grad school isn't the right choice for everybody, but for many it's a good option to consider when deciding whether to further your education or enter the workforce.n the other hand, the graduates who are able to find work end up making a lot more than their undergraduate counterparts; the median annual salary plus bonus for a person fresh out of grad school with an MBA is $105,000. Time. Graduate school takes a lot of time, time that many people might not have.\\\\n\\\\npassage 2:Some ambitious students will choose to work and pursue grad school at the same time. This may sound like a lot to handle, but students who take this approach often reap double the rewards. Rather than taking on a paid position, some students elect to volunteer part-time, working around their study schedule.y jcuadmissions November 20, 2014 American college in Rome American university in Rome study abroad in Italy. Undergraduate students hear a lot of conflicting advice when it comes to plotting their course following graduation.\\\\n\\\\npassage 3:There are pros and cons to each decision. Graduate school is expensive and time consuming, yet it allows you to further your education in a specific field. It is a tough decision that I will have to make next December, and some students will have to make as soon as this summer.urthermore, it will give you an opportunity to expand your education, and it will give you more knowledge about your field of study. When you come out of graduate school you will be more educated than a student who went straight into the career world. I also recommend holding a part time job while in graduate school.\\\\n\\\\n\\\",\\\"question\\\":\\\"pros and cons entering workforce or going to graduate school\\\"}\", \"original_answer\": \"Pros of Graduate School:\\n\\n* Allows for further education in a specific field.\\n* Gives students an opportunity to expand their knowledge.\\n* Provides students with a competitive edge in the job market by increasing their earning potential. The median annual salary plus bonus for a person fresh out of grad school with an MBA is $105,000 (Passage 2).\\n* Can be beneficial for those interested in pursuing a career in research or teaching.\\n\\nCons of Graduate School:\\n\\n* Expensive, with tuition costs potentially hindering financial stability.\\n* Time-consuming, requiring students to sacrifice years of working experience (Passage 2 and 3).\\n* Not suitable for everyone, as students must be willing to put in the effort and time required for success.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 36,
+  "source_cluster_id": "sha256:3a4077b2ecd47e940352743a49041c8996ed8a6c92f60ca73fdf11651a43869b",
+  "source_id": "14299",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:3ff4ebc11903b2529dcbfb59f7a7635809d164aa1a6bda5141835bc11b01fdb8",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.0923580139642581,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8fe02f3523f36197e4b22206a6681f7c9e68ed19d25824a591ad89052a4ef0c1",
+  "human_target": null,
+  "input_tokens": 429,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8fe02f3523f36197e4b22206a6681f7c9e68ed19d25824a591ad89052a4ef0c1",
+    "feature_hash": "sha256:f56270bcb3b907f44d45fdfba6db7f8c7d18469d5c615ff4d75fd1c8566fb696",
+    "source_normalized_hash": "1b2a71331666b5d7707559d06baeca3178a66761ee7af44acb271a25af46a01f",
+    "values": [
+      0.48747086247086246,
+      0.825008325008325,
+      0.0,
+      0.0,
+      0.6666666666666666,
+      0.6666666666666666,
+      0.5125291375291375,
+      0.9027639027639028
+    ],
+    "window_count": 4
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 429,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 452
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:a4bdea4976d6d6fc9bcfe4b2cadb6ee56a300f770ad5a83c9fdff77180134f0d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095585,
+    "id": "chatcmpl-AUDK3ZiIlNBvwCslsg1qD3y11KtXEnp1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.257,
+      "predicted_n": 23,
+      "predicted_per_second": 42.57233131639202,
+      "predicted_per_token_ms": 23.489434782608694,
+      "prompt_ms": 440.957,
+      "prompt_n": 351,
+      "prompt_per_second": 795.9959814675808,
+      "prompt_per_token_ms": 1.2562877492877493
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 429,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 452
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Anal sex. A meta-analysis exploring the risk of HIV transmission through unprotected anal sex was published in 2010. The analysis, based on the results of four studies, estimated the risk through receptive anal sex (receiving the penis into the anus, also known as bottoming) to be 1.4%.\\\\n\\\\npassage 2:As a result, the risk of an HIV-negative woman becoming infected through unprotected receptive vaginal sex could be closer to 1% (1 transmission per 100 exposures) if she has a vaginal STI.\\\\n\\\\npassage 3:CHICAGO (AP)  A study of heterosexual couples in Africa concludes that the chance of catching the AIDS virus from a single sexual encounter with an infected person is one in 588.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are the chances of getting hiv after a single encounter\\\"}\", \"original_answer\": \"Based on the given passages, the chance of getting HIV after a single encounter varies depending on the type of sexual activity and the presence of a sexually transmitted infection (STI). For receptive anal sex, the estimated risk is 1.4%, while for receptive vaginal sex with a vaginal STI, the risk could be closer to 1%. However, for heterosexual couples in Africa, the chance of catching the AIDS virus from a single sexual encounter with an infected person is one in 588.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 193,
+  "source_cluster_id": "sha256:8fda651247e27e970c7f36091c701813cb06d9e0f22f92abd4acdb880291380c",
+  "source_id": "12171",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8fe02f3523f36197e4b22206a6681f7c9e68ed19d25824a591ad89052a4ef0c1",
+  "visible_ids": [
+    0,
+    1,
+    2
+  ]
+}

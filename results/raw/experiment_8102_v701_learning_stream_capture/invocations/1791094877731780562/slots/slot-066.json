@@ -1,0 +1,144 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4325290150009096,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:3c9f35303a2455f0b9cb66eabb3c40a2be0ee0194845a0226054b2d9cf5a56cf",
+  "human_target": null,
+  "input_tokens": 843,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:3c9f35303a2455f0b9cb66eabb3c40a2be0ee0194845a0226054b2d9cf5a56cf",
+    "feature_hash": "sha256:ab66495651e82aefc82d5f3499812417b41c2dcb839b73a9d7ed60477fd9c3bd",
+    "source_normalized_hash": "f72b40d8b0950bb7c05c5698e1feaf22abcf98b5f356bb55aa0576e0b03adaa1",
+    "values": [
+      0.4053321751348067,
+      0.6313829080276449,
+      0.11428571428571428,
+      1.0,
+      0.9844155844155844,
+      1.0,
+      0.5946678248651933,
+      0.7596225412014885
+    ],
+    "window_count": 35
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 843,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 866
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:b2c6bc6af2e42c80383293b91e4cffb8931535cc5cc1dcca92c23fd81758838d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095409,
+    "id": "chatcmpl-4a12kx2ZAMPPGe55keoBxOPGbETLnb2j",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.852,
+      "predicted_n": 23,
+      "predicted_per_second": 42.6042693182576,
+      "predicted_per_token_ms": 23.471826086956522,
+      "prompt_ms": 727.07,
+      "prompt_n": 765,
+      "prompt_per_second": 1052.1682919113703,
+      "prompt_per_token_ms": 0.9504183006535948
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 843,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 866
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:How to make Yogurt in a Dehydrator: Open your container of milk and pour it into a saucepan. I normally make a gallon of yogurt at a time so I use a big pot. Place the pot on the stove and heat over medium heat until the temperature reaches 185-195 degree.f you are using store bought milk I would scald it, if using raw milk, do what you are comfortable with. Milk at the right temperature. Milk at the right temperature. When the milk reaches 110 degrees, whisk in 2 to 3 tablespoons of yogurt with active yogurt cultures.\\\\n\\\\npassage 2:The purchased Greek yogurt will act as a starter and produce the cultures needed for the new batch. Pour 1/4 cup of the cooled milk into each jar and stir to incorporate the yogurt into the milk. Add another 1/4 cup of cooled milk to each jar and mix well. Cover the jars and place them in the Excalibur dehydrator.Set the temperature to 110 degrees Fahrenheit and let incubate for approximately five to seven hours.he purchased Greek yogurt will act as a starter and produce the cultures needed for the new batch. Pour 1/4 cup of the cooled milk into each jar and stir to incorporate the yogurt into the milk. Add another 1/4 cup of cooled milk to each jar and mix well. Cover the jars and place them in the Excalibur dehydrator.\\\\n\\\\npassage 3:Previously made yogurt. Previously made yogurt. Make sure the yogurt is well mixed with the warm milk. I use yogurt that I\u2019ve made previously or Dannon plain yogurt. Use any yogurt that contains active yogurt cultures not all do. Transfer the milk/yogurt mixture to jars. Place lids on jars.f you are using store bought milk I would scald it, if using raw milk, do what you are comfortable with. Milk at the right temperature. Milk at the right temperature. When the milk reaches 110 degrees, whisk in 2 to 3 tablespoons of yogurt with active yogurt cultures.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to make yogurt in the dehydrator\\\"}\", \"original_answer\": \"Based on the given passages, here's how to make yogurt in a dehydrator:\\n\\n1. Start by heating the milk to 185-195\u00b0F (passage 1).\\n2. Whisk in 2-3 tablespoons of yogurt with active cultures (passage 1).\\n3. Pour the milk/yogurt mixture into jars, covering each one with a lid (passage 3).\\n4. Place the jars in the Excalibur dehydrator, setting the temperature to 110\u00b0F (passage 2).\\n5. Let the yogurt incubate for approximately 5-7 hours (passage 2).\\n\\nNote that it's important to use yogurt with active cultures as a starter (passage 1) and to make sure the milk is at the right temperature before adding the yogurt (passage 3).\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 67,
+  "source_cluster_id": "sha256:4d60456e5e1995579d735f6be3b23f0452ed5d479d9bc38d5b1d503286a9f7ed",
+  "source_id": "14407",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:3c9f35303a2455f0b9cb66eabb3c40a2be0ee0194845a0226054b2d9cf5a56cf",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

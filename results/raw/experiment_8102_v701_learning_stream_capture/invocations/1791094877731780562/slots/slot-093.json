@@ -1,0 +1,144 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5824326960137114,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:a5632927e3f0927366a6e75664c40016de3821647823524bcdfe182db0122b70",
+  "human_target": null,
+  "input_tokens": 990,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:a5632927e3f0927366a6e75664c40016de3821647823524bcdfe182db0122b70",
+    "feature_hash": "sha256:6bc4dbc4acd09c34dd407f79948dbc7a6afa4d71fc211ca4ea1aac2bb7cb8158",
+    "source_normalized_hash": "52197ed133019aa2a0602b976e483fd1385673ec6ac48a6d3bc21ea07395c1c9",
+    "values": [
+      0.2690947289513138,
+      0.4797995738972619,
+      0.35,
+      1.0,
+      0.3375,
+      0.5,
+      0.7309052710486862,
+      0.9541939556537521
+    ],
+    "window_count": 40
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 990,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1013
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:ae06584c4a58999d7cadef299e3d6c58a429bcec5c4099276c9166fb7a3da9eb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095446,
+    "id": "chatcmpl-n7YzkWYiTD72HOmfTTnd3Is5njzD94dY",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.338,
+      "predicted_n": 23,
+      "predicted_per_second": 42.56594946126314,
+      "predicted_per_token_ms": 23.492956521739128,
+      "prompt_ms": 923.493,
+      "prompt_n": 912,
+      "prompt_per_second": 987.5548596470139,
+      "prompt_per_token_ms": 1.0126019736842107
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 990,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1013
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The seventh installment of the \\\"Fast and Furious\\\" franchise,\\\" \\\"Furious 7\\\" is sure to draw fans curious about how the film handles the real-life death of co-star Paul Walker. But minus the off-screen tragedy, is \\\"Furious 7\\\" worth racing to the theater? Here's what the critics are saying:. Peter Travers, Rolling Stone: \\\" 'Furious 7' is the best F&F by far, two hours of pure pow fueled by dedication and passionate heart. This one sticks with you. The usual flaws -- plot bumps, muscle acting, tweet-length dialogue -- fade in the face of the camaraderie on and off screen. Finishing the film in Walker's honor clearly brought out the best in everyone. It's bittersweet seeing Walker in action again. But it's also a kick to watch him take the wheel or hang off a bus in Azerbaijan that happens to be hanging off a cliff. He feels at home.\\\" Chris Nashawaty, Entertainment Weekly: \\\"No one forks over 10 bucks to see one of these flicks for its logic. We go for the bananas demolition-derby mayhem. 'Furious 7' delivers that with the direct visceral rush of an EpiPen. For two hours and change, we're treated to a high-octane orgy of some of the most exhilarating stunts ever put on film, including one showstopper where Walker balances on an overturned bus that's teetering on the edge of a cliff.\\\" Chris Ziegler, The Verge: \\\"It's entirely possible, of course, that my fandom has simply blinded me to 'Furious 7's' greatness. The action sequences -- particularly Abu Dhabi, with the supercar leaping between buildings -- are legitimately phenomenal, and the scenes filmed after Walker's passing, in which his brothers stepped in for him, were never distracting or even noticeable without looking closely. Maybe I'm missing something.\\\" A.O. Scott, New York Times: \\\"The final moments, when Mr. Walker's longtime colleagues say their farewells while he still appears to be on screen with them, are both awkward and moving. They remind you what these movies have always been about, underneath all the noise and the bravado: the ferocity of friendship and the terrible speed of loss.\\\" Betsy Sharkey, Los Angeles Times: \\\"The action sequences -- from hand-to-hand combat to the crash and burn of cars -- are, as we've come to expect, not grounded in reality. The parkour-influenced high-rise stunts that everyone will be talking about are particularly affecting because a) they feature the multimillion-dollar eye-candy of a jewel-encrusted limited-edition Lykan Hypersport and b) they are amazing. All of the driving and skydiving fall into the never-try-this-at-home zone.\\\" Richard Lawson, Vanity Fair: \\\"The latest film, which opens Friday, can't help but take on some deeper meaning, as the death of main cast member Paul Walker, killed in a car accident in late 2013, looms large throughout. But it doesn't overwhelm -- Furious 7 is respectful, even solemn, when it needs to be, but is still, thank God, plenty of crazy fun.\\\"\\n\", \"original_answer\": \"Furious 7, the seventh installment in the Fast and Furious franchise, has been met with positive reviews from critics. The film, which features the late Paul Walker, has been praised for its action sequences and emotional resonance. Critics from Rolling Stone, Entertainment Weekly, The Verge, The New York Times, The Los Angeles Times, and Vanity Fair have all commended the film for its dedication to Walker and its impressive stunts. Despite some criticism of the plot and dialogue, the overall consensus is that Furious 7 delivers an exciting and poignant experience for fans.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 94,
+  "source_cluster_id": "sha256:98115d4e7c412fc91768f2eed41ff7db61c3038430f87c0fbda8e85a802eef03",
+  "source_id": "11879",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:a5632927e3f0927366a6e75664c40016de3821647823524bcdfe182db0122b70",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

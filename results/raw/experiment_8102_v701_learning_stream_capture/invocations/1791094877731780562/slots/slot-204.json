@@ -1,0 +1,139 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6705004370305687,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:a3cfe3281876ea8cb292c589150bdb22599b25155932b6e5289a55e5e90909b5",
+  "human_target": null,
+  "input_tokens": 1095,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:a3cfe3281876ea8cb292c589150bdb22599b25155932b6e5289a55e5e90909b5",
+    "feature_hash": "sha256:ef87defd4a211f2926dd8218dc2c78f32061993ccb565a23d706a91c91bca641",
+    "source_normalized_hash": "0feefb230d95fb1455332ee51485bb5d723d757b4b5d2296a63d8dce5053600f",
+    "values": [
+      0.2226124712103619,
+      0.38545454918268085,
+      0.06666666666666667,
+      1.0,
+      0.31666666666666665,
+      0.3333333333333333,
+      0.7773875287896381,
+      0.9195932356604462
+    ],
+    "window_count": 30
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1095,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1119
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:b350f9542fb69629e27543aa89c3353424a99a95257a75cec16957f2e0d5b610",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095597,
+    "id": "chatcmpl-CKBZP06Tfu5PYSSiTNXeNsDIMjMbX0pN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.877,
+      "predicted_n": 24,
+      "predicted_per_second": 42.412043606649505,
+      "predicted_per_token_ms": 23.578208333333333,
+      "prompt_ms": 971.317,
+      "prompt_n": 1017,
+      "prompt_per_second": 1047.0320194128178,
+      "prompt_per_token_ms": 0.9550806293018682
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1095,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1119
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"602 Anacapa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Food, Specialty Food, Farmers Market, Grocery, Health Markets\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:30-14:0\\\",\\\"Monday\\\":\\\"8:30-18:30\\\",\\\"Saturday\\\":\\\"8:30-14:0\\\",\\\"Thursday\\\":\\\"8:30-18:30\\\",\\\"Tuesday\\\":\\\"8:30-18:30\\\",\\\"Wednesday\\\":\\\"8:30-18:30\\\"},\\\"name\\\":\\\"Isabella Gourmet Foods\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-11-25 23:37:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"It's not easy to find awesome vegan donuts in most major cities, but lo and behold Santa Barbara has the goods! Thank you so much for existing!\\\"},{\\\"review_date\\\":\\\"2016-04-25 23:28:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Do you like Chocolate? Ok, so go to Isabella Gourmet Foods and let yourself eat a piece of heaven by getting the cocoa truffles. Isabella Gourmet Foods (IGF) carries an impressive selection of deliciousness. There is one in particular that is my favorite which is a rose cocoa truffle. \\\\n\\\\nBone broth at IGF is excellent because it includes the good for your body herbs and roots such as turmeric. \\\\n\\\\nThe sandwiches are a steal at under $10; very filling and combos such as waffles as bread and  turkey with delectable jam.\\\\n\\\\nFinally, the people are great that work at IGF! Amy is very knowledgable and is that person that you wish she was one of your best girlfriends. Such as cool, smart, sophisticated and still down to earth gal!\\\"},{\\\"review_date\\\":\\\"2016-04-10 07:10:14\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Really fabulous selection of gourmet, local products! I love that I can purchase all of my local favorites and artisan products under one, convenient roof. \\\\n\\\\nIGF has the Matcha I like. \\\\nIGF has the organic shrubs I use. \\\\nIGF has the Sugar Cat Cake Mixes and Cookbook that I love. \\\\nIGF has the Brown Sugar, Gourmet Popcorn that I crave!\\\\n\\\\nMy goodness, I could go on and on, but seriously the only thing that will really do this shop justice is for you to go in and see for yourself. The owner, Amy, or her GM, Amy, will likely be there ready to welcome you with a warm smile. \\\\n\\\\nWhether you're re-stocking your favorite products, shopping for the perfect gift or just want to browse - I'm sure you'll find something you love in this delightful, little boutique!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Isabella Gourmet Foods is a locally owned business in Santa Barbara that offers a variety of specialty food items, including vegan donuts, cocoa truffles, bone broth, sandwiches, and artisanal products. The store has a cozy atmosphere and friendly staff, with the owner and manager, Amy, being particularly knowledgeable and welcoming. The business is well-loved by its customers, who appreciate the wide selection of high-quality, locally sourced products and the convenience of finding everything they need under one roof. Customers also praise the affordability of the products, with many items priced under $10. The store is open Monday through Friday from 8:30am to 6:30pm and Saturday from 8:30am to 2:00pm, making it a great spot for a quick bite or grocery run during the week or on the weekends. Overall, Isabella Gourmet Foods is a must-visit for anyone looking for unique, delicious, and healthy food options in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 205,
+  "source_cluster_id": "sha256:f6ceed3f9969fe30f95c72510255499f633c523f23effeb046be6a5087b6eb7b",
+  "source_id": "14735",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:a3cfe3281876ea8cb292c589150bdb22599b25155932b6e5289a55e5e90909b5",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

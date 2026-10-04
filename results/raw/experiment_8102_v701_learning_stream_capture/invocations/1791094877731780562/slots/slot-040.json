@@ -1,0 +1,139 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5141722210682929,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:0adb3dd32b58ddd02775ce55864ca950d9dbfeca71d2542eda8cce9c42fb1b53",
+  "human_target": null,
+  "input_tokens": 869,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:0adb3dd32b58ddd02775ce55864ca950d9dbfeca71d2542eda8cce9c42fb1b53",
+    "feature_hash": "sha256:2cdb5ef2239c15e3d1c6c609588a384599c2db689cd4957a85681cacbd3d001a",
+    "source_normalized_hash": "21500816fc7b9c674214013a413a9577fcba6065d61109ea4c1b9afd2e549f32",
+    "values": [
+      0.24567287487846365,
+      0.4372823295170365,
+      0.4555555555555556,
+      0.8333333333333334,
+      0.3333333333333333,
+      0.3333333333333333,
+      0.7543271251215363,
+      0.9006697925575368
+    ],
+    "window_count": 30
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 869,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 893
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:62dbbeaa944c663ae91084c6802cff68d05779caee08a2e6be2d1a4518904e57",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095370,
+    "id": "chatcmpl-2vDpXcchp6rLsBCavDMKW8wOLp2FMz2T",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 561.835,
+      "predicted_n": 24,
+      "predicted_per_second": 42.71716785177142,
+      "predicted_per_token_ms": 23.409791666666667,
+      "prompt_ms": 812.789,
+      "prompt_n": 791,
+      "prompt_per_second": 973.1923045218377,
+      "prompt_per_token_ms": 1.0275461441213654
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 869,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 893
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"721 Cliff Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"paid\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"American (Traditional), Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"JSB Cafe at Santa Barbara City College\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-10-24 19:13:40\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Ordered a medium well \\\\\\\"JSB burger\\\\\\\". I'm not sure what I served was ever a living creature at any point in time. My friend took one bite out of it and spit it out. By far the worst dining experience I've ever had. The patty was pink, falling apart and soggy. The most unfortunate part was that the bun was honestly not that bad, but the patty soaked through it after about 30 seconds. Please make sure the food they serve you is edible before you take a bite #regrets #throwingupinthebathroom\\\\n\\\\nMuch love JSB cafe a\\\"},{\\\"review_date\\\":\\\"2019-03-15 03:32:25\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"These gals and lads work hard. Their food is great and they practice a lot and it shows. My only real negative feedback is that the food can SOMETIMES be a hit or miss. But hey, you're at a college and it's a place of learning. The fries really need to go however. Same fries given in the regular cafeteria, those are really not so good. But that's not their fault, that falls on faculty/staff.\\\"},{\\\"review_date\\\":\\\"2018-11-14 19:05:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very good, prices are mid range but not unreasonable.  All of the food is made fresh, daily I'm pretty sure.  The selection is huge, I'm surprised to see this high quality of food on a college campus.  There are lots of things to choose from and they all look great.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"JSB Cafe at Santa Barbara City College is a traditional American restaurant located at 721 Cliff Dr, Santa Barbara, CA. The cafe does not accept reservations but offers outdoor seating and take-out options. It also caters to large groups. However, the WiFi is paid and there is only street parking available. The ambiance of the cafe is casual and the business has an overall rating of 4.0-stars. Reviews on the restaurant are mixed, with some customers praising the quality and selection of the food, while others complained about inconsistent quality and issues with specific dishes like the \\\"JSB burger\\\".\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 41,
+  "source_cluster_id": "sha256:75efd8d9ecbc09e10fb5d3c565d9e15db4dadeb44b49663cbd12f5b9a6757066",
+  "source_id": "14281",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:0adb3dd32b58ddd02775ce55864ca950d9dbfeca71d2542eda8cce9c42fb1b53",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

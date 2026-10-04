@@ -1,0 +1,126 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2457384819863364,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:c1934d943a433b3a6313c3d68d68cb2be290f891150faedb1659d6b86da7e3b8",
+  "human_target": null,
+  "input_tokens": 671,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:c1934d943a433b3a6313c3d68d68cb2be290f891150faedb1659d6b86da7e3b8",
+    "feature_hash": "sha256:285630b556962024afb39848ba941971f7150e441cffeb34acf662212323ec0b",
+    "source_normalized_hash": "28b37ed87e34594bcfc87c2bb8f5bdb835ba830dfe96cc96a5150af968f356f4",
+    "values": [
+      0.5467608448744119,
+      0.8119192799070848,
+      0.7083333333333333,
+      0.9166666666666666,
+      0.4791666666666667,
+      0.5,
+      0.45323915512558804,
+      0.7835567492579688
+    ],
+    "window_count": 4
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 671,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 692
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:c11e4639332a69b23d432cf2dec1dbf266f04281c81f6b271dde2584105245b0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095733,
+    "id": "chatcmpl-iA4fxc0fKVBHQ7zY3RDHyVPmvnThvQaI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.015,
+      "predicted_n": 21,
+      "predicted_per_second": 42.68162556019634,
+      "predicted_per_token_ms": 23.429285714285715,
+      "prompt_ms": 610.969,
+      "prompt_n": 593,
+      "prompt_per_second": 970.5893425034658,
+      "prompt_per_token_ms": 1.030301854974705
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 671,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 692
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:store tender herbs by snipping off the bases of the stems and removing any discolored or wilted leaves transfer them to a large mason jar with an inch of water in the bottom seal the jar with the lid if it fits or cover the top of the jar with an overturned plastic bag sealed with a rubber band\\\\n\\\\npassage 2:fill a jar or tall plastic container with roughly 1 inch of of water just enough to cover the cut stem ends of the mint leaves place the mint leaves in the container let most of the mint leaves stick out of the container like flowers in vase cover the mint leaves and container loosely with a plastic bag and place it in the refrigerator keep the mint no longer than seven to 10 days\\\\n\\\\npassage 3:Cover the mint leaves and container loosely with a plastic bag, and place it in the refrigerator. Keep the mint no longer than seven to 10 days. Alternatively, keep the mint in a jar of water on the kitchen counter, although the leaves stay crisper longer in the fridge.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cut and save fresh mint\\\"}\", \"original_answer\": \"Sure! Here's how you can cut and save fresh mint based on the provided passages:\\n\\nTo cut and save fresh mint, follow these steps:\\n\\n1. Store tender herbs by snipping off the bases of the stems and removing any discolored or wilted leaves. Transfer them to a large mason jar with an inch of water in the bottom. Seal the jar with the lid if it fits or cover the top of the jar with an overturned plastic bag sealed with a rubber band. (Passage 1)\\n2. Fill a jar or tall plastic container with roughly 1 inch of water just enough to cover the cut stem ends of the mint leaves. Place the mint leaves in the container, and let most of the mint leaves stick out of the container like flowers in a vase. Cover the mint leaves and container loosely with a plastic bag and place it in the refrigerator. Keep the mint no longer than seven to 10 days. (Passage 2)\\n\\nAlternatively, you can also keep the mint in a jar of water on the kitchen counter, although the leaves will stay crisper longer in the fridge. (Passage 3)\\n\\nTherefore, to cut and save fresh mint, you can store the cut stems in a mason jar with water in the refrigerator for up to 7-10 days, or keep them in a jar of water on the kitchen counter for a shorter period of time.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 46,
+  "source_cluster_id": "sha256:24ef0fa36fd77b715933791fc638ec3d88533c3c04212cc1b53eac7a5dcde727",
+  "source_id": "15358",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:c1934d943a433b3a6313c3d68d68cb2be290f891150faedb1659d6b86da7e3b8",
+  "visible_ids": [
+    0,
+    1,
+    2
+  ]
+}

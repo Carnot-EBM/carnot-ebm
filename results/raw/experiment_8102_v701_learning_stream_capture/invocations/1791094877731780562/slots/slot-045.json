@@ -1,0 +1,132 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.1309594539925456,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8a01d18ecb9e0bbaf28000a8a39b2a24d22f3f2979d416f2a5b04732c5a2d9ac",
+  "human_target": null,
+  "input_tokens": 484,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8a01d18ecb9e0bbaf28000a8a39b2a24d22f3f2979d416f2a5b04732c5a2d9ac",
+    "feature_hash": "sha256:3606ac8606d3d3cc9371c93f0ed4f53fc250ca4617804ca0ca6cf3a7871faadd",
+    "source_normalized_hash": "fe89ba42ab4bd97212e72b49601bc3972e93c9a9b881ec54a5b96e0435bf1cb7",
+    "values": [
+      0.3776041666666667,
+      0.7222222222222222,
+      0.0,
+      0.0,
+      1.0,
+      1.0,
+      0.6223958333333334,
+      0.9513888888888888
+    ],
+    "window_count": 16
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 484,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 506
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:86da9655544b33c0bc364bf8efb85951bd432115277ac199e5be8a019dd2510a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095377,
+    "id": "chatcmpl-YitcXTFkMR2TB56YZM21uJbDop6Jn5ad",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 512.639,
+      "predicted_n": 22,
+      "predicted_per_second": 42.91518983144084,
+      "predicted_per_token_ms": 23.301772727272727,
+      "prompt_ms": 484.648,
+      "prompt_n": 406,
+      "prompt_per_second": 837.7213977979894,
+      "prompt_per_token_ms": 1.1937142857142857
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 484,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 506
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:An overdose of alcohol occurs when a person has a blood alcohol content (or BAC) sufficient to produce impairments that increase the risk of harm. Overdoses can range in severity, from problems with balance and slurred speech to coma or even death.\\\\n\\\\npassage 2:If you suspect that someone has alcohol poisoning, even if you don\u2019t see the classic signs and symptoms, seek immediate medical care. In an emergency, follow these suggestions 1  : If the person is unconscious, breathing less than eight times a minute or has repeated, uncontrolled vomiting, call 911 immediately.\\\\n\\\\npassage 3:Alcohol poisoning signs and symptoms include: 1  Confusion. 2  Vomiting. 3  Seizures. 4  Slow breathing (less than eight breaths a minute). 5  Irregular breathing (a gap of more than 10 seconds between breaths). 6  Blue-tinged skin or pale skin. 7  Low body temperature (hypothermia).\\\\n\\\\n\\\",\\\"question\\\":\\\"how can o you tell when a person has alcohol poisoning\\\"}\", \"original_answer\": \"Signs of alcohol poisoning include confusion, vomiting, seizures, slow breathing (less than eight breaths a minute), irregular breathing (a gap of more than 10 seconds between breaths), blue-tinged or pale skin, and low body temperature. If a person is unconscious, breathing less than eight times a minute, or has repeated, uncontrolled vomiting, it is advised to call 911 immediately.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 46,
+  "source_cluster_id": "sha256:ca6a5c5a92c719ef3d93a8d5e081e5b6ac43d823c224441287d2768d68d2a624",
+  "source_id": "12278",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8a01d18ecb9e0bbaf28000a8a39b2a24d22f3f2979d416f2a5b04732c5a2d9ac",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

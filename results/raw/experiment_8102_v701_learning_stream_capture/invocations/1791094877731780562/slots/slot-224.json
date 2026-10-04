@@ -1,0 +1,138 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5874577730428427,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:953e2cf21c04bf930d34c2893c98c2574001b315d43d1faec49ac2b10fcd5bcd",
+  "human_target": null,
+  "input_tokens": 1037,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:953e2cf21c04bf930d34c2893c98c2574001b315d43d1faec49ac2b10fcd5bcd",
+    "feature_hash": "sha256:9763c0e4ae5300b5bde435039a3f766770769b31063c13f48ea9d282b89b4361",
+    "source_normalized_hash": "977d3a5acb31675de77b1afae7301db89fcd11821fbb2696093ffd28ec01bdfc",
+    "values": [
+      0.24474830471693032,
+      0.47702180215725104,
+      0.35714285714285715,
+      0.75,
+      0.08333333333333333,
+      0.08333333333333333,
+      0.7552516952830697,
+      0.9371398789548945
+    ],
+    "window_count": 28
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1037,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1059
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:3644b96ec3557df089669d8e4b496fade179ee2b257a4e3495fbfaf7031fcab4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095624,
+    "id": "chatcmpl-QrBkrW9bww45KKZ0niiGTMH8FtTHyx1H",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 518.082,
+      "predicted_n": 22,
+      "predicted_per_second": 42.46432031994935,
+      "predicted_per_token_ms": 23.549181818181818,
+      "prompt_ms": 935.776,
+      "prompt_n": 959,
+      "prompt_per_second": 1024.8179051396914,
+      "prompt_per_token_ms": 0.9757831074035453
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1037,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1059
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3747 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":1.5,\\\"categories\\\":\\\"Restaurants, Fast Food, Tacos, Breakfast & Brunch, Burgers, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:0-22:0\\\",\\\"Monday\\\":\\\"6:0-22:0\\\",\\\"Saturday\\\":\\\"6:0-22:0\\\",\\\"Sunday\\\":\\\"6:0-22:0\\\",\\\"Thursday\\\":\\\"6:0-22:0\\\",\\\"Tuesday\\\":\\\"6:0-22:0\\\",\\\"Wednesday\\\":\\\"6:0-22:0\\\"},\\\"name\\\":\\\"Jack in the Box\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-27 03:47:58\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Waited in the drive line for about 15 min. There was a large amount of cars waiting. They took the car in front of us order and then turned off the lights. We drive up to the window and they tell us they're closed. The store hours online said they close at 10. It was 7:45. They were rude and dismissive.\\\"},{\\\"review_date\\\":\\\"2021-11-14 15:29:17\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This place has the worse customer service.  The only reason ppl go here because it's one of the only drive thru. Employees ignore the drive thru when you pull ip. Waiting for 30mins to take my order so I just left. Also the lady who is working the morning drive thru has the worse attitude, I feel like I'm interrupting  her movie when ever I pull up. Just need a whole new staff or sell it to another restaurant. We don't want you there anymore Jack in the box.\\\"},{\\\"review_date\\\":\\\"2021-11-10 19:00:41\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Rude drive thru employee my receipt stated a Etzel was the employee helped me and the attitude she carries when taking orders, handing out condiments, or even handing you your food is beyond rude. Will never come here again. I hope this particular restraunt either trains her on her customer service skills because she will not go far with that attitude or find someone that will run the drive thru and window better to bring customers back.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Jack in the Box is a fast food chain located in Santa Barbara, California. The business offers a variety of menu items including tacos, burgers, breakfast and brunch, and more. Customers can dine in, take out, or use the drive-thru. Jack in the Box has business hours from 6:00 AM to 10:00 PM Monday through Sunday.\\n\\nThe business does not offer parking options, but there is street parking available. Additionally, the business does not take reservations and does not have outdoor seating. WiFi is not available and customers cannot use their mobile devices to order food. However, the business is good for groups and allows for takeout.\\n\\nAccording to the customers' reviews, Jack in the Box has poor customer service. Several customers reported waiting for extended periods of time to receive their orders, and some felt that the employees were rude and dismissive. Some customers also noted that the lady working the morning drive-thru had a bad attitude towards them. Overall, these negative experiences may deter potential customers from choosing Jack in the Box as their preferred fast food option.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 225,
+  "source_cluster_id": "sha256:7d28841d159a7f7186823e753411431e16e8c63b9080474ff152d86cc0fe5a35",
+  "source_id": "14863",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:953e2cf21c04bf930d34c2893c98c2574001b315d43d1faec49ac2b10fcd5bcd",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

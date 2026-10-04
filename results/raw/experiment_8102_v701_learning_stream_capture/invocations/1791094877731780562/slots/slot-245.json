@@ -1,0 +1,142 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6960971410153434,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:ecf01b0e50d8bbc5f7bdb2a2c280806cf26e71c233da24fbd5e700aa50ecc0f7",
+  "human_target": null,
+  "input_tokens": 1119,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:ecf01b0e50d8bbc5f7bdb2a2c280806cf26e71c233da24fbd5e700aa50ecc0f7",
+    "feature_hash": "sha256:fe89ca19d39537aa5cc7219dca3a6130c8cd428e22a567f8051f82346e0d1af2",
+    "source_normalized_hash": "83dcc3e5ec684aee88fd59031c807f633f1e557ab4b2110969d9e3a593fe7311",
+    "values": [
+      0.19858452640315385,
+      0.4239028944911298,
+      0.2619047619047619,
+      0.8571428571428571,
+      0.2857142857142857,
+      0.2857142857142857,
+      0.8014154735968462,
+      0.936413668031315
+    ],
+    "window_count": 36
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1119,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1142
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:fa97902cfa59668d438cf7ae5fc1d5acb78a2a6112bb1603d905b814930e4cfd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095656,
+    "id": "chatcmpl-r3XhQnCRbIgwlYS5uGquAkVN3BqOwP5y",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.754,
+      "predicted_n": 23,
+      "predicted_per_second": 42.45469345865467,
+      "predicted_per_token_ms": 23.554521739130436,
+      "prompt_ms": 1016.322,
+      "prompt_n": 1041,
+      "prompt_per_second": 1024.2816745086695,
+      "prompt_per_token_ms": 0.9762939481268011
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1119,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1142
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1114 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":true,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":true,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Beer Bar, Sports Bars, Pubs, Bars, Restaurants, Cocktail Bars, Gastropubs, Nightlife, Tapas Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"10:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"1114 Sports Bar & Games\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 03:33:43\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"My buddies and I come here all the time for food and drinks whilst watching the football. Sadly they've recently increased their prices exponentially (salmon dish increased more than $10!). We like the spot but the prices are getting out of control.\\\"},{\\\"review_date\\\":\\\"2022-01-16 21:58:00\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Sadly didn't eat here. Apparently they were having issues with their reservation system so they weren't sure where to seat us. Initially the hostess told us she could sit us up stairs but we'd have to order at the bar. Then she switched things up and sat us at a long table but it was super crowded so we tried upstairs. We quickly abandoned that as it didn't seem like it would be enjoyable. We decided to leave. As we were leaving the other person waiting on a table because of a messed up reservation was sitting at a table downstairs. Not really sure why we weren't offered that table or the other empty one we saw. It was a playoff game day so I understand that they were busy but I got the impression they were a complete mess not ready to handle that many people. My wife did say the food looked good. Maybe we'll try again next time where in SB.\\\"},{\\\"review_date\\\":\\\"2021-12-13 02:19:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"For being a sports bar, this place gets 5 stars for location, classiness, affordability, and excellent service. You can really sense that they work as a team here; the host, server, and busboy were all gracious and attentive. The food was surprisingly affordable and tasty. I was expecting greasy bar food, but they also have salads, brussel sprouts and an affordable salmon dish. Two appetizers, a sparkling rose, chicken Cesar salad and an entire salmon meal ended up being around $80+tip. \\\\n\\\\nI loved the gas fireplace on each outdoor table that pumped out heat, and I loved the sound of the water overlooking the turtle pond. I felt so happy resting and dining here, it is a quiet and quaint spot off State Street.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"1114 Sports Bar & Games is a popular destination located at 1114 State St, Santa Barbara, CA. This establishment is not just a bar but also a sports bar, pub, restaurant, cocktail bar, gastropub, and tapas bar. They offer numerous amenities such as outdoor seating, free wifi, takeout services, and live music. The venue is suitable for group gatherings and is noted for its casual yet trendy and classy ambience. The business operates from Wednesday to Sunday, and offers garage parking. Despite its overall 4-star rating, recent reviews have indicated some concerns including a significant price increase and issues with the reservation system. Positive aspects highlighted by customers include the excellent service, good quality food, and a pleasant outdoor setting with features like a gas fireplace and a turtle pond.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 246,
+  "source_cluster_id": "sha256:79fe4e33e7c55c7b933b3a33c0f63aabc990aa65cba79c3f74ef59ae83106d78",
+  "source_id": "13698",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:ecf01b0e50d8bbc5f7bdb2a2c280806cf26e71c233da24fbd5e700aa50ecc0f7",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

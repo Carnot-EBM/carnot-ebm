@@ -1,0 +1,132 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3981900729704648,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:73d12561097689395a032a7a8075d8454601cc443d273c8e4a7de7131ceb00e1",
+  "human_target": null,
+  "input_tokens": 850,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:73d12561097689395a032a7a8075d8454601cc443d273c8e4a7de7131ceb00e1",
+    "feature_hash": "sha256:24eb4e8258b744678e0ef1982044334ae50a232183db14a6fb101bca36bc3451",
+    "source_normalized_hash": "34aed72cbaaefcb8b9e46aadc2fba66ab7898b1c2a822839c6efe5591df3982e",
+    "values": [
+      0.2076807766375781,
+      0.3941049282961048,
+      0.453125,
+      0.875,
+      0.125,
+      0.125,
+      0.7923192233624219,
+      0.9407970025617085
+    ],
+    "window_count": 16
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 850,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 873
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:63243186c0d7d883a2e30656d24243e694ef5c20e81ecf1af32cb98735be5583",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095310,
+    "id": "chatcmpl-Lhg7xRzUPchpct4DmJsz3YdPRXzSGibD",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 533.84,
+      "predicted_n": 23,
+      "predicted_per_second": 43.08407013337329,
+      "predicted_per_token_ms": 23.210434782608697,
+      "prompt_ms": 710.669,
+      "prompt_n": 772,
+      "prompt_per_second": 1086.300373310219,
+      "prompt_per_token_ms": 0.9205556994818652
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 850,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 873
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"532 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Bars, Nightlife, Pubs, Comedy Clubs\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Old Kings Road\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-17 23:13:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Went last night, Bar tender was really polite and new how to pour a proper Boddingtons Ale. They had the Dodgers game on the outside TV with great seating. You can't visit Santa Barbara without stopping by.\\\"},{\\\"review_date\\\":\\\"2021-05-07 02:35:30\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We stopped at State St for some drinks and stopped here because the sign read \\\\\\\"No wankers allowed and smoking patio (for the hubby). Our kind of place. No BS, or boogie-ness. Just awesome people people great drinks. The bar staff was Fn awesome, and beyond friendly.\\\\nWill definitely make this a stop everytime we are back in SBA.\\\\nThanks for the hospitality, don't change a thing, You guys are awesome.\\\"},{\\\"review_date\\\":\\\"2020-11-20 22:43:09\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I haven't been to this bar in forever. The gentleman at the bar was really friendly, we were eating at Yona Redz next door and wanted some adult beverages, he was totally fine with us bringing our food to his patio and having drinks from their bar. Awesome for these two businesses to allow sharing of space that is beneficial to both.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Old Kings Road based on the provided structured data:\\n\\nOld Kings Road is a popular nightlife spot located in downtown Santa Barbara, offering a variety of drinks and a casual ambiance. With a rating of 4.0 out of 5 stars based on reviews, it appears to be a well-liked spot among locals and visitors alike. The bar features a cozy outdoor seating area and offers free WiFi, making it a great spot to relax and unwind after a day of exploring the city. Customers have praised the friendly service, particularly the bartenders who know how to pour a perfect pint of Boddingtons Ale. The atmosphere is described as casual and welcoming, with no pretenses or frills. Some reviewers have specifically noted the lack of \\\"BS\\\" or \\\"boogie-ness,\\\" suggesting that it's a low-key spot where you can just enjoy good drinks and company. Overall, Old Kings Road seems like a great option for those looking for a chill nightlife experience in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 3,
+  "source_cluster_id": "sha256:832f5aeb0ce6cfa39e091147fc54ffbf42463b450929e70f67d301d6ab368610",
+  "source_id": "15069",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:73d12561097689395a032a7a8075d8454601cc443d273c8e4a7de7131ceb00e1",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

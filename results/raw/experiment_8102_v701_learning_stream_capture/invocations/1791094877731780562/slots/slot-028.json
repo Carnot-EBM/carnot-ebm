@@ -1,0 +1,141 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.8643235759809613,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:acdc86eeab090a1c4b9c12a876540b3928267f76256a5bfa1111cda58ccb2cc2",
+  "human_target": null,
+  "input_tokens": 1232,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:acdc86eeab090a1c4b9c12a876540b3928267f76256a5bfa1111cda58ccb2cc2",
+    "feature_hash": "sha256:cb5627e4b8e429cc31aebe6f29ed4c8da428e381658c42d76b370373b35cd31b",
+    "source_normalized_hash": "e90bf37551a8001aaea5394767c69a4087bf45414e627e9a14d4a628c5692d28",
+    "values": [
+      0.23002611336261392,
+      0.4362027758237806,
+      0.32026143790849676,
+      0.7777777777777778,
+      0.3202614379084967,
+      0.3333333333333333,
+      0.7699738866373861,
+      0.9489706954499584
+    ],
+    "window_count": 34
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1232,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1256
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:3df281c426c9daefa2f8968ed9bb501b5ccd80c4c334d3b8ca6dad36acb7a3d3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095351,
+    "id": "chatcmpl-7sBEykLTq2M77hBIhG7kHp5TCIgqILhq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 560.924,
+      "predicted_n": 24,
+      "predicted_per_second": 42.7865450577975,
+      "predicted_per_token_ms": 23.37183333333333,
+      "prompt_ms": 1066.099,
+      "prompt_n": 1154,
+      "prompt_per_second": 1082.4510669271804,
+      "prompt_per_token_ms": 0.9238292894280762
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1232,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1256
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1134 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Japanese, Restaurants, Noodles, Sushi Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Monday\\\":\\\"17:0-21:30\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-21:30\\\",\\\"Tuesday\\\":\\\"17:0-21:30\\\",\\\"Wednesday\\\":\\\"17:0-21:30\\\"},\\\"name\\\":\\\"Sushi Bar 29\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-16 08:22:01\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Back in Santa Barbara is another sushi place, at Sushi Bar 29. They had tempura ice cream, and if you know me, this is one of my favorite desserts because of how it defies logic by frying ice cream in hot oil. Here, the tempura batter was fried nice and crisp which added great texture to the cold smooth green tea ice cream in the interior. This version is an adequate serving of the dish and nothing more.\\\\n\\\\nBeef Sukiyaki is an excellent dish that I rarely find in the Santa Barbara area. The broth here was excellent -- it had a strong soy and mirin flavor as expected and really nailed the taste. But don't be fooled by the large pot because it only contains a few pieces of low quality beef and a few pieces of vegetable and a small bunch of yam noodles. The amount of content in the bowl was very minimal, which is really a shame.\\\\n\\\\nFresh, sweet, juicy uni at Sushi Bar 29! While smaller and more pricey ($16) than Sun Sushi, their uni still hits the quality mark as they are fresh, vibrant, and delicious. Highly recommend everyone to try some fresh sea urchin in their lifetime.\\\\n\\\\nMy biggest problem with this restaurant is that place has both the unpleasant attributes of penny pinching and expensive food. I think it's pretty ridiculous for an upscale restaurant to charge for something as basic as tea, sauce, and condiments if you ask me.\\\"},{\\\"review_date\\\":\\\"2021-12-18 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My new \\\\\\\"go-to\\\\\\\" for sushi! They are reasonably priced and the fish is excellent! We loved their red and green dragon rolls! We will be going here for the sushi cravings from now on! Thanks for the great service!\\\"},{\\\"review_date\\\":\\\"2021-11-15 17:55:08\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Everything was too salty. \\\\nRamen was no flavor but salty, very salty. Their seasoned egg that came with the ramen was overcooked. \\\\nRolls are too saucy. \\\\nThe space is small.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure, here's an objective overview of Sushi Bar 29 based on the provided structured data in JSON format:\\n\\nSushi Bar 29 is a Japanese restaurant located in Santa Barbara, CA, offering a variety of sushi and noodle dishes. According to their menu, they offer dine-in, takeout, and reservations, and have a rating of 4.5 stars out of 5. The restaurant has a cozy atmosphere and offers outdoor seating, but no WiFi. The menu includes a range of sushi and sashimi options, as well as noodle dishes such as ramen and udon. Some popular items on the menu include tempura ice cream, beef sukiyaki, and fresh uni.\\n\\nCustomer reviews are mixed, with some praising the quality of the food and service, while others have complained about the prices being too high and the portion sizes being too small. One reviewer noted that the restaurant charges extra for basic items like tea, sauces, and condiments, which they found to be penny-pinching. However, another reviewer praised the freshness and quality of the seafood and described the restaurant as their \\\"new go-to\\\" for sushi. Overall, Sushi Bar 29 appears to be a solid option for sushi lovers in the Santa Barbara area, but may not be the best choice for those looking for a budget-friendly meal or a wide variety of non-sushi options.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 29,
+  "source_cluster_id": "sha256:047e7e7119486f31bcdc56369012bb2fe49fa921a83601b75cc4a460734f91f1",
+  "source_id": "14782",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:acdc86eeab090a1c4b9c12a876540b3928267f76256a5bfa1111cda58ccb2cc2",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2184559509623796,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:0e8986bf195868559e1a9385c169a1ab3ff7466a33f4be08e4793d7176ff4b85",
+  "human_target": null,
+  "input_tokens": 581,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:0e8986bf195868559e1a9385c169a1ab3ff7466a33f4be08e4793d7176ff4b85",
+    "feature_hash": "sha256:cc18307526c5c3e79d227727d18471080b6ba1c920c2889d5afa8fd2472d8713",
+    "source_normalized_hash": "c76b15b332d587a0ed7a1a2b548ab7e136d673c8e7919a7c93b2a531d3e4bdca",
+    "values": [
+      0.49969486531986534,
+      0.7590277777777777,
+      0.0,
+      0.0,
+      0.49242424242424243,
+      0.5,
+      0.5003051346801347,
+      0.8511574074074074
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 581,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 604
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:d7ba600d743ea75921bd7f9978a1a287c516cc7ab336901346b7629baedf23be",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095720,
+    "id": "chatcmpl-8CWF0KmGegnZFZsNALyhe1udU5ZNro2g",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.703,
+      "predicted_n": 23,
+      "predicted_per_second": 42.53721543989954,
+      "predicted_per_token_ms": 23.50882608695652,
+      "prompt_ms": 535.76,
+      "prompt_n": 503,
+      "prompt_per_second": 938.8532178587427,
+      "prompt_per_token_ms": 1.0651292246520874
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 581,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 604
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Add sliced onions to a medium bowl. 2  Pour enough boiling water over onions so that they are covered. 3  Count to 10 then drain. 4  Add onions to glass jars or a bowl. 5  Toast cinnamon, cloves and the red pepper flakes in a small saucepan over medium heat until fragrant, 3 to 5 minutes.\\\\n\\\\npassage 2:1 Add onions to glass jars or a bowl. 2  Toast cinnamon, cloves and the red pepper flakes in a small saucepan over medium heat until fragrant, 3 to 5 minutes. 3  Whisk in vinegar, lime juice, a 1/4 cup of the sugar and salt. 4  Bring to a simmer and cook until sugar and salt have dissolved, 1 to 2 minutes.\\\\n\\\\npassage 3:1 Count to 10 then drain. 2  Add onions to glass jars or a bowl. 3  Toast cinnamon, cloves and the red pepper flakes in a small saucepan over medium heat until fragrant, 3 to 5 minutes. 4  Whisk in vinegar, lime juice, a 1/4 cup of the sugar and salt. 5  Bring to a simmer and cook until sugar and salt have dissolved, 1 to 2 minutes.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you pickle onions\\\"}\", \"original_answer\": \"To pickle onions, start by slicing them and placing them in a medium bowl. Pour enough boiling water over the onions to cover them, count to 10, then drain. Next, add the onions to glass jars or a bowl. In a small saucepan, toast cinnamon, cloves, and red pepper flakes over medium heat until fragrant. Whisk in vinegar, lime juice, a 1/4 cup of sugar, and salt. Bring the mixture to a simmer and cook until the sugar and salt have dissolved, which takes 1 to 2 minutes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 37,
+  "source_cluster_id": "sha256:8ca72ac7c624cbbf8e9488ed1866f661b428115f845df70d62597cb4fb370e31",
+  "source_id": "15150",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:0e8986bf195868559e1a9385c169a1ab3ff7466a33f4be08e4793d7176ff4b85",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

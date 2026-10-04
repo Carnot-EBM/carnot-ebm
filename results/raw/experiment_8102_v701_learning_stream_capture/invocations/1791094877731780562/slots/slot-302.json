@@ -1,0 +1,156 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7710767890093848,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:d993b48e066b181c75828dfc53a5988f10e8906ff03c9f8e0079d3f12e87daec",
+  "human_target": null,
+  "input_tokens": 1166,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:d993b48e066b181c75828dfc53a5988f10e8906ff03c9f8e0079d3f12e87daec",
+    "feature_hash": "sha256:3e1c387bf01fa574c67b62f2ba4741c5ed15ac05fb3bdb6fa2c048369054d44a",
+    "source_normalized_hash": "c355ac4c773d0598890f704f2b1510a15380df3452325ff25e38ce62e88d1c63",
+    "values": [
+      0.2578186694258123,
+      0.43877669949098524,
+      0.0625,
+      1.0,
+      0.14285714285714285,
+      0.14285714285714285,
+      0.7421813305741878,
+      0.9505235835592979
+    ],
+    "window_count": 64
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.15,
+    "schema_valid": true,
+    "source_sentence_id": 26,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1166,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1192
+    }
+  },
+  "probability": 0.15,
+  "public_eligible": true,
+  "public_hash": "sha256:3d20100cf4c60c3ed4f252005256438faed4d704641a7181edd004513add6e11",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.15,\n  \"source_sentence_id\": 26\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095735,
+    "id": "chatcmpl-89h1z1FpOIpshzWrZeGSSPwS44Vk9Qus",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 615.287,
+      "predicted_n": 26,
+      "predicted_per_second": 42.25670296950854,
+      "predicted_per_token_ms": 23.664884615384615,
+      "prompt_ms": 1040.231,
+      "prompt_n": 1088,
+      "prompt_per_second": 1045.9215308907349,
+      "prompt_per_token_ms": 0.9560946691176471
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1166,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1192
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Sanaa, Yemen  (CNN)Saudi airstrikes over Yemen have resumed once again, two days after Saudi Arabia announced the end of its air campaign. The airstrikes Thursday targeted rebel Houthi militant positions in three parts of Sanaa, two Yemeni Defense Ministry officials said. The attacks lasted four hours. The strikes caused no casualties, but did destroy all three military compounds that were targeted, the officials said. They said Saudi airstrikes were also targeting Houthi positions in Lahj province. On Tuesday, Saudi Arabia announced the end of its Operation Decisive Storm, a nearly month-long air campaign against Houthi positions. The Saudi-led coalition said a new initiative was underway, Operation Renewal of Hope, focused on the political process. But less than 24 hours later, after rebel forces attacked a Yemeni military brigade, the airstrikes resumed, security sources in Taiz said. Five airstrikes targeted a weapons depot in the province late Wednesday, two Taiz security officials said. They said explosions lasted for about 40 minutes. Saudi Arabia and its coalition partners started pounding Houthi positions across Yemen starting on March 26, hoping to wipe out the Iranian-allied rebel group that overthrew the Yemeni government and seized power. The Saudis say they want to restore the Yemeni government -- a key U.S. ally in the fight against al Qaeda -- which was kicked out of the capital by the rebels earlier this year. This month, Saudi officials said airstrikes have degraded Houthi-controlled military infrastructure, including key buildings in Sanaa. The campaign achieved its objectives \\\"by a very good planning, very precise execution, by the courage of our pilots, our sailors, our soldiers,\\\" said Brig. Gen. Ahmed Asiri, a Saudi military spokesman. A senior Saudi official told CNN that the Houthis agreed to \\\"nearly all demands\\\" of the U.N. Security Council. A statement from the Saudi Embassy in Washington outlined objectives of the next phase of operations, including protecting civilians, enhancing humanitarian and medical assistance, confronting terrorism and creating an international coalition to provide maritime security. Ground troops will continue to protect the border and confront any attempts to destabilize the situation, Asiri said. Military action will be taken if needed. Houthi leader: 'Anyone who thinks we will surrender is dreaming' On Wednesday, Houthis released Yemeni Defense Minister Mahmoud al-Subaihi in Sanaa, a senior Saudi source said on the condition of anonymity. The Houthis had said they detained the defense minister at an air base near the Yemeni port city of Aden on March 26, shortly before the Saudis began their airstrike campaign. The rebels had captured the base that day as part of an advance on the Aden area. The United Nations demanded al-Subaihi's release earlier this month. But beyond the military campaign, the Saudis and their allies have said they want to find a political solution for the violence-plagued nation. President Abd Rabbuh Mansur Hadi, who says he's Yemen's legitimate leader, thanked the Saudi-led coalition. He is working with the Saudis and other allies to return to his country. \\\"We promise to restructure the Yemen military to ensure that it serves the people of Yemen,\\\" Hadi said, calling on the Houthis to withdraw, and saying that he would return to Yemen at \\\"the right time\\\" to rebuild the country. \\\"You will witness many changes in the days to come in our mission to build an institutional government and military, far from rebel militancy.\\\" Why is Saudi Arabia bombing Yemen? Hakim Almasmari reported from Sanaa; Holly Yan reported and wrote from Atlanta. CNN's Mohammed Tawfeeq, Salim Essaid, Nic Robertson and Josh Levs contributed to this report.\\n\", \"original_answer\": \"Sure! Here's the summary within 147 words:\\n\\nSaudi-led airstrikes over Yemen have resumed after a brief pause, targeting Houthi militant positions in Sanaa and Lahj provinces. The airstrikes followed a Houthi attack on a Yemeni military brigade. The Saudi-led coalition seeks to restore the Yemeni government and combat terrorism. The campaign has degraded Houthi-controlled military infrastructure, according to Saudi officials. The UN has called for a political solution to the conflict, while Houthi leader Abdulmalik al-Houthi vowed to continue fighting. President Abd Rabbuh Mansur Hadi, who is backed by the Saudi-led coalition, has promised to rebuild Yemen and establish an institutional government.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 47,
+  "source_cluster_id": "sha256:4566dce9ed5904a9a4c29c74597e48d1c3671550078006135390cff7800a5088",
+  "source_id": "15823",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:d993b48e066b181c75828dfc53a5988f10e8906ff03c9f8e0079d3f12e87daec",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32
+  ]
+}

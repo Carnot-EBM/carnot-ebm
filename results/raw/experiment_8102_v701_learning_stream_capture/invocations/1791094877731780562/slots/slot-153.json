@@ -1,0 +1,141 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2861139419255778,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:1f724e304f71e43e087919df896e9f97157da5205c81f5fea2d8e751fe201e47",
+  "human_target": null,
+  "input_tokens": 703,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:1f724e304f71e43e087919df896e9f97157da5205c81f5fea2d8e751fe201e47",
+    "feature_hash": "sha256:b1e3da3e64d3693cbe700e556c6b504f8806409d0527751b6b85b94884473e42",
+    "source_normalized_hash": "3e54a0c2c5e4ebfdd594231b0c61b9a28b6c4aa38581e98854dae388b4dfff0f",
+    "values": [
+      0.32205882352941173,
+      0.5920634920634921,
+      0.20588235294117646,
+      1.0,
+      0.0,
+      0.0,
+      0.6779411764705883,
+      0.9140873015873016
+    ],
+    "window_count": 34
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 703,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 726
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:36a378a63a4745af66d0b117dca8ff7fb77692c5b9654bf65fa6d72ae41f8e7c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095532,
+    "id": "chatcmpl-k3qpDYDGvLpyLfkmVJRYT59pJ4pXTjpw",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.88,
+      "predicted_n": 23,
+      "predicted_per_second": 42.602059716974146,
+      "predicted_per_token_ms": 23.47304347826087,
+      "prompt_ms": 632.591,
+      "prompt_n": 625,
+      "prompt_per_second": 988.0001454336214,
+      "prompt_per_token_ms": 1.0121456
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 703,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 726
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"American buffalo struck by lightning during filming of bison documentary.\\nAfter two years of drought it's no wonder ranchers and farmers across the United States have been looking forward to a switch between El Nino and La Nina. But sometimes it seems we have to be careful for what we pray for.\\nIn the latest behind the scenes episode of filming the Meet My Neighbor Productions documentary on the American buffalo or bison, \\\"Native the Prodigies of an Icon,\\\" ranchers in Colorado share their love and challenges in raising bison.\\nIn the video a bison cow is struck by lightning when a highly needed thunderstorm rolls in across the front range. The bison's calf, left unprotected, is subsiquently killed by local predators. Interestingly the bison is not palatable to predators after the lightening strike.\\nWhat happens with the bison cow? The ranchers put her into a compost pile so that she can continue to support the ecosystem and serve a purpose even after death.\\nOverall the video depicts the heart felt efforts of Colorado ranchers and their struggles to economically maintain the bison populations across the continent.\\nThe behind the scenes footage is part of a multi-year project filming bison ranches, Native American reservations, and State and National Parks across the United States and Canada. The film brings to light the significance of one of North America's greatest success stories in bringing a species back from the brink of extinction. After each filming location, the producers release travel video blogs known as vlogs, which provide viewers a behind the scenes experience leading up to the final release of the documentary film in 2025.\\nCurrently the producers are releasing three such episodes a week on Monday at 5PM, Wednesday at 5PM, and Saturday at 9AM.\\nMeet My Neighbor Productions, Inc. is a 501(c)3 nonprofit production company focused on regenerative, humane, and sustainable agricultural practices. In 2020 the nonprofit released a Farm Series on the Yanasa TV social media channels documenting farms across the United States. The nonprofit plans to begin work on a second season of the farm series after completion of the documentary on the American buffalo aka American bison.\", \"original_answer\": \"A bison cow was struck by lightning while being filmed for a documentary on American buffalo. Her calf was killed by predators, but the ranchers placed the cow in a compost pile to continue supporting the ecosystem. The documentary highlights the struggles of ranchers to maintain bison populations, and is part of a multi-year project.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 154,
+  "source_cluster_id": "sha256:d88d23ae67d898967c5b4cfbc50dae638f2751740d2947f6979bde1bb45f1b30",
+  "source_id": "13478",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:1f724e304f71e43e087919df896e9f97157da5205c81f5fea2d8e751fe201e47",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

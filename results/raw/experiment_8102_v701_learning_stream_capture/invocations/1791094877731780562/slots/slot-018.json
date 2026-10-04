@@ -1,0 +1,140 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4373499730136245,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:9e42af9436ff93c9427d6098eb95bacd3b24b79dd0112d4448b60a2ff09e68cc",
+  "human_target": null,
+  "input_tokens": 745,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:9e42af9436ff93c9427d6098eb95bacd3b24b79dd0112d4448b60a2ff09e68cc",
+    "feature_hash": "sha256:0dd1f24fa555853a0708951f09a44c08877cf57d4a402fdd64ecb9f7f607e2b0",
+    "source_normalized_hash": "b70d5ea6d642cf111b4b4b29439e0bf8cf4f39b4bd2a8f8f333c7a6a11866bff",
+    "values": [
+      0.30977660743322266,
+      0.5535243741765481,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.6902233925667773,
+      0.9398773361635681
+    ],
+    "window_count": 31
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 745,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 769
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:6e38c05f18de5cc7399c54faede928e3bbed2f736d85462df732b0ee6b157f73",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095335,
+    "id": "chatcmpl-pLgvmNYTruiib9tzht2AjCnj482Gu0dh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 558.858,
+      "predicted_n": 24,
+      "predicted_per_second": 42.94471940993956,
+      "predicted_per_token_ms": 23.285749999999997,
+      "prompt_ms": 655.876,
+      "prompt_n": 667,
+      "prompt_per_second": 1016.960523025694,
+      "prompt_per_token_ms": 0.9833223388305846
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 745,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 769
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:If you\u2019re interested in following suit by turning your own SUV into a camper, here are the basics: 1. Preparation. We first removed the back seats. For our car, we removed a total of eight bolts and the seats were free, but you may consider having a professional help you out.After removing the seats, we cleaned the inside of the car and cut a tarp to spread under where the sleeping platform would sit.e have finally upgraded our car-camper from a WRX to a Forester XT \u2013 love the space, and the ground clearance. To answer the side-door-mozzie-net question. Step 1 is to avoid a car with frameless doors (older Subaru). Make a pillow-slip of mozzie netting, with its slit on a long side.\\\\n\\\\npassage 2:Turn Your Car Into a Motorhome with the Swiss Room Box. A friend on Facebook pointed this out today. It\u2019s a kit that makes your current car into a tiny motorhome. It\u2019s almost like a turning your car into a transforming teardrop camper\u2026.Or better yet, a car camper. The rear is used as a galley / mini kitchen (kind of like a teardrop camper). The rest are a bunch of boxes which consist of a hidden toilet, storage, and more. friend on Facebook pointed this out today. It\u2019s a kit that makes your current car into a tiny motorhome. It\u2019s almost like a turning your car into a transforming teardrop camper\u2026. Or better yet, a car camper. The rear is used as a galley / mini kitchen (kind of like a teardrop camper).\\\\n\\\\npassage 3:Now you can convert any ordinary van into a full-fledged camper van complete with a functional kitchen set, storage area, and even a sleeping quarters.ow you can convert any ordinary van into a full-fledged camper van complete with a functional kitchen set, storage area, and even a sleeping quarters.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do I turn my suv into a camper\\\"}\", \"original_answer\": \"To turn your SUV into a camper, you need to first remove the back seats. This might involve removing bolts and you might need professional help. After the seats are removed, clean the inside of the car and cut a tarp to spread under where the sleeping platform would be. You should avoid a car with frameless doors and make a pillow-slip of mosquito netting, with its slit on a long side. You can also consider using a kit like the Swiss Room Box which turns your car into a mini-motorhome, with the rear used as a mini kitchen. The kit also includes a hidden toilet, storage, and more.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 19,
+  "source_cluster_id": "sha256:99b88b758e6d24f23343f14d04b3d3ebe958e63a516975f1592a66fe9e5fbca9",
+  "source_id": "15492",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:9e42af9436ff93c9427d6098eb95bacd3b24b79dd0112d4448b60a2ff09e68cc",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

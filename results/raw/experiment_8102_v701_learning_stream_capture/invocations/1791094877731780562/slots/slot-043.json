@@ -1,0 +1,159 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.9212373250629753,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:cabff8efcf8e086c879b5e5143bd77c175cfaa0cda010a81496cd9d6f86858f5",
+  "human_target": null,
+  "input_tokens": 1406,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:cabff8efcf8e086c879b5e5143bd77c175cfaa0cda010a81496cd9d6f86858f5",
+    "feature_hash": "sha256:f1b9fa957a11edb2731d8c350d11550347e6eff4fe6b9ea27040d0311db8ecae",
+    "source_normalized_hash": "ab56ea27128305df2861c8eb47d92035b7ad7070388540d78b89163b92e0ecb2",
+    "values": [
+      0.2748445362537434,
+      0.5149963932061119,
+      0.4142857142857143,
+      0.8,
+      0.0,
+      0.0,
+      0.7251554637462565,
+      0.9430439154480075
+    ],
+    "window_count": 70
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1406,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1429
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:252222a8360269da671e643f16b7397a73f671b8651dee626ebc19a6f94a1f1b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095374,
+    "id": "chatcmpl-NSi4L6oY5rx5TFOcR7pOF2nUiV0Zt0J9",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.608,
+      "predicted_n": 23,
+      "predicted_per_second": 42.70267058788581,
+      "predicted_per_token_ms": 23.41773913043478,
+      "prompt_ms": 1208.592,
+      "prompt_n": 1328,
+      "prompt_per_second": 1098.7992639368786,
+      "prompt_per_token_ms": 0.9100843373493976
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1406,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1429
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Saudi Arabia has executed a second Indonesian maid despite protests from Jakarta, which is itself facing fierce criticism for its failure to heed calls for clemency for a number of foreigners on death row. The Indonesian government summoned the Saudi ambassador to the foreign ministry on Thursday after learning that 37-year-old Karni Bt. Medi Tarsim had been beheaded, without official warning. Karni was sentenced to death in March 2013 for killing her employer's four-year-old child. She was the second Indonesian domestic worker executed by the Saudis this week, following the death of Siti Zaenab Bt. Duhri Rupa on Tuesday -- the execution again carried out with Indonesian officials receiving no prior warning. \\\"That is our main issue. It's not that suddenly there was an execution. We didn't know when it would take place. Still, we took over a hundred steps to try to free (Siti) from execution,\\\" said Arrmanatha Nasir, spokesman for Indonesia's Ministry of Foreign Affairs. Siti, 47, was convicted of killing her employer's wife in 1999, but the death penalty was delayed until the youngest of the victim's sons reached puberty and was old enough to consider requesting her pardon. He didn't. Rights groups say they suspect Siti was mentally ill and cast aspersions on claims she had confessed to the crime. Amnesty International also said reports suggested she had been abused while working in the victim's home. \\\"Imposing the death penalty and executing someone with a suspected mental illness smacks of a basic lack of humanity,\\\" said Philip Luther, Middle East and North Africa Programme Director at Amnesty International. In a statement, the Indonesian government said the protection of its citizens abroad was a \\\"priority\\\" and listed the attempts it had made to help Siti, including providing legal aid, writing letters to the Saudi King and \\\"continuous efforts... to ask for forgiveness from the family.\\\" Indonesia said in many cases its efforts had worked. From July 2011 to the end of March this year, it said it had \\\"successfully freed\\\" 238 of its citizens from the death penalty. One of those was Satinah Binti Jumadi Ahmad who was sentenced to death in 2011 after reportedly admitting to killing her 70-year-old employer and stealing $10,000. Satinah claimed she acted in self-dense. Days before her scheduled execution, the Indonesian government stepped in with so-called \\\"blood money\\\" of 7 million Saudi riyals -- at the time worth about $1.8 million. Satinah was spared. Indonesia's efforts to save its own citizens does not sit well with advocates who are seeking the same mercy for foreigners languishing on Indonesia's death row. Two of the most high profile cases are Andrew Chan and Myuran Sukumaran, Australians convicted of attempting to smuggle heroin from Bali to Australia in 2005. Friday marks the 10-year anniversary of their arrest with seven other people -- members of the so-called \\\"Bali Nine\\\" -- who are currently serving lengthy sentences in Indonesian prisons. As the alleged ringleaders, Chan and Sukumaran were sentenced to death, and denied clemency from President Jokowi Widodo, a decision being challenged through the country's Constitutional Court. \\\"If Indonesia wants to effectively protect Indonesians from the death penalty abroad, Indonesia should also abolish the death penalty here,\\\" said Todung Mulya Lubis, one of the men's lawyers. Chan, 31, and Sukumaran -- who also turns 34 on Friday -- are currently incarcerated on Nusakambangan Island in preparation for their execution but no date has been set. Human Rights Watch called on Widodo to suspend all planned executions in Indonesia -- as the previous government did between 2008 and 2013.  No executions were carried out in 2014, but earlier this year, six people -- including five foreigners -- faced the firing squad. \\\"The executions of two Indonesian citizens in Saudi Arabia in a single week should be a turning point on the subject of death penalty in Indonesia,\\\" said Andreas Harsono, the Indonesian researcher for Human Rights Watch. \\\"Please stop the lecture of sovereignty. It is so old fashioned.\\\" Before news of the second execution emerged on Thursday,  the Indonesian Ministry of Foreign Affairs held a press briefing to denounce the Saudi action. When asked whether Jakarta's complaints smacked of hypocrisy, given the country's refusal to spare foreigners on death row, spokesman Arrmanatha Nasir said: \\\"If you read our constitution, it is the job, the role of the government to protect its citizens, right? So it's not a double standard.\\\" \\\"On the issue of death penalty, we can have a long debate whether it is against human rights or it is morally wrong or right. That's a whole other discussion, that's a whole other argument, but what we're saying now here is we are implementing our laws and we are adhering to our constitution that we have to protect our citizens abroad.\\\"\\n\", \"original_answer\": \"Saudi Arabia executed a second Indonesian maid in a matter of days, sparking outrage from Jakarta and rights groups. The executions were carried out without any prior notice to Indonesian officials. The Indonesian government has been criticized for its failure to grant clemency to several foreigners on death row. Meanwhile, Indonesia continues to advocate for the protection of its own citizens abroad while denying clemency to foreign nationals on its own death row. The tensions between the two countries highlight the complexities surrounding the application of the death penalty and the principles of justice and equality.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 44,
+  "source_cluster_id": "sha256:928b50d1a9d9e2cb8c87e77d545e388b596030f18089717b42f7b5e7f0a8f3b6",
+  "source_id": "15669",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:cabff8efcf8e086c879b5e5143bd77c175cfaa0cda010a81496cd9d6f86858f5",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+  ]
+}

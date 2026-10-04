@@ -1,0 +1,130 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.130415989086032,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:ad267f47d8b1631999e3f1b84749c21b858cb5094c1ad4c85c032054853e37e8",
+  "human_target": null,
+  "input_tokens": 406,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:ad267f47d8b1631999e3f1b84749c21b858cb5094c1ad4c85c032054853e37e8",
+    "feature_hash": "sha256:fb73b265cc9638db4a7ba4f7e54e2a44e7b5bfc15ded0413092fe2037f8b7ffd",
+    "source_normalized_hash": "73d28b0193465cc0a09e000c8d7adc0c1efb8c527aaf28c10976f7577e1d32fa",
+    "values": [
+      0.33088235294117646,
+      0.7058823529411765,
+      0.3333333333333333,
+      1.0,
+      0.0,
+      0.0,
+      0.6691176470588235,
+      0.9411764705882353
+    ],
+    "window_count": 12
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 406,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 430
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:8a3545c156449e21a8f1cd17907accb0585637e9fdb1ad76b2ddcd80c5750ded",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095395,
+    "id": "chatcmpl-LViLDB6PvzHGqhhtOp6oYO9sOBvw5aFT",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 561.676,
+      "predicted_n": 24,
+      "predicted_per_second": 42.72926028528902,
+      "predicted_per_token_ms": 23.403166666666667,
+      "prompt_ms": 416.118,
+      "prompt_n": 328,
+      "prompt_per_second": 788.2379517348444,
+      "prompt_per_token_ms": 1.2686524390243903
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 406,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 430
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Step 2: In next page, You can see Menlo Worldwide tracking form along with the page. Step 3: Enter your Menlo Worldwide tracking number in that form and hit track button to get your status instantly. Step 4: You will get information like current location, source, destination, dispatch & delivery date or any delay info.\\\\n\\\\npassage 2:All you need is Menlo Worldwide tracking awb number / Air waybill number / Docket no / Reference number. Please follow below steps to check your status. Step 1: Simply Click below image or Fill up online tracking form to go to Menlo Worldwide tracking page.\\\\n\\\\npassage 3:Its core business offerings include third-party logistics and supply ... Menlo Worldwide Logistics - Supply Chain 24/7 Company. Menlo Worldwide Logistics specializes in the integration of all functions across the supply chain, from sourcing of raw materials, through product manufacturing to ...\\\\n\\\\n\\\",\\\"question\\\":\\\"menlo worldwide government tracking\\\"}\", \"original_answer\": \"Based on the given passages, Menlo Worldwide offers a tracking service where customers can enter their tracking number to get information about the current location, source, destination, dispatch and delivery date, or any delay information.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 57,
+  "source_cluster_id": "sha256:8a358de9b52456cc5d58ccb33ed9da7a1deed126b2a01259949a1fd601d02ab1",
+  "source_id": "15304",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:ad267f47d8b1631999e3f1b84749c21b858cb5094c1ad4c85c032054853e37e8",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

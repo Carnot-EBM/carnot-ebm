@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.414981435984373,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:f0f00a01bf7d607fc4cf5a4a93e7aecdc779842d6bd31e83077e1290bb84447a",
+  "human_target": null,
+  "input_tokens": 785,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:f0f00a01bf7d607fc4cf5a4a93e7aecdc779842d6bd31e83077e1290bb84447a",
+    "feature_hash": "sha256:647806577a3b24f5cc132e2fac95fd46db433346b5812ae61d3bb41d6ad5290b",
+    "source_normalized_hash": "b93b2be744cbd7ca5dfd52cc616f0cd08a94d60fee48c12a866301fb14313585",
+    "values": [
+      0.3901512997912852,
+      0.6449723846653671,
+      0.125,
+      1.0,
+      0.3101851851851852,
+      0.3333333333333333,
+      0.6098487002087148,
+      0.9356643924626381
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 11,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 785,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 810
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:6672ca4da426bc578f6db098a7ef7b7cc4339a4910ff3ebc07da47a5dfcfd2ca",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 11\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095441,
+    "id": "chatcmpl-pa6Ukm3yV0Pe5DG8NxEF5OuIRmOoovfm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 588.598,
+      "predicted_n": 25,
+      "predicted_per_second": 42.473810648354224,
+      "predicted_per_token_ms": 23.54392,
+      "prompt_ms": 692.882,
+      "prompt_n": 707,
+      "prompt_per_second": 1020.3757638385757,
+      "prompt_per_token_ms": 0.980031117397454
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 785,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 810
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Countertop Refinishing \u2013 Don\u2019t Replace, Refinish! Countertop refinishing is a process of repairing and restoring an existing kitchen counter or bathroom vanity to extend its functional life, without replacement. The process involves the application of a very hard and durable acrylic coating to the existing counter.Countertop refinishing works equally well on kitchen countertops, bathroom vanities, laminate breakfast bars, and even cultured marble sink vanities. refinished countertop is durable and can extend the useful life of your counters for 10-15 years with basic care and maintenance. Countertop finishes are available in dozens of colors and textures to fit almost any decorating plan.\\\\n\\\\npassage 2:Wash the entire Corian counter top with just water and a clean towel. Load the sander with the next finest grit sandpaper (1000) and sand the entire area with that, still spraying with water while you sand. Use a large rubbing action to blend the sanding lines. Then use the next lightest (800) and do the same thing.Clean the Corian counter top with water again and then rub the entire area with the yellow side of the green and yellow scrubbier pad. This will give you a matte finish on your Corian countertop. If you want a gloss finish, continue to step 8.nstructions. Clean off the Corian counter top and wipe it down, just to get all of the crumbs and dirt off of the counter. Use the green side of the green and yellow scrubbier pad on the small, minor scratches.\\\\n\\\\npassage 3:Kitchen counters can be made out of a variety of materials including granite, concrete, tile, wood, and laminates, such as Formica. In addition, relatively new technology has led to the development of engineered or synthetic composite materials like Dupont\u2019s Corian, Silestone, and Swanstone.f you\u2019re considering installation of Corian, Silestone, or another solid surface, also consider the time, cost and repair advantages of countertop refinishing by Miracle Method.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you resurface corian countertops\\\"}\", \"original_answer\": \"To resurface Corian countertops, first clean the countertop thoroughly to remove any crumbs or dirt. Then, use a sander with 1000-grit sandpaper, spraying the area with water while you sand. Use a large rubbing action to blend the sanding lines. Repeat the process with 800-grit sandpaper. After sanding, clean the countertop again with water. To achieve a matte finish, rub the entire area with the yellow side of a green and yellow scrubber pad. If you prefer a gloss finish, follow the additional steps provided in the original instructions. For minor scratches, use the green side of the scrubber pad. The process of resurfacing can extend the life of your countertops for 10-15 years with basic care and maintenance.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 90,
+  "source_cluster_id": "sha256:33856663619032332dc41dacde35b97005e55265cd4d61dd4d11b14c0664e941",
+  "source_id": "15211",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:f0f00a01bf7d607fc4cf5a4a93e7aecdc779842d6bd31e83077e1290bb84447a",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

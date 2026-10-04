@@ -1,0 +1,93 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "answer_units_over_budget",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:596430339e0aa98abd61c3fa9893d508a9aa44c6b1db6ac8fcf0e6715c73c120",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": "answer_units_over_budget",
+    "family_id": "sha256:596430339e0aa98abd61c3fa9893d508a9aa44c6b1db6ac8fcf0e6715c73c120",
+    "feature_hash": "sha256:3c34a66dfb3ca38fc1b377d4b5c8a19729599acc3642bf03187776da391e3a17",
+    "source_normalized_hash": "c9d870818bdd4ccf926c61b84c2d892375baf33291197eac8be6459b2c58455f",
+    "values": null,
+    "window_count": 32
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:e8da51cf9e9bb562b7253d62b89d6273dc70c08e4de13e573d82980a77c0a4d8",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Removing an Andersen Sliding Stationary Patio Door. To remove an Andersen stationary patio door, you must first remove the sliding door as in the previous step, and get a helper. Located at the bottom of the stationary door is a screw or screws that secure the door to the bottom sill.liding Glass Shower Doors. Step inside the shower or bathtub. Turn and face the sliding doors. Grasp the door that is closest to the inside of the tub or shower. Sliding glass shower or tub doors overlap each other as they slide, and one will be closer to the inside.\\\\n\\\\npassage 2:Sliding Glass Shower Doors. Step inside the shower or bathtub. Turn and face the sliding doors. Grasp the door that is closest to the inside of the tub or shower. Sliding glass shower or tub doors overlap each other as they slide, and one will be closer to the inside.Lift up on the door until the rollers clear the bottom rail, and pull inward.liding Glass Shower Doors. Step inside the shower or bathtub. Turn and face the sliding doors. Grasp the door that is closest to the inside of the tub or shower. Sliding glass shower or tub doors overlap each other as they slide, and one will be closer to the inside.\\\\n\\\\npassage 3:1 Use the pry bar to lift the sliding glass door upward until the rollers clear the bottom track. 2  Pull the bottom toward you until the door clears the upper track. 3  If the door will not clear the rollers on the lower track, you may need to adjust the rollers. Pull the door toward you until it has cleared the top tracks. 2  Remove the stationary door. 3  To remove the stationary door, use your screwdriver to remove the retaining screws from the top and sides. 4  Once again, you may have to use the pry bar to lift the door upward until the door clears the lower track.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to remove a sliding glass door\\\"}\", \"original_answer\": \"Based on the given passages, here are the steps to remove a sliding glass door:\\n\\n1. Locate the screw or screws that secure the door to the bottom sill.\\n2. Lift up on the door until the rollers clear the bottom rail.\\n3. Pull the door toward you until it clears the upper track.\\n4. Adjust the rollers if necessary.\\n5. Remove the stationary door by removing the retaining screws from the top and sides.\\n6. Lift the door upward until it clears the lower track.\\n\\nTherefore, the answer is:\\n\\n1. Locate the screw or screws that secure the door to the bottom sill.\\n2. Lift up on the door until the rollers clear the bottom rail.\\n3. Pull the door toward you until it clears the upper track.\\n4. Adjust the rollers if necessary.\\n5. Remove the stationary door by removing the retaining screws from the top and sides.\\n6. Lift the door upward until it clears the lower track.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "slot": 59,
+  "source_cluster_id": "sha256:355724df2f28b0a1a402cdf2ce4694528eb783c7f420b509d5544d55ef4130d3",
+  "source_id": "14469",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:596430339e0aa98abd61c3fa9893d508a9aa44c6b1db6ac8fcf0e6715c73c120",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

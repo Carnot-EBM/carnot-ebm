@@ -1,0 +1,144 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5065176449716091,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:692e7e8a0d1dac826f5fed4fa93be6204bdd291fcce945ada75e001c5c251cf8",
+  "human_target": null,
+  "input_tokens": 870,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:692e7e8a0d1dac826f5fed4fa93be6204bdd291fcce945ada75e001c5c251cf8",
+    "feature_hash": "sha256:2c1487ffad42458ffc8234e685f181de65c370165d5133d46f245f308bf6b863",
+    "source_normalized_hash": "0e1b6d89257bdc762251856ddb8cf88113e807598c15f34585cc0066a1e14e76",
+    "values": [
+      0.3088045634920635,
+      0.5803571428571429,
+      0.25,
+      1.0,
+      0.14583333333333331,
+      0.16666666666666666,
+      0.6911954365079365,
+      0.8928571428571428
+    ],
+    "window_count": 40
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 870,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 893
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:7a4b5b79b03f9f84f745ccc8d6987cd245c7ab1de18ce6be8488c00b5a22481d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095663,
+    "id": "chatcmpl-fh2BfQr4YyKFirv4ocIb4QKrkjYdoldL",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.43,
+      "predicted_n": 23,
+      "predicted_per_second": 42.48009899710028,
+      "predicted_per_token_ms": 23.540434782608692,
+      "prompt_ms": 823.496,
+      "prompt_n": 792,
+      "prompt_per_second": 961.7533054198199,
+      "prompt_per_token_ms": 1.0397676767676767
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 870,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 893
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Kyle Richards reveals she initiated separation from Mauricio Umansky as he moves on\\nThe Real Housewives of Beverly Hills Season 13 premiere night dropped plenty of piping hot tea.\\nKyle Richards and her good friend, Teddi Mellencamp, appeared on Watch What Happens Live following the RHOBH premiere.\\nAndy Cohen wasted no time getting into the nitty gritty with Kyle over what is happening with Mauricio Umansky and where the couple stands in the present.\\nBut first, the RHOBH star wanted to clear up one major thing. Despite the speculation that she and Mau separated to drum up ratings, that is not true. Their split is very real.\\nNo one had Kyle and Mau separating on their 2023 Bravo Bingo card, so the interest in this situation is heavy.\\nHere\u2019s what Kyle told Andy about her marriage.\\nKyle Richards admits she initiated the split\\nAs The Real Housewives of Beverly Hills Season 13 kicked off, things were tense between Kyle Richards and Mauricio Umansky.\\nWhen Andy Cohen asked Kyle about who initiated the split, she admitted she was the one who did.\\nDespite being separated, the two live together in their sprawling Beverly Hills mansion. She revealed that Mau got the main bedroom, and she moved to the upper level, which was more \u201cglam\u201d than the \u201cmasculine\u201d room Mau remained in.\\nKyle chose her words carefully, but she seemed hurt by the entire situation. She denied anything was happening between her and Morgan Wade. Viewers are waiting to see the two interact on RHOBH, and Morgan will appear on the show while filming with Kyle.\\nKyle Richards believes there is \u2018something\u2019 between Mauricio Umanksy and Emma Slater\\nWhile fighting back emotion after Andy asked about the photos circulating of Mauricio Umanksy and his Dancing with the Star partner, Emma Slater, holding hands, Kyle revealed that she is unsure if anything has happened between them, but that \u201csomething\u201d was there.\\nShe admitted that seeing the photos hurt her, and Teddi Mellencamp piped in to criticize Mau, insinuating they were spotted in the middle of Beverly Hills, where they had to know there would be photogs.\\nIt will be interesting to see what develops between Mau and Emma as they continue dancing through this Dancing with the Stars season. This wouldn\u2019t be the first time a pro and a celebrity have developed feelings for one another while doing the show.\\nAs the RHOBH season unfolds, it will be interesting to see what clues viewers notice between Kyle and Mau and when their separation took place.\\nThe Real Housewives of Beverly Hills airs Wednesdays at 8/7c on Bravo.\", \"original_answer\": \"In the premiere of The Real Housewives of Beverly Hills Season 13, Kyle Richards admitted that she initiated the separation from her husband, Mauricio Umansky. She refuted speculations that the separation was for ratings, emphasizing that it was real. Despite the split, the couple still lives together in their Beverly Hills mansion. Richards also expressed suspicion about a possible relationship between Umansky and his Dancing with the Stars partner, Emma Slater. She indicated that she felt hurt seeing photos of them holding hands. The unfolding season will reveal more about the circumstances of the couple's separation.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 253,
+  "source_cluster_id": "sha256:c7041651821e885b8518ec363362461715f664552ccc1956dedd3db8756fccd5",
+  "source_id": "13863",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:692e7e8a0d1dac826f5fed4fa93be6204bdd291fcce945ada75e001c5c251cf8",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5075672989478335,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:4eeb716dc511bb69da4d30940d9af9c9f716da8e7cd040cee21c1b7f65b9bcab",
+  "human_target": null,
+  "input_tokens": 926,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:4eeb716dc511bb69da4d30940d9af9c9f716da8e7cd040cee21c1b7f65b9bcab",
+    "feature_hash": "sha256:b2d583ec4bfe089fb8bb3c54e098553ba1dfc94560ff2e44386673825bf6028d",
+    "source_normalized_hash": "d4dbdf35c6cfdf2ab82190ed1010ad764b6b3aecde1821a2726b70880218bf83",
+    "values": [
+      0.23036211403081686,
+      0.4087138706703924,
+      0.23966942148760328,
+      0.9090909090909091,
+      0.2727272727272727,
+      0.2727272727272727,
+      0.769637885969183,
+      0.9766577296221566
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 926,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 948
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:c0fd7a57ba26cfe703d7cd3e84803a9668a1a925b380d26bacddf9ae82864c69",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095598,
+    "id": "chatcmpl-MOImhFt7eT4UjOAWZfwJrAACHHGNfOnC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.979,
+      "predicted_n": 22,
+      "predicted_per_second": 42.554920025765064,
+      "predicted_per_token_ms": 23.499045454545456,
+      "prompt_ms": 855.262,
+      "prompt_n": 848,
+      "prompt_per_second": 991.5090346583854,
+      "prompt_per_token_ms": 1.008563679245283
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 926,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 948
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1812 Cliff Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Japanese, Sushi Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:30\\\",\\\"Monday\\\":\\\"17:0-21:0\\\",\\\"Saturday\\\":\\\"17:0-21:30\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Ichiban\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 22:23:17\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Very disappointed in my overall experience. Why on earth would anyone serve pickled ginger with artificial sweetener? Maybe I'm the only person in the world who has an extreme distaste for artificial sweetness, but my taste buds are ruined. I wish I had read the unfavorable reviews before we went. But this sealed the deal that I will never go there again.\\\"},{\\\"review_date\\\":\\\"2022-01-05 02:21:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered a small hot sake, Large Sapporo, salmon skin hand roll, tuna, grilled tuna and miso soup. It was very filling. The hand-roll was made to perfection, very tasty and nice and warm. Tuna was fresh and had the right amount of ginger and wasabi. Service was friendly and welcoming. They didn't rush but asked me if I was okay / needed anything throughout my dining experience.\\\"},{\\\"review_date\\\":\\\"2021-12-15 18:38:26\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Cool little sushi place great service all the employees were fast and friendly as well. I ordered ahead to pick up and all the employees asked if I had been helped. They were all fast efficient friendly and professional.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Ichiban is a restaurant located at 1812 Cliff Dr, Santa Barbara, CA. The restaurant serves Japanese cuisine and specializes in sushi bars. The restaurant operates from Monday to Sunday from 4 pm to 9:30 pm. The restaurant allows street parking, validated lot parking, and valet parking. Customers can make reservations, and there is outdoor seating available. The restaurant offers free Wi-Fi, takeout options, and is suitable for groups. The ambiance of the restaurant is casual, and it does not have any specific theme or style. The restaurant has an average rating of 3.5 stars out of 5.\\nBased on customer reviews, the restaurant appears to have mixed opinions. Some customers praised the quality of the food and the attentiveness of the staff, while others expressed disappointment with the artificial sweetener used in some dishes. Overall, the restaurant seems to be a decent option for those looking for sushi and Japanese cuisine, with a casual atmosphere and friendly service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 206,
+  "source_cluster_id": "sha256:514f012d6551b4b48aa41ae49954f56ead0ace5b273c458a36447c0ec8cc68cf",
+  "source_id": "14962",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:4eeb716dc511bb69da4d30940d9af9c9f716da8e7cd040cee21c1b7f65b9bcab",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

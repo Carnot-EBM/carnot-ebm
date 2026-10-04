@@ -1,0 +1,133 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.1483041069004685,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:c4cee94fc3e13fdc6358ac96f460db3906a85f5b943e1b495cca3a87b12e6aba",
+  "human_target": null,
+  "input_tokens": 466,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:c4cee94fc3e13fdc6358ac96f460db3906a85f5b943e1b495cca3a87b12e6aba",
+    "feature_hash": "sha256:b03fe819cc05258f3231b011d9f309f028cd9ddcd3ec7c521cb228efe8110b5f",
+    "source_normalized_hash": "ac97b6bab3fbc0fe4c284fed4725c2a9cd972e4a386b90ce3fdbceadee951263",
+    "values": [
+      0.3424654926810099,
+      0.6316202475685234,
+      0.4166666666666667,
+      0.75,
+      0.0,
+      0.0,
+      0.65753450731899,
+      0.9450652077807251
+    ],
+    "window_count": 18
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 466,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 490
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:1d32d553cbb08d7f4e692d98329cfb8e9ab19ec72f5b53a942a9db64523dc48b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095730,
+    "id": "chatcmpl-HXebvzZxJFC7DcDEeoG6cPMbSrCwqhWJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.275,
+      "predicted_n": 24,
+      "predicted_per_second": 42.53245314784458,
+      "predicted_per_token_ms": 23.511458333333334,
+      "prompt_ms": 449.693,
+      "prompt_n": 388,
+      "prompt_per_second": 862.8108509583204,
+      "prompt_per_token_ms": 1.1590025773195876
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 466,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 490
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Advantages of dams are a lot as following. 1  agriculture-it stores and provides water for agriculture. 2  electricity generation-to rotate wings of turbine we are still using the water energy in terms of kinetic and static or water pressure energy.\\\\n\\\\npassage 2:ADVANTAGES: 1. Once a dam is constructed, electricity can be produced at a constant rate. 2. If electricity is not needed, the sluice gates can be shut, stopping electricity generation. The water can be saved for use another time when electricity demand is high.\\\\n\\\\npassage 3:Problems and Benefits of Building a Dam. Dams can offer huge benefits in terms of electrical power generation and irrigation. Many massive dams worldwide are a tribute to the achievements of civil engineering and electrical engineering. These great feats of civil engineering are not without problems, however, and there are potential disadvantages as well as benefits to take into account.\\\\n\\\\n\\\",\\\"question\\\":\\\"what advantages do dams provide\\\"}\", \"original_answer\": \"Dams provide several advantages such as storing and providing water for agriculture. They are also used to generate electricity, by using the water energy in terms of kinetic and static or water pressure energy to rotate the turbines. Additionally, once a dam is constructed, it can produce electricity at a constant rate. If electricity is not needed at any point, the sluice gates can be shut to stop electricity generation and the water can be saved for use another time when electricity demand is high.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 44,
+  "source_cluster_id": "sha256:f04096aad138040ad1a5be7c1cb24c4410ea749b3b39af0e6a8ff49b9373c5c9",
+  "source_id": "15484",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:c4cee94fc3e13fdc6358ac96f460db3906a85f5b943e1b495cca3a87b12e6aba",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

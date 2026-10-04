@@ -1,0 +1,128 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.1537878550589085,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:2901a41a82b55778e239739d7757c5d36639edf5a8d124abe449e67fb65a9de7",
+  "human_target": null,
+  "input_tokens": 517,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:2901a41a82b55778e239739d7757c5d36639edf5a8d124abe449e67fb65a9de7",
+    "feature_hash": "sha256:be222a2f7b798f8dfaf49399b6bd70efa5c2a16f41c54a4ebaf65f008fc90ab4",
+    "source_normalized_hash": "8b82baf05a548c6076b0195adc3bbc04cb2daa1f32489d8be286460b8c5d4ee2",
+    "values": [
+      0.4913863141216082,
+      0.7197821350762528,
+      0.2,
+      0.2,
+      0.375,
+      0.4,
+      0.5086136858783917,
+      0.6966036838978015
+    ],
+    "window_count": 8
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 517,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 539
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:b364061167e36118057acf71988498179e8f3e5f6dfac9f2899cd0cb3a839cb2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095674,
+    "id": "chatcmpl-bOIiTcLEKpp7aMllufh8Zrw2ULDjsfO1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.42,
+      "predicted_n": 22,
+      "predicted_per_second": 42.6009836954417,
+      "predicted_per_token_ms": 23.473636363636363,
+      "prompt_ms": 498.98,
+      "prompt_n": 439,
+      "prompt_per_second": 879.794781353962,
+      "prompt_per_token_ms": 1.136628701594533
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 517,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 539
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Like other transition metals gold's valence electrons, or the electrons it uses to combine with other elements, are present in more than one shell. Unusually for a metal, gold can also form compounds (aurides) in which its oxidation number is negative (-1).\\\\n\\\\npassage 2:Gold is a heavy metal (density 19.3 g cm -3) and one gram of gold can be hammered out into a thin sheet of gold a metre in area, and just 230 atoms or so thick. Gold leaf is translucent and the transmitted light is greenish blue (gold metal reflects yellow and red, leaving the greenish blue colour.\\\\n\\\\npassage 3:Gold is metallic, with a yellow colour when in a mass, but when finely divided it may be black, ruby, or purple. It is the most malleable and ductile metal; 1 ounce (28 g) of gold can be beaten out to 300 square feet. It is a soft metal and is usually alloyed to give it more strength.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are properties of gold\\\"}\", \"original_answer\": \"Properties of gold:\\n\\n* Gold has more than one shell of valence electrons, allowing it to form compounds with an oxidation number of -1.\\n* Gold is a heavy metal with a density of 19.3 g/cm\u00b3.\\n* One gram of gold can be hammered out into a thin sheet of gold covering a meter in area, and is translucent with a greenish-blue color.\\n* Gold is malleable and ductile, meaning it can be easily beaten into thin sheets and drawn out into wires without breaking.\\n* Gold is a soft metal and is typically alloyed with other metals to increase its strength.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 4,
+  "source_cluster_id": "sha256:5207f2bd327b1e8e28c6db36c85525186e44cff0ca0136d231ca711de05b7363",
+  "source_id": "14388",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:2901a41a82b55778e239739d7757c5d36639edf5a8d124abe449e67fb65a9de7",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

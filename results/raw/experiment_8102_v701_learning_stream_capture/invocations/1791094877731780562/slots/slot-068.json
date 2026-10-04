@@ -1,0 +1,129 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.0706699449801818,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:be89d75f0244a0bed274750e88a55bceb38a2a9566549e768e82c0ec18daf591",
+  "human_target": null,
+  "input_tokens": 363,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:be89d75f0244a0bed274750e88a55bceb38a2a9566549e768e82c0ec18daf591",
+    "feature_hash": "sha256:b4e50a7bfe4048e12f17023ace3e09e5d108ae11baddcc2aa948a261489c0fda",
+    "source_normalized_hash": "1e0c10d5fe65551393918dc1bb1283d8a26835f887dce5472d08c3b91c510e96",
+    "values": [
+      0.2375,
+      0.375,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.7625,
+      0.875
+    ],
+    "window_count": 10
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 363,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 386
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:4090ba0045a132b7f4a36e4769da5641c8eb1713693a7853e73d0304ba979d4f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095411,
+    "id": "chatcmpl-oeJPZnMmAzZdXZFK71RauhjLnMeuAPN5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.628,
+      "predicted_n": 23,
+      "predicted_per_second": 42.70108497887224,
+      "predicted_per_token_ms": 23.418608695652175,
+      "prompt_ms": 387.626,
+      "prompt_n": 285,
+      "prompt_per_second": 735.2447978205797,
+      "prompt_per_token_ms": 1.3600912280701754
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 363,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 386
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Most flea bites can be easily managed at home. The most important part in managing flea bites is being able to resist the urge to scratch the bite. Treat flea bites at home in the following ways: 1  As soon as you identify the bite, clean the area with soap and water and pat the area dry using a clean towel.\\\\n\\\\npassage 2:Difference Between Flea and Bed Bug Bites. Flea bites or bed bug bites can turn your night into a nightmare. It is very difficult to know whether you are fallen prey to a flea bite or bed bug bite because the bites are difficult to identify.\\\\n\\\\npassage 3:Flea bites and bed bug bites are the most common bites to occur within your home, but you must know how to distinguish the two types of bites. The differences between flea bites and bed bug bites might be slight, but they are evident.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to differentiate between bedbugs and fleas\\\"}\", \"original_answer\": \"Unable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 69,
+  "source_cluster_id": "sha256:727863cee613c45a54cede1bdd15768b8e7b59727f5583f7e90f64a476a3a17d",
+  "source_id": "12249",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:be89d75f0244a0bed274750e88a55bceb38a2a9566549e768e82c0ec18daf591",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

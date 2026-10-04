@@ -1,0 +1,90 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "answer_units_over_budget",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:e44c4fe573fc079a566b0f040d7ad5bfccf38d6a1c9047f5dc1dcb9b6aca63a4",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": "answer_units_over_budget",
+    "family_id": "sha256:e44c4fe573fc079a566b0f040d7ad5bfccf38d6a1c9047f5dc1dcb9b6aca63a4",
+    "feature_hash": "sha256:6a54fef5d17723134ca7d8bbc6db9ac42c60d4ac9bc423b7059939446d7b64e4",
+    "source_normalized_hash": "7f8d2f43902bd90623605b2a3e4152af8f847939201e3e979fcea30ccd1849b1",
+    "values": null,
+    "window_count": 34
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:4f05be314e30862da2d4428018688de90672b08a33e2a7bdcf8b300d6e987f37",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Preheat oven to 350\u00b0F. Mix brown sugar and pumpkin pie spice in large bowl. Add sweet potatoes; toss well. Spread in 13x9-inch baking dish. Mix orange juice and vanilla; pour over sweet potatoes. Dot with butter. Cover. Bake 40 minutes. Remove from oven and stir. Bake, uncovered, 15 to 20 minutes longer or until sweet potatoes are fork tender.\\\\n\\\\npassage 2:Ready In. 1  Preheat oven to 350 degrees F (175 degrees C). 2  Coat the bottom of a glass or non-stick baking dish with olive oil, just enough to coat. 3  Wash and peel the sweet potatoes. 4  Cut them into medium size pieces. 5  Place the cut sweet potatoes in the baking dish and turn them so that they are coated with the olive oil.\\\\n\\\\npassage 3:1 Cut them into medium size pieces. 2  Place the cut sweet potatoes in the baking dish and turn them so that they are coated with the olive oil. 3  Sprinkle moderately with oregano, and salt and pepper (to taste). 4  Bake in a preheated 350 degrees F (175 degrees C) oven for 60 minutes or until soft.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook cut sweet potatoes\\\"}\", \"original_answer\": \"Based on the given passages, here is how you can cook cut sweet potatoes:\\n\\nAccording to Passage 1, you can cook cut sweet potatoes by:\\n\\n1. Preheating the oven to 350\u00b0F (175\u00b0C).\\n2. Mixing brown sugar and pumpkin pie spice in a large bowl.\\n3. Adding the sweet potatoes to the bowl and tossing them well to coat.\\n4. Spreading the mixture in a 13x9-inch baking dish.\\n5. Mixing orange juice and vanilla together and pouring it over the sweet potatoes.\\n6. Dotting the top with butter.\\n7. Covering the dish with foil and baking for 40 minutes.\\n8. Removing the foil and baking for an additional 15 to 20 minutes, or until the sweet potatoes are fork tender.\\n\\nAlternatively, according to Passage 2, you can cook cut sweet potatoes by:\\n\\n1. Preheating the oven to 350\u00b0F (175\u00b0C).\\n2. Coating the bottom of a glass or non-stick baking dish with olive oil.\\n3. Washing and peeling the sweet potatoes.\\n4. Cutting them into medium-sized pieces.\\n5. Placing the cut sweet potatoes in the baking dish and turning them to coat with the olive oil.\\n6. Sprinkling oregano, salt, and pepper (to taste) over the sweet potatoes.\\n7. Baking for 60 minutes or until the sweet potatoes are soft.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "retention",
+  "slot": 26,
+  "source_cluster_id": "sha256:2571a232facafacfec12b8fba7c54a675936a6d28c4361ec56d6a8fc66f6ec01",
+  "source_id": "15118",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:e44c4fe573fc079a566b0f040d7ad5bfccf38d6a1c9047f5dc1dcb9b6aca63a4",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

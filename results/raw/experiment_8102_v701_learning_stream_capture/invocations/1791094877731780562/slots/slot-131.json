@@ -1,0 +1,146 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5552740920102224,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:5d8f8f345e827f80bb44f9730ff49d23432d66dc41023ebd397b3d56914e8c3c",
+  "human_target": null,
+  "input_tokens": 910,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:5d8f8f345e827f80bb44f9730ff49d23432d66dc41023ebd397b3d56914e8c3c",
+    "feature_hash": "sha256:08cacd4b8464c0668a9a4d334a48bf96d93c8b2f0650335302a5bcc19c570b2f",
+    "source_normalized_hash": "2b3df7a4ab3c3a36e195817ca06a64d53d4dd2c959361db88a65a05c9db7c150",
+    "values": [
+      0.3558757672347936,
+      0.566966096783541,
+      0.09090909090909091,
+      1.0,
+      0.2,
+      0.2,
+      0.6441242327652064,
+      0.8748285521104993
+    ],
+    "window_count": 44
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 910,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 935
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:cbf64407314e5b223d6570e1699d6b0637fc6472d043db1067784df8a8007679",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095502,
+    "id": "chatcmpl-Kf4sbkej9Tf48IfFjyPCcAcpsO4v0w7n",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 589.573,
+      "predicted_n": 25,
+      "predicted_per_second": 42.40357004136893,
+      "predicted_per_token_ms": 23.582919999999998,
+      "prompt_ms": 850.115,
+      "prompt_n": 832,
+      "prompt_per_second": 978.6911182604707,
+      "prompt_per_token_ms": 1.0217728365384615
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 910,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 935
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Tropical Storm Lidia will turn back towards Arizona in the next week\\nTropical Storm Lidia was located approximately 950 miles south of Arizona on Thursday, 4 Oct 2023. The National Hurricane Center forecast projection for the storm will move northwestward over the next few days and then track more westward by Friday. After the Sunday time frame, the track becomes more interesting going into early next week.\\nAccording to the Arizona Weatherman, there is looking to be a radical change in the tropical system\u2019s trajectory going into Monday and Wednesday. The Spaghetti model forecasts are mixed on the overall trajectory of this system. Some continue moving it westward, and others are recurving the system back around toward Baja Mexico. The Arizona Weatherman is looking at the potential likelihood that this change in direction is going to happen next week.\\nThe most significant indicator the author is looking at closely is the 200 mb upper-level jet stream pattern and the major troughing forecast to set up over the Southwest U.S. into the Pacific Ocean by Monday morning. As this troughing sets up, it will be the impetus for the trajectory change for Tropical Storm Lidia to move toward the Mexican coast over the next few days. It is forecasted to enter the Southern Gulf of California by Thursday, 12 Oct 2023. Also, the current sea surface temperatures are 89 F, which is very warm due to the El Nino pattern. Furthermore, the Madden Jullian Oscillation 200 mb flow is projected to have upper-level divergence over the East Pacific basin, with both conditions enhancing tropical storm activity in the region.\\nWill Tropical Storm Lidia bring rain to Arizona early next week? Currently, the models are projecting most of the rain to track over Mexico, New Mexico, and Texas, not Arizona. However, this is about a week out, and conditions can change. Currently, the Arizona Weatherman looks like minimal chance for significant rain on the current track for Arizona; however, this is a week out and is likely to change.\\nThis tropical system will be watched over the next week, and updates will be provided in the comments section if significant changes are forecasted to the path of the storm. This will be an interesting tropical system to watch for sure over the next week. Currently, there is another potential tropical wave that may develop south of Guatemala in the next several days as well. The East Pacific Basin is looking to get more active in the coming 1-2 weeks.\\nSource: Arizona Weatherman is an expert meteorologist with over 25 years of experience as an aviation meteorologist with the United States Air Force, government contractor, and private practice. Has trained Special Operations Weather Technicians (SOWT) in weather techniques and is a state-certified STEM teacher.\", \"original_answer\": \"Here's the summary within 115 words:\\n\\nTropical Storm Lidia is expected to turn westward towards Arizona by early next week, potentially bringing rain to the state. The storm is currently located south of Arizona and is forecasted to move northwestward before turning westward. The Arizona Weatherman is monitoring the situation closely, with models showing most of the rain tracking over Mexico, New Mexico, and Texas. While there is a minimal chance of significant rain in Arizona, the situation is likely to change over the next week. The East Pacific Basin is expected to become more active in the coming weeks.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 132,
+  "source_cluster_id": "sha256:9d9b5154d87ac218ec112da3195ac129c4b199681b5325850cb2339718516ace",
+  "source_id": "13490",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:5d8f8f345e827f80bb44f9730ff49d23432d66dc41023ebd397b3d56914e8c3c",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

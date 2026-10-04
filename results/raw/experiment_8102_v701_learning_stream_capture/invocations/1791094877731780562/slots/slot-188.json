@@ -1,0 +1,133 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2537580699427053,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:42ce49da7cc52531fb570b97ef91ae3bc94616abe263e4e64a077e4beb72ab34",
+  "human_target": null,
+  "input_tokens": 609,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:42ce49da7cc52531fb570b97ef91ae3bc94616abe263e4e64a077e4beb72ab34",
+    "feature_hash": "sha256:2ea5870d5352806b89acd54dc2df9091119a1cd6bedb230d3a7604806becb415",
+    "source_normalized_hash": "4819ebc5e64a74b7c40a429d27151842fbd2d5dfd6868be68b950690f5643e2d",
+    "values": [
+      0.40108217846744415,
+      0.7897727272727272,
+      0.16666666666666666,
+      1.0,
+      0.0,
+      0.0,
+      0.5989178215325558,
+      0.9290583369931196
+    ],
+    "window_count": 18
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 609,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 633
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:e34ad35f1f60633d8f5857c099f56b90c577a112cb3b272fc0e0b16742b0719e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095581,
+    "id": "chatcmpl-QFKEa2RYK2cpAdLkiQXiZgq0T8gDLJT9",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.599,
+      "predicted_n": 24,
+      "predicted_per_second": 42.50804553320144,
+      "predicted_per_token_ms": 23.524958333333334,
+      "prompt_ms": 577.153,
+      "prompt_n": 531,
+      "prompt_per_second": 920.0333360478071,
+      "prompt_per_token_ms": 1.0869171374764595
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 609,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 633
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Or follow these steps: 1  Open iTunes. 2  If you\u2019re not signed in, sign in with your Apple ID. 3  Mac: From the menu bar at the top of your computer screen, choose Account > View My Account.  Enter your password, then press the Return or Enter key on your keyboard, or click View Account.\\\\n\\\\npassage 2:Q: How to list authorized devices. I recently purchased a Iphone 4. When I connected to Itunes and wanted to download an app from the Istore, I got a message that I had already reached five authorized devices. The only function I have found so far is deactivate all!\\\\n\\\\npassage 3:As soon as you try to do something that requires iTunes authorization, such as enable iTunes Match, a box will pop up asking you to do so. Just enter the Apple ID and password associated with the content you\u2019re trying to access and Apple will automatically authorize iTunes on your PC or Mac. If you\u2019d like to manually authorize iTunes, just go to the Store menu in the OS X menu bar and select Authorize This Computer. For Windows users, the lack of a menu bar means you\u2019ll find this menu by clicking the small icon on the top-left of the iTunes window, illustrated in the following screenshot.\\\\n\\\\n\\\",\\\"question\\\":\\\"apple, how to authorize a device\\\"}\", \"original_answer\": \"To authorize a device on Apple, open iTunes and sign in with your Apple ID. If you're on a Mac, from the menu bar at the top of your computer screen, choose Account > View My Account, enter your password, then press the Return or Enter key on your keyboard, or click View Account. A box will pop up asking you to authorize iTunes when you try to access content that requires authorization. Enter the Apple ID and password associated with the content you\u2019re trying to access and Apple will automatically authorize iTunes on your PC or Mac. Alternatively, you can manually authorize iTunes by going to the Store menu in the OS X menu bar and selecting Authorize This Computer. For Windows users, you\u2019ll find this menu by clicking the small icon on the top-left of the iTunes window.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 189,
+  "source_cluster_id": "sha256:8b3aeb1b274d914e9ebba93b63582525d6a73c697b5f83b7d68f6a644bdd6d6e",
+  "source_id": "15328",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:42ce49da7cc52531fb570b97ef91ae3bc94616abe263e4e64a077e4beb72ab34",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

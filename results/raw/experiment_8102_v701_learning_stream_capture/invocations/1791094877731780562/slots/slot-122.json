@@ -1,0 +1,134 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4149609010200948,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:145f711b06dab2440844dbf05e908a7aab2585449618a12f05248ca546f6d7e0",
+  "human_target": null,
+  "input_tokens": 788,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:145f711b06dab2440844dbf05e908a7aab2585449618a12f05248ca546f6d7e0",
+    "feature_hash": "sha256:2d991b26f048dda495b0385a30808e5a65612aa7f26c05c0a0fef45aad52d21d",
+    "source_normalized_hash": "710277fecd90ec4f734769efe3a78e592ce0ded1e349f1b4936d487e46fb0194",
+    "values": [
+      0.22347041847041846,
+      0.40328798185941045,
+      0.32857142857142857,
+      0.7142857142857143,
+      0.14285714285714285,
+      0.14285714285714285,
+      0.7765295815295816,
+      0.915635951350237
+    ],
+    "window_count": 20
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 788,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 812
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:c56fc5261cdda18e1266c1d48d18557c958889d1cc2f0907e120c0754d1d1f25",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095490,
+    "id": "chatcmpl-xPosY8PwqWHkygMPmX51ohc1AEijmbfC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.872,
+      "predicted_n": 24,
+      "predicted_per_second": 42.41241835609466,
+      "predicted_per_token_ms": 23.578,
+      "prompt_ms": 706.492,
+      "prompt_n": 710,
+      "prompt_per_second": 1004.9653782349977,
+      "prompt_per_token_ms": 0.9950591549295774
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 788,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 812
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3400 Calle Real\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Barbeque, Food Trucks, Restaurants, Caterers, Event Planning & Services, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Georgia's Smokehouse\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-08-17 17:08:35\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"These guys make some great sandwiches.\\\\n I had the grilled cheese and it was really delicious it was on sourdough bread has several different cheeses mixed in.  I actually ended up buying two at 5 bucks a piece they were a deal. \\\\nMy friend got a couple of pulled pork sandwiches and they were awesome too. \\\\nThis is a great food truck, nice people and good prices\\\"},{\\\"review_date\\\":\\\"2016-08-04 05:16:51\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Georgia's is the most prolific truck in the SB area and we've eaten there several times. They have a solid line-up, with pulled pork, brisket and chicken. My fav is the grilled cheese with bacon, simple but solid :-) They are also very accommodating  about doing lo-carb dishes. Can't go wrong with Georgia's  :-)\\\"},{\\\"review_date\\\":\\\"2016-04-08 06:31:52\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Shame on you if you like this place. There are other good BBQ catering companies with in range. I bet the new Dickies BBQ will be 100% better than this sh@t. Sorry but this is some nasty food. Don't be fooled you will regret every penny spent, I know I did.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Georgia's Smokehouse is a food truck that offers barbecue, food trucks, restaurants, catering services, event planning and services, and takeout options. The business has outdoor seating and allows for reservations. It does not offer Wi-Fi or valet parking. The restaurant is casual and good for groups. Customers can order online or through their mobile app. The business has received mixed reviews, with some praising the quality of the food, while others criticizing the taste and price. The business has been operating since August 2016, and its hours of operation are not available in the provided data.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 123,
+  "source_cluster_id": "sha256:cabae1259d0cec7d5a1abb3735db97fe795243a62f32aba7d9df85dc18e0870c",
+  "source_id": "14628",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:145f711b06dab2440844dbf05e908a7aab2585449618a12f05248ca546f6d7e0",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

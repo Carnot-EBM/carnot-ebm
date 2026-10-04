@@ -1,0 +1,132 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4905806611059234,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:26eb5395aba5642cbfbf18f54b8641053ede0fea5fe1af4163e51dbf34d96b76",
+  "human_target": null,
+  "input_tokens": 914,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:26eb5395aba5642cbfbf18f54b8641053ede0fea5fe1af4163e51dbf34d96b76",
+    "feature_hash": "sha256:161ef84b37ae84feafbe35250c4430602043811364c72f3788c5e9d4855beac2",
+    "source_normalized_hash": "e12b90faa8dc192c1a0fafeb643a74a1c8590fdaddc5c7c08001b2bb4c87530d",
+    "values": [
+      0.23743278573781293,
+      0.3995318675889328,
+      0.46875,
+      0.75,
+      0.25,
+      0.25,
+      0.7625672142621871,
+      0.931308465085639
+    ],
+    "window_count": 16
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 914,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 937
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:51b3eddc6a6158d7f7d18eaa79c33b1cc1dbf7ec85eb1de7f9a7012467be181b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095660,
+    "id": "chatcmpl-tGbFDZg0P7wb5FkP5RDr22WKaexVZd2P",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.4,
+      "predicted_n": 23,
+      "predicted_per_second": 42.482452899889175,
+      "predicted_per_token_ms": 23.539130434782606,
+      "prompt_ms": 849.739,
+      "prompt_n": 836,
+      "prompt_per_second": 983.8315059094616,
+      "prompt_per_token_ms": 1.0164342105263158
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 914,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 937
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5735 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Fast Food, Burgers, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"10:30-21:0\\\",\\\"Sunday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"10:30-21:0\\\",\\\"Tuesday\\\":\\\"10:30-21:0\\\",\\\"Wednesday\\\":\\\"10:30-21:0\\\"},\\\"name\\\":\\\"The Original Habit Burger Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-07 01:18:02\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Surprised to find that a BBQ chicken salad can be made so many different ways.  While the salad was good at the Original location, it's awesome at the Milpas street location.  We also hit up The Habit in Oxnard a couple of nights ago.\\\"},{\\\"review_date\\\":\\\"2021-10-21 20:53:22\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Better than the locations in the Bay Area (I would hope so, given that it's the original!), buuuut it's still not as good as In-N-Out. The cheese is not as melty, and I prefer whole lettuce leaves than shredded lettuce.\\\\n\\\\nOnion rings are good. Gotta remember to ask for the ranch dipping sauce.\\\"},{\\\"review_date\\\":\\\"2021-09-22 20:10:59\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Great good and great staff. They overcharged me but it was fine. They need to deal with the fly problem outside. Many flies just make the place seem unsanitary. But other than that, I would recommend.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Original Habit Burger Grill is a fast food restaurant located in Goleta, CA, specializing in burgers and other casual fare. According to their hours, they are open seven days a week, from 10:30am to 9:00pm, with extended hours on Fridays and Saturdays. The restaurant offers outdoor seating, take-out, and good options for groups, but does not have validated parking or Wi-Fi. The ambiance is described as classy and casual, but not particularly trendy or upscale. The restaurant has received an average rating of 4.0 stars from customer reviews, with many praising the variety of options and the quality of the food, particularly the BBQ chicken salad and onion rings. However, some customers have noted that the cheese could be meltier and the lettuce could be whole leaves rather than shredded. The staff is known for being friendly and helpful, but there have been reports of overcharging and a fly problem outside the restaurant. Overall, The Original Habit Burger Grill seems like a solid option for those looking for a quick, satisfying meal in the Goleta area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 251,
+  "source_cluster_id": "sha256:43475ba0f5cb75177a2fe0e7c00d690688b08b16a69581886efa4fb0c474d03e",
+  "source_id": "14779",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:26eb5395aba5642cbfbf18f54b8641053ede0fea5fe1af4163e51dbf34d96b76",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6210378599353135,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:d5c8824fc853378adc0b75509b75908b9db53c4da4fba51817ddebb220611a96",
+  "human_target": null,
+  "input_tokens": 1009,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:d5c8824fc853378adc0b75509b75908b9db53c4da4fba51817ddebb220611a96",
+    "feature_hash": "sha256:d794ed57cd50d6f49a527005f256a569a900f27f4fe60a14658b188653571a37",
+    "source_normalized_hash": "6d2f32c1b3df4edb51d378bb5d10d5a08465568d4aba81e153463ee00da0939f",
+    "values": [
+      0.21638513861426922,
+      0.4441001400560224,
+      0.38235294117647056,
+      0.75,
+      0.25,
+      0.25,
+      0.7836148613857308,
+      0.939485585901027
+    ],
+    "window_count": 34
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1009,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1032
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:736339ea0f9a78997e7191255948f2b96a6a1839358850e562998f424c0088f3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095634,
+    "id": "chatcmpl-r4XQFmvWjXMfcSV217H4U7ROTK8adbLi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 548.512,
+      "predicted_n": 23,
+      "predicted_per_second": 41.931625926142004,
+      "predicted_per_token_ms": 23.848347826086954,
+      "prompt_ms": 927.835,
+      "prompt_n": 931,
+      "prompt_per_second": 1003.411166856176,
+      "prompt_per_token_ms": 0.9966004296455425
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1009,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1032
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1905 Cliff Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Pizza, Restaurants, Sandwiches, Italian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-16:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Giovanni's Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-04-04 05:09:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I always walk by Giovanni's and make a mental note to try their pizza. My contractor was stuck working late and I wanted to surprise him with an assortment of food, Giovanni's was the first to come to mind, plus, it was an excuse to finally try their pizza. Wow, just wow, the crust tasted like an award winning Chicago pizza joint - only better. We ordered a meat lovers and Hawaiian. I'm not a pizza fan but this pizza is really good. They deliver and next time I walk by Giovanni's, I will actually go in.\\\"},{\\\"review_date\\\":\\\"2019-03-01 21:46:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great pizza. Would definitely recommend for big parties. N the sandwiches are all delicious. \\\\nGreat lunch time specials and affordable. \\\\nNice cold.Tall mug of beers are always nice. Great selection of brews. \\\\nGreat location. N awesome customer service. \\\\nThank you. Always hits the stop.\\\"},{\\\"review_date\\\":\\\"2019-02-13 17:11:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Normally a pizza doesn't stand out that often to be worthy of writing a review.\\\\nHowever, Giovanni's on the Mesa, is worthy of compliments.\\\\nThe crew is always friendly and willing to try and get the order correct. Sometimes over the phone ordering causes stuff to get lost in the sauce. Not at Giovanni's on the Mesa.\\\\nThe pizza they made last night was fantastic. So much better than normal commercial pizza.\\\\nIf you want some really good pie, check these folks out.\\\\nPeace and pizzaout,\\\\nAdam\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"Giovanni's Pizza, located at 1905 Cliff Dr in Santa Barbara, CA, is a well-regarded local business specialising in pizza, sandwiches, and Italian cuisine. With a business rating of 3.5 stars, this eatery offers no reservations but does provide outdoor seating, take-out, and is suitable for groups. However, there's no WiFi available. Customers praise Giovanni's for its quality pizza, which some compared to award-winning Chicago-style pizza. The crust, meat lovers, and Hawaiian pizzas were specifically highlighted in the reviews. They also commend the friendly staff, great location, and affordability, especially for lunchtime specials. Giovanni's is known for its excellent customer service and has been recommended for big parties. It's open every day, but hours vary, with it closing earliest on Saturdays.\\\"\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 231,
+  "source_cluster_id": "sha256:60c40919af4c7866bc3f73ca38ec45486666dbf42af19d0a3c8e70a712ac7bcd",
+  "source_id": "14280",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:d5c8824fc853378adc0b75509b75908b9db53c4da4fba51817ddebb220611a96",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

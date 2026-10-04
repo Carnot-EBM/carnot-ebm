@@ -1,0 +1,133 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2801253619836643,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:1ad317a0262ba4604aae57fd31b69521bbc3912f031ce9a5fe7e9500f898436b",
+  "human_target": null,
+  "input_tokens": 534,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:1ad317a0262ba4604aae57fd31b69521bbc3912f031ce9a5fe7e9500f898436b",
+    "feature_hash": "sha256:55d1dd9853db4f8fd5c6f07380b6f75eb4419c56f3bb2482e575b92ed42ab9d6",
+    "source_normalized_hash": "4354acfd396589c7eceb468a20c8da46f638ff936494623eda3bf091669569a1",
+    "values": [
+      0.43207648379217006,
+      0.6461155674390968,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5679235162078299,
+      0.8678773024361259
+    ],
+    "window_count": 18
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 534,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 557
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:43bf9aa5cde8e369714acff5d4315f8bb99b78c62288a3ba89ef22415708ea2d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095341,
+    "id": "chatcmpl-sCs7F2P2LMhwKvtzwgp20MRq8oir1naK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 535.554,
+      "predicted_n": 23,
+      "predicted_per_second": 42.94618283123644,
+      "predicted_per_token_ms": 23.28495652173913,
+      "prompt_ms": 516.333,
+      "prompt_n": 456,
+      "prompt_per_second": 883.150989768231,
+      "prompt_per_token_ms": 1.1323092105263157
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 534,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 557
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Wave Energy Fundamentals: How Waves Form. Wave energy, in one sense, is just another form of solar energy. This might sound odd, but just consider that waves start from wind, which forms as a result of the sun's heating of the \u00adEarth. The sun doesn't ever heat the Earth evenly.\\\\n\\\\npassage 2:To get a sense of wind-created waves, simply blow over a bowl of liquid, for instance. A series of waves will follow your exhalation's path. Even when wind is blowing out to sea, waves still come ashore as a result of the shape of the ocean basins.\\\\n\\\\npassage 3:The wave visible above the level of the water is in fact only part of the wave; the wave extends down through the water column to the ocean floor as well. Waves start out in the deep, open ocean as relatively vertical in shape, Presnell said. As a wave travels toward the shore, though, the bottom part of the wave drags along the ocean floor. The upper part of the wave above the water line starts to move faster than the rest of the wave. As the ocean depth decreases closer to shore, the drag on the wave's bottom becomes stronger, and the upper part of the wave begins to tilt forward.\\\\n\\\\n\\\",\\\"question\\\":\\\"how ocean waves work\\\"}\", \"original_answer\": \"Ocean waves are formed as a result of wind created by the sun's heating of the Earth. The wind blows over the ocean surface, creating a series of waves that can even come ashore due to the shape of the ocean basins. Waves extend both above and below the water surface, with the bottom part of the wave dragging along the ocean floor. As waves approach the shore, the depth decreases, causing the upper part of the wave to tilt forward.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 23,
+  "source_cluster_id": "sha256:ebf125406fc9d34d7f9bab57384de574eab1fbddfb45a4ff43d3fcf958daa94c",
+  "source_id": "15232",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:1ad317a0262ba4604aae57fd31b69521bbc3912f031ce9a5fe7e9500f898436b",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

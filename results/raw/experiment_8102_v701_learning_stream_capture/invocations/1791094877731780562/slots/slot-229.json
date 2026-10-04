@@ -1,0 +1,149 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.8017970829969272,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:16f6e9af6275db43f409ef6d9d0394328d1ab967f528e85245730942772c0e53",
+  "human_target": null,
+  "input_tokens": 1321,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:16f6e9af6275db43f409ef6d9d0394328d1ab967f528e85245730942772c0e53",
+    "feature_hash": "sha256:e91a98cd774492d52e3d6bd55043592f35ddec98addd00d5cbb3afed8f31188c",
+    "source_normalized_hash": "a08245d3f7b1f04af8813aef812382853379678c1b358c29e389d296ecd2b986",
+    "values": [
+      0.19709984560350777,
+      0.35460305809378584,
+      0.4222222222222222,
+      0.8888888888888888,
+      0.33333333333333326,
+      0.3333333333333333,
+      0.8029001543964922,
+      1.0
+    ],
+    "window_count": 50
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1321,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1343
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:d8d645d61d3757d9a818f624f180e5ed54debf05a52f4e639162e9f0af351292",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095632,
+    "id": "chatcmpl-btR1174y6KOP1UY0Ii5lNQ7aIE3rOGSb",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 518.005,
+      "predicted_n": 22,
+      "predicted_per_second": 42.4706325228521,
+      "predicted_per_token_ms": 23.54568181818182,
+      "prompt_ms": 1151.318,
+      "prompt_n": 1243,
+      "prompt_per_second": 1079.6322128204372,
+      "prompt_per_token_ms": 0.9262413515687852
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1321,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1343
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1115 Casitas Pass Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":2.0,\\\"categories\\\":\\\"Fast Food, Burgers, Coffee & Tea, Restaurants, Food\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"0:0-0:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"0:0-0:0\\\",\\\"Sunday\\\":\\\"0:0-0:0\\\",\\\"Thursday\\\":\\\"0:0-0:0\\\",\\\"Tuesday\\\":\\\"0:0-0:0\\\",\\\"Wednesday\\\":\\\"0:0-0:0\\\"},\\\"name\\\":\\\"McDonald's\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-04 23:22:11\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"***HEALTH RISK REVlEW!!!****\\\\nTerrible customer service. There is a tall lady working in the front who has an arrogant attitude towards the customers. I am writing a review because they did something that was a risk to health safety. We ordered things for dine in at 2:34pm on Dec 4 ( order number 829). The lady with an attitude served us our food and mistakenly gave us an extra drink. After a couple of minutes, we figured out that there was an extra drink we did not pay for. My mom returned it coz we wanted to be honest. At the counter, she was just arrogantly told by the same lady to just leave it on the counter which was weird because usually restaurants just let u have anything that u wanna return out of courtesy and health safety I am sure. Well, to our surprise, they gave the same cup to a different customer after a few minutes. BIG RED FLAG! What if we were bad people who put poison into the drink or something?? Restaurants r not supposed to give any food or drinks to their customers unless it came directly from their kitchen. And what made it worse for us is that the same lady took a short break to eat ice cream and without a care sat with her shoes up on the seat. What is the point of sanitizing the tables when their employees will just do that? She even left her shoe mark on the seat. I wanted to take a photo but by the time I took out my phone to do it, she got up. I have never seen that type of unprofessionalism from a McDonald's employee. And I never had high standards for McDonald's. I suggest the owner to check the cctvs. Restroom for women were gross too!\\\"},{\\\"review_date\\\":\\\"2021-11-25 19:26:42\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The COVID-19 \\\\\\\"safety  precautions\\\\\\\"that they have in place is completely ridiculous and utter overkill . It gives the bad attitude not friendly workers more reason to talk to the customers like we're stupid. Get over your Covid paranoia.\\\"},{\\\"review_date\\\":\\\"2021-10-12 03:08:13\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"When we made it inside, the lady that is \\\\\\\"manager\\\\\\\" told me and my husband to use the monitor to order... we took longer to try to put I my order... a man came in and walked to the register to place his order... when we finished placing the order the man had already received his order.. tell me how that makes sense?\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data in JSON format, here is an objective overview of the McDonald's location in Carpinteria, CA:\\n\\nThis McDonald's location has a rating of 2.0 out of 5 stars based on reviews from three customers. One reviewer had a negative experience with the customer service, describing the staff as having an \\\"arrogant attitude\\\" and expressing concern about health risks due to a mistake with their order. Another reviewer criticized the restaurant's COVID-19 safety protocols as \\\"ridiculous\\\" and \\\"overkill.\\\" A third reviewer experienced issues with ordering and perceived unequal treatment compared to other customers.\\n\\nThe restaurant has a limited menu and is open for breakfast, lunch, and dinner. It offers free WiFi and takes orders for takeout and delivery. The ambiance is casual and does not offer outdoor seating or validated parking. Customers have reported mixed experiences with the staff, with some feeling that the service is slow and others encountering rude or unfriendly employees.\\n\\nOverall, this McDonald's location appears to have some issues with customer service and may benefit from improving its communication and training for staff. Additionally, the restaurant's COVID-19 safety protocols may need to be reassessed to ensure that they are effective and fair for all customers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 230,
+  "source_cluster_id": "sha256:cb22f8b58234b4c26f97f931ad20bcbed6d6e7780ae712410d5246a7dc4825fa",
+  "source_id": "14758",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:16f6e9af6275db43f409ef6d9d0394328d1ab967f528e85245730942772c0e53",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

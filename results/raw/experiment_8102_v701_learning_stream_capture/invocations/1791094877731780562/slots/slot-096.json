@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.382933960063383,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:b68af5f29b2ab36a0f8ac5bb674592ff736ebedf60a41f57a6bf9e12a072ff21",
+  "human_target": null,
+  "input_tokens": 791,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:b68af5f29b2ab36a0f8ac5bb674592ff736ebedf60a41f57a6bf9e12a072ff21",
+    "feature_hash": "sha256:06c6eb8896a59a508c075f0f5313acee5ca1a3f80f3dfbce30a661abf06273a6",
+    "source_normalized_hash": "27306e47252c013de12bde02d575655457ecea4151fe198339219551f7c54053",
+    "values": [
+      0.3571442600609267,
+      0.6286604136604137,
+      0.26666666666666666,
+      0.9,
+      0.6583333333333333,
+      0.7,
+      0.6428557399390733,
+      0.9768879268879269
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 791,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 815
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:07745571fd7b66d48f91608491d0cdf1be696a5677226fab676b92c923c251d0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095451,
+    "id": "chatcmpl-Qr6syi8MPXlYIqp8AW4zPn07u3iP7aDJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.494,
+      "predicted_n": 24,
+      "predicted_per_second": 42.51595233961742,
+      "predicted_per_token_ms": 23.520583333333335,
+      "prompt_ms": 708.098,
+      "prompt_n": 713,
+      "prompt_per_second": 1006.9227705769541,
+      "prompt_per_token_ms": 0.9931248246844319
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 791,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 815
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Sweat and underarm odor is an unfortunate fact of life that sometimes leaves behind an unpleasant smell on your clothing. Perspiration is your body's natural way to maintain a lower temperature, and it's not the sweat that's causing the odor but the bacteria found lurking under your arms.weat and underarm odor is an unfortunate fact of life that sometimes leaves behind an unpleasant smell on your clothing. Perspiration is your body's natural way to maintain a lower temperature, and it's not the sweat that's causing the odor but the bacteria found lurking under your arms.\\\\n\\\\npassage 2:Baking soda helps get rid of external body odor by killing the bacteria that grows in areas like underarms, breast creases, and the inner thighs. While in the shower or bath, massage a baking soda paste onto desired areas (paste recipe below). Let set for 2 or 3 minutes, then wash the area as usual.The baking soda paste will help kill the bacteria that causes the body odor, leaving the area smelling fresher longer.ow to Make Baking Soda Paste. Mix together 3 tablespoons of baking soda and 1 tablespoon of water using a spoon. Mush the mixture around in the bowl until it forms a paste. That\u2019s it! Note: If baking soda gets into cuts or scrapes, it burns.\\\\n\\\\npassage 3:To use this therapy dust baking soda to your underarms and wait for 20 minutes before washing it with warm water. Another way to use this remedy is by adding lemon and water drops to it and then applying this paste to skin for 20 minutes. Use this remedy once daily to get rid of underarm odor quickly.o eliminate and stop armpit odor naturally use home remedies like vinegar, baking soda, lemon, tea tree oil, aloe vera and honey. Following these tips daily will eliminate the bad smell from underarms in a week. Bad odor from body can lead to a very embarrassing situation.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to get rid of underarm odor with baking soda\\\"}\", \"original_answer\": \"Based on the provided passages, here are some ways to get rid of underarm odor using baking soda:\\n\\n1. Massage a baking soda paste onto the underarms while showering or bathing, let it set for 2-3 minutes before washing the area as usual. This will help kill the bacteria that causes the body odor. (Passage 2)\\n2. Dust baking soda onto the underarms and wait for 20 minutes before washing it with warm water. Another method is to mix lemon and water drops with the baking soda paste and apply it to the skin for 20 minutes. (Passage 3)\\n3. Add baking soda to a homemade deodorant or antiperspirant recipe to help neutralize underarm odor. (Passage 1)\\n\\nUnable to answer based on given passages. The passages do not provide detailed instructions on how to apply the baking soda paste or the recommended frequency of use.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 97,
+  "source_cluster_id": "sha256:138d25709e9157b3bab855dae8f77d8a129e93a01a88f4aa693b4ebad5d749fc",
+  "source_id": "15481",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:b68af5f29b2ab36a0f8ac5bb674592ff736ebedf60a41f57a6bf9e12a072ff21",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

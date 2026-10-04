@@ -1,0 +1,140 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7168189079966396,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:2941afc1c862cad7b710b0d1cd155a0de406e0695bb6522f0f1efbc6c10e2b42",
+  "human_target": null,
+  "input_tokens": 1113,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:2941afc1c862cad7b710b0d1cd155a0de406e0695bb6522f0f1efbc6c10e2b42",
+    "feature_hash": "sha256:3a498593fbbe5810ee243e897faacfc3e29aa38294e6ff150bd7e55e39aca137",
+    "source_normalized_hash": "7dbddeadbbfa935c6b92317f6f126b3e19f5197c16b1b571193c619cdf280b21",
+    "values": [
+      0.24084781212436032,
+      0.46426148248230625,
+      0.125,
+      1.0,
+      0.0,
+      0.0,
+      0.7591521878756397,
+      0.9370396084783957
+    ],
+    "window_count": 32
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1113,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1137
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:7c686e9152dcb7107a70a62ebd69bb0c86230e28c8b9c5a9f91d95a89580797e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095573,
+    "id": "chatcmpl-exQyXdt4qd3qdCyjmQkrYkzgYaYkklET",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.881,
+      "predicted_n": 24,
+      "predicted_per_second": 42.411743811861506,
+      "predicted_per_token_ms": 23.578374999999998,
+      "prompt_ms": 1030.373,
+      "prompt_n": 1035,
+      "prompt_per_second": 1004.4906067996735,
+      "prompt_per_token_ms": 0.9955294685990339
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1113,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1137
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"205 Santa Barbara St, Unit B\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Nightlife, Shopping, Flowers & Gifts, Beer, Wine & Spirits, Gift Shops, Wine Bars, Bars, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-23:0\\\",\\\"Saturday\\\":\\\"12:0-23:0\\\",\\\"Sunday\\\":\\\"12:0-18:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Laplace Wine Bar & Shop\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-10-26 05:14:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We discovered Laplace walking through the Funk Zone trying to find a location to host a Day After event following our wedding.  We were instantly drawn to the look and feel of the space, hooked by the wines, and completely won over by Betty (owner) and Paul (manager).\\\\n\\\\nWe had about 50 people for our event, mostly located in the beautiful back patio with some spillover inside.  They prepared two huge charcuterie boards and allowed us to bring in our own food (leftover desserts from the wedding reception the night before and delicious pizza from Lucky Penny).\\\\n\\\\nFrom the minute we first walked into Laplace to the day of our party, Paul and Betty were extremely accommodating and helpful.  I highly recommend Laplace, whether its to grab a couple of glasses of wine with a friend or to host a party for 50.  Thanks, Betty and Paul!\\\"},{\\\"review_date\\\":\\\"2018-10-19 23:32:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great location in the Funk Zone, take the train in or stop by while in town. This quaint wine bar & shop has such a good vibe, the owner Betty & staff make you feel right at home.\\\\nSuperior wine & beer selection.\\\"},{\\\"review_date\\\":\\\"2018-09-06 18:08:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Fantastic! Great for a Group Gathering, large or small. We had a large group for an after wedding gathering and rented the patio area. Their beautiful meat and cheese boards were very reasonably priced.  Our guests enjoyed the wine and beer flights and even purchased bottles to drink. Wines from all over the world, (not just one winery) gave everyone many options. Pricing on bottles of wine are very reasonable. Their  meat and cheese boards were beautiful and  reasonably priced.  The staff was amazing and very attentive to everyone. The first time we visited with a small group, we sat at the beautiful bar inside and staff was equally as friendly.  Great place. Will certainly visit again soon.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here is an objective overview of Laplace Wine Bar & Shop based on the provided structured data:\\n\\nLaplace Wine Bar & Shop is a popular spot in the heart of Santa Barbara's Funk Zone, offering an extensive selection of wine, beer, and spirits. With a cozy atmosphere and outdoor seating, this wine bar is perfect for dates, groups, or events. The knowledgeable staff is happy to help you choose from their wide variety of drinks, including wine flights and beer tastings. The business offers catering services and takes reservations for special occasions. Customers appreciate the intimate setting, excellent customer service, and great value for the price. Reviewers have praised the charcuterie boards, wine selection, and friendly staff. Overall, Laplace Wine Bar & Shop is a great choice for wine lovers and those looking for a unique and memorable experience in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 183,
+  "source_cluster_id": "sha256:122ac27c768bc76d2194a9024243557073e9d2b6b736eba876be0ac47dd739d7",
+  "source_id": "14741",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:2941afc1c862cad7b710b0d1cd155a0de406e0695bb6522f0f1efbc6c10e2b42",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

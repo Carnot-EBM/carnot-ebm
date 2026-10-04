@@ -1,0 +1,144 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5011747679673135,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:00821127f5949d2874df16318eee24bd768025310e65b8ff43d692cdaeca0ae2",
+  "human_target": null,
+  "input_tokens": 829,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:00821127f5949d2874df16318eee24bd768025310e65b8ff43d692cdaeca0ae2",
+    "feature_hash": "sha256:306b89bb79772faa71f6574a0722a3082af8498e0b0f9b0aa549c9660eef91c1",
+    "source_normalized_hash": "9c7012716dfd5b13434b2ec42aa58967ca24ca4526c024acea00a354a719af05",
+    "values": [
+      0.2700525857045254,
+      0.43974308737239776,
+      0.175,
+      1.0,
+      0.75,
+      0.75,
+      0.7299474142954746,
+      0.9285879350534523
+    ],
+    "window_count": 40
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 6,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 829,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 854
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:75c70fc5e57fcad14ee3f5de060967fb3aa7ce3f4635754b9498f0ec8a83250e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 6\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095325,
+    "id": "chatcmpl-ejokU9aFoBcRea4564LkeQKIOztUIniS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 582.99,
+      "predicted_n": 25,
+      "predicted_per_second": 42.88238220209609,
+      "predicted_per_token_ms": 23.3196,
+      "prompt_ms": 713.841,
+      "prompt_n": 751,
+      "prompt_per_second": 1052.0550094488829,
+      "prompt_per_token_ms": 0.9505206391478029
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 829,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 854
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"New York (CNN)When Liana Barrientos was 23 years old, she got married in Westchester County, New York. A year later, she got married again in Westchester County, but to a different man and without divorcing her first husband.  Only 18 days after that marriage, she got hitched yet again. Then, Barrientos declared \\\"I do\\\" five more times, sometimes only within two weeks of each other. In 2010, she married once more, this time in the Bronx. In an application for a marriage license, she stated it was her \\\"first and only\\\" marriage. Barrientos, now 39, is facing two criminal counts of \\\"offering a false instrument for filing in the first degree,\\\" referring to her false statements on the 2010 marriage license application, according to court documents. Prosecutors said the marriages were part of an immigration scam. On Friday, she pleaded not guilty at State Supreme Court in the Bronx, according to her attorney, Christopher Wright, who declined to comment further. After leaving court, Barrientos was arrested and charged with theft of service and criminal trespass for allegedly sneaking into the New York subway through an emergency exit, said Detective Annette Markowski, a police spokeswoman. In total, Barrientos has been married 10 times, with nine of her marriages occurring between 1999 and 2002.  All occurred either in Westchester County, Long Island, New Jersey or the Bronx. She is believed to still be married to four men, and at one time, she was married to eight men at once, prosecutors say. Prosecutors said the immigration scam involved some of her husbands, who filed for permanent residence status shortly after the marriages.  Any divorces happened only after such filings were approved. It was unclear whether any of the men will be prosecuted. The case was referred to the Bronx District Attorney's Office by Immigration and Customs Enforcement and the Department of Homeland Security's Investigation Division. Seven of the men are from so-called \\\"red-flagged\\\" countries, including Egypt, Turkey, Georgia, Pakistan and Mali. Her eighth husband, Rashid Rajput, was deported in 2006 to his native Pakistan after an investigation by the Joint Terrorism Task Force. If convicted, Barrientos faces up to four years in prison.  Her next court appearance is scheduled for May 18.\\n\", \"original_answer\": \"Liana Barrientos, 39, was arrested and charged with 10 counts of fraud after marrying 10 different men in New York between 1999 and 2002 as part of an immigration scam. She faces up to 4 years in prison if convicted. Barrientos, who is currently married to 4 men, had previously declared \\\"I do\\\" 5 more times, sometimes within 2 weeks of each other. The men involved in the scam filed for permanent residence status shortly after their marriages, and any divorces occurred only after their applications were approved.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 12,
+  "source_cluster_id": "sha256:1210e696ba572c3a2daceeeaccf9ed0d77b68cbf2592c6b9d4cf177775ae2179",
+  "source_id": "15728",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:00821127f5949d2874df16318eee24bd768025310e65b8ff43d692cdaeca0ae2",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

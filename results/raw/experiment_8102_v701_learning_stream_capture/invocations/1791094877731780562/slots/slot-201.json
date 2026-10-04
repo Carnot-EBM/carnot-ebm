@@ -1,0 +1,138 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3133231890387833,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:95b5964a75414050d3bbea38c519f7a2536142d4c43bea6eda6679acf6e88e6c",
+  "human_target": null,
+  "input_tokens": 796,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:95b5964a75414050d3bbea38c519f7a2536142d4c43bea6eda6679acf6e88e6c",
+    "feature_hash": "sha256:4ee94a46b923cb85f38929115e547f5884c39307e25fd231eae097e24a08562d",
+    "source_normalized_hash": "d708142889fb50b196816786bfd88b7e62031542b73a2f30fc4e9cd07b8467a6",
+    "values": [
+      0.1960592317735175,
+      0.367965367965368,
+      0.4523809523809524,
+      0.6666666666666666,
+      0.2857142857142857,
+      0.3333333333333333,
+      0.8039407682264825,
+      0.9475709475709476
+    ],
+    "window_count": 28
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 796,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 817
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:d789378a5a832c27cb7aa7f74d08773d89d40039370daddb997ab433342be4c0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095592,
+    "id": "chatcmpl-vnJVS9hcBahrILtPIeOku90fM2zZYeZR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.571,
+      "predicted_n": 21,
+      "predicted_per_second": 42.63344776692091,
+      "predicted_per_token_ms": 23.455761904761907,
+      "prompt_ms": 709.167,
+      "prompt_n": 718,
+      "prompt_per_second": 1012.4554583053075,
+      "prompt_per_token_ms": 0.9876977715877437
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 796,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 817
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Although the mean survival time with ALS is three to five years, many people live five, 10 or more years. Symptoms can begin in the muscles that control speech and swallowing or in the hands, arms, legs or feet. Not all people with ALS experience the same symptoms or the same sequences or patterns of progression. However, progressive muscle weakness and paralysis are universally experienced. Gradual onset, painless, progressive muscle weakness is the most common initial symptom in ALS. Other early symptoms vary but can include tripping, dropping things, abnormal fatigue of the arms and/or legs, slurred speech, muscle cramps and twitches, and/or uncontrollable periods of laughing or crying.\\\\n\\\\npassage 2:While some children may seem to develop typically for a while and then develop symptoms, others may have obvious symptoms from infancy. Early signs and symptoms of autism include: no babbling or pointing by age 1. no single words by 16 months or two-word phrases by age 2. no response to name.\\\\n\\\\npassage 3:Early signs and symptoms of autism include: 1  no babbling or pointing by age 1. 2  no single words by 16 months or two-word phrases by age 2. 3  no response to name.  loss of language or social 1  skills. poor eye contact.  excessive lining up of toys or 1  objects. no smiling or social responsiveness.\\\\n\\\\n\\\",\\\"question\\\":\\\"common symptoms of autism and als\\\"}\", \"original_answer\": \"Based on the provided passages, here are the common symptoms of Autism Spectrum Disorder (ASD) and Amyotrophic Lateral Sclerosis (ALS):\\n\\nAutism Spectrum Disorder (ASD):\\n\\n* No babbling or pointing by age 1 (passage 3)\\n* No single words by 16 months or two-word phrases by age 2 (passage 3)\\n* No response to name (passage 3)\\n* Loss of language or social skills (passage 3)\\n* Poor eye contact (passage 3)\\n* Excessive lining up of toys or objects (passage 3)\\n* No smiling or social responsiveness (passage 3)\\n\\nAmyotrophic Lateral Sclerosis (ALS):\\n\\n* Gradual onset, painless, progressive muscle weakness (passage 1)\\n* Tripping, dropping things, abnormal fatigue of the arms and/or legs (passage 1)\\n* Slurred speech, muscle cramps and twitches, and/or uncontrollable periods of laughing or crying (passage 1)\\n\\nIt is important to note that these symptoms can vary in severity and not all individuals with ASD or ALS will experience all of them. Additionally, these passages do not provide enough information to answer the question about the differences between the symptoms of ASD and ALS. Therefore, I am unable to answer the question based on the given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 202,
+  "source_cluster_id": "sha256:0101e4c0df461abc6501e1df1bf60645878bc5cbb3da619c71f1da819bb307b6",
+  "source_id": "12457",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:95b5964a75414050d3bbea38c519f7a2536142d4c43bea6eda6679acf6e88e6c",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

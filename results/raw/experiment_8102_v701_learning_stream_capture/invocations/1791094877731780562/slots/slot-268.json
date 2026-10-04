@@ -1,0 +1,148 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5439268189948052,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:707c013b9e6cba44e849052ac1891f3dc13c2877864bd05dfa6a121ea8654dd9",
+  "human_target": null,
+  "input_tokens": 887,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:707c013b9e6cba44e849052ac1891f3dc13c2877864bd05dfa6a121ea8654dd9",
+    "feature_hash": "sha256:7f49ce8f9c66959e8e5b76740060da46ce1dfac27bb442d174062772566961bb",
+    "source_normalized_hash": "03b621a4200ed9e9574914fca131bf99dd569358a1dac72875fb7a84c4fe713e",
+    "values": [
+      0.23638668430335097,
+      0.38994708994708993,
+      0.1875,
+      1.0,
+      0.20000000000000004,
+      0.2,
+      0.763613315696649,
+      0.9343915343915343
+    ],
+    "window_count": 48
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 887,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 911
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:0c2999e616a47796bcc8f5e3ad06074588292b90eb688e23211f72affacacd7f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095687,
+    "id": "chatcmpl-srI7O8S1JNOiPiZyfpbi47wmKmBUN2RK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.503,
+      "predicted_n": 24,
+      "predicted_per_second": 42.44009315600447,
+      "predicted_per_token_ms": 23.562625,
+      "prompt_ms": 847.137,
+      "prompt_n": 809,
+      "prompt_per_second": 954.981307627928,
+      "prompt_per_token_ms": 1.0471409147095179
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 887,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 911
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The Bold and the Beautiful spoilers: Hope loses it after finding out about Deacon and Sheila\\nThe Bold and the Beautiful spoilers tease that an engagement isn\u2019t a happy event for everyone in Los Angeles.\\nDeacon (Sean Kanan) and Sheila (Kimberlin Brown) have carried on a relationship for months under the noses of everyone around them.\\nWith the proposal he sprung on her last week, the two are moving toward marriage.\\nWhile they are excited about their future, not everyone is on board with their plans \u2014 especially their children.\\nAs the news travels through the town, the reactions are not what they had hoped.\\nHere\u2019s what\u2019s happening this week on The Bold and the Beautiful.\\nHope freaks out about Deacon and Sheila\\nThe Bold and the Beautiful preview video shows a visibly distraught Hope (Annika Noelle) in Deacon\u2019s apartment.\\nShe can\u2019t believe her father would allow Sheila into his life, let alone marry her.\\nHope knows how dangerous this could be, so she is concerned.\\nWhen Sheila tries to interject, Hope shuts her down. She isn\u2019t interested in hearing anything she says.\\nRidge and Brooke find out about Deacon and Sheila\\nHope runs to her mom and Ridge (Thorsten Kaye) to help talk Deacon out of marrying Sheila.\\nWhile Brooke (Katherine Kelly Lang) is shocked by the news, Ridge doesn\u2019t bat an eye.\\nHe has known for quite some time that Deacon and Sheila have been having a relationship. During the sting he and Bill (Don Diamont) operated to catch her up and put her in jail, they used Hope\u2019s dad to lure her in and capture her.\\nWhen he admits it to the Logan women, expect there to be some disdain for his lack of honesty.\\nMore The Bold and the Beautiful spoilers\\nAs Eric (John McCook) continues to have health issues, Luna (Lisa Yamada) and RJ (Joshua Hoffman) grow closer.\\nThe head of Forrester is determined to fight this alone, and Donna (Jennifer Gareis) isn\u2019t privy to everything happening with her husband.\\nFinn (Tanner Novlan) isn\u2019t happy about things with Sheila and Deacon either. After meeting with Deacon and having his biological mother sprung on him, things don\u2019t go as the couple hoped.\\nSteffy (Jacqueline MacInnes Wood) won\u2019t return home until Sheila is handled, and Finn struggles with everything. He and Hope connected last week, so it wouldn\u2019t be shocking if he turned to her. After all, it\u2019s their parents getting married.\\nBe sure to tune in daily so that not a moment of the drama is missed.\\nThe Bold and the Beautiful airs weekdays on CBS.\", \"original_answer\": \"Sure! Here's a summary of the article in 107 words:\\n\\nOn The Bold and the Beautiful, Hope is devastated to learn about Deacon and Sheila's engagement. She freaks out in Deacon's apartment and worries about the danger of being in a relationship with a convicted criminal. Ridge and Brooke find out about the secret and are shocked, while Eric struggles with health issues. Meanwhile, Luna and RJ grow closer, and Finn is unhappy about Sheila and Deacon's impending marriage.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 13,
+  "source_cluster_id": "sha256:147cbeda05a9111d56cc388dbb3467ef01dd2f4b031c42d47a50524cc26b5422",
+  "source_id": "13952",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:707c013b9e6cba44e849052ac1891f3dc13c2877864bd05dfa6a121ea8654dd9",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ]
+}

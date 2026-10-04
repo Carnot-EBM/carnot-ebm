@@ -1,0 +1,142 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.660168627044186,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:f19c9445bedbebffb5955d08e23d5dcf99209ab8500cc3975c57de413e38451f",
+  "human_target": null,
+  "input_tokens": 1075,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:f19c9445bedbebffb5955d08e23d5dcf99209ab8500cc3975c57de413e38451f",
+    "feature_hash": "sha256:d677d82460d12a721a32c00a2d2da1e22bddba4da99881aba50cba7c3af5c01f",
+    "source_normalized_hash": "b5ee0a4993f8e7ddb62c034fd5e7e8a9cd6d0ad8628d2213be2909d01b20c6e4",
+    "values": [
+      0.1627561125460285,
+      0.38161402110251214,
+      0.30158730158730157,
+      0.8571428571428571,
+      0.42857142857142855,
+      0.42857142857142855,
+      0.8372438874539715,
+      1.0
+    ],
+    "window_count": 36
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.05,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1075,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1097
+    }
+  },
+  "probability": 0.05,
+  "public_eligible": true,
+  "public_hash": "sha256:fe787361f92de5f1fa9c25b7d6f15efd590be77ba0c158b8b24c399e8527b0dc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.05,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095392,
+    "id": "chatcmpl-vs2yYRllTiWQU8jaLiOI0JoFciIZ3H99",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 515.234,
+      "predicted_n": 22,
+      "predicted_per_second": 42.699045482246895,
+      "predicted_per_token_ms": 23.419727272727275,
+      "prompt_ms": 962.188,
+      "prompt_n": 997,
+      "prompt_per_second": 1036.1800396596093,
+      "prompt_per_token_ms": 0.9650832497492478
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1075,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1097
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2711 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":true,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Dive Bars, Bars, Lounges, Nightlife, Pool Halls, Sports Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-2:0\\\",\\\"Monday\\\":\\\"10:0-2:0\\\",\\\"Saturday\\\":\\\"10:0-2:0\\\",\\\"Sunday\\\":\\\"10:0-2:0\\\",\\\"Thursday\\\":\\\"10:0-2:0\\\",\\\"Tuesday\\\":\\\"10:0-2:0\\\",\\\"Wednesday\\\":\\\"10:0-2:0\\\"},\\\"name\\\":\\\"De La Vina Lounge\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-05-18 05:56:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Alice is a saint! Loved finding this gem in Santa Barbara. Enjoy the family vibes when you enter.\\\"},{\\\"review_date\\\":\\\"2021-05-12 05:17:30\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I really hate updating reviews.   First impressions, right??  But in the case of Jimboz, how could I not. I don't want to call myself a regular because honestly I have never been there at 10am for The Price Is Right and never make it more than once in a week.  But I will say I'm a huge fan!  I usually go on Tuesdays which is officially \\\\\\\"Ladies Night\\\\\\\".  But Alice is always working and treats me like her bestie!!! Nobody pours a Grand Mariner better than Alice.   What?  They do fancy???   Hell Yes!!  Premium tequilas, good Bourbon, they have it.... but most of all you feel at home, they have very welcoming regulars.   If someone is doing a food run, you will probably be included.   Isn't that what a neighborhood bar should be about??\\\"},{\\\"review_date\\\":\\\"2021-04-15 23:35:01\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Sometimes YOU \\\\\\\"get what YOU pay for\\\\\\\" & sometimes YOU get just WHAT you're looking for...!  Especially if it is that \\\\\\\"throwback\\\\\\\" friendly \\\\\\\"tavern\\\\\\\" of Ol'!  That The \\\\\\\"dufas hipsters\\\\\\\" like to refer as a \\\\\\\"dive bar\\\\\\\", because they have NO reference points in their own generation!\\\\n\\\\nAnyway if YOU are looking for a small, intimate NO FRILLS, friendly lil' place to \\\\\\\"toss back a few\\\\\\\" w/ your friends and/or solo THIS should be on your \\\\\\\"go to LIST\\\\\\\"...!!!\\\\n\\\\nPlenty of GOOD restaurants within in walking distance...\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"De La Vina Lounge, located at 2711 De La Vina St, Santa Barbara, CA, is a popular local business known for its relaxed and casual atmosphere. This establishment holds a 4-star rating and falls under various categories including Dive Bars, Bars, Lounges, Nightlife, Pool Halls, and Sports Bars. Open every day from 10 am to 2 am, it offers free Wi-Fi and is suitable for groups. While it doesn't offer reservations or live music, it provides street and lot parking. The lounge is known for its welcoming vibe, with reviews praising the friendly staff, particularly a server named Alice. Customers appreciate the quality of their premium tequilas and bourbon. Despite not offering food, the lounge is conveniently located near several good restaurants.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 55,
+  "source_cluster_id": "sha256:7c4843b62bed6d27fd133a426c74ed257f93d290f3d4a6427fa1154dcbe24dc1",
+  "source_id": "14505",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:f19c9445bedbebffb5955d08e23d5dcf99209ab8500cc3975c57de413e38451f",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

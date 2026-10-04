@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5053543059621006,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:6d7f39bf32dd05723255fcb993ab799b0f15f195a764e20b15736170dd3ed3d6",
+  "human_target": null,
+  "input_tokens": 925,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:6d7f39bf32dd05723255fcb993ab799b0f15f195a764e20b15736170dd3ed3d6",
+    "feature_hash": "sha256:01a2955b86a3b5b0471af2ac2d1f6330a3b35c5a8962bc78f8504854e213c2b5",
+    "source_normalized_hash": "dbe662aa70586d1445241cfc020370df05eeb52efff5ce4ea891a44762facc83",
+    "values": [
+      0.24048442135331352,
+      0.4283108666807684,
+      0.5974025974025974,
+      0.8571428571428571,
+      0.0,
+      0.0,
+      0.7595155786466865,
+      0.9331843034696716
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 925,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 948
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:57aa3e62aa6bca1c6ed6739b39c7ab51f28721b08496c2e8cf5a8b9b01d50d19",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095518,
+    "id": "chatcmpl-hea494dp6SJRzmNpeVyxnVlnpv1ZMo3U",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.165,
+      "predicted_n": 23,
+      "predicted_per_second": 42.50090083431116,
+      "predicted_per_token_ms": 23.52891304347826,
+      "prompt_ms": 853.736,
+      "prompt_n": 847,
+      "prompt_per_second": 992.1099731064405,
+      "prompt_per_token_ms": 1.007952774498229
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 925,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 948
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"726 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Delis, Salad, Restaurants, Sandwiches, Burgers, American (Traditional)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-20:30\\\",\\\"Monday\\\":\\\"10:0-20:30\\\",\\\"Saturday\\\":\\\"10:0-20:30\\\",\\\"Sunday\\\":\\\"11:0-19:0\\\",\\\"Thursday\\\":\\\"10:0-20:30\\\",\\\"Tuesday\\\":\\\"10:0-20:30\\\",\\\"Wednesday\\\":\\\"10:0-20:30\\\"},\\\"name\\\":\\\"Sam's to Go - Milpas\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-14 21:51:26\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Pretty basic place. Everyone was touching everything with their dirty hands. In the middle of making my sandwich the 3 workers broke out into a full on argument and weren't too nice to me. I have no reason to ever come back here.\\\"},{\\\"review_date\\\":\\\"2021-11-12 19:08:44\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Good food at great prices. They have a huge selection of sandwiches from a single size all the way to a family size all made right in front of you.\\\\n\\\\nMy Family often goes for the burger special which is a cheeseburger, fries and drink for about $8 they also have a veggie burger YUMMY!  Staff is always nice but sometimes orders can be a little slow but since they make the food in front of you I never mind. The place looks the same from 20 years ago when I was in high school so it can use a remodel for sure but its clean and good.\\\"},{\\\"review_date\\\":\\\"2021-11-10 23:03:46\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Sad to have to give them a Two.   Place is not the same.  Been here a few times for the chicken club. They put cold chicken just a few pieces.  Happened a few times.  Not coming back\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sam's to Go - Milpas is a casual, traditional American restaurant located in Santa Barbara, CA. They are known for their delicious sandwiches, burgers, and salads, which are made fresh in front of you. The menu offers a variety of options, including a family size option, and the prices are reasonable. The restaurant has a relaxed atmosphere, with outdoor seating available. While some customers have noted that the service can be slow, the staff is generally friendly and helpful. However, there have been some complaints about the cleanliness of the establishment, with one reviewer mentioning that the workers were not very hygienic. Despite this, many customers appreciate the good food and affordable prices, making Sam's to Go - Milpas a popular spot for those looking for a quick, satisfying meal.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 144,
+  "source_cluster_id": "sha256:71caf1aa6a59d3626f79fa907b262a91bc4a9349f0fc3cb74f6a543b8065584a",
+  "source_id": "14111",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:6d7f39bf32dd05723255fcb993ab799b0f15f195a764e20b15736170dd3ed3d6",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

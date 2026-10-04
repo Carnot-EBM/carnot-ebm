@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4764267050195485,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:9b28c58a9d285b039cdcded7a3a64c6f5725b6f7b254b598222688543af9c947",
+  "human_target": null,
+  "input_tokens": 908,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:9b28c58a9d285b039cdcded7a3a64c6f5725b6f7b254b598222688543af9c947",
+    "feature_hash": "sha256:d1df59eb5243767edb7b23bb82550340176a7254e5cccf58f88a9c7aa51a34df",
+    "source_normalized_hash": "d03d81682948eb37a1bcf59d26c289420dcd01f249da35c310b09131b4e90ca5",
+    "values": [
+      0.25185895682627707,
+      0.49291197252150604,
+      0.4583333333333333,
+      0.6666666666666666,
+      0.32407407407407407,
+      0.3333333333333333,
+      0.7481410431737229,
+      0.9056913885953778
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 908,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 929
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:e9a0234d8e8a685b750398ea3f3c2a89758c99d6b40c7d1b7a90f150fd63aed3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095680,
+    "id": "chatcmpl-UXrEHCjwgqrtHVaLrIdh0IspIrufN1a8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.638,
+      "predicted_n": 21,
+      "predicted_per_second": 42.62764951140594,
+      "predicted_per_token_ms": 23.45895238095238,
+      "prompt_ms": 852.182,
+      "prompt_n": 830,
+      "prompt_per_second": 973.9703490568916,
+      "prompt_per_token_ms": 1.0267253012048192
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 908,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 929
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7398 Calle Real\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-20:30\\\",\\\"Monday\\\":\\\"8:0-20:30\\\",\\\"Saturday\\\":\\\"8:0-20:30\\\",\\\"Thursday\\\":\\\"8:0-20:30\\\",\\\"Tuesday\\\":\\\"8:0-20:30\\\",\\\"Wednesday\\\":\\\"8:0-20:30\\\"},\\\"name\\\":\\\"El Sitio\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-07-30 18:57:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The service here is always excellent.  Needed to get a quick meal for my wife and I today, and couldn't have had a better experience overall.  What a local gem.\\\"},{\\\"review_date\\\":\\\"2021-03-25 02:29:58\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Food was not as cheap as I anticipated it would be. 14 dollars for a burrito and bottle of water. The burrito was pretty good, but I found the chicken to be a bit dry. The salsa has decent flavor, but was not spicy. Overall decent food\\\"},{\\\"review_date\\\":\\\"2020-09-11 02:31:03\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This El Sitio location is near home, but I've seldom been there. Now they serve only to-go, so calling your order in is a good option - ready in ten minutes. Yesterday we had 2 burritos - Adobado and pork chile verde. Both were huge and very good, for $9.50 each. You have a choice of salsas to go with. We had the verde (fairly mind). The red sauce will make you sweat, which is what you want sometimes, with a cold beer.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"El Sitio is a Mexican restaurant located at 7398 Calle Real, Goleta, CA, open from 8:00 to 20:30, Monday to Saturday. The establishment has a casual ambience and is suitable for groups. It offers take-out options but does not provide outdoor seating, Wi-Fi, or music. Street and lot parking are available, but there is no garage, valet service, or parking validation. It has an overall business rating of 4 stars. Customer reviews highlight the excellent service, good food, and quick preparation time. However, some customers have noted that the pricing might be higher than expected, with one customer mentioning a $14 charge for a burrito and bottle of water. The restaurant's burritos are praised for their size and quality, although one customer found the chicken a bit dry. The salsa is noted to have a decent flavor, but it is not particularly spicy.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 9,
+  "source_cluster_id": "sha256:08adcfab08dc598f992935df17f4cd4efdda1b1511a1c0986f278447150421a1",
+  "source_id": "14536",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:9b28c58a9d285b039cdcded7a3a64c6f5725b6f7b254b598222688543af9c947",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

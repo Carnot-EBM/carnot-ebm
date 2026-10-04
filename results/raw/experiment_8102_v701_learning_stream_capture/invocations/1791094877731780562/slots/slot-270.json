@@ -1,0 +1,132 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2834673440083861,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:15d78069fc1ffb663ded2ec65cde8d0f11245c5601545ead2cc459675b176c89",
+  "human_target": null,
+  "input_tokens": 606,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:15d78069fc1ffb663ded2ec65cde8d0f11245c5601545ead2cc459675b176c89",
+    "feature_hash": "sha256:4bc64a1c30b8d7b270cdab1f6e8b7fe80c691694728080f631c56d2d9a48f196",
+    "source_normalized_hash": "6cdd7706536febb0cf71e140831405ca7afd0590933df195afeb2ead99317156",
+    "values": [
+      0.3078192928918236,
+      0.5596289037815054,
+      0.0,
+      0.0,
+      0.7142857142857143,
+      0.7142857142857143,
+      0.6921807071081764,
+      0.8612750033902535
+    ],
+    "window_count": 16
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 606,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 630
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:02dff6158d129c7571a0918a8b0353b58ec5cac671adcc9de39636672ed0adcc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095690,
+    "id": "chatcmpl-QsSUVPgmY5s16Ca0uAKlLVQuP8eX18TR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.921,
+      "predicted_n": 24,
+      "predicted_per_second": 42.48381632122013,
+      "predicted_per_token_ms": 23.538375000000002,
+      "prompt_ms": 576.359,
+      "prompt_n": 528,
+      "prompt_per_second": 916.0956972997732,
+      "prompt_per_token_ms": 1.0915890151515153
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 606,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 630
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The earliest sunrise of the month in Madrid is 8:18 AM on December 1 and the latest sunrise is 19 minutes later at 8:37 AM on December 31. The earliest sunset is 5:48 PM on December 8 and the latest sunset is 10 minutes later at 5:57 PM on December 31.\\\\n\\\\npassage 2:Events in December in Madrid: For Christmas markets and other outdoor festivities in Madrid, see Christmas in Madrid. Madrid in Mid-December: Average Temperatures and Recent Years' Weather. It doesn't really get much colder as we head deeper into December and Madrid tends to stay dry. December 15 Averages High: 9\u00b0C. Low: 0\u00b0C.\\\\n\\\\npassage 3:See also: 100 Things to Do in Madrid. Weather in Barcelona in December. Main article: Weather in December in Barcelona. The sea has a warming effect in winter, so Barcelona isn't as cold in December as in Madrid, but it can still get pretty chilly.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather madrid december\\\"}\", \"original_answer\": \"Based on the given passages, here's what we know about the weather in Madrid in December:\\n\\n* The earliest sunrise is 8:18 AM on December 1, and the latest sunrise is 8:37 AM on December 31.\\n* The earliest sunset is 5:48 PM on December 8, and the latest sunset is 5:57 PM on December 31.\\n* The average high temperature is 9\u00b0C (48\u00b0F) on December 15.\\n* The average low temperature is 0\u00b0C (32\u00b0F) on December 15.\\n* Madrid tends to stay dry in mid-December.\\n\\nOverall, Madrid's weather in December is relatively mild compared to other parts of Europe, with temperatures ranging from 0\u00b0C to 9\u00b0C (32\u00b0F to 48\u00b0F) during the day. However, it can still get pretty chilly, especially in the evenings, and there may be some rainfall.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 15,
+  "source_cluster_id": "sha256:c1f3179f87cd91366319bcb9bf07557009d5155250b3f078f1fcde30b93d99ba",
+  "source_id": "12435",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:15d78069fc1ffb663ded2ec65cde8d0f11245c5601545ead2cc459675b176c89",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

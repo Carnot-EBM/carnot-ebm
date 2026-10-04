@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2860213509993628,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:ac2be2d9b353f68761f5f9286f5a250f24b99d852c8fc1f39a7822699ec2c019",
+  "human_target": null,
+  "input_tokens": 706,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:ac2be2d9b353f68761f5f9286f5a250f24b99d852c8fc1f39a7822699ec2c019",
+    "feature_hash": "sha256:f799dd489482c3bbecf548830e9ae9b63ec6c952b07b1c7e9b970302b0d340a1",
+    "source_normalized_hash": "6112f6982357c3b25972b1e96dccbe8c721126d47f509da6b49cd14cfe6fc1f4",
+    "values": [
+      0.35900411203128596,
+      0.6695307108350587,
+      0.275,
+      0.8,
+      0.7416666666666667,
+      0.8,
+      0.6409958879687141,
+      0.9384630779848171
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 706,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 729
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:e875f900ccdc3c30fc6335932b2a3f6af59d8a08b4566a04acd03bb56fd5163b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095535,
+    "id": "chatcmpl-MreD8jUVFrMl2axskBOdg6PqjGCQ5aX3",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.038,
+      "predicted_n": 23,
+      "predicted_per_second": 42.58959554698002,
+      "predicted_per_token_ms": 23.479913043478263,
+      "prompt_ms": 631.652,
+      "prompt_n": 628,
+      "prompt_per_second": 994.2183354125372,
+      "prompt_per_token_ms": 1.0058152866242038
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 706,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 729
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"77-Year-Old's Hidden Stash: The Underground Trade of Erectile Drugs in Florida\\nIllegal Stash Uncovered\\nIn an unexpected revelation, Reginald Kincer, a resident of The Villages in Florida, has been charged with a peculiar crime: stockpiling erectile dysfunction medications with the intent to distribute. At the age of 77, Kincer finds himself under the scrutiny of federal prosecutors who allege that he acquired over $1,800 worth of these drugs without a doctor's prescription.\\nThis rather unusual case came into the limelight after the Department of Homeland Security stumbled upon Kincer's stash during a search of his residence in 2018. While the incident itself occurred a few years ago, the rationale behind Kincer currently facing the charges remains undisclosed.\\nA Pattern of Drug-related Offenses?\\nThis isn't Kincer's maiden voyage into drug-related offenses. Diving into the past, one can trace a record of a similar arrest in 2020, where he was charged with possessing an assortment of drugs - marijuana, MDMA, and the hallucinogenic psilocybin, to name a few. His previous encounter with the legal system culminated in a guilty verdict in 2021, leading to a three-year probation sentence, as stated in the Sumter County court archives.\\nAwaiting Trial\\nAs November approaches, so does Kincer's date in court. If the court finds him guilty of his alleged misdemeanors, he could be staring down the barrel of a year-long federal prison sentence, accompanied by a hefty fine of up to $10,000.\\nThis case serves as a stark reminder of the unexpected turns the illicit drug trade can take, shedding light on the lesser-known aspects of the black market and its far-reaching tentacles in communities like The Villages.\\nSource: Clickorlando.com\\nDid this story resonate? Consider sharing on social media and ignite conversations that can make a difference!\", \"original_answer\": \"Reginald Kincer, a 77-year-old resident of The Villages in Florida, has been charged with stockpiling erectile dysfunction medications without a prescription. The Department of Homeland Security discovered his stash during a search in 2018. Kincer has a history of drug-related offenses, including a guilty verdict in 2021 for possessing drugs like marijuana and MDMA. He is awaiting trial and could face a year in federal prison and a fine of up to $10,000 if found guilty. This case highlights the underground trade of erectile drugs and the broader illicit drug trade in communities like The Villages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 156,
+  "source_cluster_id": "sha256:3ffa8a9ecd705b5c44b8ffd165f1a27ff2dac85611584cbc2a36d69f5141d4d5",
+  "source_id": "13557",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:ac2be2d9b353f68761f5f9286f5a250f24b99d852c8fc1f39a7822699ec2c019",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

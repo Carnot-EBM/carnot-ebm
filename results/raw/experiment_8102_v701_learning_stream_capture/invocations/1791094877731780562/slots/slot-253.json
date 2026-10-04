@@ -1,0 +1,169 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 2.018097105086781,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:e2d272589eb8e99f2c3ed99a65135af9ea095805182df21ee1083a78e438f004",
+  "human_target": null,
+  "input_tokens": 1571,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:e2d272589eb8e99f2c3ed99a65135af9ea095805182df21ee1083a78e438f004",
+    "feature_hash": "sha256:fc0b001128dadfef4870de4a50b1666df734f4ce312dc6b3beb8786fe1e1c869",
+    "source_normalized_hash": "e4bb22a5822b65444c7ffbc8ebefcffac297491ea05a074d9208af1334ca5bb3",
+    "values": [
+      0.25551752597784344,
+      0.5938518095660953,
+      0.12222222222222222,
+      1.0,
+      0.4888888888888889,
+      0.5,
+      0.7444824740221566,
+      0.9306842892557179
+    ],
+    "window_count": 90
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1571,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1594
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:df6e9196c56bee65c7772101051af91fcb18dfdfb47eef6eaba259d65a63d7d4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095665,
+    "id": "chatcmpl-DaobqUUhHb1Bs5aXb6mdmxkHgiW8Kf4k",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.376,
+      "predicted_n": 23,
+      "predicted_per_second": 42.40600616546455,
+      "predicted_per_token_ms": 23.581565217391304,
+      "prompt_ms": 1343.921,
+      "prompt_n": 1493,
+      "prompt_per_second": 1110.9283953446668,
+      "prompt_per_token_ms": 0.9001480241125251
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1571,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1594
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Lampedusa, Italy  (CNN)The cramped galley of the ship is filled with the smell of fresh garlic frying in olive oil. Gaetano Cortese, a tall, thin, sunburned 27-year veteran of Italy's Guardia di Finanza (Finance Police) is waxing eloquent on his favorite subject: food. \\\"We picked it this morning from the hills of Lampedusa,\\\" he declares with a flourish, waving thin sprigs of wild asparagus under my nose. He demonstrates how you must break it apart with your fingers, bit by bit, until you get to the hard part, which you keep aside to boil down in water for the pasta sauce he is preparing with his shipmate, Enzo Idone. Cooking, however, may be a positive distraction from dark memories. How I was smuggled into Europe -- and why it was worth it. We boarded the Finance Police's ship, the Calabrese, in Lampedusa harbor earlier in the evening. The Calabrese regularly patrols the Mediterranean off Lampedusa, which is Italy's southernmost territory and just 70 miles, or just over 110 kilometers, from the Tunisian coast. In recent years, it has been the first point of entry to Europe for tens of thousands of migrants from Africa and the Middle East. A few years ago, the Calabrese was on the look out for \\\"contrabandisti,\\\" smugglers trafficking in cigarettes and drugs. But in recent years, its 12-man crew has joined Italy's effort to rescue migrants coming from Africa and the Middle East. We spend seven hours on board the ship, but nothing much happens. We see some Italian fishing boats the crew knew by sight. Shortly after sunset, the Calabrese's captain, Gianluca Busonera, begins calling out quick orders to his men as we approach a small boat. The easy-going crew seem to tense up. One man turns on a bright spotlight and focuses the beam on the boat, while another with powerful binoculars read out the name on the back. Busonera peers intently at the boat, which appears to be a fishing vessel, then shrugs. \\\"It's fine,\\\" he tells me. \\\"If it were low in the water, we'd know it was full of people, but this boat is riding high.\\\" He waves to the Tunisian boat, where an older man in a jacket waves back. Busonera gives him a thumbs up, and steers the ship to the right. It's a routine evening for the Calabrese, and that is just fine with the crew. They've seen enough troubles in their time to appreciate an uneventful day's work. Back in the galley, I ask Cortese about his worst experience while serving at sea with the Guardia di Finanza. He and most of his shipmates took part in the rescue effort on October 3, 2013, after a ship with hundreds of migrants had gone down off Lampedusa. More than 350 people died in that disaster. The crew of the Calabrese was able to rescue four of the survivors. Cortese's cheery demeanor suddenly becomes serious. \\\"I still remember pulling out of the water, with our hands, a young, pregnant woman who had just died,\\\" he recalls. \\\"There were children,\\\" adds his crewmate, Idone, shaking his head. \\\"We recovered the bodies of children. It was a bad situation. I remember the body of a boy we recovered. We put him in a body bag. His head was in this hand,\\\" he said waving his hand as if he had just picked up the lifeless body. Why migrants are risking their lives to reach Italy. Cortese and Idone stress that as fathers, there is nothing worse than having to see the bodies of dead children. \\\"At the moment,\\\" recalls Cortese, \\\"we were too busy to think about it, but when we go home, before going to sleep, it comes back to us.\\\" He emphasizes that he and his shipmates were just doing their duty as professional military men. Out in the Mediterranean, with no land in sight, you realize just how vast it is. And although it's been warm on land in Sicily recently, at night on the water, it's cold and windy. On board the Calabrese, we are warm, well-fed and in good company. The ship is well-maintained and equipped with state-of-the-art equipment, allowing Busonera to plow confidently through the waves in the dark without fear of running into anything. It contrasts starkly with conditions migrants have recounted to us of the rickety boats and unseaworthy rubber dinghies they use to try to cross the Mediterranean. Often they're without food, water or shelter, their boat's crew inexperienced and untrained. That's if they have a crew at all. Many migrants have been beaten and robbed of all their possessions before they board. And unless a ship like the Calabrese comes to their rescue, death at sea is a definite possibility.\\n\", \"original_answer\": \"The Italian Finance Police's ship, the Calabrese, patrols the Mediterranean off Lampedusa, Italy's most southern territory, which lies just 70 miles from the Tunisian coast. In recent years, this territory has been the first point of entry to Europe for tens of thousands of migrants from Africa and the Middle East. A few years ago, the Calabrese was on the lookout for smugglers trafficking in cigarettes and drugs, but in recent years, its 12-man crew has joined Italy's effort to rescue migrants coming from Africa and the Middle East. The crew have seen enough troubles in their time to appreciate an uneventful day's work. One of the crew, Gaetano Cortese, recalls his worst experience while serving at sea with the Guardia di Finanza, when he and most of his shipmates took part in the rescue effort on 3 October 2013, after a ship with hundreds of migrants had gone down off Lampedusa, killing more than 350 people. The crew of the Calabrese was able to rescue four of the survivors.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 254,
+  "source_cluster_id": "sha256:c0fe5167cb65f9660dd5d1c0bb565237d3e39fdd790d383f514a2cfccc011c60",
+  "source_id": "12012",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:e2d272589eb8e99f2c3ed99a65135af9ea095805182df21ee1083a78e438f004",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45
+  ]
+}

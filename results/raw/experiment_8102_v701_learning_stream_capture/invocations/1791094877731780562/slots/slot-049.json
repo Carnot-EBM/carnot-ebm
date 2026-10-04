@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.420976429944858,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8875f4608a21c41e526fc36b7fcec6d0c456e9ec85c7fdd76751a9a790e61ceb",
+  "human_target": null,
+  "input_tokens": 723,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8875f4608a21c41e526fc36b7fcec6d0c456e9ec85c7fdd76751a9a790e61ceb",
+    "feature_hash": "sha256:c44e97e67805ee12660da10d4dfcf8549436c700d3179f04bb45a7a70c8ee2a1",
+    "source_normalized_hash": "6ecaf5e6b96c43e744418c9b01d81722912e9718dcb11b896745255981e69514",
+    "values": [
+      0.5259552253302253,
+      0.6871309246309246,
+      0.3333333333333333,
+      0.9166666666666666,
+      0.4666666666666667,
+      0.5,
+      0.4740447746697747,
+      0.6217365967365968
+    ],
+    "window_count": 20
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 723,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 747
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:9958398b338caba562f97fe4ff7d338570a44f0feb62f678ad3b798e94fce697",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095384,
+    "id": "chatcmpl-b9RfXfJVlaFoedVQMWTt5Fm0lMoALgwr",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 562.217,
+      "predicted_n": 24,
+      "predicted_per_second": 42.68814354599736,
+      "predicted_per_token_ms": 23.425708333333333,
+      "prompt_ms": 663.173,
+      "prompt_n": 645,
+      "prompt_per_second": 972.5968940231282,
+      "prompt_per_token_ms": 1.0281751937984496
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 723,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 747
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Occasionally it does not adjust on its own or the vertical may be an older model and not include the self adjusting feature at all. When a vertical does not adjust, many times slats can pop off or the blind gets completely stuck or twisted and won't open.ccasionally it does not adjust on its own or the vertical may be an older model and not include the self adjusting feature at all. When a vertical does not adjust, many times slats can pop off or the blind gets completely stuck or twisted and won't open.\\\\n\\\\npassage 2:Once you have found the pulley, tap lightly on the end of the rod to loosen the pulley. In order to loosen the vertical blind chain, find the vane carrier that is located within the head rail. Pull on the vane carrier firmly, and pull the extra cord with your free hand.This will adjust the length of the vertical blind chain. Once you have pulled it to the desired length, tie a knot in the cord.By tying the knot, the length of the cord will stay in the position that you desire.Then simply replace the end camp and you are ready to go!nce you have found the pulley, tap lightly on the end of the rod to loosen the pulley. In order to loosen the vertical blind chain, find the vane carrier that is located within the head rail. Pull on the vane carrier firmly, and pull the extra cord with your free hand.\\\\n\\\\npassage 3:During the life of your vertical blinds, if you find that the blinds are becoming increasingly difficult to function and operate, you can simply adjust the vertical blind chain to solve the problem. First, remove the end cap from the head rail. This can be accomplished with the use of a flathead screwdriver.nce you have found the pulley, tap lightly on the end of the rod to loosen the pulley. In order to loosen the vertical blind chain, find the vane carrier that is located within the head rail. Pull on the vane carrier firmly, and pull the extra cord with your free hand.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to adjust vertical blinds\\\"}\", \"original_answer\": \"To adjust vertical blinds, follow these steps:\\n\\n1. Locate the pulley by tapping lightly on the end of the rod.\\n2. Loosen the pulley by pulling on the vane carrier within the head rail.\\n3. Adjust the length of the vertical blind chain by pulling on the extra cord.\\n4. Tie a knot in the cord to secure the length.\\n5. Replace the end cap back onto the head rail.\\n6. If the passages do not contain the necessary information, unable to answer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 50,
+  "source_cluster_id": "sha256:aa9421be38f6a85f360586be079df0f24f167f6e633f8ebfa49f04f306cc9192",
+  "source_id": "12294",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8875f4608a21c41e526fc36b7fcec6d0c456e9ec85c7fdd76751a9a790e61ceb",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2762448559515178,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:d69128b70661ad628741d672cab916389d646e8b5747c3f64f187e513c9b082f",
+  "human_target": null,
+  "input_tokens": 736,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:d69128b70661ad628741d672cab916389d646e8b5747c3f64f187e513c9b082f",
+    "feature_hash": "sha256:a5514cee34f589c4e686d8959d1032597299afe42850ddbf263288de81f9e83a",
+    "source_normalized_hash": "39a70b2af01f7a4f18d6e4d52a9ea5271eea10e9e09a14d30c38ce722550df97",
+    "values": [
+      0.4227248677248677,
+      0.5665993265993265,
+      0.0,
+      0.0,
+      0.8,
+      0.8,
+      0.5772751322751323,
+      0.7197979797979798
+    ],
+    "window_count": 28
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 736,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 757
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:2436a25c6f13367dd59f855930666d75b06261070dcbd2586b01389510ad671e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095708,
+    "id": "chatcmpl-oMwqpqXURSDlX39ciQM0ZoNejkmMwwLD",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.565,
+      "predicted_n": 21,
+      "predicted_per_second": 42.63396709063778,
+      "predicted_per_token_ms": 23.45547619047619,
+      "prompt_ms": 670.399,
+      "prompt_n": 658,
+      "prompt_per_second": 981.5050440111038,
+      "prompt_per_token_ms": 1.0188434650455926
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 736,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 757
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:There is 94 percentage chance of rain and 9 mph winds from the Northwest. 3am:The San Luis Obispo, CA forecast for Mar 23 is 48 degrees and Overcast. There is 94 percentage chance of rain and 9 mph winds from the Northwest. 6am:The San Luis Obispo, CA forecast for Mar 23 is 50 degrees and Cloudy. There is 93 percentage chance of rain and 8 mph winds from the Northwest. 9am:The San Luis Obispo, CA forecast for Mar 23 is 53 degrees and Partly cloudy. There is 86 percentage chance of rain and 9 mph winds from the Northwest.\\\\n\\\\npassage 2:3am:The San Luis Obispo, CA forecast for Apr 14 is 49 degrees and Clear. There is 70 percentage chance of rain and 8 mph winds from the North. 6am:The San Luis Obispo, CA forecast for Apr 14 is 49 degrees and Clear. There is 64 percentage chance of rain and 9 mph winds from the North. 9am:The San Luis Obispo, CA forecast for Apr 14 is 55 degrees and Partly cloudy. There is 55 percentage chance of rain and 10 mph winds from the North-Northeast.\\\\n\\\\npassage 3:12am:The San Luis Obispo, CA forecast for Apr 14 is 62 degrees and Sunny. There is 44 percentage chance of rain and 10 mph winds from the Southeast. 3pm:The San Luis Obispo, CA forecast for Apr 14 is 64 degrees and Sunny. There is 41 percentage chance of rain and 15 mph winds from the North.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather forecast in slo ca\\\"}\", \"original_answer\": \"The weather forecast for San Luis Obispo, CA varies. On March 23, the forecast predicts overcast and cloudy weather with high chances of rain ranging from 86% to 94%, and temperatures ranging from 48 to 53 degrees. The winds are expected to come from the Northwest at speeds of 8 to 9 mph. On April 14, the forecast predicts clear to partly cloudy weather with decreasing chances of rain from 70% to 55% in the morning, and then 44% to 41% later in the day. The temperatures are expected to range from 49 to 64 degrees with winds from the North and Southeast at speeds of 8 to 15 mph.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 29,
+  "source_cluster_id": "sha256:8a166cb3c28f4afb013a887429d77b6f63d2a0d5914921ec5c95a8dbf8197b35",
+  "source_id": "12282",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:d69128b70661ad628741d672cab916389d646e8b5747c3f64f187e513c9b082f",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

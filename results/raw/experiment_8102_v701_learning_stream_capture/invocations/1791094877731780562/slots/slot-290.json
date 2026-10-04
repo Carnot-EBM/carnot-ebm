@@ -1,0 +1,129 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.1419496060116217,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:15db160ca21dfa2ddf14393859cba16675bef38384d2c6625ae380f8557bbaf7",
+  "human_target": null,
+  "input_tokens": 482,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:15db160ca21dfa2ddf14393859cba16675bef38384d2c6625ae380f8557bbaf7",
+    "feature_hash": "sha256:1d715422f789af72def1680cdf95d0e74bbf6179e106fce9c98a01899fea0542",
+    "source_normalized_hash": "e109feadea1d5d5f19b30a874467a03b39d5eca5891eb1328684fdd4e3744a5c",
+    "values": [
+      0.34967948717948716,
+      0.43223443223443225,
+      0.75,
+      0.75,
+      0.475,
+      0.5,
+      0.6503205128205127,
+      0.7545787545787546
+    ],
+    "window_count": 10
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 482,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 505
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:bdae8612bacc9c520207c0f8836b32f4ea4c1d9e0d86e6b653f45d493e62687d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095717,
+    "id": "chatcmpl-K59J9DhGYHKQY7jpuzRvBdm9fbSyfR47",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.143,
+      "predicted_n": 23,
+      "predicted_per_second": 42.58131642916783,
+      "predicted_per_token_ms": 23.484478260869565,
+      "prompt_ms": 489.256,
+      "prompt_n": 404,
+      "prompt_per_second": 825.7435780041533,
+      "prompt_per_token_ms": 1.211029702970297
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 482,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 505
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Most butterflies that live in cold climates spend the winter as caterpillars, while almost as many spend the winter as pupas. A few species, mainly tortoiseshells (Nymphalis) and anglewings (Polygonia), spend the winter as adults, hibernating in holes in trees, in crevices in man-made structures, or in other shelters.\\\\n\\\\npassage 2:Most butterflies that live in cold climates spend the winter as caterpillars, while almost as many spend the winter as a chrysalis. A few species spend the winter as adults, hibernating in holes in trees, in crevices in man-made structures, or in other shelters. A very few species spend the winter as eggs.\\\\n\\\\npassage 3:Some enter diapause, freeze, and live through temperatures well below 32 degrees F. Butterflies spend winter in different ways, depending upon the species. Many species convert glycogen to sorbitol and glycerol (nature's natural anti-freeze) as nights become longer and temperatures become cooler.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do butterflies eggs live through winter\\\"}\", \"original_answer\": \"Based on the given passages, butterfly eggs do not survive winter. Passage 1 states that most butterflies spend the winter as caterpillars or pupae, while passage 2 mentions that some species spend the winter as adults, but does not mention eggs. Passage 3 discusses how some butterflies enter diapause and survive winter, but does not provide any information about eggs. Therefore, I am unable to answer the question based on the given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 35,
+  "source_cluster_id": "sha256:c15b228ba98e700689885a081d752faaf41b297f3b3c0f061c39ecce6c4acfa3",
+  "source_id": "12272",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:15db160ca21dfa2ddf14393859cba16675bef38384d2c6625ae380f8557bbaf7",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

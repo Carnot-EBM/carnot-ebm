@@ -1,0 +1,140 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7978790630586445,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:b8a814cd0b460e26efadd1d84bbbaa16185ae4bb994580bc7e6f6844d0c3a193",
+  "human_target": null,
+  "input_tokens": 1293,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:b8a814cd0b460e26efadd1d84bbbaa16185ae4bb994580bc7e6f6844d0c3a193",
+    "feature_hash": "sha256:a9c116baf17bae67f9403135a14b236f44730600358e2c80b89d6f5722928974",
+    "source_normalized_hash": "568877e472bba6cd187aae81217ddd479a330219cef8639e313eedd058b221ab",
+    "values": [
+      0.2647447576672682,
+      0.4543557283809738,
+      0.3055555555555555,
+      0.8888888888888888,
+      0.2222222222222222,
+      0.2222222222222222,
+      0.7352552423327319,
+      0.9411238934240337
+    ],
+    "window_count": 32
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1293,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1315
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:2a0a916c0b41ab3e24536c6e648c1bd60fe7313ccc2feeea19dfd98ad92df048",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095741,
+    "id": "chatcmpl-dukLQeestuwdx9g7QrhIDQivweM3lOiC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 517.86,
+      "predicted_n": 22,
+      "predicted_per_second": 42.48252423434905,
+      "predicted_per_token_ms": 23.53909090909091,
+      "prompt_ms": 1132.623,
+      "prompt_n": 1215,
+      "prompt_per_second": 1072.7311735679039,
+      "prompt_per_token_ms": 0.9322
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1293,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1315
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1936 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Vegan, Vegetarian, Sandwiches, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-18:0\\\",\\\"Monday\\\":\\\"10:0-18:0\\\",\\\"Saturday\\\":\\\"10:0-18:0\\\",\\\"Sunday\\\":\\\"10:0-18:0\\\",\\\"Thursday\\\":\\\"10:0-18:0\\\",\\\"Tuesday\\\":\\\"10:0-18:0\\\",\\\"Wednesday\\\":\\\"10:0-18:0\\\"},\\\"name\\\":\\\"Ike\u2019s Love & Sandwiches\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-19 21:04:24\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Love their sandwiches, especially on Dutch bread! This location had a specific sandwich for SB, which is cool. Always super tasty and a lot so be prepared to share or save for another meal. Super fast service and convenient.\\\"},{\\\"review_date\\\":\\\"2021-12-08 22:15:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"More so than seafood, vegetarian, or even Mexican food, the cream that rises to the top in Santa Barbara most consistently is...sandwiches! There is truly a pantheon of fine sandwich shops in our fair town and Ike's, with it's sole, somewhat squalid little location next to the 7-11 on Mission, has pushed it's way into that top tier. \\\\n\\\\nI've been there twice now and heard similar stories from friends and fam, and Ike's is the bomb. Their bread is fresh and tasty (I like the sourdough better than the Dutch Crunch, but you can't go wrong either way), the variety is hard to beat, the sauces are tasty, and they cook them oh so right. I've tried the steak sandwich and the three cheese and they were both on hit. \\\\n\\\\nNormally I'd dock a star or two for so many SF Giants references, or the weird little location, or the strange hours (closes at 6?), but the food and service are so legit that I'm not even going to go there. This spot is a legitimate contender with all the big boys in town - Valentinos, South Coast, Panino, and Sam's. Definitely worth picking up on your way to the Rose Garden or if you want to enjoy it in one of their creepy little booths staring at the weird ceiling.\\\"},{\\\"review_date\\\":\\\"2021-08-22 21:21:45\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The sandwiches here are awesome!  Although I despise the name of many of them (a lot of SF sports themed, while I'm an LA fan), I looked past that and enjoyed a couple sandwiches named after Giants players.  \\\\nThe service was good, friendly and helpful.  Sandwiches were ready not too long after ordering them.  \\\\nThe star of the sandwiches was the Dutch Crunch bread.  That is one of the most awesome breads for sandwiches, crunchy on the outside and soft interior. \\\\nI'd definitely come back to try some of their other creations!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Ike's Love & Sandwiches is a popular sandwich shop located in Santa Barbara, CA, known for its delicious and diverse sandwich options. The restaurant is well-loved by locals and visitors alike, with an average rating of 4.5 stars based on customer reviews.\\n\\nOne of the standout features of Ike's is their freshly baked bread, which is made daily and available in various flavors such as sourdough and Dutch Crunch. Customers rave about the quality of the bread, with one reviewer describing it as \\\"the star of the sandwiches.\\\"\\n\\nThe menu offers a wide variety of sandwich options, including meat, vegetarian, and vegan choices. Some popular options include the steak sandwich and the three cheese sandwich, both of which have received high praise from customers. The restaurant also offers a unique sandwich named after a San Francisco Giants player, which has been a hit with fans of the team.\\n\\nThe service at Ike's is friendly and efficient, with staff members described as \\\"super fast\\\" and \\\"convenient.\\\" The restaurant's atmosphere is casual and welcoming, with creepy little booths and a strange ceiling that adds to its quirky charm.\\n\\nWhile some customers have noted that the restaurant's location next to a 7-Eleven may not be the most appealing, the quality of the food and service more than makes up for it. Ike's Love & Sandwiches is a must-visit for anyone looking for a delicious and satisfying sandwich in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 51,
+  "source_cluster_id": "sha256:a4b7e6755e2a48136ca6632af180c6bbca937f5097f7b98fce7c75cd49bd7746",
+  "source_id": "13638",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:b8a814cd0b460e26efadd1d84bbbaa16185ae4bb994580bc7e6f6844d0c3a193",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

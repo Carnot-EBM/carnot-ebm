@@ -1,0 +1,134 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5100085050798953,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:47b1ca67f65bdd58686697dcec273e04595134ec678980f480febb40c71bbac6",
+  "human_target": null,
+  "input_tokens": 871,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:47b1ca67f65bdd58686697dcec273e04595134ec678980f480febb40c71bbac6",
+    "feature_hash": "sha256:aebc3dc8c3aba217bba82c5c453f418f05e118f0a6ccbe22bd01ad24114a3b00",
+    "source_normalized_hash": "b529f002fc3b1fe4b559c6a40c75b1106494e71e429341308aab5583a1ea7f51",
+    "values": [
+      0.3793042655658755,
+      0.6132847437220501,
+      0.0,
+      0.0,
+      0.6,
+      0.6,
+      0.6206957344341245,
+      0.8241808565531474
+    ],
+    "window_count": 20
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 871,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 895
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:586b928d17e9f6b1637e6dd9d84f2608a846b94ce2df55514623eca9a55de31d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095493,
+    "id": "chatcmpl-lU3EhvKnI0arXQNIWBCus7tZOff88J3E",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.502,
+      "predicted_n": 24,
+      "predicted_per_second": 42.44016820453332,
+      "predicted_per_token_ms": 23.562583333333333,
+      "prompt_ms": 823.269,
+      "prompt_n": 793,
+      "prompt_per_second": 963.2331595140836,
+      "prompt_per_token_ms": 1.0381702395964691
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 871,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 895
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:To determine your RDA for protein, you can multiply your weight in pounds by 0.36, or use this online protein calculator. For a 50-year-old woman who weighs 140 pounds woman and who is sedentary (doesn\u2019t exercise), that translates into 53 grams of protein a day.he Recommended Dietary Allowance (RDA) for protein is a modest 0.8 grams of protein per kilogram of body weight. The RDA is the amount of a nutrient you need to meet your basic nutritional requirements.\\\\n\\\\npassage 2:You need protein for your muscles, bones, and the rest of your body. Exactly how much you need changes with age: 1  Babies need about 10 grams a day. 2  School-age kids need 19-34 grams a day.3  Teenage boys need up to 52 grams a day. 4  Teenage girls need 46 grams a day. 5  Adult men need about 56 grams a day.6  Adult women need about 46 grams a day (71 grams, if pregnant or breastfeeding).xactly how much you need changes with age: 1  Babies need about 10 grams a day. 2  School-age kids need 19-34 grams a day. 3  Teenage boys need up to 52 grams a day.\\\\n\\\\npassage 3:Moderately active women between the ages of 19 and 30 should try to eat 2,000 to 2,200 calories per day. As carbohydrates should account for 900 to 1,430 of these calories, you should eat 225 to 357.5 grams of carbs each day.If you are between the ages of 31 and 50, these values decrease to 2,000 calories and between 225 and 325 grams of carbs every day.s carbohydrates should account for 900 to 1,430 of these calories, you should eat 225 to 357.5 grams of carbs each day. If you are between the ages of 31 and 50, these values decrease to 2,000 calories and between 225 and 325 grams of carbs every day.\\\\n\\\\n\\\",\\\"question\\\":\\\"how much protein should you have a day\\\"}\", \"original_answer\": \"The amount of protein you should have a day depends on your age, sex, and activity level. For a sedentary adult, the Recommended Dietary Allowance (RDA) is 0.8 grams of protein per kilogram of body weight, or you can multiply your weight in pounds by 0.36. This means a sedentary 140-pound woman would need about 53 grams of protein a day. However, specific age groups have different requirements. For instance, babies need about 10 grams a day, school-age kids need 19-34 grams a day, teenage boys need up to 52 grams a day, teenage girls need 46 grams a day, adult men need about 56 grams a day, and adult women need about 46 grams a day (or 71 grams if pregnant or breastfeeding).\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 125,
+  "source_cluster_id": "sha256:8d7a043f8c8e60ed9276b4a199e1593b3fea5e5f61235627b92809a22ad4b65a",
+  "source_id": "14467",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:47b1ca67f65bdd58686697dcec273e04595134ec678980f480febb40c71bbac6",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

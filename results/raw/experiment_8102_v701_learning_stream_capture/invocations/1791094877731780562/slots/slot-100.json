@@ -1,0 +1,159 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.8090773549629375,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:434452b914f6f8ae8ca806bb491c02e55a42a19765fa73996c25c3ccbe61a8d7",
+  "human_target": null,
+  "input_tokens": 1281,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:434452b914f6f8ae8ca806bb491c02e55a42a19765fa73996c25c3ccbe61a8d7",
+    "feature_hash": "sha256:ffae77ba33dc1ab2d4e3cc28068b184595049057c15c34b6ee2c5180d271666c",
+    "source_normalized_hash": "f9a93bd81ec3f543876af838bb16de8c4d11867641eb64294661e45427f9f4e1",
+    "values": [
+      0.2356243550996175,
+      0.48569433232101894,
+      0.44285714285714284,
+      1.0,
+      0.2,
+      0.2,
+      0.7643756449003826,
+      0.9609747476689007
+    ],
+    "window_count": 70
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1281,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1305
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:623fdf9e9f06fae817384edbfaa0dc9e8b1ae4b3597aec735eb5dc926414c57a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095457,
+    "id": "chatcmpl-xHObbf96UWdO0At2YeMb1B4gGWOuAY5Y",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.471,
+      "predicted_n": 24,
+      "predicted_per_second": 42.36757044932574,
+      "predicted_per_token_ms": 23.602958333333333,
+      "prompt_ms": 1126.938,
+      "prompt_n": 1203,
+      "prompt_per_second": 1067.4943963199394,
+      "prompt_per_token_ms": 0.9367730673316709
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1281,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1305
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"It is not hard to imagine the conversations inside the Hillary Clinton camp prelaunch: How do we take the best known woman in the world and make her seem like less of a big shot? How can the people in Iowa and New Hampshire get to know the \\\"real Hillary,\\\" the Midwestern Methodist? (As a friend told me, she's someone who \\\"likes to sing 'God Bless America' on New Year's Eve.\\\") And how to open the minds of people about someone everyone already has an opinion about? Same questions, no doubt, that the staff asked in 2008 when she ran against the newbie Barack Obama, and same questions they asked when, as first lady, she ran for the Senate in New York. In that race, she ended up spending a lot of all-ears quality time in upstate New York. In this race, she could be spending a lot of all-you-can-eat time at Diners, Drive-ins and Dives \u2014 just like the TV show. (Except Guy Fieri would probably have been recognized by the crowd at Chipotle. Just sayin.' ) Dining aside, it's hard -- almost impossible -- to soft-launch a campaign with a superstar politician.  All the gauzy ads and the small classrooms and the coffee shops can't mask the Houdini-like effort Hillary Clinton is making to escape the inescapable reality -- that even her \\\"Scooby-Doo\\\" van is followed by throngs of press. (I half imagined an O.J. moment with a helicopter hovering as she made her way down I-80.) Try as she might to launch with a humble start \u2014 not entitled to anything \u2014 she still is who she is. Virtually unchallenged. Not to mention famous, accomplished and controversial. In watching it all unfold, it's hard to underestimate the task at hand. It's also hard to figure out whether it's actually going to work. Hillary Clinton \u2014 and her experienced campaign team \u2014 are disciplined and relentlessly on message. That's usually a good thing when you're running a presidential campaign. But when you're sitting at a community college in Iowa and you tick off your rationale for running and your resume \u2014 unprompted \u2014 it seems less effective and more oddly incongruent. (Especially when the former secretary of state described her tenure in five words \u2014 as \\\"standing up for our country.\\\" Short shrift, it seems to me.) Maybe it's that the old lessons of message discipline don't work in the informal environment the campaign is trying to create \u2014 at least not with this candidate. The hardest combination in politics is that just-right mixture of spontaneity and discipline. The ability to understand exactly what you have to say (over and over) and then say it as if you have never said it before. And look like you're having a great time doing it. We like to call it authenticity, but it's probably not. It's a honed skill that combines connection and gravitas, both of which the voters demand in a president. (A majority of voters -- 53% --  say they want to vote for someone who has been financially successful, as opposed to someone who has not.) So there's this balance: If you're too much like them, you're nothing special to vote for. But if you're too different, you're not relatable. It's a balance that doesn't come easily to Hillary Clinton. But she's not alone. When President George H.W. Bush was running for re-election in 1992, he was facing his own image issues. His populist challengers were calling him insensitive to middle class woes in the struggling state of New Hampshire. Bush tried mightily to drop the presidential persona, did some town halls, and famously declared:  \\\"Message: I care.\\\" Some said he actually read it from a cue card, but he also said this: \\\"I don't know what I have to do to convince people here that I really care about this (the economy). I do.\\\" He lost. To an empathetic I-feel-your-pain Bill Clinton. And the rest, as they say, is history. Or, in Hillary's case, at least trying to make history.\\n\", \"original_answer\": \"Hillary Clinton is attempting to make herself appear more approachable to the public in her campaign to win the 2016 Presidential election, however, it is proving to be a challenge. Clinton's campaign team has a difficult task ahead of them trying to make her appear less of a high profile figure and more down to earth. They are trying to show the public the \\\"real Hillary,\\\" hoping to change the minds of those who already have an opinion of her. It is difficult for Clinton to escape the attention of the press, even when she tries to make a low key start to her campaign. \u00a0Despite her disciplined and experienced campaign team, it is hard for them to know the right balance between making Clinton relatable, but also showing that she is special.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 101,
+  "source_cluster_id": "sha256:f1116de0c4a240e51512a5256a1b691fe8f4ae61a438238785b417488c88e4f8",
+  "source_id": "11788",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:434452b914f6f8ae8ca806bb491c02e55a42a19765fa73996c25c3ccbe61a8d7",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+  ]
+}

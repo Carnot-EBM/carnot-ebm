@@ -1,0 +1,131 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5933116909582168,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:75bc255a858a55f3cd5c98ffff2615527ea943a7aaeadec40223b3be2355fb97",
+  "human_target": null,
+  "input_tokens": 971,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:75bc255a858a55f3cd5c98ffff2615527ea943a7aaeadec40223b3be2355fb97",
+    "feature_hash": "sha256:842598b80ac53b8dc33c1264b0898e1570ac685e9972f90e2168c064a343075e",
+    "source_normalized_hash": "44ac41c22c94a8e22f804c265d61f880f3ec7652ecdea07729013394a43a2cd4",
+    "values": [
+      0.26867080992315956,
+      0.47838445190418877,
+      0.44642857142857145,
+      0.875,
+      0.125,
+      0.125,
+      0.7313291900768404,
+      0.9332981068836332
+    ],
+    "window_count": 14
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 971,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 995
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:9127e91bd4ac70ff18242d03bdd60c20f6dcc18ed0b066b27a821fab7b66d03c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095746,
+    "id": "chatcmpl-Nc3qGIyQvKuaqhx5MtNn1ntUfHVA1MgM",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.454,
+      "predicted_n": 24,
+      "predicted_per_second": 42.51896523011619,
+      "predicted_per_token_ms": 23.518916666666666,
+      "prompt_ms": 883.453,
+      "prompt_n": 893,
+      "prompt_per_second": 1010.8064605587394,
+      "prompt_per_token_ms": 0.9893090705487122
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 971,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 995
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"227 N Nopal St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Mexican, Arts & Entertainment, Festivals, Restaurants, Religious Organizations, Churches\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Our Lady of Guadalupe Mercado\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-08-04 02:47:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Pass security and bam, best Mercado every Fiestas!\\\\n\\\\nThe go-to items include elote (roasted corn), tamales (chicken or pork), Agra frescas (pineapple or strawberry are my fav), and pasole (awesome soup). With games and entertainment, plus alcohol for those who wish to partake, this Mercado is by far the best food and atmosphere.\\\\n\\\\nPlus, it benefits a local organization immensely and isn't full of just visitors. After a nice meal, head to the Courthouse for an evening of dancing under the stars!\\\"},{\\\"review_date\\\":\\\"2016-08-05 02:43:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Ay carumba! \\\\n \\\\nI know, it's a secret...but it's not.\\\\n\\\\nIf you're here for fiesta, do yourself a favor and visit this local institution. \\\\n\\\\nSome of the best times can be had here - COLOR BALL - LOTERIA! Plus the food is fantastic. Have the pozole for sure and really anything else, you won't be sorry.\\\\n\\\\nViva la Fiesta!\\\"},{\\\"review_date\\\":\\\"2014-08-02 01:54:44\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is the best food and music \\\\nFor Fiesta\\\\nSo glad someone sent me here\\\\nFabulous torta with barbecued tri tip. \\\\nDo fresh grilled to perfection \\\\nOpen till 9 going back\\\\nBest chicken tamale on the planet\\\\nThe chicken  flautas were crispy with fresh shredded chicken and guacamole and cheese on the top \\\\nGreat authentic dancers and mariachi with vibrant speakers\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Our Lady of Guadalupe Mercado is a local favorite in Santa Barbara, California, offering a unique blend of Mexican cuisine, cultural events, and festive atmosphere. With a 4.5-star rating and rave reviews from customers, this business stands out as a must-visit destination for anyone looking to experience the best of Santa Barbara's culture and culinary scene.\\n\\nReviews praise the mercado's delicious offerings, including elote, tamales, aguas frescas, and posole, all of which are made fresh daily. Customers also appreciate the lively atmosphere, complete with games and entertainment, as well as the opportunity to support a local organization. The mercado's late hours and weekend availability make it a popular spot for both locals and visitors.\\n\\nThe reviewers particularly mention the mercado's authenticity and the fact that it's not just a tourist trap, but rather a beloved local institution. They also highlight the excellent customer service and the value for money. Overall, Our Lady of Guadalupe Mercado is a gem of a find in Santa Barbara, offering a one-of-a-kind experience that will leave you wanting more.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 54,
+  "source_cluster_id": "sha256:a901aaedbdbdd99e5245b36a61795f50234b0bd2a712805c4b6e91fe205b44a0",
+  "source_id": "14569",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:75bc255a858a55f3cd5c98ffff2615527ea943a7aaeadec40223b3be2355fb97",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

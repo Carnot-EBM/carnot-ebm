@@ -1,0 +1,171 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7667365490924567,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:c55f6a0bb38f873f1afb9fff27f65b3fe890960879616f6f148bb36e11868359",
+  "human_target": null,
+  "input_tokens": 1227,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:c55f6a0bb38f873f1afb9fff27f65b3fe890960879616f6f148bb36e11868359",
+    "feature_hash": "sha256:7d01953ceca38aa8d312197d867accc88c6c5c1007fd93f2d1236e278f4ebf98",
+    "source_normalized_hash": "b3dc9f8a464ba41de11c34f0bf1f6959698605a42ec9fcdc0c6ed39fc4a3803f",
+    "values": [
+      0.19136371225782167,
+      0.3860215509128553,
+      0.3778801843317972,
+      0.7142857142857143,
+      0.14285714285714285,
+      0.14285714285714285,
+      0.8086362877421784,
+      1.0
+    ],
+    "window_count": 93
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1227,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1251
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:64a0f07b8c3a365cdc92062bef1d3b4f7133ccbf6931f86b09ab88111774b83d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095475,
+    "id": "chatcmpl-CPMJcn3kDf3Y6pwCY61rI69sZaX7wq54",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.793,
+      "predicted_n": 24,
+      "predicted_per_second": 42.418340276390836,
+      "predicted_per_token_ms": 23.574708333333334,
+      "prompt_ms": 1081.578,
+      "prompt_n": 1149,
+      "prompt_per_second": 1062.3366969372528,
+      "prompt_per_token_ms": 0.9413211488250652
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1227,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1251
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Freddie Gray was arrested Baltimore police on the morning of April 12 without incident, according to police. Less than an hour after he was detained, officers transporting him called for a medic. He subsequently slipped into a coma, dying a week after his initial arrest. So what happened? The events surrounding Gray's encounter with police remain unclear. To shed light on what happened, police released a more detailed timeline of events on Monday, and officials speaking at a news conference elaborated on specifics of the events. \\\"We want to clear up some of the confusions that may exist,\\\" Baltimore Deputy Police Commissioner Jerry Rodriguez said. \\\"We will be looking specifically at our actions from the point that we came into contact with Mr. Gray up until the time we requested medical assistance -- specifically, did we miss any warnings? Should we have acted sooner? Should we have acted in any different manner?\\\" This is what police say occurred:. ---. 8:39:12 a.m., Sunday, April 12. At the corner of North Avenue and Mount Street in Baltimore, a police officer makes eye contact with two individuals, one of them Gray. Both individuals start running southbound as officers begin pursuing them. 8:39:52 a.m. One unit (officer) says \\\"I got him\\\" at 1700 Presbury Street, two blocks south of North and Mount. 8:40:12 a.m. An officer says we've got one and confirms the address of 1700 Presbury, where Gray gave up without the use of force, according to Rodriguez. One officer took out his stun gun but did not deploy it, he said. 8:42:52 a.m. Gray asks for an inhaler. Police request a \\\"wagon\\\" to transport him. 8:46:02 a.m. The van's driver says he believes Gray is acting \\\"irate\\\" in the back, according to Rodriguez. 8:46:12 a.m. At the corner of Mount Street and Baker Street, an officer asks the vehicle driver to stop so they can finish paperwork. At that point, Gray is placed in leg irons and put back in the wagon. Police interviewed several witnesses in the community with regard to that specific stop, Rodriguez said. The videos that were filmed by bystanders show events similar to what Rodriguez describes happens at this point. 8:54:02 a.m. The wagon clears Mount Street and heads southbound towards central booking. 8:59:52 a.m. The van's driver asks for an additional unit to \\\"check on his prisoner [Gray],\\\" Rodriguez said. Another individual is arrested and a wagon is requested. Before the wagon leaves, there is \\\"some communication\\\" with Gray, according to Rodriguez. They then travel to the police cepartment/s western district with Gray and the other suspect in the wagon. The two are separated by a metal barrier and the two had no physical contact. 9:24:32 a.m. A medic is called. ---. An autopsy on Gray's body was done on Monday, according to Rodriguez. He said there was no evidence that force was used against Gray, nor did any officers describe using any force against him. \\\"When Mr. Gray was placed inside that van, he was able to talk, he was upset, and when Mr. gray was taken out of that van he could not talk and he could not breath,\\\" Rodriguez said. \\\"I know Mr. Gray suffered a very traumatic injury, but I don't know if it happened prior to him getting into the van or while he was in the van.\\\"\\n\", \"original_answer\": \"Sure! Here's the summary in 139 words:\\n\\nFreddie Gray, 25, was arrested by Baltimore police on April 12th without incident. However, he soon became unresponsive and suffered a spinal injury while in police custody, leading to his death a week later. To clarify the events surrounding his arrest, the police released a detailed timeline on Monday. According to the timeline, officers chased Gray and his companion after they ran from a police stop, and Gray was eventually apprehended and placed in a police van. During the van ride, Gray asked for an inhaler and became irate, prompting the driver to call for a medic. The autopsy showed no signs of force being used against Gray, but he sustained a traumatic spinal injury while in custody.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 113,
+  "source_cluster_id": "sha256:9c5d0bc4179ae364999d3729f4e58325c4ec1b728427ed048fd51d812abeecf6",
+  "source_id": "11862",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:c55f6a0bb38f873f1afb9fff27f65b3fe890960879616f6f148bb36e11868359",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47
+  ]
+}

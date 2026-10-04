@@ -1,0 +1,130 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.213188277091831,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:5c7ddcbf4101e369f3e3497f33620bffdd0b58b0a5a85cf839d1eef9f8c304b2",
+  "human_target": null,
+  "input_tokens": 564,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:5c7ddcbf4101e369f3e3497f33620bffdd0b58b0a5a85cf839d1eef9f8c304b2",
+    "feature_hash": "sha256:70446c495b4ffdd7bcdecfb17d34e8fff62538a2013c557c31dba1262251e47f",
+    "source_normalized_hash": "1a9b266deb277bc7d9700c05458aa5f5388591e328a1842701b2e9dd90bc10b1",
+    "values": [
+      0.3914796423619953,
+      0.5263335030982089,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.6085203576380047,
+      0.834277226041932
+    ],
+    "window_count": 12
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 564,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 588
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:47f1aa4b8df5f69c020cba37fc63dab6c54383308772eba8a82da2d975233b3d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095500,
+    "id": "chatcmpl-tzdAjilKykvngBM7qRrXkkMpXzVdgRiF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.246,
+      "predicted_n": 24,
+      "predicted_per_second": 42.53463914675514,
+      "predicted_per_token_ms": 23.51025,
+      "prompt_ms": 532.765,
+      "prompt_n": 486,
+      "prompt_per_second": 912.2220866610983,
+      "prompt_per_token_ms": 1.096224279835391
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 564,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 588
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:To solve a standard form linear program use Microsoft Excel and the Excel Solver add-in. Excel Solver can be enabled in Excel 2010 by clicking file in the toolbar, options, and Add-in.. Check the Solver Add-in option, and click OK..\\\\n\\\\npassage 2:By changing Cells: are the variables in your linear program, which is the x matrix. Click on Add to add a constraint. The cell reference is the Ax matrix. Choose the type of constraint (greater than or equal to, less than or equal to, or equal to) from the pull down menu.\\\\n\\\\npassage 3:Using EXCEL Solver page 1 Solving Linear Programs using Microsoft EXCEL Solver By Andrew J. Mason, University of Auckland To illustrate how we can use Microsoft EXCEL to solve linear programming problems, consider the following production planning problem.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to solve linear programming in excel\\\"}\", \"original_answer\": \"To solve a linear programming problem in Excel, you can use the Excel Solver add-in. First, enable the Solver add-in by clicking on \\\"File\\\" in the toolbar, then \\\"Options,\\\" and selecting the Solver Add-in option.\\n\\nNext, identify the variables in your linear program, which are the changing cells represented by the x matrix. Add constraints by clicking on \\\"Add\\\" in the Solver window. The Ax matrix represents the cell reference for each constraint. Choose the type of constraint (greater than or equal to, less than or equal to, or equal to) from the drop-down menu.\\n\\nFinally, set the objective function that you want to maximize or minimize by clicking on \\\"Set Objective\\\" in the Solver window. Specify the objective cell reference and select whether you want to maximize or minimize the objective.\\n\\nAfter setting up the problem, click on \\\"Solve\\\" in the Solver window to find the optimal solution. Excel Solver will use mathematical algorithms to determine the optimal values for the variables that satisfy the constraints and optimize the objective function.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 131,
+  "source_cluster_id": "sha256:d76a1b9516322ad766c18b226a98def4c5067b2d354ab710a863ea440d28772c",
+  "source_id": "12207",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:5c7ddcbf4101e369f3e3497f33620bffdd0b58b0a5a85cf839d1eef9f8c304b2",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

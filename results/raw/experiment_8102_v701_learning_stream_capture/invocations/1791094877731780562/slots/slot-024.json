@@ -1,0 +1,128 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2814339130418375,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:04ede8e8c021c9fac66b602b8e5e9b3953fefb4941492b0db0e3f8cc9e75d641",
+  "human_target": null,
+  "input_tokens": 644,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:04ede8e8c021c9fac66b602b8e5e9b3953fefb4941492b0db0e3f8cc9e75d641",
+    "feature_hash": "sha256:3757f9de0715ccef76764a5374d3ee4a37a8f67a0ccdd45d306d815a2be542a5",
+    "source_normalized_hash": "c85435c68bcd7cd59efeebe40cbe22969a1f8dd0181394ef035509c4301364c2",
+    "values": [
+      0.47241300366300365,
+      1.0,
+      0.25,
+      1.0,
+      0.5,
+      0.5,
+      0.5275869963369964,
+      0.8131868131868132
+    ],
+    "window_count": 8
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 644,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 668
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:f9e7a558299e831d62873e25da58c00fcf537fd7f7682ae18296e5bd7ce45e09",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095344,
+    "id": "chatcmpl-sN2HknBFqKHenTw5R5InF8QIYwd75EAw",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 559.183,
+      "predicted_n": 24,
+      "predicted_per_second": 42.9197597208785,
+      "predicted_per_token_ms": 23.299291666666665,
+      "prompt_ms": 587.96,
+      "prompt_n": 566,
+      "prompt_per_second": 962.6505204435675,
+      "prompt_per_token_ms": 1.0387985865724383
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 644,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 668
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:But if you want to do a 3rd, 4th or even a 5th round, the amount of time between rounds should get progressively longer.So if you are doing a 3rd round of the HCG Diet, you must wait 8 weeks from the time your 2nd round ends before you can begin your 3rd round of injections.he amount of weight that you need to lose, will sometimes determine how many rounds you should do.Unless they have a great round with no stalls, people that need to lose any-more than 34 pounds will usually end up doing at least 2 rounds of the HCG Weight Loss Program.\\\\n\\\\npassage 2:After every round of hCG where you finish Phase 2 (the losing weight part), you always do 3 weeks of Phase 3- during this period you are eating a more normal amount of calories (don\u2019t ask me how many-there isn\u2019t an exact number-it\u2019s more about eating to hunger) just no starches and sugars.fter every round of hCG where you finish Phase 2 (the losing weight part), you always do 3 weeks of Phase 3- during this period you are eating a more normal amount of calories (don\u2019t ask me how many-there isn\u2019t an exact number-it\u2019s more about eating to hunger) just no starches and sugars.\\\\n\\\\npassage 3:Length of hCG Course and Course Overview. A single round of hCG is either 26 or 43 days long, depending on how much weight you want to lose. Each round will start with 2 days of gorging on high fat and high calorie foods, on your first 2 days of injections. single round of hCG is either 26 or 43 days long, depending on how much weight you want to lose. Each round will start with 2 days of gorging on high fat and high calorie foods, on your first 2 days of injections.\\\\n\\\\n\\\",\\\"question\\\":\\\"how long between hcg rounds\\\"}\", \"original_answer\": \"If you are doing a 3rd round of the HCG Diet, you must wait 8 weeks from the time your 2nd round ends before you can begin your 3rd round of injections. The amount of time between rounds should get progressively longer if you want to do a 4th or 5th round.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 25,
+  "source_cluster_id": "sha256:94e84b4fca1699886eac0e925af21ac0106d3afacdd2e3f40f92ff16f9a142d4",
+  "source_id": "15096",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:04ede8e8c021c9fac66b602b8e5e9b3953fefb4941492b0db0e3f8cc9e75d641",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

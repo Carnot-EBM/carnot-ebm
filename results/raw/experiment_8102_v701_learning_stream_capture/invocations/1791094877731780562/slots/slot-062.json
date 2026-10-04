@@ -1,0 +1,138 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4147595630493015,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:83f3077aa1cb24d503f5d5c47a208ea996f126e69fbc5b86a4386a55a44aff4c",
+  "human_target": null,
+  "input_tokens": 804,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:83f3077aa1cb24d503f5d5c47a208ea996f126e69fbc5b86a4386a55a44aff4c",
+    "feature_hash": "sha256:05e74deaee552dc00bb967f372278961313e432eb4c78209ce7a5d26681fea56",
+    "source_normalized_hash": "34497e7171f4cacbadeadf39ad2c30742c1015be5cfc5afad41bdceeeb6e1d81",
+    "values": [
+      0.3898887181168585,
+      0.5549596847118399,
+      0.14285714285714285,
+      1.0,
+      0.49107142857142855,
+      0.5,
+      0.6101112818831415,
+      0.8991178218333391
+    ],
+    "window_count": 28
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 804,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 827
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:09755347b25f6ac2eba38e3d68b92da26cec3bbcafa8bf7dd6cafa6dd1223c23",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095402,
+    "id": "chatcmpl-S7xzQHkT6Erjn0pHx5rG03zCjwvqH8jw",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.22,
+      "predicted_n": 23,
+      "predicted_per_second": 42.65420422091169,
+      "predicted_per_token_ms": 23.444347826086958,
+      "prompt_ms": 705.14,
+      "prompt_n": 726,
+      "prompt_per_second": 1029.5827778880791,
+      "prompt_per_token_ms": 0.971267217630854
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 804,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 827
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:A history of the minimum wage since 1938. The grey line shows the minimum wage, unadjusted for inflation, whereas the blue line shows you what it would be worth in 2012. When President Franklin D. Roosevelt first created the minimum wage in 1938, it was 25 cents. Adjusted for inflation, that would be worth $4.07 today. The minimum wage had its lowest buying power in 1948, when it was worth about $3.81 in today's dollars. It had its highest buying power in 1968, when it was worth about $10.56. At $7.25 in 2012, our current minimum wage is in the middle of those two extremes.\\\\n\\\\npassage 2:A Brief History of the US Minimum Wage. For more than a century, Americans have grappled with how to fairly compensate the nation\u2019s lowest paid workers. As states like California and New York join the growing movement for a $15 minimum wage, ABC News explores the fascinating history of an issue viewed as both a job killer and a human rights cause. The nation owes much of its minimum wage laws to the industrial workers of Lawrence, Massachusetts.\\\\n\\\\npassage 3:No state minimum wage law. The minimum wage in the United States is a network of federal, state, and local laws. Employers generally must pay workers the highest minimum wage prescribed by federal, state, or summer local law. As of July 2016, the federal government mandates a nationwide minimum wage of $7.25 per hour. As of October 2016, there are 29 states with a minimum wage higher than the federal minimum.\\\\n\\\\n\\\",\\\"question\\\":\\\"history of minimum wage\\\"}\", \"original_answer\": \"The concept of minimum wage was first introduced in the United States by President Franklin D. Roosevelt in 1938, starting at 25 cents, which would be equivalent to $4.07 today after adjusting for inflation. The minimum wage's lowest buying power was in 1948, when it was equivalent to $3.81 in today's dollars, and it had its highest buying power in 1968, when it was equivalent to $10.56. By 2012, the minimum wage was set at $7.25. The U.S. minimum wage is a network of federal, state, and local laws, with employers generally needing to pay workers the highest minimum wage prescribed by these laws. As of July 2016, the federal government mandates a nationwide minimum wage of $7.25 per hour, however, as of October 2016, there were 29 states with a minimum wage higher than the federal minimum. The issue of minimum wage has long been a topic of debate in the U.S., viewed as both a job killer and a human rights cause.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 63,
+  "source_cluster_id": "sha256:3cd1da76276b1230c1f999b7886aa5a48bd810dc15a3e2496898a16f81ca94c5",
+  "source_id": "12427",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:83f3077aa1cb24d503f5d5c47a208ea996f126e69fbc5b86a4386a55a44aff4c",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

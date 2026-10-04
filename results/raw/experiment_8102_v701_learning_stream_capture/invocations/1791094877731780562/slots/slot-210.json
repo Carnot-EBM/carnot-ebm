@@ -1,0 +1,88 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "answer_units_over_budget",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:9ea41d695b7f37c8f395877b841f4066976de104c6f83a2f8a3c6dfc0ce25d65",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": "answer_units_over_budget",
+    "family_id": "sha256:9ea41d695b7f37c8f395877b841f4066976de104c6f83a2f8a3c6dfc0ce25d65",
+    "feature_hash": "sha256:304cca9148e111301e8590763bed5cf5e11cf5f0c504d4402c58310278b2e773",
+    "source_normalized_hash": "ecdf52cb89da691702063a8477f06402d18f41d40d560a2d517c7865c0cb70ab",
+    "values": null,
+    "window_count": 30
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:3748deef81999a8d563493cf99aaa90b2f6bb03bc6155327901ea4b60040e5e7",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Using a paintbrush or something soft, rub a flower of one paw-paw tree to collect pollen. Then proceed to rub a flower of another tree.*Note: You cannot take pollen from one tree and use it on the same tree! Each individual flower will only accept pollen from a flower from a genetically distinct individual tree. It's best not to plant them too close to the house! 2  Flies will be attracted to the smelly flowers\u2014this will help with pollination, but you won't get as much fruit. 3  Paw-paw's need plenty of room to grow, since they are able to reach 10\u201320 feet (3.0\u20136.1 m) in height.\\\\n\\\\npassage 2:Step 1. Cut open a soft, ripe paw paw fruit to remove the paw paw seeds from the pulp. Set the paw paw seeds into a colander or wire basket. Rinse the paw paw seeds under cool tap water.Use a small brush, if necessary, to remove excess pulp from the seeds.tep 4. Place the bag containing the paw paw seeds into a refrigerator where the temperature is approximately 30 to 40 degrees Fahrenheit. Leave the bag in the refrigerator for approximately 90 days. Check on the contents of the bag at least once a week to make certain the sphagnum peat moss remains moist.\\\\n\\\\npassage 3:8. Place the potted pawpaw seed indoors near a window, or outdoors in a cold frame or on a lightly shaded porch. Choose a spot with at least six hours of direct sunlight daily.. Store the pawpaw seeds inside a paper bag away from heat and humidity until late winter, approximately two months before the last frost. Inspect the seeds, and discard any that appear damaged or rotten.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to start a paw paw tree from seed\\\"}\", \"original_answer\": \"Based on the given passages, here are the steps to start a paw paw tree from seed:\\n\\n1. Collect paw paw seeds from a ripe fruit by cutting it open and removing the seeds from the pulp. Rinse the seeds under cool tap water and remove excess pulp using a small brush.\\n2. Place the paw paw seeds in a colander or wire basket and store them in a refrigerator at a temperature of 30-40\u00b0F (1-4\u00b0C) for 90 days. Check on the seeds at least once a week to ensure the sphagnum peat moss remains moist.\\n3. After the stratification period, place the paw paw seeds in a pot filled with well-draining soil and keep it indoors near a window or outdoors in a cold frame or on a lightly shaded porch. Make sure the location receives at least six hours of direct sunlight daily.\\n4. Inspect the seeds before planting and discard any that appear damaged or rotten. Plant the seeds 1/4 inch deep and 2-3 inches apart in the pot. Water the soil gently but thoroughly.\\n5. Keep the soil consistently moist but not waterlogged during the germination period. Transplant the seedlings to individual pots once they have two sets of leaves.\\n6. Plant the paw paw trees in a location with full sun to partial shade and well-draining soil. Space the trees 10-20 feet apart, depending on the variety.\\n\\nIt's important to note that paw paw trees require cross-pollination to produce fruit, so multiple trees should be planted to ensure proper pollination. Additionally, paw paws are sensitive to frost, so they should be planted in an area that provides protection from frost or brought indoors during the winter months.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "slot": 211,
+  "source_cluster_id": "sha256:a7b1f5e836f0f616bb7e131c265e96835b1a8a5c3063c88deaf29daa34c96ff1",
+  "source_id": "14306",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:9ea41d695b7f37c8f395877b841f4066976de104c6f83a2f8a3c6dfc0ce25d65",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

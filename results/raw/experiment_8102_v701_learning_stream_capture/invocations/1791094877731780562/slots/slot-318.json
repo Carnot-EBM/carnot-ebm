@@ -1,0 +1,140 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4145050999941304,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8ab0a8b48f618900826daa4e619f31ee1b4ef1bc2f9e4d548126c0de3d05971a",
+  "human_target": null,
+  "input_tokens": 846,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8ab0a8b48f618900826daa4e619f31ee1b4ef1bc2f9e4d548126c0de3d05971a",
+    "feature_hash": "sha256:65258f4b329e6184d8304cd63db14b50fa631e3cfccb9b27fc5a4d99686c8588",
+    "source_normalized_hash": "c0867a00196c79dce9a2c4dd865af211f884340144b0750e9b9cd17999e7eae9",
+    "values": [
+      0.4107433145672062,
+      0.611630307295332,
+      0.25,
+      1.0,
+      0.9464285714285714,
+      1.0,
+      0.5892566854327939,
+      0.7628806005160685
+    ],
+    "window_count": 32
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 846,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 870
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:b85f2485d741ac19095fb8bb513a9ffa3640870c7a88c7fd71cf16638118d7d9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095758,
+    "id": "chatcmpl-AZt2BfX8JiRN4AF1A6yYv3afz0OipIiz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.522,
+      "predicted_n": 24,
+      "predicted_per_second": 42.43866728438504,
+      "predicted_per_token_ms": 23.56341666666667,
+      "prompt_ms": 730.791,
+      "prompt_n": 768,
+      "prompt_per_second": 1050.9160621846738,
+      "prompt_per_token_ms": 0.95155078125
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 846,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 870
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1. Leave the butter at room temperature. The best way to soften butter is to remove it from the refrigerator about 30 minutes before you need it and let it sit at room temperature. However, you will inevitably forget to do this from time to time.You can speed up the softening process by cutting the butter into chunks.he best way to soften butter is to remove it from the refrigerator about 30 minutes before you need it and let it sit at room temperature. However, you will inevitably forget to do this from time to time.\\\\n\\\\npassage 2:When I lived up north I was able to keep butter on the counter, but in Florida it gets too warm to leave it out. My sister showed me a way to soften a stick of butter in just a few minutes. Take a stick of butter and place it in a ziploc bag.Fill a bowl or container with warm water. Place the butter in the ziploc bag in the warm water.In a few minutes you will have soft butter that is easy to spread or use in a recipe.y sister showed me a way to soften a stick of butter in just a few minutes. Take a stick of butter and place it in a ziploc bag. Fill a bowl or container with warm water.\\\\n\\\\npassage 3:The reason for using softened butter is that you want to beat the butter (also called \u201ccreaming the butter\u201d), either with sugar or without, and it\u2019s very hard to beat a cold stick of butter. The best thing to do to soften your butter is to put it out on the kitchen counter for an hour before you have to use it.But sometimes we don\u2019t think that far ahead. One popular solution is to put the cold butter in the microwave for 10 to 20 seconds.The problem with microwaving butter is that the microwave can heat the butter unevenly, and tends to over-soften or even melt the butter in places. You want pliable butter for beating, not almost melting butter.Here\u2019s a simple trick to soften butter quickly using some wax paper and a rolling pin.ethod. Just put the stick of butter between two large pieces of wax paper. Using a rolling pin, press down on the butter. Roll it out they way you would roll out a pie crust. When the butter is about 1/8 to 1/4-inch thick, lift off the wax paper and peel away the butter (before it gets too soft to peel).\\\\n\\\\n\\\",\\\"question\\\":\\\"best way to soften butter\\\"}\", \"original_answer\": \"Based on the given passages, the best way to soften butter is to:\\n\\n1. Remove it from the refrigerator about 30 minutes before use and let it sit at room temperature (Passage 1).\\n2. Place it in a ziploc bag and submerge it in warm water (Passage 2).\\n3. Use a rolling pin to roll it out while it is still slightly frozen, then peel off the wax paper once it reaches the desired consistency (Passage 3).\\n\\nTherefore, the best method to soften butter is to use a combination of methods 1 and 3, as they provide the most consistent and controlled results.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 63,
+  "source_cluster_id": "sha256:42b26f5cc8f8fdd31990687cbc3f0df3073ab901a12e5998d605b1e40063e81d",
+  "source_id": "14459",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8ab0a8b48f618900826daa4e619f31ee1b4ef1bc2f9e4d548126c0de3d05971a",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

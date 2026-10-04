@@ -1,0 +1,132 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5508165439823642,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:b82a0959d86b1cb3fbf63e1b8baa82c6ba161d03a4289631dbadc57da3c36949",
+  "human_target": null,
+  "input_tokens": 895,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:b82a0959d86b1cb3fbf63e1b8baa82c6ba161d03a4289631dbadc57da3c36949",
+    "feature_hash": "sha256:b1f6684ecf4eed8268f84f94c4b7a6b7a68a51a1b2cc08af5d3bf0675c82bd6c",
+    "source_normalized_hash": "6757ccff0f0088fdf46a5cee2977e3a87780fa1099d564aafbce0121f157e67a",
+    "values": [
+      0.2345984481333213,
+      0.4689642871889249,
+      0.6388888888888888,
+      0.7777777777777778,
+      0.1111111111111111,
+      0.1111111111111111,
+      0.7654015518666787,
+      0.931773048475947
+    ],
+    "window_count": 16
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 895,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 919
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:1c8093945e419a89bc5a206a03c2cc0b4322d2432c300785829e657134767900",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095530,
+    "id": "chatcmpl-aOWP45V5LA9VpxEj5VWBad6zIE1wQR6x",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.486,
+      "predicted_n": 24,
+      "predicted_per_second": 42.51655488355779,
+      "predicted_per_token_ms": 23.52025,
+      "prompt_ms": 846.478,
+      "prompt_n": 817,
+      "prompt_per_second": 965.1757045073824,
+      "prompt_per_token_ms": 1.036080783353733
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 895,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 919
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"628 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Burgers, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"10:30-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"10:30-21:0\\\",\\\"Tuesday\\\":\\\"10:30-21:0\\\",\\\"Wednesday\\\":\\\"10:30-21:0\\\"},\\\"name\\\":\\\"The Habit Burger Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-28 00:40:23\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I did a door dash order for pick up and they didn't have it confirmed. After forty mins of waiting and going up to the restaurant they didn't have anything in their system even though I had proof that I paid and was waiting for them to confirm the order after FORTY MINS!\\\"},{\\\"review_date\\\":\\\"2021-10-30 02:34:45\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"i usually never have \\\\\\\"fast food\\\\\\\" or when i do it will be something more macro and \\\\\\\"health\\\\\\\" oriented. i decided to treat myself with habit's chicken club on sourdough and boy was it good! i got the mayo on the side but the sandwhich was honestly great without it. only thing was the chicken was a little dry but besides that it was awesome!\\\"},{\\\"review_date\\\":\\\"2021-10-15 04:25:47\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"The worse habit in sb lol. I have no idea why but they can't ever get the order right. I door dash a burger and get no cheese??? Maybe some quality check should be implemented. Go to the habit on milpas it's way better\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Habit Burger Grill is a fast food restaurant located in Santa Barbara, California. The business serves burgers and other dishes and operates from Monday to Sunday. It has outdoor seating options and allows takeout orders. Customers can park their vehicles at a nearby garage but not in the street, and there is no valet service. The restaurant also does not offer reservations, but it has a classy ambiance, which includes being upscale and trendy. According to the provided structured data, the business has a rating of 4.0 out of 5.0 stars. There are also several reviews posted online that highlight both positive and negative experiences at the restaurant. For example, one customer had a negative experience with a failed delivery through DoorDash, while another customer had a positive experience with the restaurant's chicken club sandwich. However, another customer had a negative experience with inconsistent ordering accuracy and suggested implementing a quality check system to improve the overall experience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 152,
+  "source_cluster_id": "sha256:e0a8f2a668235568a33e09ef9d9c4ebcece839faa0753a5f4a135af7fbf4d29c",
+  "source_id": "14018",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:b82a0959d86b1cb3fbf63e1b8baa82c6ba161d03a4289631dbadc57da3c36949",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

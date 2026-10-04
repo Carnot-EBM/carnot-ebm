@@ -1,0 +1,131 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6084925070172176,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:ff385e69f5816040e81d453740a0e22eb48ea259783306aedd5d2cabfe004a0c",
+  "human_target": null,
+  "input_tokens": 1032,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:ff385e69f5816040e81d453740a0e22eb48ea259783306aedd5d2cabfe004a0c",
+    "feature_hash": "sha256:0538f2b06d24ab40b35daee16b9de2c9416bdb823db6bafed7dcd822e9a62290",
+    "source_normalized_hash": "a8e994bb46fc744fb367a353fe7072ac6f3a72a37739651d9ea3171551337372",
+    "values": [
+      0.22669936167345814,
+      0.4669500480077764,
+      0.0,
+      0.0,
+      0.08333333333333333,
+      0.08333333333333333,
+      0.7733006383265418,
+      0.9252608016466725
+    ],
+    "window_count": 14
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1032,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1054
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:9549d6d38d32532cd28a454589171c0cc65f4c9883ac2dac324871d62e07cca2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095548,
+    "id": "chatcmpl-YLKhnUlZvkrCWXpmxxK2TfPdFlPhGzHP",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 517.345,
+      "predicted_n": 22,
+      "predicted_per_second": 42.524814195556154,
+      "predicted_per_token_ms": 23.515681818181818,
+      "prompt_ms": 935.745,
+      "prompt_n": 954,
+      "prompt_per_second": 1019.5085199493452,
+      "prompt_per_token_ms": 0.9808647798742138
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1032,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1054
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1129 State St, Unit A\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":true,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":\\\"{dj: False, live: Tre, jkebox: False, video: False, backgrond_msic: False, karaoke: False, no_msic: False}\\\",\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Nightlife, Gay Bars, Wine Bars, Bars, Cupcakes, Desserts, Tapas Bars, Beer Bar, Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"13:0-22:0\\\",\\\"Monday\\\":\\\"13:0-21:0\\\",\\\"Saturday\\\":\\\"13:0-22:0\\\",\\\"Sunday\\\":\\\"13:0-20:0\\\",\\\"Thursday\\\":\\\"13:0-21:0\\\",\\\"Tuesday\\\":\\\"13:0-21:0\\\",\\\"Wednesday\\\":\\\"13:0-21:0\\\"},\\\"name\\\":\\\"Crush Bar and Tap\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-03 03:42:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Ending my holiday vacation on a good note and welcoming in the new year the right way with great people and yummy drinks. Thank u Zack for your warm welcoming and amazing customer service. #SantaBarbara #NewYear2022\\\"},{\\\"review_date\\\":\\\"2022-01-03 03:35:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great way to start the new year! Crush allowed for genuine quality time spent with the people I love! Thank you, Zach!\\\"},{\\\"review_date\\\":\\\"2021-11-24 14:57:12\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Cute little place right in the heart of downtown. This a great happy hour with one of the last hold outs for $5 beers and wine. Awesome vibe for a quick gathering for a few friends. Brianna was a perfect host.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Crush Bar and Tap:\\n\\nCrush Bar and Tap is a popular nightlife spot located in Santa Barbara, California. With a category list that includes Nightlife, Gay Bars, Wine Bars, Bars, Cupcakes, Desserts, Tapas Bars, Beer Bar, Food, and Restaurants, this bar and restaurant offers a wide range of options for customers. The business has a rating of 5.0 stars and is open from 13:00 to 22:00 from Monday to Sunday.\\n\\nThe bar offers free WiFi and allows customers to bring their own food. They also have a patio area where customers can enjoy their drinks and food. The ambiance of the bar is casual and trendy, making it a great spot for both locals and tourists. Customers have praised the friendly staff and excellent customer service at Crush Bar and Tap.\\n\\nReviews from customers are overwhelmingly positive, with many mentioning the excellent service they received from the staff, particularly from Zach. One customer noted that the bar was the perfect spot to end their holiday vacation and welcome in the new year, while another customer appreciated the quality time they were able to spend with their loved ones at the bar. A third customer praised the affordable prices and cozy atmosphere of the bar.\\n\\nOverall, Crush Bar and Tap appears to be a popular and well-liked spot in Santa Barbara, offering a wide range of drinks and food options in a casual and trendy setting. The friendly staff and excellent customer service are definite perks, and the bar's central location makes it easy to drop by for a quick visit or a longer evening out.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 164,
+  "source_cluster_id": "sha256:e9cc71ce0591d87a9178a6fd2b97dbb6ade1b486533151a3aacfe46b2a636968",
+  "source_id": "14822",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:ff385e69f5816040e81d453740a0e22eb48ea259783306aedd5d2cabfe004a0c",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

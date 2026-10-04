@@ -92207,3 +92207,19 @@ outside the checkout. Reject modified reductions, manifest, receipts and raw
 bytes. Preserve failed attempts and historical primaries. Both auditors must
 pass before publication. Ops and traceability reconciliation belongs to the
 conductor, as directed by this task's stop rule.
+## REQ-REPORT-8102: Publish bounded stream capture with current custody
+
+Exp8102 SHALL authenticate current CUDA offload, embedded GGUF tokenizer, owned
+GPU lease and exact upstream terminal bytes before readiness. Current inference
+receipts and preparation costs SHALL stay separate from historical provenance and
+later CPU learning. Readiness requires the10-second actual bounded-generation
+floor and all frozen owned checks; it gives zero generalization credit. Missing
+external evidence is terminal blocked; owned validation failure is disqualified.
+Publish checked primary bytes through primary_publication and retain raw calls,
+token counts, hashes, masks, exclusions, timings and terminal validation receipts.
+
+### SCENARIO-REPORT-8102-CLI
+
+The real CLI SHALL run private success, missing-input, label-mutation and cold
+replay checks outside the checkout. Changed-code statement coverage SHALL be100%.
+Exercise E2E-015 and E2E-019; record global health separately from owned checks.

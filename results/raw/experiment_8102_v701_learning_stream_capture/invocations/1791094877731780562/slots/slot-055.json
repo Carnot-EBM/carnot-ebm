@@ -1,0 +1,143 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.612694481969811,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:cb66e1e0d3baed48c8687c755c0561e3012cc61776629cd0593c63a76e8981f4",
+  "human_target": null,
+  "input_tokens": 956,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:cb66e1e0d3baed48c8687c755c0561e3012cc61776629cd0593c63a76e8981f4",
+    "feature_hash": "sha256:5b723f341ee3c92641c7a8d0ca38c0045143db35151f141dc9be967e3fc3304b",
+    "source_normalized_hash": "be1be4c243b4651a986dba2b79f4d281281114c9c89a1c50727c29acaf195bb5",
+    "values": [
+      0.18290816326530612,
+      0.37833951762523194,
+      0.10526315789473684,
+      1.0,
+      0.14285714285714285,
+      0.14285714285714285,
+      0.8170918367346939,
+      1.0
+    ],
+    "window_count": 38
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 956,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 980
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:f75b1cc4202659d01f33447d2631a8ebcd347590c5d8e43191001b68604b0b2c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095394,
+    "id": "chatcmpl-qPIjpP5NbZLhZs0L5ClXgRuJcFq3aEqD",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.359,
+      "predicted_n": 24,
+      "predicted_per_second": 42.60160927579039,
+      "predicted_per_token_ms": 23.473291666666668,
+      "prompt_ms": 872.739,
+      "prompt_n": 878,
+      "prompt_per_second": 1006.0281481634257,
+      "prompt_per_token_ms": 0.9940079726651481
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 956,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 980
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5205 Carpinteria Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Salad, American (New), Restaurants, Tacos, Mexican\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-21:0\\\",\\\"Saturday\\\":\\\"11:30-21:0\\\",\\\"Sunday\\\":\\\"11:30-20:0\\\",\\\"Thursday\\\":\\\"11:30-20:0\\\",\\\"Wednesday\\\":\\\"11:30-20:0\\\"},\\\"name\\\":\\\"The Good Plow\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-16 20:15:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The \\\\\\\"good plow\\\\\\\" good people and good food.  \\\\nWatched the famous \\\\\\\"3mules\\\\\\\" today show up for a visit. \\\\nThis place will take you in. Treat you right and send you on your way fat and happy!!!!!\\\"},{\\\"review_date\\\":\\\"2021-12-22 20:33:22\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Solid food and great prices. Everything is fresh and organic. They have tons of plant based and gluten free options and the information about allergens is very clear on the menu. Great place to satisfy people with different dietary needs. \\\\n\\\\nThe kombucha on tap is delicious and so are the cookies. \\\\n\\\\nThey also have a lovely little market, an outdoor play area for kids, and an all around good vibe. Highly recommend!\\\"},{\\\"review_date\\\":\\\"2021-11-20 02:40:09\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Wonderful friendly people! I have been waiting to come in so I could bring my 91 year old Mom.\\\\nWe went in and had a couple of burgers & fries.\\\\nI ate mine like I hadn't eaten in days. I'm sure I embarrassed myself! Mom loved hers too. She is a slow eater but was enjoying the atmosphere so much it was hard to keep her attention on the food.\\\\nNow let me tell you about the fries! There was a lady that mentioned to me they were the beat fries she ever had. I had to try for myself. I was not disappointed! They are! Yum to the max! They are comfort to the max!\\\\nNext visit I shall try the veg sam.\\\\nI had a hard time making up my mind.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of The Good Plow:\\n\\nThe Good Plow is a locally-owned restaurant located in Carpinteria, California, serving a variety of dishes including salads, tacos, and American cuisine. The establishment has a rating of 4.5 stars and receives positive reviews from customers. The restaurant offers outdoor seating, WiFi, and takes reservations, among other amenities. Customers appreciate the good food, friendly service, and welcoming atmosphere. One reviewer mentions the restaurant's commitment to using fresh and organic ingredients, with clear labeling of allergen information on the menu. Another reviewer highlights the tasty kombucha on tap and delicious cookies. The establishment has received praise for its accommodation of customers with different dietary needs, as well as its cozy and inviting ambiance.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 56,
+  "source_cluster_id": "sha256:5d3713cf9cc6a0ab13980c738c5bfd5c74150e6af3acfad206b2253e833d7b35",
+  "source_id": "14501",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:cb66e1e0d3baed48c8687c755c0561e3012cc61776629cd0593c63a76e8981f4",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

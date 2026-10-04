@@ -1,0 +1,142 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3335723680211231,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:93ad02efdf0a75762c1e5fe407a3db2e785c617c04d9db78b28caa701bf0f441",
+  "human_target": null,
+  "input_tokens": 667,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:93ad02efdf0a75762c1e5fe407a3db2e785c617c04d9db78b28caa701bf0f441",
+    "feature_hash": "sha256:f4caf417aff0e90c87ee41c598bec73de6519310c3b04061d65d2e806753d607",
+    "source_normalized_hash": "26059bea3364d862ad93d74e0c60c65c663454d99c996bfa3e0acc10e04e1a3b",
+    "values": [
+      0.21536276223776224,
+      0.4083624708624709,
+      0.0,
+      0.0,
+      0.2222222222222222,
+      0.25,
+      0.7846372377622378,
+      0.9807692307692308
+    ],
+    "window_count": 36
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 7,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 667,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 692
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:864614d63f9860461c7d204c14d5285970431b101712674d96f333c7c543e199",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 7\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095641,
+    "id": "chatcmpl-h65T4LxrzPQpDu3OkX198sHrnoqKvoVN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 589.05,
+      "predicted_n": 25,
+      "predicted_per_second": 42.44121891180715,
+      "predicted_per_token_ms": 23.561999999999998,
+      "prompt_ms": 610.166,
+      "prompt_n": 589,
+      "prompt_per_second": 965.3110792800646,
+      "prompt_per_token_ms": 1.0359354838709678
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 667,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 692
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"If you're famous and performing the American national anthem, be prepared to become a national hero or a national disgrace. Facts are facts.  Just ask Vince, Whitney, Roseanne, Jimi and Michael. M\u00f6tley Cr\u00fce's Vince Neil reminded us again this week of the dangers of tackling \\\"The Star-Spangled Banner.\\\" Sure, he can shred it on \\\"Girls, Girls, Girls\\\" and \\\"Dr. Feelgood,\\\" but this is a different story -- a completely different story. To say Neil butchered the song before the Las Vegas Outlaws Arena Football League game would be unkind to those in the profession.  There's less carnage when butchers are done with their work. The late Whitney Houston set the modern standard for the national anthem at Super Bowl XXV.  In the early stages of the Gulf War in 1991, a patriotic America saluted her performance. Just six months earlier, comedian Roseanne Barr may have established the low-water mark. The crowd at the San Diego Padres game booed her rendition and President George H. W. Bush called it \\\"disgraceful.\\\" There's nothing quite like getting the presidential thumbs down. One of the most controversial and beloved versions of \\\"The Star-Spangled Banner\\\" comes from 1969. Guitar slinger Jimi Hendrix inflamed mainstream America with his psychedelic take on the national anthem to the delight of the Woodstock generation. And then there's Michael Bolton's version.  Overly wrought songs are his specialty and he doesn't disappoint in that department when he sings at the American League Championship Series in 2003.  Bolton belts it out, but there's one little problem -- the words.  Can anyone say crib notes?\\n\", \"original_answer\": \"Performing the American national anthem can make one a national hero or a disgrace. Vince Neil was criticized for butchering the song at an arena football league game in Las Vegas this week. Whitney Houston set the modern standard for the national anthem in 1991 during the Gulf War, while Roseanne Barr was praised for her rendition at a baseball game that same year. Jimi Hendrix's psychedelic version of the anthem at Woodstock divided opinion, while Michael Bolton's overly emotional rendition at an American League championship series also caused controversy due to cribbing lyrics.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 235,
+  "source_cluster_id": "sha256:b63e23a74a480fdc8406eae7f60309dd40651de8585b5f2dea909b95d6682ea5",
+  "source_id": "11322",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:93ad02efdf0a75762c1e5fe407a3db2e785c617c04d9db78b28caa701bf0f441",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

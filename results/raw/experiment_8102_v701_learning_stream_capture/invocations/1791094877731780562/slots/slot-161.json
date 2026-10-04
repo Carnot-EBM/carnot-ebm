@@ -1,0 +1,167 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.9091740329749882,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:248dae4f7f71df9da5ab07cee8ceeaef73cce838165b80b3fb81f8bb9e6bda97",
+  "human_target": null,
+  "input_tokens": 1442,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:248dae4f7f71df9da5ab07cee8ceeaef73cce838165b80b3fb81f8bb9e6bda97",
+    "feature_hash": "sha256:d13511292ea3d148e467d60a3ef9bce882f2ff6690fee8aa8e9499a71c5172a3",
+    "source_normalized_hash": "27d4fa14457c0a6d3f3d186bdb57846207d6b6224934d037fdfa63ffd05f3b66",
+    "values": [
+      0.20185385135486555,
+      0.4052608311229001,
+      0.4588235294117647,
+      1.0,
+      0.0,
+      0.0,
+      0.7981461486451344,
+      0.9913793103448276
+    ],
+    "window_count": 85
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1442,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1465
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:69fbf22c3c948be1f628540bd87276c86d326c12890286b29565d4148445074c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095544,
+    "id": "chatcmpl-w1qwvqbcb1nhH6YctvOw8zmQp3dcvnST",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.906,
+      "predicted_n": 23,
+      "predicted_per_second": 42.442785280103934,
+      "predicted_per_token_ms": 23.561130434782605,
+      "prompt_ms": 1235.084,
+      "prompt_n": 1364,
+      "prompt_per_second": 1104.3783256847307,
+      "prompt_per_token_ms": 0.9054868035190616
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1442,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1465
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Western Australia (CNN)Many Australians are understandably appalled by the brutal and pointless executions of Andrew Chan and Myuran Sukumaran. The death penalty looks anachronistic and ineffective at the best of times, but to kill two people who had clearly made the most of their long periods of incarceration to transform themselves and make amends for their actions looks gratuitous and cruel. Consequently, Indonesia's actions raise more general questions about the powers we give to states -- or, more accurately, to those who control the coercive apparatus of the state at any particular moment. As German sociologist Max Weber pointed out, one of the key features of an effective state is that it has a monopoly over the legitimate use of violence. State officials can order people to be killed because -- especially in democracies -- we authorize them to do so. We can give no more significant power to another human being than to decide who lives or who dies. And yet even where that authority is deemed legitimate -- as is clearly the case in Indonesia -- its significance is only seriously considered at moments like this, when the very personal circumstances of some of its victims become the stuff of popular commentary and media interest. Less prominent victims of state-sanctioned violence often go entirely unremarked. However disappointed we may be in the actions of Indonesian President Joko Widodo -- in whom so many inside and outside Indonesia have invested such hopes as a progressive force -- he can make a couple of claims in his defense. First, Widodo -- popularly known as Jokowi -- is Indonesia's elected leader and is fulfilling his promise to crack down on what he and many other Indonesians see as a problem. Indonesia's domestic political context and the need to be seen as not giving favorable treatment to foreigners left him very little room to maneuver. This is not a justification for his actions, but it helps to explain why he was so impervious to pleas for mercy. Whatever we may think about the underlying principles and administration of justice in Indonesia, at least Jokowi can claim that it is essentially a domestic issue. We may not like Indonesia's laws, but they are being applied even-handedly within national borders where state officials have authority. Significantly, it is those same national borders that demarcate the extent of Indonesia's leaders ability -- or even desire, perhaps -- to use their capacity for state-sanctioned violence. Other countries -- including Australia -- have no such inhibitions and regularly kill perfectly innocent civilians in the course of one conflict or another. This propensity for the application of state-sanctioned violence seems especially germane when we consider another president about whom great things were expected, but who has inevitably disappointed. After the unilateralism of George W. Bush, Barack Obama was widely predicted to be a very different sort of president and one who would not make the sort of catastrophic strategic miscalculations of his predecessor. Paradoxically enough, though, while Obama has been widely criticized for a lack of decisiveness and unwillingness to commit more American forces to the Middle East, this has done nothing to curb the use of state-sanctioned violence. On the contrary, the use of drone strikes has become a key part of America's continuing war on terror. It is unsurprising, perhaps, that a cerebral and reflective leader as Obama is should be attracted to drones as a weapon of choice. Unlike Jokowi, Obama doesn't have to confront the personal narratives of the people who die at his command. Or he doesn't unless they're American citizens, at least. The recent death of an American hostage during a recent drone strike highlights the potential for \\\"collateral damage\\\". Are these cases comparable? Yes and no. Widodo's executions were cold-blooded, unnecessary and highly political. Obama clearly was not intending to kill Americans, and this has only become an issue because one of the hostages actually was. However, dozens of entirely innocent women and children from other countries are routinely killed in such strikes with little comment. The key point is that we are collectively responsible for such deaths at some level or another, especially if our leaders and state officials carry them out. Do good intentions justify one death and not another? Perhaps. Would we encourage the state to kill a thousand innocents if it meant eliminating Hitler? Almost certainly. Would we authorize a drone strike to kill ISIS leader Abu Bakr al-Baghdad if we thought a couple of passers-by might die, too? Perhaps. Would we permit the state to execute people? Not any longer in Australia, at least. But before we congratulate ourselves on how civilized and humane we've become, perhaps we should pause to consider the violence that is still being inflicted on perfectly innocent people around the world in our collective name. What was done in the name of the Indonesian state was undoubtedly awful, futile and reprehensible. Whether our moral calculus is quite so self-evidently superior is not quite so clear. Copyright 2015 The Conversation. Some rights reserved.\\n\", \"original_answer\": \"The article discusses the executions of two Australians, Andrew Chan and Myuran Sukumaran, by the Indonesian government, raising questions about the use of state-sanctioned violence and the moral implications of such actions. The author argues that while the executions were brutal and unnecessary, they also highlight the broader issue of state powers and the use of violence, both domestically and internationally. The article notes that other countries, including the United States, also engage in state-sanctioned violence, such as drone strikes, despite criticism and controversy surrounding these actions. The author suggests that while our moral compass may point towards condemning specific instances of violence, we must also acknowledge the broader role that states play in inflicting harm on innocent people, both within and beyond their own borders.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 162,
+  "source_cluster_id": "sha256:91c785c9917929a0970da69441fed1ec810695ea7e56a7c24154684157c8e662",
+  "source_id": "11814",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:248dae4f7f71df9da5ab07cee8ceeaef73cce838165b80b3fb81f8bb9e6bda97",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6996915499912575,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:2f2c2316e05a4b588d9f081a6ee3340ae669d58511dac84102e6338e81050493",
+  "human_target": null,
+  "input_tokens": 1118,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:2f2c2316e05a4b588d9f081a6ee3340ae669d58511dac84102e6338e81050493",
+    "feature_hash": "sha256:93c9f95a176a56e7df9cec2bc90d594b28a1c93fe141ad53727bc073ef089217",
+    "source_normalized_hash": "384641f82f90390c6261a8fe5a7917d0e9030220ebd4ff954662365656aa6ff8",
+    "values": [
+      0.24973533184317498,
+      0.4855810379707438,
+      0.13636363636363635,
+      1.0,
+      0.25,
+      0.25,
+      0.750264668156825,
+      0.94395813881108
+    ],
+    "window_count": 66
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1118,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1142
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:e98522b2f7a9913c9a8fdecc4bf5ea63828e527b14aa5ca099116db65274dcd7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095478,
+    "id": "chatcmpl-uMMMPkEGsmiBckGTFBEvUsIR53CYWtx6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.949,
+      "predicted_n": 24,
+      "predicted_per_second": 42.40664794884345,
+      "predicted_per_token_ms": 23.581208333333333,
+      "prompt_ms": 1015.541,
+      "prompt_n": 1040,
+      "prompt_per_second": 1024.0846996822384,
+      "prompt_per_token_ms": 0.9764817307692308
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1118,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1142
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"They left Iran unwillingly, often in a hurry. It was for the best for these refugees. Iran is a difficult place to be gay or lesbian. Mahmoud Ahmadinejad, the former President of Iran, famously said during a 2007 trip to the United States, \\\"In Iran, we don't have homosexuals, like in your country.\\\" Of course, they do live there, in fear of being discovered. Homosexuality is illegal. You can be executed if convicted of engaging in sexual acts. Kissing another person of the same sex can earn corporal punishment, like lashes. Others have been pressured to undergo gender reassignment. Psychologists in Iran have reportedly pushed LGBT patients toward hormone therapy and eventually surgery. Some flee the country before surgery, as do other homosexuals who believe they may be outed. Many come to Turkey, and the small town of Denizli is host to hundreds of gays and lesbians from Iran who are now in limbo. Photographer Laurence Rasti, the Swiss-born daughter of Iranian parents, flew from her home in Geneva, to Denizli to explore her fascination with identity issues in Iran. \\\"I couldn't understand that in Iran (homosexuality) isn't accepted,\\\" she said recently by phone from Geneva. \\\"A lot of my friends are gay. And for me it was a huge cultural difference between Europe and Iran.\\\" Rasti, whose yearlong project was part of her studies at Ecole Cantonale d'Art de Lausanne, said that when she first went to Turkey, it was difficult to get people to pose. They didn't trust her motives, didn't trust strangers, she said. It was a process to become friends. She would talk to the potential subjects about their stories then discuss with them her ideas for what the photo would be like. \\\"I took a little part of their story to imagine a photograph,\\\" she said. There was another challenge. Social media. Follow @CNNPhotos on Twitter to join the conversation about photography. \\\"It was a work about identity even though we don't see faces,\\\" she said. She hopes the images will give back to each of these people the face that their country has \\\"temporarily stolen.\\\" Rasti, 25, said once people understood her sincerity, and the anonymity of the project, they agreed to be photographed. Rasti, a photographer for four years, used her Mamiya 7 to give people a view into the spirit of these refugees. Despite their status -- they cannot earn a living in Turkey and it take years to getting papers to go to a new country -- the refugees are still full of hope and love despite their rough lives, Rasti said. It's even more remarkable, she said, when you consider how they never imagined having to flee the land they loved and then lie to their families, many telling their kin they left to pursue their studies. Most will eventually go on to a third country. Rasti said she remains friends with some of her subjects who now live in Canada. A few will return to Iran, hoping to keep their homosexuality a secret. Rasti hopes her photos spark dialogue. \\\"The reason I did this project is, I want use photos to talk about something that I think is important,\\\" she said. \\\"I wanted to let people know people know it is not unnatural. When people are afraid of something or don't accept something, I think we should talk about it.\\\" Laurence Rasti is a Swiss-born Iranian photographer based in Geneva.\\n\", \"original_answer\": \"Laurence Rasti, a Swiss-born Iranian photographer, explored identity issues in Iran through her yearlong project in which she photographed over 80 Iranian refugees living in Turkey. The project took place between 2016 and 2017. Homosexuality is illegal in Iran, and those found guilty can be executed for engaging in sexual acts. Refugees have fled the country to avoid being outed or subjected to gender reassignment. Many of Rasti's subjects came from Iran and were living in Denizli, Turkey. Rasti began by talking to potential subjects about their stories and discussing her idea for the photographs. Once people understood her intentions and the anonymity of the project, they agreed to be photographed. Despite the challenges, including social media, the refuge\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 115,
+  "source_cluster_id": "sha256:b61bc314f18a3b8c752027ccd6fa3fa19ceed79d984a503309ddbfb7329bc0fd",
+  "source_id": "11819",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:2f2c2316e05a4b588d9f081a6ee3340ae669d58511dac84102e6338e81050493",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33
+  ]
+}

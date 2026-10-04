@@ -1,0 +1,146 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6980262950528413,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:261a7ad425334953e47041587ef59b83fa473139bcd2df8b7f965673920063b9",
+  "human_target": null,
+  "input_tokens": 1138,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:261a7ad425334953e47041587ef59b83fa473139bcd2df8b7f965673920063b9",
+    "feature_hash": "sha256:1b6a2710c13ce0a6d2124372b5f654eb3ab20afe333fad3d1f7b65277896cb96",
+    "source_normalized_hash": "054320b37d9482da5872627f7188fb4590809f2014f608c31d6d1fff0016f5ed",
+    "values": [
+      0.301023756071668,
+      0.5289237132686789,
+      0.28787878787878785,
+      0.8333333333333334,
+      0.625,
+      0.6666666666666666,
+      0.698976243928332,
+      0.9167332279975301
+    ],
+    "window_count": 44
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1138,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1161
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:f940dd300343ff2a82e2b135639d4418b7d1ed62f8a682078eaa252e30605157",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095628,
+    "id": "chatcmpl-cEmB2uTFMm115DbY56F2nNozadMu0HMx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.635,
+      "predicted_n": 23,
+      "predicted_per_second": 42.464020973533835,
+      "predicted_per_token_ms": 23.549347826086954,
+      "prompt_ms": 1021.747,
+      "prompt_n": 1060,
+      "prompt_per_second": 1037.438818024423,
+      "prompt_per_token_ms": 0.9639122641509433
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1138,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1161
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"UNICEF said Friday that an initial shipment of 16 tons of medical supplies, meant to help 80,000 innocents caught up in the havoc of Yemen, had at last landed in Yemen's capital, Sanaa. The conflict is exacting a heavy toll on children and families, UNICEF said in a statement. \\\"The humanitarian situation is worsening all the time, with increasingly limited access to water, basic sanitation and critical health services,\\\" the statement quoted UNICEF Yemen representative Julien Harneis, speaking from Amman, Jordan, as saying. \\\"The supplies we have managed to bring in today can make the difference between life and death for children and their families -- but we know they are not enough, and we are planning more of these airlifts.\\\" Aid agencies have been saying that supplies were desperately needed, but getting them into the country in the midst of regional turmoil was difficult. UNICEF said its cargo included antibiotics, bandages, syringes, IV sets and other medical supplies. Included as well, the agency said, were micronutrients for up to 20,000 children and water storage materials airlifted through Djibouti from UNICEF's supply center in Denmark. Also Friday, the U.N. High Commissioner for Refugees said that about 900 refugees from Yemen have arrived in the Horn of Africa. Many more are reportedly trying to make the trip but are hampered by fuel shortages and high fees by boat operators. \\\"UNHCR is extremely concerned about the dangers for anyone trying to flee across the Red Sea and Gulf of Aden, where there are no search and rescue operations,\\\" the agency said in a statement. \\\"Last year, 246 lives were reported lost in sea crossings to Yemen. UNHCR appeals to all ships in the area to be extra vigilant and assist any boats in distress. We also ask that countries with vessels in waters near Yemen -- including surveillance and anti-piracy vessels -- instruct their ships to help with rescues.\\\" It said that, as demand increases, the boats attempting the dangerous crossing are likely to become more crowded -- a crossing that has historically been made in the other direction, by people fleeing Africa in favor of Yemen. Many Yemenis are attempting the trip in rickety fishing boats. One family told CNN the crossing was \\\"a window into hell.\\\" And underscoring the increasing toll being exacted by the conflict in Yemen, the World Health Organization said Friday that at least 643 people have been killed in the country since the fighting escalated three weeks ago. But it acknowledged that the number was almost certainly an underestimate. \\\"As of 6 April 2015 there have been a total of 643 deaths and 2,226 injuries,\\\" the WHO, the health arm of the United Nations, said in a statement. \\\"Casualty estimates are likely to change in the coming days as additional cases are verified and reported.\\\" The figures cover the period from March 19 to April 6. They include, however, only deaths and injuries verified by a health facility. Other deaths and injuries have undoubtedly occurred. Security in the country, which is on the Arabian Peninsula, deteriorated sharply last month when Houthi rebels advanced on Sanaa and the port city of Aden, forcing President Abdu Rabu Mansour Hadi to flee the country. Since then, Saudi Arabia has launched airstrikes meant to halt the advance of the Houthis. In at least one case, according to Houthi sources, one of those strikes hit a school.\\n\", \"original_answer\": \"UNICEF announced on Friday that a shipment of 16 tons of medical supplies, intended to assist 80,000 Yemenis, has landed in the capital of Yemen, Sana'a. The shipment contains vital supplies such as antibiotics, bandages, syringes, IV sets,\u00a0micronutrients for up to 20,000 children and water storage materials. UNICEF however, has warned that the supplies will not be enough and that more will be needed. The conflict in Yemen has caused a humanitarian disaster,\u00a0with people lacking access to water, basic sanitation and critical health services. The UN High Commissioner for Refugees said that about 900 refugees from Yemen have arrived in the Horn of Africa. The World Health Organisation has reported that at least 643 people have been killed since the fighting escalated three weeks ago, although it is believed that this number is an underestimate.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 227,
+  "source_cluster_id": "sha256:acb41a39fac22103937264fdc0b060ebccb554e860015f33f54a3533534f9c67",
+  "source_id": "11411",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:261a7ad425334953e47041587ef59b83fa473139bcd2df8b7f965673920063b9",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

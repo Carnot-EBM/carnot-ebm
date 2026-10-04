@@ -1,0 +1,140 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5697724058991298,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:5e534bcd4d7b52ab4ae97b4527b411732bbca5b6aeb5509ecae8205ca798fe88",
+  "human_target": null,
+  "input_tokens": 977,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:5e534bcd4d7b52ab4ae97b4527b411732bbca5b6aeb5509ecae8205ca798fe88",
+    "feature_hash": "sha256:e36015d2d96c70a2ddc008f0aecf6cbb7583b2945b4e8863a293303f46efb527",
+    "source_normalized_hash": "c859a568052282140b8ae257727dda130247429f2abdb223732b34279c79a551",
+    "values": [
+      0.4201454850768352,
+      0.6391160771595554,
+      0.41935483870967744,
+      1.0,
+      0.12903225806451613,
+      0.14285714285714285,
+      0.5798545149231649,
+      0.8268793853707225
+    ],
+    "window_count": 31
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 977,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1001
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:5d52745baf9d1bf8d8da30e4ef4028f7ab47bbfa16f508401269cbd0fec820d1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095652,
+    "id": "chatcmpl-qLFn6bBqlX4KugWS2d2AWUwFKF7GZPX8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.503,
+      "predicted_n": 24,
+      "predicted_per_second": 42.44009315600447,
+      "predicted_per_token_ms": 23.562625,
+      "prompt_ms": 884.706,
+      "prompt_n": 899,
+      "prompt_per_second": 1016.1567797663855,
+      "prompt_per_token_ms": 0.9841001112347052
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 977,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1001
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Cutting slate slabs does not have to be complicated; with standard tools and a suitable type of blade, you should be able to manage without a problem. Step 1 - Mark the Cutting Line and Mount the Slate Slab. Find the location on the slate slab that you want to cut and use a marker pen or pencil to draw a line across it.ou can also place it on top of two other slate slabs \u2013 anything to create a stable surface will do. The area of the slate slab marked by the pencil line should be places in the center between the two wooden or slate blocks. Step 2 - Cutting the Slate Slab. Get the circular saw and place a suitable blade in it.\\\\n\\\\npassage 2:Published on Aug 29, 2013. This video shows some common and not so common methods of cutting slate. Not only does it show you the easiest way to cut slate, but shows you some of the techniques and kit the professionals use, and how to replicate this at home with no specialist equipment if necessary.Why not visit this link to see more free slating advice and videos: http://www.fixmyroof.co.uk/videos-and...ot only does it show you the easiest way to cut slate, but shows you some of the techniques and kit the professionals use, and how to replicate this at home with no specialist equipment if necessary. Why not visit this link to see more free slating advice and videos:\\\\n\\\\npassage 3:You can use a wet saw for cutting. Here you place the slate stone on a sliding tray which moves into the spinning blade. The blade, the saw and stone are kept wet while cutting so that they do not become too hot. The cutting should be done in such an area that water can be easily pumped into the saw.Mark the cut on the slate with a pencil and place the slate on the tray. Place the blade on the marked portion and turn on the saw. The slate slowly moves towards the blade and the blade grinds through the stone.Continue until the blade has cut cleanly all the way through the slate.he cutting should be done in such an area that water can be easily pumped into the saw. Mark the cut on the slate with a pencil and place the slate on the tray. Place the blade on the marked portion and turn on the saw. The slate slowly moves towards the blade and the blade grinds through the stone.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cut slate\\\"}\", \"original_answer\": \"Based on the given passages, here is how to cut slate:\\n\\nStep 1: Mark the cutting line and mount the slate slab. Find the location on the slate slab where you want to cut and use a marker pen or pencil to draw a line across it. You can also place the slate slab on top of two other slate slabs to create a stable surface.\\n\\nStep 2: Cut the slate slab using a circular saw with a suitable blade. Place the blade in the circular saw and position it on the marked line. Make sure the area where the slate slab is placed is stable and secure.\\n\\nAlternatively, you can use a wet saw to cut the slate. Place the slate stone on a sliding tray, which moves into the spinning blade. Keep the blade, saw, and stone wet while cutting to prevent overheating. Mark the cut on the slate with a pencil and place the slate on the tray. Turn on the saw and let it grind through the stone, making sure to continuously pour water into the saw to keep it lubricated.\\n\\nIt's important to note that cutting slate can be difficult and requires careful attention to detail. It may be helpful to practice on a small piece of slate before attempting to cut a larger slab. Additionally, wearing protective gear such as gloves and safety glasses is recommended when cutting slate to avoid injury.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 242,
+  "source_cluster_id": "sha256:60237e951194c7c25fcc6807646e0d7ad8c2dfe86f29769658a5b940ae7e4be6",
+  "source_id": "15329",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:5e534bcd4d7b52ab4ae97b4527b411732bbca5b6aeb5509ecae8205ca798fe88",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

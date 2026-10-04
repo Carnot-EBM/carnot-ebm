@@ -1,0 +1,139 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3197321350453421,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:3e194af92c0be9b39c522a04ae7cb9c8b1503d80f8bc476b89e8b4baad1d22f6",
+  "human_target": null,
+  "input_tokens": 705,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:3e194af92c0be9b39c522a04ae7cb9c8b1503d80f8bc476b89e8b4baad1d22f6",
+    "feature_hash": "sha256:999295f4112717ca1c8b61889c48ba5f905bb6b949dff7c708098087bcfcd6c4",
+    "source_normalized_hash": "e81479d2f0413d7c1d7891eb9aadd43cecadbb41810f379824a527ff6704a26d",
+    "values": [
+      0.23675925925925925,
+      0.4370169082125604,
+      0.13333333333333333,
+      1.0,
+      0.48333333333333334,
+      0.5,
+      0.7632407407407408,
+      0.9004830917874397
+    ],
+    "window_count": 30
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 705,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 728
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:f74aa3f42948cf810441d2a1b129d8fbb420edeab5db72ee557caa7f7d910c36",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095473,
+    "id": "chatcmpl-tgfRQhgUGhIkL1NenCxBLFOEMDYysk7n",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.06,
+      "predicted_n": 23,
+      "predicted_per_second": 42.66686454198049,
+      "predicted_per_token_ms": 23.437391304347823,
+      "prompt_ms": 632.883,
+      "prompt_n": 627,
+      "prompt_per_second": 990.7044430013129,
+      "prompt_per_token_ms": 1.0093827751196174
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 705,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 728
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Volleyball battles Barnstable in 3-0 loss\\n( Oct. 23, 2023 ) The volleyball team lost its second-straight match Monday, but the Whalers battled against Barnstable, one of the top teams in Div. 1, in the 3-0 loss.\\n\u201cI'm not disheartened,\u201d coach Andrew Viselli said. That is the preeminent program to be able to say that you battled against, so I feel good about that. Obviously I want the win, however, when you put a team like that against the ropes, that's a win in and of itself.\u201d\\nNantucket hung right with the Red Hawks in the first two sets. Set one was tied 15-15 and then 20-20, but Barnstable finished with a 5-1 run to take the set 25-21.\\nLate in set two, the Whalers won five out of six points to pull with 23-21, forcing a Red Hawks timeout. The team would trade the final three points and Barnstable won the set 25-22 before closing out the match with a 25-15 third set.\\nDespite sharing the same final score, Viselli said Monday\u2019s match was a big step up for Nantucket from its first match against the Red Hawks earlier this season.\\n\u201cIt was night and day,\u201d Viselli said. \u201cWe went into their gym and we were afraid, we were tense. You can\u2019t even say that we played when we went to Barnstable. The aura, the mystique, the fans, everything, they just played scared. This time they were like \u2018we're here to play\u2019 and they played and they just came up short.\u201d\\nNow 10-7 on the year, Nantucket will wrap up the regular season this week with matches Wednesday at Sturgis East and Friday at home against St. John Paul II.\", \"original_answer\": \"Sure! Here's the summary within 70 words:\\n\\nThe Nantucket volleyball team fought hard in a 3-0 loss to top Div. 1 team Barnstable, hanging tight in the first two sets before falling in the third. Despite the loss, coach Andrew Viselli praised his team's improved performance compared to their previous match against the Red Hawks. The Whalers are now 10-7 on the year and will finish the regular season with matches at Sturgis East and home against St. John Paul II.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 112,
+  "source_cluster_id": "sha256:dadc2ebfd4ecd5b505eb73a21b5ec8506b27a52677534d8cc88a50c68586ee80",
+  "source_id": "13973",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:3e194af92c0be9b39c522a04ae7cb9c8b1503d80f8bc476b89e8b4baad1d22f6",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

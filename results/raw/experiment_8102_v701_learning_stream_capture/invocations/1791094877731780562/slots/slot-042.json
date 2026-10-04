@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2957666961010545,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:9e69e0bbea1bf8745f24fa5a15e2e8e25254f8fc89aa783f83a7d61eeaafa278",
+  "human_target": null,
+  "input_tokens": 689,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:9e69e0bbea1bf8745f24fa5a15e2e8e25254f8fc89aa783f83a7d61eeaafa278",
+    "feature_hash": "sha256:5c966c0d1ff4921ed90a51843835d83e3ab588f2ecd1c14d8cf4a50f779c1ec2",
+    "source_normalized_hash": "27f010d48663b6ff7d7bf8f5e52cd8456984282fbf8930442d5e1c528ecb2417",
+    "values": [
+      0.39109039194057577,
+      0.5451427351243527,
+      0.3317307692307692,
+      0.9375,
+      0.4254807692307692,
+      0.4375,
+      0.6089096080594243,
+      0.9286147981920041
+    ],
+    "window_count": 26
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 689,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 713
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:de19a78e41786f988e56613901c96be6ad6d9c1b9030728baab4b0a2aaf0ec8f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095372,
+    "id": "chatcmpl-gL6cAbdcCx0fnXoQvZAsvxubMLV690as",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 561.358,
+      "predicted_n": 24,
+      "predicted_per_second": 42.753465702813536,
+      "predicted_per_token_ms": 23.389916666666664,
+      "prompt_ms": 614.894,
+      "prompt_n": 611,
+      "prompt_per_second": 993.6672011761377,
+      "prompt_per_token_ms": 1.0063731587561375
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 689,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 713
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Knowing how to grow your own cat grass is beneficial for both you and your kitty. Let's take a look at some of those benefits. Adds roughage to your cat's diet providing health benefits such as adding fiber and vitamins to your cat's diet. Fiber and vitamins are vital to the overall health of your pet.\\\\n\\\\npassage 2:The grass will last anywhere from 1 to 3 weeks. The grass can be kept indoors or out for your pet to graze on. \u201cFresh is Best\u201d for full nutritional benefits. Like all living plants, the grass needs water and natural light to grow. To extend the life of the cat grass it can be transplanted into a larger pot with more soil, and/or refrigerated when not in use. The best way to water is to run the water through the container once a day, or more if necessary. If kept refrigerated, water the grass less often. DO NOT let the grass sit in standing water as this can cause mold. Get your Grow Your Own Pet Treat seed Pack with three times the seed and start again! Tags: care for cat grass, grass for pets, grow your own grass, pet grass.\\\\n\\\\npassage 3:Here's How To Grow Cat Grass For Your Kitty. 1) Fill a container with drainage holes nearly to the top with moist potting soil (we use organic potting soil) Adds roughage to your cat's diet providing health benefits such as adding fiber and vitamins to your cat's diet.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to care for cat grass\\\"}\", \"original_answer\": \"To care for cat grass, follow these steps:\\n\\n1. Fill a container with drainage holes nearly to the top with moist potting soil.\\n2. Water the soil thoroughly.\\n3. Cover the container with a plastic bag to keep the soil warm and moist.\\n4. After 7-10 days, remove the plastic bag and check the soil for moisture. If it's dry, water it again.\\n5. After about a week, your cat grass should be ready to harvest. Use scissors or a knife to cut off the blades and give them to your cat to eat.\\n6. To keep the grass fresh, either leave it outside or put it in the refrigerator when not in use. If you refrigerate it, water it less often.\\n\\nNote: If the grass sits in standing water, it can cause mold, so make sure to drain any excess water.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 43,
+  "source_cluster_id": "sha256:0fdb705be10dab9cfaf60ab3677853b5a522cafa32a26729d7ace52268b3a6b9",
+  "source_id": "12327",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:9e69e0bbea1bf8745f24fa5a15e2e8e25254f8fc89aa783f83a7d61eeaafa278",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

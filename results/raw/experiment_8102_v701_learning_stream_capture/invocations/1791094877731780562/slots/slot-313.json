@@ -1,0 +1,133 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3686560199130327,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:7e43ff23280a2eb7a2a3cb53025122babbb5ca550bb942f69eed171fd2236745",
+  "human_target": null,
+  "input_tokens": 726,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:7e43ff23280a2eb7a2a3cb53025122babbb5ca550bb942f69eed171fd2236745",
+    "feature_hash": "sha256:e5dafa7894c55366d4838c76e0bca4eb90cdaabbae42668cfd0d8a2a6a1a5591",
+    "source_normalized_hash": "c5b2325897a77c6bac3c39253948cf5eb21e5451826f563b0d3fb268c29631e7",
+    "values": [
+      0.26654060187951134,
+      0.4227902965810328,
+      0.30000000000000004,
+      0.8,
+      0.6,
+      0.6,
+      0.7334593981204887,
+      0.964858923921498
+    ],
+    "window_count": 18
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 726,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 751
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:b0415d9b33099819b7a69b2ee0630abc90deebad5092c21126f74d72317a69e9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095751,
+    "id": "chatcmpl-4FZP9jshtLhYgm5jefDmMYFYcfOFQTuA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 589.062,
+      "predicted_n": 25,
+      "predicted_per_second": 42.440354326030196,
+      "predicted_per_token_ms": 23.56248,
+      "prompt_ms": 665.868,
+      "prompt_n": 648,
+      "prompt_per_second": 973.1658526915244,
+      "prompt_per_token_ms": 1.0275740740740742
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 726,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 751
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Botswana Flag: The Botswana flag was officially adopted on September 30, 1966. The colors on the flag correspond to those on the national coat of arms. The blue represents water, the white-black-white bands depict the racial harmony of the people as well as the pluralist nature of the society. They are inspired by the coat of the zebra, the national animal. Larger Botswana flag Botswana Coat of Arms: Botswana's coat of arms was adopted on January 25, 1966, and contains a shield supported by two zebras. The zebras hold onto a tusk of ivory (symbolic of the former ivory trade) and an ear of sorghum (an important crop to the nation.\\\\n\\\\npassage 2:Botswana flag colors meaning, significance and symbolism - Presidential Standard of Botswana - The meaning of Botswana flag and What is the symbolism of the flag of Botswana Botswana flag colors symbolism\\\\n\\\\npassage 3:19. Botswana. Botswana used the UK flag as a protectorate till their independence in September 30, 1966. The flag is credited for being one of the African flags that did not take its meaning from the leading political party. Instead the flag designs and colors give cultural, political, and regional interpretations.\\\\n\\\\n\\\",\\\"question\\\":\\\"botswana flag color meanings\\\"}\", \"original_answer\": \"Based on the provided passages, here are the meanings and symbolism associated with the colors of the Botswana flag:\\n\\n* Blue: Water and sky\\n* White: Racial harmony and pluralism\\n* Black: National unity and diversity\\n\\nAccording to Passage 1, the colors on the flag correspond to those on the national coat of arms, which represents the country's values and history. The use of blue and black stripes is meant to symbolize the country's connection to the land and its people, while the white stripe represents the nation's commitment to racial harmony and pluralism.\\n\\nPassage 2 provides additional information about the symbolism of the flag, including the importance of the zebra, which is featured on the coat of arms, and the representation of the former ivory trade and sorghum crop.\\n\\nPassage 3 provides a brief overview of the flag's design and its significance, noting that it is one of the African flags that does not take its meaning from a leading political party, but rather reflects cultural, political, and regional interpretations.\\n\\nTherefore, based on the provided passages, the colors of the Botswana flag have the following meanings and symbolism:\\n\\nBlue: Water, sky, and national unity\\nWhite: Racial harmony and pluralism\\nBlack: Diversity and national unity\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 58,
+  "source_cluster_id": "sha256:4f77f08125c21002d1332eebd325b973be83138778b07f916efc8124cfe48f67",
+  "source_id": "15534",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:7e43ff23280a2eb7a2a3cb53025122babbb5ca550bb942f69eed171fd2236745",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

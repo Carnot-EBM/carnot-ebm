@@ -1,0 +1,145 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6952615000773221,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:139907226f22f7384e2a9f6c837f5bb0c48435be2867a49bd21b60b87677e1d9",
+  "human_target": null,
+  "input_tokens": 1121,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:139907226f22f7384e2a9f6c837f5bb0c48435be2867a49bd21b60b87677e1d9",
+    "feature_hash": "sha256:c29ac7ab10af658e359a7aa2f2e8c83bf4d293885aceb638b2d2c771bd5ff0d3",
+    "source_normalized_hash": "1f9f0c20d94bf8716645ea195e619b5476d8e279b069266ab46d7d3c088d47fd",
+    "values": [
+      0.21770776877478445,
+      0.43220421623553107,
+      0.25925925925925924,
+      0.8888888888888888,
+      0.0,
+      0.0,
+      0.7822922312252155,
+      1.0
+    ],
+    "window_count": 42
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1121,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1145
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:5dc99ee5760a6d2536c0294f738711eab3a4293bf1d638adf3b8577d8569ef71",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095722,
+    "id": "chatcmpl-asN7M2CZCgIJURhsp3DI7rQdNsvPPmmU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.291,
+      "predicted_n": 24,
+      "predicted_per_second": 42.381037311205716,
+      "predicted_per_token_ms": 23.595458333333337,
+      "prompt_ms": 1015.53,
+      "prompt_n": 1043,
+      "prompt_per_second": 1027.049914822802,
+      "prompt_per_token_ms": 0.9736625119846596
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1121,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1145
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"12 Helena Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":null,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Wine Tasting Room, Venues & Event Spaces, Caterers, Event Planning & Services, Arts & Entertainment, Beer, Wine & Spirits, Nightlife, Wine Bars, Food, Wineries, Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"13:0-20:0\\\",\\\"Monday\\\":\\\"13:0-20:0\\\",\\\"Saturday\\\":\\\"13:0-21:0\\\",\\\"Sunday\\\":\\\"13:0-20:0\\\",\\\"Thursday\\\":\\\"13:0-20:0\\\"},\\\"name\\\":\\\"Skyenna Wine Lounge\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-15 01:24:55\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Located a block from State St. and the Santa Barbara Pier, you'll find a funky little Bohemian wine establishment called Skyenna Wine Lounge. We stopped in at the end of a long day of tastings, so we just shared a 5 pour mixed tasting of 2 whites ('20 Sauvignon Blanc and a '20 Viognier) and 3 reds ('20 Grenache, '19 Tempranillo, and '20 Cab. Sauvignon).\\\\n\\\\nLenny, Skyenna's winemaker, poured for us and was an amazing host. We sat by ourselves in the far back of the lounge while he had a tasting bar full of people at the other end of the building. That didn't stop him from spending plenty of time with us discussing his wines and our interests. The wines we tasted were light to medium bodied and quite flavorful. If you're hungry or just want to create your own food/wine pairing experience, you can order food from the neighboring Italian restaurant, Lucky Penny.\\\\n\\\\nDefinitely worth your time to stop in and experience Skyenna's cool vibe atmosphere and Lenny's wines.\\\"},{\\\"review_date\\\":\\\"2022-01-09 20:10:43\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great place with a great vibe! Would highly recommend this place! The wine is so delicious as well! The owner is so nice and personable. Thank you for a great time!\\\"},{\\\"review_date\\\":\\\"2021-12-14 08:20:55\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"It's a pretty small place but not in a bad way. It has bar seating and lounge seating. The owner was very nice and down to earth. The bathroom is a bit of a hassle being around the back but not to bad. It has some interesting art. It's a nice laid back feel. Walking distance from the water. There's street parking. You can check out a nearby restaurant as well. The wine is good. I got a bottle.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Skyenna Wine Lounge is a unique Bohemian wine establishment located in Santa Barbara, California. With its prime location on Helena Avenue, just a block away from State Street and the Santa Barbara Pier, it's a must-visit spot for wine enthusiasts. The lounge offers a wide range of services, including wine tastings, catering, event planning, and more. It's also a popular venue for events such as weddings and corporate functions.\\n\\nCustomers have praised Skyenna Wine Lounge for its excellent selection of wines, which are made by Lenny, the winemaker, who is also known for his friendly and knowledgeable service. Customers have described the atmosphere as cool and laid back, with outdoor seating available on the patio. Skyenna also offers food options from neighboring restaurants, making it easy to create a complete dining experience.\\n\\nOverall, Skyenna Wine Lounge is a top choice for anyone looking for a unique and enjoyable wine tasting experience in Santa Barbara. With its extensive offerings and welcoming atmosphere, it's no wonder that it's quickly becoming one of the city's most popular destinations for wine lovers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 38,
+  "source_cluster_id": "sha256:eb2a2cd445983e56a91c393f308d0bc97dbfa179c02d9123d9ad7a86ff374dcf",
+  "source_id": "14959",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:139907226f22f7384e2a9f6c837f5bb0c48435be2867a49bd21b60b87677e1d9",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

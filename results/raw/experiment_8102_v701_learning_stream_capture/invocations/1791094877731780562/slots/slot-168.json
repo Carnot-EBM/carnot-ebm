@@ -1,0 +1,129 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.9953566120238975,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:6d7fa897b7d9e123bc838fd7fd2edd80e01ef327f4ca3dc70768ca26a1bdd102",
+  "human_target": null,
+  "input_tokens": 336,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:6d7fa897b7d9e123bc838fd7fd2edd80e01ef327f4ca3dc70768ca26a1bdd102",
+    "feature_hash": "sha256:71334593be22843c3c44aca5d6e1f7ac359745da292c500901b36dac45a72f59",
+    "source_normalized_hash": "f7dd59d76475a1c3fea07898ed7d4bc63aa93454f87a0e4cdb43d263aa3a9bea",
+    "values": [
+      0.3758620689655172,
+      0.5862068965517241,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.6241379310344828,
+      0.8620689655172413
+    ],
+    "window_count": 10
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 4,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 336,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 360
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:368d75c587fdcae8e8b1ef0f2ce8dfb1688421c123013826ed51c693066ca4e9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 4\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095554,
+    "id": "chatcmpl-xIVniDBBeGMgSgrOwmZ7RJxBrehd0Rif",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.069,
+      "predicted_n": 24,
+      "predicted_per_second": 42.547986150630514,
+      "predicted_per_token_ms": 23.502875,
+      "prompt_ms": 300.8,
+      "prompt_n": 258,
+      "prompt_per_second": 857.7127659574468,
+      "prompt_per_token_ms": 1.165891472868217
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 336,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 360
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"\\\"Star Wars\\\" fans will get more than they bargained for when the saga comes to digital HD on Friday. The collection of the first six \\\"Star Wars\\\" movies will also include many special features, some of which give fans a rare glimpse behind the scenes of the saga. One focus of the features will be the sound effects of the movies, including that of the insect-like Geonosians, as seen in \\\"Star Wars Episode II: Attack of the Clones.\\\" 'Star Wars' universe gets its first gay character. In the exclusive first-look video, sound designer Ben Burtt explains which animals were used to capture the alien sounds made by the Geonosians. Take a look at the video above to find out. 'Star Wars' films available for digital download for first time.\\n\", \"original_answer\": \"Star Wars fans get special features with digital release, including an exclusive look at the sound design and the introduction of the franchise's first openly gay character.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 169,
+  "source_cluster_id": "sha256:a3a93654740d9f2462922f2e1074c66149aa0a7783b37b6b72f05569994d0e01",
+  "source_id": "15730",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:6d7fa897b7d9e123bc838fd7fd2edd80e01ef327f4ca3dc70768ca26a1bdd102",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

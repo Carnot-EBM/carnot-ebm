@@ -1,0 +1,152 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6321674539940432,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:ba0f31d090d4445854526061bee1580ae52425469f577df3bc17024f20e1e18a",
+  "human_target": null,
+  "input_tokens": 1049,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:ba0f31d090d4445854526061bee1580ae52425469f577df3bc17024f20e1e18a",
+    "feature_hash": "sha256:92d0610a5ade0d3c4f627fd72a10dc652be359708e8d785fc444a1f70f03fad9",
+    "source_normalized_hash": "86b34f8a7917e94791c92a65fefdb3b8b865fc2b28d4fe9a28689aabe90889e3",
+    "values": [
+      0.37086463799081965,
+      0.6294985530858693,
+      0.21212121212121213,
+      0.9090909090909091,
+      0.18013468013468015,
+      0.18181818181818182,
+      0.6291353620091803,
+      0.9316319633653034
+    ],
+    "window_count": 54
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1049,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1072
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:cf384867bf9fe23263ace1fa4722cc005a49dfd7ce6ceff6a92595971ddf3913",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095414,
+    "id": "chatcmpl-52hhaOZBoae9QsJZS2aGvjL2qEYNBPyt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.493,
+      "predicted_n": 23,
+      "predicted_per_second": 42.55374260166181,
+      "predicted_per_token_ms": 23.499695652173916,
+      "prompt_ms": 956.864,
+      "prompt_n": 971,
+      "prompt_per_second": 1014.7732593137582,
+      "prompt_per_token_ms": 0.9854418125643667
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1049,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1072
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Preheat the oven to 180C/350F/Gas 4 and grease and line two 20cm/8in sandwich tins with baking parchment. Technique: Greasing and lining cake tins. Watch technique 0:33 mins. Put the cocoa powder and boiling water into a large bowl and mix well to make a paste.Add the remaining ingredients and beat again until combined. This can also be done in a food processor, but take care not to over whisk. Divide the cake mixture between the prepared tins.atch technique 0:33 mins. Put the cocoa powder and boiling water into a large bowl and mix well to make a paste. Add the remaining ingredients and beat again until combined. This can also be done in a food processor, but take care not to over whisk.\\\\n\\\\npassage 2:1 Cream the fat with the sugar. 2  Sift in the flour and cocoa, add the eggs and mix until the mixture is completely combined. 3  Divide the mixture between to cake tins, then place the cakes into the oven for about 15 minutes, or until cakes have risen and are srpingy to touch. Sift in the flour and cocoa, add the eggs and mix until the mixture is completely combined. 2  Divide the mixture between to cake tins, then place the cakes into the oven for about 15 minutes, or until cakes have risen and are srpingy to touch. 3  Turn out onto a wire rack and leave to cool completely.\\\\n\\\\npassage 3:2. Cream together the butter and sugar until light and fluffy. Gradually beat in the eggs and if the mixture starts to curdle, add a little flour. 3. Fold in the remaining flour and the cocoa powder with a metal spoon. 4. Divide the mixture between the two tins and bake for approx.25 minutes until golden brown and firm to the touch. Remove from oven and leave to cool before turning out onto a cooling rack. 5. To make the butter icing, place the butter in a bowl and beat until soft.Gradually sift and beat in the icing sugar and then add enough milk / water to make the icing fluffy and spreadable. Sift and beat the cocoa powder in to the icing and use it to sandwich the two sponges together.. Divide the mixture between the two tins and bake for approx. 25 minutes until golden brown and firm to the touch. Remove from oven and leave to cool before turning out onto a cooling rack. 5. To make the butter icing, place the butter in a bowl and beat until soft.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to make sponge chocolate cake\\\"}\", \"original_answer\": \"To prepare a sponge chocolate cake, start by preheating the oven to 180C/350F/Gas 4 and greasing and lining two 20cm/8in sandwich tins with baking parchment. In a large bowl, mix cocoa powder and boiling water well to make a paste. Then add the remaining ingredients and beat until combined. Do not over whisk if using a food processor. Divide the cake mixture between the prepared tins. You could also cream the fat with the sugar, sift in the flour and cocoa, add the eggs, and mix until the mixture is completely combined. Divide this mixture between the cake tins, and bake in the oven for approximately 15 to 25 minutes, or until the cakes have risen and are springy to touch. Once baked, turn out onto a wire rack and leave to cool completely. For the butter icing, place the butter in a bowl and beat until soft. Gradually sift and beat in the icing sugar and then add enough milk or water to make the icing fluffy and spreadable. Then sift and beat the cocoa powder into the icing and use it to sandwich the two sponges together.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 72,
+  "source_cluster_id": "sha256:3c6ff1905fd8ddfde268bcc4f16f99a02d4c39ac4b09efe83e9d0febf1da6a19",
+  "source_id": "12385",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:ba0f31d090d4445854526061bee1580ae52425469f577df3bc17024f20e1e18a",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5500607469584793,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:bb15ffbb061ea7fb0ebf78e9214013444f45e84d7a0e656665db73e3e97dec53",
+  "human_target": null,
+  "input_tokens": 887,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:bb15ffbb061ea7fb0ebf78e9214013444f45e84d7a0e656665db73e3e97dec53",
+    "feature_hash": "sha256:67df0d3a1fdefcbbffbdad465ed9e1dd2fea076b0fcefdfaa4e27e087039c26a",
+    "source_normalized_hash": "6e58ea7490e2f8e05a817c6d7c15fcc08c3031dd06a912bded8b390d79f2b808",
+    "values": [
+      0.19292836182091883,
+      0.4170723845093593,
+      0.0,
+      0.0,
+      0.14285714285714285,
+      0.14285714285714285,
+      0.8070716381790811,
+      1.0
+    ],
+    "window_count": 28
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 887,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 910
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:4b2a5856cd0e975056e82a4ae687260d085fb63b7c70c686eee5b5ac06265cd4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095385,
+    "id": "chatcmpl-vrx21oTcmwLi3A19ixc5stcZ2u49JEEs",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.628,
+      "predicted_n": 23,
+      "predicted_per_second": 42.70108497887224,
+      "predicted_per_token_ms": 23.418608695652175,
+      "prompt_ms": 839.583,
+      "prompt_n": 809,
+      "prompt_per_second": 963.5735835527875,
+      "prompt_per_token_ms": 1.0378034610630407
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 887,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 910
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1045 Casitas Pass Road\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Restaurants, Tex-Mex, Fast Food, Mexican, Tacos\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:30-23:0\\\",\\\"Monday\\\":\\\"9:30-22:0\\\",\\\"Saturday\\\":\\\"9:30-23:0\\\",\\\"Sunday\\\":\\\"9:30-22:0\\\",\\\"Thursday\\\":\\\"9:30-22:0\\\",\\\"Tuesday\\\":\\\"9:30-22:0\\\",\\\"Wednesday\\\":\\\"9:30-22:0\\\"},\\\"name\\\":\\\"Taco Bell\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-16 20:08:59\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Vegetarians beware. I showed them a literal photo from their website of the black bean Crunchwrap to make double sure they understood which one. And they gave me a ground beef one. Luckily I noticed after 2 bites but very disappointing. I haven't eaten meat in 8 years. THANKS TACO BELL!\\\"},{\\\"review_date\\\":\\\"2021-10-08 01:16:08\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I went in and they made the wrong thing twice !! I went all the way home and had to come back and they made the exact wrong thing again. I asked for a refund and the cashier was wrong about price and said SO !! WHO HIRES THESE MORONS ? Rudest food service worker I've EVER encountered. He kept saying give me the receipt after HE threw it away the first time they screwed up. Contacted management and they didn't even respond ! Place was also very dirty. My advice is DON'T GO TO THIS GARBAGE TACO HELL\\\"},{\\\"review_date\\\":\\\"2021-09-25 03:45:40\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Would give more stars if customers service wasn't trash. Dudes has his phone behind the register playing a video with his AirPods in & shakes his head at me when I asked to add rice to my burrito.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Taco Bell is a restaurant located at 1045 Casitas Pass Road in Carpinteria, California. It serves fast food, Tex-Mex cuisine, and tacos. The restaurant offers outdoor seating, free Wi-Fi, takeout, and good group dining options. However, some customers have reported negative experiences with the restaurant's customer service and cleanliness. One customer complained that the restaurant made the wrong thing twice and refused to issue a refund. Another customer reported that the staff was rude and unresponsive to their concerns. Overall, while Taco Bell may offer some convenient and affordable meal options, it seems that the restaurant needs to improve its customer service and hygiene standards.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 51,
+  "source_cluster_id": "sha256:fe40754f976f1a9dceef4025262f6fed48ca9603057edfd3d7f4093e91c7907e",
+  "source_id": "13764",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:bb15ffbb061ea7fb0ebf78e9214013444f45e84d7a0e656665db73e3e97dec53",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

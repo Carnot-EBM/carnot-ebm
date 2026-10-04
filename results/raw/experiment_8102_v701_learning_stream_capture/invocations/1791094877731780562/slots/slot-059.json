@@ -1,0 +1,144 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7175107130315155,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:13172c9c7d0037b41913451fff7edef36181610d360a2a242f573a1a1c7123ac",
+  "human_target": null,
+  "input_tokens": 1140,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:13172c9c7d0037b41913451fff7edef36181610d360a2a242f573a1a1c7123ac",
+    "feature_hash": "sha256:613278e4afb320ab9286a2d24c0736381482ab2e528a721b0eb596fd86b8fb10",
+    "source_normalized_hash": "a1d02013a69c6e235a1d043771b9116f80dfd6387d695306d21e93ea06e3c5c3",
+    "values": [
+      0.1842353423456622,
+      0.32878563123440685,
+      0.15,
+      1.0,
+      0.11111111111111112,
+      0.1111111111111111,
+      0.8157646576543378,
+      0.9502639132574165
+    ],
+    "window_count": 40
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1140,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1164
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:459c72ed8acdc7fa9c443c1c49b8a8ec70ddeddf1739a1874ce32231a76db85c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095398,
+    "id": "chatcmpl-ukT1FlMgzgUXvsXbTLmzhpMW5g1zE1KN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.804,
+      "predicted_n": 24,
+      "predicted_per_second": 42.56798461876822,
+      "predicted_per_token_ms": 23.491833333333332,
+      "prompt_ms": 1017.721,
+      "prompt_n": 1062,
+      "prompt_per_second": 1043.5079948237287,
+      "prompt_per_token_ms": 0.9583060263653485
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1140,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1164
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"229 W Montecto St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Steakhouses, Bars, Brewpubs, Breweries, American (Traditional), Nightlife, Sports Bars, Restaurants, Food, Burgers, Comfort Food, Seafood\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-16:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"The Brewhouse\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-08 20:29:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Food was great, absolutely loved my puppy had his own menu. Looked like a spot for the locals, but those are the best spots for travelers to eat at. Will definitely go back whenever I visit Santa Barbara again\\\"},{\\\"review_date\\\":\\\"2021-12-01 05:09:37\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Really, this is a solid 3.5. Unassuming Exterior surrounded with residential and light commercial. I confess that I came for the fire-roasted artichoke and my guy wanted the French dip. The artichoke tasted way better than it looked. It was still smoking when it was served. It came with an aioli and melted butter. Both were great. The French dip also tasted better than it looked - very tender shaved beef with a tasty and not too salty au jus. No pix because the lighting was poor and both items tasted better than they looked. I would definitely go back for more. There were several great sounding entree items and appetizers...a broader menu than one might expect at a beer joint. Good job, Brewhouse!\\\"},{\\\"review_date\\\":\\\"2021-11-27 01:47:28\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Excellent first stop we made in Santa Barbara.  This is more of a local pub than a fancy restaurant.  Upon walking in, we noticed the adorable house doggy walking around greeting guests.  We were sat quickly and ordered a couple of their house beers.  Yes, they do have great craft beer selection.  We ordered the salmon sandwich and the grilled chicken sandwich, both were good portions and tasted pretty good.  The only reason for the 1 star off is that the salmon sandwich was dripping a little too much grease/oil, but the flavor overall was good.  Nice attentive servers as well.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of The Brewhouse based on the provided structured data:\\n\\nThe Brewhouse is a local favorite in Santa Barbara, California, offering a unique blend of steakhouses, bars, brewpubs, and American traditional cuisine. With a rating of 3.5 stars and over 100 reviews, this hidden gem has proven to be a must-visit destination for both locals and tourists alike. The menu boasts a variety of mouthwatering dishes, including their famous fire-roasted artichoke, French dip, and salmon sandwich. The atmosphere is cozy and intimate, with a trendy yet casual ambiance that makes it perfect for groups and dates alike. The business offers free WiFi, outdoor seating, and takes reservations, making it a convenient and comfortable choice for diners. The reviews suggest that the food is delicious, with many patrons praising the unique flavors and generous portions. However, some reviewers noted that the salmon sandwich could be a bit oily. Overall, The Brewhouse is a great spot for anyone looking for a taste of Santa Barbara's local culture and exceptional cuisine.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 60,
+  "source_cluster_id": "sha256:85ffe4efd2657204f88d25670570df9220557a48127d28b6d078e20286353c2d",
+  "source_id": "14151",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:13172c9c7d0037b41913451fff7edef36181610d360a2a242f573a1a1c7123ac",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

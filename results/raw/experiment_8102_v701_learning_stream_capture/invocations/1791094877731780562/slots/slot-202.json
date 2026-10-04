@@ -1,0 +1,140 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2988245739834383,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:9ba200c0b6e386b89c26fe7db961175014c087560f90980ee514c3c167c4b49e",
+  "human_target": null,
+  "input_tokens": 712,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:9ba200c0b6e386b89c26fe7db961175014c087560f90980ee514c3c167c4b49e",
+    "feature_hash": "sha256:a6ce7978320bea9f9cfe6d0df1049086d199378e513b6f52c07f9cccacc573f7",
+    "source_normalized_hash": "c602fe01a5f8085fd1bbfbb2170e04abf5542e2a169d17ee03a7b223e3a9a8c2",
+    "values": [
+      0.29290364583333334,
+      0.6381944444444444,
+      0.0625,
+      1.0,
+      0.5,
+      0.5,
+      0.7070963541666667,
+      0.9222222222222223
+    ],
+    "window_count": 32
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 712,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 735
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:5785bea4e93772c1e93fee9818e8451b701de1ecf85c175443ec0db78c6917af",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095594,
+    "id": "chatcmpl-ne8IeaKslEAs2qifiUUo4Jkjdhw4DyWg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.655,
+      "predicted_n": 23,
+      "predicted_per_second": 42.54099194495566,
+      "predicted_per_token_ms": 23.50673913043478,
+      "prompt_ms": 639.949,
+      "prompt_n": 634,
+      "prompt_per_second": 990.7039467207544,
+      "prompt_per_token_ms": 1.0093832807570977
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 712,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 735
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"UAW Targets CEO Pay During Strike\\nSince September, the UAW has been striking against the big three Michigan car companies, Ford, GM, and Stellantis.\\nThe United Auto Workers are asking for better pay and more benefits.\\nA number of workers have walked off the job across several states. Contracts have been offered and rejected. The president and former president have visited the striking workers.\\nNow, the UAW has another target in their quest to win the media war.\\nCEO pay.\\nThe car companies\u2019 executives have huge compensation packages. Shawn Fawn, the UAW, said that their salaries have outpaced the workers\u2019 wages.\\nFain took to YouTube to explain his point, \u201cThey\u2019re absolutely rolling in the money. They\u2019re competing for who gets the biggest executive compensation package.\u201d\\nAccording to Michigan Advance, the big three CEOs all made over $20 million. \u201cGeneral Motors CEO Mary Barra\u2019s compensation is $29 million, the highest of the big three automakers, followed by Stellantis\u2019 Carlo Tevares at $25 million and Ford\u2019s Jim Farley at $21 million.\u201d\\nFain has been bringing up the executive officers\u2019 salaries because they have risen by 40% since 2019 when the last contract was done. However, the auto workers' wages have only risen 6% during the same period.\\nCindy Schipani, a business law professor at the University of Michigan explained how this hurts the companies during negotiations. \u201cThe union seems to be arguing an equity issue, especially in light of the sacrifices the workers needed to make in past negotiations,\u201d she said. \u201cOf course, the CEO\u2019s job isn\u2019t comparable to the job of the average worker, but I suspect the UAW may believe it has some leverage. If the company can afford to raise the salary of the top executive at roughly 40% over 4 years, why not also grant the rank and file similar increases.\u201d\", \"original_answer\": \"The United Auto Workers (UAW) has been on strike against Ford, GM, and Stellantis since September, demanding better pay and benefits. Now, the UAW is targeting CEO pay, arguing that executive salaries have outpaced workers' wages. The CEOs of the big three automakers all made over $20 million, with General Motors CEO Mary Barra earning the highest at $29 million. UAW President Shawn Fain has highlighted the 40% increase in CEO salaries since 2019, compared to a 6% increase for auto workers, as an equity issue during negotiations.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 203,
+  "source_cluster_id": "sha256:c049abdac02de2d61580be5d9dab3abb85921c9ead15b7d4e4d707b2d7374117",
+  "source_id": "13587",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:9ba200c0b6e386b89c26fe7db961175014c087560f90980ee514c3c167c4b49e",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

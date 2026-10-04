@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6169421219965443,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:b146ba120b1670da101b42aac1f7771491f99a066775727569c5c375a6894e77",
+  "human_target": null,
+  "input_tokens": 968,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:b146ba120b1670da101b42aac1f7771491f99a066775727569c5c375a6894e77",
+    "feature_hash": "sha256:db62922d0c95b1afc44c1a3b53f8678411927f2f2a61b5f3d93640da3d44b0dc",
+    "source_normalized_hash": "3b2d28f8337336fa75262db06f5ec08dc4383f2112161910ee110ff7faf13363",
+    "values": [
+      0.20206814474752663,
+      0.45287221485944396,
+      0.4621212121212121,
+      0.9166666666666666,
+      0.25,
+      0.25,
+      0.7979318552524735,
+      0.9462602724502879
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 968,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 991
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:856bd6e5437e62f8301f7c45744e5083ac7ed60895ae47defe3c7ee9f63c71b5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095330,
+    "id": "chatcmpl-U4lH5XCVwceHD5ywWmDPRZXG8lo85kpc",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 534.959,
+      "predicted_n": 23,
+      "predicted_per_second": 42.99394906899408,
+      "predicted_per_token_ms": 23.259086956521738,
+      "prompt_ms": 865.821,
+      "prompt_n": 890,
+      "prompt_per_second": 1027.9260955786472,
+      "prompt_per_token_ms": 0.9728325842696629
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 968,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 991
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"901 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Cajun/Creole, Breakfast & Brunch, Caterers, Restaurants, Event Planning & Services, Burgers\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-14:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:0-14:0\\\",\\\"Sunday\\\":\\\"7:0-14:0\\\",\\\"Thursday\\\":\\\"7:0-14:0\\\",\\\"Tuesday\\\":\\\"7:0-14:0\\\",\\\"Wednesday\\\":\\\"7:0-14:0\\\"},\\\"name\\\":\\\"Cajun Kitchen Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 04:59:22\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Amazing brunch in Santa Barbara. The wait is always worth it. The staff are kind and you can never go wrong with a breakfast burrito or benedict.\\\"},{\\\"review_date\\\":\\\"2022-01-12 10:39:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My grandson and I really enjoyed this place!  The food was incredible and the staff were friendly and efficient.  We always come here when he's in town and will keep doing so.\\\"},{\\\"review_date\\\":\\\"2021-12-12 19:36:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The wait was not that long on a Sunday. But ommmggg the food! If you're in this area or from the area and can check it out you SHOULD. The Beignets were good BUT THE Fried Chicken Benedict BOMB. Best ever. It's just a party in your mouth. 10/10. I have no words just try it and thank me later.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Cajun Kitchen Cafe, located at 901 Chapala St in Santa Barbara, CA, is a local business that specializes in Cajun/Creole, Breakfast & Brunch, Catering, Restaurants, Event Planning & Services, and Burgers. The cafe offers a variety of dishes and has received positive reviews from customers.\\n\\nThe cafe operates from 7:00 am to 2:00 pm from Tuesday to Sunday, providing a breakfast and brunch experience for its patrons. Customers have praised the food quality and taste, with specific mentions of the breakfast burrito and Fried Chicken Benedict as standout dishes.\\n\\nThe staff at Cajun Kitchen Cafe has been described as friendly, efficient, and kind. Customers appreciate the service they receive during their visits. The wait times have also been mentioned, with reviewers noting that the wait is always worth it. \\n\\nThe cafe offers outdoor seating and takeout options for customers who prefer to enjoy their meals on the go. It is also suitable for groups and has a casual and classy ambience. However, Wi-Fi is not available at the establishment.\\n\\nOverall, Cajun Kitchen Cafe has a rating of 4.0 stars and comes highly recommended by customers for its delicious food, friendly service, and enjoyable dining experience. Whether you're in the area or a local resident, this cafe is definitely worth a visit.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 15,
+  "source_cluster_id": "sha256:ab595f4f7f6cb4150443c9ed4358075f0d7c25bbf793bcf1606afed8d260c999",
+  "source_id": "14093",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:b146ba120b1670da101b42aac1f7771491f99a066775727569c5c375a6894e77",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

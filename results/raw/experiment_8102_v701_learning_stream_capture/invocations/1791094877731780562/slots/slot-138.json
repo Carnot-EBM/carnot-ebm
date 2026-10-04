@@ -1,0 +1,133 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.240878248005174,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:e25e12115f49a09a30d056156a65a20c0a4fba9be13c7a97f082b504ded09616",
+  "human_target": null,
+  "input_tokens": 581,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:e25e12115f49a09a30d056156a65a20c0a4fba9be13c7a97f082b504ded09616",
+    "feature_hash": "sha256:f50dc9ba2e5906ea9ad85cd55b9d07891590c8209ed63fe107113b7f706f6a50",
+    "source_normalized_hash": "807c6fc6212a3a4c8d5b96e718cf56c1246577cfb4fadcc5a25fdefcd6a9a5f2",
+    "values": [
+      0.3618016651104886,
+      0.5717787114845939,
+      0.2222222222222222,
+      1.0,
+      0.0,
+      0.0,
+      0.6381983348895113,
+      0.8923319327731093
+    ],
+    "window_count": 18
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 581,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 605
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:57b6a334021ca57db6a3b30694e6e8bfdf24001fd9a7af157b666cbcc7b7c754",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095511,
+    "id": "chatcmpl-vnp5Gso7KmfMYcMMqbPgQd9PUqAV4Lmu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.208,
+      "predicted_n": 24,
+      "predicted_per_second": 42.537503899271194,
+      "predicted_per_token_ms": 23.508666666666667,
+      "prompt_ms": 535.452,
+      "prompt_n": 503,
+      "prompt_per_second": 939.3932602735633,
+      "prompt_per_token_ms": 1.06451689860835
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 581,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 605
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:As we have just seen, many factors, specificities and characteristics influence the individual in what he is and the consumer in his decision making process, shopping habits, purchasing behavior, the brands he buys or the retailers he goes. A purchase decision is the result of each and every one of these factors.s we have just seen, many factors, specificities and characteristics influence the individual in what he is and the consumer in his decision making process, shopping habits, purchasing behavior, the brands he buys or the retailers he goes. A purchase decision is the result of each and every one of these factors.\\\\n\\\\npassage 2:When it comes to making decisions it boils down to motivation. It\u2019s not what we do, but why. For example, we qualify a prospect with clear needs.1  We give a presentation on the benefits of our products and services and the customer understands the fit and one week later makes a decision to reward our company with the business. Gold\u2019s are motivated by financial results. 2  The Blue personality is always motivated by what the product or service can do for the people in the organization. 3  If the solution will increase employee moral or help employees work better or lower stress on the job, these aspects will be important to the Blue personality.\\\\n\\\\npassage 3:Introduction. Knowing what motivates people to buy products and services is essential to maintaining the viability of your company. Except for the very largest companies, mass marketing is far too expensive as a means to generate a customer or client base.nowing what motivates people to buy products and services is essential to maintaining the viability of your company.\\\\n\\\\n\\\",\\\"question\\\":\\\"what motivates customer purchase decisions\\\"}\", \"original_answer\": \"Customer purchase decisions are influenced by many factors, such as individual characteristics and shopping habits. Decisions are driven by motivation, including financial results and the potential benefits a product or service can bring to the people within an organization, such as increasing employee morale or lowering stress. Understanding what motivates people to buy products and services is essential for companies.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 139,
+  "source_cluster_id": "sha256:65b2496df4573cfaaf19f024558e67c764c12a0d1eea13cd948a63a9e141ecce",
+  "source_id": "14471",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:e25e12115f49a09a30d056156a65a20c0a4fba9be13c7a97f082b504ded09616",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

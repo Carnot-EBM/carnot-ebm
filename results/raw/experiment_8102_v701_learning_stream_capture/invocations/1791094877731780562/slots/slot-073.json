@@ -1,0 +1,88 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "answer_units_over_budget",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:e2ad164ca938c68301bb931527a5d13a9bc6f0a5f7e5cfebea2274056efaa22a",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": "answer_units_over_budget",
+    "family_id": "sha256:e2ad164ca938c68301bb931527a5d13a9bc6f0a5f7e5cfebea2274056efaa22a",
+    "feature_hash": "sha256:d8638521f32ef0774dab9cb7891fce7c83f216b0dbd42f197597f49031c6f739",
+    "source_normalized_hash": "63ba9d334a62e9fc2022ecf429406aabe1e906de432d35994d9331922924bb24",
+    "values": null,
+    "window_count": 30
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:de985d28a22fb0e836ff10c1642d444b3b8ead8de51744644351d9e2f8df485a",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The professional LG G3 photos manager for you to backup and restore all photos on LG G3 easily.Download MobileGo for LG G3 [Windows]: http://www.phonetransfer.org/android-... With the smart LG G3, you can take beautiful photos to record your life whenever and wherever you want.he professional LG G3 photos manager for you to backup and restore all photos on LG G3 easily.\\\\n\\\\npassage 2:Notes: 1  Pictures or videos can also be transferred to the device from a computer or to a memory card. 2  If using a Macintosh computer, additional software is required in order to transfer files. 3  Connect the device to a computer using the supplied USB cable. 4  From the Select USB connection method screen, tap Media sync (MTP) . If using a Macintosh computer, additional software is required in order to transfer files. 2  Connect the device to a computer using the supplied USB cable. 3  From the Select USB connection method screen, tap Media sync (MTP) . 4  Launch Windows Explorer. 5  Using the computer keyboard, press Windows+E (+E) keys.\\\\n\\\\npassage 3:Downloading pictures and videos from your LG G3 phone is very easy. Below are simple steps to download pictures from your LG G3 phone to your PC. 1) Plug your USB cable and connect it to your PC and turn on your laptop/pc. 2) Connect the other end of USB cable to your LG Phone.3) Open up the File Explorer on your PC and you will see the LG G3 icon on the listed devices on your PC. See Figure below. 4) Click on Photos/Videos icon to expand the Folder.) Select all the photos/videos from your LG G3 device folder and right click and select copy. 7) Go to the explorer window where you want to copy the files to and right click and select paste, and you are done.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to transfer photos from lg g3 to acer laptop\\\"}\", \"original_answer\": \"Based on the given passages, here are the steps to transfer photos from an LG G3 to an Acer laptop:\\n\\n1. Connect the LG G3 to the Acer laptop using the USB cable.\\n2. Open the File Explorer on the Acer laptop.\\n3. Find the LG G3 icon under the list of connected devices.\\n4. Click on the Photos/Videos icon to expand the folder.\\n5. Select all the photos and videos you want to transfer.\\n6. Right-click and select Copy.\\n7. Go to the destination folder on the Acer laptop where you want to save the photos and videos.\\n8. Right-click and select Paste.\\n\\nAlternatively, you can use the Professional LG G3 Photo Manager mentioned in Passage 1 to backup and restore all photos on the LG G3 easily. To transfer photos from the LG G3 to the Acer laptop, you can follow these steps:\\n\\n1. Download and install MobileGo for LG G3 on the Acer laptop.\\n2. Connect the LG G3 to the Acer laptop using the USB cable.\\n3. Open MobileGo and select the Photos option.\\n4. Choose the photos you want to transfer and click on the Export button.\\n5. Select the desired location on the Acer laptop to save the photos.\\n6. Click on the Start button to start the transfer process.\\n\\nNote: Make sure to use the Media sync (MTP) option when connecting the LG G3 to the Acer laptop, as specified in Passage 2.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "slot": 74,
+  "source_cluster_id": "sha256:a06fb33cdf905cb294313222543ed8c913aea6747252ada53acd5dbacbb4ab87",
+  "source_id": "12425",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:e2ad164ca938c68301bb931527a5d13a9bc6f0a5f7e5cfebea2274056efaa22a",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 2.0885064859176055,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:0808eda8391c7c292827f93a9903a1109ca30db4968857ca983bc46d756bf813",
+  "human_target": null,
+  "input_tokens": 1659,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:0808eda8391c7c292827f93a9903a1109ca30db4968857ca983bc46d756bf813",
+    "feature_hash": "sha256:7143b01727d0dbbbfae9cf94a755311f1310ca22b92a8efe1ecb96fbc9dd8d8d",
+    "source_normalized_hash": "95b7e8f7c7075c3b7d7d5e50a91bc6d02eff05c2cc3c53496b8690025c625524",
+    "values": [
+      0.17238822256175199,
+      0.37464897847250783,
+      0.26,
+      1.0,
+      0.0,
+      0.0,
+      0.827611777438248,
+      1.0
+    ],
+    "window_count": 100
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1659,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1683
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:013e1adbd36f645c89f30019864ea317c67a6506be146b6f71e34c30fdd95d8b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095514,
+    "id": "chatcmpl-ABIH98fHd0OIokFHWBvyvKbE7bIpo6R3",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.433,
+      "predicted_n": 24,
+      "predicted_per_second": 42.37041274078311,
+      "predicted_per_token_ms": 23.601375,
+      "prompt_ms": 1406.976,
+      "prompt_n": 1581,
+      "prompt_per_second": 1123.6865447598252,
+      "prompt_per_token_ms": 0.8899278937381405
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1659,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1683
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"409 State St.\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Sushi Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Q's Billiard Club & Sushi-a-go-go\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2009-07-16 01:33:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place makes you  have a good time...\\\\n\\\\nA friend recommended this bar/club for my friend and I to go to when we went to SB because we wanted to experience SB's nightlife. We got there around 9:30pm, and it wasn't crowded yet...so we got a good spot at the bar and ordered a drink...the drinks are decently priced...beers around 6-7 bucks, mixed drinks about 9 bucks. The bar tender even gave my friend a free drink! Awesome!\\\\n\\\\nThe dancefloor didn't have people dancing on it until about 10:30pm, but from then on people were having fun! There were some guys that all they wanted to do was rub up against you...but that's to be expected. \\\\n\\\\nWhen my friend and I got tired of dancing, we went up to the 2nd floor where they have private lounge areas, which was sweet...it gives you time to cool down before you head back to your hotel. They have a bar on the 2nd floor too if you want more to drink.\\\\n\\\\nOverall, we had a fun night...and I think everyone should stop by this bar when they're in SB.\\\"},{\\\"review_date\\\":\\\"2009-04-27 18:51:28\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"We had a fun time playing pool and eating California rolls at Q's. When we go down to Santa Barbara we spend alot of time eating, drinking, and walking the town.  This place gave us another option (playing pool). \\\\n\\\\nUnfortunately when we were down in March we missed it but look forward to visiting again next time.\\\"},{\\\"review_date\\\":\\\"2009-03-10 07:09:03\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Okay when I first started going here every thurs and some other nights I would have given it a 4-5 but now a 3. \\\\n\\\\n1. Bars: A definite plus! They have 4 bars total. One on each floor and one outside. The drinks are nice and stiff, make friends with the bartenders and they give you discounts. All are super nice. The drinks are pretty average, about $5-10. I like the seven and sevens, the black label and cokes, the midori sours, washington apple shots, long islands etc etc. \\\\n\\\\n2. Dance floor way too small for how many ppl come here, no matter the night. But mostly Thursdays and Saturdays. It just gets crowded and you have ppl glaring at you and not dancing but they're on the dance floor. Uhhhh don't get that.\\\\n\\\\n3. Crowd: It has a mix, but definitely some older guys will come here on Thurs. college night to hit on the youngins. However, you can always get a free drink! LOL Definite older crowd on other nights. And 80's night Tuesdays. Just be careful of the creepers ladies, they are there watching you! HA! no joke!\\\\n\\\\nIn the beginning I definitely had tons of fun meeting new people and seeing all my friends from SB but now they have 18+ on Thursday nights. NO THANKS! Its not like its not crowded enough! I'll have to admit how much trouble I got in when I go here! The drinks and just everything combined you can't help but get all crazy!\\\\n\\\\n4. First Floor: There are seating outside in a smoking patio,a bar. Theres seating inside on the sides of the bar, tables, huge bar and dance floor, bathroom. The basics.\\\\n\\\\n5. Second Floor: Small, VIP sectioned off, a tiny bar, bathroom, can ppl watch down below which is fun sometimes. No seating unless in \\\\\\\"VIP\\\\\\\" area.\\\\n\\\\n6. Third Floor: Pool tables galore. They have about 5 I think. They also have another bar, a bathroom and really comfy couches that I would sleep on. :D Fair warning if you're about to crash don't sit there b/c you won't get up. LOL\\\\n\\\\nThis holds a place in my heart b/c I've had so many crazy memories here. However, I just do not like the changes I have seen. i.e. 18+ and the mere fact that I got over the dance floor. Too crowded that it pushed me away. :(\\\\n\\\\nO and for those who get SUPER drunk and can't walk, be forewarned they will kick you out! :D aka my housemate LOL\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Q's Billiard Club & Sushi-a-go-go in Santa Barbara, CA:\\n\\nQ's Billiard Club & Sushi-a-go-go is a popular restaurant and bar located in downtown Santa Barbara, offering a unique blend of dining, drinking, and entertainment options. The establishment features four bars, including one on each floor and one outside, as well as a large dance floor and private lounge areas. Customers can enjoy a variety of food options, including sushi, as well as cocktails and beer. The bar staff is friendly and offers discounts to regular customers. While the crowd tends to be diverse and fun, some customers have noted that the dance floor can get overcrowded and rowdy, especially on weekends. Despite these issues, Q's remains a popular destination for both locals and visitors, with many customers praising its welcoming atmosphere and excellent service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 141,
+  "source_cluster_id": "sha256:b5d3df7be0aefae12f90a1344b9a604d6dfa09507f7b95089dcc866ded729f7b",
+  "source_id": "14888",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:0808eda8391c7c292827f93a9903a1109ca30db4968857ca983bc46d756bf813",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50
+  ]
+}

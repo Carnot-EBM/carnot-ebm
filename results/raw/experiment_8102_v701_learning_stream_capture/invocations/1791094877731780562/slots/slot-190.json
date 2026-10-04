@@ -1,0 +1,92 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "answer_units_over_budget",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:0282c83e04cd9b7a58c6f0eeb047623153abc00241887b0eee79d22a6cd651b3",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": "answer_units_over_budget",
+    "family_id": "sha256:0282c83e04cd9b7a58c6f0eeb047623153abc00241887b0eee79d22a6cd651b3",
+    "feature_hash": "sha256:b9dea8cf4073253d52120eefde38ce0393f24e61755d2a6ad33d07df58391795",
+    "source_normalized_hash": "b108feb065cfc265a56243397e2f2a606d1d5cd3d55e6491ec4308e8b5fc89ea",
+    "values": null,
+    "window_count": 36
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:11f3e7de6020ccd51908725a68ccd0426da5145cec502ad656183e38579d2b79",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:2. Open My Computer. 3. Click the files or folders you want to copy to the CD. To select more than one file, hold down the CTRL key while you click the files you want. Then, under File and Folder Tasks, click Copy this file, Copy this folder, or Copy the selected items.If the files are located in My Pictures, under Picture Tasks, click Copy to CD or Copy all items to CD, and then skip to step 5.4. In the Copy Items dialog box, click the CD recording drive, and then click Copy. 5. In My Computer, double-click the CD recording drive.Windows displays a temporary area where the files are held before they are copied to the CD.o select more than one file, hold down the CTRL key while you click the files you want. Then, under File and Folder Tasks, click Copy this file, Copy this folder, or Copy the selected items. If the files are located in My Pictures, under Picture Tasks, click Copy to CD or Copy all items to CD, and then skip to step 5.\\\\n\\\\npassage 2:\u00b7 Type the name you wish to call your new folder. HOW TO COPY PICTURE (FILE) FROM LOCATION TO ANOTHER. \u00b7 Insert your CD into your CD drive (your new laptop). \u00b7 Go to My Computer double click on your CD drive icon to open it (a windows should come up listing the content of your CD).\u00b7 On your keyboard, press these buttons \u201cCtrl or Control\u201d and the letter \u201cA\u201d at the same (this will select all your pictures on your CD).O. I have copied 100 photos from my desktop (XP) to a CD and want to download or copy them to my new laptop (Vista). I have inserted disc and clicked on computer and clicked on E drive and I can see the photos but I can't find a way to get them loaded onto my laptop.\\\\n\\\\npassage 3:DO. I have copied 100 photos from my desktop (XP) to a CD and want to download or copy them to my new laptop (Vista). I have inserted disc and clicked on computer and clicked on E drive and I can see the photos but I can't find a way to get them loaded onto my laptop.O. I have copied 100 photos from my desktop (XP) to a CD and want to download or copy them to my new laptop (Vista). I have inserted disc and clicked on computer and clicked on E drive and I can see the photos but I can't find a way to get them loaded onto my laptop.\\\\n\\\\n\\\",\\\"question\\\":\\\"how can i copy my photo from laptop to cd\\\"}\", \"original_answer\": \"To copy your photos from your laptop to a CD, follow these steps:\\n\\n1. Open My Computer.\\n2. Click the files or folders you want to copy to the CD. You can hold down the CTRL key to select multiple files.\\n3. Under File and Folder Tasks, click Copy this file, Copy this folder, or Copy the selected items.\\n4. If the files are located in My Pictures, under Picture Tasks, click Copy to CD or Copy all items to CD. Then, skip to step 5.\\n5. In the Copy Items dialog box, click the CD recording drive, and then click Copy.\\n6. Double-click the CD recording drive in My Computer to access the temporary area where the files are being copied.\\n7. Once the files are copied, eject the CD from the CD drive and insert it into your new laptop.\\n8. Double-click on the CD icon in My Computer to open the CD and access the copied files.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "slot": 191,
+  "source_cluster_id": "sha256:ec99b630ab7b897de9e81a8d7deee55a76f573e44fa6a44187deaaf44cec84ef",
+  "source_id": "12405",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:0282c83e04cd9b7a58c6f0eeb047623153abc00241887b0eee79d22a6cd651b3",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

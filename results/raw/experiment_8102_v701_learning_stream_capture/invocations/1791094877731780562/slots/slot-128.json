@@ -1,0 +1,133 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.177978519932367,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:0d6efc7fd8c537c8dc74173c339499fac184eb39670cfc297c693fcc6fcab277",
+  "human_target": null,
+  "input_tokens": 492,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:0d6efc7fd8c537c8dc74173c339499fac184eb39670cfc297c693fcc6fcab277",
+    "feature_hash": "sha256:b5dc657b7dc11524655e8c6ee60ce859d6ab5ba547e7f5b471ef404d6f916898",
+    "source_normalized_hash": "a65f7ee7a3dfd1915fa5f8ce357fb62349bea557e520dcb2f5abdc61769799f7",
+    "values": [
+      0.20337301587301587,
+      0.3839285714285714,
+      0.16666666666666666,
+      1.0,
+      0.25,
+      0.25,
+      0.7966269841269841,
+      0.9464285714285714
+    ],
+    "window_count": 18
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 492,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 516
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:2cce23c7c535eafd637becafe787a0b18266985d83edd7a0e9576de77b905c10",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095498,
+    "id": "chatcmpl-gqnvwy9ng3TAtN6cnUlVFau1LazQGn66",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 571.213,
+      "predicted_n": 24,
+      "predicted_per_second": 42.01585047959343,
+      "predicted_per_token_ms": 23.800541666666664,
+      "prompt_ms": 492.066,
+      "prompt_n": 414,
+      "prompt_per_second": 841.3505505359037,
+      "prompt_per_token_ms": 1.1885652173913044
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 492,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 516
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Beijing (CNN)Chinese police on Monday released five female activists who were detained last month, family and friends of the women tell CNN. Wei Tingting, Wang Man, Zheng Churan, Li Tingting and Wu Rongrong were freed. The women will be under police surveillance for a year and have their movements and activities restricted, attorney Liang Xiaojun said. Police can summon the women for questioning at any time, he added. The five members of China's Women's Rights Action Group were detained in Beijing, Guangzhou and Hangzhou a few days before events planned for International Women's Day on March 8. The United States had urged China to free them, and the international community harshly criticized keeping the women in custody. \\\"Each and every one of us has the right to speak out against sexual harassment and the many other injustices that millions of women and girls suffer around the world,\\\" U.S. Secretary of State John Kerry said in a statement Friday. \\\"We strongly support the efforts of these activists to make progress on these challenging issues, and we believe that Chinese authorities should also support them, not silence them.\\\" \\\"Free the five\\\" became a Twitter hashtag. Wang Qiushi, a lawyer for Wei, said police recommended last week that prosecutors press charges of \\\"assembling a crowd to disturb public order.\\\"\\n\", \"original_answer\": \"Sure! Here is the summary you requested within 54 words:\\n\\nFive Chinese feminist activists have been released from police custody after being held for over a month. They will be under surveillance and can be summoned for questioning at any time. Their detention had sparked international criticism, with the US calling for their release.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 129,
+  "source_cluster_id": "sha256:8f1418914fa4abbc0b3c4c065f6da52108f2bca20a10986fa9c352ca4e7216a4",
+  "source_id": "15807",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:0d6efc7fd8c537c8dc74173c339499fac184eb39670cfc297c693fcc6fcab277",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

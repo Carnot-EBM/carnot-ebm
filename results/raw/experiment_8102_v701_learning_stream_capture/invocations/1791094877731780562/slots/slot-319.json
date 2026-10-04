@@ -1,0 +1,129 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3537603920558468,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:205e6470586ee0afb902f17af9260e79538bd71fbd6de05396e351e041284192",
+  "human_target": null,
+  "input_tokens": 731,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:205e6470586ee0afb902f17af9260e79538bd71fbd6de05396e351e041284192",
+    "feature_hash": "sha256:99b84d691489aeaf0503f81f6319bdba7b326a922788c9baa0cea7de18392730",
+    "source_normalized_hash": "28a46efd5be443c1c32a32d3e264c82ac66ff2a82468f7fbea672dc0fd9cbf94",
+    "values": [
+      0.2261487050960735,
+      0.34962406015037595,
+      0.0,
+      0.0,
+      0.11111111111111112,
+      0.1111111111111111,
+      0.7738512949039265,
+      0.9303258145363409
+    ],
+    "window_count": 10
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 731,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 755
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:b7c786db83a84246a911cb22012437556e77c31e65190fef16e079e99fab4d71",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095759,
+    "id": "chatcmpl-CfwcJ7LsMtIspQ4EKcqTSGk2bWz8Rsm2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.761,
+      "predicted_n": 24,
+      "predicted_per_second": 42.49585222775652,
+      "predicted_per_token_ms": 23.53170833333333,
+      "prompt_ms": 668.699,
+      "prompt_n": 653,
+      "prompt_per_second": 976.5230694228645,
+      "prompt_per_token_ms": 1.02404134762634
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 731,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 755
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"905 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Sandwiches, Pizza, Restaurants, Italian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-21:0\\\",\\\"Monday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:30-21:0\\\",\\\"Sunday\\\":\\\"11:30-20:0\\\",\\\"Thursday\\\":\\\"11:30-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Cali-Forno Pizzeria\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-15 04:00:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Was in town and stumbled across this gem! Owner is amazing, pizza was tasty, and portions were great!\\\\n\\\\nGoing to be back!\\\"},{\\\"review_date\\\":\\\"2022-01-06 23:26:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Cool pizza spot... great for quality wood fired & quick customized pizza.  Large selection of toppings available. Friendly staff & easy customizable pizza you can eat outside on state and relax. Tip: Add blue cheese!\\\"},{\\\"review_date\\\":\\\"2022-01-05 07:05:20\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Gross to eat this place the dude with goatee beard don't wash hand and grabs the topping with bare hands..\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Cali-Forno Pizzeria based on the provided structured data in JSON format:\\n\\nCali-Forno Pizzeria is a popular restaurant located in Santa Barbara, California, offering a variety of sandwiches, pizzas, and Italian dishes. They are open seven days a week from 11am to 10pm, with extended hours on Friday and Saturday. The restaurant has free WiFi and provides takeout services. According to customer reviews, the pizza is delicious, with generous portions and a wide range of toppings available. The owner is friendly and accommodating, making it a great spot for both casual and group dining experiences. One reviewer noted that the ambiance is pleasant, with outdoor seating available. However, one reviewer had a negative experience with the hygiene of the establishment. Overall, Cali-Forno Pizzeria has an average rating of 4.0 stars based on three customer reviews.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 64,
+  "source_cluster_id": "sha256:9c02b8fcd9420bdb7f71bd8edcd0583198615a4296dc03c877e6fec78349861e",
+  "source_id": "14221",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:205e6470586ee0afb902f17af9260e79538bd71fbd6de05396e351e041284192",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

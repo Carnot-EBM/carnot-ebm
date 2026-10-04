@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3621217890176922,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:3b03cf9595f15845f8e4e49d154641bc57170124ed843967aabac8a94b58009e",
+  "human_target": null,
+  "input_tokens": 731,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:3b03cf9595f15845f8e4e49d154641bc57170124ed843967aabac8a94b58009e",
+    "feature_hash": "sha256:ed47335ae3709e6b0f163db59d0d5dac7fed6a3f098c2abaa09e2121b72f2e86",
+    "source_normalized_hash": "eb043f124e05948fc63dfec36677561e11ccd10cc57e1ff53d118917bfe27e00",
+    "values": [
+      0.4081970089623151,
+      0.5681689342403627,
+      0.19047619047619047,
+      1.0,
+      0.8435374149659862,
+      0.8571428571428571,
+      0.591802991037685,
+      0.8030824829931973
+    ],
+    "window_count": 21
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 731,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 755
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:85547e5134d544526a521e86be84d4ec6305a00ac6c35bc3666a273916d5a541",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095444,
+    "id": "chatcmpl-6jlj1cbMoQQ7Z0l8WeoM8NDWBhwkkSbJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.892,
+      "predicted_n": 24,
+      "predicted_per_second": 42.561341533485134,
+      "predicted_per_token_ms": 23.495500000000003,
+      "prompt_ms": 667.029,
+      "prompt_n": 653,
+      "prompt_per_second": 978.9679309295399,
+      "prompt_per_token_ms": 1.0214839203675345
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 731,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 755
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Egg Donors are responsible for updating their Egg Donor application/profile annually. 2  Egg Donors' Body Mass Index must be between 18 and 29 because overweight Egg Donors' health and egg quality may be at placed risk when taking medications necessary for an egg donation cycle. Egg Donors must be between the ages of 21 and 32 and in good health. 2  Egg Donors must have obtained a High school diploma or GED. 3  Egg Donors must be non-smokers and drug-free.\\\\n\\\\npassage 2:1 Egg Donors must be non-smokers and drug-free. 2  Egg Donors must have abstained from smoking for at least six months prior to submitting an Egg Donor application and may not have a history of drug use.3  Urine toxicology tests may be completed during the Egg Donor screening process to confirm abstinence. Egg Donors must be between the ages of 21 and 32 and in good health. 2  Egg Donors must have obtained a High school diploma or GED. 3  Egg Donors must be non-smokers and drug-free.\\\\n\\\\npassage 3:1 Egg Donors must be between the ages of 21 and 32 and in good health. 2  Egg Donors must have obtained a High school diploma or GED. 3  Egg Donors must be non-smokers and drug-free. Egg Donors must be between the ages of 21 and 32 and in good health. 2  Egg Donors must have obtained a High school diploma or GED. 3  Egg Donors must be non-smokers and drug-free.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are the requirements for egg donation\\\"}\", \"original_answer\": \"Based on the given passages, the requirements for egg donation include:\\n\\n* Being between the ages of 21 and 32\\n* Being in good health\\n* Having a body mass index (BMI) between 18 and 29\\n* Being a non-smoker and drug-free\\n* Having abstained from smoking for at least six months prior to applying\\n* Obtaining a high school diploma or GED\\n* Updating the egg donor application/profile annually\\n\\nTherefore, the requirements for egg donation are:\\n\\n1. Age: 21-32 years old\\n2. Health: Good health\\n3. BMI: 18-29\\n4. Smoking: Non-smoker for at least 6 months\\n5. Education: High school diploma or GED\\n6. Update profile: Annually\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 92,
+  "source_cluster_id": "sha256:9db84afb42dbe7fc03415fe2e847c59729f34d93702ce5992e93fd374fabc211",
+  "source_id": "15451",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:3b03cf9595f15845f8e4e49d154641bc57170124ed843967aabac8a94b58009e",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

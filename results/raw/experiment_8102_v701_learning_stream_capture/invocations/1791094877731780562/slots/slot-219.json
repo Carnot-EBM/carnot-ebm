@@ -1,0 +1,143 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.487126354011707,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8aa201664116ee49a64cf7194b75c90b203f1febe23d3e76a97503ed967fb1d4",
+  "human_target": null,
+  "input_tokens": 875,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8aa201664116ee49a64cf7194b75c90b203f1febe23d3e76a97503ed967fb1d4",
+    "feature_hash": "sha256:0f1a8adee1ccaf3e77ac5a0cfc14185f559e96193d513be449b5c45f90742f51",
+    "source_normalized_hash": "f56bec64985997148b18f7f8a49e17110874e298b154a720fd7ccf1e6a7a2e6b",
+    "values": [
+      0.2847102624240782,
+      0.5341819498069498,
+      0.18421052631578946,
+      1.0,
+      0.0,
+      0.0,
+      0.7152897375759217,
+      0.9359301265551265
+    ],
+    "window_count": 38
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 875,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 898
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:027098be7b66e14fc360d375d681b1f843f158b3ab0ff2ed11395a879d9a9145",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095616,
+    "id": "chatcmpl-KM9Bi44i4AdE0WOCvIee044elJymb9S9",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.917,
+      "predicted_n": 23,
+      "predicted_per_second": 42.52038667669901,
+      "predicted_per_token_ms": 23.51813043478261,
+      "prompt_ms": 823.767,
+      "prompt_n": 797,
+      "prompt_per_second": 967.506588634893,
+      "prompt_per_token_ms": 1.0335846925972396
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 875,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 898
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Nick Offerman calls out Joy Behar for laughing at his aspiration\\nToday on The View, Whoopi Goldberg delightedly introduced her friend and fellow comedian Nick Offerman.\\nNick is making the talk show circuit to highlight his recent bestselling book, Where the Deer and the Antelope Play becoming a paperback.\\nIt is apparent how much Whoopi Goldberg and Nick Offerman enjoy each other\u2019s company.\\nAfter striding onto the set today in a dapper three-piece suit, Whoopi called out to him, \u201cHow\u2019s your old lady?\u201d\\nWhoppi was meaning his lovely wife, Megan Mullally. The couple has been married since 2003 and most recently worked together on The Umbrella Academy.\\nNick happily recounted to the ladies seated around the table today that he had recently created a heart-shaped wooden box to give to his wife on their twentieth anniversary.\\nOne potential job of Nick\u2019s had Joy Behar cracking up\\nNick could add woodworker to his list of professions if he really wanted to, but that list is already huge. He is a comedian, actor, and best-selling author to boot.\\nBut that wasn\u2019t all he aspired to be in life. No, not all.\\nSara Haines described how Nick grew up in a small town in Illinois. She continued, \u201cYour dream as a teenager was for you and your cousin to become a famous break-dancing duo.\u201d\\nWith a picture of Nick as a geeky teenager on the big screen behind the ladies, Joy Behar could not contain her laughter.\\nJoy snickering and laughing at Nick caused him to come to a full stop.\\n\u201cI\u2019m sorry, what were you laughing at?\u201d he indignantly replied.\\nJoy barely could get out the words between giggles, \u201cThat hairdo is adorable!\u201d\\nNick Offerman wanted to grow up to be John Schneider\\nClarifying that he was a teen in that picture, Nick explained the times and his thought processes in this funny aspiration he has since abandoned.\\n\u201cI\u2019m guessing that was 1983, and if you had to caption it, it would be \u2018I want to grow up to be John Schneider.'\u201d\\nJohn Schneider was a massive star in the 80s when he played \u201cBo\u201d Duke on the popular hit show The Dukes of Hazzard.\\nNick wanting to be like John Schneider as a breakdancer is pretty close. John Schneider competed on Season 27 of Dancing with the Stars.\\nA chastised Joy Behar sat back after this and listened while Sara Haines finished the interview with Nick Offerman.\\nThe View airs weekdays at 11/10c on ABC.\", \"original_answer\": \"During an appearance on The View, comedian and actor Nick Offerman called out co-host Joy Behar for laughing at his aspiration to be a break-dancing duo with his cousin when he was a teenager. Offerman, who was promoting his bestselling book, shared a picture of himself as a geeky teenager and explained that he wanted to be like John Schneider, who played \\\"Bo\\\" Duke on The Dukes of Hazzard. Behar couldn't contain her laughter, prompting Offerman to ask what she was laughing at. Despite the moment of tension, the interview continued and Offerman discussed other aspects of his career.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 220,
+  "source_cluster_id": "sha256:39c725e684ee796a36a1e32e4e26bd11ee9c170cd00cdacc85f715018ae2c2bb",
+  "source_id": "13940",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8aa201664116ee49a64cf7194b75c90b203f1febe23d3e76a97503ed967fb1d4",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

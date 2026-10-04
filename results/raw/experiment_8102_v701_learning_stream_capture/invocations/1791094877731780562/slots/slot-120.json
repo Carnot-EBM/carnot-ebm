@@ -1,0 +1,159 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 2.1473116310080513,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:c9a6c0e2d60467cd71eeca0ea4fc8dc9db77d6c1986daa8490383e6882edf4e0",
+  "human_target": null,
+  "input_tokens": 1698,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:c9a6c0e2d60467cd71eeca0ea4fc8dc9db77d6c1986daa8490383e6882edf4e0",
+    "feature_hash": "sha256:8a84289d4d50a98e98d01b292b740eec808f247f589631c9decdb000832f4745",
+    "source_normalized_hash": "2b0db1746da78256dc1181aa89d4a69a98d585050bc12853db61543ed2ca904d",
+    "values": [
+      0.21351253321841557,
+      0.37529160382101556,
+      0.42000000000000004,
+      0.9,
+      0.1,
+      0.1,
+      0.7864874667815844,
+      1.0
+    ],
+    "window_count": 70
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1698,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1722
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:5ac3fdca03057af7064d70ec5947ea5fd8c476de53a94dca1c821aab8331706b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095487,
+    "id": "chatcmpl-z5vO5rGDLSGNe62IgTv8aupCGY37nIiW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.552,
+      "predicted_n": 24,
+      "predicted_per_second": 42.36151315324983,
+      "predicted_per_token_ms": 23.606333333333335,
+      "prompt_ms": 1430.582,
+      "prompt_n": 1620,
+      "prompt_per_second": 1132.406251441721,
+      "prompt_per_token_ms": 0.8830753086419754
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1698,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1722
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1208 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":\\\"{dj: None, live: False, jkebox: None, video: False, backgrond_msic: False, karaoke: None, no_msic: False}\\\",\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Cocktail Bars, Farmers Market, Tapas Bars, Food, Desserts, Nightlife, Asian Fusion, Restaurants, Tapas/Small Plates, Bars, Indonesian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-21:0\\\",\\\"Sunday\\\":\\\"17:0-20:0\\\",\\\"Thursday\\\":\\\"17:0-20:0\\\",\\\"Tuesday\\\":\\\"17:0-20:0\\\",\\\"Wednesday\\\":\\\"17:0-20:0\\\"},\\\"name\\\":\\\"Sama Sama Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 05:26:03\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Things I wasn't fond of:\\\\n\\\\n1) They can't do substitutions. At an Indonesian-inspired restaurant... really? I was trying to get tofu for my fried rice, instead of eggs (I'm vegan) Just a friendly tip, if you're taking inspiration from Indonesian cuisine, you might note that Indonesian cafes do in fact offer tofu substitutions. I've never had that issue at any Indonesian place I've been to. \\\\n\\\\n2) Instant 20% gratuity. What if I didn't feel the service and food deserved that much? Because my husband and I weren't fond of the service. \\\\n\\\\n3) As an Indonesian, the nasi goreng didn't taste anywhere close to nasi goreng. It didn't taste bad, though. \\\\n\\\\n4) The menu and the servers advertised the food as family style. It's just not anywhere near family portion; hence, family style. Sorry. \\\\n\\\\nThe second star is for the kerupuk and sambal, which  tasted pretty authentic.\\\"},{\\\"review_date\\\":\\\"2022-01-13 05:13:31\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Okay, since coming to town we were told many times to go to Sama Sama to try their very reputable wings, and honestly we were pleased. The wings are a perfect amount of both crunchy and tangy. I am not kidding when I tell you each bite draws you in for a glazed explosion in your mouth. My wife and her friends, being wing addicts were licking their fingers by the time we reached the last wing. After, we ordered a few little plates which included crispy rice and some sort of noodles that I can't recall at this point. Both were very good, and had a memorable flavor to it. I never actually was a huge fan of 'crispy rice' even when I lived in Thailand with my mother, but they truly made me change my mind. The only negative parts of this experience that drew me away was the automatic 20% gratuity- even though we felt the service was rather rushed and inconsistent. I know that there have been many reviews on this, but we felt so off put by the fact our server who seemed kind, wasn't putting much effort into explaining much dishes and didn't explain the food allergy restrictions for my wife. We felt even like we were an inconvenience to our server when we asked to see the desserts again, the server seemed rushed and dismissive at this point. That being said, we settled with the banana fritters and this sugar cake with pineapple ice cream. The banana fritters which was a crowd pleaser for my wife and her friends but the rest of us felt like it was rather bland to eat and it had a interesting aftertaste. While we fought and fought over what other dessert to order, we decided to do the sugar cake as well. Sadly, we all thought it was as average as the service if not, worse. The ice cream used almost overpowered the cake even though tasting it alone, we felt there wasn't much to it. We would've loved to have seen more dessert options but maybe they are working on better options. That being said, I am not going to give this place a poor star rating, because this is a tough time for all businesses and we all overall enjoyed our food. Yes the service and dessert needed an improvement but there is always room for healthy feedback. We had a great time and went next door to this very cool bar which was a great experience as well.\\\"},{\\\"review_date\\\":\\\"2022-01-07 05:09:36\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This needs to be heard first. They are charging sales tax on a mandatory 20% gratuity. Service is not a taxable sale and you do not pass that on to your customer. Either your manager set up the POS system incorrectly or you're really messing up your accounting... Good food and service was great, but you're going to lose business by doing something completely wrong and probably illegal.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Sama Sama Kitchen based on the provided structured data in JSON format:\\n\\nSama Sama Kitchen is a local business in Santa Barbara, California that offers Cocktail Bars, Farmers Market, Tapas Bars, Food, Desserts, Nightlife, Asian Fusion, Restaurants, Tapas/Small Plates, and Bars. The business has an average rating of 4.0 stars based on three reviews.\\n\\nOne reviewer was unhappy with the fact that the restaurant does not offer substitutions, specifically for tofu, and that the nasi goreng did not taste as authentic as they expected. Another reviewer enjoyed the wings but found the service to be inconsistent and rushed, and the desserts to be average. A third reviewer praised the food, especially the wings and crispy rice, but noted that the service and desserts needed improvement.\\n\\nThe business has a validated parking garage and offers outdoor seating, WiFi, and takeout. It is open seven days a week, and reservations are accepted. The ambiance is described as classy and casual.\\n\\nOverall, Sama Sama Kitchen appears to be a popular spot for Indonesian-inspired cuisine and cocktails, but some reviewers experienced issues with the service and substitions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 121,
+  "source_cluster_id": "sha256:4719c0d006aa2463f8ff78127fc5713c5e2e83a2a2851ce59f4e12fece364fb0",
+  "source_id": "14271",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:c9a6c0e2d60467cd71eeca0ea4fc8dc9db77d6c1986daa8490383e6882edf4e0",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+  ]
+}

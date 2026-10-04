@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4190964399604127,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:5779ae65bd3f03223368b4d870924e436c859560c55763ac1bb8532c8ee65756",
+  "human_target": null,
+  "input_tokens": 824,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:5779ae65bd3f03223368b4d870924e436c859560c55763ac1bb8532c8ee65756",
+    "feature_hash": "sha256:d0406f30d732516a58c6c313717df5b3e0de5a146207c39caad89b1ad6ae7c5d",
+    "source_normalized_hash": "be82502a829a7121b55901170d646baef9846fbd68252caa5954f430f6fd8c70",
+    "values": [
+      0.18567867409270572,
+      0.39520750988142295,
+      0.6818181818181818,
+      1.0,
+      0.25,
+      0.25,
+      0.8143213259072943,
+      0.9527667984189723
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 824,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 848
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:1ee0a05a4bde48eca2d32c6458ec11dd234c39263a101172ec8f9882d06e7121",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095424,
+    "id": "chatcmpl-ppfvA3W10bfQjUYFFy5fiVh52kv4b64U",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.249,
+      "predicted_n": 24,
+      "predicted_per_second": 42.53441299851661,
+      "predicted_per_token_ms": 23.510375,
+      "prompt_ms": 723.2,
+      "prompt_n": 746,
+      "prompt_per_second": 1031.5265486725664,
+      "prompt_per_token_ms": 0.9694369973190349
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 824,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 848
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1483 E Valley Rd, Ste 20\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Pizza, Restaurants, Italian\\\",\\\"city\\\":\\\"Montecito\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-21:30\\\",\\\"Monday\\\":\\\"11:30-21:0\\\",\\\"Saturday\\\":\\\"11:30-21:30\\\",\\\"Sunday\\\":\\\"11:30-21:0\\\",\\\"Thursday\\\":\\\"11:30-21:0\\\",\\\"Tuesday\\\":\\\"11:30-21:0\\\",\\\"Wednesday\\\":\\\"11:30-21:0\\\"},\\\"name\\\":\\\"Via Vai Trattoria Pizzeria\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-16 04:36:01\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I understand that they are understaffed and the reasons.\\\\nWe had lunch there last weekend Three of the four lunches were good. My lunch was inedible I ordered grilled Italian sausages with saut\u00e9ed spinach and polenta. Only the spinach was edible No one came to see if we were happy with our meals.\\\"},{\\\"review_date\\\":\\\"2021-10-05 19:01:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The staff could not have been more welcoming on a stormy Santa Barbara evening. Everyone in our party of six was delighted by the food and ambience. This is one of Montecito's treasures!\\\"},{\\\"review_date\\\":\\\"2021-09-13 02:41:36\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Please do not go here ! Absolutely the worst Italian food I've had in years! Meatballs tasted frozen and undercooked. The fish had no flavor. The bread was stale. There was literally nothing that was good. Why they have any customers I honestly cannot say. Believe the other yelp reviews they really are that bad!!!\\\\n\\\\nSTAY AWAY\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, Via Vai Trattoria Pizzeria appears to be a popular Italian restaurant located in Montecito, California. While customer reviews have been mixed, the majority of patrons have praised the restaurant's ambiance and service quality. However, some guests have criticized the food quality, particularly the meatballs and fish dishes, which have been described as subpar. Despite this, the restaurant has managed to retain a loyal customer base and earn a respectable rating of 3.5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 79,
+  "source_cluster_id": "sha256:370a7d1171867748b6b7f35160011a865e8db3c94d988d82522752f2a363052b",
+  "source_id": "14827",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:5779ae65bd3f03223368b4d870924e436c859560c55763ac1bb8532c8ee65756",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

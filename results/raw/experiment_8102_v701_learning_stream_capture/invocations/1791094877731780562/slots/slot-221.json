@@ -1,0 +1,134 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5268982260022312,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:a33c1ac99add6d4b206a13996fd32ca6148f17beff78665d1fa8b7fdc11c5543",
+  "human_target": null,
+  "input_tokens": 897,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:a33c1ac99add6d4b206a13996fd32ca6148f17beff78665d1fa8b7fdc11c5543",
+    "feature_hash": "sha256:eff08603bc64cb9e03e2da753801a50c9aae42e8b1f38bf1b12dc8e68b6710dc",
+    "source_normalized_hash": "5e94d53ddc6c6f73c6d56b4ad61cc196a504e24a707d12ca18d595b72fbc6ec9",
+    "values": [
+      0.21034898589065257,
+      0.3911067019400353,
+      0.4611111111111111,
+      0.8888888888888888,
+      0.3333333333333333,
+      0.3333333333333333,
+      0.7896510141093475,
+      0.9339902998236332
+    ],
+    "window_count": 20
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 897,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 920
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:0e3bc64fe0fddd8d2599fdac21db3bb5f0293ee9a85c4e205646d864399b115c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095620,
+    "id": "chatcmpl-6mbOT7POMQwbrxAVsIBz1KdnYe61PxLk",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.595,
+      "predicted_n": 23,
+      "predicted_per_second": 42.46715719310555,
+      "predicted_per_token_ms": 23.547608695652176,
+      "prompt_ms": 847.871,
+      "prompt_n": 819,
+      "prompt_per_second": 965.9488294799563,
+      "prompt_per_token_ms": 1.0352515262515263
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 897,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 920
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3855 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Flowers & Gifts, Restaurants, Grocery, Food, Bakeries, Shopping, Florists\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:0-0:0\\\",\\\"Monday\\\":\\\"6:0-0:0\\\",\\\"Saturday\\\":\\\"6:0-0:0\\\",\\\"Sunday\\\":\\\"6:0-0:0\\\",\\\"Thursday\\\":\\\"6:0-0:0\\\",\\\"Tuesday\\\":\\\"6:0-0:0\\\",\\\"Wednesday\\\":\\\"6:0-0:0\\\"},\\\"name\\\":\\\"Vons\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-07-26 14:22:26\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Staying in Santa Barbara for the night, we decided to stop by here to pick up some grub to cook for dinner - albeit a little late (around 9-9:30).\\\\n\\\\nThe first thing I looked for was a tri tip.  They only had 3, and they were absolutely massive.  Something that you would buy for a huge party you would host.  But because there weren't any other options, we had to settle with 1/2 a cow.\\\\n\\\\nWe got some fresh corn, which was super sweet, and some potatoes, ranch beans and misc other items.  \\\\n\\\\nThe store was very clean, and the check out attendants were very pleasant and accommodating for when we were running back and grabbing things during checkout.\\\"},{\\\"review_date\\\":\\\"2018-07-24 04:32:54\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best apple fritter I've ever had. I'm not joking. Yes I know it's Vons. \\\\nThis fritter was lit.\\\\nGot it around 830 am\\\"},{\\\"review_date\\\":\\\"2018-06-15 21:39:21\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Strange visit. Employee is not very friendly at the sandwich area. We like the sandwiches here so I'll keep coming back but I never have a great experience here. Upgrade the cheerfulness please.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Vons is a diverse local business located at 3855 State St, Santa Barbara, CA. It operates in various categories including Flowers & Gifts, Restaurants, Grocery, Food, Bakeries, Shopping, and Florists. The store is open every day from 6 am to midnight. It offers lot parking and takeout service, though it does not specify about the availability of Wi-Fi, outdoor seating, or reservation services. \\n\\nFrom the customer reviews, Vons has an average rating of 2.5 stars. One customer praised the store for its cleanliness and the pleasantness of the checkout attendants. They also commended the store for its fresh corn and the size of their tri-tip steak. Another customer hailed their apple fritter as the best they have ever had. However, there was dissatisfaction from another customer who found the employee at the sandwich area unfriendly, affecting their overall experience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 222,
+  "source_cluster_id": "sha256:4e1aa96f023b28274358d836f025c63484ef1daea8cf9e1cc1bf2de50194fce7",
+  "source_id": "14678",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:a33c1ac99add6d4b206a13996fd32ca6148f17beff78665d1fa8b7fdc11c5543",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

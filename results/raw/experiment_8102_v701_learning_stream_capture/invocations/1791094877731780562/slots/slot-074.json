@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.578249983023852,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:739baead192db0abea452e7b909156b29a5336bfb565783a2d6824d98f31490d",
+  "human_target": null,
+  "input_tokens": 946,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:739baead192db0abea452e7b909156b29a5336bfb565783a2d6824d98f31490d",
+    "feature_hash": "sha256:e8d75be705bd542b9b8c5530e509c77bba3fedee3b7439af3f6d0298b656d7ff",
+    "source_normalized_hash": "7aaded429bb96b64c5b1bc2dd6180f08840a05100cf8de492b0ef7e74cd9b80b",
+    "values": [
+      0.21602422168545354,
+      0.4450529542920847,
+      0.5,
+      0.7777777777777778,
+      0.3333333333333333,
+      0.3333333333333333,
+      0.7839757783145465,
+      0.9523039762170197
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 946,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 970
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:ca8a97e4c91ddd2ebaf0a2393aaab7523ec1d58c4984bec506c57e97f7a320d0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095418,
+    "id": "chatcmpl-Dn6l2WDTHpuU8B9IklUHq9cbCFPBe62z",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.883,
+      "predicted_n": 24,
+      "predicted_per_second": 42.56202084474971,
+      "predicted_per_token_ms": 23.495125,
+      "prompt_ms": 873.686,
+      "prompt_n": 868,
+      "prompt_per_second": 993.4919410406026,
+      "prompt_per_token_ms": 1.0065506912442397
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 946,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 970
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1218 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Breakfast & Brunch, American (Traditional), American (New), Southern\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-20:0\\\",\\\"Monday\\\":\\\"8:0-14:0\\\",\\\"Saturday\\\":\\\"17:0-20:0\\\",\\\"Sunday\\\":\\\"17:0-20:0\\\",\\\"Thursday\\\":\\\"17:0-20:0\\\",\\\"Tuesday\\\":\\\"17:0-20:0\\\",\\\"Wednesday\\\":\\\"17:0-20:0\\\"},\\\"name\\\":\\\"Tupelo Junction Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-12-13 18:24:08\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"The food was great!  We brought our kids and they were pretty accommodating given that they didn't have a kids' menu.  The scrambles were pretty good, the cinnamon apple beignets were excellent.  The crab bloody Mary was a little watery but still spicy.  I could have rated this 5 stars but we've never spent $80 on a brunch so it's just 4 stars.\\\"},{\\\"review_date\\\":\\\"2018-01-27 18:12:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place has incredible breakfast. They just moved to Newport Beach California. There are no longer in Santa Barbara :(\\\"},{\\\"review_date\\\":\\\"2017-11-12 20:02:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"NOTICE!  It looks like Tupelo Junction has been shuttered for good. With no warning or messaging beyond some vague rumors that they forgot to renew their liquor license, it appears that it's gone.  Their website and listing here on Yelp still show it as active but the sign is down, the windows are covered in brown paper, and they don't answer the phone. R.I.P. Tupelo Junction.  Gonna miss that French toast!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Tupelo Junction Cafe based on the provided structured data in JSON format:\\n\\nTupelo Junction Cafe is a restaurant located in Santa Barbara, CA that serves American (Traditional), American (New), and Southern cuisine. The cafe is open Monday through Sunday from 8:00 am to 2:00 pm and offers outdoor seating, WiFi, and takeout. The cafe has received positive reviews for its food, with one reviewer praising the scrambles, cinnamon apple beignets, and spicy crab bloody Mary. Another reviewer noted that the cafe is accommodating for children and has a casual atmosphere. However, one reviewer expressed disappointment at the high prices, stating that they had never spent $80 on a brunch before. Additionally, there is no kids' menu available. Tupelo Junction Cafe has a rating of 4.0 stars on Yelp and has been praised for its breakfast dishes. However, it appears that the cafe has since closed down according to one review.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 75,
+  "source_cluster_id": "sha256:f0db4f289cdf5b441e329288e9a982ac7b033c7b7d6408b9b5be8c930b844fb7",
+  "source_id": "13635",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:739baead192db0abea452e7b909156b29a5336bfb565783a2d6824d98f31490d",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

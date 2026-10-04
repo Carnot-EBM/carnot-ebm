@@ -1,0 +1,139 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.668522707070224,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:9a59b008b5e0ba550a317c5a2eec799c98bf5295c87eede406078d54aecdd8a6",
+  "human_target": null,
+  "input_tokens": 1060,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:9a59b008b5e0ba550a317c5a2eec799c98bf5295c87eede406078d54aecdd8a6",
+    "feature_hash": "sha256:dc25878cd4f51af19af63a92c64ffc56affae56427904f3bfe99cd7df1035c47",
+    "source_normalized_hash": "cc1d6d7fe73bd7cd02e7d5db0c26095041ac273cec21b3c7bee749f33cec35e4",
+    "values": [
+      0.17863948104494323,
+      0.3501418749317909,
+      0.3809523809523809,
+      0.8571428571428571,
+      0.21428571428571427,
+      0.21428571428571427,
+      0.8213605189550568,
+      0.939029702790207
+    ],
+    "window_count": 30
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1060,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1084
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:50a71b9ae1031bf90fb72ac99e8795a3f939e440825466d29ff32c894d823cad",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095460,
+    "id": "chatcmpl-HhGLgJoXWW3ldNRRLvJKgfKqGSoUYy2X",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.191,
+      "predicted_n": 24,
+      "predicted_per_second": 42.38852260103039,
+      "predicted_per_token_ms": 23.591291666666667,
+      "prompt_ms": 964.482,
+      "prompt_n": 982,
+      "prompt_per_second": 1018.1631176113189,
+      "prompt_per_token_ms": 0.9821608961303462
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1060,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1084
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"223 Anacapa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Books, Mags, Music & Video, Adult, Nightlife, Adult Entertainment, Shopping, Bookstores\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-4:0\\\",\\\"Monday\\\":\\\"10:0-4:0\\\",\\\"Saturday\\\":\\\"10:0-4:0\\\",\\\"Sunday\\\":\\\"10:0-4:0\\\",\\\"Thursday\\\":\\\"10:0-4:0\\\",\\\"Tuesday\\\":\\\"10:0-4:0\\\",\\\"Wednesday\\\":\\\"10:0-4:0\\\"},\\\"name\\\":\\\"For Adults Only\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-05-23 02:46:17\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Violet was so amazing and was so informative & helpful! I really enjoyed my experience in the store because of her :)\\\"},{\\\"review_date\\\":\\\"2018-06-08 05:04:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place rocks!! Ryan was super helpful and kind. A true pleasure to shop here. ;) Excellent customer service.\\\"},{\\\"review_date\\\":\\\"2018-05-29 18:40:30\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Sold us a defective toy and said if we had any problems we could return it. Came in the next day to return the defective toy. The guy working the counter said he didn't know how to process returns. He was clearly not alright and said he was stressed because the store was \\\\\\\"messed up\\\\\\\" and he just got back from Vegas. He was visibly shaking and his face was red around his eyes. I persisted asking for s return and he called the manager, who made me stand there for 25 mins while they tried to find a replacement, which they couldn't. After 25 mins they told me to drive another store and get a replacement. I am not from SB and didn't have time to drive to another store. They refused to refund me. If I had bought from Amazon this wouldn't have happened and it would have been cheaper. Now I know. Avoid this place.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"For Adults Only is a local business located at 223 Anacapa St in Santa Barbara, CA. It offers a variety of products and services, including books, magazines, music, adult entertainment, and shopping. The business is open from 10:00 AM to 4:00 PM every day of the week. \\n\\nBased on customer reviews, the business has received mixed feedback. Some customers have had positive experiences, mentioning helpful and informative staff members such as Violet and Ryan. They praised the excellent customer service they received during their visits. However, one customer had a negative experience, stating that they were sold a defective toy and had difficulty returning it. The customer felt that the staff was unhelpful and unprofessional, causing frustration and inconvenience.\\n\\nThe business has a rating of 3.0 stars, indicating an average customer satisfaction level. They offer no on-site parking options but do provide an array of amenities, such as Wi-Fi and seating outdoors. The ambience of the store is described as casual, with no specific themes or atmospheres highlighted.\\n\\nOverall, For Adults Only is a local business in Santa Barbara that offers a range of adult-oriented products. While some customers have had positive experiences, others have encountered issues with product quality and customer service. It is recommended for potential customers to consider these factors before visiting the store.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 103,
+  "source_cluster_id": "sha256:0076788826d5e8172d95ee3b427341f02a75b48f03533b0b3ac6a47f9f761179",
+  "source_id": "14755",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:9a59b008b5e0ba550a317c5a2eec799c98bf5295c87eede406078d54aecdd8a6",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

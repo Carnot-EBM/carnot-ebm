@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4477859470061958,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:9ff09a2bfec844f5149fa0dd7fcdf132204ff8120db8541661282187ad332570",
+  "human_target": null,
+  "input_tokens": 841,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:9ff09a2bfec844f5149fa0dd7fcdf132204ff8120db8541661282187ad332570",
+    "feature_hash": "sha256:1c602c544f4e0b6f67ac711b254962ff6c807c97c111d7a2720fa50a7681c7b2",
+    "source_normalized_hash": "cdca0cc7156ee5bf0e0c272b9ca59734ba48fae9e052ba65b1c9f23577edbd1b",
+    "values": [
+      0.219512212598538,
+      0.3883226017679799,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.7804877874014621,
+      0.9639322395624916
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 841,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 862
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:8450c5270abe22f44a7bc2ec896798e6e83a5f54f38c3552819228f78da1a645",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095316,
+    "id": "chatcmpl-Vs5SgKIYQR3pYLEcITp7wcoAcdjaYUti",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 486.469,
+      "predicted_n": 21,
+      "predicted_per_second": 43.16821832429199,
+      "predicted_per_token_ms": 23.165190476190475,
+      "prompt_ms": 712.553,
+      "prompt_n": 763,
+      "prompt_per_second": 1070.7975406741673,
+      "prompt_per_token_ms": 0.9338833551769331
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 841,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 862
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"730 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"American (New), Food, Restaurants, Coffee & Tea, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-14:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-14:0\\\",\\\"Sunday\\\":\\\"8:0-14:0\\\",\\\"Thursday\\\":\\\"8:0-14:0\\\",\\\"Tuesday\\\":\\\"8:0-14:0\\\",\\\"Wednesday\\\":\\\"8:0-14:0\\\"},\\\"name\\\":\\\"The Shop Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-16 21:57:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered The General, and it was awesome! The mix of apple slices and the spicy sauce was perfect in the fried chicken.. I would highly recommend this place. The vibe, outdoor seating, music, and people who run it was exactly what I was looking for.\\\"},{\\\"review_date\\\":\\\"2022-01-16 18:31:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is exceptional! I actually found a nice breakfast/ lunch place that served a decent amount of food that was made quality. Make sure if you order the French toast just another $3 bucks gets you a bunch off berries on top, delicious! Check my photos out and you'll see what I'm talking about! Also, we had a really good chai latte with oat milk. Definitely coming back here every morning when I'm stopping in SB!\\\"},{\\\"review_date\\\":\\\"2022-01-10 18:51:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The outdoor dinning was cool with some music on.. so beach vibe. Food was awesomely good but a little pricey. Will definitely come back.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Shop Kitchen is a popular American (New) restaurant located in Santa Barbara, CA. According to their reviews, they are known for their delicious food, especially their fried chicken and French toast. They offer both indoor and outdoor seating, with a relaxed and casual atmosphere. Their menu includes breakfast, brunch, and lunch options, and they also serve coffee and tea. The restaurant is praised for its high-quality food, friendly service, and trendy ambiance. Some reviewers have noted that the prices can be a bit steep, but most agree that the food is worth the cost. Overall, The Shop Kitchen is a great spot for those looking for tasty, modern American cuisine in a laid-back setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 7,
+  "source_cluster_id": "sha256:7bd324eca1c3081baffbf7f091024aa7a518cccf8f1474b9c834873328fc1769",
+  "source_id": "14606",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:9ff09a2bfec844f5149fa0dd7fcdf132204ff8120db8541661282187ad332570",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

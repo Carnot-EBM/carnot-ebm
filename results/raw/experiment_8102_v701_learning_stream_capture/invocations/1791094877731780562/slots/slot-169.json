@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.318786786054261,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:c6413505cd689d12cc6f488e6d0dc6efff5da964ca9127dff2ee852307ef4696",
+  "human_target": null,
+  "input_tokens": 703,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:c6413505cd689d12cc6f488e6d0dc6efff5da964ca9127dff2ee852307ef4696",
+    "feature_hash": "sha256:b6453659b418126e01c4784f4722875f27fdf00fe785e3712557fb5d67acb5e3",
+    "source_normalized_hash": "a2248de80d9e00d5cd1af091621382ef1313df3831b6deb3217106b2f0f092b9",
+    "values": [
+      0.3285227272727273,
+      0.49583333333333335,
+      0.2727272727272727,
+      1.0,
+      0.0,
+      0.0,
+      0.6714772727272726,
+      0.8424999999999999
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 9,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 703,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 728
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:fc4dd159f31816a20a94a8311fe099bc975e0273e63fb97639d4dbbc95df6ee8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 9\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095556,
+    "id": "chatcmpl-8N7KfXfR74VthtFPsxdgursmTbLsebz0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 588.91,
+      "predicted_n": 25,
+      "predicted_per_second": 42.45130834932333,
+      "predicted_per_token_ms": 23.5564,
+      "prompt_ms": 631.994,
+      "prompt_n": 625,
+      "prompt_per_second": 988.9334392415118,
+      "prompt_per_token_ms": 1.0111904
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 703,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 728
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Everything you need to know about where and when to see the 'Ring of Fire' eclipse on Saturday\\nAstronomy enthusiasts and skygazers are in for a treat this Saturday morning as a rare celestial event, an annular eclipse, is set to grace the skies.\\nThis awe-inspiring phenomenon will be the last of its kind until 2039, making it a must-see event for space enthusiasts.\\nDistinguishing itself from a total eclipse, such as the 2017 \\\"Great American Eclipse,\\\" during an annular solar eclipse, the moon does not completely obscure the sun as it traverses between the Earth and the sun.\\nThe moon, appearing slightly smaller than the sun, cannot fully cover the sun's disk, creating a captivating effect where the sun peeks around the moon's edges, earning the event the moniker \u201cRing of Fire.\u201d\\nAccording to space.com, the phenomenon of the sun forming a \\\"Ring of Fire\\\" around the moon is a spectacular sight, attracting both amateur and professional astronomers.\\nThe event unfolds as a unique interplay of celestial bodies and offers an incredible spectacle for sky watchers.\\nWhile the annular eclipse will grace the skies of multiple states, only the far northeastern corner of California will be in the path of the event's greatest viewing.\\nIn this region, the moon will cover the entire sun, leaving only the sun's outer edges visible.\\nHowever, the rest of Northern California will also be in a favorable position to view this celestial wonder.\\nThe eclipse's path will stretch across eight states, starting from Oregon and traversing through to Texas, offering a prime viewing opportunity for many across the United States.\\nThis celestial event has sparked excitement and anticipation among both seasoned astronomers and those just starting to explore the wonders of the universe.\\nFor those eager to witness the 'Ring of Fire,' ensuring safety during the eclipse is paramount.\\nExperts recommend using proper solar viewing glasses or other safe solar viewing methods to protect one's eyes while enjoying this rare celestial display.\", \"original_answer\": \"On Saturday, an annular eclipse will take place, creating a \\\"Ring of Fire\\\" around the sun as the moon passes between the Earth and sun. This rare event will be visible in the far northeastern corner of California, where the moon will completely cover the sun, and in other parts of the US including Oregon, Idaho, Wyoming, Montana, North Dakota, Nebraska, Kansas, Missouri, Iowa, Minnesota, Wisconsin, Illinois, Indiana, Ohio, Michigan, Pennsylvania, New York, Vermont, New Hampshire, Maine, and Massachusetts. To safely view the eclipse, use proper solar viewing glasses or other safe solar viewing methods.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 170,
+  "source_cluster_id": "sha256:c095d6d5067db043904a773beacd9c59a63fdaa63c19b198cc0d3bc5591fca05",
+  "source_id": "13954",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:c6413505cd689d12cc6f488e6d0dc6efff5da964ca9127dff2ee852307ef4696",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.534927148022689,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:0d33b6c5cb4b5bc1d6e625b7596b22cdfbaf8146f6f70a6e4aa5d2d85ab4f5fb",
+  "human_target": null,
+  "input_tokens": 908,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:0d33b6c5cb4b5bc1d6e625b7596b22cdfbaf8146f6f70a6e4aa5d2d85ab4f5fb",
+    "feature_hash": "sha256:bfbd7a52c15e2984db352838c5b6ec7459d70a45ae0ed216acceb1d11e9ced45",
+    "source_normalized_hash": "35c66281c56701dc85edd7fd19339d782d4314ea6c92c49f7ea695bf9687c8bc",
+    "values": [
+      0.21743518518518518,
+      0.4979166666666666,
+      0.38666666666666666,
+      0.6666666666666666,
+      0.64,
+      0.6666666666666666,
+      0.7825648148148149,
+      0.9384259259259259
+    ],
+    "window_count": 50
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 908,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 932
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:680e1c995c0f0752c137ed5e0c363539e03c171e8dc61994097ab3fd96f834ef",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095727,
+    "id": "chatcmpl-vRCz0tiQD9oMCGxfSkAHwf6aTsYU8tCS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.818,
+      "predicted_n": 24,
+      "predicted_per_second": 42.416466072129204,
+      "predicted_per_token_ms": 23.57575,
+      "prompt_ms": 851.557,
+      "prompt_n": 830,
+      "prompt_per_second": 974.6851942970346,
+      "prompt_per_token_ms": 1.0259722891566265
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 908,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 932
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Bowie Jane\u2019s biggest fan might be a Big Brother winner\\nThe Big Brother 2023 season is now in the jury phase, with Bowie Jane helping to determine the first juror.\\nSome Big Brother fans have questioned her moves as the Week 10 Head of Household, but a former player has cheered her on from Day 1.\\nAnd the former houseguest won his season of Big Brother.\\nBowie Jane talked about being a DJ and a lawyer before throwing her hat in the Big Brother ring.\\nThe Australian has become known for throwing challenges, but she is also about to get Cameron Hardin evicted again.\\nThough Cameron has come up short in the social aspect, he has been dominant in the challenges.\\nAndy Herren cheers on Bowe Jane\\nBig Brother 15 winner Andy Herren loves BB25 houseguest Bowie Jane.\\n\u201cMost successful HoH reign of the season. Played smart and is well-positioned going into next week,\u201d Andy wrote on social media after Bowie Jane named Cameron the replacement nominee at the Veto Meeting.\\n\u201cShe\u2019s a great player and if you can\u2019t accept this you need to GROW UP. #BB25,\u201d Andy added.\\nAndy also posted on social media about Bowie Jane when she revealed the plan to backdoor Cameron.\\n\u201cTaking out the biggest comp threat in the house this week,\u201d Andy wrote.\\nAndy also touched on Bowie Jane nominating a Survivor legend, never seeing the block herself, and how her moves had \u201cpressed\u201d houseguests and fans alike.\\nBowie Jane has made a big move to go after Cameron, even if she was urged to take that strategy.\\nAn earlier post from Andy also poked fun at people he felt don\u2019t understand Bowie Jane.\\n\u201cIt takes a certain intelligence to understand her,\u201d Andy wrote about the BB25 Week 10 HOH.\\nMore from Big Brother\\nThe live feeds have been busy over the past, and it isn\u2019t limited to people scrambling to get out Cameron Hardin.\\nCirie Fields [recently] said, \u201cI want to go home,\u201d while speaking to the camera. This isn\u2019t the first time she has spoken about wanting to escape the house.\\nOne houseguest even said Cameron had an \u201cevil spirit\u201d in him. It was an odd personal attack that didn\u2019t go over well with fans on social media.\\nCirie also addressed playing Big Brother again, answering fan inquiries about whether or not she would join an All-Stars season.\\nSome important episodes are coming up on the CBS schedule, with times and dates adjusted for Fall 2023.\\nHere is the TV schedule for the BB25 episodes in October.\\nBig Brother 25 airs on CBS.\", \"original_answer\": \"Bowie Jane may have some controversy surrounding her decision making as the Week 10 Head of Household on Big Brother 2023, but one former player has shown support. Big Brother 15 winner Andy Herron has praised Bowie Jane's gameplay and strategy, calling it \\\"most successful\\\" and \\\"great.\\\" Despite criticism from some fans, Andy believes Bowie Jane deserves credit for being a \\\"fantastic\\\" player. Meanwhile, other drama unfolds on the show, including Cirie Fields expressing her desire to leave and a houseguest attacking Cameron Hardin with a personal attack that did not sit well with fans.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 42,
+  "source_cluster_id": "sha256:02fa11bacd636d865fec1d241fb1c45ffed76f42ed91d46c600fcc0e495d90f3",
+  "source_id": "13893",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:0d33b6c5cb4b5bc1d6e625b7596b22cdfbaf8146f6f70a6e4aa5d2d85ab4f5fb",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2038336920086294,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:af81101bc9b36231248b2700ea9a96882ba18d22ea647de00519124ef798d76a",
+  "human_target": null,
+  "input_tokens": 546,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:af81101bc9b36231248b2700ea9a96882ba18d22ea647de00519124ef798d76a",
+    "feature_hash": "sha256:7d65d5799b9b86bd8f514e80be8cb320d4aacb6cddb4e59db19f7bde86a2b025",
+    "source_normalized_hash": "59293088a8b5b0487a98129823a1aeda92b1d6a98cac4ca8c51f6aab2082432e",
+    "values": [
+      0.4866310160427808,
+      0.7045454545454546,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5133689839572192,
+      0.8636363636363635
+    ],
+    "window_count": 17
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 546,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 570
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:ebb2e16a57f1ea05ee8c2e1097007c6c6716ebff3d00e8b3b76373e797b35fe0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095587,
+    "id": "chatcmpl-kYVevbAkaVlrOSxegNEVPqTZkgY80HCb",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.509,
+      "predicted_n": 24,
+      "predicted_per_second": 42.51482261575989,
+      "predicted_per_token_ms": 23.521208333333334,
+      "prompt_ms": 527.805,
+      "prompt_n": 468,
+      "prompt_per_second": 886.6911075112969,
+      "prompt_per_token_ms": 1.1277884615384615
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 546,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 570
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Skeletal muscles \u2014 These muscles contract to pull on tendons and move the bones of the skeleton. 2  In addition to producing skeletal movement, muscles also maintain posture and body position, support soft tissues, guard entrances and exits to the digestive and urinary tracts, and maintain body temperature. Skeletal muscles \u2014 These muscles contract to pull on tendons and move the bones of the skeleton. 2  In addition to producing skeletal movement, muscles also maintain posture and body position, support soft tissues, guard entrances and exits to the digestive and urinary tracts, and maintain body temperature.\\\\n\\\\npassage 2:Three types of muscles. The muscular system can be broken down into three types of muscles: skeletal, smooth and cardiac, according to the NIH. Skeletal muscles are the only voluntary muscle tissue in the human body and control every action that a person consciously performs.hree types of muscles. The muscular system can be broken down into three types of muscles: skeletal, smooth and cardiac, according to the NIH. Skeletal muscles are the only voluntary muscle tissue in the human body and control every action that a person consciously performs.\\\\n\\\\npassage 3:Muscular system is the system of Human Body that provides motor power for all movements of body parts. Muscular system is composed of special tissue called muscular tissue. Muscles have the ability to contract actvely to provide the force for movements of body parts.uscular system has the following important functions in human body; 1  MOVEMENTS OF BODY PARTS: Skeletal muscles are responsible for all voluntary movements of human body parts.\\\\n\\\\n\\\",\\\"question\\\":\\\"briefly explain how muscles produce movement\\\"}\", \"original_answer\": \"Based on the given passages, muscles produce movement by contracting and pulling on tendons, which in turn move the bones of the skeleton. Skeletal muscles are responsible for voluntary movements of body parts.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 195,
+  "source_cluster_id": "sha256:b4d7a1dcfe064b9ac39e8e3ab2bf15b744b5899867d80ba80e7404455aeb6462",
+  "source_id": "12371",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:af81101bc9b36231248b2700ea9a96882ba18d22ea647de00519124ef798d76a",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

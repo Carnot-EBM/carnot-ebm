@@ -1,0 +1,130 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2515497719869018,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:4edc57aa183e841b0f1cc2901655faa372aaa9f24f14389d28c9652edd5b6e7e",
+  "human_target": null,
+  "input_tokens": 613,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:4edc57aa183e841b0f1cc2901655faa372aaa9f24f14389d28c9652edd5b6e7e",
+    "feature_hash": "sha256:821f59d37dc24fdb485798606f953b753d05b058848a639275eaac4da9b9294b",
+    "source_normalized_hash": "ec13eacfb968106e59366828675ef530e4a99c0548099c7341a4db57e29867aa",
+    "values": [
+      0.2561728395061728,
+      0.4603174603174603,
+      0.4444444444444444,
+      0.6666666666666666,
+      0.0,
+      0.0,
+      0.7438271604938271,
+      0.888888888888889
+    ],
+    "window_count": 12
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 613,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 637
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:8d7f97cd5ac54c9bd1ab7998f90fab134b1ba5105ef39b28851e86b6fb5d0f37",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095469,
+    "id": "chatcmpl-Qq9XQL6ZfByTqVSMJVO9nAGeCOyCtzbr",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.399,
+      "predicted_n": 24,
+      "predicted_per_second": 42.523108651857996,
+      "predicted_per_token_ms": 23.516625,
+      "prompt_ms": 576.713,
+      "prompt_n": 535,
+      "prompt_per_second": 927.6711293138875,
+      "prompt_per_token_ms": 1.0779682242990654
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 613,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 637
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Registration (Or Registered Trademark) A registered trademark is designated with the symbol \u00ae. With a registration, a trademark is protected against another company\u2019s use of the name or image. A registered trademark is a federal and legal registration of the mark. Any future companies wishing to register its own design/name/image has to check to be sure that it is not like any registered trademarks. If the image is too similar and is still produced, the company is guilty of trademark infringement.\\\\n\\\\npassage 2:An unregistered trademark refers to the mark enforced and created by a business or individual to signify or distinguish the product or service in the market but it does not provide a strong security to the product or service. It signifies the distinct or source of the product or the service is specified.\\\\n\\\\npassage 3:Or it can just mean that no trademark application has been filed either at the federal or state level, but this mark is being used to distinguish goods. In that case, the owner of the mark has common law rights even though the mark has not been registered.\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between a registered trademark and an unregistered trademark\\\"}\", \"original_answer\": \"Sure! Based on the given passages, here's the difference between a registered trademark and an unregistered trademark:\\n\\nRegistered Trademark:\\n\\n* Is designated with the symbol \u00ae\\n* Provides legal protection against other companies using the same name or image\\n* Is a federal and legal registration of the mark\\n* Gives the owner exclusive rights to use the mark nationwide\\n* Prevents others from using similar marks that might cause confusion among consumers\\n\\nUnregistered Trademark:\\n\\n* Does not provide strong legal protection\\n* Is not registered with the government\\n* Does not give the owner exclusive rights to use the mark nationwide\\n* May not be recognized as a trademark by courts if challenged\\n* Can only be protected under common law, which may not provide sufficient legal remedies in cases of infringement.\\n\\nSo, the main difference between a registered trademark and an unregistered trademark is that a registered trademark provides stronger legal protection and exclusive rights to the owner, while an unregistered trademark does not have the same level of legal protection and may not be recognized as a trademark by courts.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 109,
+  "source_cluster_id": "sha256:9df5c7444280abca1f5f046e0d2d1f42532f5d14c7429ff5bd2dc3244a591264",
+  "source_id": "15386",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:4edc57aa183e841b0f1cc2901655faa372aaa9f24f14389d28c9652edd5b6e7e",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

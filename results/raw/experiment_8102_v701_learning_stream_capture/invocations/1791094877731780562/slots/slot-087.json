@@ -1,0 +1,132 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5065037530148402,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:f1af04e2d0f44defc00959752ae8a1e1b4fd2524c80a301bb3ef496ebef5440a",
+  "human_target": null,
+  "input_tokens": 875,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:f1af04e2d0f44defc00959752ae8a1e1b4fd2524c80a301bb3ef496ebef5440a",
+    "feature_hash": "sha256:b23336d767e04dc9af7d6aa96fde4ef2b00b9714b38abecb7627f6182a3f725c",
+    "source_normalized_hash": "e5bbc7a25df0657f8416f195859f2db5be36966877849bb57935c9395f11d6b8",
+    "values": [
+      0.22381600033738192,
+      0.353803378638905,
+      0.125,
+      1.0,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.7761839996626181,
+      0.8949332465779835
+    ],
+    "window_count": 16
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 875,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 899
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:ea1b5182ffe4ebfdd5d77d3ebaf147349b09cb15d378fb56e0198c9d0735320f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095438,
+    "id": "chatcmpl-5VbCTOrAPIvqTQ6ikluTaQ7cBQfdjiM5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.342,
+      "predicted_n": 24,
+      "predicted_per_second": 42.52740359569198,
+      "predicted_per_token_ms": 23.51425,
+      "prompt_ms": 820.976,
+      "prompt_n": 797,
+      "prompt_per_second": 970.7957358071368,
+      "prompt_per_token_ms": 1.0300828105395232
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 875,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 899
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"901 Embarcadero Del Mar\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Asian Fusion, Poke, Seafood, Food, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-1:0\\\",\\\"Monday\\\":\\\"11:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-1:0\\\",\\\"Sunday\\\":\\\"11:0-0:0\\\",\\\"Thursday\\\":\\\"11:0-0:0\\\",\\\"Tuesday\\\":\\\"11:0-0:0\\\",\\\"Wednesday\\\":\\\"11:0-0:0\\\"},\\\"name\\\":\\\"PokeCeviche\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-14 21:21:54\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My favorite place to come for lunch!  It's always fresh and super flavorful. Customer service is great....I'll continue coming back and bringing my friends!\\\"},{\\\"review_date\\\":\\\"2022-01-12 02:11:49\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"The poor girl behind the counter has been slaving over online orders and walk-in orders for 20 minutes now. There's 4 of us in line, it shouldn't take this long. There shouldn't be just one employee handling all of this. Hire more employees and stop running out of fish (at a poke place) before 7pm. Step it up.\\\"},{\\\"review_date\\\":\\\"2022-01-11 21:45:45\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"This place has the most bomb musubi so three stars for that. Minus two stars because I ordered on DoorDash and paid $1.50 for avocado and the avocado that they put on my bowl was brown and rotten-looking. I just can't believe someone looked at rotten avocado and thought \\\\\\\"yep I'll serve this to a customer\\\\\\\" :| I was bummed.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Here is an objective overview of PokeCeviche based on the provided structured data:\\n\\nPokeCeviche is a popular Asian Fusion restaurant located in Goleta, California, with a rating of 4.0 out of 5 stars. The restaurant offers a variety of dishes, including poke bowls, ceviche, and seafood options, and is known for its high-quality ingredients and fresh flavors. Customers have praised the restaurant's customer service and atmosphere, with some describing it as trendy and intimate. However, there have been some complaints about long wait times and inadequate staffing, particularly during busy periods. Additionally, one customer reported receiving their order from DoorDash with spoiled avocado. Overall, PokeCeviche appears to be a well-regarded eatery with a loyal customer base, although there are areas for improvement in terms of service and logistics.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 88,
+  "source_cluster_id": "sha256:11eff63344d923f4fc56becba24a8548a26dc7cac399ca157923bd0b3726fdca",
+  "source_id": "13730",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:f1af04e2d0f44defc00959752ae8a1e1b4fd2524c80a301bb3ef496ebef5440a",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

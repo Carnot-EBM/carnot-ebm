@@ -1,0 +1,133 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3038573960075155,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:e78a52f840ab22d2c62d8834c6abbd705f0f6c8bddec6e1dc69cdf40af8ee5ff",
+  "human_target": null,
+  "input_tokens": 655,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:e78a52f840ab22d2c62d8834c6abbd705f0f6c8bddec6e1dc69cdf40af8ee5ff",
+    "feature_hash": "sha256:89e5d02268d969ff1de4f0db3a4c4456d67f02de6c00703c9718213aa4b745e2",
+    "source_normalized_hash": "aaa138b3f54fe044c31c6a8464f70bd2c5f73a1f8a9f924536cf1c9606efcad8",
+    "values": [
+      0.4446803026766262,
+      0.6621586134453782,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5553196973233737,
+      0.897671568627451
+    ],
+    "window_count": 18
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 655,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 679
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:f7696668b13f4895f71ca2817b1be4da060d8f5abbf73895a680ffc10afa8f3b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095653,
+    "id": "chatcmpl-LNK7Y6lRSIeo1GKAQq7uY4X2Fdpf7L79",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.145,
+      "predicted_n": 24,
+      "predicted_per_second": 42.46697750134921,
+      "predicted_per_token_ms": 23.547708333333333,
+      "prompt_ms": 602.28,
+      "prompt_n": 577,
+      "prompt_per_second": 958.0261672311882,
+      "prompt_per_token_ms": 1.0438128249566725
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 655,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 679
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Although a peacock can be seen in many parts of the world, it is native to the Indian subcontinent and parts of western China. Peacocks are magnificent birds known for their beauty and grace. They have multicolored stunning tail feathers. Only the male birds of this species have these beautiful multicolored feathers.he Muslims used the quill of peacock feathers to write and mark passages in the Quran. The female peacocks are known to be very protective about their young ones, which is why many women get a peacock feather tattooed on themselves to symbolize this trait.\\\\n\\\\npassage 2:Peacocks are revered around the globe and have been for centuries: It is believed that a peacock (sometimes a pair of peacocks) stands guard at the entrance to the Gates of Paradise. They are also a symbol of the immortality of Christ.In Buddhist iconography, peacocks are symbols of wisdom.hile some believe that having peacock feathers in the home is bad luck, I am of the opinion that the energy we put into our thoughts is what actually brings us our luck. The collection of feathers that we do have indoors was gifted to us at a music festival held at a peacock farm in Oregon by one of the caretakers.\\\\n\\\\npassage 3:It is also thought of as a symbol of good luck in most parts of the world. The feathers are used for decorative purposes in homes as well as means to keep away insects and flies. Peacock is considered as the manifestation of the celestial Phoenix bird, and its feather is often recommended in Feng Shui as a love cure.he Muslims used the quill of peacock feathers to write and mark passages in the Quran. The female peacocks are known to be very protective about their young ones, which is why many women get a peacock feather tattooed on themselves to symbolize this trait.\\\\n\\\\n\\\",\\\"question\\\":\\\"what does a peacock symbolize pragya\\\"}\", \"original_answer\": \"Peacocks symbolize beauty, grace, and protection, particularly by female peacocks of their young. They are also seen as a symbol of immortality and wisdom in religious contexts, and are thought to bring good luck. Some people use peacock feathers for decorative purposes or as a love cure in Feng Shui. In the Muslim tradition, peacock feathers were used to write and mark passages in the Quran.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 243,
+  "source_cluster_id": "sha256:1a3af51ad3af0316fa4b870e08265745312e078f1561f186483090605eca6c21",
+  "source_id": "15163",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:e78a52f840ab22d2c62d8834c6abbd705f0f6c8bddec6e1dc69cdf40af8ee5ff",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

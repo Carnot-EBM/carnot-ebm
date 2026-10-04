@@ -1,0 +1,152 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.8085401260759681,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:32f39a6365d6fc0a23ff957f361065c45f608ebadf25cdb83a13c2e855f79809",
+  "human_target": null,
+  "input_tokens": 1292,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:32f39a6365d6fc0a23ff957f361065c45f608ebadf25cdb83a13c2e855f79809",
+    "feature_hash": "sha256:b8dc1c513be0418b152b7144a7a46b9435d79407291c295ef0f4ca618706537a",
+    "source_normalized_hash": "23253a58e4ca9bc01613a765ed28aa3306c1154dc5b1647d50e4b354f046311d",
+    "values": [
+      0.2995097907001834,
+      0.5542699080567243,
+      0.35714285714285715,
+      0.8333333333333334,
+      0.3333333333333333,
+      0.3333333333333333,
+      0.7004902092998166,
+      0.9306139940782296
+    ],
+    "window_count": 56
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1292,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1315
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:01e828093273c80a4774f60c41fe91d113cbdde7f4598af916b3a9713cfb26a7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095606,
+    "id": "chatcmpl-NYxhTKLmHrjW2NUpD0TcOuyGFG3sJIQx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.991,
+      "predicted_n": 23,
+      "predicted_per_second": 42.436129013212394,
+      "predicted_per_token_ms": 23.564826086956522,
+      "prompt_ms": 1132.68,
+      "prompt_n": 1214,
+      "prompt_per_second": 1071.79432849525,
+      "prompt_per_token_ms": 0.933014827018122
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1292,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1315
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Police added attempted murder to the list of charges against the mother of a quadriplegic man who was left in the woods for days, Philadelphia police spokeswoman Christine O'Brien said Tuesday. Nyia Parler cannot be extradited to face the charges in Philadelphia until she completes an unspecified \\\"treatment,\\\" Maryland police said Monday. When she does arrive, she will be charged with aggravated assault, simple assault, recklessly endangering another person and related offenses, in addition to the attempted murder count, O'Brien said. The Montgomery County (Maryland) Department of Police took Parler, 41, into custody Sunday after Philadelphia police reported that she left her 21-year-old son in the woods while she hopped a bus to see her boyfriend in Maryland. A man walking through the woods found him Friday \\\"lying in leaves, covered in a blanket with a Bible and a wheelchair nearby,\\\" Philadelphia police say. Citing federal health care privacy laws, Montgomery County police spokesman Capt. Paul Starks said he could not divulge why Parler was receiving treatment, but he said she had to complete it before she could be extradited. She remained in treatment as of Tuesday morning, Starks told CNN. If she chooses not to challenge her extradition, she will be transported to Philadelphia once the treatment is complete, he said. For more than four days, police say, the quadriplegic man, who also suffers from cerebral palsy, was left lying in the woods of Philadelphia's Cobbs Creek Park. Low temperatures reached the mid-30s during the week, and rain was reported in the area Wednesday and Thursday. The man is unable to communicate how he came to be in the park, but Philadelphia police Lt. John Walker told reporters that the man's mother left him there the morning of April 6. Starks identified the mother as Parler on Monday. \\\"The mother went to visit her boyfriend down in Maryland, over in Montgomery County, and we believe she placed the child into Cobbs Creeks Park,\\\" Walker said at a news conference. Walker told CNN the man was transported to Presbyterian Hospital, but CNN affiliates reported he was being treated at The Children's Hospital of Philadelphia. He suffered eye problems, dehydration, malnutrition and a cut to his back that raised infection concerns, the lieutenant told reporters. \\\"This kid's obviously a fighter,\\\" Walker said during a Saturday news conference. \\\"It's just unbelievable how we found him out there last night. To see that kid laying there, it's heartbreaking to see another human, especially a mother, can treat someone like that.\\\" Officials at Philadelphia's School of the Future, which the man attends, became concerned when he didn't show up for classes last week and tried to contact his mother but eventually reached an aunt, Philadelphia police said. \\\"The aunt was in contact via text message with Nyia throughout the week and when she expressed her concerns about the complainant, Nyia replied, 'We're OK,' which the aunt believed meant that the victim was with Nyia in Maryland,\\\" according to a police news release. When police tracked down the mother, she told them her son was with her, Walker said. \\\"She indicated to both family members and the police officers that the child was with her down with her boyfriend in Maryland,\\\" he said. The boyfriend was not aware of what happened, Walker told CNN affiliate KYW-TV. Walker told reporters she bore \\\"clear criminal liability in this case.\\\" There was no reason for the man to suffer, Walker told philly.com, because the mother had sisters willing to take care of him. Two of his aunts, who have tried to obtain guardianship of him, were staying with him at the hospital, police told the website. Parler's sister told police that Parler has another child, a 16-year-old. The mother's arrest was only the beginning of the investigation, Walker told reporters. Authorities are interested in learning more about \\\"how this kid was cared for, and what actions were taken and providing of services by different agencies.\\\" CNN's Chuck Johnston and Carma Hassan contributed to this report.\\n\", \"original_answer\": \"A mother has been charged with attempted murder and other counts after she left her 21-year-old quadriplegic son in the woods for days while she visited her boyfriend in Maryland. The man was found lying in leaves, covered in a blanket with a Bible and a wheelchair nearby, and was suffering from dehydration, malnutrition, and a cut that raised infection concerns. The mother, Nyia Parler, 41, was taken into custody in Maryland and will be extradited to Philadelphia to face charges once she completes an unspecified \\\"treatment.\\\" The charges against Parler include aggravated assault, simple assault, recklessly endangering another person, and related offenses. The police were able to identify Parler as the mother through text messages between her and her aunt, in which Parler claimed that her son was with her in Maryland. The police have stated that the boyfriend was not aware of the situation, and that Parler's sisters have tried to obtain guardianship of the man. The investigation is ongoing, and authorities are looking into how the man was cared for and what actions were taken by different agencies.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 212,
+  "source_cluster_id": "sha256:704f6a5ced7166ab297489ecab9d756914288dbe719007acb8ba1d9ed73ed42a",
+  "source_id": "15632",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:32f39a6365d6fc0a23ff957f361065c45f608ebadf25cdb83a13c2e855f79809",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ]
+}

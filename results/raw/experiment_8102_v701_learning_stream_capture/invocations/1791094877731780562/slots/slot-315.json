@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2017340119928122,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:fbbb595639cae972c354a5d0f72e0170a8c4f72b4582ddadc120377ede67e847",
+  "human_target": null,
+  "input_tokens": 636,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:fbbb595639cae972c354a5d0f72e0170a8c4f72b4582ddadc120377ede67e847",
+    "feature_hash": "sha256:0cbc4b9730de3b0134f01bf7a1be69e26b94a147f30cf9192d917f63c4088d5e",
+    "source_normalized_hash": "dbaa794bfd4f883185d6169aa04b9161729d0b076af9f733a54bd7432b815d7d",
+    "values": [
+      0.3765374994694848,
+      0.5305696142093201,
+      0.0,
+      0.0,
+      0.109375,
+      0.125,
+      0.6234625005305152,
+      0.8256169892199304
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 636,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 657
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:24561674d12841cac8cf1ab2bc7fd9e57dc3e36683e0881fc894f7c4cb8c6c20",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095753,
+    "id": "chatcmpl-R0WVBt7cicfIi3Y5mb6JQSes7eZyOVQF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.996,
+      "predicted_n": 21,
+      "predicted_per_second": 42.68327384775486,
+      "predicted_per_token_ms": 23.42838095238095,
+      "prompt_ms": 591.538,
+      "prompt_n": 558,
+      "prompt_per_second": 943.3037268949754,
+      "prompt_per_token_ms": 1.0601039426523298
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 636,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 657
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Heat the water, sugar, and condensed milk in a saucepan. Bring it just to a boil and turn off the heat. Stir in the vanilla and bloomed gelatin until it is fully dissolved. Place the chocolate in a bowl and pour the hot liquid over it. Let the mixture sit for a few minutes until the chocolate is fully melted.\\\\n\\\\npassage 2:1. 1  Prepare the chocolate mirror glaze the day before using: soften the gelatin in cold water and in the meantime prepare a syrup by bringing the water and sugar to a boil on medium heat. 2  Add the sifted cocoa powder and whisk. 3  Brink the heavy cream to a boil.  Incorporate the cream in the cocoa sugar syrup.\\\\n\\\\npassage 3:When it boils, remove from the heat and add chopped dark chocolate. Stir slowly to melt and add the strained gelatin, stir until smooth and strain. Store in a airtight container in the fridge over night. When you\u2019re about to use it, warm the chocolate mirror glaze to the temperature around 110\u00b0F (44\u00b0C) before using it. If you do get a a lot of air bubbles in the glaze, strain it through a fine mesh strainer before using, otherwise the tiny bubbles will show on the finished cake.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to make chocolate mirror glaze\\\"}\", \"original_answer\": \"To make chocolate mirror glaze, you need to heat water, sugar, and condensed milk in a saucepan until it comes to a boil. Turn off the heat and stir in vanilla and bloomed gelatin until fully dissolved. Pour the hot liquid over chocolate in a bowl and let it sit until the chocolate is fully melted. Another method involves softening gelatin in cold water and preparing a syrup with water, sugar, and cocoa powder. Boil heavy cream and incorporate it into the cocoa sugar syrup. Then add chopped dark chocolate to the boiling mixture, stir until smooth, strain, and store it in an airtight container in the fridge overnight. Before using it, warm the glaze to around 110\u00b0F (44\u00b0C). Strain through a fine mesh strainer if there are air bubbles.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 60,
+  "source_cluster_id": "sha256:8b8d4454c2684b620a13d647f6108053596945ef1d758c9bb8f88860c4dfb9da",
+  "source_id": "14480",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:fbbb595639cae972c354a5d0f72e0170a8c4f72b4582ddadc120377ede67e847",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3673457769909874,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:4e2fc31993bf8ce2e8f4c3630980d98e1ebb4749c1a94031827f43687964da90",
+  "human_target": null,
+  "input_tokens": 685,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:4e2fc31993bf8ce2e8f4c3630980d98e1ebb4749c1a94031827f43687964da90",
+    "feature_hash": "sha256:71c6a11bcecc8b70376454e4c419675704cbbb39b1b2906fb6a2b28aeb8cf77e",
+    "source_normalized_hash": "f1db304c15b415dedb987b3372067031e79c9bcbb2e09bfbf8b6d6c64cb3e73e",
+    "values": [
+      0.25411465638148667,
+      0.4152691768259791,
+      0.125,
+      1.0,
+      0.2,
+      0.2,
+      0.7458853436185133,
+      0.9002628834466142
+    ],
+    "window_count": 16
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 685,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 709
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:3cb0682a25f5d0776e4090a7b62c8d02224137c39e24e166821ecfd4be06e5cf",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095356,
+    "id": "chatcmpl-04v5WzmuZLlE2X8q9XAQdCIyuxTxvu91",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 560.489,
+      "predicted_n": 24,
+      "predicted_per_second": 42.81975203795257,
+      "predicted_per_token_ms": 23.353708333333334,
+      "prompt_ms": 610.4,
+      "prompt_n": 607,
+      "prompt_per_second": 994.4298820445609,
+      "prompt_per_token_ms": 1.0056013179571663
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 685,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 709
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1187 Coast Village Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Pizza, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Giovanni's\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-01-08 15:17:24\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Delicious! I go once a week for the lunch special, slice (which is large) and a salad. Service is quick\\\"},{\\\"review_date\\\":\\\"2018-12-02 22:16:29\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The pizza here is so yummy!\\\\nEveryone who worked here was very friendly and accommodating. We got the lunch special and itnwas a good deal. Pizza crust was perfect, just the right thickness soft and chewy, while still holding up. Seasoned with oregano, just the right amount of sauce too.\\\"},{\\\"review_date\\\":\\\"2018-09-01 04:35:00\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Jesus Christ! Where's the customer service! I don't want to be treated like royalty but I at least want to be acknowledged by employees. If I wanted to be referred to as a fat ass I would have rather it be said to my face...\\\\n\\\\n\\\\nPs food sucked.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, Giovanni's is a locally-owned restaurant located in Santa Barbara, California, that serves both delicious pizza and provides excellent service. According to the reviews, the pizza here is highly rated, with reviewers praising its crispy crust and perfect seasoning. The restaurant also offers a lunch special and has outdoor seating. However, one reviewer had a negative experience with poor customer service. Overall, Giovanni's appears to be a popular spot for both locals and visitors, with a rating of 3.0 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 32,
+  "source_cluster_id": "sha256:fb4c0225b87c1cb02820e6b1168f0f7d9c19ca02e10a4eca050bf848f3648c6a",
+  "source_id": "14012",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:4e2fc31993bf8ce2e8f4c3630980d98e1ebb4749c1a94031827f43687964da90",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

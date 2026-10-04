@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.805707146995701,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:0018b2109efe89b4ad4aa5f250301aa3b8bf6aa98dc663a97302f459458e161f",
+  "human_target": null,
+  "input_tokens": 1318,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:0018b2109efe89b4ad4aa5f250301aa3b8bf6aa98dc663a97302f459458e161f",
+    "feature_hash": "sha256:ac82ec7100a22336d3ad54d0cc669b3df297ebae3549d49e6fa5f6c605bf154a",
+    "source_normalized_hash": "3ead92bb6703a507557244d4c6589fa691104e4e1be9fb97645336c253ba4364",
+    "values": [
+      0.2617090238061005,
+      0.5409653122075723,
+      0.46153846153846156,
+      1.0,
+      0.25,
+      0.25,
+      0.7382909761938995,
+      1.0
+    ],
+    "window_count": 26
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1318,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1341
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:a647e7970f88dfe5767591ec034a61a0e459e13ecb039a83a01dd4dbdf0d5992",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095732,
+    "id": "chatcmpl-dJJ51w0CLj4l4ETQ4g3z4PHi1Ky6mRNm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.012,
+      "predicted_n": 23,
+      "predicted_per_second": 42.43448484535398,
+      "predicted_per_token_ms": 23.565739130434782,
+      "prompt_ms": 1151.776,
+      "prompt_n": 1240,
+      "prompt_per_second": 1076.5982274331118,
+      "prompt_per_token_ms": 0.9288516129032258
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1318,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1341
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"4447 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Coffee & Tea, Food, Restaurants, Breakfast & Brunch, Bakeries, Sandwiches, Tabletop Games, Shopping\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:0-17:0\\\",\\\"Monday\\\":\\\"6:0-17:0\\\",\\\"Saturday\\\":\\\"6:0-17:0\\\",\\\"Sunday\\\":\\\"6:0-17:0\\\",\\\"Thursday\\\":\\\"6:0-17:0\\\",\\\"Tuesday\\\":\\\"6:0-17:0\\\",\\\"Wednesday\\\":\\\"6:0-17:0\\\"},\\\"name\\\":\\\"Java Station\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-11 21:14:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is my favorite coffee shop. It's in a very convienient area near my house, so I come often. Their bagel with tomato and cream cheese is the best thing I've ever had, and everyone working there is very nice.\\\"},{\\\"review_date\\\":\\\"2022-01-11 16:04:02\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Visited many times. Bagel melt, Avocado Toast are favorites. \\\\n\\\\nRecommend: \\\\n1-baristas clean/sanitize outside tables more often\\\\n2-tighten up loose mask policy indoors\\\\n3-SB ordinance does not allow smoking in SB but a homeless guy wearing grey shirt daily smokes in the back which stinks and you can smell it if sitting on the side. Might need to report that \\\\n4-baristas could be friendlier to regulars\\\\n\\\\nLikes: \\\\n1-baristas make great coffee drinks\\\\n2-good atmosphere\\\\n3-great baked goods\\\\n4-outside seating\\\\n\\\\nRecent price increases is a bit heavy. Coffee In a mug was $2.95 now $4!\\\"},{\\\"review_date\\\":\\\"2022-01-01 17:21:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"To start off the New Year of 2022, I figured I would write a review for a place I regularly visit and appreciate. Given the bags under my eyes and slight fatigue due to being up past my normal bedtime of 9 pm, I could go for a cup of their joe right about now!\\\\nWhile I do enjoy many coffee shops in town, Java Station often has a few perks that places it toward the top.\\\\n- Shorter line for friendly service\\\\n- Better food offerings\\\\n- Decent amount of parking and seating\\\\n- High speed Wi-Fi (not sure how this is possible in town)\\\\n- Welcoming to all (they celebrate Pride, Halloween and beyond)\\\\n- They have games available to play\\\\n- It brings a sense of community to an odd little neighborhood (What the heck is it considered?! Noleta? Or Hope Ranch Annex? ...Now we are just getting particular...)\\\\nI enjoy their Klatch Coffee Co. espresso which is bold without being acidic or underbearing. I often order the Oat Milk Vanilla Latte (yah, I'm basic), yet recently ordered a fall/winter special of Maple Bourbon Latte which I'm a big fan of. I will note that their \\\\\\\"small\\\\\\\" coffee is truly small, so order a medium if in doubt.\\\\nNow that I'm rambling due to a lack of sleep, I will adjourn...until a Review Update comes along!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Java Station is a local business located at 4447 Hollister Ave in Santa Barbara, CA. It is a coffee shop that also serves food and is known for its breakfast and brunch options, sandwiches, and baked goods. The business also offers tabletop games for customers to enjoy.\\n\\nThe coffee shop operates from 6:00 am to 5:00 pm every day of the week. It has outdoor seating available and offers free WiFi to its customers. Takeout service is also provided.\\n\\nCustomers have left mixed reviews about Java Station. One customer mentioned that it is their favorite coffee shop and praised the bagel with tomato and cream cheese. They also highlighted the friendly staff. Another customer appreciated the cleanliness, good atmosphere, great baked goods, and outside seating. However, they suggested that the baristas should clean the outside tables more often and have a stricter mask policy indoors. They also mentioned a homeless person smoking in the back, which caused a smell.\\n\\nThe overall rating for Java Station is 3.5 stars. Customers appreciate the shorter lines, good food offerings, ample parking and seating, high-speed Wi-Fi, and the sense of community the coffee shop brings. They enjoy the bold and non-acidic coffee options, particularly the Oat Milk Vanilla Latte and Maple Bourbon Latte.\\n\\nIt's worth noting that there have been recent price increases, with a coffee in a mug now costing $4, which some customers find to be on the higher side.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 45,
+  "source_cluster_id": "sha256:728e6eaeb81a95a3183a72ce3d3546154b19d6eaf6b83021a7bc5deb135eadbf",
+  "source_id": "14715",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:0018b2109efe89b4ad4aa5f250301aa3b8bf6aa98dc663a97302f459458e161f",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4401783059583977,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:f64fa69ad18f958677baefa2d499297cd6f90907b35c574759bc8ae6744a065a",
+  "human_target": null,
+  "input_tokens": 809,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:f64fa69ad18f958677baefa2d499297cd6f90907b35c574759bc8ae6744a065a",
+    "feature_hash": "sha256:877ca91229f62af38f7160dd08b87fec224771bac66cc1c4cdb5b1cf30e08b71",
+    "source_normalized_hash": "5ef7d650d0293e3ea3f66479b3fb78200f16575eaa216d4821a2177592074761",
+    "values": [
+      0.24970982378389786,
+      0.45706145706145707,
+      0.4592592592592592,
+      0.6666666666666666,
+      0.3259259259259259,
+      0.3333333333333333,
+      0.7502901762161022,
+      0.9589607922941257
+    ],
+    "window_count": 45
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 12,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 809,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 834
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:20c3da6c36e4df8f97ad5ff070363846a05b2d268572227553e5170dfd02c70c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 12\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095483,
+    "id": "chatcmpl-JEofDkSkKcUcbk8kF4zzkcQ6IHE0h0H0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 589.863,
+      "predicted_n": 25,
+      "predicted_per_second": 42.38272276782914,
+      "predicted_per_token_ms": 23.594520000000003,
+      "prompt_ms": 710.28,
+      "prompt_n": 731,
+      "prompt_per_second": 1029.1715943008392,
+      "prompt_per_token_ms": 0.971655266757866
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 809,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 834
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:2. Place the food to be dried on a cookie sheet so that the food edges are not touching and there is plenty of air circulation around the food. 2. 3. Put the loaded cookie sheet into the convection oven.4. Close the oven door or experiment with propping it open with a wood spoon for more air circulation. 3. 5.. Place the food to be dried on a cookie sheet so that the food edges are not touching and there is plenty of air circulation around the food. 2. 3. Put the loaded cookie sheet into the convection oven.\\\\n\\\\npassage 2:For this tutorial, I chose to make jerky from goat liver. A 500 gram piece cost me $2.02, which is pretty cheap. You can use this method for any type of organ meat like kidneys, hearts etc. The actual preparation time for these treats was about 45 minutes, not counting the boiling and drying of the meat.or this tutorial, I chose to make jerky from goat liver. A 500 gram piece cost me $2.02, which is pretty cheap. You can use this method for any type of organ meat like kidneys, hearts etc. The actual preparation time for these treats was about 45 minutes, not counting the boiling and drying of the meat.\\\\n\\\\npassage 3:Step 1. Grease the cookie sheet with baking spray and set it aside while you preheat the oven to 200 degrees. Step 2. Open the package of chicken breasts and pat the tops dry with a paper towel. Pull each chicken breast out and pat the bottom dry before placing them on a plastic cutting board.Step 3. Slice the chicken into long, thin strips -- no wider than a quarter-inch -- with the sharp knife, cutting with the grain of the meat to produce chewier jerky. Remove any fat and discard it.lace the chicken strips on the greased cookie sheet, making sure none of them touch and there is space for air to circulate between each piece. Step 5. Place the tray in the oven and bake the strips. Check them at two hours, although it may take three to six hours to complete the drying process.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to dehydrate meat for dogs in the oven\\\"}\", \"original_answer\": \"Based on the given passages, here is a brief answer to the question:\\n\\nTo dehydrate meat for dogs in the oven, you will need to preheat the oven to 200 degrees. Grease a cookie sheet with baking spray and place the meat strips on it, ensuring they do not touch and there is enough air circulation. Bake the strips in the oven for approximately two to six hours, checking them periodically until they are fully dried.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 118,
+  "source_cluster_id": "sha256:0f856a16767d1d9a13f5824e46d12209d7d4a139b7b739ca9c24190ebbd89c75",
+  "source_id": "12297",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:f64fa69ad18f958677baefa2d499297cd6f90907b35c574759bc8ae6744a065a",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ]
+}

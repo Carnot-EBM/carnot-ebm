@@ -1,0 +1,140 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5539709539152682,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:fb97eb23b8e18634fe331b969334a90151e2fc9dcfd228d48dfaf7dc2e4c5232",
+  "human_target": null,
+  "input_tokens": 956,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:fb97eb23b8e18634fe331b969334a90151e2fc9dcfd228d48dfaf7dc2e4c5232",
+    "feature_hash": "sha256:d4711a36696f10735b9b81727b2407e2dc23fb3047a68b39463b9dbd6bee8b5a",
+    "source_normalized_hash": "8035a19b7e7d930152cc43f164ad2eb665fac7880f1a4b701188e71641e5104a",
+    "values": [
+      0.23197348484848485,
+      0.424060606060606,
+      0.375,
+      1.0,
+      0.2,
+      0.2,
+      0.7680265151515152,
+      0.9571060606060605
+    ],
+    "window_count": 32
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 956,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 979
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:5bb6bca688095d6ba9ac8efdce427d32f2bae986ac9b35a00e238b667bc8f0b9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095729,
+    "id": "chatcmpl-GOB8FmZX0UuZ70Le1gk8UuQYgp9yDhvA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.34,
+      "predicted_n": 23,
+      "predicted_per_second": 42.48716148815901,
+      "predicted_per_token_ms": 23.536521739130436,
+      "prompt_ms": 879.894,
+      "prompt_n": 878,
+      "prompt_per_second": 997.8474679904624,
+      "prompt_per_token_ms": 1.0021571753986334
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 956,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 979
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6100 Hollister Ave, Unit 1\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Food, Coffee Roasteries, Restaurants, Coffee & Tea, Salad, Sandwiches\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:0-16:0\\\",\\\"Monday\\\":\\\"6:0-16:0\\\",\\\"Saturday\\\":\\\"7:0-16:0\\\",\\\"Sunday\\\":\\\"7:0-16:0\\\",\\\"Thursday\\\":\\\"6:0-16:0\\\",\\\"Tuesday\\\":\\\"6:0-16:0\\\",\\\"Wednesday\\\":\\\"6:0-16:0\\\"},\\\"name\\\":\\\"Dean: A Coffee Shop\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-13 22:13:14\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"The cashier was very helpful and the order was made quick. The shop seem clean/sleek but borderline cold/not homey. The atmosphere seems very study worthy. \\\\n\\\\nThe dirty chai was not my preferred sweetness level but my be good for those who like a more spicy chai. The hazelnut latte was refreshing but I couldn't taste the hazelnut all the much. The chocolate chunk cookie was decent, more of a subtle sweet, nothing special.\\\"},{\\\"review_date\\\":\\\"2022-01-13 22:12:26\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"This shop is super clean and well organized. Great atmosphere for studying due to it being extremely quiet. The iced hazelnut latte lacked the hazelnut flavoring which was disappointing, but still not bad. I asked the cashier for her personal recommendation and she did not disappoint! She recommended an iced coconut/vanilla coffee with oat milk and it was so good! You could really taste the coconut. By far my favorite drink I tasted today. The dirty chai was good but it was very strong and kinda of bitter. Overall it's a cute coffee shop with very nice staff and a cute atmosphere\\\"},{\\\"review_date\\\":\\\"2022-01-13 17:50:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My go to coffee shop in Goleta! I've tried a few different flavors of their latte with oat milk and thought they were all delicious, including their Lori's Vietnamese iced coffee. The coffee shop is super spacious with lots of indoor and outdoor seating. The staff is always so friendly and helpful - highly recommend Dean for your next coffee craving.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Dean: A Coffee Shop:\\n\\nLocated in Goleta, California, Dean: A Coffee Shop offers a variety of food and beverage options, including coffee, sandwiches, salads, and pastries. The shop has a rating of 4.5 stars and is known for its clean and sleek atmosphere, as well as its friendly and helpful staff. Customers have praised the quality of the coffee and the convenience of the shop's outdoor seating area. However, some customers have noted that the atmosphere can feel a bit cold or uninviting, and that the dirty chai tea was too strong and bitter. Nonetheless, many customers have given the shop high ratings and recommend it as a great place to grab a cup of coffee or study.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 43,
+  "source_cluster_id": "sha256:cfbf6a276dd9c016928c1b81223dc3b4c9121daa8a015683250ddfb9e9f9ab52",
+  "source_id": "14743",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:fb97eb23b8e18634fe331b969334a90151e2fc9dcfd228d48dfaf7dc2e4c5232",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

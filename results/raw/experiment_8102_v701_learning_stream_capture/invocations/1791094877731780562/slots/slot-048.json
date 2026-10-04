@@ -1,0 +1,142 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6887958589941263,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:da7805d4a1fdf46e4425d1552d2d16d8d58cb0de229b2e8be408edc6944cc95b",
+  "human_target": null,
+  "input_tokens": 1077,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:da7805d4a1fdf46e4425d1552d2d16d8d58cb0de229b2e8be408edc6944cc95b",
+    "feature_hash": "sha256:109a2de3028f2b8c616ca9a6dc870e30d70fb03b401103ad608816625c0c9cce",
+    "source_normalized_hash": "7a7c5676117cb8e03905eec5a562268d240821a0e6fd5b49bfd68b5090777864",
+    "values": [
+      0.26308156303457053,
+      0.43729233798782674,
+      0.05555555555555555,
+      1.0,
+      0.14285714285714285,
+      0.14285714285714285,
+      0.7369184369654295,
+      0.9407599355531687
+    ],
+    "window_count": 36
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1077,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1100
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:cc5d74d7988adb3351364f40c89444d440a8a6d36019bb9a16b657b3a909fedc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095382,
+    "id": "chatcmpl-B5Le1Q2pQJMFcl0QkLvcGKIsYbuPEIV8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.07,
+      "predicted_n": 23,
+      "predicted_per_second": 42.66607305173725,
+      "predicted_per_token_ms": 23.437826086956523,
+      "prompt_ms": 960.207,
+      "prompt_n": 999,
+      "prompt_per_second": 1040.4006636069098,
+      "prompt_per_token_ms": 0.9611681681681682
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1077,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1100
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"914 Santa Barbara St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Mexican, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"La Playa Azul Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-08 15:16:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I thought this was a tourist trap. \\\\n\\\\nWe were pleasantly surprised by this place. We sat outside under the trees while drinking amazing margaritas and having an amazingly delicious taco platter.  \\\\n\\\\nThe service was excellent!\\\\n\\\\nI will definitely go back here.\\\"},{\\\"review_date\\\":\\\"2021-11-13 21:20:16\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"A quaint, semi-upscale, casual restaurant with outdoor seating. They have an extensive menu, and the best time to go for the best prices would be happy hour, between 3 - 6pm. The food is relatively clean if you order something grilled. The service is a tad slow, because the servers are overworked and busy. I appreciate the hand sanitizer on every table, and along the corridor. They take germs and the pandemic seriously here. I like their wine and alcohol list, and it's a peaceful spot for conversation. Because the restaurant looks quaint, sits up on a hill away from the sidewalk and busy street, and there's little tables in different little spots, it feels kind of romantic. I would come here again for a peaceful and easy afternoon.\\\"},{\\\"review_date\\\":\\\"2021-11-08 06:47:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I have had two very enjoyable dining experiences at this caf\u00e9.  It seems to be the restaurant I always go to when I go up to Santa Barbara for a concert. Both times I was seated reasonably quickly (One time solo dining and the other with a group of friends). The service was quite good both times - which was particularly remarkable on my most recent visit because it was during a very busy Saturday night service. Even though it was busy, it wasn't super loud, IMO. The outdoor seating patio area is very nice and on this most recent visit I sat inside and the atmosphere was very pleasant (and all staff were masked and I felt perfectly fine in that regard).  Most importantly the food is YUM *and* they have several vegetarian friendly options.  I look forward to my next visit.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"La Playa Azul Cafe is a Mexican restaurant located in Santa Barbara, CA, with a rating of 4.0 stars based on customer reviews. The restaurant offers a variety of dishes including tacos, margaritas, and a tasty taco platter. Customers appreciate the outdoor seating area under the trees and find the service to be excellent. The ambiance is casual, peaceful, and semi-upscale, making it a great spot for conversation and relaxation. La Playa Azul Cafe also takes health and safety seriously, providing hand sanitizer on every table and along the corridor. Some customers have noted that the service can be a bit slow due to overworking servers, but the food is delicious and worth the wait. This restaurant is a great option for those looking for a casual, relaxed dining experience with a touch of romance.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 49,
+  "source_cluster_id": "sha256:bb4c3c91fc54e45723e8c040ec5cebb79855c8a17524ac8b521451272a080623",
+  "source_id": "14003",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:da7805d4a1fdf46e4425d1552d2d16d8d58cb0de229b2e8be408edc6944cc95b",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.303430211963132,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:ade160be02f6c5b4c415027d62e8c966725a01444f4726aa13550e47a78fd37b",
+  "human_target": null,
+  "input_tokens": 675,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:ade160be02f6c5b4c415027d62e8c966725a01444f4726aa13550e47a78fd37b",
+    "feature_hash": "sha256:b0c1f7d0e2d642bca70bc7527097166e0462c661a31947d8b5d40d7079c84717",
+    "source_normalized_hash": "d54488d78f53721851fa8388b2960beab317361b334d91410247b0013407f24b",
+    "values": [
+      0.33957953608369607,
+      0.5970126015666812,
+      0.2923076923076923,
+      0.8,
+      0.2,
+      0.2,
+      0.6604204639163039,
+      0.9386212880520282
+    ],
+    "window_count": 26
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 675,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 698
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:d391ea1860ac3570e27e1dc506170b2ba17d1d5fca09a8afb68f915fa19f04cc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095396,
+    "id": "chatcmpl-11vAKHmnRXR8LBSYPZgkEOeLXI3zj2Sb",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.499,
+      "predicted_n": 23,
+      "predicted_per_second": 42.71131422713877,
+      "predicted_per_token_ms": 23.413,
+      "prompt_ms": 614.442,
+      "prompt_n": 597,
+      "prompt_per_second": 971.6132686242152,
+      "prompt_per_token_ms": 1.02921608040201
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 675,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 698
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"California man sentenced to prison after unwanted touching on flight to LAX\\nA 50-year-old man from Diamond Bar, Mohammad Jawad Ansari, was sentenced today to 21 months in federal prison after being found guilty of abusive sexual contact during a flight from Cleveland to Los Angeles in February 2020.\\nUnited States District Judge Fernando L. Aenlle-Rocha handed down the sentence, along with additional fines and the requirement for Ansari to register as a sex offender.\\nThe incident occurred on February 17, 2020, as the flight took off from Cleveland Hopkins International Airport bound for Los Angeles International Airport.\\nAnsari was seated in a window seat, with the victim occupying the middle seat beside him.\\nThe victim, wearing a dress, had fallen asleep shortly after takeoff, and the armrest separating Ansari from her was down.\\nDuring the flight, Ansari intentionally touched the victim's inner thigh without her consent.\\nA witness seated in the aisle noticed Ansari's actions and alerted the victim. Upon being awoken and made aware of the assault, the victim immediately reported the incident to a flight attendant.\\nFollowing a four-day trial, a jury found Ansari guilty of one count of abusive sexual contact on May 9.\\nIn the sentencing memorandum, prosecutors stressed the severe impact this incident had on the victim, causing her immediate distress and lasting emotional trauma. The victim now experiences fear and anxiety while traveling, a lasting consequence of the assault.\\nThe investigation into this matter was conducted jointly by the FBI and the Los Angeles Airport Police, leading to Ansari's conviction and subsequent sentencing.\\nIn addition to the prison term, Judge Aenlle-Rocha ordered Ansari to pay a $33,750 fine, $1,600 in restitution, a $100 special assessment, and an additional $5,000 special assessment.\", \"original_answer\": \"Mohammad Jawad Ansari, a man from Diamond Bar, California, has been sentenced to 21 months in federal prison for abusive sexual contact during a flight from Cleveland to Los Angeles in February 2020. The incident involved Ansari intentionally touching a sleeping woman's inner thigh without her consent. He was found guilty and also ordered to pay fines, restitution, and register as a sex offender. The victim suffered emotional trauma and now experiences fear and anxiety while traveling. The investigation was conducted by the FBI and Los Angeles Airport Police.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 58,
+  "source_cluster_id": "sha256:dccc13c82059361ceba7be0dae0dae0a9d941fec2bab8db78b54dfbd6751098d",
+  "source_id": "13914",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:ade160be02f6c5b4c415027d62e8c966725a01444f4726aa13550e47a78fd37b",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

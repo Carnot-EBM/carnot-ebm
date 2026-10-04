@@ -1,0 +1,140 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.6430908439215273,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:dec22b4de82dd4b584da872dd5d5e67ff5e04b9e5397302ed99ffbc81f934930",
+  "human_target": null,
+  "input_tokens": 1016,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:dec22b4de82dd4b584da872dd5d5e67ff5e04b9e5397302ed99ffbc81f934930",
+    "feature_hash": "sha256:7194e68d495fb8d56614eafc838fc5b363fc17d48125b63edf146fe2999d4c48",
+    "source_normalized_hash": "21fca9e115b5685f8ced9ffc3ba3f099b90f55d2873c80457e0a482d2774fccf",
+    "values": [
+      0.17236918062937517,
+      0.3296628784605191,
+      0.2916666666666667,
+      0.8333333333333334,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.8276308193706249,
+      0.9885057471264368
+    ],
+    "window_count": 32
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1016,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1040
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:58689745da558574ede417dba102ba15c096f4e419fec58435104596eed76f37",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095639,
+    "id": "chatcmpl-Ofhgp9MLfuT3Ya2bOS5lI93oiti5uBew",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 572.696,
+      "predicted_n": 24,
+      "predicted_per_second": 41.90705016273904,
+      "predicted_per_token_ms": 23.862333333333336,
+      "prompt_ms": 930.514,
+      "prompt_n": 938,
+      "prompt_per_second": 1008.0450159804151,
+      "prompt_per_token_ms": 0.9920191897654584
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1016,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1040
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"12 W Haley St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":null,\\\"Music\\\":\\\"{dj: False, live: None, jkebox: None, video: False, backgrond_msic: False, karaoke: None, no_msic: False}\\\",\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Bars, Cocktail Bars, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-2:0\\\",\\\"Monday\\\":\\\"17:0-2:0\\\",\\\"Saturday\\\":\\\"14:0-2:0\\\",\\\"Sunday\\\":\\\"14:0-2:0\\\",\\\"Thursday\\\":\\\"17:0-2:0\\\",\\\"Tuesday\\\":\\\"17:0-2:0\\\",\\\"Wednesday\\\":\\\"17:0-2:0\\\"},\\\"name\\\":\\\"Unbearable\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-07 07:44:59\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I've been a few times for drinks and it has been great until now. I ordered a pizza and it was the worst I've ever had. My friend and I both tried a slice and then left it untouched. The bartender (Christine) wasn't very friendly and charged me for two drinks instead of one and added an \\\\\\\"entertainment district fee\\\\\\\". The total for my bill was $50 when all I ordered was a cocktail ($12) and pizza($14)... overall I'm very disappointed. The security was nice enough to help me get the second drink off of the bill, however the tip was not adjusted and neither was the \\\\\\\"entertainment district fee\\\\\\\".\\\"},{\\\"review_date\\\":\\\"2021-11-14 05:10:08\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Worst service :-) I get that Saturday nights are busy but all 3!! bartenders passed my boyfriend and I too many times in a 25-minute window and not one person helped us. We literally made eye contact too and they'd just look away or at each other. One of the bartender's Cassie/Kassie (first photo) and two other girls.\\\"},{\\\"review_date\\\":\\\"2021-11-01 02:18:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Looking for 12 TVs for football, ping pong, jinga and ski ball?? Unbearable has got you covered! Also I LOVE the food here! The portobello burger is one of my FAVORITES! The staff is so kind and warm. They treat you like a friend and call you by the first name. This is my football go to bar! #graceydogofthemonth\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Unbearable:\\n\\nUnbearable is a popular bar located in Santa Barbara, California, with a rating of 4.0 stars. The bar offers a variety of amenities, including outdoor seating, WiFi, and restaurant takeout. However, some reviewers have expressed dissatisfaction with the service, particularly on busy nights. One reviewer reported being passed over multiple times by bartenders without receiving any attention, while another reviewer had issues with charges and fees added to their bill. Despite these negative experiences, some patrons have praised the bar's atmosphere, food, and friendly staff. Overall, Unbearable appears to offer a enjoyable experience for sports enthusiasts and those looking for a casual dining spot, but may struggle with managing large crowds and providing efficient service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 234,
+  "source_cluster_id": "sha256:71157bbb7b15e740f50a9b20eb5098dcc9bd7bff10eb05120ff0fd7789e63d1d",
+  "source_id": "14874",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:dec22b4de82dd4b584da872dd5d5e67ff5e04b9e5397302ed99ffbc81f934930",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

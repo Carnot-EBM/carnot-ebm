@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3629204629687592,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:a1e1b4fe3dccbf4a39f0c49a7ee39ca34fc889aa7a78f00b0e6289dea222dd66",
+  "human_target": null,
+  "input_tokens": 781,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:a1e1b4fe3dccbf4a39f0c49a7ee39ca34fc889aa7a78f00b0e6289dea222dd66",
+    "feature_hash": "sha256:a45fdacd6ff74615f136842db2fe94ebd60a0afaba0197a861892b2193120af8",
+    "source_normalized_hash": "4c9fc704308eafc9b6bfd8f676aeb42ce2b121c30c6c5a4ac760ac6b219bfecc",
+    "values": [
+      0.1699629422583128,
+      0.3829113474880065,
+      0.3076923076923077,
+      0.8571428571428571,
+      0.14285714285714285,
+      0.14285714285714285,
+      0.8300370577416872,
+      0.947482530182759
+    ],
+    "window_count": 26
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 781,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 805
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:1061e107b6a9703f5a7885ac6522577faf089e114761fa978f729e205a9a8a59",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095334,
+    "id": "chatcmpl-ZUFLcODaqnA4NsYogp59xqdBPdphnqTa",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 559.646,
+      "predicted_n": 24,
+      "predicted_per_second": 42.8842518306215,
+      "predicted_per_token_ms": 23.318583333333333,
+      "prompt_ms": 677.867,
+      "prompt_n": 703,
+      "prompt_per_second": 1037.076594671226,
+      "prompt_per_token_ms": 0.9642489331436699
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 781,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 805
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"The Bluffs Parking Lot\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Restaurants, Hot Dogs\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Surf Dog\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2017-02-25 05:41:32\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"He treated me with such respect when stopping for a bite on my cycling and knew just what would be the best for me. So missed before I could turn you onto other fellow friend cyclists.\\\"},{\\\"review_date\\\":\\\"2016-02-28 20:34:48\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"So sorry to hear Bill passed away. He was the nicest man, kind and thoughtful. We'll miss him\\\"},{\\\"review_date\\\":\\\"2016-02-15 05:17:27\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Bye Bye Bill.... \\\\n\\\\nA hotdog stand now in heaven to quench the love that is always needed everywhere.  I really will miss you on that corner with your wit and caring banter. \\\\n\\\\npast review.... AN OASIS ....  Don't drive by without stopping...  Great hotdogs, views, customers are a hoot and Bill has a viable suggestion for any challenge. I met him as he was lecturing in a business class.  An oasis....  Seal Rookery down the trail...  Very COOL\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Surf Dog is a popular local restaurant located in Carpinteria, California, known for its delicious hot dogs and exceptional customer service. According to reviews, the business has a rating of 5.0 stars and is highly recommended. Reviewers praise the friendly and helpful staff, with one customer noting that the owner, Bill, showed remarkable kindness and respect towards them during their visit. The business offers outdoor seating and WiFi, but does not accept reservations or have parking validation. Despite this, customers rave about the casual atmosphere and excellent food. One reviewer even refers to Surf Dog as an \\\"oasis\\\" and recommends it to all visitors to the area. Overall, Surf Dog appears to be a must-visit destination for anyone looking for great food and top-notch customer service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 18,
+  "source_cluster_id": "sha256:448892ea439eb46d2b462d510a0de80bd175e436bd773fed668a7de621bd0d4b",
+  "source_id": "14736",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:a1e1b4fe3dccbf4a39f0c49a7ee39ca34fc889aa7a78f00b0e6289dea222dd66",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

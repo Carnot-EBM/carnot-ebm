@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.236154263955541,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:74e5950fd8585d07ff3bb621d1e15fa02a8522b4dc42f9ffdbdc262569ad4b82",
+  "human_target": null,
+  "input_tokens": 590,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:74e5950fd8585d07ff3bb621d1e15fa02a8522b4dc42f9ffdbdc262569ad4b82",
+    "feature_hash": "sha256:3083dfb39a15c3d2fd2f520531da5c3a07b2589d6890fa6bd41225eedc9d75dc",
+    "source_normalized_hash": "0b073761577a5239e27f9e16d49a9ffbc478b124049a91f74bdf0aeb42543667",
+    "values": [
+      0.4313572230238896,
+      0.6235209235209235,
+      0.08333333333333333,
+      1.0,
+      0.0,
+      0.0,
+      0.5686427769761103,
+      0.8441077441077441
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 590,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 614
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:33067f074d399dcc0adbffc26864bf20cb46967d85cbc015a959376192779774",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095453,
+    "id": "chatcmpl-3XBmjKW4bZDHsynf8y19hDEwSi3uQHok",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.761,
+      "predicted_n": 24,
+      "predicted_per_second": 42.49585222775652,
+      "predicted_per_token_ms": 23.53170833333333,
+      "prompt_ms": 536.007,
+      "prompt_n": 512,
+      "prompt_per_second": 955.2114058211927,
+      "prompt_per_token_ms": 1.046888671875
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 590,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 614
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Its UK counterpart, which dates back much farther, was worn to denote private club or military affiliation, featured stripes that ran from left to right, or \u201cfrom heart to sword.\u201d To wear a tie without proper membership to its specific club was a serious social faux pas.\\\\n\\\\npassage 2:1 You now have a right side and a left side to work with.  You can tie a bow from a piece of ribbon that isn't attached to a package. Tie a knot in the center of the ribbon so the left and right sides are equal in length.\\\\n\\\\npassage 3:HOW TO TIE A BOW TIE. To tie a bow tie, the first step is to make sure that one end of the bow tie is longer than the other by a few inches. The longer end of the tie should be on your right side. Cross the longer end of the bow tie over the shorter end. Bring the longer end of the bow tie underneath the shorter end and then bring it out from the center. Fold the shorter end of the bow tie horizontally. Place the longer end of the bow tie over the shorter end. Fold the longer end of the bow tie horizontally. Insert the longer end of the bow tie through the loop at the back of the shorter end. Pull both ends gently to tighten the knot. Adjust as needed--and don't worry, slight imperfections add character.\\\\n\\\\n\\\",\\\"question\\\":\\\"bow tie - how to tie\\\"}\", \"original_answer\": \"To tie a bow tie, start by making sure that one end of the bow tie is longer than the other by a few inches. The longer end should be on the right side. Cross the longer end over the shorter end, then bring the longer end underneath the shorter end and out from the center. Fold the shorter end horizontally, then place the longer end over the shorter end. Fold the longer end horizontally and insert it through the loop at the back of the shorter end. Finally, gently pull both ends to tighten the knot and adjust as needed.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 99,
+  "source_cluster_id": "sha256:0261c1b9e0bba84a43611dd2d43984f3f5718494c0ac1449a6784da1e6adbe67",
+  "source_id": "12336",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:74e5950fd8585d07ff3bb621d1e15fa02a8522b4dc42f9ffdbdc262569ad4b82",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

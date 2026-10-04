@@ -1,0 +1,145 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4974657050333917,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:15c8d974d3d265e7f0bfa1461cef4cf9643e54009e957c466219f0012ccf9d71",
+  "human_target": null,
+  "input_tokens": 872,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:15c8d974d3d265e7f0bfa1461cef4cf9643e54009e957c466219f0012ccf9d71",
+    "feature_hash": "sha256:fb4901c608748166a868cb3ad80c151ff4c4e03da989078579349583761fcf99",
+    "source_normalized_hash": "f2b7dca8b9b62520c3aad93f4f5afc293f061570bd94d65fe77080f402accf03",
+    "values": [
+      0.264594256675002,
+      0.47392010163749293,
+      0.09523809523809523,
+      1.0,
+      0.5,
+      0.5,
+      0.735405743324998,
+      0.9563382269904009
+    ],
+    "window_count": 42
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 872,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 895
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:a4874b8adb0eec54a2a1ca5d320b63c8f1983088134eb4aaac26f4d80532b151",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095621,
+    "id": "chatcmpl-zhwnlbQoeyeYxUGFWgjP7pEI7urlRK8u",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.24,
+      "predicted_n": 23,
+      "predicted_per_second": 42.495011455177,
+      "predicted_per_token_ms": 23.53217391304348,
+      "prompt_ms": 824.791,
+      "prompt_n": 794,
+      "prompt_per_second": 962.6681183475572,
+      "prompt_per_token_ms": 1.0387795969773301
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 872,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 895
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Caitlyn Rose Case, 33, disappeared while driving from Louisiana to Colorado in 2022.\\nA Hopeful Quest: Caitlyn Rose Case's Mysterious Disappearance on a Journey to New Beginnings\\nStarting fresh and turning the page to a new chapter is a dream many pursue. Caitlyn Rose Case, a 33-year-old technician from Louisiana, was on that very path to new beginnings in Colorado when fate seemed to have taken a detour.\\nCaitlyn's tale began on Aug. 4, 2022, when she bid farewell to Houma, Louisiana, behind the wheel of her recently acquired GMC Envoy. Her move to Colorado was to be close to her family, but a brief return to Louisiana was made to purchase the vehicle for her journey.\\nHowever, destiny had other plans. On Aug. 5, 2022, as per insights from FindCaitlyn.com, she found herself wrestling with the SUV's erratic navigation system amidst the vastness of Texas. With unreliable cell service, the journey that should have been seamless turned into a maze. The last voice guiding her, her father, got disconnected amidst trying to reroute her to the highway.\\nBy sunset, digital trails indicated Caitlyn was near Bogota, Texas. Merely hours later, her phone signaled its presence in Pattonville, followed by Paris, Texas. Disturbingly, hints began to emerge that Caitlyn might not have been alone. As the night deepened, evidence from investigators suggested her SUV was heading towards Oklahoma, but it was uncertain if Caitlyn herself ever made it across the state border.\\nA week after that fateful call with her father, her GMC Envoy surfaced in a remote location near Frogville, Oklahoma, by the Kiamichi River, painting an eerie picture. The SUV was found wedged between two trees overlooking a steep drop, giving investigators reason to believe that there was an intent to hide or destroy the vehicle.\\nFor Caitlyn's parents, the uncertainty is harrowing, but their spirit remains undeterred. They fondly recall Caitlyn as a beacon of kindness and trust. Their message is clear: \u201cOur dedication to finding Caitlyn and ensuring justice for her is unwavering.\u201d\\nCaitlyn is described as 5 feet 5 inches tall, weighing approximately 140 pounds, with distinguishing brown hair and eyes.\\nThe family's plea is simple: any information, however small, could be the key to unlocking this mystery. If anyone holds clues to Caitlyn Rose Case's whereabouts, they are encouraged to reach out to the Oklahoma State Bureau of Investigation at (800) 522-8017.\", \"original_answer\": \"Here is a summary of the article in 99 words:\\n\\n33-year-old Caitlyn Rose Case disappeared while driving from Louisiana to Colorado in August 2022. Her SUV was found abandoned in Oklahoma, with evidence suggesting someone may have intentionally hidden or destroyed it. Despite the mystery, Caitlyn's family remains hopeful and is urging anyone with information to come forward to help find her. Caitlyn is described as 5'5\\\" with brown hair and eyes, and is believed to have been last seen in Texas.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 223,
+  "source_cluster_id": "sha256:c2f0ca5fd290cb30c77efd9b21609358a6f2b817b143a3ad79e47cc2419bb487",
+  "source_id": "13527",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:15c8d974d3d265e7f0bfa1461cef4cf9643e54009e957c466219f0012ccf9d71",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

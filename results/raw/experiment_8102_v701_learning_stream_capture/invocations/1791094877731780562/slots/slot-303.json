@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.388005468994379,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:5a10eab8ecc2f7b4d72b63225ad7672d40acb888e940e80b1c4e5c001f52a314",
+  "human_target": null,
+  "input_tokens": 845,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:5a10eab8ecc2f7b4d72b63225ad7672d40acb888e940e80b1c4e5c001f52a314",
+    "feature_hash": "sha256:2de5b3a94a028175f5153f031be8ffa70a3aaed954b321425583dfb6e6032211",
+    "source_normalized_hash": "bd4e07b91b1548e0cecb6ff2f6b27e99224addf69d061694810750b747ec84ae",
+    "values": [
+      0.23979691776596224,
+      0.4169496230986674,
+      0.2777777777777778,
+      0.8333333333333334,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.7602030822340379,
+      0.9842836257309941
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 845,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 867
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:cf38e5c048ee0fef810a1a6c6cb63e3f3153dba37d4d6471e5eff8fa1d26346c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095736,
+    "id": "chatcmpl-br8VlU0OxaNxd0zncf5LDdeq5DgFqZMJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 517.082,
+      "predicted_n": 22,
+      "predicted_per_second": 42.546443310732144,
+      "predicted_per_token_ms": 23.50372727272727,
+      "prompt_ms": 732.998,
+      "prompt_n": 767,
+      "prompt_per_second": 1046.3875754094827,
+      "prompt_per_token_ms": 0.9556688396349414
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 845,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 867
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"4600 Hwy 154\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Barbeque, Golf, Active Life, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Rancho San Marcos Golf Course\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-08-28 00:29:48\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Would be a 5 star review but.. when we got there, they inadvertently forget to tell us over the phone, that we would be playing the same 9  holes as they were aerating the back 9.  Too bad as we love this course and come every year.  That is the bad news, the good news, is the head professional, Josh Pollaro arranged to get us on Sand piper and it was perfect.  He was so professional, understood that we wanted to play  all 18 holes at Rancho so he  came up with a great idea , for us to play Sandpiper and he called to arrange a tee time asap so we had time to drive over and they got us right on. THANKS Josh, we will be back in October and thanks for being so kind, accommodating  and thinking of a great solution.   See you in October!!! We love Rancho San Marcos\\\"},{\\\"review_date\\\":\\\"2019-06-19 13:45:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great day yesterday \\\\nStaff was very accommodating and friendly \\\\nCourse was great fun.\\\\nVery challenging for part time golfer like me but nonetheless had a great time\\\"},{\\\"review_date\\\":\\\"2019-05-09 23:32:19\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"My wife and I another couple played here 10 days ago. The course is in the best shape in years. A challenging course and well worth it. We need to play it more often then we do. The only negative is that there are no course Marshall's and at times the play can getting a little slow. I am not a fan of 5 hour rounds.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Rancho San Marcos Golf Course is a business located at 4600 Hwy 154 in Santa Barbara, California. The business offers golf courses, barbecue, restaurants, active life activities, and other amenities. According to the customers' reviews, the business receives high ratings for its staff's accommodating and friendly demeanor and the quality of its course. However, some customers have noted that the course's pricing is quite expensive. Additionally, the course does not have course marshals, which can sometimes lead to slower play times. Despite these drawbacks, many customers seem to enjoy their experience at Rancho San Marcos Golf Course and plan to return in the future.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 48,
+  "source_cluster_id": "sha256:e362067b3675e6ca1dff8b4c341530f211bad213ecaf7f37d39f0c00ce545a81",
+  "source_id": "14893",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:5a10eab8ecc2f7b4d72b63225ad7672d40acb888e940e80b1c4e5c001f52a314",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

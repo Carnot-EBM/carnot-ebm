@@ -1,0 +1,130 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2282236008904874,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:15a2043770cdb6597a673ca7323b0961d0f6513d331c1d898e42b5e1f7b70245",
+  "human_target": null,
+  "input_tokens": 607,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:15a2043770cdb6597a673ca7323b0961d0f6513d331c1d898e42b5e1f7b70245",
+    "feature_hash": "sha256:a4f10a0939122b927ed4ddf0fca819e2513f3e77faad5d3f1bf3b3d29966e47e",
+    "source_normalized_hash": "7b339b79ad4ee794def1c69993fd269465b8e4eb1aeb687eba083e432f00a5d4",
+    "values": [
+      0.5724996816908582,
+      0.7501109184932714,
+      0.0,
+      0.0,
+      0.5641025641025641,
+      0.6153846153846154,
+      0.42750031830914187,
+      0.574048799784094
+    ],
+    "window_count": 12
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 607,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 630
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:ab418fa317c8f32a85e05718ae3de153a4cc3ea1609bd36f581d609ee30197c8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095588,
+    "id": "chatcmpl-penvBUCxwNhHts1Cg8uAYd8YX022BXSs",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.148,
+      "predicted_n": 23,
+      "predicted_per_second": 42.580922265749386,
+      "predicted_per_token_ms": 23.484695652173915,
+      "prompt_ms": 576.613,
+      "prompt_n": 529,
+      "prompt_per_second": 917.4264194529085,
+      "prompt_per_token_ms": 1.0900056710775048
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 607,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 630
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:First step in installing a helical thread insert is to drill out the hole to the proper size for the thread repair tap. I put the fork leg semi-snugly in the milling machine vise and lined it up using a 1-2-3 block. Once in position, I locked down the vise.\\\\n\\\\npassage 2:Overtime, the repetition of the maintenance process can easily cause the threads to be worn out making it difficult to fasten parts back together. Installing heli-coil screw thread inserts will help make this process easier.\\\\n\\\\npassage 3:Thread the Helicoil insert onto the supplied installation tool and coat the threaded insert with thread locking fluid. Insert the Helicoil threaded insert into the tapped hole and turn the handle of the insertion tool until the top of the Helicoil rests 1/4 to 1/2 of a turn below the surface of the base metal. Place the tang removal tool into the threaded insert and break the tang from the Helicoil insert to lock it in place. Thread the fastener into the Helicoil threaded insert after the thread locking fluid has cured to complete the installation.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to use helicoil insert properly\\\"}\", \"original_answer\": \"To properly install a helical thread insert, follow these steps:\\n\\n1. Drill out the hole to the proper size for the thread repair tap.\\n2. Position the fork leg semi-snugly in the milling machine vise and line it up using a 1-2-3 block. Lock down the vise.\\n3. Thread the Helicoil insert onto the supplied installation tool and coat the threaded insert with thread locking fluid.\\n4. Insert the Helicoil threaded insert into the tapped hole and turn the handle of the insertion tool until the top of the Helicoil rests 1/4 to 1/2 of a turn below the surface of the base metal.\\n5. Place the tang removal tool into the threaded insert and break the tang from the Helicoil insert to lock it in place.\\n6. Thread the fastener into the Helicoil threaded insert after the thread locking fluid has cured to complete the installation.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 196,
+  "source_cluster_id": "sha256:3483e1629ec2f9c6a48cb1b6fd064b848750b6d00662674d2886334b364d6c7b",
+  "source_id": "15392",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:15a2043770cdb6597a673ca7323b0961d0f6513d331c1d898e42b5e1f7b70245",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2714756019413471,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8df22f4f15e1c484e2bc031cc56ed6e5fbcbf6c7bf304bdb227f711111747099",
+  "human_target": null,
+  "input_tokens": 511,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8df22f4f15e1c484e2bc031cc56ed6e5fbcbf6c7bf304bdb227f711111747099",
+    "feature_hash": "sha256:0e3c2d538dc12b93dbbf0db7e4c1fee94d0c40044191747d34a73fa7cff982d0",
+    "source_normalized_hash": "ccf0cfaeddce29be69fa2641eb57db9f44d4d715c584dab505a49156b32f8c15",
+    "values": [
+      0.6002158173210805,
+      0.8014768200694975,
+      0.14285714285714285,
+      0.14285714285714285,
+      0.9642857142857143,
+      1.0,
+      0.3997841826789196,
+      0.5877828629544878
+    ],
+    "window_count": 4
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 511,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 535
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:00908e95bd6be4d4e88faf4735cae8ee96bdccb7a3c2529830115623543edb54",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095322,
+    "id": "chatcmpl-8IX4qmspPGl9vT3MxDOBXpBMpu7wnDMy",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 561.174,
+      "predicted_n": 24,
+      "predicted_per_second": 42.76748388200451,
+      "predicted_per_token_ms": 23.38225,
+      "prompt_ms": 486.178,
+      "prompt_n": 433,
+      "prompt_per_second": 890.6203077885056,
+      "prompt_per_token_ms": 1.1228129330254042
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 511,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 535
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:To use this angle measurement to cut the piece of wood, you must divide the actual measurement by two. For example, if you have an inside angle of 90 degrees then you divide this number by two and you get 45 degrees.\\\\n\\\\npassage 2:In addition to the 90-degree and 45-degree angles so simple to scribe from an angle, you can also use a speed square to set any other angle between zero degrees and 80 degrees. A home remodeling expert demonstrates in this free video of professional home help tips.\\\\n\\\\npassage 3:$$ That is, you need to cut an acute angle $\\\\\\\\alpha=90^\\\\\\\\circ-\\\\\\\\beta$ on each piece of wood, to get a total angle of $2\\\\\\\\alpha$ at the top of the roof.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to measure an angle cut\\\"}\", \"original_answer\": \"Based on the provided passages, there are two ways to measure an angle cut:\\n\\n1. Dividing the actual measurement by 2: According to passage 1, if you have an inside angle of 90 degrees, you can divide it by 2 to get 45 degrees. This means that for any angle measurement, dividing it by 2 will give you the corresponding angle cut.\\n2. Using a speed square: Passage 2 mentions that a speed square can be used to set any other angle between 0 degrees and 80 degrees. This suggests that using a speed square can help you measure and cut an angle that is not equal to 90 degrees or 45 degrees.\\n\\nTherefore, the answer to the question is: Both dividing the actual measurement by 2 and using a speed square can be used to measure an angle cut.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 10,
+  "source_cluster_id": "sha256:9d9ac9261d09fd9c560b90b37a53ae668816a4d949a219f96bed395a7e03faec",
+  "source_id": "12227",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8df22f4f15e1c484e2bc031cc56ed6e5fbcbf6c7bf304bdb227f711111747099",
+  "visible_ids": [
+    0,
+    1,
+    2
+  ]
+}

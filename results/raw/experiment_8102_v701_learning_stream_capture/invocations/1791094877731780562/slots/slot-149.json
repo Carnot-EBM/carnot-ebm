@@ -1,0 +1,131 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2065292759798467,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:1e34dff259a7f098063ca6f546641cf0b16ded34e31ad871b52e7e57e924ab23",
+  "human_target": null,
+  "input_tokens": 496,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:1e34dff259a7f098063ca6f546641cf0b16ded34e31ad871b52e7e57e924ab23",
+    "feature_hash": "sha256:bb207e48d3bbf84943498940fe8b693bf120ec8b98684711c07eea80cb3ba325",
+    "source_normalized_hash": "2a60b2ef8b854fc481f45ddb1a7d46c0bfd8dd7030ae7edf36dbc3833da36c94",
+    "values": [
+      0.2935871420528509,
+      0.5283933523781721,
+      0.2857142857142857,
+      0.8,
+      0.5714285714285714,
+      0.6,
+      0.7064128579471491,
+      0.9283770878078279
+    ],
+    "window_count": 14
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 496,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 521
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:5471f29642e6fd50a2554f50565b6c9d43f8c00bfa692a1ba54657d61601fd04",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095527,
+    "id": "chatcmpl-0va0A4BVpzgKl8fFFLI1s7K9gFxj6jlA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 595.179,
+      "predicted_n": 25,
+      "predicted_per_second": 42.004170174014874,
+      "predicted_per_token_ms": 23.80716,
+      "prompt_ms": 493.19,
+      "prompt_n": 418,
+      "prompt_per_second": 847.5435430564286,
+      "prompt_per_token_ms": 1.1798803827751196
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 496,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 521
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Without the transmission fee, solar owners faced an average $6 monthly charge. With transmission costs, the monthly charge could have topped $12 for the average solar owner, potentially wiping out the savings that solar gave them. The solar industry said the monthly cost could go as high as $18 a month.\\\\n\\\\npassage 2:Oklahoma Gov. Mary Fallin signed the \u201csolar surcharge\u201d bill into law on Monday, permitting utilities to charge an extra fee to any customer using distributed power generation, such as rooftop solar or a small wind turbine. A rooftop solar installation. Credit: U.S. Dept. of Energy.\\\\n\\\\npassage 3:Of course, with electricity demand falling \u2013 thanks in large part to the popularity of rooftop solar \u2013 power companies are using the fixed cost components of their billing systems to help cover their own fixed costs, while also compensating for lower usage by consumers.\\\\n\\\\n\\\",\\\"question\\\":\\\"how are the electric companies justified to charge for solar power\\\"}\", \"original_answer\": \"Electricity companies may justify charging for solar power by considering the transmission fees associated with it. Without these fees, the monthly charge for solar owners could top $12 and wipe out the savings provided by solar energy (Passage 1). Additionally, Oklahoma Gov. Mary Fallin signed a \\\"solar surcharge\\\" bill into law, which allows utilities to charge an extra fee to customers using distributed power generation like rooftop solar or small wind turbines (Passage 2). This fee helps utilities cover their own fixed costs and compensate for lower usage by consumers due to increasing popularity of renewable energy sources like solar (Passage 3).\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 150,
+  "source_cluster_id": "sha256:b3e8d43cadc98912bc4c1ab2eacd5c4a92422f04aa003eebd80d8fcccb9a010f",
+  "source_id": "15345",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:1e34dff259a7f098063ca6f546641cf0b16ded34e31ad871b52e7e57e924ab23",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

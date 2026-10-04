@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.3287495520198718,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:70662d828911dd66089303fa31607040d600e82cfcd3507e172d75be4d31b756",
+  "human_target": null,
+  "input_tokens": 731,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:70662d828911dd66089303fa31607040d600e82cfcd3507e172d75be4d31b756",
+    "feature_hash": "sha256:0d5698ec47505be56ab91cf315da828c9edc92e22e5415c32d3c8094c75a137b",
+    "source_normalized_hash": "a76cb6ab0e2e35bb578db9370665ce80be3feedc200338fc3f49d2de02cfd9df",
+    "values": [
+      0.19413144431326249,
+      0.35468398268398266,
+      0.3181818181818182,
+      1.0,
+      0.2,
+      0.2,
+      0.8058685556867374,
+      0.9327792207792207
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 731,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 754
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:9b4f84e5bd9ad14ff934755e14d25355ab128715dfe3803c33e98a5767ffa71d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095752,
+    "id": "chatcmpl-GovsMPpg7zhZZfOjfcCDrr0A1PEtVYMK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.869,
+      "predicted_n": 23,
+      "predicted_per_second": 42.524160194058084,
+      "predicted_per_token_ms": 23.516043478260872,
+      "prompt_ms": 668.149,
+      "prompt_n": 653,
+      "prompt_per_second": 977.3269136075936,
+      "prompt_per_token_ms": 1.0231990811638592
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 731,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 754
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3771 State Street\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":2.0,\\\"categories\\\":\\\"Fast Food, Restaurants, Tex-Mex, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Taco Bell\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-12-16 22:03:54\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"CLOSED. Their $1 menu items were all $1.59. What was up with that, anyway?? The Milpas Taco Bell is still business as usual. And the $1 menu items are still $1.\\\"},{\\\"review_date\\\":\\\"2015-10-16 06:31:41\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Complete ripoff!!!! I bought a big box for the PlayStation promotion they have going on, I entered my code and I get a reply saying that the code has already been used. The only reason why I bought the box was for a chance to win. The employees must have used the codes, never coming to this taco bell again!\\\"},{\\\"review_date\\\":\\\"2015-07-07 13:54:27\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The restaurant is dirty. Outside the restaurant is also dirty. The floors of the patio outside is dirty. I will never invest my hard-earned money here due to sanitation reasons. My food will most likely be dirty & contaminated.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Taco Bell is a fast food restaurant located in Santa Barbara, CA, serving Tex-Mex and Mexican cuisine. According to customer reviews, the restaurant has a casual and clean atmosphere, with free Wi-Fi and outdoor seating available. However, some customers have reported issues with the quality of service and cleanliness of the restaurant, with one reviewer mentioning that their $1 menu items were overpriced and another expressing concern about the sanitation of the establishment. Additionally, some customers have had negative experiences with the restaurant's promotions, such as a PlayStation promotion where the employee allegedly used the code before the customer could redeem it. Overall, Taco Bell seems to have some work to do in terms of improving their customer service and maintaining a clean environment for their patrons.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "slot": 59,
+  "source_cluster_id": "sha256:d4b9e19f60ee66f64054067dd7cf2830a16ad941ab0943515b037459ab3bbd3c",
+  "source_id": "14518",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:70662d828911dd66089303fa31607040d600e82cfcd3507e172d75be4d31b756",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

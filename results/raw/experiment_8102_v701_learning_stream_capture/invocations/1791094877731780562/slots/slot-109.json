@@ -1,0 +1,136 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.277515286928974,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:59163d646876712a84e06e4bc57f2d9d5b7d51fc58a0a4ac03ff46556976954f",
+  "human_target": null,
+  "input_tokens": 742,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:59163d646876712a84e06e4bc57f2d9d5b7d51fc58a0a4ac03ff46556976954f",
+    "feature_hash": "sha256:83b7cb593d2a27711fdb88a88d2f8a32a38a260197ccdaa8532d4a67f93d4463",
+    "source_normalized_hash": "e7422493e88dda706c305a9f91826bf1da8961e48e30ff2d47cf90c338e2b6e3",
+    "values": [
+      0.262195588479851,
+      0.617883311411789,
+      0.125,
+      1.0,
+      0.24479166666666666,
+      0.25,
+      0.7378044115201489,
+      0.9403992408939964
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 742,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 763
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:1960d54dfe8aac68d5abb2a70b1f1bea8947e6053d010f85a07951c54be1c1f1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095470,
+    "id": "chatcmpl-Q42E9HZtoJq2n7G4qVn0ak7st52YfAhP",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.922,
+      "predicted_n": 21,
+      "predicted_per_second": 42.68969470769756,
+      "predicted_per_token_ms": 23.424857142857142,
+      "prompt_ms": 670.107,
+      "prompt_n": 664,
+      "prompt_per_second": 990.886530061617,
+      "prompt_per_token_ms": 1.0091972891566265
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 742,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 763
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Actor | Director | Writer. The son of an attorney, Richard Carlson had an introspective quality to his performances and looked every inch the academic he first aspired to be.ritten by Richard Carlson. Incidental music by Lehman Engel. Directed by Elsa Moses and Richard Carlson. Hudson Theatre: 28 Dec 1937- Jan 1938 (closing date unknown/7 performances). Cast: Thomas Chalmers (as Josiah Cutler), Thomas Gomez (as Rev. Barnabus Harpie), Jackie Grimes, H. Dudley Hawley, Van ...\\\\n\\\\npassage 2:Biography. Richard Carlson received his M.A. at the University of Minnesota and taught there briefly before working in the theater as an actor, director, and writer.ypecast early in his career as a diffident juvenile, he had trouble breaking out of the mold and landing more mature roles; he tended to appear in monster flicks and B-movies in the '50s. He turned to directing in that decade, beginning with Riders to the Stars (1954), which he also wrote and in which he acted.\\\\n\\\\npassage 3:Mini Bio (1). The son of an attorney, Richard Carlson had an introspective quality to his performances and looked every inch the academic he first aspired to be.hen he returned to the screen, it was without the intensity and vigour which had characterised his pre-war performances. After several years of indifferent acting parts, Richard found renewed energy for his third-billed appearance in MGM's lavish Technicolor remake of King Solomon's Mines (1950).\\\\n\\\\n\\\",\\\"question\\\":\\\"richard carlson actor bio\\\"}\", \"original_answer\": \"Based on the provided passages, here is what can be gathered about Richard Carlson's actor bio:\\n\\n* Richard Carlson was an actor, director, and writer.\\n* He was born into a family of an attorney.\\n* He had an introspective quality to his performances and looked every inch the academic he first aspired to be.\\n* He began his career as an actor and appeared in various films in the 1930s, including \\\"Riders to the Stars\\\" (1954) which he also wrote and acted in.\\n* In the 1950s, he turned to directing and acting in B-movies and monster films.\\n* He struggled to break out of his typecast as a diffident juvenile and had difficulty landing more mature roles.\\n* After several years of indifferent acting parts, he found renewed energy for his third-billed appearance in MGM's Technicolor remake of \\\"King Solomon's Mines\\\" (1950).\\n\\nUnable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 110,
+  "source_cluster_id": "sha256:d0e76f6ef17e28fc0703969b4110a8e1e0b137c7d30ace1017ecd47c9c4bb64a",
+  "source_id": "15229",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:59163d646876712a84e06e4bc57f2d9d5b7d51fc58a0a4ac03ff46556976954f",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

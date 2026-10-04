@@ -1,0 +1,129 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2727956309681758,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:4f1dc00af22aaadb5a4119979144b2492735e84880904bca0768d8a051ac85b7",
+  "human_target": null,
+  "input_tokens": 653,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:4f1dc00af22aaadb5a4119979144b2492735e84880904bca0768d8a051ac85b7",
+    "feature_hash": "sha256:7693455f09b80f3e303a990f302a325f4691ce336088872172070f90a91254af",
+    "source_normalized_hash": "bf254c2bee32ada7591268c7bb0eb7b896fdaf3c64e52f769b2de04648755f10",
+    "values": [
+      0.2512016687016687,
+      0.5138125763125764,
+      0.6,
+      0.6666666666666666,
+      0.11111111111111112,
+      0.1111111111111111,
+      0.7487983312983313,
+      0.9003815628815628
+    ],
+    "window_count": 10
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 653,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 676
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:03b01520f7541555b87c7df486c13bfef9ee63701c38f0922e5c07979ac7f223",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095531,
+    "id": "chatcmpl-EHcljHmIQ4cnMgeOKM0tMXyHd2PmoGQk",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.752,
+      "predicted_n": 23,
+      "predicted_per_second": 42.61216262283419,
+      "predicted_per_token_ms": 23.467478260869562,
+      "prompt_ms": 600.119,
+      "prompt_n": 575,
+      "prompt_per_second": 958.1433015785202,
+      "prompt_per_token_ms": 1.0436852173913045
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 653,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 676
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"36 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Food, Restaurants, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Hot Spots Espresso Company\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-11-07 00:29:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I am so sad that this place is gone, honestly the coffee was always delicious and the service was beyond friendly. It was such a convenient location too!\\\"},{\\\"review_date\\\":\\\"2014-11-02 01:54:30\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"My favorite coffee place in Santa Barbara but sadly its closed down.\\\"},{\\\"review_date\\\":\\\"2014-10-25 22:17:28\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Unfortunately my visit with friends and family was not positive. Young staff not aware of Groupon deal. Staff reflected rude attitude when they did not understand the offer. No manager present for guidance, no reply from manager or owners regarding matter. Staff needs customer service training.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Hot Spots Espresso Company was a popular spot for locals and tourists alike, located at 36 State Street in Santa Barbara, California. The business offered food, restaurants, coffee & tea and had outdoor seating. The company had parking available on the street, but it was not validated. Free Wi-Fi was available for customers to use while sipping their coffee. Unfortunately, the business has closed down and is no longer operational. Customers have left reviews expressing their disappointment over the closure and sharing their experiences at the establishment. One reviewer praised the coffee and friendly service, while another noted that it was their favorite coffee place in the area. However, a third customer had a negative experience and complained about a rude attitude from the staff who were not aware of a Groupon deal. Despite the closure, the memories of Hot Spots Espresso Company will live on through the reviews left by its loyal customers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 153,
+  "source_cluster_id": "sha256:f3fdf0068f76e81ba44cd9ff03b697a7283ddd1c2fb8fa7c56c5154a75a301f1",
+  "source_id": "14781",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:4f1dc00af22aaadb5a4119979144b2492735e84880904bca0768d8a051ac85b7",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

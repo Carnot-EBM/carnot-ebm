@@ -1,0 +1,141 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.638769762008451,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:d26b9c9c568f2ef83462f6a436712416cdc25a737c9372e637d91fad5faa8e1e",
+  "human_target": null,
+  "input_tokens": 1011,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:d26b9c9c568f2ef83462f6a436712416cdc25a737c9372e637d91fad5faa8e1e",
+    "feature_hash": "sha256:a6d2f65746468b4b94d23dde56e00d4d1bf9b95414e95e0a00a1fff2ab9ba6f3",
+    "source_normalized_hash": "22dc8d755afc4a2f1108d692fbbff8ee4ba4c1554c76f33c6ac0dd9703292697",
+    "values": [
+      0.18735101799340426,
+      0.49447498827117053,
+      0.2647058823529412,
+      1.0,
+      0.125,
+      0.125,
+      0.8126489820065957,
+      0.9249890042223786
+    ],
+    "window_count": 34
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1011,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1035
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:507205a426ad5e1cd20e573f2ee8dd481d924a216e30d9c7bac5296837e7ea7b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095462,
+    "id": "chatcmpl-7LiwKuywNmT7Gf4dugCXlpSTVCaz3Fx6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 572.541,
+      "predicted_n": 24,
+      "predicted_per_second": 41.91839536382547,
+      "predicted_per_token_ms": 23.855875,
+      "prompt_ms": 931.095,
+      "prompt_n": 933,
+      "prompt_per_second": 1002.045978122533,
+      "prompt_per_token_ms": 0.9979581993569132
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1011,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1035
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"235 W Montecito St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Salad, Sandwiches, Vegetarian, Restaurants, Chicken Wings\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-22:0\\\",\\\"Saturday\\\":\\\"12:0-22:0\\\",\\\"Sunday\\\":\\\"12:0-22:0\\\",\\\"Thursday\\\":\\\"16:0-22:0\\\"},\\\"name\\\":\\\"Wingman Rodeo - Montecito Street\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-23 19:21:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The food was great and even had leftovers.  Ordered through GrubHub because I wasn't aware that if you ordered on their website that they deliver as well, so order on their website.\\\"},{\\\"review_date\\\":\\\"2021-12-06 01:30:26\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"While I understand that hardships have been a thing. 22 dollars for a six wing and a coke is a big step. I may be unaware of a shortage. Though I can't imagine it being this large of a loss. Explanation is welcome. Service is great, food or great. I want to come back.\\\"},{\\\"review_date\\\":\\\"2021-12-02 05:10:12\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I was skeptical due to the bone-in wing prices, but the reviews convinced me to splurge. \\\\n\\\\nKale Cirtus salad with Thai peanut bone-in wings (came with 3 wings) was incredible. Kale is fresh, whole leaf Kale. Oranges (cuties) were fresh cut, not canned. Tots did not really belong, but hey, it's a topping! \\\\n\\\\nStrawberry Arbol Boneless boneless wings are incredible. Large, moist, and crispy boneless chicken + sauce on the side. Hot and worth it.\\\\n\\\\nThe Rodeo Fries were are as well. Crispy fries, tender Buffalo boneless chicken, chewy bacon. This should come with at least an option for blue cheese - not sure if this was overlooked on the online menu or just not an option. Will make sure to order a side next time.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Wingman Rodeo - Montecito Street is a popular restaurant in Santa Barbara, CA that serves salads, sandwiches, vegetarian options, and chicken wings. They are known for their delicious food, outdoor seating, and friendly service. The restaurant offers both bone-in and boneless wings with a variety of sauces to choose from, as well as a kale and citrus salad that is a customer favorite. They also offer delivery and take-out options.\\n\\nRecent customers have praised the restaurant's food, with one reviewer stating that their meal was \\\"incredible\\\" and another saying that the bone-in wings were \\\"worth the splurge.\\\" However, some customers have noted that the prices for the bone-in wings are a bit high, with one reviewer suggesting that the restaurant consider offering blue cheese as an optional topping.\\n\\nThe restaurant has a 4-star rating and is considered a good spot for groups. They offer valet parking and have a validated parking lot, making it easy for customers to park and enjoy their meals. Overall, Wingman Rodeo - Montecito Street is a great spot for those looking for tasty chicken wings and salads in a casual, welcoming atmosphere.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 104,
+  "source_cluster_id": "sha256:71ccf22ecaf79113f5681a5509b380414a10b4ad10a09fd6e0e4f8a6f0110899",
+  "source_id": "13641",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:d26b9c9c568f2ef83462f6a436712416cdc25a737c9372e637d91fad5faa8e1e",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

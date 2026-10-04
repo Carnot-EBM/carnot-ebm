@@ -1,0 +1,144 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4009020189987496,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:d8f291eae9abf44dc8c0a4a00554d334812084953fcb34396bc7e2a22c4f9a20",
+  "human_target": null,
+  "input_tokens": 752,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:d8f291eae9abf44dc8c0a4a00554d334812084953fcb34396bc7e2a22c4f9a20",
+    "feature_hash": "sha256:c19b060ed63e7e8166e93cbfcdab31af91f9c90c42aaa6f93c0b408c59a463ac",
+    "source_normalized_hash": "6e11ca1460b3d43236bfcc8e67af890cfb4da55e5c679ee49a858f12c003f6dd",
+    "values": [
+      0.262877107364685,
+      0.4687009103158171,
+      0.42857142857142855,
+      0.8571428571428571,
+      0.0,
+      0.0,
+      0.737122892635315,
+      0.9367352913936765
+    ],
+    "window_count": 40
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 19,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 752,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 777
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:fbf77fe4f35e81bcf1dab7755a1b67aac5a48356fdf844e9ac13fdc1efb18e44",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 19\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095603,
+    "id": "chatcmpl-6jwCyoXMityL907cNZC2KW4CN3i5VQGI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 595.995,
+      "predicted_n": 25,
+      "predicted_per_second": 41.94666062634754,
+      "predicted_per_token_ms": 23.8398,
+      "prompt_ms": 673.023,
+      "prompt_n": 674,
+      "prompt_per_second": 1001.4516591557792,
+      "prompt_per_token_ms": 0.9985504451038576
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 752,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 777
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said. Here's how police say the scheme worked: When the male TSA officer noticed a man he found attractive, he would alert a female TSA officer. The female officer would then tell the screening machine that a female passenger -- not a male -- was walking through. And that information would trigger a machine to register an anomaly in the groin area, prompting the male TSA officer to pat down the passenger, police said, citing a TSA investigation. But during the patdown, the male TSA officer used the palms of his hands to touch the passenger's front groin area and buttocks, which violates TSA policy. Former TSA agent sentenced for recording coworker. All this came to light after an anonymous tip from a TSA employee in November. The agency launched an investigation, and investigator Chris Higgins monitored the two TSA officers in question, Denver police said in a report. Higgins watched the plan being carried out on February 9. He interviewed the female TSA officer, who said she had done this with her colleague at least 10 other times, police said. Both of the TSA officers investigated have been fired, TSA special agent Charles Stone told police. Authorities did not release their names. Giant security gap at airports: Lack of criminal background checks. The TSA called the incident deplorable. \\\"These alleged acts are egregious and intolerable,\\\" the agency said in a written statement to CNN. \\\"All allegations of misconduct are thoroughly investigated by the agency. And when substantiated, employees are held accountable.\\\" But it's unlikely criminal charges will be filed because there is no identifiable victim. The TSA said it has been trying to identify the passenger in the February incident but to no avail. The TSA said no passengers have come forward with similar cases so far at the Denver airport. Hidden cameras reveal airport workers stealing from luggage. CNN's Tony Marco contributed to this report.\\n\", \"original_answer\": \"Two Transportation Security Administration (TSA) screeners have been fired after conspiring to grope attractive men at Denver International Airport. The scheme involved the male TSA officer alerting a female officer about a male passenger, who would then be flagged for a pat-down. During the pat-down, the male TSA officer would touch the passenger's front groin area and buttocks, which violates TSA policy. The incident came to light after an anonymous tip from a TSA employee in November, and an investigation revealed that both officers involved have been fired. The TSA called the incident deplorable and said all allegations of misconduct are thoroughly investigated. However, criminal charges may not be filed as there is no identifiable victim. Additionally, hidden cameras at the airport have revealed airport workers stealing from luggage.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 209,
+  "source_cluster_id": "sha256:408f2301e5da441120091b5599a3b7a323fd470ca24d819053161d5ba156c699",
+  "source_id": "11933",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:d8f291eae9abf44dc8c0a4a00554d334812084953fcb34396bc7e2a22c4f9a20",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

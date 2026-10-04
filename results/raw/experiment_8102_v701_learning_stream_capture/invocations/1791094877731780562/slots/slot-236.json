@@ -1,0 +1,131 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.5746855268953368,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:3daea4de820e333111bb8dc0937c7386b85460bdd42b7d24851dc66c2399557b",
+  "human_target": null,
+  "input_tokens": 934,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:3daea4de820e333111bb8dc0937c7386b85460bdd42b7d24851dc66c2399557b",
+    "feature_hash": "sha256:668e496f9bc13da70b230e9153a8e64d76b07d45875000ba676df6d01d5d7f4d",
+    "source_normalized_hash": "3cca482b4289800778300ad00b5f23e734d678ca69776981e247395f4ba7c5bb",
+    "values": [
+      0.2482097930005595,
+      0.3818377507755931,
+      0.1978021978021978,
+      0.9230769230769231,
+      0.23076923076923078,
+      0.23076923076923078,
+      0.7517902069994405,
+      0.9136957197495421
+    ],
+    "window_count": 14
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 934,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 957
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:8f3324d0cccc68d69aca8ec3f3bbc0ad0a25362d2b8d3e42192f3fa20c1069a9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095645,
+    "id": "chatcmpl-lgewAEFtVEU40aU9OCXOtIsyXiv2OyYa",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.098,
+      "predicted_n": 23,
+      "predicted_per_second": 42.58486422834375,
+      "predicted_per_token_ms": 23.482521739130434,
+      "prompt_ms": 874.928,
+      "prompt_n": 856,
+      "prompt_per_second": 978.3662198489475,
+      "prompt_per_token_ms": 1.0221121495327103
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 934,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 957
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5221 Cheadle Hall\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":null,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":null},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Cafes, Burgers, Sandwiches, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-17:0\\\",\\\"Monday\\\":\\\"7:30-17:0\\\",\\\"Thursday\\\":\\\"7:30-17:0\\\",\\\"Tuesday\\\":\\\"7:30-17:0\\\",\\\"Wednesday\\\":\\\"7:30-17:0\\\"},\\\"name\\\":\\\"Coral Tree Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-10-25 22:01:52\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Do you need to be a student to buy things at this cafe? The blonde girl thought this was the most prudent question to ask this Gaucho when I went inside to buy an energy drink. First and last time I buy anything here. And I'll continue highlighting each and every micro aggression aimed toward me by making them all public.\\\"},{\\\"review_date\\\":\\\"2019-10-01 17:29:02\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"A bit underrated honestly, sure their coffee isn't amazing but it's also a great value, it costs about half of what starbucks charges for their coffee. Inside seating is usually full but outside seating is fine. What I really liked was the breakfast burrito, I'll have to try more of their food menu to make a complete judgement but the burrito was pretty good.\\\"},{\\\"review_date\\\":\\\"2019-05-22 16:39:11\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Slow slow slow!!  And they often get my order wrong.  But, they have a monopoly on this side of campus, and have no incentive to perform.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Coral Tree Cafe is a local business located at 5221 Cheadle Hall in Santa Barbara, CA. It is a caf\u00e9 that offers a variety of food options including burgers, sandwiches, and other restaurant dishes. The caf\u00e9 is open from Monday to Friday, from 7:30 am to 5:00 pm.\\n\\nThe caf\u00e9 provides free WiFi and outdoor seating for its customers. They also offer takeout services, making it convenient for those who prefer to enjoy their food elsewhere. However, they do not take reservations and are not particularly suitable for larger groups.\\n\\nBased on the provided review data, Coral Tree Cafe has received mixed feedback from customers. One customer expressed frustration about a perceived microaggression by the staff, which left a negative impression. Another customer mentioned that the caf\u00e9 can be slow and occasionally gets orders wrong, but acknowledged that it has a monopoly on that side of the campus. On the other hand, another customer found the caf\u00e9 to be underrated and praised the affordability of their coffee compared to Starbucks. They also enjoyed the breakfast burrito.\\n\\nOverall, Coral Tree Cafe has a rating of 3.0 stars. While the caf\u00e9 has some areas for improvement, such as customer service and order accuracy, it also offers value for money and enjoyable food options.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 237,
+  "source_cluster_id": "sha256:4324aa71d40283091f05f11da725b966b1334ab44f50495afa8e787a95884679",
+  "source_id": "14232",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:3daea4de820e333111bb8dc0937c7386b85460bdd42b7d24851dc66c2399557b",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

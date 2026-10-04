@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.7429718229686841,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:76915985686598fc6bd9eb87d65fae03d5dfe9df29acb5e7583dafc9013dccc5",
+  "human_target": null,
+  "input_tokens": 1161,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:76915985686598fc6bd9eb87d65fae03d5dfe9df29acb5e7583dafc9013dccc5",
+    "feature_hash": "sha256:9fdb1bbd5bfaaf527963e44963998de0851873f2498011c8d13969d3415f86fd",
+    "source_normalized_hash": "df40701189448624b84e7c67fbf1ba8b253bb366890d9e17643838fd7b36ae8d",
+    "values": [
+      0.23497178712910533,
+      0.43075460231886303,
+      0.532967032967033,
+      0.9285714285714286,
+      0.14285714285714285,
+      0.14285714285714285,
+      0.7650282128708946,
+      0.9349400371409919
+    ],
+    "window_count": 26
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1161,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1185
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:a3520e515ba39aa07a38055b98a71406a22faea604decee3feb6a061c83d819e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095463,
+    "id": "chatcmpl-fs73C0jIqKRHMuusLh0A6OXn3dE8QVJK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.112,
+      "predicted_n": 24,
+      "predicted_per_second": 42.39443784975411,
+      "predicted_per_token_ms": 23.587999999999997,
+      "prompt_ms": 1040.221,
+      "prompt_n": 1083,
+      "prompt_per_second": 1041.1249148017585,
+      "prompt_per_token_ms": 0.9604995383194829
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1161,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1185
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2984 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Restaurants, New Mexican Cuisine, Mexican, Fast Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-17:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"10:0-22:0\\\",\\\"Sunday\\\":\\\"10:0-22:0\\\",\\\"Thursday\\\":\\\"10:0-22:0\\\",\\\"Tuesday\\\":\\\"10:0-22:0\\\",\\\"Wednesday\\\":\\\"10:0-22:0\\\"},\\\"name\\\":\\\"Pueblo Pollo\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-06 09:27:40\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"if you want your moneys worth or any type of decent food that you pay for this isnt the place for it , go elsewhere.\\\\nlukewarm sides, chicken seems a bit off , taste & lookswise.\\\\n\\\\nmy guess is they arent busy enough to keep things going fresh and hot here constantly , at the end you end up with not fresh food or even past due food.\\\\n\\\\njust dont , trust me..\\\"},{\\\"review_date\\\":\\\"2021-11-24 00:59:13\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Really nicely done chicken not overcooked or dry and the rice was tasty too! Going to go back but honestly want to ask for larger portions on the rice. Felt like it was small even for a child.  But great tasting food and chicken. 7.99$ for 2 piece meal same as el pollo loco\\\"},{\\\"review_date\\\":\\\"2021-11-23 05:29:40\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Went here to see if the food was any better now that it's not an El Pollo loco. The bar was set low and I had hoped that they could have served me some decent chicken, but, alas, they could not. Chicken was greasy but not in a good way. The beans and rice had the texture and taste as if they had been laying out for most of the day. Needless to say, I wasn't impressed with food. I'm not surprised considering the photos on google look like stock photos, pretty lame. Do yourself a favor and go down to El Mercado plaza near the 154 and hit up El Rincon or Palapa(next to the adult store and methadone clinic) both of those places will give you a meal worthy of your hard earned money. This place has decided to continue in the mediocre footsteps of El Pollo Loco and have, somehow, taken the food down  another step. Perhaps they are competing for the worst food in town award? PASS.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data in JSON format, here is an objective overview of Pueblo Pollo:\\n\\nPueblo Pollo is a restaurant located in Santa Barbara, CA, that offers New Mexican cuisine and Mexican dishes. The restaurant has a rating of 2.5 stars out of 5 based on reviews from customers. The restaurant's hours of operation are Monday to Sunday from 10:00 AM to 10:00 PM, with valet parking available. The restaurant has outdoor seating and offers Wi-Fi to its customers. Pueblo Pollo also takes reservations and offers takeout options.\\n\\nAccording to customer reviews, the quality of food at Pueblo Pollo is mixed. Some reviewers enjoyed their meals, praising the chicken and rice as being well-prepared and flavorful. However, other reviewers were disappointed with their meals, describing the chicken as greasy and the beans and rice as lacking in flavor and texture. One reviewer noted that the food seemed to be past its expiration date.\\n\\nSome reviewers also expressed frustration with the portion sizes, with one reviewer feeling that the rice portion was too small. Additionally, some reviewers noted that the restaurant's atmosphere and ambiance were not impressive.\\n\\nOverall, Pueblo Pollo seems to be a mixed bag when it comes to the quality of its food and service. While some reviewers enjoyed their meals, others were disappointed with their experiences. Potential customers may want to approach with caution and read reviews carefully before deciding whether to visit.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 105,
+  "source_cluster_id": "sha256:ce05574c2c5c08cf7d718fdb294a767190e7aef7ea388976a5bda430466d0e84",
+  "source_id": "15023",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:76915985686598fc6bd9eb87d65fae03d5dfe9df29acb5e7583dafc9013dccc5",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

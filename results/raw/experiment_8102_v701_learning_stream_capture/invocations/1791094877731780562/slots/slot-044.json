@@ -1,0 +1,142 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.448956701089628,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8017e6514e241502c47160457fdd4fa8c53c56b31fc642673050dfc487cf4043",
+  "human_target": null,
+  "input_tokens": 726,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8017e6514e241502c47160457fdd4fa8c53c56b31fc642673050dfc487cf4043",
+    "feature_hash": "sha256:c1a81b0d019114557b5fbaffcff9be6c911aa39540095746fa252bd54b20098d",
+    "source_normalized_hash": "4375f3efed8437ca828c6cb40ac8cec1825d993389342606e5e5d126be14a0dc",
+    "values": [
+      0.32978878698679565,
+      0.6549443735963759,
+      0.2619047619047619,
+      0.8571428571428571,
+      0.40079365079365076,
+      0.42857142857142855,
+      0.6702112130132043,
+      0.9456063860832306
+    ],
+    "window_count": 36
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 726,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 751
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:528fa99c7d5c873e9af90ee56e6a9c490258c199af7cf23dcfe549512873ba7c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095376,
+    "id": "chatcmpl-Egw8DRjIPGBNKDco62S6wWRxWjupdlb5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 585.672,
+      "predicted_n": 25,
+      "predicted_per_second": 42.68600855086123,
+      "predicted_per_token_ms": 23.42688,
+      "prompt_ms": 658.392,
+      "prompt_n": 648,
+      "prompt_per_second": 984.2160901104508,
+      "prompt_per_token_ms": 1.016037037037037
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 726,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 751
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Golf cart paint can take your E-Z-GO from drab to dynamite with the investment of a little time and money. Whether you want to make your golf cart stand out or you just want to refresh an old paint job, it is important to get the right kind of golf cart paint for your E-Z-GO golf car. In addition, a paint pen will cover small damages like nicks or scratches so that you don't have to paint the entire golf cart.\\\\n\\\\npassage 2:Steps. 1  1. Prepare the golf cart for painting. Strip all trim and bumpers. 2  2. Cover areas that you do not want to paint. Use masking tape and plastic to cover any areas that you will not paint. 3  3. Apply primer to the golf cart. Apply a coat of primer to the golf cart and allow it to dry for 20 minutes.  4. Paint the golf cart. Use a spray gun and aim it perpendicular to the area you are painting. Hold the spray gun approximately 1 foot (0.3 m) from the surface that you are spraying. Apply the base coat of paint and wait 20 minutes for it to dry. Apply a second coat of paint and wait 20 minutes for it to dry.\\\\n\\\\npassage 3:Whether you want to make your golf cart stand out or you just want to refresh an old paint job, it is important to get the right kind of golf cart paint for the outcome you desire. In addition, a paint pen will cover small damages like nicks or scratches so that you don't have to paint the entire golf cart.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to spray a golf cart\\\"}\", \"original_answer\": \"To spray a golf cart, start by preparing the golf cart for painting. This includes stripping all trim and bumpers and covering areas that you do not want to paint with masking tape and plastic. Once prepared, apply a coat of primer to the golf cart and let it dry for 20 minutes. Once the primer is dry, use a spray gun to apply the base coat of paint, holding the gun approximately 1 foot from the surface and aiming it perpendicular to the area you are painting. Let the base coat dry for 20 minutes, then apply a second coat of paint and let it dry for another 20 minutes. If necessary, use a paint pen to cover small damages like nicks or scratches. Always use the right kind of golf cart paint for your E-Z-GO golf car.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 45,
+  "source_cluster_id": "sha256:9f929d88310ca8a26bf4800358d363f0c54da6e625abb7ca74614b446551826f",
+  "source_id": "12353",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8017e6514e241502c47160457fdd4fa8c53c56b31fc642673050dfc487cf4043",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

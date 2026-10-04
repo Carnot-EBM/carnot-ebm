@@ -1,0 +1,135 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.536250509088859,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8f7503672d72fa79c3c1f75522a99fc3ca3c54212d42cc1c2ec909f8c24b473d",
+  "human_target": null,
+  "input_tokens": 930,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8f7503672d72fa79c3c1f75522a99fc3ca3c54212d42cc1c2ec909f8c24b473d",
+    "feature_hash": "sha256:687e7d047a4d1780114709cfa8e5543de5ae075385d9bce7a61c1855565e7186",
+    "source_normalized_hash": "af30c64fb99dd295aa2a72e391f867679b56a1f363d9efbbb469fce2730eff75",
+    "values": [
+      0.2781443589726948,
+      0.5160239934977566,
+      0.0,
+      0.0,
+      0.2727272727272727,
+      0.2857142857142857,
+      0.7218556410273052,
+      0.933066671792309
+    ],
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 930,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 954
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:e03e5e61372d17a3b2341bbaa61414b40312f4b4b17d286894240853c74f6755",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095433,
+    "id": "chatcmpl-kTUoMFJNbWTDVbS3jqQpkWXm6Gk6hd1F",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.906,
+      "predicted_n": 24,
+      "predicted_per_second": 42.484944397829025,
+      "predicted_per_token_ms": 23.53775,
+      "prompt_ms": 851.241,
+      "prompt_n": 852,
+      "prompt_per_second": 1000.8916393829716,
+      "prompt_per_token_ms": 0.9991091549295774
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 930,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 954
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6583 Pardall Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Breweries, Restaurants, Nightlife, Bars, Food, Pubs, Pizza\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Sunday\\\":\\\"1:0-1:15\\\"},\\\"name\\\":\\\"Rincon Brewery\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-06-22 23:43:09\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Rincon is so conveniently located on Pardall that I'm surprised I hadn't gone more often when I still lived in IV. \\\\n\\\\nDrinks here were amazingly refreshing after a hot day at the beach, price was just right, and employees here are friendly and helpful. \\\\n\\\\nI love their assortment of games (giant Jenga, giant Connect 4, and even a knock-off Go Fish) because it makes it so easy to hang out here with your friends while sipping on a cold one. \\\\n\\\\nI've only tried the kombucha and each sip was cold and crisp. Fortunately they have a private parking lot (rare for a business in IV), making it easy to come back.\\\"},{\\\"review_date\\\":\\\"2018-06-18 03:50:36\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Still can't believe Gio's is gone but Rincon is a satisfactory replacement. Most of their beer pitches are $17.99 which is kinda pricey, especially when the IV pale ale is good and only $9.99! I like how they are prepared for customers to play games with plastic cups + ping pong balls available! We brought die and played games at a table which was easy as the place was pretty empty on a Saturday afternoon. They don't wristband like Gio's used to.\\\"},{\\\"review_date\\\":\\\"2018-05-19 20:05:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Beer tastes great. Massive upgrade to Giovannis. Coming from an old Gaucho who hates a lot of the Isla Vista changes. This is a good one though.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Rincon Brewery is a popular brewery, restaurant, and bar located in the heart of Isla Vista, CA. With a 4.0-star rating and positive customer reviews, Rincon Brewery offers a wide selection of delicious beers, including their famous IV pale ale, as well as a variety of games such as giant Jenga and Connect 4 for customers to enjoy. The brewery has a cozy atmosphere, with a private parking lot, making it a convenient and enjoyable spot to meet with friends or family. The staff is friendly and helpful, and the prices are reasonable, with most beer pitches priced at $17.99 and some affordable options like the IV pale ale for $9.99. Customers appreciate the availability of plastic cups and ping pong balls for playing games, and the brewery is a great spot to visit on a Saturday afternoon. Some customers mention that the brewery is a significant improvement over its predecessor, Giovanni's, and is a welcome addition to the Isla Vista community. Overall, Rincon Brewery is a must-visit destination for beer enthusiasts and those looking for a fun and relaxed spot to socialize with friends.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 85,
+  "source_cluster_id": "sha256:5f5ebd22a27a61d44d3bb89e81c6fbc3e6b2e0b81cff4a9aabf848c542e9547e",
+  "source_id": "13656",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8f7503672d72fa79c3c1f75522a99fc3ca3c54212d42cc1c2ec909f8c24b473d",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

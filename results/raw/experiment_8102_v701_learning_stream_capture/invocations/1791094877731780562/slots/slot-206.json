@@ -1,0 +1,137 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.2082366799004376,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:f4d8bb26ae882f38f6c3998b2c068b33b61f8ea5f2f0444ea3e77bdfe8a73b39",
+  "human_target": null,
+  "input_tokens": 582,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:f4d8bb26ae882f38f6c3998b2c068b33b61f8ea5f2f0444ea3e77bdfe8a73b39",
+    "feature_hash": "sha256:d6969985d1cccefee720d359dabec760a1e13b238a4f20d24cbe9aa5db4844d4",
+    "source_normalized_hash": "6d2b75fdc1eb729ce29905b0c55e67a3dd21ed72c1af5f7be35b872fc201624d",
+    "values": [
+      0.3231981981981982,
+      0.4594594594594595,
+      0.16666666666666666,
+      1.0,
+      0.0,
+      0.0,
+      0.6768018018018017,
+      0.9189189189189189
+    ],
+    "window_count": 24
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 582,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 605
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:eb8aa161b2d564ca99fed2ba046eeee1242f51982a06fa8066a16ddc12574967",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095600,
+    "id": "chatcmpl-yZLUCe7avPeor3q4UPuQPHzNGCl3MYVT",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.385,
+      "predicted_n": 23,
+      "predicted_per_second": 42.562247286656735,
+      "predicted_per_token_ms": 23.495,
+      "prompt_ms": 536.118,
+      "prompt_n": 504,
+      "prompt_per_second": 940.091547010173,
+      "prompt_per_token_ms": 1.0637261904761905
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 582,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 605
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Compassion A great veterinarian is very compassionate, both to animals and their owners. 2  They are able to put animals and their owners at ease during a visit. 3  Customer Service Skills A great veterinarian has excellent customer service skills and can satisfy the animal care needs of pet owners. great veterinarian is held in the highest regard by animal lovers and pet owners. They provide much needed preventative and emergency care to beloved dogs, cats, horses, and other animals. To be the most successful in the field, a great veterinarian should have:\\\\n\\\\npassage 2:1 Communication Skills A great veterinarian has excellent communication skills and can talk effectively with pet owners to determine exactly what the animal needs, as well as explain clearly to the owner what the diagnosis is and what the treatment will be. great veterinarian is held in the highest regard by animal lovers and pet owners. They provide much needed preventative and emergency care to beloved dogs, cats, horses, and other animals. To be the most successful in the field, a great veterinarian should have:\\\\n\\\\npassage 3:Passion for Animals. The most important skill is a passion for animals and a commitment to the health and well-being of animals. The future veterinarian cannot just own a dog or cat; he must have desire to care for the pet and keep it healthy and happy.nterpersonal Skills. Almost every animal treated by a veterinarian has an owner. Whether it is a cat, dog, ferret, bird or any other type of pet, the owners of these animals are the clients who pay the bills. Good interpersonal skills with clients are essential when treating their pets.\\\\n\\\\n\\\",\\\"question\\\":\\\"what skills are needed to become a veterinarian\\\"}\", \"original_answer\": \"Based on the given passages, to become a veterinarian, one needs compassion towards animals and their owners, good communication skills to explain diagnoses and treatments to pet owners, passion for animals and commitment to their health and well-being, and excellent interpersonal skills to work with pet owners.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 207,
+  "source_cluster_id": "sha256:f84e743be89f3f21ae8873d57530fddc3d015f958faafbfddc4a5d1bbb1d747b",
+  "source_id": "12399",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:f4d8bb26ae882f38f6c3998b2c068b33b61f8ea5f2f0444ea3e77bdfe8a73b39",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4924999099457636,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:f79364180491e90d07ff7445d7b481bff6d462db4603301728993ac361afd7ff",
+  "human_target": null,
+  "input_tokens": 899,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:f79364180491e90d07ff7445d7b481bff6d462db4603301728993ac361afd7ff",
+    "feature_hash": "sha256:4c6cf39a4934329ae11e0614066dcb3e40b802ea58b6ccaa2a65910938881643",
+    "source_normalized_hash": "3805fd59136503c7528cd2f1fecfd65306af642307feebecb182ddc1a4c7046e",
+    "values": [
+      0.29087687166634535,
+      0.5641409212132896,
+      0.35,
+      0.875,
+      0.125,
+      0.125,
+      0.7091231283336547,
+      0.9035812688773215
+    ],
+    "window_count": 10
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 899,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 921
+    }
+  },
+  "probability": 0.95,
+  "public_eligible": true,
+  "public_hash": "sha256:40af715471d368fe3bdc422e50b0dc2686a3a67ffef53f49fe1b43d75c187f59",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095410,
+    "id": "chatcmpl-kaG5CoqIf5aNlBijqGRBUEbgNdoHbXTw",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 514.977,
+      "predicted_n": 22,
+      "predicted_per_second": 42.720354501268986,
+      "predicted_per_token_ms": 23.408045454545455,
+      "prompt_ms": 844.244,
+      "prompt_n": 821,
+      "prompt_per_second": 972.4676752218553,
+      "prompt_per_token_ms": 1.0283118148599268
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 899,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 921
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"146 S Fairview Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":null},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":2.0,\\\"categories\\\":\\\"Food, Burgers, Restaurants, Fast Food, Coffee & Tea\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"5:0-0:0\\\",\\\"Monday\\\":\\\"5:0-0:0\\\",\\\"Saturday\\\":\\\"5:0-0:0\\\",\\\"Sunday\\\":\\\"5:0-0:0\\\",\\\"Thursday\\\":\\\"5:0-0:0\\\",\\\"Tuesday\\\":\\\"5:0-0:0\\\",\\\"Wednesday\\\":\\\"5:0-0:0\\\"},\\\"name\\\":\\\"McDonald's\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-17 23:12:29\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I was charged for somebody else's order when I picked up my order, when I went into a tell the manager so he can fix it he told me that I needed to call the one 800 number that they don't fix it on site. I called the one 800 number and they informed me that it does need to be fixed inside the branch.\\\\nI don't like that the management is not aware of the proper procedures.\\\\nIn the end I paid $22.00 for and iced coffee.\\\"},{\\\"review_date\\\":\\\"2021-12-07 20:34:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I was given the wrong order entirely not happy allergic to all of the food that was given to me\\\"},{\\\"review_date\\\":\\\"2021-11-29 23:22:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I like their coffee as a rule, when they manage to make it properly.\\\\nStopped by there to get a coffee and apple pie. I see the fellow pour it out of the beginning of the brew. On complaining that it is a bad product that way, I was rewarded with a blank look.\\\\n\\\\nI just left. Left the apple pie, left their poor excuse of a coffee.\\\\n\\\\nIt would mean something if there was an adult on site that one could speak to but I just give up. Its tiring and just becomes easier, better, make my own or go elsewhere.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"McDonald's is a fast food restaurant located at 146 S Fairview Ave in Goleta, California. The restaurant offers a variety of burgers, fries, salads, and desserts. They also provide coffee and tea options. McDonald's has outdoor seating available, and WiFi is available for free. They offer takeout services and are good for groups. Music and ambiance features such as touristy, hipster, romantic, divey, intimate, trendy, upscale, and classy are not available. Customers have given varying reviews of their experiences at this location, some highlighting issues with incorrect orders being served and customer service. Overall, McDonald's appears to be a fast food restaurant with mixed reviews from its customers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 68,
+  "source_cluster_id": "sha256:477e62d1079b1af17c3d6b8ddb62a095bd4748b9bf707321fec1c85c5006c0ab",
+  "source_id": "14010",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:f79364180491e90d07ff7445d7b481bff6d462db4603301728993ac361afd7ff",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

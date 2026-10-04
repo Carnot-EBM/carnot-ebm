@@ -1,0 +1,142 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 1.4805165780708194,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:8747ae3951ca176c19c668ef62d087604d0fc8b4f7ebcab09088dbc608055c78",
+  "human_target": null,
+  "input_tokens": 873,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:8747ae3951ca176c19c668ef62d087604d0fc8b4f7ebcab09088dbc608055c78",
+    "feature_hash": "sha256:1f09f21f72645173e12fc4a035b0d140462534b08432cc4cb56af5599ade2a3a",
+    "source_normalized_hash": "3089508a60e840e4acbfd41f6be12a0fa01911b9695364ff5c7b4ee7e8ce2d33",
+    "values": [
+      0.33659242851423077,
+      0.7059759593887267,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.6634075714857692,
+      1.0
+    ],
+    "window_count": 36
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 873,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 896
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:74537207c680dbcc5b0c35ca926db8298b34b5e87e4054463dbf003d676b679f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095582,
+    "id": "chatcmpl-xFwnYqXYQ1KpX0rx5QLR6ZoaBvYusqay",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.465,
+      "predicted_n": 23,
+      "predicted_per_second": 42.47735310684901,
+      "predicted_per_token_ms": 23.54195652173913,
+      "prompt_ms": 823.749,
+      "prompt_n": 795,
+      "prompt_per_second": 965.0998058874729,
+      "prompt_per_token_ms": 1.0361622641509434
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 873,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 896
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Have Mercy! Lifetime has its follow-up to its \\\"Unauthorized Saved By the Bell\\\" TV movie: the network is now taking on Full House. The female-skewing cable network has greenlit \\\"The Unauthorized Full House Story\\\" (working title), The Hollywood Reporter has learned. In the same vein as its \\\"Saved By the Bell\\\" pic, Lifetime's Full House Story will look at the rise of the cast \u2014 including John Stamos, Bob Saget and the Mary-Kate and Ashley Olsen \u2014 and explore the pressure they faced to balance idyllic family life on the show with the more complicated reality of their own lives outside the series. Additionally, it will look at the warm bond that grew between the cast as the show became one of America's most beloved family sitcoms. Casting will begin immediately. An air date for the \\\"Full House\\\" tell-all has yet to be determined. See more Broadcast TV's Returning Shows 2015-16. Ron McGee, who penned the \\\"Unauthorized Saved by the Bell Story,\\\" will write the \\\"Full House\\\" take. The telepic will be produced by the Bell team of Front Street Pictures and Ringaling Productions, with Harvey Kahn and Stephen Bulka also on board to exec produce. For Lifetime, the news comes after its two-hour Bell take fizzled on Labor Day 2014. Despite tons of build-up and excitement from diehard fans of the original comedy series, the Bell take drew only 1.6 million total viewers, with 1.1 million viewers among the 18-49 and 25-54 demographics. That pic was based on former star Dustin Diamond's Behind the Bell 2009 tell-all, with Dylan Everett starring as Mark-Paul Gosselaar and Sam Kindseth as Diamond. Full House aired on ABC from 1987 to 1995. Netflix this month revived the beloved family comedy as \\\"Fuller House,\\\" with original stars Candace Cameron-Bure (D.J.), her on-screen sister, Jodie Sweetin (Stephanie), and best friend Andrea Barber (Kimmy), in a 13-episode follow-up series. From its start as an unassuming family comedy in 1987 to its eventual wildly popular 192-episode run, \\\"Full House\\\" was \\\"the little sitcom that could.\\\" It made huge stars of its cast \u2014 from Bob Saget and Dave Coulier, who were grinding away on the standup circuit, to John Stamos breaking hearts on General Hospital, and the Olsen twins. See the original story at The Hollywood Reporter's website. \u00a92015 The Hollywood Reporter. All rights reserved.\\n\", \"original_answer\": \"Lifetime has greenlit \\\"The Unauthorized Full House Story\\\", a follow-up to its \\\"Unauthorized Saved By the Bell\\\" movie. The TV movie will explore the rise of the cast and the pressure they faced to balance family life on the show with their own realities. Ron McGee, who wrote \\\"The Unauthorized Saved By the Bell Story\\\", will write the script for \\\"Full House\\\". The film will be produced by the Bell team and will look at the bond that grew between the cast as the show became one of America's most beloved family sitcoms. Casting will begin immediately and an air date has yet to be determined.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 190,
+  "source_cluster_id": "sha256:07d3ebd057a72c2129de22eb78c25c119cafa1d948aa55fb2374f82240a7267a",
+  "source_id": "11876",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:8747ae3951ca176c19c668ef62d087604d0fc8b4f7ebcab09088dbc608055c78",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

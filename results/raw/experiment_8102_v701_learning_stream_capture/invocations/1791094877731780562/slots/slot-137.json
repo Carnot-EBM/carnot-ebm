@@ -1,0 +1,85 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "answer_units_over_budget",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:c8ddfdd7090c98f9b8ac27ebffbc42f0f3aec8f1f5049c7a4d964062e28674d8",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": "answer_units_over_budget",
+    "family_id": "sha256:c8ddfdd7090c98f9b8ac27ebffbc42f0f3aec8f1f5049c7a4d964062e28674d8",
+    "feature_hash": "sha256:15c627d41ec3f602d716a482ae33d76d05004e1c378e43de2c4b69838919fab4",
+    "source_normalized_hash": "1b8b8cb11d19b9d253351c46a4d032a9e3ca2c69323e7f372a2177268feff48e",
+    "values": null,
+    "window_count": 22
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:579ad98d5bb0ac772ea952604ceb4113ca2ec85a4ed8513815cbd73ca63d9ac9",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Points to be kept in mind while pursuing a career in banking: 1  To be able to start a career in banking candidates should understand that this career will involve lot of hard work, attention to detail, ability to achieve the goals, maintenance of security, and ability to learn on a continuous basis. Candidates who are pursuing a career in banking should be perfectionists at work. 2  They cannot let any amount of money being misused or fall under discrepancy. 3  They have to do all electronic transactions and paperwork perfectly.\\\\n\\\\npassage 2:Answers. Best Answer: In investment banking, it is like any career, you start as an apprentice and then apply for jobs and work your way in. In China, there is not that much investment banking going on compared to the west.Best way is to get in touch directly with investment bankers, and ask. am also interested in doing an internship in china in the same field. What are good... show more I am senior in college with a double major in Finance and International Business. I am weighting my options and I want to work in the investment banking field.\\\\n\\\\npassage 3:1 To be able to start a career in banking candidates should understand that this career will involve lot of hard work, attention to detail, ability to achieve the goals, maintenance of security, and ability to learn on a continuous basis. Candidates who are pursuing a career in banking should be perfectionists at work. 2  They cannot let any amount of money being misused or fall under discrepancy. 3  They have to do all electronic transactions and paperwork perfectly.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to start a career in banking\\\"}\", \"original_answer\": \"Based on the provided passages, here are some steps to start a career in banking:\\n\\n1. Understand the industry: It is important to have a thorough understanding of the banking industry, including its dynamics, regulations, and expectations. This can involve researching the industry, networking with professionals, and gaining practical experience through internships or part-time jobs. (Passage 1)\\n2. Develop transferable skills: Banking involves working with numbers, attention to detail, and the ability to meet deadlines. Developing strong analytical, problem-solving, and communication skills can help you excel in this industry. (Passage 1)\\n3. Build a strong foundation in finance: A degree in finance or a related field can provide a solid foundation for a career in banking. Additionally, studying international business or economics can help you understand the global financial landscape and how banks operate in different markets. (Passage 2)\\n4. Network and make connections: Building relationships with professionals in the industry can help you learn about job opportunities and gain valuable insights into what employers are looking for. Attend industry events, join professional organizations, and connect with alumni from top banks to expand your network. (Passage 2)\\n5. Consider specializing: Within the banking industry, there are many areas to specialize in, such as investment banking, retail banking, or commercial banking. Identifying your strengths and interests can help you determine which area to focus on and make your resume stand out. (Passage 1)\\n6. Stay up to date with industry trends: The banking industry is constantly evolving, and staying informed about the latest trends and developments can help you succeed. Read industry publications, attend conferences, and participate in online forums to stay engaged and learn from others. (Passage 1)\\n7. Pursue relevant certifications: Depending on your area of interest within the banking industry, pursuing relevant certifications can demonstrate your expertise and commitment to the field. For example, the Chartered Financial Analyst (CFA) designation is highly respected in investment banking. (Passage 2)\\n8. Seek mentorship: Finding a mentor who is experienced in the banking industry can provide valuable guidance and support throughout your career journey\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "slot": 138,
+  "source_cluster_id": "sha256:25a73ea24067d6dd70981fe58257751777369beb961c6435bd30a3163da4fad3",
+  "source_id": "15306",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:c8ddfdd7090c98f9b8ac27ebffbc42f0f3aec8f1f5049c7a4d964062e28674d8",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

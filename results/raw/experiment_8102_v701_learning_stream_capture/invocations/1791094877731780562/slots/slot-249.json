@@ -1,0 +1,129 @@
+{
+  "arm": "full_source",
+  "capture_identity": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.9576600370928645,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "sha256:5a6de2a10f9f403b3fc59d8d192d2f5fecfa2c90b4c67fac53da112066abde84",
+  "human_target": null,
+  "input_tokens": 336,
+  "issued_state": "sha256:4e2b1b18bd0bc38cb68dcd4a979f6f95a499a1b1c5e1b0eec2d7d9b3a56db7e8",
+  "lexical_feature": {
+    "abstention": null,
+    "family_id": "sha256:5a6de2a10f9f403b3fc59d8d192d2f5fecfa2c90b4c67fac53da112066abde84",
+    "feature_hash": "sha256:99202f17cd533ecf559176506036e0e8398361063f4ccf7133b80b50ffa359eb",
+    "source_normalized_hash": "961f0e598117e9c3ef84181be57f592db5722a340e7d88f8f04469ba61b94435",
+    "values": [
+      0.2125,
+      0.25,
+      0.4,
+      1.0,
+      0.0,
+      0.0,
+      0.7875,
+      0.875
+    ],
+    "window_count": 10
+  },
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 336,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 359
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:0fd17ea42d3b78e4269fb205a8c6f20b8b3d485f9103826be80577f307f80aa3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791095659,
+    "id": "chatcmpl-VtOtDpMIenV2b2LzcuCyMvbMubMiakNk",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.127,
+      "predicted_n": 23,
+      "predicted_per_second": 42.582577801146776,
+      "predicted_per_token_ms": 23.483782608695652,
+      "prompt_ms": 300.595,
+      "prompt_n": 258,
+      "prompt_per_second": 858.2977095427402,
+      "prompt_per_token_ms": 1.1650968992248063
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 336,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 359
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:There were few positive effects for the African people themselves. One of these was the fact that a very limited number of Africans were offered a western education, but the negatives for the people far outweighed this. (The imperialism process was definitely good for the European powers.\\\\n\\\\npassage 2:The developlnent of colonialisln and the partition of Africa by the European colonial powers arrested the natural development of the African economic system. Africa prior to colonialisln was not econolnical1y isolated fro In the rest of the world.\\\\n\\\\npassage 3:European Imperialism In Africa: 1885 - c. 1950 AD. Major Accomplishments: important to note both the negative and the positive aspects of European imperialism.\\\\n\\\\n\\\",\\\"question\\\":\\\"negatives of colonialism in africa\\\"}\", \"original_answer\": \"Unable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "slot": 250,
+  "source_cluster_id": "sha256:9ae2fc5a62edc2542f66efcf9f75e6779526e74b30d8a86630fb1db03963b7c9",
+  "source_id": "12245",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:5a6de2a10f9f403b3fc59d8d192d2f5fecfa2c90b4c67fac53da112066abde84",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}
