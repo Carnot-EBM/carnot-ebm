@@ -92315,3 +92315,31 @@ primary_publication. Current V701 receipt joins remain separate from the current
 run's zero model-invocation counts. Primitive rows, conditional reuse estimates,
 private CLI receipts and the single failed bounded global diagnostic are retained
 under `results/raw/experiment_8106_v701_radial_service_cost/`. NFR-01 remains open.
+
+## REQ-REPORT-8108: Independent board custody and complete-service bounds
+
+Authenticate the recorded board rows independently through byte-bound historical
+custody and each original source/transcript hash. Preserve original workload,
+code hashes and dates: KV260 quadratic Ising fabric k_max<=5, PolarFire Linux CPU,
+and GateMate unchanged physical/JTAG 0xffffffff block. Missing board evidence
+blocks only that board; no current hardware execution, purchase or new bitstream.
+Optionally join authenticated Exp8106 service primitives with readiness one,
+including a blocked acquisition verdict. Independently charge lookup, transport,
+fallback, durable writes and all residual host work in an arithmetic-free Amdahl
+bound. Missing/invalid service evidence is an unavailable subresult with exact
+failed gate operands. Export assessment readiness separately from acceleration.
+Freeze validations before measurement; require traced tests, outside-checkout
+success/blocked/mutation/cold CLI, consumers, Ruff, strict mypy, scoped spec and
+100 percent statement coverage of added code. Preserve global-health failures
+separately. Publish only normally exited, checked candidates with primary_publication.
+
+### SCENARIO-REPORT-8108: Independent failures and replay
+
+Private tests SHALL remove one board, change its workload, reject forged service
+primitives and reject changed precision/replay bytes without touching primaries.
+Completed missing inputs are terminal blocked; owned check failures disqualify
+readiness. Fixtures/exposed development grant zero generalization and oracle credit.
+
+Implementation: `python/carnot/reporting/radial_hardware_8108.py`,
+`python/carnot/experiment_8108_v701_radial_hardware_boundary.py`, thin CLI and
+`tests/python/test_radial_hardware_8108.py`; operational reconciliation is external.

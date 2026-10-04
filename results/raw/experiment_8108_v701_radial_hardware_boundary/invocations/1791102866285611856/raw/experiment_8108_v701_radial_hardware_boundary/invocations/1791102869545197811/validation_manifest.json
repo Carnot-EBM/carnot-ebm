@@ -1,0 +1,72 @@
+{
+  "commands": [],
+  "config": {
+    "arithmetic": "float64; quantized storage only",
+    "bits": [
+      8,
+      12,
+      16
+    ],
+    "center_range": [
+      -4,
+      4
+    ],
+    "coefficient_range": [
+      -8,
+      8
+    ],
+    "floating_allowance": 1e-11,
+    "scaled_input_range": [
+      -4,
+      4
+    ],
+    "seed": 7008085,
+    "sigma_range": [
+      0.25,
+      16
+    ],
+    "systems": 64,
+    "thresholds": [
+      0.1,
+      0.5
+    ],
+    "transcendental_assumption": "exp and sigmoid at most 4 ulp on this host"
+  },
+  "scope": "frozen before CPU arithmetic",
+  "terminal_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8108_v701_radial_hardware_boundary.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8108_v701_radial_hardware_boundary/invocations/1791102866285611856/raw/experiment_8108_v701_radial_hardware_boundary/invocations/1791102869545197811/terminal_candidate.json"
+      ],
+      "name": "cold_replay",
+      "scope": "terminal",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8108_v701_radial_hardware_boundary/invocations/1791102866285611856/raw/experiment_8108_v701_radial_hardware_boundary/invocations/1791102869545197811/terminal_candidate.json"
+      ],
+      "name": "adversarial",
+      "scope": "terminal",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8108_v701_radial_hardware_boundary/invocations/1791102866285611856/raw/experiment_8108_v701_radial_hardware_boundary/invocations/1791102869545197811/terminal_candidate.json"
+      ],
+      "name": "strict_rows",
+      "scope": "terminal",
+      "timeout_s": 60
+    }
+  ]
+}

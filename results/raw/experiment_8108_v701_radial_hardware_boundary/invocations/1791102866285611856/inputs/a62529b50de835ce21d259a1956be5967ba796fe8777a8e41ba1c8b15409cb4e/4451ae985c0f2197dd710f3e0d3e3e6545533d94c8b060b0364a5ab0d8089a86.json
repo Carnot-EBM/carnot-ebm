@@ -1,0 +1,67 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8106_v701_radial_service_cost.json",
+  "primary_sha256": "sha256:4451ae985c0f2197dd710f3e0d3e3e6545533d94c8b060b0364a5ab0d8089a86",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8106_v701_radial_service_cost.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8106_v701_radial_service_cost/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8106_v701_radial_service_cost.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8106_v701_radial_service_cost/terminal_candidate.json"
+        ],
+        "duration_s": 3.540452830027789,
+        "execution_cwd": "/tmp/carnot-8106-terminal-v7ey5m29",
+        "exit_code": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8106_v701_radial_service_cost/validation_logs/cold_replay/00_cold_replay.log",
+        "log_sha256": "sha256:a19952f5892f4a3dde399ad03520a2afa39c40f9b5c54831be2175859685cf18",
+        "name": "cold_replay",
+        "output_tail": "[exp8106] start completed=0 pending=0\n[exp8106] before_binding_load completed=0 pending=0\n[exp8106] after_binding_load completed=0 pending=0\n",
+        "passed": true,
+        "scope": "private_cli",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8106_v701_radial_service_cost/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8106_v701_radial_service_cost/terminal_candidate.json"
+        ],
+        "duration_s": 12.283643990987912,
+        "execution_cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8106_v701_radial_service_cost/validation_logs/adversarial/00_adversarial.log",
+        "log_sha256": "sha256:e2b4c70b0899b704080b826b953bddccccc747ed427b04d44b52352f37716f3e",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8106_v701_radial_service_cost/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8106,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_blocked_changed_content_current_capture\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8106_v701_radial_service_cost/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8106_v701_radial_service_cost/terminal_candidate.json"
+        ],
+        "duration_s": 0.2075201258994639,
+        "execution_cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8106_v701_radial_service_cost/validation_logs/strict_rows/00_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

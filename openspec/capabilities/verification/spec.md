@@ -48148,3 +48148,21 @@ Private tests in `tests/python/test_radial_service_cost_8106.py` cross the quali
 native binary, cache invalidation, complete state serialization and cold restore.
 The measured scope is host service work with supplied radial coefficients.
 Unavailable exact changed-content judgments abstain and remain acquisition blocks.
+
+## REQ-VERIFY-8108: Scoped radial quantization with safe typed actions
+
+Exp8108 SHALL reuse the exact 64 authenticated Exp8085 seeded systems. Compare
+float64 Gaussian probabilities with declared signed 8, 12 and 16 bit uniform
+center and coefficient storage; retain float64 inputs, width and arithmetic.
+Declare scaled input/center, coefficient and width limits, clipping, a Gaussian
+Lipschitz plus sigmoid error envelope with outward rounding, and the host
+floating arithmetic allowance. Outside-domain or threshold-overlapping results
+SHALL use authoritative float64 before issuing actions. Save per-point operands,
+probabilities, errors, bounds, fallback flags and actions. Fixtures supply zero
+independent natural sources and cannot establish a global hardware bound.
+
+### SCENARIO-VERIFY-8108: Bounds and precision failures
+
+Private fixtures SHALL exercise every precision, clipping and exact typed-action
+ties; a reported bound below observed error SHALL disqualify the owned result.
+Cold replay SHALL verify exact bytes and recompute numerical rows independently.
