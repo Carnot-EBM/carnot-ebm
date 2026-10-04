@@ -19511,3 +19511,7 @@ code |
 | 2026-10-04 21:50 UTC | Bind fourteen tasks and preserve the terminal V703 | OK | 86 passed, 1 warning in 25.53s |
 | 2026-10-04 22:09 UTC | Qualify source evidence capture after the private  | OK | 106 passed, 1 warning in 20.11s |
 | 2026-10-04 23:18 UTC | Qualify delayed learning independently of source c | OK | 99 passed, 1 warning in 252.85s (0:04:12) |
+| 2026-10-04 23:21 UTC | Capture paired Qwen evidence on fixed fit and tune | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8137-source-protocol.source_protocol_ready_score (actual=0 == expected=1) |
+| 2026-10-04 23:23 UTC | Train calibrated energy decisions with equal-infor | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8139-fit-evidence-capture) |
+| 2026-10-04 23:23 UTC | Capture reserved Qwen evidence after every decisio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8140-evidence-energy-fit) |
+| 2026-10-04 23:23 UTC | Independently measure evidence-linked calibration | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8141-reserved-evidence-capture) |
