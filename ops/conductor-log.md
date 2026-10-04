@@ -19491,3 +19491,4 @@ code |
 | 2026-10-04 16:45 UTC | Plan milestone 2026.10.703 | OK | 13 tasks proposed |
 | 2026-10-04 16:59 UTC | Milestone 2026.10.703 activated | OK | 13 tasks queued |
 | 2026-10-04 17:25 UTC | Bind thirteen tasks with the exact authority-reade | OK | 88 passed, 1 warning in 29.41s |
+| 2026-10-04 17:37 UTC | Seal evidence-span comparisons and qualify model i | FAIL | Codex CLI error: ile(log))] + atomic_json(raw / "validation_receipts.json" |

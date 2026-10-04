@@ -2,6 +2,29 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8124: Publish a normally validated no-model protocol
+
+Exp8124 publishes its primary and primitive evidence through primary_publication.
+Declare no_model_load, aggregation_from_upstream_artifacts, MODEL_SPECS=[] and
+zero current calls. Historical Qwen work appears only in cited_upstream_artifacts;
+trained heads are distinct. Exposed development earns zero generalization or
+learning benefit. Freeze argv before measurement; run owned/consumer/E2E-015/019,
+Ruff check/format, strict mypy, scoped spec checks and100 percent new statement
+coverage. Run the full Python suite once as separate repository-health evidence.
+Run unmodified adversarial_verify and strict row lint with bounded heartbeats;
+timeouts never pass. External unchanged blocks terminate complete_blocked with
+actual operands. Owned failures disqualify and zero all readiness. Preserve
+failed candidates and primaries. Operational reconciliation is delegated to the
+conductor by the final operator instruction; do not edit its code or ops pages.
+
+### SCENARIO-REPORT-8124: Private CLI and terminal accounting
+
+Outside-checkout private success, external-block, mutation and cold replay routes
+resolve imports without PYTHONPATH. Real terminal builders cover zero-call,
+load-only, current-generation and resumed-historical accounting without loading
+a model. Replay independently reduces rows and checks source/config/log hashes.
+
+
 ## REQ-REPORT-8122: Terminal V702 capstone accounting
 
 Exp8122 SHALL bind all thirteen Exp8110 activation contracts and independently

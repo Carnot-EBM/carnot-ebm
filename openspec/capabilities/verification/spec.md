@@ -2,6 +2,29 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8124: Seal V703 evidence and expected identity before observations
+
+Authenticate Exp8098 original640 source roles and Exp8111 custody without
+resplitting or replacing missing sources. Preserve fit128/tune64/evaluation128/
+stream256/retention64 and original masks. Freeze exact holistic/span prompts,
+parser, source-hash arm order and twelve public features before evaluator access.
+Each arm permits one judgment and128 output tokens; span permits at most one
+verbatim32-word quote with complete-source UTF-8 byte offsets. Invalid/absent
+quotes remain observations, never inferred entailment labels. Build expected
+runtime identity from authenticated Exp8102/8118 bytes before testing nested
+runtime_identity.model_revision, cache revision, GGUF, runtime or template.
+Expected operands may never be filled from current observed operands.
+Ingest RT4CHART2603.27752v2 local/global methods and delayed-capacity2606.11711;
+record bounded adaptations and absent theorem transfer. KAN-CL remains deferred.
+
+### SCENARIO-VERIFY-8124: Independent gates and byte custody
+
+Production preconditions reject absent/mutated nested revision and cache revision,
+GGUF/runtime/template drift. Methods, historical stream and optional capture
+readiness remain independent. UTF-8 offsets, malformed probabilities, multiple
+quotes and word limits are tested on private bytes. Preserve original assertions.
+
+
 ## REQ-VERIFY-8122: Independent V702 branch reductions
 
 Reopen primitive rows to recompute methods, finite memory, acquisition, service

@@ -6432,10 +6432,21 @@ independent generalization claim, and the retention panel cannot certify safety.
 | [EAEV 2609.08267](https://arxiv.org/abs/2609.08267) | Ingested, primary abstract | Register source perturbations and duplicate controls; whole-answer probability diagnostics do not reproduce entity alignment. |
 | [KAC 2503.21076](https://arxiv.org/abs/2503.21076) | Ingested, primary abstract | Bound radial capacity; multivariate Gaussian centers differ from channel-wise KAC bases. |
 | [Forgetting 2511.12828](https://arxiv.org/abs/2511.12828) | Ingested, primary abstract | Measure independent retention; localized support alone does not prevent high-dimensional forgetting. |
-| [Capacity 2606.11711](https://arxiv.org/abs/2606.11711) | Ingested, primary abstract | Persist finite pending feedback; empirical admission guards inherit no scheduler regret theorem. |
+| [Capacity 2606.11711](https://arxiv.org/abs/2606.11711) | Ingested, primary methods, Exp8124 2026-10-04; prior abstract ingestion preserved | Persist finite pending feedback; empirical admission guards inherit no scheduler regret theorem. |
 | [On-chip KAN 2602.02056](https://arxiv.org/abs/2602.02056) | Ingested, primary abstract, v4 | Charge updates and memory movement; spline FPGA results are not CPU radial or Carnot hardware measurements. |
 
 Exact primary HTML bytes are retained in Exp8111's literature directory. The
 fresh primary retrieval is bounded to these five sources. The prior inaccessible
 citation service is a bibliographic limitation, not a science gate. The sealed
 protocol is `openspec/change-proposals/v702-methods-and-stream-protocol.md`.
+
+## 2026-10-04 Exp8124 method ingestion
+
+RT4CHART2603.27752v2: ingested primary Sections3.3–3.6. Frozen complete-source
+holistic/span arms adapt evidence custody only; exact quotes do not prove
+entailment. Original human labels remain fixed. Raw HTML is preserved under
+results/raw/experiment_8124_v703_evidence_protocol/literature/.
+Capacity2606.11711v1: ingested primary Section2 and scheduler methods. Preserve
+V702 delay20/capacity32 and pending/lost-feedback accounting. Empirical center
+learning inherits no convex regret theorem. KAN-CL importance anchoring remains
+deferred under the existing retirement. No literature-service access gates science.
