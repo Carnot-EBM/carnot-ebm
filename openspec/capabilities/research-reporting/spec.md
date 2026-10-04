@@ -92727,3 +92727,31 @@ REQ-REPORT-8132 implementation: `carnot.experiment_8132_v703_service_cost`,
 the matching script-path CLI and private `test_service_cost_8132.py` implement
 qualification, four-arm timing, paired reduction, custody and terminal routes.
 The conductor owns the requested ops and traceability reconciliation.
+
+# REQ-REPORT-8133: Qualify current reader behavior and inspect only new events
+
+Exp8133 SHALL preserve Exp8120's actual historical reader hash failure.
+A new receipt SHALL bind current reader code, tests, private raw-event controls,
+and the preserved Exp8107 frontier. Historical code hashes SHALL NOT be replaced.
+Qualification SHALL precede a 120-second bounded inventory. Only authenticated
+redirect identities beyond the preserved frontier enter natural reductions.
+Deduplicate run/game/seed/redirect identities. Retain malformed and missing units.
+No new outcomes SHALL terminate as complete_null_no_new_outcomes. Reader readiness
+and new-outcome readiness SHALL be separate. Models, games and solve credit stay zero.
+Recommendations require 30 resolved firings across five games, matched within-game
+evidence and held-game checks. Smaller panels remain descriptive; policy stays unchanged.
+The conductor owns ops and traceability reconciliation.
+
+## SCENARIO-REPORT-8133-CONFORMANCE
+
+Current reader controls SHALL admit supported wrapper/frame outcomes and reject
+missing frames, altered outcomes and repeated event identities. Compare exact cold
+reductions against preserved raw frontier rows. Private controls are circular_positive
+and SHALL NOT enter natural rows. Keep source, code, config and control byte hashes.
+
+## SCENARIO-REPORT-8133-FRONTIER
+
+Unchanged frontier identities SHALL supply zero new outcomes. Missing external
+custody blocks with the actual operand. Owned failures disqualify and zero readiness.
+Freeze unit, consumer, E2E-017, CLI, lint, strict type and scoped spec commands first.
+Every added statement SHALL be covered. Publish only normally validated candidate bytes.

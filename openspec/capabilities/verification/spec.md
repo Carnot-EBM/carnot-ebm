@@ -48490,3 +48490,16 @@ REQ-VERIFY-8132 workload clarification: use the three Exp8119 source-panel IDs.
 Each is the median-sized original in one public byte-size third. Keep captured
 permutations and cyclic query order. Report all three exposed source IDs and
 within-batch reuse; repetitions create no independent scientific sources.
+
+# REQ-VERIFY-8133: Bind current supervisor qualification to exact evidence
+
+A new reader receipt SHALL preserve historical failures and bind current code,
+tests, source events and exact reductions. Both validators SHALL exit normally.
+Private evidence stays separate from natural observations and generalization credit.
+
+## SCENARIO-VERIFY-8133-COLD
+
+Cold replay outside the checkout without PYTHONPATH SHALL reject mutated reader
+hashes, missing evidence, forged firings, repeated identities and removed durable
+rows. It SHALL accept a qualified zero-firing ledger. All new statements require
+100 percent statement coverage. Test outputs stay in private temporary directories.
