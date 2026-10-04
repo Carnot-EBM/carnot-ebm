@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from types import ModuleType
 from typing import Any
 
 from carnot.reporting import v700_contract_custody as e
@@ -27,8 +28,11 @@ Json = dict[str, Any]
 OWNED = [e.MODULE, e.RUNNER, e.CLI]
 
 
-def manifest(private: Path, candidate: Path) -> Json:
+def manifest(private: Path, candidate: Path, *, experiment: ModuleType = e) -> Json:
     """Fix command bytes before inputs open; full repository health stays diagnostic."""
+    e = experiment
+    OWNED = getattr(e, "COVERAGE_PATHS", [e.MODULE, e.RUNNER, e.CLI])
+    checked_paths = getattr(e, "CHECK_PATHS", OWNED)
     py, cov, pytest, ruff, mypy = [
         str(e.ROOT / ".venv/bin" / n) for n in ["python", "coverage", "pytest", "ruff", "mypy"]
     ]
@@ -52,7 +56,9 @@ def manifest(private: Path, candidate: Path) -> Json:
                 "-m",
                 "pytest",
                 *common,
+                "-s",
                 e.TEST,
+                "tests/python/test_contract_custody_8083.py",
                 "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
             ],
             180,
@@ -65,9 +71,9 @@ def manifest(private: Path, candidate: Path) -> Json:
         ("coverage_combine", [cov, "combine", rc], 30),
         ("coverage_report", [cov, "report", rc, include, "--show-missing", "--fail-under=100"], 30),
         ("coverage_json", [cov, "json", rc, include, "-o", str(private / "coverage.json")], 30),
-        ("ruff_check", [ruff, "check", *OWNED, e.TEST], 30),
-        ("ruff_format", [ruff, "format", "--check", *OWNED, e.TEST], 30),
-        ("strict_mypy", [mypy, "--strict", "--follow-imports=silent", *OWNED], 60),
+        ("ruff_check", [ruff, "check", *checked_paths, e.TEST], 30),
+        ("ruff_format", [ruff, "format", "--check", *checked_paths, e.TEST], 30),
+        ("strict_mypy", [mypy, "--strict", "--follow-imports=silent", *checked_paths], 60),
         ("scoped_spec_coverage", [py, "scripts/check_spec_coverage.py", e.TEST], 30),
     ]
     terminal = [
@@ -106,8 +112,12 @@ def manifest(private: Path, candidate: Path) -> Json:
     )
 
 
-def publish(value: Json, output: Path, private: Path, raw: Path) -> None:
+def publish(
+    value: Json, output: Path, private: Path, raw: Path, *, experiment: ModuleType = e
+) -> None:
     """Expose bytes only after normal validator exits and save their hash binding."""
+
+    e = experiment
 
     def validator(candidate: Path) -> Json:
         commands = json.loads((raw / "validation_commands.json").read_text())["terminal_commands"]
@@ -136,8 +146,10 @@ def publish(value: Json, output: Path, private: Path, raw: Path) -> None:
     )
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, *, experiment: ModuleType = e) -> int:
     """Run a zero-model measurement child, private controls or immutable cold replay."""
+    e = experiment
+    OWNED = getattr(e, "COVERAGE_PATHS", [e.MODULE, e.RUNNER, e.CLI])
     os.environ["PYTHONUNBUFFERED"] = "1"
     e.progress("start")
     parser = argparse.ArgumentParser(description=__doc__)
@@ -169,7 +181,7 @@ def main(argv: list[str] | None = None) -> int:
     with TemporaryDirectory(prefix="carnot-8083-") as directory:
         private = Path(directory)
         candidate = output.parent / "raw" / output.stem / "terminal_candidate.json"
-        specs = manifest(private, candidate)
+        specs = manifest(private, candidate, experiment=e)
         measurement = dict(
             name="measurement",
             argv=[
@@ -253,6 +265,6 @@ def main(argv: list[str] | None = None) -> int:
         atomic_json(raw / "work.json", work)
         value = e.build(work, raw, receipts)
         e.progress("before_publication")
-        publish(value, output, private, raw)
-        e.progress("after_publication", 14, 0)
+        publish(value, output, private, raw, experiment=e)
+        e.progress("after_publication", len(value["rows"]), 0)
     return 0

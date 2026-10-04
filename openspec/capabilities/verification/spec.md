@@ -48006,3 +48006,23 @@ unknown labels, partial capture, identical-logistic parity and interrupted state
 commits SHALL have private regression checks. Native claims SHALL cross the
 loaded Rust binding. These are execution requirements, not passing results of
 this planning change.
+
+## REQ-VERIFY-8097: Separate fixture readiness and authenticated validation
+
+Exp8097 SHALL qualify the actual Exp8085 public primary and immutable historical
+control paths separately. A clean circular_positive numerical fixture with
+kernel_ready_score=1 SHALL be consumable without a positive science class.
+Required commands SHALL freeze before measurement: focused and consumer tests,
+Ruff check/format, strict mypy, scoped spec coverage and 100% added statements.
+Private real CLI success, block, mutation and cold replay SHALL execute outside
+the checkout with argv, normal exit, duration and log hashes. Publication SHALL
+use primary_publication after normal measurement exit and passing owned checks.
+Owned validation failure SHALL clear readiness and disqualify; external missing
+evidence SHALL yield terminal blocked with exact observed operands. Repository
+health SHALL be recorded separately and SHALL not become a scientific gate.
+
+### SCENARIO-VERIFY-8097: Consumer and failure boundaries
+
+Private fixtures SHALL preserve failed predecessor receipts, reject missing or
+changed kernel/control bytes and verify independent readiness failures. No test
+may write repository evidence. Completed negative science SHALL not request retries.

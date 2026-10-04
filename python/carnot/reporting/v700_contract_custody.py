@@ -47,15 +47,20 @@ def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
 class Binder(HistoricalBinder):
     """Record successful checks as well as failures; availability is not science."""
 
-    def __init__(self, raw: Path):
+    def __init__(self, raw: Path, *, task: str = TASK):
         super().__init__(raw)
+        self.task = task
         self.observations: list[Json] = []
 
     def require(self, path: Path, field: str, expected: Any, observed: Any) -> None:
-        row = failure(path, field, expected, observed, TASK)
+        row = failure(path, field, expected, observed, self.task)
         row["passed"] = expected == observed
         self.observations.append(row)
-        super().require(path, field, expected, observed)
+        try:
+            super().require(path, field, expected, observed)
+        except InputFailure:
+            self.failures[-1]["upstream"] = self.task
+            raise
 
     def terminal_evidence(self, path: Path, value: Json) -> Json:
         """Authenticate failed receipts too, without changing their original validity."""
@@ -84,7 +89,17 @@ class Binder(HistoricalBinder):
                 self.logs(child)
 
 
-def assess(design: Path, staged: Path, active: Path, raw: Path) -> Json:
+def assess(
+    design: Path,
+    staged: Path,
+    active: Path,
+    raw: Path,
+    *,
+    milestone: str = MILESTONE,
+    first_id: int = 8083,
+    count: int = 14,
+    task: str = TASK,
+) -> Json:
     """Freeze every observed authority even when the external design is incomplete."""
     snapshots = {
         role: authority._snapshot(path, path.read_bytes() if path.is_file() else None, raw, role)
@@ -96,14 +111,14 @@ def assess(design: Path, staged: Path, active: Path, raw: Path) -> Json:
             for role in ["design", "staged", "active"]
         ]
         value = authority.assess_authorities(
-            *frozen, raw / "assessment", milestone=MILESTONE, first_id=8083, count=14
+            *frozen, raw / "assessment", milestone=milestone, first_id=first_id, count=count
         )
-        _, tasks = parse_design(frozen[0].read_text(), milestone=MILESTONE)
+        _, tasks = parse_design(frozen[0].read_text(), milestone=milestone)
         digest = authority.tasks_digest(tasks)
         if digest != value["canonical_tasks_sha256"]:
             value["gate_check_summary"].append(
                 failure(
-                    design, "design_tasks_sha256", value["canonical_tasks_sha256"], digest, TASK
+                    design, "design_tasks_sha256", value["canonical_tasks_sha256"], digest, task
                 )
             )
         if (
@@ -117,7 +132,7 @@ def assess(design: Path, staged: Path, active: Path, raw: Path) -> Json:
                     "active_snapshot_bytes",
                     snapshots["staged"]["sha256"],
                     snapshots["active"]["sha256"],
-                    TASK,
+                    task,
                 )
             )
         value["tasks"] = tasks
@@ -128,13 +143,13 @@ def assess(design: Path, staged: Path, active: Path, raw: Path) -> Json:
             contract_rows=[],
             tasks=[],
             canonical_tasks_sha256=None,
-            gate_check_summary=[failure(design, "authority_readable", True, str(error), TASK)],
+            gate_check_summary=[failure(design, "authority_readable", True, str(error), task)],
         )
     value["authority_snapshots"] = snapshots
     value["gate_check_summary"] = [
         dict(
             check=r.get("field", r.get("artifact_field")),
-            upstream=TASK,
+            upstream=task,
             path=snapshots.get(
                 next(
                     (k for k in snapshots if k in Path(r.get("artifact_path", r.get("path"))).name),

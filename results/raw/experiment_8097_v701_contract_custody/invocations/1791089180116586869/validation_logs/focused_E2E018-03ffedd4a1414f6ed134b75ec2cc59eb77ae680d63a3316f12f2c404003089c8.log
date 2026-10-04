@@ -1,0 +1,343 @@
+.[exp8097] phase=preconditions_before completed=0 pending=0
+[exp8097] phase=preconditions_after completed=10 pending=0
+[exp8097] phase=authority_after completed=13 pending=0
+[exp8097] phase=historical_before completed=0 pending=3
+[exp8097] phase=historical_after completed=1 pending=2
+[exp8097] phase=historical_before completed=1 pending=2
+[exp8097] phase=historical_after completed=2 pending=1
+[exp8097] phase=historical_before completed=2 pending=1
+[exp8097] phase=historical_after completed=3 pending=0
+[exp8097] phase=preconditions_before completed=0 pending=0
+[exp8097] phase=preconditions_after completed=10 pending=0
+[exp8097] phase=authority_after completed=13 pending=0
+[exp8097] phase=historical_before completed=0 pending=3
+[exp8097] phase=historical_after completed=1 pending=2
+[exp8097] phase=historical_before completed=1 pending=2
+[exp8097] phase=historical_after completed=2 pending=1
+[exp8097] phase=historical_before completed=2 pending=1
+[exp8097] phase=historical_after completed=3 pending=0
+.Exp8097 private CLI before subprocess
+Exp8097 private CLI after subprocess {"argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-m", "coverage", "run", "--rcfile=/tmp/carnot-8083-d8l82ks5/coverage.ini", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8097_v701_contract_custody.py", "--fixture-output", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/results/experiment_8097_v701_contract_custody.json", "--root", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "--design", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/authority/design.md", "--staged", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/authority/staged.yaml", "--active", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/authority/active.yaml"], "cwd": "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "exit_code": 0, "normal_exit": true, "expected_exit": 0, "duration_s": 5.381129861925729, "log_sha256": "sha256:f92568701cce3449c4efdf59228b83b10830f312bdcea79b8579c48f794bf3ec", "captured_log": "Exp8097 start: V701 contract custody; current model calls=0\n[exp8097] phase=start completed=0 pending=0\n[exp8097] phase=preconditions_before completed=0 pending=0\n[exp8097] phase=preconditions_after completed=10 pending=0\n[exp8097] phase=authority_after completed=13 pending=0\n[exp8097] phase=historical_before completed=0 pending=3\n[exp8097] phase=historical_after completed=1 pending=2\n[exp8097] phase=historical_before completed=1 pending=2\n[exp8097] phase=historical_after completed=2 pending=1\n[exp8097] phase=historical_before completed=2 pending=1\n[exp8097] phase=historical_after completed=3 pending=0\n[exp8097] phase=before_publication completed=0 pending=0\n[exp8097] phase=before_cold_replay completed=0 pending=0\n[exp7303-validation] before_subprocess cold_replay elapsed_s=0.000 unit=1/1\n[exp7303-validation:cold_replay] Exp8097 start: V701 contract custody; current model calls=0\n[exp7303-validation:cold_replay] [exp8097] phase=start completed=0 pending=0\n[exp7303-validation:cold_replay] [exp8097] phase=replay_passed completed=0 pending=0\n[exp7303-validation] after_subprocess cold_replay elapsed_s=1.425 exit=0 unit=1/1\n[exp8097] phase=after_cold_replay completed=0 pending=0\n[exp8097] phase=before_adversarial_verify completed=0 pending=0\n[exp7303-validation] before_subprocess adversarial_verify elapsed_s=0.000 unit=1/1\n[exp7303-validation:adversarial_verify] {\n[exp7303-validation:adversarial_verify]   \"reports\": [\n[exp7303-validation:adversarial_verify]     {\n[exp7303-validation:adversarial_verify]       \"artifact\": \"/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/results/raw/experiment_8097_v701_contract_custody/terminal_candidate.json\",\n[exp7303-validation:adversarial_verify]       \"loaded\": true,\n[exp7303-validation:adversarial_verify]       \"exp_id\": 8097,\n[exp7303-validation:adversarial_verify]       \"title\": \"V701 contract custody\",\n[exp7303-validation:adversarial_verify]       \"honest_verdict\": \"complete_circular_positive_contract_custody\",\n[exp7303-validation:adversarial_verify]       \"flag_count\": 0,\n[exp7303-validation:adversarial_verify]       \"max_severity\": -1,\n[exp7303-validation:adversarial_verify]       \"flags\": [],\n[exp7303-validation:adversarial_verify]       \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n[exp7303-validation:adversarial_verify]     }\n[exp7303-validation:adversarial_verify]   ],\n[exp7303-validation:adversarial_verify]   \"flagged_count\": 0\n[exp7303-validation:adversarial_verify] }\n[exp7303-validation] after_subprocess adversarial_verify elapsed_s=0.589 exit=0 unit=1/1\n[exp8097] phase=after_adversarial_verify completed=0 pending=0\n[exp8097] phase=before_strict_row_lint completed=0 pending=0\n[exp7303-validation] before_subprocess strict_row_lint elapsed_s=0.000 unit=1/1\n[exp7303-validation:strict_row_lint] \n[exp7303-validation:strict_row_lint] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n[exp7303-validation:strict_row_lint]   No row/verdict contradictions among the artifacts that could be checked.\n[exp7303-validation] after_subprocess strict_row_lint elapsed_s=0.033 exit=0 unit=1/1\n[exp8097] phase=after_strict_row_lint completed=0 pending=0\n[exp8097] phase=after_publication completed=13 pending=0\n"}
+Exp8097 private CLI before subprocess
+Exp8097 private CLI after subprocess {"argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-m", "coverage", "run", "--rcfile=/tmp/carnot-8083-d8l82ks5/coverage.ini", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8097_v701_contract_custody.py", "--cold-replay", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/results/experiment_8097_v701_contract_custody.json"], "cwd": "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "exit_code": 0, "normal_exit": true, "expected_exit": 0, "duration_s": 2.444027296965942, "log_sha256": "sha256:d9593d6e352b6ea4f2cbe1256ebbe8953cf161564c46540b106804c4c74c2a1e", "captured_log": "Exp8097 start: V701 contract custody; current model calls=0\n[exp8097] phase=start completed=0 pending=0\n[exp8097] phase=replay_passed completed=0 pending=0\n"}
+Exp8097 private CLI before subprocess
+Exp8097 private CLI after subprocess {"argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-m", "coverage", "run", "--rcfile=/tmp/carnot-8083-d8l82ks5/coverage.ini", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8097_v701_contract_custody.py", "--fixture-output", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/results/experiment_8097_v701_contract_custody.json", "--root", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "--design", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/authority/design.md", "--staged", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/authority/staged.yaml", "--active", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/authority/active.yaml", "--mutate"], "cwd": "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "exit_code": 0, "normal_exit": true, "expected_exit": 0, "duration_s": 5.40037263603881, "log_sha256": "sha256:6c98f110f79193a63f3a03e90684033a31d16927250c2ce88a33cadeca98073d", "captured_log": "Exp8097 start: V701 contract custody; current model calls=0\n[exp8097] phase=start completed=0 pending=0\n[exp8097] phase=preconditions_before completed=0 pending=0\n[exp8097] phase=preconditions_after completed=10 pending=0\n[exp8097] phase=authority_after completed=13 pending=0\n[exp8097] phase=historical_before completed=0 pending=3\n[exp8097] phase=historical_after completed=1 pending=2\n[exp8097] phase=historical_before completed=1 pending=2\n[exp8097] phase=historical_after completed=2 pending=1\n[exp8097] phase=historical_before completed=2 pending=1\n[exp8097] phase=historical_after completed=3 pending=0\n[exp8097] phase=before_publication completed=0 pending=0\n[exp8097] phase=before_cold_replay completed=0 pending=0\n[exp7303-validation] before_subprocess cold_replay elapsed_s=0.000 unit=1/1\n[exp7303-validation:cold_replay] Exp8097 start: V701 contract custody; current model calls=0\n[exp7303-validation:cold_replay] [exp8097] phase=start completed=0 pending=0\n[exp7303-validation:cold_replay] [exp8097] phase=replay_passed completed=0 pending=0\n[exp7303-validation] after_subprocess cold_replay elapsed_s=1.433 exit=0 unit=1/1\n[exp8097] phase=after_cold_replay completed=0 pending=0\n[exp8097] phase=before_adversarial_verify completed=0 pending=0\n[exp7303-validation] before_subprocess adversarial_verify elapsed_s=0.000 unit=1/1\n[exp7303-validation:adversarial_verify] {\n[exp7303-validation:adversarial_verify]   \"reports\": [\n[exp7303-validation:adversarial_verify]     {\n[exp7303-validation:adversarial_verify]       \"artifact\": \"/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/results/raw/experiment_8097_v701_contract_custody/terminal_candidate.json\",\n[exp7303-validation:adversarial_verify]       \"loaded\": true,\n[exp7303-validation:adversarial_verify]       \"exp_id\": 8097,\n[exp7303-validation:adversarial_verify]       \"title\": \"V701 contract custody\",\n[exp7303-validation:adversarial_verify]       \"honest_verdict\": \"complete_disqualified_1791089204396063754\",\n[exp7303-validation:adversarial_verify]       \"flag_count\": 0,\n[exp7303-validation:adversarial_verify]       \"max_severity\": -1,\n[exp7303-validation:adversarial_verify]       \"flags\": [],\n[exp7303-validation:adversarial_verify]       \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n[exp7303-validation:adversarial_verify]     }\n[exp7303-validation:adversarial_verify]   ],\n[exp7303-validation:adversarial_verify]   \"flagged_count\": 0\n[exp7303-validation:adversarial_verify] }\n[exp7303-validation] after_subprocess adversarial_verify elapsed_s=0.574 exit=0 unit=1/1\n[exp8097] phase=after_adversarial_verify completed=0 pending=0\n[exp8097] phase=before_strict_row_lint completed=0 pending=0\n[exp7303-validation] before_subprocess strict_row_lint elapsed_s=0.000 unit=1/1\n[exp7303-validation:strict_row_lint] \n[exp7303-validation:strict_row_lint] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n[exp7303-validation:strict_row_lint]   No row/verdict contradictions among the artifacts that could be checked.\n[exp7303-validation] after_subprocess strict_row_lint elapsed_s=0.031 exit=0 unit=1/1\n[exp8097] phase=after_strict_row_lint completed=0 pending=0\n[exp8097] phase=after_publication completed=13 pending=0\n"}
+Exp8097 private CLI before subprocess
+Exp8097 private CLI after subprocess {"argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-m", "coverage", "run", "--rcfile=/tmp/carnot-8083-d8l82ks5/coverage.ini", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8097_v701_contract_custody.py", "--cold-replay", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/results/experiment_8097_v701_contract_custody.json"], "cwd": "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "exit_code": 0, "normal_exit": true, "expected_exit": 0, "duration_s": 2.473480103071779, "log_sha256": "sha256:d9593d6e352b6ea4f2cbe1256ebbe8953cf161564c46540b106804c4c74c2a1e", "captured_log": "Exp8097 start: V701 contract custody; current model calls=0\n[exp8097] phase=start completed=0 pending=0\n[exp8097] phase=replay_passed completed=0 pending=0\n"}
+Exp8097 private CLI before subprocess
+Exp8097 private CLI after subprocess {"argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-m", "coverage", "run", "--rcfile=/tmp/carnot-8083-d8l82ks5/coverage.ini", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8097_v701_contract_custody.py", "--fixture-output", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/results/experiment_8097_v701_contract_custody.json", "--root", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "--design", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/authority/design.md", "--staged", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/authority/staged.yaml", "--active", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/authority/active.yaml", "--root", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/missing"], "cwd": "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "exit_code": 0, "normal_exit": true, "expected_exit": 0, "duration_s": 5.496333186980337, "log_sha256": "sha256:eb4b3a00e6a51ab6cd230687a01da4a8ba691d7ee5be463a48e19c82b951ce7a", "captured_log": "Exp8097 start: V701 contract custody; current model calls=0\n[exp8097] phase=start completed=0 pending=0\n[exp8097] phase=preconditions_before completed=0 pending=0\n[exp8097] phase=preconditions_after completed=10 pending=0\n[exp8097] phase=authority_after completed=13 pending=0\n[exp8097] phase=historical_before completed=0 pending=3\n[exp8097] phase=historical_after completed=1 pending=2\n[exp8097] phase=historical_before completed=1 pending=2\n[exp8097] phase=historical_after completed=2 pending=1\n[exp8097] phase=historical_before completed=2 pending=1\n[exp8097] phase=historical_after completed=3 pending=0\n[exp8097] phase=before_publication completed=0 pending=0\n[exp8097] phase=before_cold_replay completed=0 pending=0\n[exp7303-validation] before_subprocess cold_replay elapsed_s=0.000 unit=1/1\n[exp7303-validation:cold_replay] Exp8097 start: V701 contract custody; current model calls=0\n[exp7303-validation:cold_replay] [exp8097] phase=start completed=0 pending=0\n[exp7303-validation:cold_replay] [exp8097] phase=replay_passed completed=0 pending=0\n[exp7303-validation] after_subprocess cold_replay elapsed_s=1.462 exit=0 unit=1/1\n[exp8097] phase=after_cold_replay completed=0 pending=0\n[exp8097] phase=before_adversarial_verify completed=0 pending=0\n[exp7303-validation] before_subprocess adversarial_verify elapsed_s=0.000 unit=1/1\n[exp7303-validation:adversarial_verify] {\n[exp7303-validation:adversarial_verify]   \"reports\": [\n[exp7303-validation:adversarial_verify]     {\n[exp7303-validation:adversarial_verify]       \"artifact\": \"/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/results/raw/experiment_8097_v701_contract_custody/terminal_candidate.json\",\n[exp7303-validation:adversarial_verify]       \"loaded\": true,\n[exp7303-validation:adversarial_verify]       \"exp_id\": 8097,\n[exp7303-validation:adversarial_verify]       \"title\": \"V701 contract custody\",\n[exp7303-validation:adversarial_verify]       \"honest_verdict\": \"complete_blocked_experiment_8083_v700_contract_custody_json\",\n[exp7303-validation:adversarial_verify]       \"flag_count\": 0,\n[exp7303-validation:adversarial_verify]       \"max_severity\": -1,\n[exp7303-validation:adversarial_verify]       \"flags\": [],\n[exp7303-validation:adversarial_verify]       \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n[exp7303-validation:adversarial_verify]     }\n[exp7303-validation:adversarial_verify]   ],\n[exp7303-validation:adversarial_verify]   \"flagged_count\": 0\n[exp7303-validation:adversarial_verify] }\n[exp7303-validation] after_subprocess adversarial_verify elapsed_s=0.557 exit=0 unit=1/1\n[exp8097] phase=after_adversarial_verify completed=0 pending=0\n[exp8097] phase=before_strict_row_lint completed=0 pending=0\n[exp7303-validation] before_subprocess strict_row_lint elapsed_s=0.000 unit=1/1\n[exp7303-validation:strict_row_lint] \n[exp7303-validation:strict_row_lint] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n[exp7303-validation:strict_row_lint]   No row/verdict contradictions among the artifacts that could be checked.\n[exp7303-validation] after_subprocess strict_row_lint elapsed_s=0.032 exit=0 unit=1/1\n[exp8097] phase=after_strict_row_lint completed=0 pending=0\n[exp8097] phase=after_publication completed=13 pending=0\n"}
+Exp8097 private CLI before subprocess
+Exp8097 private CLI after subprocess {"argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-m", "coverage", "run", "--rcfile=/tmp/carnot-8083-d8l82ks5/coverage.ini", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8097_v701_contract_custody.py", "--cold-replay", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/results/experiment_8097_v701_contract_custody.json"], "cwd": "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "exit_code": 0, "normal_exit": true, "expected_exit": 0, "duration_s": 2.4942993819713593, "log_sha256": "sha256:d9593d6e352b6ea4f2cbe1256ebbe8953cf161564c46540b106804c4c74c2a1e", "captured_log": "Exp8097 start: V701 contract custody; current model calls=0\n[exp8097] phase=start completed=0 pending=0\n[exp8097] phase=replay_passed completed=0 pending=0\n"}
+Exp8097 private CLI before subprocess
+Exp8097 private CLI after subprocess {"argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-m", "coverage", "run", "--rcfile=/tmp/carnot-8083-d8l82ks5/coverage.ini", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8097_v701_contract_custody.py", "--cold-replay", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/results/experiment_8097_v701_contract_custody.json"], "cwd": "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "exit_code": 1, "normal_exit": true, "expected_exit": 1, "duration_s": 2.4958753109676763, "log_sha256": "sha256:b1162c1a98a7f96426f4473de79e48d8b5da52b54941d7f31025643b3d0d9903", "captured_log": "Exp8097 start: V701 contract custody; current model calls=0\n[exp8097] phase=start completed=0 pending=0\n[exp8097] phase=reduction_drift completed=0 pending=0\n"}
+Exp8097 private CLI before subprocess
+Exp8097 private CLI after subprocess {"argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-m", "coverage", "run", "--rcfile=/tmp/carnot-8083-d8l82ks5/coverage.ini", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8097_v701_contract_custody.py", "--cold-replay", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/results/experiment_8097_v701_contract_custody.json"], "cwd": "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "exit_code": 1, "normal_exit": true, "expected_exit": 1, "duration_s": 2.4621128198923543, "log_sha256": "sha256:b1162c1a98a7f96426f4473de79e48d8b5da52b54941d7f31025643b3d0d9903", "captured_log": "Exp8097 start: V701 contract custody; current model calls=0\n[exp8097] phase=start completed=0 pending=0\n[exp8097] phase=reduction_drift completed=0 pending=0\n"}
+Exp8097 private CLI before subprocess
+Exp8097 private CLI after subprocess {"argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-m", "coverage", "run", "--rcfile=/tmp/carnot-8083-d8l82ks5/coverage.ini", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8097_v701_contract_custody.py", "--cold-replay", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/results/experiment_8097_v701_contract_custody.json"], "cwd": "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "exit_code": 1, "normal_exit": true, "expected_exit": 1, "duration_s": 2.450872304965742, "log_sha256": "sha256:b1162c1a98a7f96426f4473de79e48d8b5da52b54941d7f31025643b3d0d9903", "captured_log": "Exp8097 start: V701 contract custody; current model calls=0\n[exp8097] phase=start completed=0 pending=0\n[exp8097] phase=reduction_drift completed=0 pending=0\n"}
+Exp8097 private CLI before subprocess
+Exp8097 private CLI after subprocess {"argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-m", "coverage", "run", "--rcfile=/tmp/carnot-8083-d8l82ks5/coverage.ini", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8097_v701_contract_custody.py", "--cold-replay", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/results/experiment_8097_v701_contract_custody.json"], "cwd": "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "exit_code": 1, "normal_exit": true, "expected_exit": 1, "duration_s": 2.470162784913555, "log_sha256": "sha256:b1162c1a98a7f96426f4473de79e48d8b5da52b54941d7f31025643b3d0d9903", "captured_log": "Exp8097 start: V701 contract custody; current model calls=0\n[exp8097] phase=start completed=0 pending=0\n[exp8097] phase=reduction_drift completed=0 pending=0\n"}
+Exp8097 private CLI before subprocess
+Exp8097 private CLI after subprocess {"argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-m", "coverage", "run", "--rcfile=/tmp/carnot-8083-d8l82ks5/coverage.ini", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8097_v701_contract_custody.py", "--cold-replay", "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0/absent"], "cwd": "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "exit_code": 1, "normal_exit": true, "expected_exit": 1, "duration_s": 2.4166341070085764, "log_sha256": "sha256:b1162c1a98a7f96426f4473de79e48d8b5da52b54941d7f31025643b3d0d9903", "captured_log": "Exp8097 start: V701 contract custody; current model calls=0\n[exp8097] phase=start completed=0 pending=0\n[exp8097] phase=reduction_drift completed=0 pending=0\n"}
+Exp8097 private CLI before subprocess
+Exp8097 private CLI after subprocess {"argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-m", "coverage", "run", "--rcfile=/tmp/carnot-8083-d8l82ks5/coverage.ini", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8097_v701_contract_custody.py", "--date", "wrong"], "cwd": "/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_private_cli_success_block0", "exit_code": 2, "normal_exit": true, "expected_exit": 2, "duration_s": 2.448815275914967, "log_sha256": "sha256:92f08a855138591b50ef1c168232d3b4e4fad4879437100845d42554e5d203f7", "captured_log": "Exp8097 start: V701 contract custody; current model calls=0\n[exp8097] phase=start completed=0 pending=0\nusage: experiment_8097_v701_contract_custody.py [-h] [--date {20261004}]\n                                                [--root ROOT]\n                                                [--design DESIGN]\n                                                [--staged STAGED]\n                                                [--active ACTIVE]\n                                                [--output OUTPUT]\n                                                [--fixture-output FIXTURE_OUTPUT]\n                                                [--worker-output WORKER_OUTPUT]\n                                                [--cold-replay COLD_REPLAY]\n                                                [--mutate]\nexperiment_8097_v701_contract_custody.py: error: argument --date: invalid choice: 'wrong' (choose from 20261004)\n"}
+.[exp8097] phase=start completed=0 pending=0
+[exp8097] phase=before_measurement completed=0 pending=0
+[exp8097] phase=preconditions_before completed=0 pending=0
+[exp8097] phase=preconditions_after completed=10 pending=0
+[exp8097] phase=authority_after completed=13 pending=0
+[exp8097] phase=historical_before completed=0 pending=3
+[exp8097] phase=historical_after completed=1 pending=2
+[exp8097] phase=historical_before completed=1 pending=2
+[exp8097] phase=historical_after completed=2 pending=1
+[exp8097] phase=historical_before completed=2 pending=1
+[exp8097] phase=historical_after completed=3 pending=0
+[exp8097] phase=after_measurement completed=0 pending=0
+[exp8097] phase=before_focused_E2E018 completed=0 pending=9
+[exp8097] phase=after_focused_E2E018 completed=1 pending=8
+[exp8097] phase=before_consumer_tests completed=1 pending=8
+[exp8097] phase=after_consumer_tests completed=2 pending=7
+[exp8097] phase=before_coverage_combine completed=2 pending=7
+[exp8097] phase=after_coverage_combine completed=3 pending=6
+[exp8097] phase=before_coverage_report completed=3 pending=6
+[exp8097] phase=after_coverage_report completed=4 pending=5
+[exp8097] phase=before_coverage_json completed=4 pending=5
+[exp8097] phase=after_coverage_json completed=5 pending=4
+[exp8097] phase=before_ruff_check completed=5 pending=4
+[exp8097] phase=after_ruff_check completed=6 pending=3
+[exp8097] phase=before_ruff_format completed=6 pending=3
+[exp8097] phase=after_ruff_format completed=7 pending=2
+[exp8097] phase=before_strict_mypy completed=7 pending=2
+[exp8097] phase=after_strict_mypy completed=8 pending=1
+[exp8097] phase=before_scoped_spec_coverage completed=8 pending=1
+[exp8097] phase=after_scoped_spec_coverage completed=9 pending=0
+[exp8097] phase=before_repository_health completed=0 pending=0
+[exp8097] phase=after_repository_health completed=0 pending=0
+[exp8097] phase=before_publication completed=0 pending=0
+[exp8097] phase=before_cold_replay completed=0 pending=0
+[exp8097] phase=after_cold_replay completed=0 pending=0
+[exp8097] phase=before_adversarial_verify completed=0 pending=0
+[exp8097] phase=after_adversarial_verify completed=0 pending=0
+[exp8097] phase=before_strict_row_lint completed=0 pending=0
+[exp8097] phase=after_strict_row_lint completed=0 pending=0
+[exp8097] phase=after_publication completed=13 pending=0
+[exp8097] phase=start completed=0 pending=0
+[exp8097] phase=preconditions_before completed=0 pending=0
+[exp8097] phase=preconditions_after completed=10 pending=0
+[exp8097] phase=authority_after completed=13 pending=0
+[exp8097] phase=historical_before completed=0 pending=3
+[exp8097] phase=historical_after completed=1 pending=2
+[exp8097] phase=historical_before completed=1 pending=2
+[exp8097] phase=historical_after completed=2 pending=1
+[exp8097] phase=historical_before completed=2 pending=1
+[exp8097] phase=historical_after completed=3 pending=0
+[exp8097] phase=before_publication completed=0 pending=0
+[exp8097] phase=before_cold_replay completed=0 pending=0
+[exp8097] phase=after_cold_replay completed=0 pending=0
+[exp8097] phase=before_adversarial_verify completed=0 pending=0
+[exp8097] phase=after_adversarial_verify completed=0 pending=0
+[exp8097] phase=before_strict_row_lint completed=0 pending=0
+[exp8097] phase=after_strict_row_lint completed=0 pending=0
+[exp8097] phase=after_publication completed=13 pending=0
+[exp8097] phase=start completed=0 pending=0
+[exp8097] phase=preconditions_before completed=0 pending=0
+[exp8097] phase=preconditions_after completed=22 pending=0
+[exp8097] phase=authority_after completed=13 pending=0
+[exp8097] phase=historical_before completed=0 pending=3
+[exp8097] phase=historical_after completed=1 pending=2
+[exp8097] phase=historical_before completed=1 pending=2
+[exp8097] phase=historical_after completed=2 pending=1
+[exp8097] phase=historical_before completed=2 pending=1
+[exp8097] phase=historical_after completed=3 pending=0
+[exp8097] phase=measurement_normal_exit completed=0 pending=0
+.[exp8097] phase=preconditions_before completed=0 pending=0
+[exp8097] phase=preconditions_after completed=10 pending=0
+[exp8097] phase=authority_after completed=13 pending=0
+[exp8097] phase=historical_before completed=0 pending=3
+[exp8097] phase=historical_after completed=1 pending=2
+[exp8097] phase=historical_before completed=1 pending=2
+[exp8097] phase=historical_after completed=2 pending=1
+[exp8097] phase=historical_before completed=2 pending=1
+[exp8097] phase=historical_after completed=3 pending=0
+[exp8097] phase=preconditions_before completed=0 pending=0
+[exp8097] phase=preconditions_after completed=17 pending=0
+[exp8097] phase=authority_after completed=13 pending=0
+[exp8097] phase=historical_before completed=0 pending=3
+[exp8097] phase=historical_after completed=1 pending=2
+[exp8097] phase=historical_before completed=1 pending=2
+[exp8097] phase=historical_after completed=2 pending=1
+[exp8097] phase=historical_before completed=2 pending=1
+[exp8097] phase=historical_after completed=3 pending=0
+..[exp8083] phase=historical_primary_before completed=0 pending=13
+[exp8083] phase=historical_primary_after completed=1 pending=12
+[exp8083] phase=historical_primary_before completed=1 pending=12
+[exp8083] phase=historical_primary_after completed=2 pending=11
+[exp8083] phase=historical_primary_before completed=2 pending=11
+[exp8083] phase=historical_primary_after completed=3 pending=10
+[exp8083] phase=historical_primary_before completed=3 pending=10
+[exp8083] phase=historical_primary_after completed=4 pending=9
+[exp8083] phase=historical_primary_before completed=4 pending=9
+[exp8083] phase=historical_primary_after completed=5 pending=8
+[exp8083] phase=historical_primary_before completed=5 pending=8
+[exp8083] phase=historical_primary_after completed=6 pending=7
+[exp8083] phase=historical_primary_before completed=6 pending=7
+[exp8083] phase=historical_primary_after completed=7 pending=6
+[exp8083] phase=historical_primary_before completed=7 pending=6
+[exp8083] phase=historical_primary_after completed=8 pending=5
+[exp8083] phase=historical_primary_before completed=8 pending=5
+[exp8083] phase=historical_primary_after completed=9 pending=4
+[exp8083] phase=historical_primary_before completed=9 pending=4
+[exp8083] phase=historical_primary_after completed=10 pending=3
+[exp8083] phase=historical_primary_before completed=10 pending=3
+[exp8083] phase=historical_primary_after completed=11 pending=2
+[exp8083] phase=historical_primary_before completed=11 pending=2
+[exp8083] phase=historical_primary_after completed=12 pending=1
+[exp8083] phase=historical_primary_before completed=12 pending=1
+[exp8083] phase=historical_primary_after completed=13 pending=0
+.private CLI before argv=('--fixture-output', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/results/experiment_8083_v700_contract_custody.json'), '--root', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0'), '--design', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/authority/design.md'), '--staged', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/authority/staged.yaml'), '--active', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/authority/active.yaml'))
+private CLI after exit=0
+private CLI before argv=('--cold-replay', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/results/experiment_8083_v700_contract_custody.json'))
+private CLI after exit=0
+private CLI before argv=('--fixture-output', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/results/experiment_8083_v700_contract_custody.json'), '--root', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0'), '--design', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/authority/design.md'), '--staged', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/authority/staged.yaml'), '--active', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/authority/active.yaml'), '--mutate')
+private CLI after exit=0
+private CLI before argv=('--fixture-output', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/results/experiment_8083_v700_contract_custody.json'), '--root', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0'), '--design', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/authority/design.md'), '--staged', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/authority/staged.yaml'), '--active', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/authority/active.yaml'), '--root', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/missing'))
+private CLI after exit=0
+private CLI before argv=('--cold-replay', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/results/experiment_8083_v700_contract_custody.json'))
+private CLI after exit=0
+private CLI before argv=('--cold-replay', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/results/experiment_8083_v700_contract_custody.json'))
+private CLI after exit=1
+private CLI before argv=('--cold-replay', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/results/experiment_8083_v700_contract_custody.json'))
+private CLI after exit=1
+private CLI before argv=('--cold-replay', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/results/experiment_8083_v700_contract_custody.json'))
+private CLI after exit=1
+private CLI before argv=('--cold-replay', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/results/experiment_8083_v700_contract_custody.json'))
+private CLI after exit=1
+private CLI before argv=('--cold-replay', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/results/experiment_8083_v700_contract_custody.json'))
+private CLI after exit=1
+private CLI before argv=('--cold-replay', PosixPath('/tmp/pytest-carnot-ianblenke/20261004T044623-2373569-a26429ce/test_cli_external_routes_and_f0/missing'))
+private CLI after exit=1
+private CLI before argv=('--date', 'wrong')
+private CLI after exit=2
+.[exp8083] phase=start completed=0 pending=0
+[exp8083] phase=before_measurement completed=0 pending=0
+[exp8083] phase=preconditions_before completed=0 pending=0
+[exp8083] phase=preconditions_after completed=11 pending=0
+[exp8083] phase=authority_after completed=14 pending=0
+[exp8083] phase=historical_primary_before completed=0 pending=13
+[exp8083] phase=historical_primary_after completed=1 pending=12
+[exp8083] phase=historical_primary_before completed=1 pending=12
+[exp8083] phase=historical_primary_after completed=2 pending=11
+[exp8083] phase=historical_primary_before completed=2 pending=11
+[exp8083] phase=historical_primary_after completed=3 pending=10
+[exp8083] phase=historical_primary_before completed=3 pending=10
+[exp8083] phase=historical_primary_after completed=4 pending=9
+[exp8083] phase=historical_primary_before completed=4 pending=9
+[exp8083] phase=historical_primary_after completed=5 pending=8
+[exp8083] phase=historical_primary_before completed=5 pending=8
+[exp8083] phase=historical_primary_after completed=6 pending=7
+[exp8083] phase=historical_primary_before completed=6 pending=7
+[exp8083] phase=historical_primary_after completed=7 pending=6
+[exp8083] phase=historical_primary_before completed=7 pending=6
+[exp8083] phase=historical_primary_after completed=8 pending=5
+[exp8083] phase=historical_primary_before completed=8 pending=5
+[exp8083] phase=historical_primary_after completed=9 pending=4
+[exp8083] phase=historical_primary_before completed=9 pending=4
+[exp8083] phase=historical_primary_after completed=10 pending=3
+[exp8083] phase=historical_primary_before completed=10 pending=3
+[exp8083] phase=historical_primary_after completed=11 pending=2
+[exp8083] phase=historical_primary_before completed=11 pending=2
+[exp8083] phase=historical_primary_after completed=12 pending=1
+[exp8083] phase=historical_primary_before completed=12 pending=1
+[exp8083] phase=historical_primary_after completed=13 pending=0
+[exp8083] phase=historical_after completed=13 pending=0
+[exp8083] phase=after_measurement completed=0 pending=0
+[exp8083] phase=before_focused_E2E018 completed=0 pending=9
+[exp8083] phase=after_focused_E2E018 completed=1 pending=8
+[exp8083] phase=before_consumer_tests completed=1 pending=8
+[exp8083] phase=after_consumer_tests completed=2 pending=7
+[exp8083] phase=before_coverage_combine completed=2 pending=7
+[exp8083] phase=after_coverage_combine completed=3 pending=6
+[exp8083] phase=before_coverage_report completed=3 pending=6
+[exp8083] phase=after_coverage_report completed=4 pending=5
+[exp8083] phase=before_coverage_json completed=4 pending=5
+[exp8083] phase=after_coverage_json completed=5 pending=4
+[exp8083] phase=before_ruff_check completed=5 pending=4
+[exp8083] phase=after_ruff_check completed=6 pending=3
+[exp8083] phase=before_ruff_format completed=6 pending=3
+[exp8083] phase=after_ruff_format completed=7 pending=2
+[exp8083] phase=before_strict_mypy completed=7 pending=2
+[exp8083] phase=after_strict_mypy completed=8 pending=1
+[exp8083] phase=before_scoped_spec_coverage completed=8 pending=1
+[exp8083] phase=after_scoped_spec_coverage completed=9 pending=0
+[exp8083] phase=before_repository_health completed=0 pending=0
+[exp8083] phase=after_repository_health completed=0 pending=0
+[exp8083] phase=before_publication completed=0 pending=0
+[exp8083] phase=before_cold_replay completed=0 pending=0
+[exp8083] phase=after_cold_replay completed=0 pending=0
+[exp8083] phase=before_adversarial_verify completed=0 pending=0
+[exp8083] phase=after_adversarial_verify completed=0 pending=0
+[exp8083] phase=before_strict_row_lint completed=0 pending=0
+[exp8083] phase=after_strict_row_lint completed=0 pending=0
+[exp8083] phase=after_publication completed=14 pending=0
+[exp8083] phase=start completed=0 pending=0
+[exp8083] phase=replay_passed completed=0 pending=0
+[exp8083] phase=start completed=0 pending=0
+[exp8083] phase=preconditions_before completed=0 pending=0
+[exp8083] phase=preconditions_after completed=23 pending=0
+[exp8083] phase=authority_after completed=0 pending=14
+[exp8083] phase=historical_after completed=0 pending=13
+[exp8083] phase=measurement_normal_exit completed=0 pending=0
+.[exp8083] phase=preconditions_before completed=0 pending=0
+[exp8083] phase=preconditions_after completed=18 pending=0
+[exp8083] phase=authority_after completed=14 pending=0
+[exp8083] phase=historical_after completed=0 pending=13
+[exp8083] phase=preconditions_before completed=0 pending=0
+[exp8083] phase=preconditions_after completed=11 pending=0
+[exp8083] phase=authority_after completed=14 pending=0
+[exp8083] phase=historical_after completed=0 pending=13
+.[exp8083] phase=start completed=0 pending=0
+[exp8083] phase=preconditions_before completed=0 pending=0
+[exp8083] phase=preconditions_after completed=11 pending=0
+[exp8083] phase=authority_after completed=14 pending=0
+[exp8083] phase=historical_primary_before completed=0 pending=13
+[exp8083] phase=historical_primary_after completed=1 pending=12
+[exp8083] phase=historical_primary_before completed=1 pending=12
+[exp8083] phase=historical_primary_after completed=2 pending=11
+[exp8083] phase=historical_primary_before completed=2 pending=11
+[exp8083] phase=historical_primary_after completed=3 pending=10
+[exp8083] phase=historical_primary_before completed=3 pending=10
+[exp8083] phase=historical_primary_after completed=4 pending=9
+[exp8083] phase=historical_primary_before completed=4 pending=9
+[exp8083] phase=historical_primary_after completed=5 pending=8
+[exp8083] phase=historical_primary_before completed=5 pending=8
+[exp8083] phase=historical_primary_after completed=6 pending=7
+[exp8083] phase=historical_primary_before completed=6 pending=7
+[exp8083] phase=historical_primary_after completed=7 pending=6
+[exp8083] phase=historical_primary_before completed=7 pending=6
+[exp8083] phase=historical_primary_after completed=8 pending=5
+[exp8083] phase=historical_primary_before completed=8 pending=5
+[exp8083] phase=historical_primary_after completed=9 pending=4
+[exp8083] phase=historical_primary_before completed=9 pending=4
+[exp8083] phase=historical_primary_after completed=10 pending=3
+[exp8083] phase=historical_primary_before completed=10 pending=3
+[exp8083] phase=historical_primary_after completed=11 pending=2
+[exp8083] phase=historical_primary_before completed=11 pending=2
+[exp8083] phase=historical_primary_after completed=12 pending=1
+[exp8083] phase=historical_primary_before completed=12 pending=1
+[exp8083] phase=historical_primary_after completed=13 pending=0
+[exp8083] phase=historical_after completed=13 pending=0
+[exp8083] phase=before_publication completed=0 pending=0
+[exp8083] phase=before_cold_replay completed=0 pending=0
+[exp8083] phase=after_cold_replay completed=0 pending=0
+[exp8083] phase=before_adversarial_verify completed=0 pending=0
+[exp8083] phase=after_adversarial_verify completed=0 pending=0
+[exp8083] phase=before_strict_row_lint completed=0 pending=0
+[exp8083] phase=after_strict_row_lint completed=0 pending=0
+[exp8083] phase=after_publication completed=14 pending=0
+.[exp8083] phase=historical_primary_before completed=0 pending=13
+[exp8083] phase=historical_primary_after completed=1 pending=12
+[exp8083] phase=historical_primary_before completed=1 pending=12
+[exp8083] phase=historical_primary_after completed=2 pending=11
+[exp8083] phase=historical_primary_before completed=2 pending=11
+[exp8083] phase=historical_primary_after completed=3 pending=10
+[exp8083] phase=historical_primary_before completed=3 pending=10
+[exp8083] phase=historical_primary_after completed=4 pending=9
+[exp8083] phase=historical_primary_before completed=4 pending=9
+[exp8083] phase=historical_primary_after completed=5 pending=8
+[exp8083] phase=historical_primary_before completed=5 pending=8
+[exp8083] phase=historical_primary_after completed=6 pending=7
+[exp8083] phase=historical_primary_before completed=6 pending=7
+[exp8083] phase=historical_primary_after completed=7 pending=6
+[exp8083] phase=historical_primary_before completed=7 pending=6
+[exp8083] phase=historical_primary_after completed=8 pending=5
+[exp8083] phase=historical_primary_before completed=8 pending=5
+[exp8083] phase=historical_primary_after completed=9 pending=4
+[exp8083] phase=historical_primary_before completed=9 pending=4
+[exp8083] phase=historical_primary_after completed=10 pending=3
+[exp8083] phase=historical_primary_before completed=10 pending=3
+[exp8083] phase=historical_primary_after completed=11 pending=2
+[exp8083] phase=historical_primary_before completed=11 pending=2
+[exp8083] phase=historical_primary_after completed=12 pending=1
+[exp8083] phase=historical_primary_before completed=12 pending=1
+[exp8083] phase=historical_primary_after completed=13 pending=0
+..............[exp7891] phase=startup event=start elapsed_s=89.704 completed_units=0
+.[exp7891] phase=deadline_probe event=before_subprocess elapsed_s=89.705 completed_units=0
+[exp7891] phase=deadline_probe event=heartbeat elapsed_s=89.806 completed_units=0
+[exp7891] phase=deadline_probe event=after_subprocess elapsed_s=89.809 completed_units=1
+.[exp7891] phase=preconditions event=start elapsed_s=89.812 completed_units=0
+[exp7891] phase=preconditions event=complete elapsed_s=90.233 completed_units=3
+[exp7891] phase=preconditions event=start elapsed_s=90.244 completed_units=0
+[exp7891] phase=preconditions event=complete elapsed_s=90.667 completed_units=3
+[exp7891] phase=preconditions event=start elapsed_s=91.254 completed_units=0
+[exp7891] phase=preconditions event=complete elapsed_s=91.721 completed_units=3
+.[exp7891] phase=startup event=start elapsed_s=91.734 completed_units=0
+[exp7891] phase=publication event=complete elapsed_s=91.735 completed_units=12
+.[exp7891] phase=startup event=start elapsed_s=91.736 completed_units=0
+[exp7891] phase=cold_replay event=complete elapsed_s=91.736 completed_units=1
+[exp7891] phase=startup event=start elapsed_s=91.737 completed_units=0
+[exp7891] phase=startup event=start elapsed_s=91.738 completed_units=0
+usage: exp7891 [-h] [--date DATE] [--design DESIGN] [--staged STAGED]
+               [--active ACTIVE] [--output OUTPUT] [--raw RAW]
+               [--cold-replay COLD_REPLAY] [--no-validation]
+exp7891: error: run_date must be 20260929
+.
+30 passed in 97.91s (0:01:37)

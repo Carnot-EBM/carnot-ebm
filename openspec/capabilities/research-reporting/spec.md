@@ -92147,3 +92147,21 @@ The design SHALL record three actual V700 tasks and eleven unscheduled promises.
 It SHALL preserve Exp8083's disqualification, Exp8084's cohort block and Exp8085's
 fixture-only qualification. Exposed development data SHALL NOT gain independent
 or generalized-learning credit. Completed negative science SHALL remain terminal.
+
+## REQ-REPORT-8097: V701 contract custody and predecessor preservation
+
+Exp8097 SHALL bind all thirteen table and executable tasks, their full-task
+digest and immutable authority bytes using the parameterized authority reader.
+Matching active authority SHALL remain valid after the staged pathname disappears.
+It SHALL authenticate the three actual V700 primaries and preserve their terminal
+verdicts and failed or passing receipts. IDs8086–8096 SHALL be explicitly unexecuted
+promises, never counted as completed experiments. Contract readiness SHALL be
+independent of historical scientific validity and numerical kernel readiness.
+
+### SCENARIO-REPORT-8097: Private activation and historical custody
+
+Private tests SHALL reject twelve authority mutations and accept consumed-stage
+activation. Cold replay SHALL use immutable bytes, independently reduce task and
+historical rows, and reject altered primitive observations even after rehashing.
+No current model calls, oracle, claim, exposure or generalized-learning credit
+may be inferred from administrative or fixture success.
