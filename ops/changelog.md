@@ -21389,3 +21389,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-04: Capture bounded Qwen fit scores and source-use controls (⚠️ Research Finding) — honest_verdict=complete_disqualified_terminal_validation; results/experiment_8099_v701_fit_source_capture.json
 - 2026-10-04: Capture bounded stream and retention features without future labels (⚠️ Research Finding) — honest_verdict=complete_null_learning_stream_capture; results/experiment_8102_v701_learning_stream_capture.json
 - 2026-10-04: Port bounded radial evaluation through an actual Rust binding (⚠️ Research Finding) — honest_verdict=complete_circular_positive_native_radial_kernel; results/experiment_8105_v701_native_radial_kernel.json
+- 2026-10-04: Measure full radial transactions and charged model acquisition (⚠️ Blocked) — honest_verdict=complete_blocked_changed_content_current_capture; results/experiment_8106_v701_radial_service_cost.json
