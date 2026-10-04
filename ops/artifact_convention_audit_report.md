@@ -9,28 +9,16 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 1 |
-| CANNOT_DETERMINE | 7 |
+| CHECKABLE | 2 |
+| CANNOT_DETERMINE | 6 |
 
-## experiment_8078_v699_feature_cache_core.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8079_v699_feature_cache_lifecycle.json
+## experiment_8099_v701_fit_source_capture.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8080_v699_arc_supervisor_frontier.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8081_v699_hardware_workload_boundary.json
+## experiment_8100_radial_energy_fit.json
 
 **CHECKABLE**
 
@@ -38,7 +26,7 @@ reviewer call failed
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+The run was blocked at the conductor pre-gate because upstream dependency exp8099-fit-source-capture failed the fit_capture_ready_score check with an observed value of 0 versus the expected 1.
 
 ## WHAT IS MISSING
 nothing
@@ -46,26 +34,48 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8082_v699_capstone.json
+## experiment_8102_v701_learning_stream_capture.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8083_v700_contract_custody.json
+## experiment_8105_v701_native_radial_kernel.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8084_v700_fresh_cohort_methods.json
+## experiment_8106_v701_radial_service_cost.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8085_v700_radial_memory_kernel.json
+## experiment_8107_v701_arc_supervisor_evidence.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
+
+## experiment_8108_v701_radial_hardware_boundary.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8109_v701_capstone.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The v701 capstone run is blocked due to failed upstream acceptance gates and missing prerequisites.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none

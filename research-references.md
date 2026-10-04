@@ -50076,3 +50076,95 @@ Hardware implication: CPU, existing CUDA RTX 3090 resources and a real PyO3
 binding suffice for the proposed mechanism tests. No purchase is required.
 Preserve KV260 fabric, PolarFire Linux CPU and GateMate physical-block evidence
 separately. Sparse hardware mapping and any 100x target remain hypotheses.
+
+## 2026-10-04 — V702 planning scan, recorded before experiment design
+
+The V701 capture failure occurred before any model invocation. Its consumer
+command named an absent test file, and its terminal record still claimed live
+inference. The separate stream capture recorded 300 completed bounded Qwen
+calls. These observations favor reuse of qualified transport, a check of actual
+validation paths, and independent offline learning from the captured stream.
+They do not support relabeling the failed capture as successful science.
+
+### Methods worth testing
+
+- **Evidence-Aligned Entity Verification for Hallucination Detection in
+  Retrieval-Augmented Generation**, September 8, 2026,
+  [paper and method](https://arxiv.org/html/2609.08267v1).
+  EAEV combines entity/evidence alignment with counterfactual stability.
+  A narrow Carnot adaptation can compare complete, removed, mismatched and
+  order-permuted evidence, while a duplicate arm measures transport variation.
+  Freeze interventions before scores. Altered evidence does not inherit the
+  original human label. This is a source-use diagnostic, not an EAEV replication
+  or evidence of useful factuality decisions by itself.
+- **KAC: Kolmogorov-Arnold Classifier for Continual Learning**, March 27, 2025,
+  [paper](https://arxiv.org/abs/2503.21076),
+  [author code](https://github.com/Ethanhuhuhu/KAC).
+  Rechecked prior knowledge: local basis functions motivate a bounded memory
+  of released errors. Carnot's multivariate radial centers differ from KAC's
+  channel-wise construction. Test center selection against random-past and
+  fixed-center controls with equal capacity and feedback, using a frozen Qwen
+  score as an offset so learning does not depend on the failed batch-fit chain.
+- **Catastrophic Forgetting in Kolmogorov-Arnold Networks**, November 16, 2025,
+  [paper](https://arxiv.org/abs/2511.12828).
+  Rechecked prior knowledge: local support does not establish retention.
+  Independently evaluate earlier-role retention and later-slot decisions;
+  changed parameters alone are not a learning benefit.
+- **Capacity-Constrained Online Convex Optimization with Delayed Feedback**,
+  June 10, 2026, [paper](https://arxiv.org/abs/2606.11711).
+  Record prediction time, feedback release, bounded pending memory and dropped
+  labels. A changing radial dictionary with empirical admission does not inherit
+  the paper's regret guarantees. Cached data with scheduled feedback remain an
+  offline prequential development experiment.
+- **Ultrafast On-chip Online Learning via Spline Locality in
+  Kolmogorov-Arnold Networks**, February 2, 2026,
+  [paper](https://arxiv.org/abs/2602.02056).
+  Rechecked prior knowledge: count touched coefficients and memory traffic,
+  then measure complete transactions. Its spline locality and hardware results
+  do not transfer unchanged to dense Gaussian distance evaluations.
+
+### Coverage of the requested research areas
+
+| Area | Primary source checked | Consequence |
+|---|---|---|
+| EBM verification and reasoning | [EBT](https://openreview.net/pdf?id=ZBj3Qp1bYg), [ARM–EBM bijection](https://arxiv.org/abs/2512.15605) | Keep an exactly equivalent probabilistic control. Energy terminology alone adds no correctness information. |
+| Neural constraints and Ising ML | [LagONN](https://arxiv.org/abs/2505.07179) | Useful constrained-optimization mechanism; no new solver branch while verification benefit remains open. |
+| Hallucination detection | EAEV above; [input-side alignment](https://arxiv.org/abs/2608.15804) | Test dependence on source evidence and preserve complete human annotation custody. |
+| KAN and online learning | KAC, forgetting, on-chip learning and capacity papers above | Separate structural growth, retention, timing and learning claims. |
+| Energy-guided decoding | [ETS](https://arxiv.org/abs/2601.21484), revised May 19, 2026 | Defer steering until a qualified verifier supplies useful decisions. |
+| FPGA sampling | [hybrid FPGA decomposition](https://arxiv.org/abs/2602.15985), [KV260 dSB](https://arxiv.org/abs/2510.12407) | Charge preprocessing and transport; sampling hardware is not automatically a radial evaluator. |
+| Sparse Ising implementation | [Nature Communications, July 11, 2026](https://doi.org/10.1038/s41467-026-75119-0) | Tiled sparse storage and quantization are mapping leads, not measurements on Carnot's boards. |
+| New evaluation data | [HalluScoring 2026, September 29](https://arxiv.org/abs/2609.38355) | Arabic unseen-question/unseen-generator evaluation is a future external-validity lead. Do not silently substitute language, labels or benchmark population. |
+
+### Secondary-source coverage and limits
+
+- **OpenReview:** the EBT PDF was searchable and identifies ICLR 2026
+  publication. Direct [forum access](https://openreview.net/forum?id=ZBj3Qp1bYg)
+  returned a browser challenge. No new acceptance decision is inferred.
+- **Semantic Scholar:** attempted citation endpoints for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,url&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,url&limit=20).
+  Both were inaccessible. Title-specific searches did not supply a verified
+  citing-paper list. Citation coverage remains incomplete.
+- **Hugging Face papers:** searched verification/hallucination work and checked
+  [HalluGuard](https://huggingface.co/papers/2601.18753). EAEV's paper-page
+  request failed; its arXiv full text supplied the method evidence instead.
+- **GitHub trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) pages. Both carried
+  three-week-old crawl dates. No current EBM/KAN trending rank is established.
+  KAC and [EBT author code](https://github.com/Diogenesoftoronto/EnergyBasedTransformer)
+  are concrete implementation references, not newly discovered trending claims.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t). Z1T explicitly excludes final dense
+  vocabulary readout from key efficiency estimates; its energy comparison also
+  excludes chip-to-chip data movement. This reinforces a complete-service cost
+  boundary. The page does not establish local TSU access or measured Carnot
+  speedup. Use vendor projections only as projections.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  It describes a constraint reasoning layer under language models. The inspected
+  page supplies no open reproducible training and evaluation recipe.
+
+No hardware purchase is needed for the next bounded studies. Existing CUDA
+resources handle the mandated Qwen model; CPU and the qualified Rust binding
+handle selectors. KV260 fabric, PolarFire Linux CPU dispatch and GateMate's
+unchanged physical/JTAG block must retain separate evidence scopes.
