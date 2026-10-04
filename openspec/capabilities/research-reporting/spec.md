@@ -92630,6 +92630,29 @@ costs and cold numerical replay run outside results/. Mutated primitive bytes,
 aggregates, code, command manifests or validation receipts fail replay.
 Oracle fixtures are circular_positive. Independent learning scores remain zero.
 
+## REQ-REPORT-8123: Activated V703 custody without scientific credit
+
+Bind thirteen complete task dictionaries with the literal `## Exact task contract`,
+five-column table, V703_TASK_CONTRACT_START JSON and tasks_digest. Use the shipped
+parameterized lifecycle, preserve consumed staging absence and immutable snapshots,
+and compare the real activated roadmap without editing it or the conductor.
+Preserve both the V702 activation design and the separately preserved later design.
+Reconstruct nine primaries and four skips from activated V702 tasks and conductor
+rows, including alternate blocked receipts. Historical qualification is independent
+of the failed administrative receipt. Current model counters and learning scores
+remain zero. Missing external operands terminate blocked; owned failures disqualify.
+
+### SCENARIO-REPORT-8123: Authority and private publication
+
+Reject missing, extra, reordered and mutated full tasks, prompts, gates, stale
+digests and overwritten snapshots. Accept consumed staging. Freeze validation argv
+before measuring; require scoped consumer/spec checks, Ruff, strict mypy, full
+changed-code statement coverage and E2E-018 private CLI success/block/mutation/replay.
+Cold replay independently rehashes primitives, code and logs and rebuilds reductions.
+Publish through primary_publication only after normal unmodified validator exits.
+One bounded full-suite diagnostic remains separate from owned validation. Ops and
+traceability reconciliation is delegated to the conductor by the final user instruction.
+
 ## REQ-REPORT-V703-PLAN: Exact staged research contract
 
 Status: planned experiments; planning artifacts only, 2026-10-04.

@@ -48294,6 +48294,23 @@ Private null and harmful paired rows SHALL earn no benefit. Repeated seeds SHALL
 one source denominator. Missing masks and invalid rows remain visible. Cold reductions
 SHALL reject changed input bytes, aggregates, command manifests and validation receipts.
 
+## REQ-VERIFY-8123: Independent V702 historical qualification
+
+Authenticate full V702 activation tasks separately from its blocked design receipt.
+Preserve failed primary verdicts and gate operands, never retry unchanged outcomes.
+Independently qualify methods/stream (8111), acquisition (8118) and hardware (8121)
+using their terminal byte bindings, owned validation and primitive hashes. A failed
+historical scientific branch does not invalidate V703 authority readiness. Historical
+Qwen provenance belongs in cited_upstream_artifacts; MODEL_SPECS and current calls
+stay empty. Record both later preserved design and original activation design bytes.
+
+### SCENARIO-VERIFY-8123: Historical reduction and cold replay
+
+Retain thirteen dispositions including four nonexecutions and alternate skip records.
+Missing qualified bytes block only their input branch. Replay authenticates immutable
+copies, reconstructs dispositions and readiness, rejects row/hash/log/code drift,
+and retains zero independent scientific sources and zero generalization credit.
+
 ## REQ-VERIFY-8110: Independent historical input qualification
 
 Authenticate Exp8098 public roles, Exp8102 stream/retention feature shards,
