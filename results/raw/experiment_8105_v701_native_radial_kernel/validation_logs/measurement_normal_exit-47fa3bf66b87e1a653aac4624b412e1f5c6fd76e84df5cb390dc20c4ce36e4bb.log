@@ -1,0 +1,44 @@
+[exp8105] start: native radial fixture qualification; model calls=0
+[exp8105] start completed=0 pending=0
+[exp8105] before native build
+[phase 3 before] interpreter-bound carnot-python subprocess
+warning: unused import: `ndarray::Array2`
+ --> crates/carnot-python/src/s2kan.rs:3:5
+  |
+3 | use ndarray::Array2;
+  |     ^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `std::sync::Arc`
+ --> crates/carnot-python/src/s2kan.rs:6:5
+  |
+6 | use std::sync::Arc;
+  |     ^^^^^^^^^^^^^^
+
+warning: use of deprecated method `numpy::IntoPyArray::into_pyarray_bound`: renamed to `IntoPyArray::into_pyarray`
+  --> crates/carnot-python/src/s2kan.rs:40:16
+   |
+40 |         result.into_pyarray_bound(py)
+   |                ^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+
+warning: `carnot-python` (lib) generated 3 warnings (run `cargo fix --lib -p carnot-python` to apply 2 suggestions)
+    Finished `release` profile [optimized] target(s) in 0.05s
+[phase 3 after] native build selected=/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7230-load/_rust.cpython-312-x86_64-linux-gnu.so
+[exp8105] after native build
+[exp8105] before binding load
+[exp8105] after binding load
+[exp8105] before binding load
+[exp8105] after binding load
+[exp8105] benchmark_before completed=0 pending=512
+[exp8105] configuration_complete completed=64 pending=448
+[exp8105] configuration_complete completed=128 pending=384
+[exp8105] configuration_complete completed=192 pending=320
+[exp8105] configuration_complete completed=256 pending=256
+[exp8105] configuration_complete completed=320 pending=192
+[exp8105] configuration_complete completed=384 pending=128
+[exp8105] configuration_complete completed=448 pending=64
+[exp8105] configuration_complete completed=512 pending=0
+[exp8105] benchmark_after completed=512 pending=0

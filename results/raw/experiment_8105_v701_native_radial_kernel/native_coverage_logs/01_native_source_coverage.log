@@ -1,0 +1,244 @@
+    1|       |//! REQ-VERIFY-8105: bounded arithmetic preserves the public state's provenance.
+    2|       |use pyo3::exceptions::PyValueError;
+    3|       |use pyo3::prelude::*;
+    4|       |use serde::Deserialize;
+    5|       |use serde_json::Value;
+    6|       |use sha2::{Digest, Sha256};
+    7|       |
+    8|       |#[derive(Deserialize)]
+    9|       |struct Geometry {
+   10|       |    mean: Vec<f64>,
+   11|       |    std: Vec<f64>,
+   12|       |    sigma: f64,
+   13|       |}
+   14|       |#[derive(Deserialize)]
+   15|       |struct Center {
+   16|       |    x: Vec<f64>,
+   17|       |}
+   18|       |#[derive(Deserialize)]
+   19|       |struct State {
+   20|       |    geometry: Geometry,
+   21|       |    centers: Vec<Center>,
+   22|       |    coefficients: Vec<f64>,
+   23|       |}
+   24|       |
+   25|       |#[pyclass(name = "RustRadial8105")]
+   26|       |struct Radial {
+   27|       |    original: Value,
+   28|       |    state: State,
+   29|       |}
+   30|       |
+   31|     11|fn invalid() -> PyErr {
+   32|     11|    PyValueError::new_err("radial_contract")
+   33|     11|}
+   34|      6|fn probability(logit: f64) -> f64 {
+   35|      6|    if logit >= 0.0 {
+   36|      5|        1.0 / (1.0 + (-logit).exp())
+   37|       |    } else {
+   38|      1|        let weight = logit.exp();
+   39|      1|        weight / (1.0 + weight)
+   40|       |    }
+   41|      6|}
+   42|       |
+   43|      0|#[pymethods]
+  ------------------
+  | Unexecuted instantiation: _RNvMsb_NtCs2WsKbXDWKKO_13carnot_python11radial_8105NtB5_6Radial23___pymethod_checkpoint__
+  ------------------
+  | Unexecuted instantiation: _RNvMsb_NtCs2WsKbXDWKKO_13carnot_python11radial_8105NtB5_6Radial23___pymethod_state_json__
+  ------------------
+   44|       |impl Radial {
+   45|       |    #[new]
+   46|      9|    fn new(encoded: &str) -> PyResult<Self> {
+   47|      9|        let original: Value = serde_json::from_str(encoded).map_err(|_| invalid())?;
+   48|      9|        let state: State = serde_json::from_value(original.clone()).map_err(|_| invalid())?;
+   49|      8|        let g = &state.geometry;
+   50|      8|        let d = g.mean.len();
+   51|      8|        if ![1, 9].contains(&d)
+   52|      8|            || ![16, 20, 24, 28].contains(&state.centers.len())
+   53|      8|            || g.std.len() != d
+   54|      8|            || g.mean.iter().any(|v| !v.is_finite())
+   55|      8|            || g.std.iter().any(|v| !v.is_finite() || *v <= 0.0)
+   56|      7|            || !g.sigma.is_finite()
+   57|      7|            || g.sigma <= 0.0
+   58|      7|            || state
+   59|      7|                .centers
+   60|      7|                .iter()
+   61|    112|                .any(|c| c.x.len() != d || c.x.iter().any(|v| !v.is_finite()))
+   62|      7|            || state.coefficients.len() != state.centers.len() + 1
+   63|    119|            || state.coefficients.iter().any(|v| !v.is_finite())
+   64|       |        {
+   65|      1|            return Err(invalid());
+   66|      7|        }
+   67|      7|        Ok(Self { original, state })
+   68|      9|    }
+   69|       |
+   70|     14|    fn design(&self, rows: Vec<Vec<f64>>) -> PyResult<Vec<Vec<f64>>> {
+   71|     14|        let g = &self.state.geometry;
+   72|     14|        rows.iter()
+   73|     14|            .map(|r| {
+   74|     14|                if r.len() != g.mean.len() || r.iter().any(|v| !v.is_finite()) {
+   75|      2|                    return Err(invalid());
+   76|     12|                }
+   77|     12|                let z: Vec<f64> = r
+   78|     12|                    .iter()
+   79|     12|                    .zip(&g.mean)
+   80|     12|                    .zip(&g.std)
+   81|     12|                    .map(|((x, m), s)| (x - m) / s)
+   82|     12|                    .collect();
+   83|     12|                if z.iter().any(|v| !v.is_finite()) {
+   84|      1|                    return Err(invalid());
+   85|     11|                }
+   86|     11|                let mut phi = vec![1.0];
+   87|    176|                for c in &self.state.centers {
+   88|       |                    // A huge finite separation gives a zero Gaussian without squaring overflow.
+   89|    176|                    let norm = z
+   90|    176|                        .iter()
+   91|    176|                        .zip(&c.x)
+   92|    176|                        .fold(0.0_f64, |n, (x, c)| n.hypot((x - c) / g.sigma));
+   93|    176|                    phi.push((-0.5 * norm * norm).exp());
+   94|       |                }
+   95|     11|                Ok(phi)
+   96|     14|            })
+   97|     14|            .collect()
+   98|     14|    }
+   99|       |
+  100|      8|    fn predict(&self, rows: Vec<Vec<f64>>) -> PyResult<Vec<f64>> {
+  101|      8|        self.design(rows)?
+  102|      6|            .iter()
+  103|      6|            .map(|r| {
+  104|      6|                let logit: f64 = r
+  105|      6|                    .iter()
+  106|      6|                    .zip(&self.state.coefficients)
+  107|    102|                    .map(|(x, w)| x * w)
+  108|      6|                    .sum();
+  109|      6|                if !logit.is_finite() {
+  110|      1|                    return Err(invalid());
+  111|      5|                }
+  112|      5|                Ok(probability(logit))
+  113|      6|            })
+  114|      6|            .collect()
+  115|      8|    }
+  116|       |
+  117|      4|    fn gradient(&self, rows: Vec<Vec<f64>>, labels: Vec<u8>, ridge: f64) -> PyResult<Vec<f64>> {
+  118|      4|        if rows.is_empty()
+  119|      3|            || rows.len() != labels.len()
+  120|      3|            || labels.iter().any(|y| *y > 1)
+  121|      3|            || !ridge.is_finite()
+  122|      3|            || ridge <= 0.0
+  123|       |        {
+  124|      1|            return Err(invalid());
+  125|      3|        }
+  126|      3|        let phi = self.design(rows.clone())?;
+  127|      3|        let p = self.predict(rows)?;
+  128|     51|        let mut grad: Vec<f64> = self.state.coefficients.iter().map(|w| ridge * w).collect();
+  129|      3|        for ((r, p), y) in phi.iter().zip(p).zip(labels) {
+  130|     51|            for (g, x) in grad.iter_mut().zip(r) {
+  131|     51|                *g += x * (p - f64::from(y)) / phi.len() as f64;
+  132|     51|            }
+  133|       |        }
+  134|     35|        if grad.iter().any(|v| !v.is_finite()) {
+  135|      1|            return Err(invalid());
+  136|      2|        }
+  137|      2|        Ok(grad)
+  138|      4|    }
+  139|       |
+  140|      5|    fn state_json(&self) -> String {
+  141|      5|        self.original.to_string()
+  142|      5|    }
+  143|       |
+  144|      2|    fn checkpoint(&self) -> String {
+  145|      2|        let payload = self.state_json();
+  146|      2|        let sha256 = format!("{:x}", Sha256::digest(payload.as_bytes()));
+  147|      2|        serde_json::json!({"payload":payload,"sha256":sha256}).to_string()
+  148|      2|    }
+  149|       |
+  150|       |    #[staticmethod]
+  151|      5|    fn restore(encoded: &str) -> PyResult<Self> {
+  152|      5|        let v: Value = serde_json::from_str(encoded).map_err(|_| invalid())?;
+  153|      4|        let payload = v["payload"].as_str().ok_or_else(invalid)?;
+  154|      3|        if v["sha256"].as_str()
+  155|      3|            != Some(format!("{:x}", Sha256::digest(payload.as_bytes())).as_str())
+  156|       |        {
+  157|      1|            return Err(invalid());
+  158|      2|        }
+  159|      2|        Self::new(payload)
+  160|      5|    }
+  161|       |}
+  162|       |
+  163|      1|pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
+  164|      1|    m.add_class::<Radial>()?;
+  165|      1|    Ok(())
+  166|      1|}
+  167|       |
+  168|       |#[cfg(test)]
+  169|       |mod tests {
+  170|       |    use super::*;
+  171|       |    #[test]
+  172|      1|    fn req_verify_8105_arithmetic_and_checkpoint() {
+  173|       |        // REQ-VERIFY-8105: nonzero state and invalid operands exercise the safe port.
+  174|      1|        pyo3::prepare_freethreaded_python();
+  175|      1|        let encoded = serde_json::json!({"geometry":{"mean":[0.0],"std":[1.0],"sigma":1.0},
+  176|     16|            "centers":(0..16).map(|i| serde_json::json!({"x":[0.0],"source_id":i})).collect::<Vec<_>>(),
+  177|      1|            "coefficients":vec![0.1;17]}).to_string();
+  178|      1|        let n = Radial::new(&encoded).unwrap();
+  179|      1|        assert_eq!(n.design(vec![vec![0.0]]).unwrap()[0], vec![1.0; 17]);
+  180|      1|        assert!(n.predict(vec![vec![0.0]]).unwrap()[0] > 0.5);
+  181|      1|        assert_eq!(
+  182|      1|            n.gradient(vec![vec![0.0]], vec![1], 0.01).unwrap().len(),
+  183|       |            17
+  184|       |        );
+  185|      1|        assert_eq!(
+  186|      1|            Radial::restore(&n.checkpoint()).unwrap().state_json(),
+  187|      1|            n.state_json()
+  188|       |        );
+  189|      1|        assert!(Radial::new("[]").is_err());
+  190|      1|        let mut invalid_geometry: Value = serde_json::from_str(&encoded).unwrap();
+  191|      1|        invalid_geometry["geometry"]["std"][0] = serde_json::json!(0.0);
+  192|      1|        assert!(Radial::new(&invalid_geometry.to_string()).is_err());
+  193|      1|        assert!(Radial::restore("{").is_err());
+  194|      1|        assert!(Radial::restore("{}").is_err());
+  195|      1|        assert!(Radial::restore(r#"{"payload":"{}","sha256":"wrong"}"#).is_err());
+  196|      1|        assert!(n.predict(vec![vec![f64::NAN]]).is_err());
+  197|      1|        assert!(n.predict(vec![vec![]]).is_err());
+  198|      1|        assert!(n.gradient(vec![], vec![], 0.01).is_err());
+  199|      1|        let mut v: Value = serde_json::from_str(&encoded).unwrap();
+  200|      1|        v["geometry"]["mean"][0] = serde_json::json!(-1e308);
+  201|      1|        assert!(Radial::new(&v.to_string())
+  202|      1|            .unwrap()
+  203|      1|            .design(vec![vec![1e308]])
+  204|      1|            .is_err());
+  205|      1|        v["geometry"]["mean"][0] = serde_json::json!(0.0);
+  206|      1|        v["coefficients"] = serde_json::json!(vec![1e308; 17]);
+  207|      1|        let huge = Radial::new(&v.to_string()).unwrap();
+  208|      1|        assert!(huge.predict(vec![vec![0.0]]).is_err());
+  209|      1|        v["coefficients"] = serde_json::json!([
+  210|       |            1e308, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+  211|       |        ]);
+  212|      1|        assert!(Radial::new(&v.to_string())
+  213|      1|            .unwrap()
+  214|      1|            .gradient(vec![vec![0.0]], vec![0], 10.0)
+  215|      1|            .is_err());
+  216|      1|        assert!(probability(-10.0) < 0.5);
+  217|      1|        Python::with_gil(|py| {
+  218|      1|            let m = PyModule::new(py, "_rust").unwrap();
+  219|      1|            register(&m).unwrap();
+  220|      1|            let bound = m
+  221|      1|                .getattr("RustRadial8105")
+  222|      1|                .unwrap()
+  223|      1|                .call1((encoded.as_str(),))
+  224|      1|                .unwrap();
+  225|      1|            bound.call_method1("design", (vec![vec![0.0]],)).unwrap();
+  226|      1|            bound.call_method1("predict", (vec![vec![0.0]],)).unwrap();
+  227|      1|            bound
+  228|      1|                .call_method1("gradient", (vec![vec![0.0]], vec![1u8], 0.01))
+  229|      1|                .unwrap();
+  230|      1|            bound.call_method0("state_json").unwrap();
+  231|      1|            let cp = bound.call_method0("checkpoint").unwrap();
+  232|      1|            m.getattr("RustRadial8105")
+  233|      1|                .unwrap()
+  234|      1|                .call_method1("restore", (cp,))
+  235|      1|                .unwrap();
+  236|      1|        });
+  237|      1|    }
+  238|       |}
+

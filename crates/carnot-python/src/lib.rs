@@ -20,6 +20,7 @@ mod one_axis_tempering;
 mod packed_belief;
 mod pipeline;
 mod portable_recalibration;
+mod radial_8105;
 mod s2kan;
 mod safety_net;
 mod schedule;
@@ -491,6 +492,7 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
     schedule::register_schedule_module(m)?;
 
     numerical_update_8027::register(m)?;
+    radial_8105::register(m)?;
 
     // Durable portable recalibration service
     portable_recalibration::register_portable_recalibration_module(m)?;
