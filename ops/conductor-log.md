@@ -19464,3 +19464,6 @@ code |
 | 2026-10-04 06:03 UTC | Capture bounded Qwen fit scores and source-use con | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 99 passed, 1 warning in 22.00s |
 | 2026-10-04 06:06 UTC | Train calibrated radial energies with equal-inform | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8099-fit-source-capture.fit_capture_ready_score (actual=0 == expected=1) |
 | 2026-10-04 06:08 UTC | Measure reserved development decisions with curren | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8100-radial-energy-fit) |
+| 2026-10-04 06:39 UTC | Capture bounded stream and retention features with | OK | 94 passed, 1 warning in 13.75s |
+| 2026-10-04 06:41 UTC | Test continuous learning by adding centers from re | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8100-radial-energy-fit) |
+| 2026-10-04 06:41 UTC | Independently audit later decisions retention and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8103-feedback-grown-memory) |
