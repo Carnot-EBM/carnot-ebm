@@ -19502,3 +19502,4 @@ code |
 | 2026-10-04 17:47 UTC | Learn structural energy memory under the sealed de | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8129-learning-protocol-qualification, exp8124-evidence-protocol) |
 | 2026-10-04 17:47 UTC | Independently measure later learning benefit reten | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8130-delayed-energy-memory) |
 | 2026-10-04 19:01 UTC | Measure complete radial service costs with qualifi | OK | 98 passed, 1 warning in 86.95s (0:01:26) |
+| 2026-10-04 19:20 UTC | Qualify the current supervisor reader and inspect  | OK | 92 passed, 1 warning in 15.80s |
