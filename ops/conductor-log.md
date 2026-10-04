@@ -19433,3 +19433,22 @@ code |
 | 2026-10-03 22:55 UTC | Assess new live supervisor outcomes for transferab | OK | 95 passed, 1 warning in 10.23s |
 | 2026-10-03 23:15 UTC | Preserve board custody and bound corrected service | OK | 87 passed, 1 warning in 19.97s |
 | 2026-10-04 00:07 UTC | Independently decide thirteen outcomes and the thr | OK | 94 passed, 1 warning in 121.31s (0:02:01) |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | exclusion_manifest_lint.py age-week 5: OPEN 35 days: SILENT_NON_FIRING on exclus |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_timestamp_field age-week 5: OPEN 35 days: SILENT_NON_ |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_online_training_evidence age-week 4: OPEN 2 |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_online_arm_metric_items age-week 4: OPEN 28 days: SILENT |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_byte_identical_online_arm_reason age-week 4: OPEN 28 day |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_probe_exercise_evidence age-week 4: OPEN 28 |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_but_unrun_probe_reasons age-week 4: OPEN 28 day |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_nondegenerate_lever_evidence age-week 4: OPEN 28 day |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_execution_venue age-week 3: OPEN 21 days: SILENT_NO |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_artifact_run_date age-week 3: OPEN 21 days: SILENT_NON_F |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_substrate_class age-week 3: OPEN 21 days: SILENT_NO |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7267_v639_recognition_prototype.json age-week 3: OPEN 21 days: CLAIM_ |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_strip_verdict_terminal_prefix age-week 2: OPEN 14 days:  |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_substrate_declaration_shape age-week 2: OPEN 14 day |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_methodology_present age-week 2: OPEN 14 days: REAL_ |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_inference_substrate_value_matches age-week 1: OPEN 7 day |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_inference_substrate age-week 1: OPEN 7 days: SI |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_typed_invocation_evidence age-week 1: OPEN 7 days: SILEN |
+| 2026-10-04 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_verifier_scoring_only age-week 1: OPEN 7 days: REAL_B |

@@ -49888,3 +49888,93 @@ Hardware implication: retain the existing CPU, CUDA RTX 3090 resources and nativ
 binding. Partition expensive cache cases into separate tasks with complete pairs.
 Preserve independent KV260 fabric, PolarFire CPU and GateMate physical evidence.
 No purchase, new FPGA design, NPU installation or TSU run follows from this scan.
+
+## V700 planning scan — 2026-10-04 UTC
+
+This entry precedes the V700 experiment design. Searches covered 2025–2026
+papers on energy models, neural constraints, Ising hardware, hallucinations,
+KANs, guided generation and continual learning. These are research leads.
+Paper or vendor results do not establish Carnot performance.
+
+### Methods selected for further design
+
+- **KAC: Kolmogorov-Arnold Classifier for Continual Learning** (2025-03-27).
+  [Primary paper](https://arxiv.org/html/2503.21076v1) and
+  [author implementation](https://github.com/Ethanhuhuhu/KAC).
+  The paper compares radial basis functions with conventional spline classifiers
+  in continual classification. It motivates a small radial energy head and a
+  separate experiment that adds centers from released error feedback. This would
+  be a Carnot adaptation, not a reproduction of the paper's vision benchmarks.
+  Matched fixed-center and linear controls must receive the same features.
+- **Catastrophic Forgetting in Kolmogorov-Arnold Networks** (2025).
+  [Primary paper](https://arxiv.org/abs/2511.12828).
+  Retain a separate retention set and crash/restart audit. Local activation
+  functions alone do not certify preservation of prior decisions.
+- **Capacity-Constrained Online Convex Optimization with Delayed Feedback**
+  (2026-06-10). [Primary paper](https://arxiv.org/abs/2606.11711).
+  This follow-up to [the 2025 scheduling paper](https://arxiv.org/abs/2503.19856)
+  explicitly bounds the number of pending observations. It motivates recording
+  admission, release, occupancy and lost feedback in the learning ledger.
+  Carnot must check the convexity and delay assumptions before claiming any
+  regret guarantee. A changing feature dictionary does not inherit that theorem.
+- **Autoregressive Language Models are Secretly Energy-Based Models**.
+  [arXiv v4, 2026-05-25](https://arxiv.org/abs/2512.15605) and
+  [ICML 2026 proceedings](https://proceedings.mlr.press/v306/blondel26a.html).
+  Keep an exact logistic-equivalence control. Rewriting a classifier as an energy
+  does not create information or establish a verifier advantage.
+- **Energy-Based Transformers are Scalable Learners and Thinkers** (2025).
+  [Primary paper](https://arxiv.org/abs/2507.02092).
+  Input/candidate compatibility remains relevant to small conditional heads.
+  Training a new foundation model is outside this milestone's budget.
+
+### Promising leads retained with limits
+
+| Topic | Checked source | Design implication |
+|---|---|---|
+| Hallucination sensitivity | [When the Wrong Key Wins](https://arxiv.org/abs/2609.15106), revised 2026-09-29 | Keyword interventions can reveal different failure causes. Reserve for a separate causal study; scalar feature permutation is not a text intervention. |
+| Internal verification | [HalluTracer](https://arxiv.org/abs/2608.16353) | Depth aggregation is a possible new signal. First qualify internal-layer access in the mandated GGUF runtime. No hidden-state result is claimed here. |
+| Evidence domains | [Beyond Document Grounding](https://arxiv.org/abs/2607.00895) | Code/tool evidence is a useful future transfer set. Its injected errors need separate claim labels from natural human-annotated responses. |
+| Neural constraints | [LagONN](https://arxiv.org/abs/2505.07179) | Constraint solvers need an explicit problem encoding. Do not infer language truth from numerical feasibility. |
+| Energy-guided decoding | [ETS](https://arxiv.org/abs/2601.21484) | Defer steering until the verifier produces useful independent decisions. Preserve generator weights and live ARC settings. |
+| Structured output | [Thinking Before Constraining](https://arxiv.org/abs/2601.07525) | Grammar validity and reasoning quality are different measurements. Preserve the qualified bounded judgment protocol. |
+| Ising inference | [Scaling Up Thermodynamic AI Models](https://arxiv.org/abs/2607.00170) | Sampling accuracy, autocorrelation and scheduling costs belong in hardware projections. Image results do not validate text verification. |
+| FPGA | [Precision meets speed](https://doi.org/10.1038/s41467-026-75119-0), 2026-07-11 | Indexed publisher metadata describes sparse quantized simulated bifurcation. Full publisher retrieval failed; defer detailed method adoption. |
+| New open implementation | [Energy-based Compositional Diffusion Planning](https://github.com/GradientSpaces/ECD), ICML 2026 | Logged as a planning lead. Not a substitute for the live ARC agent or evidence of transfer. |
+
+### Secondary-source coverage
+
+- **OpenReview:** searched 2026 ICLR/ICML EBM work and checked the
+  [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg).
+  Its forum returned a browser challenge. Indexed EBT conference PDF text was
+  available. [On the Emergence of Reasoning](https://openreview.net/pdf?id=bYkfHTcR1v)
+  was indexed as an ICLR submission. Its counterfactual-answer discussion is a
+  lead, not a validated remedy for Carnot's likelihood-repeatability failure.
+- **Semantic Scholar:** requested citation lists for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,url&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,url&limit=20).
+  Both returned retrieval errors. Title/identifier searches did not recover a
+  reliable citation list. Citation coverage remains incomplete.
+- **Hugging Face papers:** checked verification feeds and
+  [Spilled Energy](https://huggingface.co/papers/2602.18671),
+  [DiffuTruth](https://huggingface.co/papers/2602.11364), and
+  [ARM–EBM](https://huggingface.co/papers/2512.15605).
+  These are discovery channels. Generated page summaries alone are not method
+  evidence. A direct HalluTracer feed request failed; its arXiv page was available.
+- **GitHub Trending:** checked monthly
+  [Python](https://github.com/trending/python?since=monthly) and
+  [Rust](https://github.com/trending/rust?since=monthly).
+  Returned pages were cached three weeks earlier. No current ranking is claimed.
+  Targeted repository checks found the KAC author code and ECD implementation.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t/).
+  The writing index exposed little content. The Z1T page was available.
+  Hardware remains a future sampling route. Vendor efficiency figures cannot
+  stand in for local complete-service measurements or authenticated device access.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona)
+  and the [main site](https://logicalintelligence.com/).
+  The pages describe constraint-based reasoning. This scan did not establish an
+  open local training recipe or a reproducible comparison for Carnot.
+
+The immediate hardware path is bounded CPU memory and numerical work, with a
+Rust/PyO3 kernel and CUDA for the frozen local Qwen model. No new board purchase
+or repeat of unchanged GateMate, NPU or TSU access probes follows from this scan.
