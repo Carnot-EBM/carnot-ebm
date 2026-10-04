@@ -19467,3 +19467,4 @@ code |
 | 2026-10-04 06:39 UTC | Capture bounded stream and retention features with | OK | 94 passed, 1 warning in 13.75s |
 | 2026-10-04 06:41 UTC | Test continuous learning by adding centers from re | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8100-radial-energy-fit) |
 | 2026-10-04 06:41 UTC | Independently audit later decisions retention and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8103-feedback-grown-memory) |
+| 2026-10-04 07:10 UTC | Port bounded radial evaluation through an actual R | OK | 99 passed, 1 warning in 33.70s |
