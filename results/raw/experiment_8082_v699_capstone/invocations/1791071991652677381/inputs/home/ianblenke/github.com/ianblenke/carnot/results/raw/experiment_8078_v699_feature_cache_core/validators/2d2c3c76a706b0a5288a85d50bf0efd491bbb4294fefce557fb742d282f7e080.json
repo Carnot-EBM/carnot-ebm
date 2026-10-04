@@ -1,0 +1,64 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8078_v699_feature_cache_core.json",
+  "primary_sha256": "sha256:2d2c3c76a706b0a5288a85d50bf0efd491bbb4294fefce557fb742d282f7e080",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8078_v699_feature_cache_core.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8078_v699_feature_cache_core/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8078_v699_feature_cache_core.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8078_v699_feature_cache_core/terminal_candidate.json"
+        ],
+        "duration_s": 3.968346207984723,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8078_v699_feature_cache_core/invocations/1791063385143024221/terminal_logs/2d2c3c76a706b0a5288a85d50bf0efd491bbb4294fefce557fb742d282f7e080/00_cold_replay.log",
+        "log_sha256": "sha256:8927613138a0bb46224493fbd984700617de43915fc429fe1c689627b35016c4",
+        "name": "cold_replay",
+        "output_tail": "[exp8078] phase=start_preconditions elapsed_s=0.000 completed=0 pending=0\n{\"passed\": true}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8078_v699_feature_cache_core/terminal_candidate.json --json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8078_v699_feature_cache_core/terminal_candidate.json",
+          "--json"
+        ],
+        "duration_s": 6.121160637005232,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8078_v699_feature_cache_core/invocations/1791063385143024221/terminal_logs/2d2c3c76a706b0a5288a85d50bf0efd491bbb4294fefce557fb742d282f7e080/01_adversarial.log",
+        "log_sha256": "sha256:b85e492d7f130c539e37f8b32aabc12e4201e845c28192cd2fd8f59f426417d8",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8078_v699_feature_cache_core/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8078,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_feature_service\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8078_v699_feature_cache_core/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8078_v699_feature_cache_core/terminal_candidate.json"
+        ],
+        "duration_s": 0.21571591799147427,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8078_v699_feature_cache_core/invocations/1791063385143024221/terminal_logs/2d2c3c76a706b0a5288a85d50bf0efd491bbb4294fefce557fb742d282f7e080/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

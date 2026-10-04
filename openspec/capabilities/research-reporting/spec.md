@@ -2,6 +2,51 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8082: Independently close V699 outcome accounting
+
+Exp8082 SHALL bind thirteen ordered full task contracts to preserved design and
+invocation snapshots. Consumed staged YAML remains absent. Missing scientific
+primaries remain absent. Authenticate terminal bindings and actual skip receipts.
+Preserve all V698 outcomes. External absence closes terminal blocked; owned
+validation failure disqualifies. Administrative completion supplies no science.
+
+Rebuild H1 from sealed heads, complete source bytes and original human targets.
+Rebuild H2 from causal SQLite events, released labels and sealed retention heads.
+Use the frozen .02 margins, 10000 draws and original source groups. Apply Holm
+.05 to exactly H1/H2. Missing, invalid, unsupported or unsafe tests receive p=1.
+Keep exposed development scope and generalized_learning_benefit_score=0.
+
+Join cache partitions only with identical workload, shared code and native
+library hashes. Rebuild all six modes, condition cells, parity and break-even.
+Unknown acquisition and feedback costs cannot close NFR-01. Preserve ARC
+monitoring separately from failed scientific reruns and each board's custody.
+Decide the three PRD gaps independently. Evaluate every prior_failures entry;
+retire only an authenticated exact repeat within its tested mechanism scope.
+State explicit reopen conditions and at most three next research recommendations.
+
+Freeze bounded validation argv before reduction. Run owned tests and consumers,
+private E2E-018 and E2E-016 routes, Ruff, strict mypy, scoped spec checks and
+100 percent added-code statement coverage. Run repository pytest once and
+preserve unrelated global failures as diagnostics. Publish after normal child
+exit through primary_publication with cold replay and both terminal validators.
+Report historical G1-G4 separately. Write the V699 outcome note. Status,
+changelog and traceability reconciliation belong to the conductor for this task.
+
+### SCENARIO-REPORT-8082-REDUCTION
+
+Tests SHALL reject mutated authority, primitive rows, hashes and reduced claims.
+An absent or unsafe H1/H2 remains in the two-test Holm family with p=1.
+Repetition and seed counts SHALL NOT increase independent source support.
+One invalid cache partition SHALL NOT earn complete six-mode credit or erase
+valid board custody. A fixture SHALL NOT earn scientific benefit.
+
+### SCENARIO-REPORT-8082-TERMINAL
+
+Real script-path CLIs run outside the checkout for success, blocked, mutation
+and cold replay. All test outputs remain in private temporary directories.
+The final primary binds owned checks and a terminal sidecar to its exact bytes.
+Completed nulls are final findings. External failures are blocked, never partial.
+
 ## REQ-REPORT-7968: Publish authenticated response-role views
 
 Publish exactly one Exp7968 primary for milestone 2026.10.691 on 20261001.
