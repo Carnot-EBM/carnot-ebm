@@ -21391,3 +21391,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-04: Port bounded radial evaluation through an actual Rust binding (⚠️ Research Finding) — honest_verdict=complete_circular_positive_native_radial_kernel; results/experiment_8105_v701_native_radial_kernel.json
 - 2026-10-04: Measure full radial transactions and charged model acquisition (⚠️ Blocked) — honest_verdict=complete_blocked_changed_content_current_capture; results/experiment_8106_v701_radial_service_cost.json
 - 2026-10-04: Qualify the actual supervisor reader and inspect new redirect outcomes (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8107_v701_arc_supervisor_evidence.json
+- 2026-10-04: Bound radial precision and preserve each board evidence boundary (⚠️ Research Finding) — honest_verdict=complete_null_radial_hardware_boundary; results/experiment_8108_v701_radial_hardware_boundary.json
