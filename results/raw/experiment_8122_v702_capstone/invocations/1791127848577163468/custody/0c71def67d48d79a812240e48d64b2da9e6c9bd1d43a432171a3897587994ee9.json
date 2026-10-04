@@ -1,0 +1,51 @@
+{
+  "experiment": 8117,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-10-04",
+  "started_at": "2026-10-04T12:39:18.655520+00:00",
+  "finished_at": "2026-10-04T12:39:18.655520+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Reconstruct later learning benefit retention and restart integrity",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp8116-independent-online-memory",
+  "failed_field": "learning_trajectory_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8116_v702_independent_online_memory.json",
+  "failed_evidence_sha256": "sha256:c61da0333c81ce46955348a13588c28865407e1d03dfc061e1dc42d896b7d6e0",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp8116-independent-online-memory",
+    "failed_field": "learning_trajectory_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8116_v702_independent_online_memory.json",
+    "failed_evidence_sha256": "sha256:c61da0333c81ce46955348a13588c28865407e1d03dfc061e1dc42d896b7d6e0"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8116-independent-online-memory.learning_trajectory_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8116-independent-online-memory",
+      "artifact_field": "learning_trajectory_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8116_v702_independent_online_memory.json",
+      "artifact_sha256": "sha256:c61da0333c81ce46955348a13588c28865407e1d03dfc061e1dc42d896b7d6e0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

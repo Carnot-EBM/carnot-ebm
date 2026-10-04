@@ -1,0 +1,213 @@
+{
+  "design_sha256": "sha256:3bfd25c6ab5b11ff18c6cd8cffa97a2200d3b77187669b80570f9e8864ee1f2a",
+  "design_text": "# V702 numerical protocol sealed by Exp8111\n\nREQ-VERIFY-8111 / REQ-REPORT-8111. Frozen 20261004 before new V702 outcomes.\nThis exposed-development protocol cannot establish independent generalization.\nOriginal Exp8098 slots and roles are immutable; labels never select replacements.\nThe source-trained radial branch has no qualified execution. FR-11 is independent.\n\nThe JSON below is the machine-readable numerical contract. Costs are losses;\npositive paired gain means control loss minus treatment loss. Altered sources\nhave no inherited human label. Source interventions are diagnostics only.\n\n```json\n{\n  \"roles\": {\"fit\":128,\"tune\":64,\"evaluation\":128,\"stream\":256,\"retention\":64},\n  \"exposure_scope\":\"exposed_development_within_run_disjoint\",\n  \"source_interventions\": {\n    \"panel\":\"first32 original fit slots, answer bytes fixed\",\n    \"arms\":[\"full_source\",\"source_removed\",\"cyclic_mismatch\"],\n    \"duplicate\":\"one identical full_source repeat per panel slot\",\n    \"mismatch\":\"next panel source modulo32; no replacement\",\n    \"labels\":\"original-source evaluator labels never transfer to altered sources\",\n    \"metrics\":[\"absolute paired probability difference\",\"parse rate\",\"effect minus duplicate variation\"],\n    \"science_gate\":\"nonzero source sensitivity is not transport readiness\"\n  },\n  \"fitted_head_grid\": {\n    \"arms\":[\"scalar_qwen\",\"linear9\",\"additive_cubic\",\"radial16\",\"equivalent_logistic\",\"always_escalate\"],\n    \"features\":\"historical Qwen logit clipped to [1e-6,1-1e-6] plus eight public lexical features\",\n    \"geometry\":\"fit-only mean/std, zero std=1; recomputed within each fold\",\n    \"folds\":4,\n    \"ridge\":[0.0001,0.001,0.01,0.1,1],\n    \"selection\":\"mean fit-fold log loss; largest ridge on exact ties\",\n    \"intercept_penalized\":false,\n    \"initial_centers\":16,\n    \"reserved_centers\":12,\n    \"center_selection\":\"public farthest-first, SHA256 source ties\",\n    \"width\":\"median positive scaled fit pair distance, fallback1\",\n    \"optimizer_max_iterations\":256,\n    \"optimizer_max_seconds\":600,\n    \"gradient_infinity_limit\":1e-7,\n    \"calibration\":\"tune-only affine logit, identical procedure for every fitted arm\",\n    \"additive\":\"Exp8098 sealed degree3, quantiles .25/.5/.75, endpoint multiplicity4, padding1e-8, clipping,63 columns\",\n    \"equivalent_probability_tolerance\":1e-10\n  },\n  \"typed_costs\":{\"accept_y1\":5,\"accept_y0\":0,\"reject_y0\":1,\"reject_y1\":0,\"escalate\":0.5,\"ties\":\"escalate\"},\n  \"delayed_memory\": {\n    \"prerequisites\":[\"methods_ready_score\",\"stream_input_ready_score\"],\n    \"fitted_head_required\":false,\n    \"fit_capture_required\":false,\n    \"start\":\"historical Qwen logit offset plus exactly zero residual\",\n    \"warmup_slots\":[1,64],\n    \"evaluation_slots\":[65,256],\n    \"arms\":[\"error_center\",\"fixed_public_center\",\"random_past_center\",\"frozen_qwen_offset\"],\n    \"geometry\":\"first64 original public stream slots only; available public values, no labels, no fit/tune data\",\n    \"minimum_warmup_public_sources\":28,\n    \"initial_centers\":16,\n    \"maximum_centers\":28,\n    \"opportunities\":[64,128,192],\n    \"centers_per_opportunity\":4,\n    \"width\":\"median positive scaled warmup pair distance, fallback1\",\n    \"fixed_centers\":\"reserve next12 from warmup public farthest-first traversal\",\n    \"random_centers\":\"seeded label-blind released past update rows\",\n    \"error_centers\":\"released update rows with immutable frozen-offset issued errors\",\n    \"duplicate_centers\":\"report duplicates/effective rank, never substitute\",\n    \"shared_eligibility\":\"newest64 released update rows, at least16 and at least4 frozen-offset issued errors\",\n    \"sgd_steps_per_update\":4,\n    \"learning_rate\":0.05,\n    \"ridge\":0.01,\n    \"intercept_penalized\":false,\n    \"compute_budget_seconds\":1200,\n    \"feedback_delay_slots\":20,\n    \"pending_capacity\":32,\n    \"overflow\":\"oldest evicted, feedback permanently lost, lossless claim disqualified\",\n    \"roles\":\"SHA256(source_id) modulo4: bucket0 admission-only, all others update-only\",\n    \"admission\":\"commit candidate first, then next12 unused admission rows released strictly later; at least2/class\",\n    \"admission_deadline\":\"before next opportunity and slot256; defer whole block if incomplete\",\n    \"step_grid\":[1,0.5,0.25,0.125],\n    \"admission_guard\":\"largest passing step: no extra false accepts; cost/Brier no worse than incumbent; cost<=frozen offset+.02, Brier<=frozen offset+.01\",\n    \"rejected_update\":\"retain old coefficients, keep installed zero-weight centers\",\n    \"event_order\":[\"issue_prediction\",\"durable_commit\",\"commit_candidate\",\"select_future_admission\",\"release_feedback\",\"admit_once\",\"durable_update\"],\n    \"durable_state\":[\"pending_events\",\"issuing_state_hashes\",\"centers\",\"coefficients\",\"optimizer_step\",\"rng_state\",\"consumed_update_ids\",\"used_admission_ids\",\"baseline_hashes\",\"original_slot_mask\"],\n    \"retention\":\"commit all final heads and retention predictions before evaluator labels open\"\n  },\n  \"statistical_plan\": {\n    \"hypotheses\":[\"H1 radial versus additive on128 reserved evaluation slots\",\"H2 error-center versus fixed-public-center on192 later stream slots\"],\n    \"unit\":\"original source_cluster; seeds and duplicates add zero independent units\",\n    \"multiplicity\":\"Bonferroni family alpha=.05 across exactly2 hypotheses: one-sided alpha=.025 each\",\n    \"draws\":10000,\n    \"valid_minimum\":9500,\n    \"one_sided_confidence\":0.975,\n    \"gain_lower_bound_minimum\":0.02,\n    \"H1_support\":{\"complete\":96,\"per_class\":12},\n    \"H2_support\":{\"complete\":128,\"per_class\":8,\"nonoverlapping_blocks\":8},\n    \"beneficial_sources_minimum\":5,\n    \"extra_false_accepts_maximum\":0,\n    \"brier_increase_maximum\":0.01,\n    \"other_control_cost_increase_maximum\":0.02,\n    \"H1_resampling\":\"paired source bootstrap\",\n    \"H2_resampling\":\"average seeds per source, moving original-slot blocks with missing masks\",\n    \"primary_block\":16,\n    \"sensitivity_blocks\":[8,32],\n    \"seeds\":[101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120],\n    \"retention\":{\"complete\":48,\"per_class\":8,\"cost_increase\":0.02,\"brier_increase\":0.01,\"extra_false_accepts\":0},\n    \"precision\":\"descriptive finite-source intervals; no rare-event or lifelong-safety claim\"\n  }\n}\n```\n\nMethods readiness authenticates design and original source custody. Stream\nreadiness additionally authenticates historical completions/features/masks with\nat least224 usable stream and48 retention sources. Missing stream evidence\ncannot veto sealed methods. No current model loads, generations or head training\noccur in Exp8111. Exp8116 must commit real optimizer/RNG/pending states when run;\nthis seal records state requirements and zero-residual genesis, not learned states.\n",
+  "protocol": {
+    "delayed_memory": {
+      "admission": "commit candidate first, then next12 unused admission rows released strictly later; at least2/class",
+      "admission_deadline": "before next opportunity and slot256; defer whole block if incomplete",
+      "admission_guard": "largest passing step: no extra false accepts; cost/Brier no worse than incumbent; cost<=frozen offset+.02, Brier<=frozen offset+.01",
+      "arms": [
+        "error_center",
+        "fixed_public_center",
+        "random_past_center",
+        "frozen_qwen_offset"
+      ],
+      "centers_per_opportunity": 4,
+      "compute_budget_seconds": 1200,
+      "duplicate_centers": "report duplicates/effective rank, never substitute",
+      "durable_state": [
+        "pending_events",
+        "issuing_state_hashes",
+        "centers",
+        "coefficients",
+        "optimizer_step",
+        "rng_state",
+        "consumed_update_ids",
+        "used_admission_ids",
+        "baseline_hashes",
+        "original_slot_mask"
+      ],
+      "error_centers": "released update rows with immutable frozen-offset issued errors",
+      "evaluation_slots": [
+        65,
+        256
+      ],
+      "event_order": [
+        "issue_prediction",
+        "durable_commit",
+        "commit_candidate",
+        "select_future_admission",
+        "release_feedback",
+        "admit_once",
+        "durable_update"
+      ],
+      "feedback_delay_slots": 20,
+      "fit_capture_required": false,
+      "fitted_head_required": false,
+      "fixed_centers": "reserve next12 from warmup public farthest-first traversal",
+      "geometry": "first64 original public stream slots only; available public values, no labels, no fit/tune data",
+      "initial_centers": 16,
+      "intercept_penalized": false,
+      "learning_rate": 0.05,
+      "maximum_centers": 28,
+      "minimum_warmup_public_sources": 28,
+      "opportunities": [
+        64,
+        128,
+        192
+      ],
+      "overflow": "oldest evicted, feedback permanently lost, lossless claim disqualified",
+      "pending_capacity": 32,
+      "prerequisites": [
+        "methods_ready_score",
+        "stream_input_ready_score"
+      ],
+      "random_centers": "seeded label-blind released past update rows",
+      "rejected_update": "retain old coefficients, keep installed zero-weight centers",
+      "retention": "commit all final heads and retention predictions before evaluator labels open",
+      "ridge": 0.01,
+      "roles": "SHA256(source_id) modulo4: bucket0 admission-only, all others update-only",
+      "sgd_steps_per_update": 4,
+      "shared_eligibility": "newest64 released update rows, at least16 and at least4 frozen-offset issued errors",
+      "start": "historical Qwen logit offset plus exactly zero residual",
+      "step_grid": [
+        1,
+        0.5,
+        0.25,
+        0.125
+      ],
+      "warmup_slots": [
+        1,
+        64
+      ],
+      "width": "median positive scaled warmup pair distance, fallback1"
+    },
+    "exposure_scope": "exposed_development_within_run_disjoint",
+    "fitted_head_grid": {
+      "additive": "Exp8098 sealed degree3, quantiles .25/.5/.75, endpoint multiplicity4, padding1e-8, clipping,63 columns",
+      "arms": [
+        "scalar_qwen",
+        "linear9",
+        "additive_cubic",
+        "radial16",
+        "equivalent_logistic",
+        "always_escalate"
+      ],
+      "calibration": "tune-only affine logit, identical procedure for every fitted arm",
+      "center_selection": "public farthest-first, SHA256 source ties",
+      "equivalent_probability_tolerance": 1e-10,
+      "features": "historical Qwen logit clipped to [1e-6,1-1e-6] plus eight public lexical features",
+      "folds": 4,
+      "geometry": "fit-only mean/std, zero std=1; recomputed within each fold",
+      "gradient_infinity_limit": 1e-07,
+      "initial_centers": 16,
+      "intercept_penalized": false,
+      "optimizer_max_iterations": 256,
+      "optimizer_max_seconds": 600,
+      "reserved_centers": 12,
+      "ridge": [
+        0.0001,
+        0.001,
+        0.01,
+        0.1,
+        1
+      ],
+      "selection": "mean fit-fold log loss; largest ridge on exact ties",
+      "width": "median positive scaled fit pair distance, fallback1"
+    },
+    "roles": {
+      "evaluation": 128,
+      "fit": 128,
+      "retention": 64,
+      "stream": 256,
+      "tune": 64
+    },
+    "source_interventions": {
+      "arms": [
+        "full_source",
+        "source_removed",
+        "cyclic_mismatch"
+      ],
+      "duplicate": "one identical full_source repeat per panel slot",
+      "labels": "original-source evaluator labels never transfer to altered sources",
+      "metrics": [
+        "absolute paired probability difference",
+        "parse rate",
+        "effect minus duplicate variation"
+      ],
+      "mismatch": "next panel source modulo32; no replacement",
+      "panel": "first32 original fit slots, answer bytes fixed",
+      "science_gate": "nonzero source sensitivity is not transport readiness"
+    },
+    "statistical_plan": {
+      "H1_resampling": "paired source bootstrap",
+      "H1_support": {
+        "complete": 96,
+        "per_class": 12
+      },
+      "H2_resampling": "average seeds per source, moving original-slot blocks with missing masks",
+      "H2_support": {
+        "complete": 128,
+        "nonoverlapping_blocks": 8,
+        "per_class": 8
+      },
+      "beneficial_sources_minimum": 5,
+      "brier_increase_maximum": 0.01,
+      "draws": 10000,
+      "extra_false_accepts_maximum": 0,
+      "gain_lower_bound_minimum": 0.02,
+      "hypotheses": [
+        "H1 radial versus additive on128 reserved evaluation slots",
+        "H2 error-center versus fixed-public-center on192 later stream slots"
+      ],
+      "multiplicity": "Bonferroni family alpha=.05 across exactly2 hypotheses: one-sided alpha=.025 each",
+      "one_sided_confidence": 0.975,
+      "other_control_cost_increase_maximum": 0.02,
+      "precision": "descriptive finite-source intervals; no rare-event or lifelong-safety claim",
+      "primary_block": 16,
+      "retention": {
+        "brier_increase": 0.01,
+        "complete": 48,
+        "cost_increase": 0.02,
+        "extra_false_accepts": 0,
+        "per_class": 8
+      },
+      "seeds": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120
+      ],
+      "sensitivity_blocks": [
+        8,
+        32
+      ],
+      "unit": "original source_cluster; seeds and duplicates add zero independent units",
+      "valid_minimum": 9500
+    },
+    "typed_costs": {
+      "accept_y0": 0,
+      "accept_y1": 5,
+      "escalate": 0.5,
+      "reject_y0": 1,
+      "reject_y1": 0,
+      "ties": "escalate"
+    }
+  }
+}

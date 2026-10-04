@@ -1,0 +1,195 @@
+{
+  "code_hashes": {
+    "python/carnot/experiment_8119_v702_batched_service_cost.py": "sha256:ec4deac34d08c48061dd4d4b50f0defebe34d8a510e95264e214381aa6cdd76f",
+    "scripts/experiments/experiment_8119_v702_batched_service_cost.py": "sha256:24c1602f6130798141c93268f61f633457daaa11f543aca53b4735eb5ba9ab92",
+    "tests/python/test_batched_service_cost_8119.py": "sha256:123780804f56e92add581f6435e601e224c04d8a426b0e3704ec236fcc2ee690"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_8119_v702_batched_service_cost"
+      ],
+      "name": "worktree_imports",
+      "scope": "changed_modules",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8119-tpzwvzhh/focused",
+        "tests/python/test_batched_service_cost_8119.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_native_radial_8105.py::test_req_verify_8105_seeded_numpy",
+        "tests/python/test_native_radial_8105.py::test_req_verify_8105_boundaries",
+        "tests/python/test_native_radial_8105.py::test_req_verify_8105_serialization",
+        "tests/python/test_radial_service_cost_8106.py::test_schedule_and_keys",
+        "tests/python/test_radial_service_cost_8106.py::test_transactions",
+        "tests/python/test_radial_service_cost_8106.py::test_state_hash_and_fallback",
+        "tests/python/test_radial_service_cost_8106.py::test_binding_hash_rejected",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "explicit_tests",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8119-tpzwvzhh/.coverage",
+        "--include=*/experiment_8119_v702_batched_service_cost.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8119-tpzwvzhh/coverage",
+        "tests/python/test_batched_service_cost_8119.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_native_radial_8105.py::test_req_verify_8105_seeded_numpy",
+        "tests/python/test_native_radial_8105.py::test_req_verify_8105_boundaries",
+        "tests/python/test_native_radial_8105.py::test_req_verify_8105_serialization",
+        "tests/python/test_radial_service_cost_8106.py::test_schedule_and_keys",
+        "tests/python/test_radial_service_cost_8106.py::test_transactions",
+        "tests/python/test_radial_service_cost_8106.py::test_state_hash_and_fallback",
+        "tests/python/test_radial_service_cost_8106.py::test_binding_hash_rejected",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "explicit_tests_and_changed_modules",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8119-tpzwvzhh/.coverage",
+        "--include=*/experiment_8119_v702_batched_service_cost.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "changed_modules",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8119_v702_batched_service_cost.py",
+        "scripts/experiments/experiment_8119_v702_batched_service_cost.py",
+        "tests/python/test_batched_service_cost_8119.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "tests/python/test_native_radial_8105.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_radial_service_cost_8106.py",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8119_v702_batched_service_cost.py",
+        "scripts/experiments/experiment_8119_v702_batched_service_cost.py",
+        "tests/python/test_batched_service_cost_8119.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "tests/python/test_native_radial_8105.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_radial_service_cost_8106.py",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_8119_v702_batched_service_cost.py",
+        "--strict",
+        "--follow-imports=silent"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_batched_service_cost_8119.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "tests/python/test_native_radial_8105.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_radial_service_cost_8106.py",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 300
+    }
+  ],
+  "config": {
+    "batches": [
+      1,
+      8,
+      32,
+      128
+    ],
+    "centers": [
+      16,
+      28
+    ],
+    "repetitions": 30,
+    "seed": 7028119,
+    "strata": 3,
+    "warmups": 5
+  },
+  "measurement": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8119_v702_batched_service_cost.py",
+      "--root",
+      "/home/ianblenke/github.com/ianblenke/carnot",
+      "--worker-output",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8119_v702_batched_service_cost/invocations/1791122498132741243/work.json"
+    ],
+    "name": "measurement_normal_exit",
+    "scope": "private_cli",
+    "timeout_s": 900
+  },
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "name": "repository_health_once",
+    "scope": "repository_health",
+    "timeout_s": 120
+  }
+}

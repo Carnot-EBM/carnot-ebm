@@ -2,6 +2,31 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8122: Terminal V702 capstone accounting
+
+Exp8122 SHALL bind all thirteen Exp8110 activation contracts and independently
+read actual primaries, terminal sidecars, primitive shards and conductor skips.
+Negative, absent and disqualified sources SHALL remain visible and contribute
+no science benefit. External missing evidence SHALL finish complete_blocked
+with the actual failed operand; partial is reserved for unfinished owned work.
+Current execution SHALL load no model and make no generation calls. Historical
+Qwen receipts and trained heads SHALL never become current model invocations.
+Stable G1-G4 publication readiness is separate from exposed V702 science and
+does not authorize external publication. All three independent PRD gaps remain
+open. Same-verdict retirement binds exact hashes and changed-mechanism evidence,
+retires only qualified unchanged null configurations, and preserves historical
+.111 GRPO, puzzle, HardNet and generic external-text exclusions without reopening.
+Freeze validation argv before measurement; require normal child exits, scoped
+unit/consumer/E2E checks, Ruff, strict mypy, spec coverage and 100% added-code
+statement coverage. Keep bounded repository health separate from owned science.
+
+### SCENARIO-REPORT-8122-PRIVATE
+
+Private complete/null/missing/tampered authority and cold-reduction routes,
+including E2E-018, SHALL write outside results/. Script-path execution outside
+the checkout SHALL resolve the same implementation. Failed owned validation
+SHALL disqualify and set readiness0. Only checked exact bytes become primary.
+
 ## REQ-REPORT-8119: Honest batch and complete-service accounting
 
 Publish Exp8119 through primary_publication after normal measurement exit,

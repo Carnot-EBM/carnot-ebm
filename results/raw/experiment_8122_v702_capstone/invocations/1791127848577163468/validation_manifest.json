@@ -1,0 +1,149 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/publication_gate.py",
+        "--json"
+      ],
+      "name": "publication_gate",
+      "scope": "publication",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--rcfile=/tmp/carnot8122-j83_xb6a/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8122-j83_xb6a/pytest",
+        "tests/python/test_v702_capstone_8122.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "-q"
+      ],
+      "name": "owned_tests",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile=/tmp/carnot8122-j83_xb6a/coverage.ini"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile=/tmp/carnot8122-j83_xb6a/coverage.ini",
+        "-o",
+        "/tmp/carnot8122-j83_xb6a/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "report",
+        "--rcfile=/tmp/carnot8122-j83_xb6a/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "coverage100",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v702_capstone.py",
+        "python/carnot/reporting/v702_capstone_inputs.py",
+        "scripts/experiments/experiment_8122_v702_capstone.py",
+        "tests/python/test_v702_capstone_8122.py",
+        "python/carnot/reporting/v702_capstone_reduction.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v702_capstone.py",
+        "python/carnot/reporting/v702_capstone_inputs.py",
+        "scripts/experiments/experiment_8122_v702_capstone.py",
+        "tests/python/test_v702_capstone_8122.py",
+        "python/carnot/reporting/v702_capstone_reduction.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/v702_capstone.py",
+        "python/carnot/reporting/v702_capstone_inputs.py",
+        "scripts/experiments/experiment_8122_v702_capstone.py",
+        "python/carnot/reporting/v702_capstone_reduction.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_v702_capstone_8122.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "full_pytest",
+      "scope": "repository_health",
+      "timeout_s": 120
+    }
+  ],
+  "owned": [
+    "python/carnot/reporting/v702_capstone.py",
+    "python/carnot/reporting/v702_capstone_inputs.py",
+    "python/carnot/reporting/v702_capstone_reduction.py",
+    "scripts/experiments/experiment_8122_v702_capstone.py"
+  ]
+}

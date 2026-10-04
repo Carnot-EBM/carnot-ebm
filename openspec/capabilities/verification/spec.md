@@ -2,6 +2,25 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8122: Independent V702 branch reductions
+
+Reopen primitive rows to recompute methods, finite memory, acquisition, service
+and hardware reductions. Excluded, flagged or invalid inputs contribute no
+benefit. H1 decision benefit, H2 finite prequential benefit with retention, and
+complete-service value SHALL remain separate. A fitted-head block cannot erase
+a qualified independent H2 result; host timings cannot replace acquisition or
+learning-update joins. Source clusters, never seeds, are the independent units.
+Both independent generalization scores SHALL remain0 on the exposed corpus.
+
+### SCENARIO-VERIFY-8122-REDUCTION
+
+Complete null is terminal; absent external work is blocked. Duplicate seeds,
+tampered primitive bytes, changed reductions, unsafe oracle claims and failed
+owned checks SHALL fail qualification. Null radial and center-growth mechanisms
+retire unchanged; a promising finite result requires a separately acquired
+independent human-labeled corpus before generalization. No scientific family
+retires because of an environmental or validation block.
+
 ## REQ-VERIFY-8119: Batched native crossing and durable host service
 
 Freeze batches [1,8,32,128], centers [16,28], three public byte-size strata,
