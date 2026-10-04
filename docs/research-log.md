@@ -7210,3 +7210,10 @@ Operational evidence addendum: this entry supersedes earlier operational asserti
 - theme: Feature reuse guarded transaction synthesis and Qwen source scoring dominated wall time across an experiment set dominated by synthesis tasks and lacking sub-phase telemetry
 - key result: honest operational negative — 10 experiments (1 compute-bound, 9 synthesis-only) completed in 47.8 wall-time minutes led by guarded transaction testing (15.98 min) and Qwen source scoring (15.58 min), while available records lack intra-task stage breakdowns, continuous execution-window GPU telemetry, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
+
+### Milestone 2026.10.699
+
+- exp_range: no data available this milestone
+- theme: Feature cache eviction, calibrated source energy training, and sealed projection methods dominated wall time across an experiment set heavily dominated by synthesis tasks and lacking sub-phase telemetry
+- key result: honest operational negative — 13 experiments (1 compute-bound, 12 synthesis-only) completed in 105.3 wall-time minutes led by feature cache eviction (20.69 min), source energy training (18.92 min), projection method ingestion (18.68 min), Qwen process isolation (15.57 min), and cache transaction measurement (12.55 min), while available records lack intra-task stage breakdowns, continuous execution-window GPU telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone

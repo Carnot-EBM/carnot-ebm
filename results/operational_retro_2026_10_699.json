@@ -1,0 +1,62 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.699",
+  "generated_at": "2026-10-04T00:13:14Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 105.3,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure changed content eviction and restart feature transactions",
+      "duration_minutes": 20.69,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Train calibrated source energies with explicit feature interactions",
+      "duration_minutes": 18.92,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Ingest projection methods and seal independent research branches",
+      "duration_minutes": 18.68,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Isolate process lifetime in the failed Qwen duplicate measurement",
+      "duration_minutes": 15.57,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure complete cold warm and miss feature transactions",
+      "duration_minutes": 12.55,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.699 executed 13 experiments (1 compute-bound, 12 synthesis-only) across 105.3 total wall-time minutes (averaging 8 minutes per experiment) reconstructed from fallback disk timestamp data. Execution was dominated by four synthesis tasks—'Measure changed content eviction and restart feature transactions' (20.69 minutes), 'Train calibrated source energies with explicit feature interactions' (18.92 minutes), 'Ingest projection methods and seal independent research branches' (18.68 minutes), and 'Measure complete cold warm and miss feature transactions' (12.55 minutes)—alongside the single compute-bound task 'Isolate process lifetime in the failed Qwen duplicate measurement' (15.57 minutes). Point-in-time monitor telemetry showed both NVIDIA GeForce RTX 3090 GPUs at 0% utilization with 4MB allocated outside active runs; because active-window execution telemetry was absent and the single compute-bound task did not evaluate multiple models, gpu_idle_on_compute_bound_tasks is recorded as false.",
+  "bottlenecks_identified": [
+    "Wall-clock duration was heavily concentrated in the top five slowest experiments, which consumed 86.41 of the 105.3 total milestone minutes (82.1%).",
+    "Synthesis-only tasks formed the primary milestone bottleneck, accounting for 12 of the 13 completed experiments and 4 of the top 5 longest-running tasks (totaling 70.84 minutes, or 67.3% of total milestone wall time), led by 'Measure changed content eviction and restart feature transactions' at 20.69 minutes.",
+    "The sole compute-bound experiment, 'Isolate process lifetime in the failed Qwen duplicate measurement', consumed 15.57 minutes diagnosing process lifetime and duplicate execution without multi-model parallelism.",
+    "Milestone timing relied on disk-mtime fallback reconstruction following zero commits on the live git-log path, leaving intra-task execution phases (process initialization, test verification, and artifact emission) uninstrumented.",
+    "Point-in-time GPU monitor polling observed both RTX 3090 GPUs idle with 4MB memory outside active runs, but the lack of continuous in-flight accelerator telemetry leaves active-window hardware execution efficiency unmeasured during the compute-bound experiment."
+  ],
+  "improvements_suggested": [
+    "Profile and optimize the feature cache lifecycle and transaction verification synthesis tasks (accounting for 20.69 and 12.55 minutes) to reduce code generation and verification overhead.",
+    "Instrument experiment runners with granular sub-phase timers to isolate latency across environment setup, data preparation, compute/synthesis passes, and artifact validation.",
+    "Deploy continuous, lightweight in-flight GPU metrics sampling during compute-bound tasks rather than relying exclusively on point-in-time monitor snapshots.",
+    "Implement strict timeout guards and lightweight subprocess lifecycle isolation for single-model Qwen diagnostic measurement tasks (15.57 minutes) to prevent process management stalls.",
+    "Restrict DualGPURunner orchestration strictly to parallel workloads involving two or more distinct models (e.g. concurrent Qwen and Gemma execution), avoiding misapplication to single-model tasks like Qwen process isolation.",
+    "Maintain failure_ledger pre-launch verification so doomed reruns continue to be blocked in sub-second time without expending compute budget."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile and optimize long-running feature cache and energy transaction synthesis pipelines (consuming over 33 minutes across eviction and cold/warm/miss transactions).",
+    "Add granular sub-phase execution timing to experiment runners to measure setup, compute, synthesis iterations, and artifact validation overhead.",
+    "Deploy active-window GPU utilization and memory timeseries logging to assess hardware efficiency during compute-bound experiments."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.699 completed 13 experiments in 105.3 wall-time minutes, heavily skewed toward synthesis-only tasks (12 of 13) which accounted for the three slowest runs and 70.84 minutes among the top five. The sole compute-bound task ('Isolate process lifetime in the failed Qwen duplicate measurement', 15.57 minutes) properly evaluated a single model without requiring DualGPURunner, and gpu_idle_on_compute_bound_tasks is recorded as false. Tooling leverage lies in instrumenting intra-task execution phases and optimizing feature cache transaction synthesis, with estimated time savings set to 0% pending empirical telemetry."
+}
