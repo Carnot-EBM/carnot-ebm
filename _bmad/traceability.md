@@ -3660,3 +3660,20 @@ the plan are requirements, not current execution evidence.
 The V703 primary-source scan was recorded before experiment design.
 The V702 document is preserved byte-for-byte. No implementation, experiment
 activation, generator training, external publication or conductor change is included.
+
+## 2026-10-04 — V704 research planning, execution pending
+
+| Requirement | Planned tasks | Evidence boundary |
+|---|---|---|
+| REQ-REPORT-V704-PLAN; FR-09/10 | Exp8136, Exp8149 | Fourteen exact tasks; preserved V703 design; activation pending |
+| REQ-VERIFY-V704-PLAN; FR-06/12 | Exp8137, Exp8139–Exp8142 | Qualified paired source evidence and equal-information calibrated decisions |
+| FR-11 | Exp8138, Exp8143–Exp8144 | Independent historical input, exact delayed protocol, future loss and retention |
+| FR-05/08; NFR-01 | Exp8145–Exp8146 | Natural Rust host costs and fresh complete Qwen requests measured separately |
+| ARC generalization floor | Exp8147 | New current reader receipt and unseen redirect outcomes; no new solve claim |
+| Hardware continuity | Exp8148 | Per-board custody and natural-workload acceleration bounds |
+
+The V704 primary-source scan precedes design. The three largest gaps remain
+verification utility, retained continuous learning and complete-service speed.
+No implementation, generator training, activation or external publication occurs
+in this planning change. Future execution must extend task-specific requirements
+and run the applicable E2E scenarios before reporting results.

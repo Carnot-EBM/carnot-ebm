@@ -19505,3 +19505,4 @@ code |
 | 2026-10-04 19:20 UTC | Qualify the current supervisor reader and inspect  | OK | 92 passed, 1 warning in 15.80s |
 | 2026-10-04 19:39 UTC | Bound useful acceleration and preserve each board  | OK | 86 passed, 1 warning in 21.79s |
 | 2026-10-04 20:10 UTC | Decide thirteen outcomes and remaining verificatio | OK | 96 passed, 1 warning in 72.26s (0:01:12) |
+| 2026-10-04 20:45 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | timeout after 300s |

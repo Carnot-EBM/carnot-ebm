@@ -50269,3 +50269,98 @@ come from primary pages. Vendor estimates are not Carnot measurements.
 The immediate hardware path remains CPU memory and Rust/PyO3 arithmetic, with
 CUDA for frozen Qwen inference. Preserve separate KV260, PolarFire and GateMate
 limits. No purchase or unchanged NPU/TSU/JTAG probe is justified by this scan.
+
+## 2026-10-04 — V704 planning scan: usable evidence and independent learning execution
+
+This scan precedes the V704 design. Primary pages were checked again. Existing
+entries remain prior knowledge. These sources motivate tests; they do not supply
+Carnot results or establish local hardware access.
+
+### Promising findings and bounded uses
+
+- **HART: Data-Driven Hallucination Attribution and Evidence-Based Tracing for
+  Large Language Models**, March 6, 2026. New lead in this reference file.
+  [Abstract](https://arxiv.org/abs/2603.05828) and
+  [method](https://arxiv.org/html/2603.05828v1).
+  HART separates span localization, error attribution, retrieval and causal
+  tracing. Its dataset includes counterfactual evidence annotations. Adapt the
+  evidence distinction: store quote validity separately from semantic judgment,
+  then test removed and mismatched source controls. These controls test source
+  sensitivity; they do not inherit the original human label. Do not claim a
+  reproduction of HART or qualify its corpus from an abstract alone.
+- **RT4CHART**, revised July 20, 2026.
+  [Primary method](https://arxiv.org/html/2603.27752v2).
+  Claim decomposition and local verification are central to the method. A
+  whole-answer quote request tests only a restricted evidence intervention.
+  Preserve that limitation when continuing the unexecuted V703 paired capture.
+  Keep original labels fixed. Exact quote bytes prove custody, not entailment.
+- **SURE-RAG: Sufficiency and Uncertainty-Aware Evidence Verification for
+  Selective Retrieval-Augmented Generation**, 2026.
+  [Primary paper](https://arxiv.org/abs/2605.03534), discovered through
+  [Hugging Face papers](https://huggingface.co/papers/2605.03534).
+  Keep selective decisions and calibration explicit. Controlled sufficiency
+  tasks and natural hallucination detection are different evaluation targets.
+  Compare accept/reject/escalate cost, Brier score and an always-escalate arm.
+  This does not license replacing natural targets with generated certificates.
+- **Capacity-Constrained Online Convex Optimization with Delayed Feedback**,
+  June 10, 2026. [Primary paper](https://arxiv.org/abs/2606.11711).
+  Rechecked alongside its [2025 scheduling predecessor](https://arxiv.org/abs/2503.19856)
+  and [February 2026 delay reduction](https://arxiv.org/abs/2602.02634).
+  Keep prediction, feedback release and update application as separate events.
+  Measure lost pending feedback and stale gradients. The fixed radial learner
+  does not inherit these convex regret guarantees. Qualify the complete frozen
+  schedule before measuring natural learning; do not silently shorten delays.
+- **KAC**, March 2025, and **Catastrophic Forgetting in KANs**, November 2025.
+  [KAC paper](https://arxiv.org/abs/2503.21076),
+  [author code](https://github.com/Ethanhuhuhu/KAC),
+  [forgetting study](https://arxiv.org/abs/2511.12828).
+  RBF features are a practical small-head lead. Local activation alone does not
+  establish retention. Compare equal-capacity error-selected, public and random
+  centers. Measure later predictions and reserved retention separately.
+
+### Primary-topic coverage and deferred branches
+
+| Topic | Primary source checked | Planning consequence |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), [ARM–EBM v4](https://arxiv.org/abs/2512.15605) | Keep an exactly equivalent logistic control. Energy notation alone supplies no independent correctness signal. |
+| Neural constraints | [LagONN](https://arxiv.org/abs/2505.07179) | Constraint feasibility does not solve source extraction. Defer another solver family. |
+| Ising and FPGA sampling | [Higher-order neuromorphic Ising machines](https://doi.org/10.1038/s41467-026-71937-4), [sparse FPGA Ising](https://doi.org/10.1038/s41467-026-75119-0) | Distinguish core solver time from communication and host noise generation. Do not port published speed factors into Carnot costs. |
+| Hallucination evidence | [Input-side alignment](https://arxiv.org/abs/2608.15804), HART and RT4CHART above | Measure source dependence and calibration before any broad verification claim. |
+| Energy-guided decoding | [Reward-guided EBD](https://arxiv.org/abs/2605.28020), [object-hallucination decoding](https://arxiv.org/abs/2507.07731) | Frozen-weight steering still needs a useful reward and extra compute. Vision results do not establish text-verifier utility; defer decoder changes. |
+| Continual learning | Capacity papers and KAC above | Preserve causal event order, fixed budgets, restart parity and retention controls. |
+
+### Requested secondary sources and access limits
+
+- **OpenReview:** searched ICLR 2026 EBM and verification submissions. The
+  [EBT PDF](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  identifies an ICLR 2026 paper. Its
+  [forum](https://openreview.net/forum?id=ZBj3Qp1bYg) returned a browser challenge.
+  No acceptance inference is made for other submissions.
+- **Semantic Scholar:** attempted citation endpoints for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,url&limit=10)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,url&limit=10).
+  Both were inaccessible. Targeted searches did not establish a citing-paper
+  list. Citation coverage remains incomplete; no citation count is asserted.
+- **Hugging Face papers:** checked SURE-RAG and
+  [input-side alignment](https://huggingface.co/papers/2608.15804).
+  HART's paper-page request failed; its primary arXiv method was accessible.
+- **GitHub trending:** checked weekly
+  [Python](https://github.com/trending/python?since=weekly) and
+  [Rust](https://github.com/trending/rust?since=weekly). Returned pages were
+  crawled three weeks earlier. No current EBM/KAN ranking was established.
+  Checked KAC author code and
+  [EBT author code](https://github.com/Diogenesoftoronto/EnergyBasedTransformer)
+  as implementation references, not as newly trending repositories.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t). Energy estimates exclude final dense
+  vocabulary readout and inter-device movement. The page also gives a much
+  larger estimate when readout is included. Report complete service costs and
+  label modelled bounds. This supplies no local TSU execution evidence.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  Treat its system description as vendor context. The inspected page does not
+  provide a reproducible local training/evaluation recipe for this milestone.
+
+No new hardware purchase follows from this scan. Use the existing CUDA model
+runtime and CPU/Rust small heads. Preserve separate KV260 fabric, PolarFire
+Linux CPU and GateMate physical/JTAG evidence. Reopen other hardware only after
+measured complete-workload costs identify a useful acceleration target.

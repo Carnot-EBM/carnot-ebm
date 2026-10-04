@@ -11,103 +11,8 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 1 |
-| NO_CLAIM | 2 |
-| CANNOT_DETERMINE | 5 |
-
-## experiment_8113_radial_decision_fit.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-None; the artifact makes no comparative or empirical claim, serving only as an operational receipt recording that experiment execution was blocked at pre-run gate evaluation.
-
-## WAS THAT CHECKED
-No; execution was blocked prior to running the experiment, so no empirical evaluation occurred.
-
-## EVIDENCE
-`schema`: `"blocked_gate_check_v1"`
-`status`: `"blocked"`
-`honest_verdict`: `"blocked_gate_check_failed"`
-`duration_s`: `0.0`
-`blocked_at_layer`: `"conductor_pre_gate"`
-`gate_check_summary`: `"gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8112-fit-source-capture.fit_capture_ready_score (actual=0 == expected=1)"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8116_v702_independent_online_memory.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
-
-## experiment_8117_learning_audit.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable; the artifact is a gate-check receipt recording an upstream dependency failure and asserts no comparative or empirical claim.
-
-## WAS THAT CHECKED
-No; the experiment was halted at the conductor pre-gate layer prior to execution, so no experimental hypothesis or comparator was evaluated.
-
-## EVIDENCE
-`schema`
-`blocked_gate_check_v1`
-`status`
-`blocked`
-`honest_verdict`
-`blocked_gate_check_failed`
-`duration_s`
-`0.0`
-`blocked_at_layer`
-`conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8118_v702_fresh_acquisition_cost.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
-
-## experiment_8119_v702_batched_service_cost.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
+| NO_CLAIM | 1 |
+| CANNOT_DETERMINE | 7 |
 
 ## experiment_8120_v702_arc_supervisor_delta.json
 
@@ -123,36 +28,111 @@ sandbox: workspace-write
 
 ## experiment_8121_v702_hardware_batch_boundary.json
 
-**CLAIM_SUPPORTED**
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_8122_v702_capstone.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_8123_v703_contract_custody.json
+
+**NO_CLAIM**
 
 ## VERDICT
-CLAIM_SUPPORTED
+NO_CLAIM
 
 ## THE HEADLINE CLAIM
-The evaluated FPGA hardware boards demonstrate no measured whole-service acceleration or qualifying batch execution, establishing an honest null hardware batch boundary result.
+no claim
 
 ## WHAT WOULD REFUTE IT
-A board row in the artifact recording measured whole-service acceleration or qualifying batch execution (e.g., a non-null `measured_current_latency_ms` demonstrating speedup, `terminal_criterion_met` evaluating to `true` for FPGA batch workloads, or `acquisition_relevance` showing positive whole-service benefit rather than deferral).
+The artifact asserts no comparative or scientific claim, explicitly scoping itself to administrative custody validation with zero claim scope. If a downstream consumer were to interpret this artifact as demonstrating scientific performance, capability, or generalization, that interpretation would be refuted by the artifact's own recorded design showing that no model was loaded, no training was conducted, no rival arm was evaluated, and zero independent scientific units were measured.
 
 ## WAS THAT CHECKED
-Yes. The audit checked each evaluated board arm (`KV260` and `PolarFire`) for current hardware execution, whole-service speedup, and qualifying batch prerequisites, finding that batch inputs were unavailable, current hardware execution was not performed, and neither board met the whole-service acceleration criteria.
+No comparative or scientific hypothesis was checked or attempted. The artifact only checked administrative custody preconditions and task contract syntax against authority files (17 checks across 13 tasks in `rows`), while explicitly confirming that no model was invoked and no scientific units were evaluated.
 
 ## EVIDENCE
-- `batch_input_status`: `unavailable`
-- `acquisition_relevance`: `defer: no measured board whole-service benefit`
-- `arm`: `historical_accounting`
-- `board`: `KV260`
-- `historical_verdict`: `historical_fabric_k_max<=5`
-- `current_hardware_execution`: `false`
-- `terminal_criterion_met`: `false`
-- `measured_current_latency_ms`: `null`
-- `board`: `PolarFire`
-- `historical_verdict`: `historical_linux_cpu_only`
+`claim_scope`
+`0`
+`exposure_scope`
+`0`
+`honest_verdict`
+`"complete_null_contract_custody"`
+`methodology_note`
+`"Compare complete V703 task bytes with strict authority parsing; independently preserve V702 primaries and conductor skips. No science, training, model loading or service benchmark is measured."`
+`inference_substrate`
+`"aggregation_from_upstream_artifacts"`
+`inference_substrate_class`
+`"no_model_load"`
+`current_work_receipt`
+`"model_invoked": false`
+`"performed": false`
+`sample_size_budget`
+`"administrative_tasks": 13`
+`"independent_scientific_units": 0`
+`contract_ready_score`
+`1`
+`"Complete authority agreement and normal owned validation qualify scheduling only."`
+`MODEL_SPECS`
+`"Record MODEL_SPECS so administrative custody cannot imply scientific benefit."`
+`arm`
+`"contract_custody"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8122_v702_capstone.json
+## experiment_8132_v703_service_cost.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_8133_v703_arc_reader_frontier.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_8134_v703_hardware_service_boundary.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_8135_v703_capstone.json
 
 **CANNOT_DETERMINE**
 

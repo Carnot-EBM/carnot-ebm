@@ -48544,3 +48544,20 @@ Missing or inconsistent cost rows remain excluded units. Changed board scope
 blocks only that board. Near-threshold, clipped and outside-domain fixtures
 fallback to float64 with zero issued decision disagreements. Cold replay
 rehashes inputs and independently recomputes every reduction.
+
+## REQ-VERIFY-V704-PLAN: Evidence decisions and qualified delayed learning
+
+V704 shall plan source-conditioned typed decisions using the mandated frozen
+Qwen3.8-27B GGUF. It shall compare equal-information energy and probability
+controls. It shall separately qualify and execute the original delayed-memory
+protocol on historical source roles. Benefit shall require independent reductions
+of later decision loss and retention, with source-level units and fixed H1/H2
+multiplicity. Exposed development data shall not establish independent generalization.
+Natural host timing and current complete-model request timing shall be distinct.
+
+### SCENARIO-VERIFY-V704-PLAN
+
+A source fixture failure blocks only the source branch. Qualified historical
+stream data can still reach causal learning. Invalid quotes do not become semantic
+labels. Missing natural updates or current acquisition cannot become complete
+service evidence. These are planned requirements; no new science result is claimed.

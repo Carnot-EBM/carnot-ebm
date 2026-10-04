@@ -9,78 +9,9 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 4 |
-| CANNOT_DETERMINE | 4 |
-
-## experiment_8113_radial_decision_fit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The task was blocked at conductor pre-gate because upstream check `exp8112-fit-source-capture.fit_capture_ready_score` returned 0 instead of the expected 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8116_v702_independent_online_memory.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8117_learning_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked prior to execution by an unmet pre-gate condition because upstream dependency `exp8116-independent-online-memory` had `learning_trajectory_ready_score` equal to 0 instead of the expected 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8118_v702_fresh_acquisition_cost.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8119_v702_batched_service_cost.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+| CHECKABLE | 1 |
+| AGGREGATE_ONLY | 1 |
+| CANNOT_DETERMINE | 6 |
 
 ## experiment_8120_v702_arc_supervisor_delta.json
 
@@ -95,6 +26,56 @@ reviewer call failed
 reviewer call failed
 
 ## experiment_8122_v702_capstone.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment is blocked due to failed precondition gates (verdict: "complete_blocked_design_exact_task_contract") and asserts no comparative scientific gain for hypotheses H1 or H2.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8123_v703_contract_custody.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8132_v703_service_cost.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8133_v703_arc_reader_frontier.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8134_v703_hardware_service_boundary.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+The artifact claims that exact decision parity is satisfied across implementations and that a 100x speedup is ruled out by Amdahl outer bound ceilings across all tested arms and conditions.
+
+## WHAT IS MISSING
+Per-unit execution, parity, and timing rows for the 150 units per condition (`"units": 150`) or 11,070 completed runs (`"completed_count": 11070`). Present fields provide only aggregate totals in `"amdahl_bounds"` (`"retained_ns"`, `"total_ns"`, `"outer_ceiling"`), boolean gate summaries in `"acceptance_gates"` (`"exact_decision_parity": true`, `"host_component_rows": true`), and high-level board metadata in `"board_rows"`.
+
+## THE CHECK A READER CANNOT DO
+A reader cannot verify whether exact decision parity held on every individual center/seed unit or whether the pooled Amdahl retained and total times were driven by outlier transactions versus a consistent profile across the 150 units.
+
+## experiment_8135_v703_capstone.json
 
 **CANNOT_DETERMINE**
 

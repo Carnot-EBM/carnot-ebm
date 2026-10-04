@@ -92799,3 +92799,20 @@ A private CLI outside the checkout without PYTHONPATH publishes a fixture,
 records a missing full-service operand as a terminal block, rejects changed
 board custody and cold-replay aggregates, and retains other boards independently.
 No validation fixture or scratch file is written into live results/.
+
+## REQ-REPORT-V704-PLAN: Independent staged research branches
+
+The staged V704 plan shall contain exactly fourteen tasks, Exp8136–Exp8149.
+Its visible table, full JSON contract and canonical digest shall match the YAML.
+It shall preserve the V703 design and distinguish five primaries, one failed
+unpublished producer and seven skipped dependents. Source capture and historical
+learning shall have separate qualification tasks. The capstone shall run without
+an upstream success gate. Every prompt shall require flushed progress, bounded
+tool calls, per-unit evidence and terminal blocked classifications.
+
+### SCENARIO-REPORT-V704-PLAN
+
+The existing authority reader accepts matching private activated copies and
+rejects missing/reordered tasks, changed prompts, stale digests and gate drift.
+Planning leaves the actual active roadmap and conductor bytes unchanged.
+Implementation and natural science remain pending until conductor execution.
