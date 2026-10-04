@@ -91484,6 +91484,41 @@ SHALL still receive its existing flag. Replay SHALL retain terminal-failure
 reports and normalize their operand shape. Preserve failed attempts and reuse
 their whole-suite diagnostic when only publication handling changes.
 
+# REQ-REPORT-8107: Qualify the actual V701 supervisor evidence reader
+
+Resolve the reporting import from the Exp8067 CLI and authenticate both files
+against the qualified primary. Bind its primary, inventory and terminal sidecar
+by exact hashes. Preserve V699's failed invented-path receipt. Qualification
+precedes reading the current frontier; unchanged failed inventory is retired.
+Only authenticated new redirect bytes may enter observational reductions.
+Publish a terminal null when there are no new outcomes, or terminal blocked
+with exact operands when upstream custody fails. Reader readiness is separate
+from outcome count. Claim zero new solves, model calls and generalization credit.
+
+## SCENARIO-REPORT-8107-AUTHENTICATION
+
+The actual imported module exists and matches historical code hashes. Missing
+sidecars and changed code block with their observed path and bytes. Private
+empty, missing-event, duplicate-event and corrupt-receipt routes receive no
+natural evidence credit. Retain the solve registry precheck and provenance.
+
+## SCENARIO-REPORT-8107-REDUCTION
+
+Preserve primitive identity, curated arm, closure, help, level-up action cost
+and unredirected stagnation. Recompute all counters from rows. At least ten
+closed firings across three games are needed for a future curated-selection
+proposal. Observational help cannot establish causality or change live policy.
+
+## SCENARIO-REPORT-8107-VALIDATION
+
+Freeze commands before measurement. Run focused consumers, E2E-017, strict
+mypy, Ruff, scoped spec coverage and 100 percent new statement coverage.
+Run private real CLI success, blocked, mutation and cold replay outside the
+checkout. Archive argv, normal exit, duration and log hash. A bounded whole
+Python suite diagnostic is separate from owned qualification. Use the primary
+publisher, adversarial verification and strict row lint on identical bytes.
+Owned failures disqualify and set readiness zero. The conductor reconciles ops.
+
 # REQ-REPORT-8067: Authenticate the V698 supervisor frontier
 
 Exp8067 SHALL bind the Exp8054 primary, inventory and terminal sidecar by exact

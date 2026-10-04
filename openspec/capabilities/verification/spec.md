@@ -47823,6 +47823,18 @@ quantile, issue-before-release state machine, persisted slot128 restart and pair
 fixed-window block reduction. `tests/python/test_delayed_confidence_8000.py`
 references this requirement and exercises boundary sets, delayed identity,
 future outcomes, controls and support floors.
+# REQ-VERIFY-8107: Authenticate reader readiness independently of outcome count
+
+Qualify the actual Exp8067 reporting import before reading new outcomes.
+Missing upstream bytes are terminal blocked. Failed owned checks disqualify.
+Fixture execution gives no independent verifier or live solve credit.
+
+## SCENARIO-VERIFY-8107-COLD
+
+Cold replay from outside the checkout SHALL reject forged counts, repeated
+event identities, missing outcomes and changed durable checkpoints. All new
+statements and named E2E-017 routes SHALL execute in private directories.
+
 # REQ-VERIFY-8001: Repair owned qualification before admitting supervisor evidence
 
 The current audit SHALL qualify E2E-017 and the entire owned statement denominator
