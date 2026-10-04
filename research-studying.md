@@ -6393,3 +6393,20 @@ The full T-SKM-Net text and the other five primary abstracts were rechecked.
 Formal guarantees, generator tuning and new full likelihood capture remain deferred.
 No guarantee transfers to Carnot. The historically exposed cohorts cannot establish
 unseen-data verification or general lifelong improvement.
+## Exp8084 V700 local-memory methods — 2026-10-04
+
+Status: ingested. Primary retrieval receipts and exact HTML hashes are in
+`results/raw/experiment_8084_v700_fresh_cohort_methods/literature_access.json`.
+KAC [2503.21076](https://arxiv.org/html/2503.21076v1) supplies a Gaussian radial
+basis adaptation. Its full HTML was read; Carnot does not reproduce its vision
+class-incremental benchmark. KAN forgetting
+[2511.12828](https://arxiv.org/abs/2511.12828) motivates independent retention.
+Capacity-constrained delayed OCO
+[2606.11711](https://arxiv.org/abs/2606.11711) motivates bounded pending feedback
+and explicit lost-feedback records; changing centers do not inherit fixed
+convex-loss regret bounds. ARM–EBM
+[2512.15605](https://arxiv.org/abs/2512.15605) requires an exact logistic control.
+EBT [2507.02092](https://arxiv.org/abs/2507.02092) supplies conditional compatibility
+context. These four checks retrieved abstracts, not full method proofs.
+No paper guarantee transfers. No foundation model is trained or loaded here.
+Unknown prior exposure remains unknown, and generalized learning benefit is zero.

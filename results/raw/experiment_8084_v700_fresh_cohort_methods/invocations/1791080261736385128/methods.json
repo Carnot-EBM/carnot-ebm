@@ -1,0 +1,88 @@
+{
+  "costs": {
+    "accept": "5*y",
+    "escalate": 0.5,
+    "reject": "1-y",
+    "ties": "escalate"
+  },
+  "features": [
+    "bounded_qwen_unsupported_logit",
+    "overlap_mean",
+    "overlap_maximum",
+    "negation_mismatch_mean",
+    "negation_mismatch_maximum",
+    "numeric_mismatch_mean",
+    "numeric_mismatch_maximum",
+    "uncovered_fraction_mean",
+    "uncovered_fraction_maximum"
+  ],
+  "hypothesis_family": [
+    "H1_radial_source_decisions",
+    "H2_feedback_grown_memory"
+  ],
+  "memory": {
+    "additions_per_opportunity": 4,
+    "basis": "exp(-||x-c||^2/(2*sigma^2))",
+    "initial_centers": 16,
+    "maximum_additions": 12,
+    "newest_update_rows": 64,
+    "opportunities": [
+      64,
+      128,
+      192
+    ],
+    "pending_capacity": 32,
+    "width": "median positive fit pair distance; fallback1"
+  },
+  "model_call_limits": {
+    "current": 0,
+    "future_maximum": 768,
+    "output_tokens": 64,
+    "retries": 0,
+    "timeout_s": 120
+  },
+  "no_paper_guarantee_transfers": true,
+  "protocol": "\n\nSpec refs: REQ-REPORT-8084 and REQ-VERIFY-8084. This additive contract is\nsealed before current annotation access. It changes the basis to Gaussian\nradial memory and requires a new recorded-history-separated allocation.\n\nNormalize source text with NFKC, casefold and collapsed whitespace. Use\nnormalized five-token shingles, Jaccard >=0.8, including connected components.\nScan all prior result and checkpoint inputs; preserve file hashes and individual\ndeclarations. Opaque, missing and unreadable inputs stay explicit unknowns.\nUnavailable relevant history blocks cohort selection. Unknown pretraining and\nunrecorded external history remain limitations, even with a passing local scan.\n\nExactly 768 groups receive fit128, tune64, evaluation192, stream256, retention128.\nNumeric response IDs sort numerically, then text IDs lexically. Sort groups by\nSHA256(b\"V700\" + normalized source bytes). Keep every selected slot after\nannotation exclusion. Public completeness and original span custody determine\neligibility. Unknown annotation status has no target. Measure support after seal.\n\nNine inputs are the future bounded Qwen unsupported judgment logit plus the\neight Exp7980 lexical features. No current LLM is loaded by Exp8084. Fit-only\nmean and standard deviation scale inputs; zero scales become one. Geometry\nis recomputed inside each fit fold. Tune alone fits affine calibration.\nFour source-group folds select ridge from [0.0001,0.001,0.01,0.1,1], with\nlargest ridge breaking ties. Optimizer limit is 256 iterations, 600 seconds,\ngradient infinity norm <=1e-7, finite objective and parameters.\n\nGaussian basis is exp(-||x-c||^2/(2*sigma^2)). Select initial16 centers by\nSHA256 source order with deterministic farthest-first distance and source-ID\nties. Sigma is the median positive fit pair distance, default one if none.\nPreserve initial16 centers; admit at most12 new centers, four at slots64,128,192.\nNew centers come only from newest64 eligible released update errors, ranked by\nissued decision cost then source ID. Fixed-center controls use fit-selected\nreserved centers with identical coefficient count and optimization budget.\nArms are frozen, fixed_center, feedback_grown and historical_projected.\nNo evaluation, admission or retention label selects centers or coefficients.\n\nCosts: accept=5*y, reject=1-y, escalate=0.5; ties escalate. E0=0,E1=-f and\np(unsupported)=sigmoid(f). An identical logistic head must match probabilities\nand actions within1e-10. Future Qwen capture allows one bounded call per selected\nresponse, at most768 total, timeout120 seconds, output64 tokens, no retries or\nreplacement. Capture cannot see evaluator manifests.\n\nStream feedback releases at original slot+20; pending capacity32, oldest\npending eviction if full, lost feedback retained. Every fourth stream slot is\nadmission-only; other slots are update candidates. The first64 slots are burn-in.\nEach candidate is committed before the next12 unused released admission rows.\nChoose the largest passing step among [1,.5,.25,.125]; no reuse of admission\nlabels. Retention opens only after final states and predictions are committed.\n\nH1 compares radial cost against matched additive cost on >=144 evaluation\ngroups and >=16 of each class. H2 compares feedback-grown against fixed-center\ncost on >=80 later groups and >=10 of each class. Each requires gain lower\nbound >.02, >=5 beneficial changes and zero added false accepts. H1 Brier\nincrease <=.01. H2 cost noninferiority <=.02 to frozen and historical_projected;\nretention requires >=96 groups and >=16 per class, Brier increase <=.01 and\ncost increase <=.02. Missing support blocks only the affected hypothesis.\n\nUse paired source bootstrap for H1 and moving-block bootstrap on original\nstream slots for H2, 10,000 draws, primary block32, sensitivities16 and64.\nAverage seeds101..120 within source; seeds do not increase independent count.\nHolm alpha=.05 applies only to [H1_radial_source_decisions,\nH2_feedback_grown_memory]. Preserve incomplete resamples and masks. Unavailable\nor safety-failed tests get p=1. Diagnostics cannot replace primary tests.\nFinished null science is terminal. Local separation never proves unknown\npretraining separation or generalized lifelong learning.\n",
+  "protocol_sha256": "sha256:43bb9290a883e221baaba20dec06b96d3861f7ee61bea678e0ac51217f045547",
+  "roles": {
+    "evaluation": 192,
+    "fit": 128,
+    "retention": 128,
+    "stream": 256,
+    "tune": 64
+  },
+  "statistics": {
+    "alpha": 0.05,
+    "bootstrap_draws": 10000,
+    "independent_unit": "source_group",
+    "margin": 0.02,
+    "primary_block": 32,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120
+    ],
+    "sensitivity_blocks": [
+      16,
+      64
+    ]
+  },
+  "transforms": "fit-only mean/std; zero std=1; fit folds recompute geometry"
+}

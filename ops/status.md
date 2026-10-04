@@ -1,6 +1,29 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-03
+
+## 2026-10-03 — Exp8084 seal worker output repair
+
+The worker previously refused its private seal destination when the default
+primary already existed. The existing-terminal guard now applies to terminal
+publication. Two added regressions verify that workers complete while preserving
+existing publication files; the original failing test remains unchanged.
+
+The repaired subset passes 95 tests with one existing ast.Num warning. All 69
+downstream/E2E-015/019 tests and ten fix-erasure tests pass. Nine current required
+validation commands pass, including 420/420 owned statements, scoped Ruff,
+formatting, strict mypy and spec traceability. Revalidation archives the old
+primary and binds current validation to its preserved primitive evidence and
+timings. Terminal validators, cold replay and both readers pass; external
+history/pool blocks and readiness zero are preserved. Evidence is retained in
+`results/raw/experiment_8084_v700_fresh_cohort_methods/fixgate-validation/`.
+
+The previously failed full-suite diagnostic remains recorded as failed; these
+checks establish an affected-suite pass. Global spec traceability still reports
+1,142 existing gaps. All original test/helper definitions and
+`scripts/research_conductor.py` remain unchanged.
+Final reconciliation passes documentation freshness and reports only those
+existing global traceability gaps. The updated documentation tests pass 5/5.
 
 ## 2026-10-02 — Exp8027 native library shutdown repair
 

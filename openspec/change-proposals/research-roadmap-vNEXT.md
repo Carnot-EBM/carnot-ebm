@@ -131,3 +131,69 @@ Check gradients, probability parity, typed-action parity, source identity, memor
 limits and recovery. The acceptance result is fixture-only circular-positive.
 Each phase includes a runnable prototype, private CLI validation and adversarial
 mutation controls. No new implementation is marked complete by this plan.
+## Exp8084 frozen execution protocol
+
+Spec refs: REQ-REPORT-8084 and REQ-VERIFY-8084. This additive contract is
+sealed before current annotation access. It changes the basis to Gaussian
+radial memory and requires a new recorded-history-separated allocation.
+
+Normalize source text with NFKC, casefold and collapsed whitespace. Use
+normalized five-token shingles, Jaccard >=0.8, including connected components.
+Scan all prior result and checkpoint inputs; preserve file hashes and individual
+declarations. Opaque, missing and unreadable inputs stay explicit unknowns.
+Unavailable relevant history blocks cohort selection. Unknown pretraining and
+unrecorded external history remain limitations, even with a passing local scan.
+
+Exactly 768 groups receive fit128, tune64, evaluation192, stream256, retention128.
+Numeric response IDs sort numerically, then text IDs lexically. Sort groups by
+SHA256(b"V700" + normalized source bytes). Keep every selected slot after
+annotation exclusion. Public completeness and original span custody determine
+eligibility. Unknown annotation status has no target. Measure support after seal.
+
+Nine inputs are the future bounded Qwen unsupported judgment logit plus the
+eight Exp7980 lexical features. No current LLM is loaded by Exp8084. Fit-only
+mean and standard deviation scale inputs; zero scales become one. Geometry
+is recomputed inside each fit fold. Tune alone fits affine calibration.
+Four source-group folds select ridge from [0.0001,0.001,0.01,0.1,1], with
+largest ridge breaking ties. Optimizer limit is 256 iterations, 600 seconds,
+gradient infinity norm <=1e-7, finite objective and parameters.
+
+Gaussian basis is exp(-||x-c||^2/(2*sigma^2)). Select initial16 centers by
+SHA256 source order with deterministic farthest-first distance and source-ID
+ties. Sigma is the median positive fit pair distance, default one if none.
+Preserve initial16 centers; admit at most12 new centers, four at slots64,128,192.
+New centers come only from newest64 eligible released update errors, ranked by
+issued decision cost then source ID. Fixed-center controls use fit-selected
+reserved centers with identical coefficient count and optimization budget.
+Arms are frozen, fixed_center, feedback_grown and historical_projected.
+No evaluation, admission or retention label selects centers or coefficients.
+
+Costs: accept=5*y, reject=1-y, escalate=0.5; ties escalate. E0=0,E1=-f and
+p(unsupported)=sigmoid(f). An identical logistic head must match probabilities
+and actions within1e-10. Future Qwen capture allows one bounded call per selected
+response, at most768 total, timeout120 seconds, output64 tokens, no retries or
+replacement. Capture cannot see evaluator manifests.
+
+Stream feedback releases at original slot+20; pending capacity32, oldest
+pending eviction if full, lost feedback retained. Every fourth stream slot is
+admission-only; other slots are update candidates. The first64 slots are burn-in.
+Each candidate is committed before the next12 unused released admission rows.
+Choose the largest passing step among [1,.5,.25,.125]; no reuse of admission
+labels. Retention opens only after final states and predictions are committed.
+
+H1 compares radial cost against matched additive cost on >=144 evaluation
+groups and >=16 of each class. H2 compares feedback-grown against fixed-center
+cost on >=80 later groups and >=10 of each class. Each requires gain lower
+bound >.02, >=5 beneficial changes and zero added false accepts. H1 Brier
+increase <=.01. H2 cost noninferiority <=.02 to frozen and historical_projected;
+retention requires >=96 groups and >=16 per class, Brier increase <=.01 and
+cost increase <=.02. Missing support blocks only the affected hypothesis.
+
+Use paired source bootstrap for H1 and moving-block bootstrap on original
+stream slots for H2, 10,000 draws, primary block32, sensitivities16 and64.
+Average seeds101..120 within source; seeds do not increase independent count.
+Holm alpha=.05 applies only to [H1_radial_source_decisions,
+H2_feedback_grown_memory]. Preserve incomplete resamples and masks. Unavailable
+or safety-failed tests get p=1. Diagnostics cannot replace primary tests.
+Finished null science is terminal. Local separation never proves unknown
+pretraining separation or generalized lifelong learning.

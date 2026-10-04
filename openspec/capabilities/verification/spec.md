@@ -47925,3 +47925,24 @@ Real private CLI success, external blocked, owned mutation and cold replay
 routes run outside the checkout. Receipts bind actual argv, duration, exit and
 log hash. Fixture controls are oracle evidence only. Current model counters
 remain zero. Ops and traceability reconciliation belongs to the conductor.
+## REQ-VERIFY-8084: Recorded-history source separation
+
+V700 SHALL group complete official training public responses by source and
+normalized content, choose the lowest stable response ID, and order by SHA256
+of V700 plus normalized source bytes. All prior fit, tune, evaluation, stream
+and retention declarations SHALL exclude their IDs, exact normalized hashes,
+and five-token shingle clusters with Jaccard similarity at least 0.8.
+Unknown history SHALL be explicit. Reading a complete dataset never proves
+unseen labels. No pretraining or universal decontamination claim follows.
+
+### SCENARIO-VERIFY-8084-SEPARATION
+
+Selection and inventory reach immutable storage before the existing complete
+response target reader opens annotations. Unknown annotation custody remains
+unknown, original spans survive, and no selected group is replaced.
+
+### SCENARIO-VERIFY-8084-POOL
+
+Insufficient separated public groups block data readiness while independent
+kernel and board work remain runnable. Duplicate cross-role content and public
+label contamination fail the separation gate.

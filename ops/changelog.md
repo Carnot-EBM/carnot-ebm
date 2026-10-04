@@ -1,5 +1,21 @@
 # Carnot — Changelog
 
+## 2026-10-03 — Exp8084 private seal destination repair
+
+- Scope the existing-terminal guard to publication so an existing default
+  primary cannot block a worker's explicit seal output.
+- Preserve the original failing test and all original helper definitions; add
+  two regressions covering existing primary and publication seal preservation.
+- Verify 95 subset tests, 69 consumer/E2E tests, ten fix-erasure tests, all nine
+  current required checks and 420/420 owned statements. Scoped Ruff, formatting,
+  strict mypy, spec traceability and E2E-015/019 pass.
+- Archive the previous primary and revalidate preserved primitive evidence and
+  timings against current code. Terminal checks, replay and both readers pass;
+  the cohort retains its original blocked verdict and readiness zero.
+- Retain logs and coverage under the Exp8084 `fixgate-validation/` directory.
+  Preserve the failed full-suite diagnostic and 1,142 unrelated global spec gaps.
+  The conductor source is unchanged.
+
 ## 2026-10-02 — Exp8027 extension copy and shutdown repair
 
 - Fix SIGSEGV after a passing pytest summary by atomically replacing copied

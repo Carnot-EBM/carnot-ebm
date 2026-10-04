@@ -1,6 +1,14 @@
 # Carnot — Architecture
 
-**Last Reconciled:** 2026-09-26
+**Last Reconciled:** 2026-10-03
+
+Exp8084 publication custody was reviewed for SCENARIO-REPORT-8084-WORKER-OUTPUT.
+The seal worker owns its explicit output independently of the primary publisher.
+The publisher retains its existing-terminal guard and validates prospective
+bytes before atomic replacement. Repair revalidation retains original primitive
+evidence, archives the previous primary, and binds current code and validation
+logs to the published result. The source grouping and numerical methods are
+unchanged; the cohort remains blocked by its original history and pool operands.
 
 ## Overview
 

@@ -1,0 +1,151 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8084_v700_fresh_cohort_methods.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--inventory",
+        "results/raw/experiment_8084_v700_fresh_cohort_methods/invocations/separation-20261004/exposure_inventory.json",
+        "--seal-output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8084_v700_fresh_cohort_methods/invocations/1791080261736385128/seal.json"
+      ],
+      "deadline_s": 600,
+      "expected_exit": 0,
+      "name": "seal_child"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8084-validation-uphlappa/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_fresh_cohort_methods_8084.py",
+        "--basetemp=/tmp/carnot-8084-validation-uphlappa/unit"
+      ],
+      "classification": "required",
+      "deadline_s": 240,
+      "expected_exit": 0,
+      "name": "focused_unit_and_cli"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8084-validation-uphlappa/coverage.ini"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8084-validation-uphlappa/coverage.ini",
+        "-o",
+        "/tmp/carnot-8084-validation-uphlappa/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot-8084-validation-uphlappa/coverage.ini",
+        "--fail-under=100",
+        "-m"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "changed_statement_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_primary_publication_7928.py",
+        "--basetemp=/tmp/carnot-8084-validation-uphlappa/consumer"
+      ],
+      "classification": "required",
+      "deadline_s": 240,
+      "expected_exit": 0,
+      "name": "consumer_and_e2e_015_019"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8084_v700_fresh_cohort_methods.py",
+        "python/carnot/verify/fresh_cohort_8084.py",
+        "scripts/experiments/experiment_8084_v700_fresh_cohort_methods.py",
+        "tests/python/test_fresh_cohort_methods_8084.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8084_v700_fresh_cohort_methods.py",
+        "python/carnot/verify/fresh_cohort_8084.py",
+        "scripts/experiments/experiment_8084_v700_fresh_cohort_methods.py",
+        "tests/python/test_fresh_cohort_methods_8084.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/tmp/carnot-8084-validation-uphlappa/mypy.ini",
+        "python/carnot/experiment_8084_v700_fresh_cohort_methods.py",
+        "python/carnot/verify/fresh_cohort_8084.py",
+        "scripts/experiments/experiment_8084_v700_fresh_cohort_methods.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "from scripts.check_spec_coverage import check_python_files; from pathlib import Path; assert not check_python_files([Path('tests/python/test_fresh_cohort_methods_8084.py')])"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "scoped_spec_coverage"
+    }
+  ]
+}

@@ -92071,3 +92071,37 @@ Failed historical receipts remain failed controls. Authenticate original heads,
 source manifests, exposure inventory and board bytes independently. Mutation of
 any saved input, primitive, validation log or reported reduction fails replay.
 Repeated administrative tasks provide zero independent scientific groups.
+## REQ-REPORT-8084: Seal V700 fresh cohort methods
+
+Exp8084 SHALL inventory prior public source declarations before current label
+access, seal the selection algorithm, and assign exactly fit128, tune64,
+evaluation192, stream256 and retention128 without replacement. External missing
+history or insufficient groups SHALL terminate blocked with exact operands.
+Public manifests SHALL exclude human labels. Current validation SHALL bind logs,
+code, primitive evidence and terminal publication. Owned failures disqualify
+readiness. The frozen family is H1_radial_source_decisions and
+H2_feedback_grown_memory; generalized learning benefit remains zero.
+
+### SCENARIO-REPORT-8084-CLI
+
+Private real CLI success, blocked, contamination, duplicate and unavailable
+history controls SHALL run outside the checkout without ambient PYTHONPATH.
+Cold replay SHALL independently reduce primitives and reject mutations.
+
+### SCENARIO-REPORT-8084-VALIDATION
+
+Required commands SHALL be frozen before measurement. New statements SHALL
+have 100 percent coverage; full-suite failures remain separate diagnostics.
+E2E-015 and E2E-019 SHALL run. Primaries publish only after child normal exit.
+
+### SCENARIO-REPORT-8084-WORKER-OUTPUT
+
+A seal worker SHALL check and write its explicit seal destination independently
+of the terminal publication destination. An existing primary or publication seal
+SHALL remain byte-identical and SHALL NOT block a worker with a separate output.
+Terminal publication SHALL continue refusing an existing primary or seal.
+
+Implementation: the Exp8084 runner scopes the existing-terminal guard to
+publication. The original worker/drift test and two explicit destination
+regressions pass. Current validation covers 420/420 owned statements and
+E2E-015/019; the preserved blocked primary passes terminal validation and replay.

@@ -1,0 +1,148 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot8084-fixgate-q_qvnk6v/private/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_fresh_cohort_methods_8084.py",
+        "--basetemp=/tmp/carnot8084-fixgate-q_qvnk6v/private/unit"
+      ],
+      "classification": "required",
+      "deadline_s": 240,
+      "expected_exit": 0,
+      "name": "focused_unit_and_cli"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot8084-fixgate-q_qvnk6v/private/coverage.ini"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot8084-fixgate-q_qvnk6v/private/coverage.ini",
+        "-o",
+        "/tmp/carnot8084-fixgate-q_qvnk6v/private/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot8084-fixgate-q_qvnk6v/private/coverage.ini",
+        "--fail-under=100",
+        "-m"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "changed_statement_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_primary_publication_7928.py",
+        "--basetemp=/tmp/carnot8084-fixgate-q_qvnk6v/private/consumer"
+      ],
+      "classification": "required",
+      "deadline_s": 240,
+      "expected_exit": 0,
+      "name": "consumer_and_e2e_015_019"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8084_v700_fresh_cohort_methods.py",
+        "python/carnot/verify/fresh_cohort_8084.py",
+        "scripts/experiments/experiment_8084_v700_fresh_cohort_methods.py",
+        "tests/python/test_fresh_cohort_methods_8084.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8084_v700_fresh_cohort_methods.py",
+        "python/carnot/verify/fresh_cohort_8084.py",
+        "scripts/experiments/experiment_8084_v700_fresh_cohort_methods.py",
+        "tests/python/test_fresh_cohort_methods_8084.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/tmp/carnot8084-fixgate-q_qvnk6v/private/mypy.ini",
+        "python/carnot/experiment_8084_v700_fresh_cohort_methods.py",
+        "python/carnot/verify/fresh_cohort_8084.py",
+        "scripts/experiments/experiment_8084_v700_fresh_cohort_methods.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "from scripts.check_spec_coverage import check_python_files; from pathlib import Path; assert not check_python_files([Path('tests/python/test_fresh_cohort_methods_8084.py')])"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "scoped_spec_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "--basetemp=/tmp/carnot8084-fixgate-q_qvnk6v/private/full"
+      ],
+      "classification": "diagnostic",
+      "deadline_s": 900,
+      "expected_exit": 0,
+      "name": "repository_full_suite"
+    }
+  ],
+  "scope": "Current required commands; existing full-suite diagnostic preserved separately"
+}

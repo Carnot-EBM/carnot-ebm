@@ -1,6 +1,27 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-03
+**Operational Note:** REQ-REPORT-8084, REQ-VERIFY-8084 and
+SCENARIO-REPORT-8084-WORKER-OUTPUT map to
+`python/carnot/experiment_8084_v700_fresh_cohort_methods.py`,
+`python/carnot/verify/fresh_cohort_8084.py`, the Exp8084 CLI, and
+`tests/python/test_fresh_cohort_methods_8084.py`. Seal workers now use their
+explicit destination without being blocked by the default published primary.
+Existing primary and seal bytes remain protected. The original failing test and
+all original test/helper definitions are preserved; two destination regressions
+were added after reproducing the failure. The repaired subset passes 95 tests,
+69 consumer/E2E tests and ten fix-erasure tests pass, and all nine current
+required checks pass with 420/420 owned statements covered. Ruff, formatting,
+strict mypy, scoped spec traceability and E2E-015/019 pass. The prior primary is
+archived; revalidation binds current code and logs to preserved primitives and
+timings. Terminal checks, cold replay and both readers pass; cohort readiness
+remains zero with the original external history/pool blocks. Evidence:
+`results/raw/experiment_8084_v700_fresh_cohort_methods/fixgate-validation/`.
+The existing failed full-suite diagnostic and 1,142 global spec gaps remain
+recorded separately. `scripts/research_conductor.py` is byte-identical to the
+pre-repair snapshot.
+Final reconciliation passes documentation freshness and reports only the
+existing global spec gaps; all five updated-documentation checks pass.
 **Operational Note:** REQ-PYBIND-8027, SCENARIO-PYBIND-8027-SHUTDOWN and
 REQ-REPORT-8027 map the staged atomic extension copy to
 `python/carnot/experiment_8027_v695_native_update_cost.py` and the repeated-load
