@@ -21420,3 +21420,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-04: Bind thirteen tasks with the exact authority-reader format (⚠️ Research Finding) — honest_verdict=complete_null_contract_custody; results/experiment_8123_v703_contract_custody.json
 - 2026-10-04: Measure complete radial service costs with qualified receipt storage (⚠️ Research Finding) — honest_verdict=complete_circular_positive_host_service_fixture; results/experiment_8132_v703_service_cost.json
 - 2026-10-04: Qualify the current supervisor reader and inspect only new outcomes (⚠️ Blocked) — honest_verdict=complete_blocked_validation_command_manifest; results/experiment_8133_v703_arc_reader_frontier.json
+- 2026-10-04: Bound useful acceleration and preserve each board evidence boundary (⚠️ Blocked) — honest_verdict=complete_blocked_complete_service_ready_score; results/experiment_8134_v703_hardware_service_boundary.json
