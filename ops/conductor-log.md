@@ -19477,3 +19477,6 @@ code |
 | 2026-10-04 10:35 UTC | Bind thirteen tasks and preserve V701 execution ev | OK | 92 passed, 1 warning in 42.63s |
 | 2026-10-04 11:06 UTC | Seal source interventions and an independent delay | OK | 95 passed, 1 warning in 21.67s |
 | 2026-10-04 11:34 UTC | Measure Qwen source sensitivity with qualified bou | OK | 97 passed, 1 warning in 20.63s |
+| 2026-10-04 11:37 UTC | Train calibrated radial decisions with matched inf | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8112-fit-source-capture.fit_capture_ready_score (actual=0 == expected=1) |
+| 2026-10-04 11:39 UTC | Capture reserved source judgments after the decisi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8113-radial-decision-fit) |
+| 2026-10-04 11:39 UTC | Independently test source-sensitive decision value | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8114-evaluation-capture) |
