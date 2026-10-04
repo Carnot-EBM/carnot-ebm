@@ -50179,3 +50179,93 @@ Primary abstracts ingested: [EAEV](https://arxiv.org/abs/2609.08267),
 Five exact HTML transcripts bind the method-source map in Exp8111. Mechanism
 limits and ingestion status are recorded in the matching research-studying
 appendix. No citation-service availability gate or additional fresh search was used.
+
+## 2026-10-04 — V703 planning scan: source evidence and bounded learning
+
+This scan precedes the V703 experiment design. It covers 2025–2026 work.
+Previously recorded papers remain prior knowledge. Publication dates below
+come from primary pages. Vendor estimates are not Carnot measurements.
+
+### Methods worth testing
+
+- **Retromorphic Testing with Hierarchical Verification for Hallucination
+  Detection in RAG**, submitted March 29, 2026; revised July 20, 2026.
+  [Primary paper](https://arxiv.org/abs/2603.27752).
+  RT4CHART separates claims, checks local evidence, then applies global checks.
+  Its reannotation also changes the measured prevalence of hallucinations.
+  A useful bounded adaptation is to require a source span for a support judgment.
+  Compare the same Qwen model, source bytes and token budget with and without
+  that requirement. An exact substring proves span custody, not entailment.
+  Keep original human labels fixed. Do not silently replace labels with model
+  judgments or call this a reproduction of the complete RT4CHART system.
+- **Capacity-Constrained Online Convex Optimization with Delayed Feedback**,
+  June 10, 2026. [Primary paper](https://arxiv.org/abs/2606.11711).
+  Pending feedback occupies limited capacity; untracked feedback can be lost.
+  Track occupancy, issue/release order and dropped observations in Carnot's
+  persistent learner. Keep the scheduler identical across learning controls.
+  An empirical radial-center learner does not inherit the paper's regret bounds.
+- **Constrained Online Convex Optimization with Memory and Predictions**,
+  March 22, 2026. [Primary paper](https://arxiv.org/abs/2603.21375).
+  The objective explicitly includes past actions and time-varying constraints.
+  This supports charging persistent state and feedback delay in a learning
+  evaluation. It does not prove strict per-update safety for Carnot's model.
+- **KAN-CL: Per-Knot Importance Regularization for Continual Learning with
+  Kolmogorov-Arnold Networks**, May 12, 2026.
+  [Primary method](https://arxiv.org/html/2605.12306v1).
+  The method anchors individual spline knots and also regularizes its backbone.
+  Its results do not establish that a radial head alone prevents forgetting.
+  Defer a new anchoring experiment: Carnot's unchanged importance-anchor scope
+  is retired. A new paper title does not reopen that mechanism.
+- **Catastrophic Forgetting in Kolmogorov-Arnold Networks**, November 16, 2025.
+  [Primary paper](https://arxiv.org/abs/2511.12828).
+  Local support can still overlap. Retention must be measured on a separate
+  role after predictions are sealed. Radial centers and channel-wise KAN
+  splines are different constructions.
+
+### Coverage of the other primary topics
+
+| Topic | Primary sources checked | Consequence for the next plan |
+|---|---|---|
+| EBM verification and reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM, revised May 25, 2026](https://arxiv.org/abs/2512.15605) | Preserve a probability-equivalent logistic control. Energy notation alone supplies no new correctness information. |
+| Neural constraint satisfaction | [LagONN, May 2025](https://arxiv.org/abs/2505.07179); [PAL, March 2025](https://arxiv.org/abs/2503.19466) | Constraint feasibility and semantic extraction are separate questions. Defer a new solver stack. |
+| Ising in machine learning | [Learning-to-sample phase transition, May 2026](https://arxiv.org/abs/2605.24752) | Do not transfer small easy-instance sampling results to hard learned distributions. |
+| Energy-guided generation | [ETS, revised May 19, 2026](https://arxiv.org/abs/2601.21484) | Its Monte Carlo energy estimator requires extra inference work. Defer a decoder change until the verifier has qualified decision value. |
+| FPGA sampling | [Hybrid FPGA decomposition, February 2026](https://arxiv.org/abs/2602.15985) | Include preprocessing, communication and final readout in cost claims. A fast kernel is insufficient. |
+| Hallucination evaluation | [HalluScoring 2026, September 29](https://arxiv.org/abs/2609.38355) | Unseen-question and unseen-generator evaluations are useful later external-validity tests. This scan does not qualify a new local corpus. |
+
+### Secondary-source checks and access limits
+
+- **OpenReview:** searched ICLR 2026 EBM work. The
+  [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg) returned a browser
+  challenge. An indexed [ICLR PDF](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  exposes the EBM formulation. Do not infer acceptance status for unrelated
+  submissions from search snippets. Use the accessible arXiv methods above.
+- **Semantic Scholar:** attempted both arXiv citation links and graph citation
+  endpoints for `2507.02092` and `2512.15605`. The former returned 403/cache
+  errors; the graph endpoints were inaccessible through the browser tool.
+  No complete citing-paper list or citation count was established.
+- **Hugging Face papers:** the
+  [RT4CHART page](https://huggingface.co/papers/2603.27752) led to its primary
+  paper. Also checked [CiteTracer](https://huggingface.co/papers/2605.08583)
+  and [VeriFY](https://huggingface.co/papers/2602.02018). Keep these as leads;
+  no generator fine-tuning or citation product branch follows from this scan.
+- **GitHub:** checked monthly [Python Trending](https://github.com/trending/python?since=monthly)
+  and [Rust Trending](https://github.com/trending/rust?since=monthly). Returned
+  pages were cached three weeks earlier; no current ranking is claimed.
+  Targeted searches found author repositories for
+  [Hyper-SET](https://github.com/huyunzhe/hyper-set),
+  [ECD](https://github.com/GradientSpaces/ECD), and
+  [EB-JEPA](https://github.com/facebookresearch/eb_jepa/).
+  These are implementation leads, not evidence of local compatibility.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t/). The latter labels its chip-energy
+  figures as projections. Its principal ratio excludes final dense logits
+  and inter-device movement. Charge both when discussing an acceleration path.
+  The page does not establish local hardware or authenticated TSU access.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  It describes a constraint reasoning layer beneath language models. This
+  page does not supply a reproducible local training recipe or benchmark.
+
+The immediate hardware path remains CPU memory and Rust/PyO3 arithmetic, with
+CUDA for frozen Qwen inference. Preserve separate KV260, PolarFire and GateMate
+limits. No purchase or unchanged NPU/TSU/JTAG probe is justified by this scan.

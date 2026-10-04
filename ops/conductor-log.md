@@ -19487,3 +19487,4 @@ code |
 | 2026-10-04 14:47 UTC | Assess only new live supervisor outcomes for trans | OK | 90 passed, 1 warning in 15.36s |
 | 2026-10-04 15:11 UTC | Bound batch memory traffic and preserve separate b | OK | 90 passed, 1 warning in 21.35s |
 | 2026-10-04 15:37 UTC | Decide all thirteen outcomes and the three remaini | OK | 91 passed, 1 warning in 18.58s |
+| 2026-10-04 16:10 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | timeout after 300s |

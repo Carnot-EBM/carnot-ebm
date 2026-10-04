@@ -21405,3 +21405,15 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-04: Decide all thirteen outcomes and the three remaining PRD gaps (⚠️ Blocked) — honest_verdict=complete_blocked_design_exact_task_contract; results/experiment_8122_v702_capstone.json
 - 2026-10-04: Completed operational retrospective for milestone 2026.10.702. Executed 9 experiments (2 compute-bound, 7 synthesis-only), totaling 44.6 wall-time minutes (averaging 5 minutes per experiment) reconstructed from disk-mtime fallback data. The slowest experiments were synthesis task 'Measure batch crossover and complete radial service transactions' (16.78 minutes), compute-bound task 'Measure owned Qwen acquisition for unseen cache keys' (7.75 minutes), compute-bound task 'Measure Qwen source sensitivity with qualified bounded transport' (6.79 minutes), synthesis task 'Decide all thirteen outcomes and the three remaining PRD gaps' (3.56 minutes), and synthesis task 'Assess only new live supervisor outcomes for transferable refinement' (3.52 minutes). The locked GPU-idle indicator on compute-bound tasks is false, while static monitor telemetry recorded 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs. Recommended operational improvements include adding granular intra-task sub-phase timing receipts to isolate compute and synthesis stages, emitting synchronous lifecycle timestamps directly into experiment receipts, profiling radial service transaction pipelines, deploying continuous execution-time GPU telemetry, and restricting DualGPURunner strictly to concurrent multi-model workloads. Estimated time savings are 0% pending empirical measurement of phase receipts. Artifact: results/operational_retro_2026_10_702.json.
 
+
+## 2026-10-04 — Plan milestone 2026.10.703
+
+- Create thirteen ordered experiment prompts, Exp8123–Exp8135, and a matching
+  four-phase design with architecture, dependencies and hardware requirements.
+- Record primary 2025–2026 research and secondary-source access limits before
+  experiment design. Adapt source-span verification and delayed-feedback methods.
+- Diagnose V702 contract parsing, expected-revision order, frozen-protocol drift,
+  terminal-validation timeouts and supervisor-reader custody without altering results.
+- Preserve independent learning input so source capture cannot cascade-block FR-11.
+- Preserve the V702 design and add planning-only specifications and traceability.
+- Leave the active roadmap and conductor source unchanged. No push or activation.

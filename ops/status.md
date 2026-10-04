@@ -17822,3 +17822,18 @@ admission against the fitted initial head. Native parity, complete host service
 cost, new ARC supervisor evidence and separate board limits remain included.
 Research findings were recorded before design. No experiments, publication or
 activation occurred. The active roadmap and conductor source remain unchanged.
+
+## 2026-10-04 — Next milestone V703 planned; execution pending
+
+Milestone 2026.10.703 stages thirteen tasks, Exp8123–Exp8135, across four phases.
+The plan tests evidence-linked typed decisions, sealed continuous-learning
+semantics and complete host transaction costs. It preserves separate ARC and
+hardware work. The authority contract uses the existing parser's literal heading,
+full task JSON and digest. Both requested planning files contain the same tasks.
+
+V702 supplies qualified methods, historical stream custody and bounded Qwen
+acquisition. It does not supply qualified decision or learning benefit.
+The new plan addresses the malformed document contract, early revision check,
+learning protocol drift, validator timeouts and changed supervisor-reader hash.
+The literature scan is recorded in research-references.md. The V702 design is
+preserved. Active scheduling and scripts/research_conductor.py are unchanged.

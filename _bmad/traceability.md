@@ -3645,3 +3645,18 @@ The V701 literature scan in research-references.md precedes the design.
 The previous V700 document is preserved as research-roadmap-v700-preserved-20261004.md.
 The active roadmap and conductor source remain unchanged. Future tests named in
 the plan are requirements, not current execution evidence.
+
+## 2026-10-04 — V703 research planning, execution pending
+
+| Requirement | Planned tasks | Evidence boundary |
+|---|---|---|
+| REQ-REPORT-V703-PLAN; FR-09/10 | Exp8123, Exp8135 | Thirteen exact tasks, full prompts, table, JSON and digest; activation remains pending |
+| REQ-VERIFY-V703-PLAN; FR-06/12 | Exp8124–Exp8128 | Source-span evidence and calibrated decisions on exposed development data |
+| FR-11 | Exp8129–Exp8131 | Frozen-protocol conformance, delayed structural learning, independent later/retention audit |
+| FR-05/08; NFR-01 | Exp8132 | Actual native host transactions; historical acquisition remains a modeled bound |
+| ARC generalization floor | Exp8133 | Current reader qualification and new authenticated outcomes only |
+| Hardware continuity | Exp8134 | Separate KV260, PolarFire and GateMate evidence and useful-work bounds |
+
+The V703 primary-source scan was recorded before experiment design.
+The V702 document is preserved byte-for-byte. No implementation, experiment
+activation, generator training, external publication or conductor change is included.

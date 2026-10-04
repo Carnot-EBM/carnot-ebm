@@ -92629,3 +92629,25 @@ Private direct CLI success, external blocking, changed board evidence, unavailab
 costs and cold numerical replay run outside results/. Mutated primitive bytes,
 aggregates, code, command manifests or validation receipts fail replay.
 Oracle fixtures are circular_positive. Independent learning scores remain zero.
+
+## REQ-REPORT-V703-PLAN: Exact staged research contract
+
+Status: planned experiments; planning artifacts only, 2026-10-04.
+Milestone 2026.10.703 shall contain exactly thirteen ordered tasks,
+Exp8123 through Exp8135, across four phases of three, three, four and three.
+The design shall use the existing parser's literal Exact task contract heading,
+five-column table, complete V703 JSON and canonical full-task digest.
+The staged YAML and embedded task dictionaries shall agree, including prompts.
+Every gate shall name an earlier producer and its declared artifact field.
+Every comparative task shall preserve individual rows and source independence.
+Every continuation shall document the prior verdict, changed cause and retirement.
+Prompts shall require bounded calls, flushed progress and private E2E validation.
+The planner shall preserve V702 design bytes and leave active scheduling unchanged.
+
+### SCENARIO-REPORT-V703-PLAN
+
+The real authority reader accepts a private simulated activation of all13 tasks.
+It rejects a missing task, reordered tasks, a changed prompt and stale digest.
+Schema, prior-failure, exclusion and gate checks run on the staged YAML.
+The current active roadmap and conductor hashes remain unchanged.
+This validates planning; it does not mark future experiment code implemented.

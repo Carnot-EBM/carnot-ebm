@@ -48399,3 +48399,23 @@ Reject missing, negative, overlapping, duplicated or incomplete service costs.
 One unavailable board blocks only its row. Cold replay recomputes precision,
 traffic and service reductions from sealed operands. Native representations
 remain unchanged, so E2E-003/004 do not apply to this reporting-only task.
+
+## REQ-VERIFY-V703-PLAN: Evidence and causal learning study
+
+Status: research design only; implementation and measurement pending.
+The V703 study shall compare holistic and source-span Qwen judgments with
+matched complete sources, bounded token budgets and frozen human labels.
+A valid quote shall prove byte custody only, never semantic entailment.
+Small energy heads shall face equal-information calibrated controls.
+Continuous memory shall execute the sealed delayed-feedback protocol, including
+release order, pending capacity, immutable baselines and independent retention.
+Protocol conformance and full-size artifact validation shall precede execution.
+Host service cost, historical acquisition bounds and hardware evidence shall
+retain separate scopes. Reused development data cannot close generalization gaps.
+
+### SCENARIO-VERIFY-V703-PLAN
+
+The staged tasks include independent decision and learning audits, source/evaluator
+E2E checks, protocol-mutation checks and complete service cost accounting.
+Learning has no prerequisite on new source capture or a batch-trained head.
+No natural-data benefit is inferred from fixtures or disqualified V702 results.
