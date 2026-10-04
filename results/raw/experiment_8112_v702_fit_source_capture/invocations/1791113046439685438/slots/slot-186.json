@@ -1,0 +1,83 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c2069742061707065617273207468617420706f726b2063686f70732063616e20626520636f6f6b656420696e206120746f6173746572206f76656e2e2050617373616765203220737461746573207468617420796f752063616e20757365206120746f6173746572206f76656e20746f20636f6f6b20706f726b2063686f70732062792073657474696e67207468652074656d7065726174757265207468652073616d65206173206120726567756c6172206f76656e20616e6420706c6163696e67207468656d206f6e20612062616b696e672073686565742e2054686520636f6f6b696e672074696d65206d6179207661727920646570656e64696e67206f6e2074686520746869636b6e657373206f6620746865206d6561742c20627574206f6e20617665726167652c2069742074616b65732061626f75742068616c6620616e20686f75722e2050617373616765203320616c736f206d656e74696f6e73207468617420706f726b2063686f70732073686f756c642062652062616b656420666f72203435206d696e7574657320696e206120636f6e76656374696f6e206f76656e20617420333235c2b0462c2077686963682073756767657374732074686174206120746f6173746572206f76656e2063616e20626520757365642061732077656c6c2e205468657265666f72652c20697420697320706f737369626c6520746f20636f6f6b20706f726b2063686f707320696e206120746f6173746572206f76656e2e",
+  "arm": "full_source",
+  "capture_identity": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "qwen_cache_revision",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:b9cccdb9de23c1aeadec7a7c5994afdc65af1093d98efe8d0f1aea03acc9b5db:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "measurement_scope": "unattempted",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:f317749b9e3f33e6353da1c2352e2490cd4dab4676b97040f932dd769eccd393",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:6. OVEN BAKED PORK CHOPS WITH STUFFING. Place pork chops in greased shallow ... with foil and bake in a 350 F oven for 1 hour ... vegetable juice, and you will have your whole meal complete. Serves 4.VEN BAKED PORK CHOPS WITH STUFFING. Place pork chops in greased shallow ... with foil and bake in a 350 F oven for 1 hour ... vegetable juice, and you will have your whole meal complete. Serves 4.\\\\n\\\\npassage 2:You would follow the same directions you \u2026 would use for a regular oven. Set the temperature the same, and place a few on the baking sheet that comes with the toaster oven. To prevent a crispy bottom of the cookie, use a silicone mat and cut to the size of your toaster oven baking tray.he time for cooking can depend on the thickness of the meat but normally the average time is about half an hour. If you like to eat a plain baked pork chop, you can season the meat with freshly ground pepper and salt before baking.\\\\n\\\\npassage 3:Pork chops should be baked for 45 minutes, in a convection oven, at  a temperature of 325A\u00b0. 325\u00e2 pork chops should not be considered  done until the internal temperature is \u2026 a minimum OF\u00b0. 165a 165\u00e26 people found. this usefulhe time for cooking can depend on the thickness of the meat but normally the average time is about half an hour. If you like to eat a plain baked pork chop, you can season the meat with freshly ground pepper and salt before baking.\\\\n\\\\n\\\",\\\"question\\\":\\\"can you cook pork chops in a toaster oven\\\"}\", \"original_answer\": \"Based on the given passages, it appears that pork chops can be cooked in a toaster oven. Passage 2 states that you can use a toaster oven to cook pork chops by setting the temperature the same as a regular oven and placing them on a baking sheet. The cooking time may vary depending on the thickness of the meat, but on average, it takes about half an hour. Passage 3 also mentions that pork chops should be baked for 45 minutes in a convection oven at 325\u00b0F, which suggests that a toaster oven can be used as well. Therefore, it is possible to cook pork chops in a toaster oven.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "tune",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a362e204f56454e2042414b454420504f524b2043484f50532057495448205354554646494e472e20506c61636520706f726b2063686f707320696e2067726561736564207368616c6c6f77202e2e2e207769746820666f696c20616e642062616b6520696e2061203335302046206f76656e20666f72203120686f7572202e2e2e20766567657461626c65206a756963652c20616e6420796f752077696c6c206861766520796f75722077686f6c65206d65616c20636f6d706c6574652e2053657276657320342e56454e2042414b454420504f524b2043484f50532057495448205354554646494e472e20506c61636520706f726b2063686f707320696e2067726561736564207368616c6c6f77202e2e2e207769746820666f696c20616e642062616b6520696e2061203335302046206f76656e20666f72203120686f7572202e2e2e20766567657461626c65206a756963652c20616e6420796f752077696c6c206861766520796f75722077686f6c65206d65616c20636f6d706c6574652e2053657276657320342e5c6e5c6e7061737361676520323a596f7520776f756c6420666f6c6c6f77207468652073616d6520646972656374696f6e7320796f7520e280a620776f756c642075736520666f72206120726567756c6172206f76656e2e20536574207468652074656d7065726174757265207468652073616d652c20616e6420706c616365206120666577206f6e207468652062616b696e67207368656574207468617420636f6d657320776974682074686520746f6173746572206f76656e2e20546f2070726576656e7420612063726973707920626f74746f6d206f662074686520636f6f6b69652c2075736520612073696c69636f6e65206d617420616e642063757420746f207468652073697a65206f6620796f757220746f6173746572206f76656e2062616b696e6720747261792e68652074696d6520666f7220636f6f6b696e672063616e20646570656e64206f6e2074686520746869636b6e657373206f6620746865206d65617420627574206e6f726d616c6c792074686520617665726167652074696d652069732061626f75742068616c6620616e20686f75722e20496620796f75206c696b6520746f20656174206120706c61696e2062616b656420706f726b2063686f702c20796f752063616e20736561736f6e20746865206d65617420776974682066726573686c792067726f756e642070657070657220616e642073616c74206265666f72652062616b696e672e5c6e5c6e7061737361676520333a506f726b2063686f70732073686f756c642062652062616b656420666f72203435206d696e757465732c20696e206120636f6e76656374696f6e206f76656e2c2061742020612074656d7065726174757265206f662033323541c2b02e20333235c3a220706f726b2063686f70732073686f756c64206e6f7420626520636f6e736964657265642020646f6e6520756e74696c2074686520696e7465726e616c2074656d706572617475726520697320e280a62061206d696e696d756d204f46c2b02e203136356120313635c3a2362070656f706c6520666f756e642e20746869732075736566756c68652074696d6520666f7220636f6f6b696e672063616e20646570656e64206f6e2074686520746869636b6e657373206f6620746865206d65617420627574206e6f726d616c6c792074686520617665726167652074696d652069732061626f75742068616c6620616e20686f75722e20496620796f75206c696b6520746f20656174206120706c61696e2062616b656420706f726b2063686f702c20796f752063616e20736561736f6e20746865206d65617420776974682066726573686c792067726f756e642070657070657220616e642073616c74206265666f72652062616b696e672e5c6e5c6e222c227175657374696f6e223a2263616e20796f7520636f6f6b20706f726b2063686f707320696e206120746f6173746572206f76656e227d",
+  "source_cluster_id": "sha256:347de667ad662df666754c6ae0e38e51ae6324dde215c91578762a67c23d3263",
+  "source_id": "15123",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:b9cccdb9de23c1aeadec7a7c5994afdc65af1093d98efe8d0f1aea03acc9b5db",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

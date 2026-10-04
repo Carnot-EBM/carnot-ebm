@@ -1,0 +1,85 @@
+{
+  "answer_bytes": "546f2072657365742061204d6173746572204c6f636b203420646967697420636f6d62696e6174696f6e206c6f636b2c20666972737420656e73757265207468617420746865206c6f636b2069732073657420746f207468652063757272656e7420636f6d62696e6174696f6e2e20496e736572742074686520726573657420746f6f6c20696e746f2074686520686f6c65206f6e207468652073696465206f6620746865206c6f636b20616e64207475726e20697420393020646567726565732e205769746820746865206469616c732073657420617420302d302d302d302c2070756c6c206f75742074686520736861636b6c652e20526f746174652074686520736861636b6c65203930206465677265657320736f207468617420746865206e6f746368206f6e2074686520736861636b6c6520616c69676e73207769746820746865206e6f74636820696e20746865206c6f636b20626f64792e20507265737320616e6420686f6c642074686520736861636b6c6520646f776e2c207468656e2073657420746865206469616c7320746f20796f7572206465736972656420636f6d62696e6174696f6e20627920616c69676e696e6720746865206d6964646c65206f6620746865206e756d6265727320776974682074686520726564207374726970652e",
+  "arm": "full_source",
+  "capture_identity": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "qwen_cache_revision",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:624cf824eff243de64c90a708ec3db22f5d7c879bc22be4fae8ba7fe90f89172:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "measurement_scope": "unattempted",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:e303e0bc801d972bc3f21bdd9a6a7d7d414658fbafba5de53d6097964606ad1f",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 The lock must be set to the current combination, or you cannot reset it. 2  Note: the shackle must be in the open position to reset the combination. 3  Insert reset tool (enclosed in package) in hole on side of lock. 4  Push reset tool in and turn 90 degrees (in either direction). With dials at 0-0-0-0, pull out the shackle. 2  Turn shackle 90 degree (1/4 turn) so notch on shackle is aligned with notch in lock body. 3  Press and hold the shackle down. 4  Set the dials to your own combination by lining up middle of numbers with red stripe.\\\\n\\\\npassage 2:1 Open lock with the factory set or previously set combination. 2  The lock must be set to the current combination, or you cannot reset it. 3  Note: the shackle must be in the open position to reset the combination. 4  Insert reset tool (enclosed in package) in hole on side of lock. With dials at 0-0-0-0, pull out the shackle. 2  Turn shackle 90 degree (1/4 turn) so notch on shackle is aligned with notch in lock body. 3  Press and hold the shackle down. 4  Set the dials to your own combination by lining up middle of numbers with red stripe.\\\\n\\\\npassage 3:Features and Benefits: - Set-your-own 4-digit combination for convenience and security. - Reset to any of 10,000 personalized combination. - 2 (51mm) wide solid brass case for strength and weatherability.- 1 (25mm) tall, 5/16 (8mm) diameter hardened steel shackle for superior cut resistance.- Combination change key included.75 Brass Combination Padlock. The 175 Combination Padlock is part of Master Lock Set-Your-Own Combination Padlock - Delivery: The Master Lock 175D Combination Padlock is in stock and available to ship. The 175 Combination Padlock is part of Master Lock.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to reset a master lock 4 digit\\\"}\", \"original_answer\": \"To reset a Master Lock 4 digit combination lock, first ensure that the lock is set to the current combination. Insert the reset tool into the hole on the side of the lock and turn it 90 degrees. With the dials set at 0-0-0-0, pull out the shackle. Rotate the shackle 90 degrees so that the notch on the shackle aligns with the notch in the lock body. Press and hold the shackle down, then set the dials to your desired combination by aligning the middle of the numbers with the red stripe.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a3120546865206c6f636b206d7573742062652073657420746f207468652063757272656e7420636f6d62696e6174696f6e2c206f7220796f752063616e6e6f742072657365742069742e203220204e6f74653a2074686520736861636b6c65206d75737420626520696e20746865206f70656e20706f736974696f6e20746f2072657365742074686520636f6d62696e6174696f6e2e20332020496e7365727420726573657420746f6f6c2028656e636c6f73656420696e207061636b6167652920696e20686f6c65206f6e2073696465206f66206c6f636b2e203420205075736820726573657420746f6f6c20696e20616e64207475726e20393020646567726565732028696e2065697468657220646972656374696f6e292e2057697468206469616c7320617420302d302d302d302c2070756c6c206f75742074686520736861636b6c652e203220205475726e20736861636b6c65203930206465677265652028312f34207475726e2920736f206e6f746368206f6e20736861636b6c6520697320616c69676e65642077697468206e6f74636820696e206c6f636b20626f64792e20332020507265737320616e6420686f6c642074686520736861636b6c6520646f776e2e2034202053657420746865206469616c7320746f20796f7572206f776e20636f6d62696e6174696f6e206279206c696e696e67207570206d6964646c65206f66206e756d62657273207769746820726564207374726970652e5c6e5c6e7061737361676520323a31204f70656e206c6f636b20776974682074686520666163746f727920736574206f722070726576696f75736c792073657420636f6d62696e6174696f6e2e20322020546865206c6f636b206d7573742062652073657420746f207468652063757272656e7420636f6d62696e6174696f6e2c206f7220796f752063616e6e6f742072657365742069742e203320204e6f74653a2074686520736861636b6c65206d75737420626520696e20746865206f70656e20706f736974696f6e20746f2072657365742074686520636f6d62696e6174696f6e2e20342020496e7365727420726573657420746f6f6c2028656e636c6f73656420696e207061636b6167652920696e20686f6c65206f6e2073696465206f66206c6f636b2e2057697468206469616c7320617420302d302d302d302c2070756c6c206f75742074686520736861636b6c652e203220205475726e20736861636b6c65203930206465677265652028312f34207475726e2920736f206e6f746368206f6e20736861636b6c6520697320616c69676e65642077697468206e6f74636820696e206c6f636b20626f64792e20332020507265737320616e6420686f6c642074686520736861636b6c6520646f776e2e2034202053657420746865206469616c7320746f20796f7572206f776e20636f6d62696e6174696f6e206279206c696e696e67207570206d6964646c65206f66206e756d62657273207769746820726564207374726970652e5c6e5c6e7061737361676520333a466561747572657320616e642042656e65666974733a202d205365742d796f75722d6f776e20342d646967697420636f6d62696e6174696f6e20666f7220636f6e76656e69656e636520616e642073656375726974792e202d20526573657420746f20616e79206f662031302c30303020706572736f6e616c697a656420636f6d62696e6174696f6e2e202d2032202835316d6d29207769646520736f6c6964206272617373206361736520666f7220737472656e67746820616e6420776561746865726162696c6974792e2d2031202832356d6d292074616c6c2c20352f31362028386d6d29206469616d657465722068617264656e656420737465656c20736861636b6c6520666f72207375706572696f722063757420726573697374616e63652e2d20436f6d62696e6174696f6e206368616e6765206b657920696e636c756465642e373520427261737320436f6d62696e6174696f6e205061646c6f636b2e205468652031373520436f6d62696e6174696f6e205061646c6f636b2069732070617274206f66204d6173746572204c6f636b205365742d596f75722d4f776e20436f6d62696e6174696f6e205061646c6f636b202d2044656c69766572793a20546865204d6173746572204c6f636b203137354420436f6d62696e6174696f6e205061646c6f636b20697320696e2073746f636b20616e6420617661696c61626c6520746f20736869702e205468652031373520436f6d62696e6174696f6e205061646c6f636b2069732070617274206f66204d6173746572204c6f636b2e5c6e5c6e222c227175657374696f6e223a22686f7720746f2072657365742061206d6173746572206c6f636b2034206469676974227d",
+  "source_cluster_id": "sha256:feac048b0cab2df601699864f9571db7d1d06f59112d7277f58269368f3d4a36",
+  "source_id": "15274",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:624cf824eff243de64c90a708ec3db22f5d7c879bc22be4fae8ba7fe90f89172",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "classification": "owned_preflight_lookup_failure",
+  "explanation": "Producer requested top-level model_revision; qualified Exp8102 stores it in runtime_identity.model_revision. No model invocation occurred.",
+  "failed_operand": [
+    {
+      "check": "qwen_cache_revision",
+      "expected": null,
+      "field": "revision",
+      "hash": null,
+      "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "upstream": "qwen_cache",
+      "upstream_id": "qwen_cache"
+    }
+  ],
+  "historical_primary_sha256": "sha256:7c5b1b2a3b95e837022d3dcb143f30d90bb99049aea7046704c8c13563cd331c",
+  "preserved_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8112_v702_fit_source_capture/invocations/1791113046439685438/preserved_primary_before_revision_lookup_fix.json"
+}

@@ -1,0 +1,73 @@
+{
+  "answer_bytes": "22417272657374656420446576656c6f706d656e7422206578656375746976652070726f647563657220427269616e204772617a657220636f6e6669726d65642074686174207468652073686f772077696c6c2072657475726e20666f72206120666966746820736561736f6e206f6620313720657069736f6465732e204e6574666c697820686173206e6f742079657420636f6e6669726d6564206966207468652066756c6c20636173742077696c6c2072657475726e2e",
+  "arm": "full_source",
+  "capture_identity": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "qwen_cache_revision",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:0fc1673c47a825d53160d8b47637a1ca9ece5c797ac1ee5122e18cff1a20116f:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "measurement_scope": "unattempted",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:94bb8889aa332fbbf8878f185c5547477c94629082fbd7e52fb8e9133dbd3bd5",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"For those wondering if we would ever hear from the Bluth family again, the answer would appear to be yes. \\\"Arrested Development\\\" executive producer Brian Grazer said the show will return for a fifth season of 17 episodes. The Hollywood mogul was interviewed on Bill Simmons' podcast recently, and let it drop that fans can expect more of the quirky comedy. Netflix had no comment for CNN when asked to verify his statements. The fourth season was streamed exclusively on Netflix in 2013, after Fox canceled the show several years before. Despite critical acclaim, the series never had big ratings, but has a devoted fan base, who often quote from the show. It was not yet known if the full cast, including Jason Bateman, Michael Cera and Will Arnett, will return for the season.\\n\", \"original_answer\": \"\\\"Arrested Development\\\" executive producer Brian Grazer confirmed that the show will return for a fifth season of 17 episodes. Netflix has not yet confirmed if the full cast will return.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "466f722074686f736520776f6e646572696e6720696620776520776f756c64206576657220686561722066726f6d2074686520426c7574682066616d696c7920616761696e2c2074686520616e7377657220776f756c642061707065617220746f206265207965732e2022417272657374656420446576656c6f706d656e7422206578656375746976652070726f647563657220427269616e204772617a65722073616964207468652073686f772077696c6c2072657475726e20666f72206120666966746820736561736f6e206f6620313720657069736f6465732e2054686520486f6c6c79776f6f64206d6f67756c2077617320696e746572766965776564206f6e2042696c6c2053696d6d6f6e732720706f646361737420726563656e746c792c20616e64206c65742069742064726f7020746861742066616e732063616e20657870656374206d6f7265206f662074686520717569726b7920636f6d6564792e204e6574666c697820686164206e6f20636f6d6d656e7420666f7220434e4e207768656e2061736b656420746f20766572696679206869732073746174656d656e74732e2054686520666f7572746820736561736f6e207761732073747265616d6564206578636c75736976656c79206f6e204e6574666c697820696e20323031332c20616674657220466f782063616e63656c6564207468652073686f77207365766572616c207965617273206265666f72652e204465737069746520637269746963616c206163636c61696d2c2074686520736572696573206e65766572206861642062696720726174696e67732c20627574206861732061206465766f7465642066616e20626173652c2077686f206f6674656e2071756f74652066726f6d207468652073686f772e20497420776173206e6f7420796574206b6e6f776e206966207468652066756c6c20636173742c20696e636c7564696e67204a61736f6e20426174656d616e2c204d69636861656c204365726120616e642057696c6c2041726e6574742c2077696c6c2072657475726e20666f722074686520736561736f6e2e0a",
+  "source_cluster_id": "sha256:d91beecc09f74ccce4a431ce2fbe627c8bd71f9ac47d44eaa03d2c9641529f53",
+  "source_id": "15717",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:0fc1673c47a825d53160d8b47637a1ca9ece5c797ac1ee5122e18cff1a20116f",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

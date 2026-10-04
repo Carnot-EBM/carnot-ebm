@@ -1,0 +1,77 @@
+{
+  "answer_bytes": "4a534f4e20697320707265666572726564206f76657220584d4c20666f72207365766572616c20726561736f6e732e2046697273742c20626f7468204a534f4e20616e6420584d4c206172652073656c662d64657363726962696e6720616e642068696572617263686963616c2c20616e642063616e2062652070617273656420616e642075736564206279206d616e792070726f6772616d6d696e67206c616e6775616765732e204164646974696f6e616c6c792c20626f74682063616e2062652066657463686564207573696e6720616e20584d4c48747470526571756573742e20486f77657665722c204a534f4e2073796e746178206973206c69676874657220616e64206c65737320766572626f7365207468616e20584d4c2c207573696e67206665776572206368617261637465727320746f20726570726573656e74207468652073616d6520646174612e2054686973206d616b6573204a534f4e206c696768746572206f6e2074686520776972652c20616c74686f7567682074686520696d70616374206f6e20646174612073697a65206d6179206e6f74206265207369676e69666963616e7420666f72206c617267652064617461736574732e20467572746865726d6f72652c204a534f4e2069732073696d706c6572207468616e20584d4c2c2077697468206120736d616c6c6572206772616d6d61722074686174206469726563746c79206d617073206f6e746f20646174612073747275637475726573207573656420696e206d6f6465726e2070726f6772616d6d696e67206c616e6775616765732e204a534f4e20646f6573206e6f74206e65656420746f20626520657874656e7369626c652c20756e6c696b6520584d4c2e",
+  "arm": "full_source",
+  "capture_identity": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "qwen_cache_revision",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:354130cdbecd5bdd0f497e210fa140faea66debb9def146b03ab1f973a07490a:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "measurement_scope": "unattempted",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:80a36396b2cf2d1e0c67e3bed36f6f5f4f3ef8b22773b1428bda436194102e3e",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:JSON is Like XML Because. 1  Both JSON and XML are self describing (human readable) 2  Both JSON and XML are hierarchical (values within values) 3  Both JSON and XML can be parsed and used by lots of programming languages.  Both JSON and XML can be fetched with an XMLHttpRequest.\\\\n\\\\npassage 2:Syntax: JSON syntax is quite light and definitely less verbose than XML, with all of its start and end tags. When it comes down to pure byte-size, JSON can represent the same data as XML using fewer characters. Weight: Since JSON syntax requires fewer characters, it is lighter on the wire than XML. The question is if this really matters. Any large data set is going to be large regardless of the data format you use.\\\\n\\\\npassage 3:Let's compare XML and JSON on the attributes that the XML community considers important. From http://www.simonstl.com/articles/whyxml.htm. XML is simpler than SGML, but JSON is much simpler than XML. JSON has a much smaller grammar and maps more directly onto the data structures used in modern programming languages. JSON is not extensible because it does not need to be.\\\\n\\\\n\\\",\\\"question\\\":\\\"why json vs xml\\\"}\", \"original_answer\": \"JSON is preferred over XML for several reasons. First, both JSON and XML are self-describing and hierarchical, and can be parsed and used by many programming languages. Additionally, both can be fetched using an XMLHttpRequest. However, JSON syntax is lighter and less verbose than XML, using fewer characters to represent the same data. This makes JSON lighter on the wire, although the impact on data size may not be significant for large datasets. Furthermore, JSON is simpler than XML, with a smaller grammar that directly maps onto data structures used in modern programming languages. JSON does not need to be extensible, unlike XML.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4a534f4e206973204c696b6520584d4c20426563617573652e20312020426f7468204a534f4e20616e6420584d4c206172652073656c662064657363726962696e67202868756d616e207265616461626c652920322020426f7468204a534f4e20616e6420584d4c206172652068696572617263686963616c202876616c7565732077697468696e2076616c7565732920332020426f7468204a534f4e20616e6420584d4c2063616e2062652070617273656420616e642075736564206279206c6f7473206f662070726f6772616d6d696e67206c616e6775616765732e2020426f7468204a534f4e20616e6420584d4c2063616e2062652066657463686564207769746820616e20584d4c48747470526571756573742e5c6e5c6e7061737361676520323a53796e7461783a204a534f4e2073796e746178206973207175697465206c6967687420616e6420646566696e6974656c79206c65737320766572626f7365207468616e20584d4c2c207769746820616c6c206f662069747320737461727420616e6420656e6420746167732e205768656e20697420636f6d657320646f776e20746f207075726520627974652d73697a652c204a534f4e2063616e20726570726573656e74207468652073616d65206461746120617320584d4c207573696e6720666577657220636861726163746572732e205765696768743a2053696e6365204a534f4e2073796e74617820726571756972657320666577657220636861726163746572732c206974206973206c696768746572206f6e207468652077697265207468616e20584d4c2e20546865207175657374696f6e2069732069662074686973207265616c6c79206d6174746572732e20416e79206c6172676520646174612073657420697320676f696e6720746f206265206c61726765207265676172646c657373206f6620746865206461746120666f726d617420796f75207573652e5c6e5c6e7061737361676520333a4c6574277320636f6d7061726520584d4c20616e64204a534f4e206f6e20746865206174747269627574657320746861742074686520584d4c20636f6d6d756e69747920636f6e73696465727320696d706f7274616e742e2046726f6d20687474703a2f2f7777772e73696d6f6e73746c2e636f6d2f61727469636c65732f776879786d6c2e68746d2e20584d4c2069732073696d706c6572207468616e2053474d4c2c20627574204a534f4e206973206d7563682073696d706c6572207468616e20584d4c2e204a534f4e206861732061206d75636820736d616c6c6572206772616d6d617220616e64206d617073206d6f7265206469726563746c79206f6e746f2074686520646174612073747275637475726573207573656420696e206d6f6465726e2070726f6772616d6d696e67206c616e6775616765732e204a534f4e206973206e6f7420657874656e7369626c65206265636175736520697420646f6573206e6f74206e65656420746f2062652e5c6e5c6e222c227175657374696f6e223a22776879206a736f6e20767320786d6c227d",
+  "source_cluster_id": "sha256:7e2b8b8a03afbacfb2118679ee3b653bc8529ace8d528d9295f0b49a7c6445ce",
+  "source_id": "15410",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:354130cdbecd5bdd0f497e210fa140faea66debb9def146b03ab1f973a07490a",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

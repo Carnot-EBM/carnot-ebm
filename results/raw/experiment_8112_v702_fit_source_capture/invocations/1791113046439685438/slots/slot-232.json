@@ -1,0 +1,78 @@
+{
+  "answer_bytes": "556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e",
+  "arm": "duplicate",
+  "capture_identity": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "censor_status": false,
+  "condition": "duplicate",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "qwen_cache_revision",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:4e81df93883ce5c26a38ec81bb73233edd0fe45e464f1a16aa2901f09b1f9fe4:duplicate",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "measurement_scope": "unattempted",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:61b9d95be9131aab7f50510bfa44497f56830884d88034831d1921e41ca98efd",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Steps to Recover Files from memory card. Step1. You can connect your memory card to your computer via a card reader or USB cable. Then, you need to download and install the data recovery software on your computer. Run the software and choose a recovery option. Step2.\\\\n\\\\npassage 2:Select  Graphics  and click . Next  button to start your picture recovery job. Step 2. Select the disk where you lost your data and click  Scan  button, the software will quickly scan the selected disk to find all your lost pictures.\\\\n\\\\npassage 3:Step 6: For Recuva, select all the images you want to restore, and click the Recover button. Choose a place you want to restore the files to. You will want to choose somewhere you can access easily, like the desktop or your pictures folder. It's best not to save them back to the memory card.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to recover deleted photos from memory card without any software\\\"}\", \"original_answer\": \"Unable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a537465707320746f205265636f7665722046696c65732066726f6d206d656d6f727920636172642e2053746570312e20596f752063616e20636f6e6e65637420796f7572206d656d6f7279206361726420746f20796f757220636f6d7075746572207669612061206361726420726561646572206f7220555342206361626c652e205468656e2c20796f75206e65656420746f20646f776e6c6f616420616e6420696e7374616c6c207468652064617461207265636f7665727920736f667477617265206f6e20796f757220636f6d70757465722e2052756e2074686520736f66747761726520616e642063686f6f73652061207265636f76657279206f7074696f6e2e2053746570322e5c6e5c6e7061737361676520323a53656c656374202047726170686963732020616e6420636c69636b202e204e6578742020627574746f6e20746f20737461727420796f75722070696374757265207265636f76657279206a6f622e205374657020322e2053656c65637420746865206469736b20776865726520796f75206c6f737420796f7572206461746120616e6420636c69636b20205363616e2020627574746f6e2c2074686520736f6674776172652077696c6c20717569636b6c79207363616e207468652073656c6563746564206469736b20746f2066696e6420616c6c20796f7572206c6f73742070696374757265732e5c6e5c6e7061737361676520333a5374657020363a20466f72205265637576612c2073656c65637420616c6c2074686520696d6167657320796f752077616e7420746f20726573746f72652c20616e6420636c69636b20746865205265636f76657220627574746f6e2e2043686f6f7365206120706c61636520796f752077616e7420746f20726573746f7265207468652066696c657320746f2e20596f752077696c6c2077616e7420746f2063686f6f736520736f6d65776865726520796f752063616e2061636365737320656173696c792c206c696b6520746865206465736b746f70206f7220796f757220706963747572657320666f6c6465722e20497427732062657374206e6f7420746f2073617665207468656d206261636b20746f20746865206d656d6f727920636172642e5c6e5c6e222c227175657374696f6e223a22686f7720746f207265636f7665722064656c657465642070686f746f732066726f6d206d656d6f7279206361726420776974686f757420616e7920736f667477617265227d",
+  "source_cluster_id": "sha256:3cf0a195088c4a9be466140a7aae0b86e027f43cc73ef653b7a0608aa2b7369c",
+  "source_id": "12208",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:4e81df93883ce5c26a38ec81bb73233edd0fe45e464f1a16aa2901f09b1f9fe4",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

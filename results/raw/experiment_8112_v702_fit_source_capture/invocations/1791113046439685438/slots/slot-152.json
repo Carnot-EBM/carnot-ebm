@@ -1,0 +1,77 @@
+{
+  "answer_bytes": "5375726521204261736564206f6e2074686520676976656e2070617373616765732c20686572652773206120627269656620616e7377657220746f20746865207175657374696f6e2022486f7720646f20796f7520696e6372656173652072657475726e206f6e206571756974793f220a0a4163636f7264696e6720746f205061737361676520312c206f6e652077617920746f20696e6372656173652072657475726e206f6e2065717569747920697320746f20757365206d6f72652066696e616e6369616c206c657665726167652c207768696368206d65616e73207573696e67206d6f72652064656274206361706974616c2072656c617469766520746f20657175697479206361706974616c2e20546869732063616e20626520646f6e6520627920626f72726f77696e67206d6f6e657920746f20696e7665737420696e2061737365747320746861742077696c6c2067656e6572617465206869676865722072657475726e73207468616e2074686520636f7374206f6620626f72726f77696e672c207468657265627920696e6372656173696e672074686520636f6d70616e7927732070726f6669747320616e6420756c74696d6174656c79206974732072657475726e206f6e206571756974792e0a0a50617373616765203320616c736f2070726f7669646573206120666f726d756c6120666f722063616c63756c6174696e672072657475726e206f6e206571756974792c207768696368206973206e657420696e636f6d6520646976696465642062792061766572616765207368617265686f6c6465727327206571756974792e205468697320666f726d756c61207375676765737473207468617420696e6372656173696e67206e657420696e636f6d65206f722061766572616765207368617265686f6c6465727327206571756974792063616e20616c736f20626f6f73742072657475726e206f6e206571756974792e0a0a5468657265666f72652c20746f20696e6372656173652072657475726e206f6e206571756974792c206120636f6d70616e792063616e20636f6e7369646572207573696e672066696e616e6369616c206c6576657261676520746f20696e7665737420696e2070726f66697461626c65206173736574732c20616e6420616c736f20666f637573206f6e20696e6372656173696e6720697473206e657420696e636f6d6520616e642061766572616765207368617265686f6c6465727327206571756974792e",
+  "arm": "full_source",
+  "capture_identity": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "qwen_cache_revision",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:a6c379d36b738d8578662161007eaa36b6d6ccf3b18e70bd7d6391020defcea6:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "measurement_scope": "unattempted",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:8497af9d89c9bf613ca6cf5ea861462cee7d5210b891c9d5199049cd32dee4ea",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:A company can improve its return on equity in a number of ways, but here are the five most common. 1. Use more financial leverage. Companies can finance themselves with debt and equity capital. By increasing the amount of debt capital relative to its equity capital, a company can increase its return on equity. We'll use a (fictional) lemonade stand as an example for how the use of debt can increase a company's return on equity.\\\\n\\\\npassage 2:Owning equity in a company means that you own all or part of it. The owner\u2019s equity account is listed on the balance sheet for accounting purposes. There are a few reasons for a decrease in owner\u2019s equity.\\\\n\\\\npassage 3:2. Return on equity may also be calculated by dividing net income by average shareholders' equity. Average shareholders' equity is calculated by adding the shareholders' equity at the beginning of a period to the shareholders' equity at period's end and dividing the result by two. 3.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you increase return on equity\\\"}\", \"original_answer\": \"Sure! Based on the given passages, here's a brief answer to the question \\\"How do you increase return on equity?\\\"\\n\\nAccording to Passage 1, one way to increase return on equity is to use more financial leverage, which means using more debt capital relative to equity capital. This can be done by borrowing money to invest in assets that will generate higher returns than the cost of borrowing, thereby increasing the company's profits and ultimately its return on equity.\\n\\nPassage 3 also provides a formula for calculating return on equity, which is net income divided by average shareholders' equity. This formula suggests that increasing net income or average shareholders' equity can also boost return on equity.\\n\\nTherefore, to increase return on equity, a company can consider using financial leverage to invest in profitable assets, and also focus on increasing its net income and average shareholders' equity.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "tune",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4120636f6d70616e792063616e20696d70726f7665206974732072657475726e206f6e2065717569747920696e2061206e756d626572206f6620776179732c20627574206865726520617265207468652066697665206d6f737420636f6d6d6f6e2e20312e20557365206d6f72652066696e616e6369616c206c657665726167652e20436f6d70616e6965732063616e2066696e616e6365207468656d73656c7665732077697468206465627420616e6420657175697479206361706974616c2e20427920696e6372656173696e672074686520616d6f756e74206f662064656274206361706974616c2072656c617469766520746f2069747320657175697479206361706974616c2c206120636f6d70616e792063616e20696e637265617365206974732072657475726e206f6e206571756974792e205765276c6c207573652061202866696374696f6e616c29206c656d6f6e616465207374616e6420617320616e206578616d706c6520666f7220686f772074686520757365206f6620646562742063616e20696e637265617365206120636f6d70616e7927732072657475726e206f6e206571756974792e5c6e5c6e7061737361676520323a4f776e696e672065717569747920696e206120636f6d70616e79206d65616e73207468617420796f75206f776e20616c6c206f722070617274206f662069742e20546865206f776e6572e280997320657175697479206163636f756e74206973206c6973746564206f6e207468652062616c616e636520736865657420666f72206163636f756e74696e6720707572706f7365732e2054686572652061726520612066657720726561736f6e7320666f72206120646563726561736520696e206f776e6572e2809973206571756974792e5c6e5c6e7061737361676520333a322e2052657475726e206f6e20657175697479206d617920616c736f2062652063616c63756c61746564206279206469766964696e67206e657420696e636f6d652062792061766572616765207368617265686f6c6465727327206571756974792e2041766572616765207368617265686f6c6465727327206571756974792069732063616c63756c6174656420627920616464696e6720746865207368617265686f6c6465727327206571756974792061742074686520626567696e6e696e67206f66206120706572696f6420746f20746865207368617265686f6c64657273272065717569747920617420706572696f64277320656e6420616e64206469766964696e672074686520726573756c742062792074776f2e20332e5c6e5c6e222c227175657374696f6e223a22686f7720646f20796f7520696e6372656173652072657475726e206f6e20657175697479227d",
+  "source_cluster_id": "sha256:7467431c428325d04bccb423e3214f222937d32b3d33869a4cd6e36c603e596c",
+  "source_id": "15418",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:a6c379d36b738d8578662161007eaa36b6d6ccf3b18e70bd7d6391020defcea6",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

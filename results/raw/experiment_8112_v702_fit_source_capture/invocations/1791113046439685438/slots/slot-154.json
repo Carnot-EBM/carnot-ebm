@@ -1,0 +1,78 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c2068657265206172652074686520737465707320746f2075736520612073637265656e20696e7374616c6c6174696f6e20746f6f6c3a0a0a312e2053746172742062792073656174696e67207468652076696e796c2072657461696e65722073706c696e6520696e746f20746865206368616e6e656c207573696e672074686520636f6e6361766520776865656c206f662074686520696e7374616c6c6174696f6e20746f6f6c2c20626567696e6e696e6720696e206120636f726e65722e0a322e205573652073686f7274207374726f6b657320676f696e6720696e207468652073616d6520646972656374696f6e20746f207072657373207468652073706c696e6520696e746f20746865206672616d652e0a332e20557365206120736d616c6c20736372657764726976657220746f207072657373207468652073706c696e6520696e746f2074686520636f726e657273206173206e65636573736172792e0a342e20417320796f75207072657373207468652073706c696e6520696e746f20746865206672616d652c2069742077696c6c206d616b65207468652073637265656e20746175742e0a352e205472696d20746865206578636573732073637265656e206d6174657269616c20776974682073636973736f7273206f722061207574696c697479206b6e6966652e0a0a5468657265666f72652c2074686520616e737765722069733a0a0a312e2053656174207468652076696e796c2072657461696e65722073706c696e6520696e746f20746865206368616e6e656c207573696e672074686520636f6e6361766520776865656c206f662074686520696e7374616c6c6174696f6e20746f6f6c2c207374617274696e6720696e206120636f726e65722e0a322e205573652073686f7274207374726f6b657320676f696e6720696e207468652073616d6520646972656374696f6e20746f207072657373207468652073706c696e6520696e746f20746865206672616d652e0a332e20557365206120736d616c6c20736372657764726976657220746f207072657373207468652073706c696e6520696e746f2074686520636f726e657273206173206e65636573736172792e0a342e205472696d20746865206578636573732073637265656e206d6174657269616c20776974682073636973736f7273206f722061207574696c697479206b6e6966652e",
+  "arm": "full_source",
+  "capture_identity": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "qwen_cache_revision",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:2c76ad8640ea8daeb7d3e107a42ab6f3b7db6a1b9b72dad2abf1733661f877b0:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "measurement_scope": "unattempted",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:decbd85a3dd6c7ad72298349c31b7e4f0e8992693915bf00cb6c0553164b7ad9",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Use short strokes going in the same direction. 2  Try not to go back and forth. 3  Use a small screwdriver to press the spline into the corners as necessary. 4  As you press the spline into the frame it will make the screen taught. 5  Once installed, trim the excess screen material with scissors or a utility knife.\\\\n\\\\npassage 2:To use the screen or spline installation tool, follow these steps: 1  Using the concave wheel of the installation tool, seat the vinyl retainer spline into the channel by starting in a corner. 2  Use short strokes going in the same direction. 3  Use a small screwdriver to press the spline into the corners as necessary. 4  As you press the spline into the 5  ... O\\\\n\\\\npassage 3:Fasteners should be snug, but not so tight that the base strip bends. Put a screw no more that 2 inches from the end of each base strip. Do not leave base strips exposed to direct sunlight. STEP 2: Roll screen into base.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to use a screen installation tool\\\"}\", \"original_answer\": \"Based on the given passages, here are the steps to use a screen installation tool:\\n\\n1. Start by seating the vinyl retainer spline into the channel using the concave wheel of the installation tool, beginning in a corner.\\n2. Use short strokes going in the same direction to press the spline into the frame.\\n3. Use a small screwdriver to press the spline into the corners as necessary.\\n4. As you press the spline into the frame, it will make the screen taut.\\n5. Trim the excess screen material with scissors or a utility knife.\\n\\nTherefore, the answer is:\\n\\n1. Seat the vinyl retainer spline into the channel using the concave wheel of the installation tool, starting in a corner.\\n2. Use short strokes going in the same direction to press the spline into the frame.\\n3. Use a small screwdriver to press the spline into the corners as necessary.\\n4. Trim the excess screen material with scissors or a utility knife.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "tune",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a31205573652073686f7274207374726f6b657320676f696e6720696e207468652073616d6520646972656374696f6e2e20322020547279206e6f7420746f20676f206261636b20616e6420666f7274682e20332020557365206120736d616c6c20736372657764726976657220746f207072657373207468652073706c696e6520696e746f2074686520636f726e657273206173206e65636573736172792e20342020417320796f75207072657373207468652073706c696e6520696e746f20746865206672616d652069742077696c6c206d616b65207468652073637265656e207461756768742e203520204f6e636520696e7374616c6c65642c207472696d20746865206578636573732073637265656e206d6174657269616c20776974682073636973736f7273206f722061207574696c697479206b6e6966652e5c6e5c6e7061737361676520323a546f20757365207468652073637265656e206f722073706c696e6520696e7374616c6c6174696f6e20746f6f6c2c20666f6c6c6f772074686573652073746570733a203120205573696e672074686520636f6e6361766520776865656c206f662074686520696e7374616c6c6174696f6e20746f6f6c2c2073656174207468652076696e796c2072657461696e65722073706c696e6520696e746f20746865206368616e6e656c206279207374617274696e6720696e206120636f726e65722e203220205573652073686f7274207374726f6b657320676f696e6720696e207468652073616d6520646972656374696f6e2e20332020557365206120736d616c6c20736372657764726976657220746f207072657373207468652073706c696e6520696e746f2074686520636f726e657273206173206e65636573736172792e20342020417320796f75207072657373207468652073706c696e6520696e746f20746865203520202e2e2e204f5c6e5c6e7061737361676520333a46617374656e6572732073686f756c6420626520736e75672c20627574206e6f7420736f20746967687420746861742074686520626173652073747269702062656e64732e205075742061207363726577206e6f206d6f72652074686174203220696e636865732066726f6d2074686520656e64206f66206561636820626173652073747269702e20446f206e6f74206c65617665206261736520737472697073206578706f73656420746f206469726563742073756e6c696768742e205354455020323a20526f6c6c2073637265656e20696e746f20626173652e5c6e5c6e222c227175657374696f6e223a22686f7720746f2075736520612073637265656e20696e7374616c6c6174696f6e20746f6f6c227d",
+  "source_cluster_id": "sha256:2a7128d4db917b84824bf374250e6f592a85431eddb9f4f901539d1e39c19e13",
+  "source_id": "15416",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:2c76ad8640ea8daeb7d3e107a42ab6f3b7db6a1b9b72dad2abf1733661f877b0",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

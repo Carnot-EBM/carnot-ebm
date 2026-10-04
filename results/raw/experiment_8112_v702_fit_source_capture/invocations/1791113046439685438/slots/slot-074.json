@@ -1,0 +1,72 @@
+{
+  "answer_bytes": "436f6d6d756e696361626c652064697365617365732063616e206265207061737365642066726f6d206f6e6520706572736f6e20746f20616e6f746865722c207768696c65206e6f6e2d636f6d6d756e696361626c652064697365617365732063616e6e6f74206265207472616e736d69747465642e20436f6d6d756e696361626c6520646973656173657320617265206f6674656e20616375746520616e642063617573656420627920766972757365732c207768696c65206e6f6e2d636f6d6d756e696361626c6520646973656173657320617265206368726f6e696320616e642063616e206c6173742061206c6f6e672074696d652e20536f6d65206578616d706c6573206f6620636f6d6d756e696361626c652064697365617365732061726520636869636b656e20706f782c207768696c65206e6f6e2d636f6d6d756e696361626c6520646973656173657320696e636c7564652063616e6365727320616e642072657370697261746f72792073797374656d20636f6e646974696f6e732e",
+  "arm": "full_source",
+  "capture_identity": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "qwen_cache_revision",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:f4fa68709969c7e8286191eb00d1151d45406d8cfc76edb9095747672516d2b7:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "measurement_scope": "unattempted",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:2fa50655c9a6ea13306f403ecbd0f6b957ea45412dc1372076b32d91e2b5267b",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Communicable disease refers to diseases that can pass from one person to another. Non-communicable diseases occur in one person and cannot be passed on to another person. Communicable diseases are also known as infectious diseases, and non-communicable diseases are referred to as chronic.\\\\n\\\\npassage 2:One important difference between communicable and non-communicable disease is that non-communicable diseases tend to be chronic, which means they last a long time and progress slowly. Communicable diseases are more likely to be acute, which means the disease develops quickly.\\\\n\\\\npassage 3:Cancers are one category of non-communicable diseases that cannot be spread to others. Chicken pox and other conditions caused by viruses are communicable diseases. Non-infectious diseases involving the respiratory system are a class of non-communicable conditions.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between communicable and non communicable diseases\\\"}\", \"original_answer\": \"Communicable diseases can be passed from one person to another, while non-communicable diseases cannot be transmitted. Communicable diseases are often acute and caused by viruses, while non-communicable diseases are chronic and can last a long time. Some examples of communicable diseases are chicken pox, while non-communicable diseases include cancers and respiratory system conditions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a436f6d6d756e696361626c6520646973656173652072656665727320746f20646973656173657320746861742063616e20706173732066726f6d206f6e6520706572736f6e20746f20616e6f746865722e204e6f6e2d636f6d6d756e696361626c65206469736561736573206f6363757220696e206f6e6520706572736f6e20616e642063616e6e6f7420626520706173736564206f6e20746f20616e6f7468657220706572736f6e2e20436f6d6d756e696361626c652064697365617365732061726520616c736f206b6e6f776e20617320696e66656374696f75732064697365617365732c20616e64206e6f6e2d636f6d6d756e696361626c652064697365617365732061726520726566657272656420746f206173206368726f6e69632e5c6e5c6e7061737361676520323a4f6e6520696d706f7274616e7420646966666572656e6365206265747765656e20636f6d6d756e696361626c6520616e64206e6f6e2d636f6d6d756e696361626c6520646973656173652069732074686174206e6f6e2d636f6d6d756e696361626c652064697365617365732074656e6420746f206265206368726f6e69632c207768696368206d65616e732074686579206c6173742061206c6f6e672074696d6520616e642070726f677265737320736c6f776c792e20436f6d6d756e696361626c6520646973656173657320617265206d6f7265206c696b656c7920746f2062652061637574652c207768696368206d65616e7320746865206469736561736520646576656c6f707320717569636b6c792e5c6e5c6e7061737361676520333a43616e6365727320617265206f6e652063617465676f7279206f66206e6f6e2d636f6d6d756e696361626c6520646973656173657320746861742063616e6e6f742062652073707265616420746f206f74686572732e20436869636b656e20706f7820616e64206f7468657220636f6e646974696f6e732063617573656420627920766972757365732061726520636f6d6d756e696361626c652064697365617365732e204e6f6e2d696e66656374696f757320646973656173657320696e766f6c76696e67207468652072657370697261746f72792073797374656d20617265206120636c617373206f66206e6f6e2d636f6d6d756e696361626c6520636f6e646974696f6e732e5c6e5c6e222c227175657374696f6e223a22776861742069732074686520646966666572656e6365206265747765656e20636f6d6d756e696361626c6520616e64206e6f6e20636f6d6d756e696361626c65206469736561736573227d",
+  "source_cluster_id": "sha256:f4984d97cb02218065a47814f5741d23e65bb0cbfacbc142ff6b145a22ee274c",
+  "source_id": "14487",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:f4fa68709969c7e8286191eb00d1151d45406d8cfc76edb9095747672516d2b7",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

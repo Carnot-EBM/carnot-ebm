@@ -1,0 +1,74 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20697420697320646966666963756c7420746f2070726f7669646520616e20616363757261746520726573706f6e736520746f2074686973207175657374696f6e2e2054686520706173736167657320646973637573732074686520646966666572656e636520696e20636f7374206265747765656e206865616c74687920616e64206c657373206865616c7468792064696574732c20627574207468657920646f206e6f74207370656369666963616c6c79206d656e74696f6e2074686520636f7374206f6620656174696e67206865616c74687920696e2074686520556e69746564205374617465732e204164646974696f6e616c6c792c2074686520706173736167657320666f637573206f6e2074686520646966666572656e636520696e20636f7374207065722073657276696e67206f72207065722063616c6f7269652c20726174686572207468616e2074686520746f74616c20636f7374206f6620656174696e67206865616c74687920666f72206120646179206f722061207765656b2e205468657265666f72652c204920616d20756e61626c6520746f2070726f76696465206120646566696e697469766520616e7377657220746f2074686973207175657374696f6e206261736564206f6e2074686520676976656e2070617373616765732e",
+  "arm": "full_source",
+  "capture_identity": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "qwen_cache_revision",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:c607985efdff0748f2ef74149b8988ba41be5c8ed1d08b79f4220693b0a9eff5:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "measurement_scope": "unattempted",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:9729cca589bf4fa2f3b0faa446727c9b7e6b7f9d77a7a3f0e528a1fdc98811ba",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The greatest price differences were seen in meats and proteins, in which healthy versions of the foods cost about 30 cents more per serving, and 47 cents more per 200 calories, on average, than less healthy versions. Healthy diets, like the Mediterranean diet, cost $1.48 more per day, or $1.54 more per 2,000 calories, than less healthy diets. When the researchers considered only studies conducted in the United States, the results were similar: healthy diets cost $1.49 more per day, and $1.79 more per 2,000 calories. Reducing food cost\\\\n\\\\npassage 2:Papers of particular interest, published recently, have been highlighted as: \u2022 Of importance \u2022\u2022 Of major importance. 1  1. \u2022\u2022 Hiza HAB et al. Diet quality of Americans differs by age, sex, race/ethnicity, income, and education level.\\\\n\\\\npassage 3:One important feature of a healthy diet is that its benefits often occur in the distant future, while its costs (e.g., perceived inferior taste) occur immediately. Uncertainty about the future [55], impatience, and future discounting [56] all increase the psychological costs of healthy eating.\\\\n\\\\n\\\",\\\"question\\\":\\\"cost of eating healthy in us\\\"}\", \"original_answer\": \"Based on the given passages, it is difficult to provide an accurate response to this question. The passages discuss the difference in cost between healthy and less healthy diets, but they do not specifically mention the cost of eating healthy in the United States. Additionally, the passages focus on the difference in cost per serving or per calorie, rather than the total cost of eating healthy for a day or a week. Therefore, I am unable to provide a definitive answer to this question based on the given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a54686520677265617465737420707269636520646966666572656e6365732077657265207365656e20696e206d6561747320616e642070726f7465696e732c20696e207768696368206865616c7468792076657273696f6e73206f662074686520666f6f647320636f73742061626f75742033302063656e7473206d6f7265207065722073657276696e672c20616e642034372063656e7473206d6f726520706572203230302063616c6f726965732c206f6e20617665726167652c207468616e206c657373206865616c7468792076657273696f6e732e204865616c7468792064696574732c206c696b6520746865204d65646974657272616e65616e20646965742c20636f73742024312e3438206d6f726520706572206461792c206f722024312e3534206d6f72652070657220322c3030302063616c6f726965732c207468616e206c657373206865616c7468792064696574732e205768656e2074686520726573656172636865727320636f6e73696465726564206f6e6c79207374756469657320636f6e64756374656420696e2074686520556e69746564205374617465732c2074686520726573756c747320776572652073696d696c61723a206865616c74687920646965747320636f73742024312e3439206d6f726520706572206461792c20616e642024312e3739206d6f72652070657220322c3030302063616c6f726965732e205265647563696e6720666f6f6420636f73745c6e5c6e7061737361676520323a506170657273206f6620706172746963756c617220696e7465726573742c207075626c697368656420726563656e746c792c2068617665206265656e20686967686c6967687465642061733a20e280a2204f6620696d706f7274616e636520e280a2e280a2204f66206d616a6f7220696d706f7274616e63652e20312020312e20e280a2e280a22048697a612048414220657420616c2e2044696574207175616c697479206f6620416d65726963616e732064696666657273206279206167652c207365782c20726163652f6574686e69636974792c20696e636f6d652c20616e6420656475636174696f6e206c6576656c2e5c6e5c6e7061737361676520333a4f6e6520696d706f7274616e742066656174757265206f662061206865616c74687920646965742069732074686174206974732062656e6566697473206f6674656e206f6363757220696e207468652064697374616e74206675747572652c207768696c652069747320636f7374732028652e672e2c2070657263656976656420696e666572696f7220746173746529206f6363757220696d6d6564696174656c792e20556e6365727461696e74792061626f75742074686520667574757265205b35355d2c20696d70617469656e63652c20616e642066757475726520646973636f756e74696e67205b35365d20616c6c20696e637265617365207468652070737963686f6c6f676963616c20636f737473206f66206865616c74687920656174696e672e5c6e5c6e222c227175657374696f6e223a22636f7374206f6620656174696e67206865616c74687920696e207573227d",
+  "source_cluster_id": "sha256:3bb495f78f4ee46930a9c1f0e60433ef163143f00b9e8e0db446ea660f56386a",
+  "source_id": "15122",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:c607985efdff0748f2ef74149b8988ba41be5c8ed1d08b79f4220693b0a9eff5",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

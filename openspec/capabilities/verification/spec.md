@@ -2,6 +2,31 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8112: Bounded complete-source sensitivity capture
+
+Exp8112 SHALL retain fit128/tune64 public order and unchanged answer bytes.
+The operator's V702 override uses the first24 fit clusters with duplicate,
+source-removed, cyclic next-source modulo24 mismatch, and reverse sentence-order
+permutation arms. Freeze exact source-byte permutations and donor identities
+before calls; preserve the historical Exp8111 first32 protocol unchanged.
+Use qualified Exp8102 Qwen GGUF native chat transport, one owned CUDA load,
+300s load and120s call bounds,6000 input tokens,96 output tokens,288 calls and
+27648 reserved output tokens. Stop launches at3150s and measurement at3270s.
+Exclude long complete sources without replacement, truncation, retry or padding.
+Reparse primitive answers and authenticate content/model/template cache keys.
+Historical resumed work contributes zero current calls. Compare each source
+effect to its own duplicate on the same complete paired sources. Altered sources
+carry no original truth label. Readiness needs96 usable original fit sources
+with16/class and48 tune sources with8/class plus current owned validation.
+Null effects do not gate readiness; independent generalization remains zero.
+
+### SCENARIO-VERIFY-8112-PRIVATE
+
+Model-free private tests cover frozen permutations, donor mapping, label custody,
+complete-source context exclusions, exact cache reuse and identity drift, paired
+duplicate baselines, raw parse mutations and post-capture original class support.
+
+
 ## REQ-VERIFY-7968: Isolate complete-response calibration roles
 
 Reuse Exp7955 freeze/check_roles/join and its authenticated all-role union.

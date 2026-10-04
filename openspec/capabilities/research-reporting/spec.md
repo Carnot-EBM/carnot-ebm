@@ -2,6 +2,36 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8112: Invocation-derived bounded capture publication
+
+Exp8112 SHALL publish results/experiment_8112_v702_fit_source_capture.json and
+primitive evidence beneath its raw directory through primary_publication.
+Authenticate Exp8098 public roles, Exp8111 methods and Exp8102 runtime terminals,
+exact bytes and executable/test operands before inference. Preserve Exp8099.
+Collect existing test_primary_publication_7928.py and named consumers first.
+Exercise the real builder's zero-call, load-only, bounded-generation and resumed
+cache branches. Actual receipts determine no_model_load with MODEL_SPECS=[],
+model_load_no_generation (2s floor), or model_bounded_generation (10s floor).
+Keep planned_MODEL_SPECS separately. Record owned PID/argv, lease, GPU memory
+delta, CUDA authentication, runtime/model/template hashes, spans and tokens.
+External unchanged failures close complete_blocked with failed operand details;
+owned failures disqualify and zero readiness. Oracle fixtures are circular_positive.
+Freeze validation argv before measurement; run scoped unit/consumer tests,
+E2E-015/019 and private CLI success/blocked/mutation/cold replay, Ruff, strict
+mypy, scoped spec coverage and100 percent added-code statement coverage.
+Run bounded repository health once, preserving existing failures diagnostically.
+Run adversarial_verify and strict verdict_row_consistency_lint on terminal bytes.
+Ops/status/traceability reconciliation is delegated to the conductor by the
+operator; update only these specs in this task. Never edit the conductor.
+
+### SCENARIO-REPORT-8112-TERMINAL
+
+Private script-path routes work outside the checkout without ambient PYTHONPATH.
+Reject mutated raw rows, aggregates, provenance, labels and cache keys. Owned
+normal-exit validation binds the final primary hash; blocked evidence identifies
+the actual operand and never acquires historical model calls as current work.
+
+
 ## REQ-REPORT-8082: Independently close V699 outcome accounting
 
 Exp8082 SHALL bind thirteen ordered full task contracts to preserved design and

@@ -1,0 +1,76 @@
+{
+  "answer_bytes": "224e69636b792044277320576f6f642066697265642050697a7a6122206973206120686967686c792d7261746564206c6f63616c20627573696e657373206c6f63617465642061742032383430204465204c612056696e612053742c2053616e746120426172626172612c2043412e205468652072657374617572616e74207370656369616c697a657320696e2073657276696e672070697a7a6120616e64206973206f70656e206576657279206461792066726f6d2031323a303020746f2032313a30302e205468657920646f206e6f74206f666665722057694669206f72206f7574646f6f722073656174696e672c20627574207468657920646f2070726f76696465207061726b696e67206c6f747320666f7220637573746f6d6572732e205468657920616c736f206f666665722074616b652d6f7574206f7074696f6e7320616e6420617265207375697461626c6520666f722067726f7570732e205468652072657374617572616e7427732061746d6f7370686572652069732063617375616c2e20437573746f6d6572732068617665207072616973656420746865207175616c697479206f6620746865697220776f6f642d66697265642070697a7a612c2077697468207370656369666963206d656e74696f6e206f662074686520506573746f2050697a7a6120776974682052616d616e6f2026204d6f7a7a6172656c6c6120436865657365732c205370696e6163682c204172746963686f6b652c20436869636b656e2c20426173696c2c20616e6420546f6d61746f2e20437573746f6d657273206861766520616c736f206d656e74696f6e65642074686520667269656e646c7920736572766963652070726f766964656420627920746865206f776e65722c204e69636b7920442c2077686f206973206f6674656e2070726573656e74206174207468652072657374617572616e742c20657370656369616c6c79206f6e207765656b656e64732e",
+  "arm": "source_mismatched",
+  "capture_identity": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "censor_status": false,
+  "condition": "source_mismatched",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "qwen_cache_revision",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:d2f4d75824dbe2944cf209c67379115b39f5b03f2d484498b5372a279d6a76ab:source_mismatched",
+  "human_target": null,
+  "input_tokens": null,
+  "intervention_source_id": "14172",
+  "issued_state": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "measurement_scope": "unattempted",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:4767c57daf8049681fa77720498fa1b6b24315482b820c5300a9a582dbec517a",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1046 Coast Village Rd, Ste F\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Juice Bars & Smoothies, Food, Restaurants, Vegetarian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-18:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-22:0\\\",\\\"Sunday\\\":\\\"8:0-22:0\\\",\\\"Thursday\\\":\\\"7:0-22:0\\\",\\\"Tuesday\\\":\\\"7:0-22:0\\\",\\\"Wednesday\\\":\\\"7:0-22:0\\\"},\\\"name\\\":\\\"Blenders In the Grass\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-09 04:23:38\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I went to blenders and ordered 2 drinks.  One was a blue pomegranate and it was made short even after using the spatula to pour any excess smoothie into the cup. I know the smoothie is supposed to reach the top of the cup because I used to be a supervisor there. This is not the first time this has happened, it seems to be a reoccurring problem.\\\"},{\\\"review_date\\\":\\\"2021-09-21 16:07:13\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The blenders in montecito last night I go to the register the girl working it goes to it too and just blankly stares at me.\\\\n\\\\nNo hello what can I get you no acknowledgment or greeting. I have to initiate my order.\\\"},{\\\"review_date\\\":\\\"2021-05-17 20:01:12\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"If you like added sugar in their ice milk and sherbet and non organic gmo tasting fruit and soy milk then this is your place! The fruit juice they add tastes like corn syrup and sugar, maybe 10% real juice.\\\\nI dont even think their wheat grass is organic as nothing is labeled organic and non gmo. Hit or miss on customer service and sanitary procedures as it looks as the college kids working their are trying to make them as fast as they can and rarely even blend them long enough, I was loyal but the last straw was when I bought a peanut butter bar and it tasted like moldy peanuts as I looked at the expiration date, it was 3 months expired! The owners have lost touch and the managers are not into customer service. So long...\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"Nicky D's Wood fired Pizza\\\" is a highly-rated local business located at 2840 De La Vina St, Santa Barbara, CA. The restaurant specializes in serving pizza and is open every day from 12:00 to 21:00. They do not offer WiFi or outdoor seating, but they do provide parking lots for customers. They also offer take-out options and are suitable for groups. The restaurant's atmosphere is casual. Customers have praised the quality of their wood-fired pizza, with specific mention of the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil, and Tomato. Customers have also mentioned the friendly service provided by the owner, Nicky D, who is often present at the restaurant, especially on weekends.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b2261646472657373223a2232383430204465204c612056696e61205374222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a747275652c22636c61737379223a66616c73652c226469766579223a66616c73652c2268697073746572223a66616c73652c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a66616c73652c227472656e6479223a66616c73652c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a747275652c22737472656574223a66616c73652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a66616c73652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a226e6f227d2c22627573696e6573735f7374617273223a342e302c2263617465676f72696573223a2250697a7a612c2052657374617572616e7473222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a2231323a302d32313a30222c224d6f6e646179223a2231323a302d32313a30222c225361747572646179223a2231323a302d32313a30222c2253756e646179223a2231323a302d32313a30222c225468757273646179223a2231323a302d32313a30222c2254756573646179223a2231323a302d32313a30222c225765646e6573646179223a2231323a302d32313a30227d2c226e616d65223a224e69636b792044277320576f6f642066697265642050697a7a61222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323031382d30372d32312031373a33373a3238222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22457863656c6c656e7420776f6f642066697265642070697a7a612e2049206f7264657265642074686520506573746f2050697a7a6120776974682052616d616e6f2026204d6f7a7a6172656c6c6120436865657365732c205370696e6163682c204172746963686f6b652c20436869636b656e2c20426173696c20616e6420546f6d61746f2e205065726665637421227d2c7b227265766965775f64617465223a22323031382d30362d30332030323a32383a3538222c227265766965775f7374617273223a352e302c227265766965775f74657874223a2254686520626573742070697a7a61206d6f6e65792063616e2062757920494e2053616e746120426172626172612068616e647320646f776e202e2e2049206d6574204e69636b79204420686520697320616c77617973207468657265206f6e207765656b656e64732067726561742067757920746f2074616c6b2032202e2e227d2c7b227265766965775f64617465223a22323031382d30352d31322030333a34323a3537222c227265766965775f7374617273223a352e302c227265766965775f74657874223a225765206a757374206174652064696e6e6572206865726520746f6e696768742120492059656c7065642070697a7a612773206e65617262792073696e6365207765206172652066726f6d2053616e20446965676f20616e64204920616d20736f20676c616420776520666f756e64207468697320706c6163652121212049742077617320736f6f6f6f6f20676f6f6421205265616c6c7920676f6f642063686565736520616e6420677265617420666c61766f7221227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:12c288a6fc13915988b0d7d7783a79b051ef0a997089ec9ad04e6d499f3763bd",
+  "source_id": "14555",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:d2f4d75824dbe2944cf209c67379115b39f5b03f2d484498b5372a279d6a76ab",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

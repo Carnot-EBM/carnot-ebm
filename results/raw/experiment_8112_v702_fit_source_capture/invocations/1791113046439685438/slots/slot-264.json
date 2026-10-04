@@ -1,0 +1,73 @@
+{
+  "answer_bytes": "53756e205375736869206973206120706f70756c61722072657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043616c69666f726e69612e20497420736572766573204a6170616e6573652063756973696e652077697468206120666f637573206f6e20737573686920626172732e205468652072657374617572616e74206973206f70656e20736576656e20646179732061207765656b2c2066726f6d2031373a303020746f2032313a3030206f6e207765656b6461797320616e642066726f6d2031373a303020746f2032323a3030206f6e207765656b656e64732e20437573746f6d6572732063616e206d616b65207265736572766174696f6e732c20656e6a6f79206f7574646f6f722073656174696e672c2074616b65206f757420666f6f642c20616e642067726f75702064696e696e67206f7074696f6e732e205468652072657374617572616e7420646f6573206e6f74206f666665722057694669206f722076616c6574207061726b696e672c2062757420746865726520697320737472656574207061726b696e6720617661696c61626c652e0a0a4163636f7264696e6720746f20637573746f6d657220726576696577732c2053756e205375736869206f666665727320686967682d7175616c69747920737573686920776974682064656c6963696f757320666c61766f72732e205468652073706963792074756e61206f6e206372697370792072696365206973206120706172746963756c6172206661766f7269746520616d6f6e6720637573746f6d6572732c20616c6f6e67207769746820746865207369782d737465702073616c6d6f6e2064696e6e65722e205468652072657374617572616e7420616c736f20686173206375746520746561206d75677320746861742061646420746f20746865206f766572616c6c20657870657269656e63652e204d616e7920637573746f6d6572732061707072656369617465207468652063617375616c20616d6269616e636520616e642074686520667269656e646c792073746166662e204f766572616c6c2c2053756e20537573686920697320612067726561742063686f69636520666f7220616e796f6e65206c6f6f6b696e6720666f7220667265736820616e6420746173747920737573686920696e2053616e746120426172626172612e",
+  "arm": "duplicate",
+  "capture_identity": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "censor_status": false,
+  "condition": "duplicate",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "qwen_cache_revision",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:ee9eb636b40f26373171395332ea7d4858874853fa7e4019318968a1ff0a1ba7:duplicate",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:76ff1b9ca5414b9979b789f62e623a159454d3baf83787a829e830dea97a9df2",
+  "measurement_scope": "unattempted",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:a71ece0dc32b35ec94303bf992cb9bc20575951417845d5d7e0e672ebb14b8c4",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3631 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Japanese, Sushi Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Sun Sushi\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 02:54:36\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is a local secret :) Whenever the suhsi cravings kick in this is our first choice. This last time I've ordered the spicy tuna on crispy rice and six step salmon dinner. Overall great quality and delicious!\\\"},{\\\"review_date\\\":\\\"2022-01-19 02:54:20\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Really great quality sushi!! I love coming here whenever I'm in the area. The spicy tuna on crispy rice is amazing. And their tea mugs are really cute.\\\"},{\\\"review_date\\\":\\\"2022-01-03 23:51:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Some of the best sushi I've had in a decade. Go sit at the bar, drink some sake, and get the six step salmon plate.\\\\n\\\\n10/10 coming back again.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sun Sushi is a popular restaurant located in Santa Barbara, California. It serves Japanese cuisine with a focus on sushi bars. The restaurant is open seven days a week, from 17:00 to 21:00 on weekdays and from 17:00 to 22:00 on weekends. Customers can make reservations, enjoy outdoor seating, take out food, and group dining options. The restaurant does not offer WiFi or valet parking, but there is street parking available.\\n\\nAccording to customer reviews, Sun Sushi offers high-quality sushi with delicious flavors. The spicy tuna on crispy rice is a particular favorite among customers, along with the six-step salmon dinner. The restaurant also has cute tea mugs that add to the overall experience. Many customers appreciate the casual ambiance and the friendly staff. Overall, Sun Sushi is a great choice for anyone looking for fresh and tasty sushi in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b2261646472657373223a2233363331205374617465205374222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a747275652c22636c61737379223a66616c73652c226469766579223a66616c73652c2268697073746572223a66616c73652c22696e74696d617465223a6e756c6c2c22726f6d616e746963223a6e756c6c2c22746f757269737479223a66616c73652c227472656e6479223a6e756c6c2c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a66616c73652c22737472656574223a66616c73652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a747275652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a747275652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a226e6f227d2c22627573696e6573735f7374617273223a342e352c2263617465676f72696573223a2252657374617572616e74732c204a6170616e6573652c2053757368692042617273222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a2231373a302d32313a30222c224d6f6e646179223a22303a302d303a30222c225361747572646179223a2231373a302d32323a30222c2253756e646179223a2231373a302d32313a30222c225468757273646179223a2231373a302d32313a30222c2254756573646179223a2231373a302d32313a30222c225765646e6573646179223a2231373a302d32313a30227d2c226e616d65223a2253756e205375736869222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323032322d30312d31392030323a35343a3336222c227265766965775f7374617273223a352e302c227265766965775f74657874223a225468697320706c6163652069732061206c6f63616c20736563726574203a29205768656e65766572207468652073756873692063726176696e6773206b69636b20696e2074686973206973206f75722066697273742063686f6963652e2054686973206c6173742074696d652049277665206f726465726564207468652073706963792074756e61206f6e20637269737079207269636520616e642073697820737465702073616c6d6f6e2064696e6e65722e204f766572616c6c206772656174207175616c69747920616e642064656c6963696f757321227d2c7b227265766965775f64617465223a22323032322d30312d31392030323a35343a3230222c227265766965775f7374617273223a352e302c227265766965775f74657874223a225265616c6c79206772656174207175616c69747920737573686921212049206c6f766520636f6d696e672068657265207768656e657665722049276d20696e2074686520617265612e205468652073706963792074756e61206f6e20637269737079207269636520697320616d617a696e672e20416e6420746865697220746561206d75677320617265207265616c6c7920637574652e227d2c7b227265766965775f64617465223a22323032322d30312d30332032333a35313a3233222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22536f6d65206f6620746865206265737420737573686920492776652068616420696e2061206465636164652e20476f2073697420617420746865206261722c206472696e6b20736f6d652073616b652c20616e6420676574207468652073697820737465702073616c6d6f6e20706c6174652e5c6e5c6e31302f313020636f6d696e67206261636b20616761696e2e227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:ca002d78fd1938796dbaddd11f28ce5aede42ebe08dfcc00a36f86c77e52932c",
+  "source_id": "14936",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:ee9eb636b40f26373171395332ea7d4858874853fa7e4019318968a1ff0a1ba7",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}
