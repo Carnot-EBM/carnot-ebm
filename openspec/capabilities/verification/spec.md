@@ -2,6 +2,37 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8119: Batched native crossing and durable host service
+
+Freeze batches [1,8,32,128], centers [16,28], three public byte-size strata,
+five excluded warmups and thirty paired repetitions per cell. Seed and randomize
+arm order. Reuse the authenticated Exp8105 vector API and independent NumPy
+equations, with equal float64 operands and canonical threshold fallback.
+Kernel timings include vector conversion and crossing; host timings include
+public rendering, feature construction, cache custody, crossing, decision,
+durable metadata write and return. Retain every primitive latency and error.
+Original, exact reuse, changed-content, eviction and restart must exercise real
+cache transitions. Changed content uses Exp8118's captured source permutation;
+unknown bytes or stale model identities abstain. Numerical heads are fixture-only
+when qualified natural states are unavailable. No Rust rewrite is required.
+Each byte-size stratum freezes its median-sized original source and captured
+permutation. A batch repeats that exact public request; observed within-batch
+reuse is declared and the separate no-reuse composition charges every request.
+This is three exposed source clusters, not a new independent sample.
+
+### SCENARIO-VERIFY-8119: Binding, keys and restart
+
+E2E-003/004 must use the actual loaded extension, hash its actual module path,
+round-trip checkpoints and cold-replay durable states. Reject invalid vectors,
+state mutation, raw hash drift, latency/accounting drift and stale keys.
+Repetitions and batch duplicates cannot increase independent-source counts.
+
+Implementation: `python/carnot/experiment_8119_v702_batched_service_cost.py`
+and private `tests/python/test_batched_service_cost_8119.py` reuse the qualified
+binding and feature-cache modules. The public panel has three exposed clusters;
+the supplied head has no independent scientific denominator.
+
+
 ## REQ-VERIFY-8118: Bounded unseen-key acquisition panel
 
 Freeze the first24 fit sources in Exp8111 public order with original and exact

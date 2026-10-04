@@ -1,0 +1,44 @@
+[exp8119] start completed=0 pending=0
+[exp8119] subprocess_before_measurement_normal_exit completed=0 pending=1
+[exp7303-validation] before_subprocess measurement_normal_exit elapsed_s=0.000 unit=1/1
+[exp7303-validation:measurement_normal_exit] [exp8119] start completed=0 pending=0
+[exp7303-validation:measurement_normal_exit] [exp8119] preconditions_before completed=0 pending=0
+[exp7303-validation:measurement_normal_exit] [exp8119] preconditions_after completed=0 pending=0
+[exp7303-validation] after_subprocess measurement_normal_exit elapsed_s=1.400 exit=0 unit=1/1
+[exp8119] subprocess_after_measurement_normal_exit completed=1 pending=0
+[exp8119] independent_reduction_before completed=0 pending=0
+[exp8119] independent_reduction_after completed=0 pending=0
+[exp8119] publication_before completed=0 pending=0
+[exp8119] subprocess_before_cold_replay completed=0 pending=3
+[exp7303-validation] before_subprocess cold_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:cold_replay] [exp8119] start completed=0 pending=0
+[exp7303-validation] after_subprocess cold_replay elapsed_s=1.592 exit=0 unit=1/1
+[exp8119] subprocess_after_cold_replay completed=1 pending=2
+[exp8119] subprocess_before_adversarial completed=1 pending=2
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/1
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/tmp/carnot-8119-ixh9rov6/coverage/test_private_cli_and_cold_muta0/blocked/raw/experiment_8119_blocked/terminal_candidate.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 8119,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_blocked_host_qualified",
+[exp7303-validation:adversarial]       "flag_count": 0,
+[exp7303-validation:adversarial]       "max_severity": -1,
+[exp7303-validation:adversarial]       "flags": [],
+[exp7303-validation:adversarial]       "gate_version": "38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 0
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.503 exit=0 unit=1/1
+[exp8119] subprocess_after_adversarial completed=2 pending=1
+[exp8119] subprocess_before_strict_rows completed=2 pending=1
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=1/1
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.023 exit=0 unit=1/1
+[exp8119] subprocess_after_strict_rows completed=3 pending=0
+[exp8119] publication_after completed=0 pending=0

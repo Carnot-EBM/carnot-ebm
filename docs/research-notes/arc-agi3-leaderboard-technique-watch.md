@@ -436,3 +436,9 @@ For these three published inference paths, I found no game-source reading or per
 
 I found no attributable public ARC implementation or technique writeup for either. **Classification remains unknown:** source-reading/per-game hardcoding versus general-purpose methods cannot yet be determined. [lalalia’s code profile](https://www.kaggle.com/lalalia9/code), [Kamal’s code profile](https://www.kaggle.com/kamalkadakara/code)
 
+## 2026-10-04 13:36 UTC -- NEW
+
+**New top-five entrant, October 4:** **mtg (`michaeltgao`) is #3 at 37.54**. [Live Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+No attributable public ARC implementation or technique writeup was found. **Classification remains unknown:** game-source exploitation/per-game hardcoding versus general-purpose methods cannot yet be determined. [Code profile](https://www.kaggle.com/michaeltgao/code), [GitHub repositories](https://github.com/michaeltgao?tab=repositories)
+

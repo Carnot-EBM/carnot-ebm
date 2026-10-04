@@ -2,6 +2,45 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8119: Honest batch and complete-service accounting
+
+Publish Exp8119 through primary_publication after normal measurement exit,
+owned tests/consumers, Ruff check/format, strict mypy, scoped spec coverage and
+100 percent changed statement coverage. Freeze argv before measurement; retain
+logs, hashes, timings and private CLI success/blocked/mutation/cold-replay receipts.
+Run E2E-015/019 key custody and one bounded full Python health diagnostic;
+pre-existing global health failures are separate from owned qualification.
+Use no_model_load, MODEL_SPECS=[], zero current call ledger. Join Exp8118 only
+with readiness one and exact content/runtime/template/parser/config keys and
+request/response hashes. Charge load separately, observed reuse and an explicit
+no-reuse scenario. Consume learning updates only from qualified Exp8116.
+Missing updates/acquisition set complete_service_ready_score=0 while preserving
+host readiness. External blocks are complete_blocked_<actual check>; owned
+failures disqualify. Fixture parity is circular evidence, never generalization.
+Report per-pair and median/p95 reductions, complete accounting, arithmetic
+fractions and measured Amdahl bounds; NFR-01 needs 10x throughput on the complete
+declared workload with equal correctness. Stage sums are composed estimates.
+No current Qwen call or learning/generalization claim is permitted. Reconciliation
+of ops/status/changelog/traceability is delegated to the conductor by the final
+operator instruction. Preserve history and do not edit research_conductor.py.
+
+### SCENARIO-REPORT-8119: Terminal custody
+
+Private fixtures live outside results. Script-path execution outside checkout
+must publish qualified host evidence, terminal external blocks and disqualified
+owned failures, while cold replay rejects changed rows, states, keys, logs and
+aggregates. Independently recompute reductions before publication and run
+adversarial_verify plus strict verdict_row_consistency_lint.
+
+Implementation: `python/carnot/experiment_8119_v702_batched_service_cost.py`,
+the script with the same basename under `scripts/experiments/`, and
+`tests/python/test_batched_service_cost_8119.py` implement this publication
+contract. Operational reconciliation remains with the conductor.
+An explicit owned-validation retry may preserve the rejected primary and its
+frozen source/argv evidence, start a new frozen measurement invocation and reuse
+the already executed global health diagnostic. It may not retry external blocks.
+
+
 ## REQ-REPORT-8118: Owned fresh acquisition cost publication
 
 Exp8118 SHALL publish its primary and primitive cost evidence through
