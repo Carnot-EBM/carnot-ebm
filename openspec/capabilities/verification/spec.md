@@ -47905,3 +47905,23 @@ Bind receipts to the published hash in a nested sidecar. Publication rejection
 SHALL leave the old primary intact. Owned failure zeroes readiness; blocked
 work stays zero even when its owned checks pass. Ops and traceability updates
 are reserved for the conductor reconciler by the task's final instruction.
+
+## REQ-VERIFY-8083: Owned V700 checks and publication
+
+Freeze actual bounded validation argv before measurement. Run focused and
+consumer tests, private E2E-018 mutations, Ruff check/format, strict mypy,
+scoped spec coverage and nonempty 100 percent added statement coverage.
+Run the repository Python suite once and preserve its unrelated failures as
+separate diagnostics. Use private test directories, supervised normal child
+exit, immutable logs and flushed phase/child progress within sixty seconds.
+Validate prospective bytes with adversarial verification, strict row lint and
+independent cold replay before primary_publication exposes them. Owned check
+failure disqualifies and zeroes readiness; unchanged external blocks finish
+blocked. No native code is changed by this custody task.
+
+### SCENARIO-VERIFY-8083-CLI
+
+Real private CLI success, external blocked, owned mutation and cold replay
+routes run outside the checkout. Receipts bind actual argv, duration, exit and
+log hash. Fixture controls are oracle evidence only. Current model counters
+remain zero. Ops and traceability reconciliation belongs to the conductor.

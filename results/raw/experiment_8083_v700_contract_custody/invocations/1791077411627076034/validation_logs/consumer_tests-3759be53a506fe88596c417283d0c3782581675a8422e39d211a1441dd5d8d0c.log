@@ -1,0 +1,33 @@
+....F................................................................... [ 61%]
+..............................................                           [100%]
+=================================== FAILURES ===================================
+________________ test_linter_passes_clean_on_active_80_roadmap _________________
+
+    def test_linter_passes_clean_on_active_80_roadmap():
+        """REQ-INFRA-081: The current research-roadmap.yaml (milestone .80) must lint clean.
+    
+        This is the regression guard: every commit that touches the active
+        roadmap or the linter is checked against the real .80 roadmap, so
+        accidental scope-overlap (or schema errors introduced by an edit)
+        surface immediately.
+        """
+        active_roadmap = _REPO_ROOT / "research-roadmap.yaml"
+        if not active_roadmap.exists():
+            pytest.skip("research-roadmap.yaml not present in repo")
+    
+        schema_errors, prior_violations = validate_roadmap(active_roadmap)
+        assert schema_errors == [], f"Active .80 roadmap has schema errors: {schema_errors}"
+>       assert prior_violations == [], (
+            f"Active .80 roadmap has prior-failure violations:\n  " + "\n  ".join(prior_violations)
+        )
+E       AssertionError: Active .80 roadmap has prior-failure violations:
+E           Task 'exp8084-fresh-cohort-methods' ('Seal new source roles and ingest local-memory learning methods') matches archived experiments ['exp7447-contract-methods', 'exp7491-window-protocol', 'exp7532-contract-methods', 'exp7575-cached-learning-protocol', 'exp7588-evidence-protocol'] but has no prior_failures field — add prior_failures or confirm this is a genuinely new scope
+E       assert ["Task 'exp80...ly new scope"] == []
+E         
+E         Left contains one more item: "Task 'exp8084-fresh-cohort-methods' ('Seal new source roles and ingest local-memory learning methods') matches archiv...7588-evidence-protocol'] but has no prior_failures field — add prior_failures or confirm this is a genuinely new scope"
+E         Use -v to get more diff
+
+tests/python/test_roadmap_schema.py:172: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_roadmap_schema.py::test_linter_passes_clean_on_active_80_roadmap
+1 failed, 117 passed in 8.63s

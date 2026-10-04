@@ -92041,3 +92041,33 @@ primitive reductions, then run adversarial verification and strict row lint.
 Publish through primary_publication after normal child exit. Owned failures
 disqualify readiness. Missing external costs are blocked, never partial.
 The conductor owns ops/status/changelog and traceability reconciliation.
+
+## REQ-REPORT-8083: V700 contract and terminal V699 custody
+
+Bind fourteen ordered executable tasks, the visible table and canonical digest
+from immutable design and staged/active snapshots. Consume staging without
+requiring its live pathname after activation. Compare full task bodies, gate
+schemas and ordering. Missing or malformed external authority is terminal
+blocked with exact observed operands; never synthesize missing task bodies.
+Preserve all thirteen V699 primary byte hashes, dispositions and terminal
+validation sidecars, including the capstone's original pending self-row.
+Exp8071 remains disqualified: preserve its 64 forwards, two failed current
+context duplicate checks, passing fresh-process pairs and original
+PRECONDITIONS_UNDECLARED log. No model calls or historical provenance repair.
+Authenticate historical heads, role manifests, recorded exposure inventory and
+board receipts separately. Export historical_inputs_ready_score independently
+of contract_ready_score. No historical scientific positive is required.
+
+### SCENARIO-REPORT-8083-AUTHORITY
+
+Private fourteen-task authority accepts activation with consumed staging.
+Changed prompts, gate types, ordering, digest, table or active bytes fail.
+Missing external files retain exact paths and observations. Cold replay uses
+sealed snapshot bytes, even when live staged or historical paths disappear.
+
+### SCENARIO-REPORT-8083-HISTORY
+
+Failed historical receipts remain failed controls. Authenticate original heads,
+source manifests, exposure inventory and board bytes independently. Mutation of
+any saved input, primitive, validation log or reported reduction fails replay.
+Repeated administrative tasks provide zero independent scientific groups.
