@@ -19461,3 +19461,4 @@ code |
 | 2026-10-04 04:26 UTC | Milestone 2026.10.701 activated | OK | 13 tasks queued |
 | 2026-10-04 04:54 UTC | Bind thirteen tasks and preserve the three actual  | OK | 86 passed, 1 warning in 36.08s |
 | 2026-10-04 05:35 UTC | Seal exposed development sources and local-memory  | OK | 97 passed, 1 warning in 23.52s |
+| 2026-10-04 06:03 UTC | Capture bounded Qwen fit scores and source-use con | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 99 passed, 1 warning in 22.00s |
