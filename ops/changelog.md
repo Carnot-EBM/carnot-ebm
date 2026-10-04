@@ -21402,3 +21402,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-04: Measure batch crossover and complete radial service transactions (⚠️ Research Finding) — honest_verdict=complete_disqualified_terminal_validation; results/experiment_8119_v702_batched_service_cost.json
 - 2026-10-04: Assess only new live supervisor outcomes for transferable refinement (⚠️ Blocked) — honest_verdict=complete_blocked_arc_supervisor_v701_evidence; results/experiment_8120_v702_arc_supervisor_delta.json
 - 2026-10-04: Bound batch memory traffic and preserve separate board evidence (⚠️ Research Finding) — honest_verdict=complete_null_hardware_batch_boundary; results/experiment_8121_v702_hardware_batch_boundary.json
+- 2026-10-04: Decide all thirteen outcomes and the three remaining PRD gaps (⚠️ Blocked) — honest_verdict=complete_blocked_design_exact_task_contract; results/experiment_8122_v702_capstone.json
