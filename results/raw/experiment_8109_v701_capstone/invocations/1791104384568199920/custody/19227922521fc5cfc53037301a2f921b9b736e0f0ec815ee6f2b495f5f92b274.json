@@ -1,0 +1,157 @@
+{
+  "code_hashes": {
+    "python/carnot/experiment_8106_v701_radial_service_cost.py": "sha256:41697b15afa9c4d78cfecc36c41b450c5d0dbd78af1711109078f0602b456ba5",
+    "scripts/experiments/experiment_8106_v701_radial_service_cost.py": "sha256:f4251a70a8dc758fe052f70bf26617005dbfd8a24132bb2a01d0aa290906c579",
+    "tests/python/test_radial_service_cost_8106.py": "sha256:2f61261041967e4c0544140dfc7cdfcae248191a7c32343a960e2e0736050132"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_8106_v701_radial_service_cost"
+      ],
+      "name": "worktree_imports",
+      "scope": "changed_modules",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8106-r8e26f7w/focused",
+        "tests/python/test_radial_service_cost_8106.py",
+        "tests/python/test_primary_publication_7928.py",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "explicit_tests",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8106-r8e26f7w/.coverage",
+        "--include=*/experiment_8106_v701_radial_service_cost.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8106-r8e26f7w/coverage",
+        "tests/python/test_radial_service_cost_8106.py",
+        "tests/python/test_primary_publication_7928.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "explicit_tests_and_changed_modules",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8106-r8e26f7w/.coverage",
+        "--include=*/experiment_8106_v701_radial_service_cost.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "changed_modules",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8106_v701_radial_service_cost.py",
+        "scripts/experiments/experiment_8106_v701_radial_service_cost.py",
+        "tests/python/test_radial_service_cost_8106.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8106_v701_radial_service_cost.py",
+        "scripts/experiments/experiment_8106_v701_radial_service_cost.py",
+        "tests/python/test_radial_service_cost_8106.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_8106_v701_radial_service_cost.py",
+        "--strict",
+        "--follow-imports=silent"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_radial_service_cost_8106.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 300
+    }
+  ],
+  "config": {
+    "centers": [
+      16,
+      28
+    ],
+    "families": 30,
+    "max_pairs": 1080,
+    "modes": [
+      "cold",
+      "warm",
+      "miss",
+      "content-change",
+      "eviction",
+      "restart"
+    ],
+    "repetitions": 3,
+    "seed": 7018106
+  },
+  "measurement": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8106_v701_radial_service_cost.py",
+      "--root",
+      "/home/ianblenke/github.com/ianblenke/carnot",
+      "--worker-output",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8106_v701_radial_service_cost/work.json"
+    ],
+    "name": "measurement_normal_exit",
+    "scope": "private_cli",
+    "timeout_s": 300
+  }
+}

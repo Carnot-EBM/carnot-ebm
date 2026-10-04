@@ -1,0 +1,47 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________________ test_conductor_gate_record_shape _______________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261004T085911-2483053-9824e34e/test_conductor_gate_record_sha0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f5afa20e120>
+
+    def test_conductor_gate_record_shape(tmp_path,monkeypatch):
+        """REQ-REPORT-8109: conductor block summaries are objects rather than scientific row lists."""
+        data=fixture(); rows=deepcopy(data['dispositions'])
+        for task,row in zip(data['tasks'],rows):
+            path=tmp_path/task['deliverable']; atomic_json(path,dict(gate_check_summary={'failed_upstream':'exp8099'}))
+            row.update(path=str(path),primary_present=False,gate_check_summary=[],eligible=False,excluded=True)
+        monkeypatch.setattr(c,'authorities',lambda root:(data['tasks'],[]))
+        monkeypatch.setattr(c,'NAMED',[])
+        monkeypatch.setattr(c.previous,'collect',lambda root,tasks:(rows,[],[]))
+>       assert not c.load(tmp_path,tmp_path/'raw')['dispositions'][0]['eligible']
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v701_capstone_8109.py:487: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v701_capstone.py:167: in load
+    successful_gate_ids.update(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <dict_keyiterator object at 0x7f5af9ddff60>
+
+    successful_gate_ids.update(
+        canonical_hash(
+            dict(g, artifact_field=g.get("field", g.get("artifact_field")), passed=False)
+        )
+        for g in value.get("gate_check_summary", [])
+>       if g.get("passed") is True
+           ^^^^^
+    )
+E   AttributeError: 'str' object has no attribute 'get'
+
+python/carnot/reporting/v701_capstone.py:172: AttributeError
+----------------------------- Captured stdout call -----------------------------
+[exp8109] phase=precondition completed_units=1 pending_units=4
+[exp8109] phase=precondition completed_units=2 pending_units=3
+[exp8109] phase=precondition completed_units=3 pending_units=2
+[exp8109] phase=precondition completed_units=4 pending_units=1
+[exp8109] phase=precondition completed_units=5 pending_units=0
+=========================== short test summary info ============================
+FAILED tests/python/test_v701_capstone_8109.py::test_conductor_gate_record_shape
+1 failed in 1.83s

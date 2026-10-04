@@ -92343,3 +92343,27 @@ readiness. Fixtures/exposed development grant zero generalization and oracle cre
 Implementation: `python/carnot/reporting/radial_hardware_8108.py`,
 `python/carnot/experiment_8108_v701_radial_hardware_boundary.py`, thin CLI and
 `tests/python/test_radial_hardware_8108.py`; operational reconciliation is external.
+
+## REQ-REPORT-8109: Independent V701 terminal outcome accounting
+
+The capstone SHALL authenticate immutable thirteen-task authority, current primaries,
+terminal bindings, primitive shards and conductor gate blocks. Preserve invalid and
+flagged evidence with exact exclusions. Recompute primitive denominators and required
+operands. Missing upstream science is terminal blocked, never partial or a retry request.
+Keep administrative validation separate from science, stable G1-G4 and operator permission.
+All current model counters and generalization credit SHALL remain zero. Preserve masks,
+source dependence, class support, equality controls, precision limits, the repaired fitted
+baseline and unmatched effective capacity. Reconcile every prior failure using literal
+verdict equality and narrow hash-bound scope; environmental blocks retire no method family.
+A valid null retires only the exact unchanged radial configuration. Promising development
+requires separately acquired independent human-labeled sources. Publication SHALL follow
+normal exit and authenticated frozen owned checks through primary_publication.
+
+### SCENARIO-REPORT-8109-PRIVATE
+
+Write failing tests first. Exercise private complete/null, missing, flagged and tampered
+inputs, real success/blocked/mutation/cold-replay CLI routes outside the checkout, and
+E2E-018 authority lifecycle. Require consumer tests, Ruff, strict mypy, scoped spec
+coverage and 100 percent added statement coverage. Record one bounded full Python suite
+run separately as global health. Preserve all historical assertions and failed receipts.
+Operational and traceability reconciliation belongs to the conductor per the stop rule.

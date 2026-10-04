@@ -1,0 +1,130 @@
+{
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --parallel-mode --rcfile=/tmp/carnot8109-afg1gnn9/coverage.ini /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8109_v701_capstone.py --worker-input /tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/input.json --output /tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/experiment_8109_private.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--rcfile=/tmp/carnot8109-afg1gnn9/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8109_v701_capstone.py",
+        "--worker-input",
+        "/tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/input.json",
+        "--output",
+        "/tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/experiment_8109_private.json"
+      ],
+      "duration_s": 2.380302225938067,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "logs/00_private_success.log",
+      "log_sha256": "sha256:ac0143c20404040561b0651b81ec390287e9c7a3b1376db6ee5d8fcbc127e933",
+      "name": "private_success",
+      "output_tail": "[exp8109] phase=start completed_units=0 pending_units=0\n[exp8109] phase=preconditions_before completed_units=0 pending_units=0\n[exp8109] phase=preconditions_after_before_reduction completed_units=12 pending_units=1\n[exp8109] phase=after_reduction_before_validation completed_units=13 pending_units=0\n[exp8109] phase=after_validation_before_publication completed_units=0 pending_units=1\n[exp8109] phase=complete completed_units=13 pending_units=0\n",
+      "passed": true,
+      "scope": "private_e2e",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --parallel-mode --rcfile=/tmp/carnot8109-afg1gnn9/coverage.ini /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8109_v701_capstone.py --cold-replay /tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/experiment_8109_private.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--rcfile=/tmp/carnot8109-afg1gnn9/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8109_v701_capstone.py",
+        "--cold-replay",
+        "/tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/experiment_8109_private.json"
+      ],
+      "duration_s": 2.3713480210863054,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "logs/00_cold_success.log",
+      "log_sha256": "sha256:65bd6f2b95fd2a5aca62b8328b1227508d2da37b5e4881b65d674bebf82cd96d",
+      "name": "cold_success",
+      "output_tail": "[exp8109] phase=start completed_units=0 pending_units=0\n{\"passed\": true, \"rows_checksum\": \"sha256:bdde7df08f3fe4e93559890321b3c3721b0e48072f50dd9a5f27867646263b51\"}\n",
+      "passed": true,
+      "scope": "private_e2e",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --parallel-mode --rcfile=/tmp/carnot8109-afg1gnn9/coverage.ini /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8109_v701_capstone.py --cold-replay /tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/mutation.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--rcfile=/tmp/carnot8109-afg1gnn9/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8109_v701_capstone.py",
+        "--cold-replay",
+        "/tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/mutation.json"
+      ],
+      "duration_s": 2.3657596319681033,
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log_path": "logs/00_mutation_rejected.log",
+      "log_sha256": "sha256:8722689f82e16e49dd0552c22de6af8c9df79aa56e5424d1cf0ca84a107302dc",
+      "name": "mutation_rejected",
+      "output_tail": "[exp8109] phase=start completed_units=0 pending_units=0\n{\"passed\": false, \"error\": \"reduction_drift:eligible_count\"}\n",
+      "passed": false,
+      "scope": "private_e2e",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --parallel-mode --rcfile=/tmp/carnot8109-afg1gnn9/coverage.ini /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8109_v701_capstone.py --worker-input /tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/input.json --output /tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/experiment_8109_private.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--rcfile=/tmp/carnot8109-afg1gnn9/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8109_v701_capstone.py",
+        "--worker-input",
+        "/tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/input.json",
+        "--output",
+        "/tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/experiment_8109_private.json"
+      ],
+      "duration_s": 2.4157181560294703,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "logs/00_private_blocked.log",
+      "log_sha256": "sha256:ac0143c20404040561b0651b81ec390287e9c7a3b1376db6ee5d8fcbc127e933",
+      "name": "private_blocked",
+      "output_tail": "[exp8109] phase=start completed_units=0 pending_units=0\n[exp8109] phase=preconditions_before completed_units=0 pending_units=0\n[exp8109] phase=preconditions_after_before_reduction completed_units=12 pending_units=1\n[exp8109] phase=after_reduction_before_validation completed_units=13 pending_units=0\n[exp8109] phase=after_validation_before_publication completed_units=0 pending_units=1\n[exp8109] phase=complete completed_units=13 pending_units=0\n",
+      "passed": true,
+      "scope": "private_e2e",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --parallel-mode --rcfile=/tmp/carnot8109-afg1gnn9/coverage.ini /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8109_v701_capstone.py --worker-input /tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/absent.json --output /tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/experiment_8109_private.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--rcfile=/tmp/carnot8109-afg1gnn9/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8109_v701_capstone.py",
+        "--worker-input",
+        "/tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/absent.json",
+        "--output",
+        "/tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/experiment_8109_private.json"
+      ],
+      "duration_s": 2.3251276740338653,
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log_path": "logs/00_missing_input.log",
+      "log_sha256": "sha256:96650d0594895f62cbd99a419fb3a92b2f09aa162b1acba27284d7de7f33b37c",
+      "name": "missing_input",
+      "output_tail": "[exp8109] phase=start completed_units=0 pending_units=0\n[exp8109] phase=preconditions_before completed_units=0 pending_units=0\n{\"passed\": false, \"error\": \"[Errno 2] No such file or directory: '/tmp/carnot8109-afg1gnn9/pytest/test_private_real_cli0/absent.json'\"}\n",
+      "passed": false,
+      "scope": "private_e2e",
+      "timed_out": false
+    }
+  ]
+}

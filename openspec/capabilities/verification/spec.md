@@ -48166,3 +48166,18 @@ independent natural sources and cannot establish a global hardware bound.
 Private fixtures SHALL exercise every precision, clipping and exact typed-action
 ties; a reported bound below observed error SHALL disqualify the owned result.
 Cold replay SHALL verify exact bytes and recompute numerical rows independently.
+
+## REQ-VERIFY-8109: Exposed radial decision limits
+
+H1 and H2 SHALL reduce paired primitive costs and issued decisions on original source
+units. Seeds never increase independent support. Missing science blocks its decision.
+Use the sealed V701 support, harm and two-question bootstrap rules without selecting
+successful rows. Equality-control failure blocks benefit. Finite retention evidence
+cannot establish lifelong learning; descriptive precision and effective-capacity limits
+remain explicit. Independent and generalized-learning benefit scores SHALL stay zero.
+
+### SCENARIO-VERIFY-8109-REDUCTION
+
+Private null and harmful paired rows SHALL earn no benefit. Repeated seeds SHALL retain
+one source denominator. Missing masks and invalid rows remain visible. Cold reductions
+SHALL reject changed input bytes, aggregates, command manifests and validation receipts.

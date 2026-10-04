@@ -1,0 +1,898 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": {
+    "decision_benefit": null,
+    "efficiency": null,
+    "probability_quality": null,
+    "readiness": 0,
+    "retention": null,
+    "validity": false
+  },
+  "arc_delta_ready_score": 0,
+  "claim_scope": "exposed_development; observational live receipt delta",
+  "cutoff_manifest_path": "/tmp/carnot-exp7887-3grd0oc_/cutoff_manifest.json",
+  "duration_s": 20.27187982801115,
+  "execution_venue": "host",
+  "experiment_id": 7887,
+  "field_principles": {
+    "MODEL_SPECS": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "acceptance_gate_results": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "arc_delta_ready_score": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "claim_scope": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "cutoff_manifest_path": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "duration_s": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "execution_venue": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "experiment_id": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "firings": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "flagged_adversarial": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "gate_check_summary": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "historical_model_identity": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "historical_required_failures": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "honest_verdict": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "inference_substrate": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "inference_substrate_class": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "milestone": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "model_invocation_counts": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "model_specs": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "new_level_solves": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "new_live_outcome_count": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "no_new_outcomes": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "observed_child_commands": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "outcome_rows": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "per_game_results": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "phase_spans": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "planned_inference_substrate_class": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "preconditions_checked": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "random_seed": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "recommendation_rows": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "registry_sha256": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "repository_health": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "reproducibility_checksum": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "resolved_imports": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "rows": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "run_date": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "sample_size_budget": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "solve_provenance": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "source_artifact_hashes": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "target_model": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "task_id": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "trained_head_specs": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "validation_command_manifest_path": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "validation_errors": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "validation_receipts": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "verdict_class": "Keep exact current evidence and leave unmeasured benefit unknown.",
+    "verifier_is_oracle": "Keep exact current evidence and leave unmeasured benefit unknown."
+  },
+  "firings": 0,
+  "flagged_adversarial": true,
+  "gate_check_summary": [],
+  "historical_model_identity": "historical only; no current model calls",
+  "historical_required_failures": [
+    {
+      "exit_code": 2,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/changed_coverage_ba376c8e55d4ddcb11773e7416f942c12998b45f6e04bd8ad9ac296a10241ed1.log",
+      "log_sha256": "sha256:ba376c8e55d4ddcb11773e7416f942c12998b45f6e04bd8ad9ac296a10241ed1",
+      "name": "changed_coverage",
+      "upstream_id": "exp7845"
+    },
+    {
+      "exit_code": 1,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/adversarial_verify_19a716dd490611aefb0445620e254453788e4723c21407d17f61f3ae2ddc98e6.log",
+      "log_sha256": "sha256:19a716dd490611aefb0445620e254453788e4723c21407d17f61f3ae2ddc98e6",
+      "name": "adversarial_verify",
+      "upstream_id": "exp7845"
+    }
+  ],
+  "honest_verdict": "complete_disqualified_terminal_verification",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "no_model_load",
+  "milestone": "2026.09.684",
+  "model_invocation_counts": {
+    "calls": 0,
+    "file_hashes": [],
+    "loads": 0,
+    "tokens": 0
+  },
+  "model_specs": [],
+  "new_level_solves": 0,
+  "new_live_outcome_count": 0,
+  "no_new_outcomes": true,
+  "observed_child_commands": [
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python/test_arc_supervisor_delta_7874.py",
+      "tests/python/test_arc_supervisor_delta_7887.py",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "-q",
+      "--basetemp=/tmp/carnot-exp7887-3grd0oc_/test-temp"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.unit",
+      "--include=*/carnot/reporting/arc_supervisor_v684_delta.py,*/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+      "-m",
+      "pytest",
+      "tests/python/test_arc_supervisor_delta_7874.py",
+      "tests/python/test_arc_supervisor_delta_7887.py",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "-q",
+      "--basetemp=/tmp/carnot-exp7887-3grd0oc_/cov-temp"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.cli-success",
+      "--include=*/carnot/reporting/arc_supervisor_v684_delta.py,*/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+      "scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+      "--reduce-ledger",
+      "/tmp/carnot-exp7887-3grd0oc_/empty",
+      "--cutoff-ns",
+      "1790661629984261279",
+      "--output",
+      "/tmp/carnot-exp7887-3grd0oc_/cli-empty.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.cli-failure",
+      "--include=*/carnot/reporting/arc_supervisor_v684_delta.py,*/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+      "scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+      "--reduce-ledger",
+      "/tmp/carnot-exp7887-3grd0oc_/empty",
+      "--cutoff-ns",
+      "1790661629984261279"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "combine",
+      "--data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.combined",
+      "/tmp/carnot-exp7887-3grd0oc_/coverage.unit",
+      "/tmp/carnot-exp7887-3grd0oc_/coverage.cli-success"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "report",
+      "--data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.combined",
+      "--include=*/carnot/reporting/arc_supervisor_v684_delta.py,*/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+      "--show-missing",
+      "--fail-under=100"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "check",
+      "python/carnot/reporting/arc_supervisor_v684_delta.py",
+      "scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+      "tests/python/test_arc_supervisor_delta_7874.py",
+      "tests/python/test_arc_supervisor_delta_7887.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "format",
+      "--check",
+      "python/carnot/reporting/arc_supervisor_v684_delta.py",
+      "scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+      "tests/python/test_arc_supervisor_delta_7874.py",
+      "tests/python/test_arc_supervisor_delta_7887.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+      "--strict",
+      "python/carnot/reporting/arc_supervisor_v684_delta.py",
+      "scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/check_spec_coverage.py",
+      "tests/python/test_arc_supervisor_delta_7874.py",
+      "tests/python/test_arc_supervisor_delta_7887.py"
+    ]
+  ],
+  "outcome_rows": [
+    {
+      "producer_path": "results/experiment_7847_v681_hardware_evidence.json",
+      "producer_sha256": "sha256:d846417affb341a243077f52209464e983ec49ee91cda246a5dc35175a118b05",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7231/polarfire_dispatch.json",
+      "source_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7847_v681_hardware_evidence.json",
+      "producer_sha256": "sha256:d846417affb341a243077f52209464e983ec49ee91cda246a5dc35175a118b05",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "source_sha256": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7847_v681_hardware_evidence.json",
+      "producer_sha256": "sha256:d846417affb341a243077f52209464e983ec49ee91cda246a5dc35175a118b05",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "source_sha256": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7860_v682_arc_supervisor_delta.json",
+      "producer_sha256": "sha256:02339c224e2e9c2bfce03d2da7bbc136e810a2b0f42a609c9a2c60a1e549bf68",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7231/polarfire_dispatch.json",
+      "source_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7860_v682_arc_supervisor_delta.json",
+      "producer_sha256": "sha256:02339c224e2e9c2bfce03d2da7bbc136e810a2b0f42a609c9a2c60a1e549bf68",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "source_sha256": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7860_v682_arc_supervisor_delta.json",
+      "producer_sha256": "sha256:02339c224e2e9c2bfce03d2da7bbc136e810a2b0f42a609c9a2c60a1e549bf68",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "source_sha256": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "producer_sha256": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7231/polarfire_dispatch.json",
+      "source_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "producer_sha256": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "source_sha256": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "producer_sha256": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "source_sha256": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7874_v683_arc_supervisor_delta.json",
+      "producer_sha256": "sha256:531abb4ab85f1abfe83900fed8f3583c8901a4efc8e5e2461cbcba20586ef46b",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7231/polarfire_dispatch.json",
+      "source_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7874_v683_arc_supervisor_delta.json",
+      "producer_sha256": "sha256:531abb4ab85f1abfe83900fed8f3583c8901a4efc8e5e2461cbcba20586ef46b",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "source_sha256": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7874_v683_arc_supervisor_delta.json",
+      "producer_sha256": "sha256:531abb4ab85f1abfe83900fed8f3583c8901a4efc8e5e2461cbcba20586ef46b",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "source_sha256": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7876_v683_hardware_evidence.json",
+      "producer_sha256": "sha256:6c3d886dff7596b8a9c01c8597b523f6a4a32aeeb4c89c62d5f4046eb4bbe229",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7231/polarfire_dispatch.json",
+      "source_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7876_v683_hardware_evidence.json",
+      "producer_sha256": "sha256:6c3d886dff7596b8a9c01c8597b523f6a4a32aeeb4c89c62d5f4046eb4bbe229",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "source_sha256": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7876_v683_hardware_evidence.json",
+      "producer_sha256": "sha256:6c3d886dff7596b8a9c01c8597b523f6a4a32aeeb4c89c62d5f4046eb4bbe229",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "source_sha256": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "status": "excluded"
+    }
+  ],
+  "per_game_results": {},
+  "phase_spans": [
+    {
+      "duration_s": 0.30381401703925803,
+      "phase": "precheck_and_reduce"
+    },
+    {
+      "duration_s": 19.968065810971893,
+      "phase": "validation"
+    }
+  ],
+  "planned_inference_substrate_class": "no_model_load",
+  "preconditions_checked": [
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:02339c224e2e9c2bfce03d2da7bbc136e810a2b0f42a609c9a2c60a1e549bf68",
+      "exposure_status": "read_only",
+      "observed": "sha256:02339c224e2e9c2bfce03d2da7bbc136e810a2b0f42a609c9a2c60a1e549bf68",
+      "op": "==",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7860_v682_arc_supervisor_delta.json",
+      "role": "historical_cutoff",
+      "sha256": "sha256:02339c224e2e9c2bfce03d2da7bbc136e810a2b0f42a609c9a2c60a1e549bf68",
+      "upstream_id": "experiment_7860_v682_arc_supervisor_delta"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:7e64814e631350118462b108fc947ebac845a25eff339387a85a507b2ed3424d",
+      "exposure_status": "read_only",
+      "observed": "sha256:7e64814e631350118462b108fc947ebac845a25eff339387a85a507b2ed3424d",
+      "op": "==",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7860_v682_arc_supervisor_delta.py",
+      "role": "historical_code",
+      "sha256": "sha256:7e64814e631350118462b108fc947ebac845a25eff339387a85a507b2ed3424d",
+      "upstream_id": "experiment_7860_v682_arc_supervisor_delta"
+    },
+    {
+      "artifact_field": "sha256",
+      "expected": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "exposure_status": "read_only",
+      "observed": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "op": "==",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+      "role": "live_registry_precheck",
+      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "upstream_id": "arc_solve_registry"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "expected": "null",
+      "exposure_status": "read_only",
+      "observed": "null",
+      "op": "==",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7860_v682_arc_supervisor_delta.json",
+      "role": "historical_cutoff",
+      "sha256": "sha256:02339c224e2e9c2bfce03d2da7bbc136e810a2b0f42a609c9a2c60a1e549bf68",
+      "upstream_id": "experiment_7860_v682_arc_supervisor_delta"
+    },
+    {
+      "artifact_field": "schema_version",
+      "expected": 1,
+      "exposure_status": "read_only",
+      "observed": 1,
+      "op": "==",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+      "role": "live_registry_precheck",
+      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "upstream_id": "arc_solve_registry"
+    },
+    {
+      "artifact_field": "live_reachability._make_trajectory_supervisor",
+      "expected": true,
+      "exposure_status": "read_only",
+      "observed": true,
+      "op": "==",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
+      "role": "live_policy_reachability",
+      "sha256": "sha256:0ab79da07e9aff18a270b5fe9a682ddef1a309c359405ff400cf4dd2174bf914",
+      "upstream_id": "arc_competition_agent"
+    },
+    {
+      "artifact_field": "live_reachability._maybe_supervise_trajectory",
+      "expected": true,
+      "exposure_status": "read_only",
+      "observed": true,
+      "op": "==",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
+      "role": "live_policy_reachability",
+      "sha256": "sha256:0ab79da07e9aff18a270b5fe9a682ddef1a309c359405ff400cf4dd2174bf914",
+      "upstream_id": "arc_competition_agent"
+    },
+    {
+      "artifact_field": "live_reachability.trajectory_supervisor_diagnostics",
+      "expected": true,
+      "exposure_status": "read_only",
+      "observed": true,
+      "op": "==",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
+      "role": "live_policy_reachability",
+      "sha256": "sha256:0ab79da07e9aff18a270b5fe9a682ddef1a309c359405ff400cf4dd2174bf914",
+      "upstream_id": "arc_competition_agent"
+    }
+  ],
+  "random_seed": 0,
+  "recommendation_rows": [],
+  "registry_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+  "repository_health": {
+    "historical_full_suite_obligations_open": true,
+    "status": "unmeasured"
+  },
+  "reproducibility_checksum": "sha256:9f146eab2787dcdde309ecc867e3552808ed8e2d1269606881cce9860a9ffdf4",
+  "resolved_imports": {
+    "carnot.reporting.arc_supervisor_v684_delta": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_supervisor_v684_delta.py"
+  },
+  "rows": [
+    {
+      "producer_path": "results/experiment_7847_v681_hardware_evidence.json",
+      "producer_sha256": "sha256:d846417affb341a243077f52209464e983ec49ee91cda246a5dc35175a118b05",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7231/polarfire_dispatch.json",
+      "source_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7847_v681_hardware_evidence.json",
+      "producer_sha256": "sha256:d846417affb341a243077f52209464e983ec49ee91cda246a5dc35175a118b05",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "source_sha256": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7847_v681_hardware_evidence.json",
+      "producer_sha256": "sha256:d846417affb341a243077f52209464e983ec49ee91cda246a5dc35175a118b05",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "source_sha256": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7860_v682_arc_supervisor_delta.json",
+      "producer_sha256": "sha256:02339c224e2e9c2bfce03d2da7bbc136e810a2b0f42a609c9a2c60a1e549bf68",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7231/polarfire_dispatch.json",
+      "source_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7860_v682_arc_supervisor_delta.json",
+      "producer_sha256": "sha256:02339c224e2e9c2bfce03d2da7bbc136e810a2b0f42a609c9a2c60a1e549bf68",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "source_sha256": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7860_v682_arc_supervisor_delta.json",
+      "producer_sha256": "sha256:02339c224e2e9c2bfce03d2da7bbc136e810a2b0f42a609c9a2c60a1e549bf68",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "source_sha256": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "producer_sha256": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7231/polarfire_dispatch.json",
+      "source_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "producer_sha256": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "source_sha256": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7862_v682_hardware_evidence.json",
+      "producer_sha256": "sha256:b1437f73ecd254d2c43354227c3400b7fe7e6aef532272b82dd74de7b0cc7be4",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "source_sha256": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7874_v683_arc_supervisor_delta.json",
+      "producer_sha256": "sha256:531abb4ab85f1abfe83900fed8f3583c8901a4efc8e5e2461cbcba20586ef46b",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7231/polarfire_dispatch.json",
+      "source_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7874_v683_arc_supervisor_delta.json",
+      "producer_sha256": "sha256:531abb4ab85f1abfe83900fed8f3583c8901a4efc8e5e2461cbcba20586ef46b",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "source_sha256": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7874_v683_arc_supervisor_delta.json",
+      "producer_sha256": "sha256:531abb4ab85f1abfe83900fed8f3583c8901a4efc8e5e2461cbcba20586ef46b",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "source_sha256": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7876_v683_hardware_evidence.json",
+      "producer_sha256": "sha256:6c3d886dff7596b8a9c01c8597b523f6a4a32aeeb4c89c62d5f4046eb4bbe229",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7231/polarfire_dispatch.json",
+      "source_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7876_v683_hardware_evidence.json",
+      "producer_sha256": "sha256:6c3d886dff7596b8a9c01c8597b523f6a4a32aeeb4c89c62d5f4046eb4bbe229",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7751_v674_hardware_continuity/rows.json",
+      "source_sha256": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+      "status": "excluded"
+    },
+    {
+      "producer_path": "results/experiment_7876_v683_hardware_evidence.json",
+      "producer_sha256": "sha256:6c3d886dff7596b8a9c01c8597b523f6a4a32aeeb4c89c62d5f4046eb4bbe229",
+      "reason": "prior_hash_inventory",
+      "role": "science_producer",
+      "run_date": "20260929",
+      "source_path": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "source_sha256": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6",
+      "status": "excluded"
+    }
+  ],
+  "run_date": "20260929",
+  "sample_size_budget": {
+    "censored": 0,
+    "completed": 0,
+    "eligible": 0,
+    "excluded": 15,
+    "independent_n": 0,
+    "intended": 15,
+    "started": 0
+  },
+  "solve_provenance": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "source_artifact_hashes": {
+    "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py": "sha256:0ab79da07e9aff18a270b5fe9a682ddef1a309c359405ff400cf4dd2174bf914",
+    "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_supervisor_v683_delta.py": "sha256:b92af197fc5e34e15a1d3781338e17d4dc6dd01e82a0c19df276258c98bc8026",
+    "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_supervisor_v684_delta.py": "sha256:b7f0d619a4b17483657aac42d162355b49d4869e057ca3d9a71f7834aeb0f2ce",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7860_v682_arc_supervisor_delta.json": "sha256:02339c224e2e9c2bfce03d2da7bbc136e810a2b0f42a609c9a2c60a1e549bf68",
+    "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7860_v682_arc_supervisor_delta.py": "sha256:7e64814e631350118462b108fc947ebac845a25eff339387a85a507b2ed3424d",
+    "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py": "sha256:e33a23d23ec4e226e36ef170d2d40879e1fcc840ab5d69997a3ffd27af31053d",
+    "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_arc_supervisor_delta_7874.py": "sha256:16a1d613896dccf948f60469c49953fbed58a88999f8736dd9b8c41149d0c925",
+    "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_arc_supervisor_delta_7887.py": "sha256:99426d1a3cfab9f082bfb1a89b92fbd932210baed6213dd0c451c26245362cf1",
+    "/tmp/carnot-exp7887-3grd0oc_/cutoff_manifest.json": "sha256:2b7bdcb07133dcc4d12e16826ec1c4e25d375f61319f337dbd0fb8440cf7b31b",
+    "/tmp/carnot-exp7887-3grd0oc_/validation_command_manifest.json": "sha256:78fd88ccb2ab7b03325d1f462a101011d9e7e80f83bedd1496485a5596bb04c5",
+    "results/raw/experiment_7231/polarfire_dispatch.json": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+    "results/raw/experiment_7751_v674_hardware_continuity/rows.json": "sha256:83335f3b09dc80df579dac955b1575c6ccbaf8c4138391dab5c7b482439a5b6a",
+    "results/raw/experiment_7779_v676_hardware_evidence/rows.json": "sha256:ba0a93a87e9342168b3b00e05d8781466bb4bd0996bce8251457b30c055fabc6"
+  },
+  "target_model": "none (no pretrained model)",
+  "task_id": "exp7887-arc-supervisor-delta",
+  "trained_head_specs": [],
+  "validation_command_manifest_path": "/tmp/carnot-exp7887-3grd0oc_/validation_command_manifest.json",
+  "validation_errors": [
+    "coverage_report",
+    "terminal_adversarial"
+  ],
+  "validation_receipts": [
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_arc_supervisor_delta_7874.py tests/python/test_arc_supervisor_delta_7887.py -n 0 -o addopts= --no-cov -q --basetemp=/tmp/carnot-exp7887-3grd0oc_/test-temp",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python/test_arc_supervisor_delta_7874.py",
+        "tests/python/test_arc_supervisor_delta_7887.py",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-exp7887-3grd0oc_/test-temp"
+      ],
+      "duration_s": 7.451347291993443,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7887-3grd0oc_/sealed/affected_pytest_2536c08031c885eb922b4b063ca50b9d149c2ceef4113ea7b7135b4c433f585f.log",
+      "log_sha256": "sha256:2536c08031c885eb922b4b063ca50b9d149c2ceef4113ea7b7135b4c433f585f",
+      "name": "affected_pytest",
+      "output_tail": ".........                                                                [100%]\n9 passed in 5.13s\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.unit '--include=*/carnot/reporting/arc_supervisor_v684_delta.py,*/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py' -m pytest tests/python/test_arc_supervisor_delta_7874.py tests/python/test_arc_supervisor_delta_7887.py -n 0 -o addopts= --no-cov -q --basetemp=/tmp/carnot-exp7887-3grd0oc_/cov-temp",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.unit",
+        "--include=*/carnot/reporting/arc_supervisor_v684_delta.py,*/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+        "-m",
+        "pytest",
+        "tests/python/test_arc_supervisor_delta_7874.py",
+        "tests/python/test_arc_supervisor_delta_7887.py",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-exp7887-3grd0oc_/cov-temp"
+      ],
+      "duration_s": 10.462335639982484,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7887-3grd0oc_/sealed/unit_coverage_d1eb1a5e4bf2ac572f087d5bc1c16ddf39145b1b58524fc8a8d76c511af27bbf.log",
+      "log_sha256": "sha256:d1eb1a5e4bf2ac572f087d5bc1c16ddf39145b1b58524fc8a8d76c511af27bbf",
+      "name": "unit_coverage",
+      "output_tail": ".........                                                                [100%]\n9 passed in 6.76s\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.cli-success '--include=*/carnot/reporting/arc_supervisor_v684_delta.py,*/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py' scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py --reduce-ledger /tmp/carnot-exp7887-3grd0oc_/empty --cutoff-ns 1790661629984261279 --output /tmp/carnot-exp7887-3grd0oc_/cli-empty.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.cli-success",
+        "--include=*/carnot/reporting/arc_supervisor_v684_delta.py,*/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+        "scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+        "--reduce-ledger",
+        "/tmp/carnot-exp7887-3grd0oc_/empty",
+        "--cutoff-ns",
+        "1790661629984261279",
+        "--output",
+        "/tmp/carnot-exp7887-3grd0oc_/cli-empty.json"
+      ],
+      "duration_s": 0.8863481739535928,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7887-3grd0oc_/sealed/cli_success_coverage_16f0e2439d909e024c53f42941c565db66ffb34961ec736eb9c36a5df51a18f8.log",
+      "log_sha256": "sha256:16f0e2439d909e024c53f42941c565db66ffb34961ec736eb9c36a5df51a18f8",
+      "name": "cli_success_coverage",
+      "output_tail": "[exp7887] phase=start elapsed_s=0.000 completed_units=0\n[exp7887] phase=before_private_reduce elapsed_s=0.000 completed_units=0\n[exp7887] phase=after_private_reduce elapsed_s=0.001 completed_units=0\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "diagnostic",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.cli-failure '--include=*/carnot/reporting/arc_supervisor_v684_delta.py,*/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py' scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py --reduce-ledger /tmp/carnot-exp7887-3grd0oc_/empty --cutoff-ns 1790661629984261279",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.cli-failure",
+        "--include=*/carnot/reporting/arc_supervisor_v684_delta.py,*/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+        "scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+        "--reduce-ledger",
+        "/tmp/carnot-exp7887-3grd0oc_/empty",
+        "--cutoff-ns",
+        "1790661629984261279"
+      ],
+      "duration_s": 0.8849769289954565,
+      "exit_code": 2,
+      "log_path": "/tmp/carnot-exp7887-3grd0oc_/sealed/cli_failure_coverage_2235f5a2be1da5fcbc108d21685931ade528a12c995f09a6f1cdc20c30c261fe.log",
+      "log_sha256": "sha256:2235f5a2be1da5fcbc108d21685931ade528a12c995f09a6f1cdc20c30c261fe",
+      "name": "cli_failure_coverage",
+      "output_tail": "[exp7887] phase=start elapsed_s=0.000 completed_units=0\nusage: experiment_7887_v684_arc_supervisor_delta.py [-h] [--date DATE]\n                                                    [--reduce-ledger REDUCE_LEDGER]\n                                                    [--cutoff-ns CUTOFF_NS]\n                                                    [--cold-replay COLD_REPLAY]\n                                                    [--output OUTPUT]\nexperiment_7887_v684_arc_supervisor_delta.py: error: --reduce-ledger needs --cutoff-ns and --output\n",
+      "passed": true,
+      "scope": "diagnostic",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage combine --data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.combined /tmp/carnot-exp7887-3grd0oc_/coverage.unit /tmp/carnot-exp7887-3grd0oc_/coverage.cli-success",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.combined",
+        "/tmp/carnot-exp7887-3grd0oc_/coverage.unit",
+        "/tmp/carnot-exp7887-3grd0oc_/coverage.cli-success"
+      ],
+      "duration_s": 0.04763907101005316,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7887-3grd0oc_/sealed/coverage_combine_c39da6aa013e7c752dd73a1410ffae0f0ac73e969f916261e4aaf96b839e5ee0.log",
+      "log_sha256": "sha256:c39da6aa013e7c752dd73a1410ffae0f0ac73e969f916261e4aaf96b839e5ee0",
+      "name": "coverage_combine",
+      "output_tail": "Combined 2 files\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.combined '--include=*/carnot/reporting/arc_supervisor_v684_delta.py,*/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7887-3grd0oc_/coverage.combined",
+        "--include=*/carnot/reporting/arc_supervisor_v684_delta.py,*/scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.055884809989947826,
+      "exit_code": 2,
+      "log_path": "/tmp/carnot-exp7887-3grd0oc_/sealed/coverage_report_215733ec0c4f0a1c4e123d0617af0c6039902911c0d140cc2898e89fdb3a8c2e.log",
+      "log_sha256": "sha256:215733ec0c4f0a1c4e123d0617af0c6039902911c0d140cc2898e89fdb3a8c2e",
+      "name": "coverage_report",
+      "output_tail": "Name                                                               Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------------------------\npython/carnot/reporting/arc_supervisor_v684_delta.py                  61      1    98%   25\nscripts/experiments/experiment_7887_v684_arc_supervisor_delta.py     146     99    32%   47-78, 84-94, 100-106, 120-210, 226-228, 231, 238-360\n------------------------------------------------------------------------------------------------\nTOTAL                                                                207    100    52%\nCoverage failure: total of 52 is less than fail-under=100\n",
+      "passed": false,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/reporting/arc_supervisor_v684_delta.py scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py tests/python/test_arc_supervisor_delta_7874.py tests/python/test_arc_supervisor_delta_7887.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/arc_supervisor_v684_delta.py",
+        "scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+        "tests/python/test_arc_supervisor_delta_7874.py",
+        "tests/python/test_arc_supervisor_delta_7887.py"
+      ],
+      "duration_s": 0.012893741019070148,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7887-3grd0oc_/sealed/ruff_check_82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/reporting/arc_supervisor_v684_delta.py scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py tests/python/test_arc_supervisor_delta_7874.py tests/python/test_arc_supervisor_delta_7887.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/arc_supervisor_v684_delta.py",
+        "scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+        "tests/python/test_arc_supervisor_delta_7874.py",
+        "tests/python/test_arc_supervisor_delta_7887.py"
+      ],
+      "duration_s": 0.011361812998075038,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7887-3grd0oc_/sealed/ruff_format_177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de.log",
+      "log_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "name": "ruff_format",
+      "output_tail": "4 files already formatted\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy --strict python/carnot/reporting/arc_supervisor_v684_delta.py scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/arc_supervisor_v684_delta.py",
+        "scripts/experiments/experiment_7887_v684_arc_supervisor_delta.py"
+      ],
+      "duration_s": 0.12749536096816882,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7887-3grd0oc_/sealed/mypy_e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce.log",
+      "log_sha256": "sha256:e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce",
+      "name": "mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 2 source files\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py tests/python/test_arc_supervisor_delta_7874.py tests/python/test_arc_supervisor_delta_7887.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_arc_supervisor_delta_7874.py",
+        "tests/python/test_arc_supervisor_delta_7887.py"
+      ],
+      "duration_s": 0.023196414986159652,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-exp7887-3grd0oc_/sealed/scoped_spec_6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false
+}

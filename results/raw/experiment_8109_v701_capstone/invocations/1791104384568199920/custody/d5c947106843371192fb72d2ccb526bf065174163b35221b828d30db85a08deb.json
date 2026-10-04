@@ -1,0 +1,632 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": {
+    "decision_benefit": null,
+    "efficiency": null,
+    "probability_quality": null,
+    "readiness": 0,
+    "retention": null,
+    "validity": false
+  },
+  "arm_statistics": {},
+  "claim_scope": "observational live supervisor audit; no causal benefit or new solve",
+  "current_work_receipt": {
+    "MODEL_SPECS": [],
+    "current_invocation_events": [],
+    "current_owner_pid": 2844367,
+    "current_run_id": "exp7845-2844367",
+    "duration_s": 0.144950286,
+    "ended_monotonic_ns": 302253956872024,
+    "event_count": 0,
+    "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "execution_venue": "host",
+    "inference_substrate": "aggregation_from_upstream_artifacts",
+    "inference_substrate_class": "aggregation",
+    "inference_substrate_details": {
+      "source_count": 0
+    },
+    "invocation_counts": {
+      "generation_calls_attempted": 0,
+      "generation_calls_cancelled": 0,
+      "generation_calls_completed": 0,
+      "generation_calls_failed": 0,
+      "generation_calls_in_flight": 0,
+      "model_loads_attempted": 0,
+      "model_loads_cancelled": 0,
+      "model_loads_completed": 0,
+      "model_loads_failed": 0,
+      "model_loads_in_flight": 0
+    },
+    "model_invoked": false,
+    "phase_spans": [],
+    "receipt_sidecars": [],
+    "small_ebm_training": {
+      "performed": false
+    },
+    "started_monotonic_ns": 302253811921738
+  },
+  "duration_s": 188.82341910497053,
+  "experiment_id": 7845,
+  "field_principles": {
+    "MODEL_SPECS": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "acceptance_gate_results": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "arm_statistics": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "claim_scope": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "current_work_receipt": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "duration_s": "Measured current result; historical failures remain separate.",
+    "experiment_id": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "flagged_adversarial": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "gate_check_summary": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "general_mechanism_requirement": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "honest_verdict": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "inference_substrate": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "inference_substrate_class": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "milestone": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "model_invocation_counts": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "model_specs": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "new_source_count": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "observed_child_commands": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "per_game_results": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "phase_spans": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "planned_inference_substrate_class": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "preconditions_checked": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "production_defaults_changed": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "random_seed": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "recommendation_rows": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "repository_health": "Measured current result; historical failures remain separate.",
+    "reproducibility_checksum": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "rows": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "run_date": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "sample_size_budget": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "solve_claim": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "solve_provenance": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "source_artifact_hashes": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "supervisor_delta_ready_score": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "task_id": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "validation_command_manifest_path": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "validation_receipts": "Measured current result; historical failures remain separate.",
+    "verdict_class": "Exact current bytes and bounded claims; unmeasured gates stay null.",
+    "verifier_is_oracle": "Exact current bytes and bounded claims; unmeasured gates stay null."
+  },
+  "flagged_adversarial": true,
+  "gate_check_summary": [],
+  "general_mechanism_requirement": null,
+  "honest_verdict": "complete_disqualified_required_validation",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "milestone": "2026.09.681",
+  "model_invocation_counts": {
+    "calls": 0,
+    "file_hashes": [],
+    "tokens": 0
+  },
+  "model_specs": [],
+  "new_source_count": 0,
+  "observed_child_commands": [
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "-c",
+      "import importlib,json; from pathlib import Path; names=(\"carnot.reporting.arc_supervisor_delta\",\"carnot.reporting.current_work_receipt\",\"carnot.reporting.experiment_7303_validation_scope\",\"carnot.agentic.arc_supervisor_refinement\"); print(json.dumps({\"resolved_imports\":{n:str(Path(importlib.import_module(n).__file__).resolve()) for n in names}}),flush=True)"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--data-file=/tmp/carnot-exp7845/unit.coverage",
+      "--include=*/python/carnot/reporting/arc_supervisor_delta.py,*/scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+      "-m",
+      "pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "tests/python/test_arc_supervisor_delta.py",
+      "-q"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--data-file=/tmp/carnot-exp7845/cli.coverage",
+      "--include=*/python/carnot/reporting/arc_supervisor_delta.py,*/scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+      "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+      "--date",
+      "20260929",
+      "--reader-only",
+      "--output",
+      "/tmp/carnot-exp7845/e2e/result.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "combine",
+      "--data-file=/tmp/carnot-exp7845/combined.coverage",
+      "/tmp/carnot-exp7845/unit.coverage",
+      "/tmp/carnot-exp7845/cli.coverage"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "report",
+      "--data-file=/tmp/carnot-exp7845/combined.coverage",
+      "--include=*/python/carnot/reporting/arc_supervisor_delta.py,*/scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+      "--show-missing",
+      "--fail-under=100"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "check",
+      "python/carnot/reporting/arc_supervisor_delta.py",
+      "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+      "tests/python/test_arc_supervisor_delta.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "format",
+      "--check",
+      "python/carnot/reporting/arc_supervisor_delta.py",
+      "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+      "tests/python/test_arc_supervisor_delta.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+      "--strict",
+      "python/carnot/reporting/arc_supervisor_delta.py",
+      "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/check_spec_coverage.py",
+      "tests/python/test_arc_supervisor_delta.py"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+      "--cold-replay",
+      "/tmp/carnot-exp7845/candidate.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/adversarial_verify.py",
+      "--json",
+      "/tmp/carnot-exp7845/candidate.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/verdict_row_consistency_lint.py",
+      "--strict",
+      "/tmp/carnot-exp7845/candidate.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov"
+    ]
+  ],
+  "per_game_results": {},
+  "phase_spans": [
+    {
+      "duration_s": 188.82341910497053,
+      "phase": "total"
+    }
+  ],
+  "planned_inference_substrate_class": "aggregation",
+  "preconditions_checked": [
+    {
+      "artifact_field": "inventory_hash",
+      "eligibility": "not_science_evidence",
+      "expected": "sha256:2d5266fc17b8caa02d19cfe331d8603960c5d72b8aa1a95f8b1b3e5a909d305e",
+      "observed": "sha256:2d5266fc17b8caa02d19cfe331d8603960c5d72b8aa1a95f8b1b3e5a909d305e",
+      "op": "==",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7831_v680_arc_supervisor_refinement.json",
+      "role": "historical_dedup_baseline_only",
+      "sha256": "sha256:2d5266fc17b8caa02d19cfe331d8603960c5d72b8aa1a95f8b1b3e5a909d305e",
+      "upstream_id": "exp7831-arc-supervisor-refinement"
+    },
+    {
+      "artifact_field": "raw_sha256",
+      "eligibility": "disqualified",
+      "expected": "sha256:da0062982fdbda51fa0be462a3a0eabdee386c28708ce242df50f2042ad6cba6",
+      "observed": "sha256:da0062982fdbda51fa0be462a3a0eabdee386c28708ce242df50f2042ad6cba6",
+      "op": "==",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7722_v672_arc_evidence_recovery.json",
+      "role": "science_producer",
+      "sha256": "sha256:da0062982fdbda51fa0be462a3a0eabdee386c28708ce242df50f2042ad6cba6",
+      "upstream_id": "exp7831-arc-supervisor-refinement"
+    },
+    {
+      "artifact_field": "raw_sha256",
+      "eligibility": "unqualified_no_redirect_schema",
+      "expected": "sha256:62e8825f50a6466128948eac4c4513986329646b2e0adcda9da1da1435dfe100",
+      "observed": "sha256:62e8825f50a6466128948eac4c4513986329646b2e0adcda9da1da1435dfe100",
+      "op": "==",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7817_v679_arc_runner_qualification.json",
+      "role": "runner_qualification",
+      "sha256": "sha256:62e8825f50a6466128948eac4c4513986329646b2e0adcda9da1da1435dfe100",
+      "upstream_id": "exp7831-arc-supervisor-refinement"
+    },
+    {
+      "artifact_field": "raw_sha256",
+      "eligibility": "disqualified",
+      "expected": "sha256:b06589669d311b76d5b4a0ed1b8f08965fd45e6770fa97fdb822d0c4beac69d8",
+      "observed": "sha256:b06589669d311b76d5b4a0ed1b8f08965fd45e6770fa97fdb822d0c4beac69d8",
+      "op": "==",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7818_v679_arc_organic_measurement/raw_rows.json",
+      "role": "science_producer",
+      "sha256": "sha256:b06589669d311b76d5b4a0ed1b8f08965fd45e6770fa97fdb822d0c4beac69d8",
+      "upstream_id": "exp7831-arc-supervisor-refinement"
+    },
+    {
+      "artifact_field": "levels_reproduced_positive",
+      "eligibility": "read_only",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+      "role": "registry_precheck",
+      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "upstream_id": "arc_solve_registry"
+    }
+  ],
+  "production_defaults_changed": false,
+  "random_seed": 0,
+  "recommendation_rows": [],
+  "repository_health": {
+    "diagnostic": {
+      "class": "diagnostic",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q -n 0 -o addopts= --no-cov",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov"
+      ],
+      "duration_s": 180.12834860401927,
+      "exit_code": -15,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/repository_health_180s_e5890fc3b1f1dd2d24030e8c84e0e779bb2361c206b20c0a79e0d56ef34ad29a.log",
+      "log_sha256": "sha256:e5890fc3b1f1dd2d24030e8c84e0e779bb2361c206b20c0a79e0d56ef34ad29a",
+      "name": "repository_health_180s",
+      "output_tail": "........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n....................................s................................... [  1%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n.............F.......................................................... [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n...",
+      "passed": false,
+      "scope": "diagnostic",
+      "timed_out": true
+    },
+    "historical_failure": {
+      "exit_code": -15,
+      "path": "results/experiment_7831_v680_arc_supervisor_refinement.json",
+      "required_check": "all_python_tests",
+      "verdict": "complete_disqualified_required_validation"
+    },
+    "historical_full_suite_obligations_open": true,
+    "status": "failed_health"
+  },
+  "reproducibility_checksum": "sha256:0441a3bb5249cf79e72e03e935b26e64a2e0610dbc457474cbaf5b62c9d1b7bc",
+  "rows": [
+    {
+      "censored": 0,
+      "completed": 0,
+      "eligible": 0,
+      "excluded": 0,
+      "independent_n": 0,
+      "intended": 0,
+      "source_path": "results/raw",
+      "started": 0,
+      "status": "completed",
+      "unit": "inventory_delta"
+    }
+  ],
+  "run_date": "20260929",
+  "sample_size_budget": {
+    "censored": 0,
+    "completed": 0,
+    "eligible": 0,
+    "excluded": 0,
+    "independent_n": 0,
+    "intended": 0,
+    "started": 0
+  },
+  "solve_claim": false,
+  "solve_provenance": null,
+  "source_artifact_hashes": {
+    "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7722_v672_arc_evidence_recovery.json": "sha256:da0062982fdbda51fa0be462a3a0eabdee386c28708ce242df50f2042ad6cba6",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7817_v679_arc_runner_qualification.json": "sha256:62e8825f50a6466128948eac4c4513986329646b2e0adcda9da1da1435dfe100",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7831_v680_arc_supervisor_refinement.json": "sha256:2d5266fc17b8caa02d19cfe331d8603960c5d72b8aa1a95f8b1b3e5a909d305e",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7818_v679_arc_organic_measurement/raw_rows.json": "sha256:b06589669d311b76d5b4a0ed1b8f08965fd45e6770fa97fdb822d0c4beac69d8"
+  },
+  "supervisor_delta_ready_score": 0,
+  "task_id": "exp7845-arc-supervisor-delta",
+  "validation_command_manifest_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/validation_command_manifest.json",
+  "validation_errors": [
+    "changed_coverage",
+    "adversarial_verify"
+  ],
+  "validation_receipts": [
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib,json; from pathlib import Path; names=(\"carnot.reporting.arc_supervisor_delta\",\"carnot.reporting.current_work_receipt\",\"carnot.reporting.experiment_7303_validation_scope\",\"carnot.agentic.arc_supervisor_refinement\"); print(json.dumps({\"resolved_imports\":{n:str(Path(importlib.import_module(n).__file__).resolve()) for n in names}}),flush=True)'",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib,json; from pathlib import Path; names=(\"carnot.reporting.arc_supervisor_delta\",\"carnot.reporting.current_work_receipt\",\"carnot.reporting.experiment_7303_validation_scope\",\"carnot.agentic.arc_supervisor_refinement\"); print(json.dumps({\"resolved_imports\":{n:str(Path(importlib.import_module(n).__file__).resolve()) for n in names}}),flush=True)"
+      ],
+      "duration_s": 0.5431475299992599,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/worktree_imports_1db7761958c4290b3fe7e75c8db63c7987e866d71072cfdc638ab54625d4235c.log",
+      "log_sha256": "sha256:1db7761958c4290b3fe7e75c8db63c7987e866d71072cfdc638ab54625d4235c",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.reporting.arc_supervisor_delta\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_supervisor_delta.py\", \"carnot.reporting.current_work_receipt\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py\", \"carnot.reporting.experiment_7303_validation_scope\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7303_validation_scope.py\", \"carnot.agentic.arc_supervisor_refinement\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_supervisor_refinement.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.agentic.arc_supervisor_refinement": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_supervisor_refinement.py",
+        "carnot.reporting.arc_supervisor_delta": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_supervisor_delta.py",
+        "carnot.reporting.current_work_receipt": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+        "carnot.reporting.experiment_7303_validation_scope": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7303_validation_scope.py"
+      },
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-exp7845/unit.coverage '--include=*/python/carnot/reporting/arc_supervisor_delta.py,*/scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py' -m pytest -n 0 -o addopts= --no-cov tests/python/test_arc_supervisor_delta.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7845/unit.coverage",
+        "--include=*/python/carnot/reporting/arc_supervisor_delta.py,*/scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_arc_supervisor_delta.py",
+        "-q"
+      ],
+      "duration_s": 5.714094805996865,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/affected_pytest_49c9f6594cc67ea9803b16acc7fb06c2c7310713d9ab6c897225e85d68f0d732.log",
+      "log_sha256": "sha256:49c9f6594cc67ea9803b16acc7fb06c2c7310713d9ab6c897225e85d68f0d732",
+      "name": "affected_pytest",
+      "output_tail": "........                                                                 [100%]\n8 passed in 2.20s\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-exp7845/cli.coverage '--include=*/python/carnot/reporting/arc_supervisor_delta.py,*/scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py' scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py --date 20260929 --reader-only --output /tmp/carnot-exp7845/e2e/result.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7845/cli.coverage",
+        "--include=*/python/carnot/reporting/arc_supervisor_delta.py,*/scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+        "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+        "--date",
+        "20260929",
+        "--reader-only",
+        "--output",
+        "/tmp/carnot-exp7845/e2e/result.json"
+      ],
+      "duration_s": 0.9713526450213976,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/cli_e2e_4646f14e6115d3f5a0166fe72b6227fb32a9eb0966a0803af85ff0861368e1e0.log",
+      "log_sha256": "sha256:4646f14e6115d3f5a0166fe72b6227fb32a9eb0966a0803af85ff0861368e1e0",
+      "name": "cli_e2e",
+      "output_tail": "[exp7845] phase=start elapsed_s=0.000 completed_units=0\n[exp7845] phase=preconditions_before elapsed_s=0.000 completed_units=0\n[exp7845] phase=preconditions_after elapsed_s=0.048 completed_units=5\n[exp7845] phase=scan_before elapsed_s=0.048 completed_units=0\n[exp7845] phase=scan_after elapsed_s=0.144 completed_units=0\n[exp7845] phase=private_output_written elapsed_s=0.145 completed_units=0\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage combine --data-file=/tmp/carnot-exp7845/combined.coverage /tmp/carnot-exp7845/unit.coverage /tmp/carnot-exp7845/cli.coverage",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-exp7845/combined.coverage",
+        "/tmp/carnot-exp7845/unit.coverage",
+        "/tmp/carnot-exp7845/cli.coverage"
+      ],
+      "duration_s": 0.056526728032622486,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/coverage_combine_c39da6aa013e7c752dd73a1410ffae0f0ac73e969f916261e4aaf96b839e5ee0.log",
+      "log_sha256": "sha256:c39da6aa013e7c752dd73a1410ffae0f0ac73e969f916261e4aaf96b839e5ee0",
+      "name": "coverage_combine",
+      "output_tail": "Combined 2 files\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/carnot-exp7845/combined.coverage '--include=*/python/carnot/reporting/arc_supervisor_delta.py,*/scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7845/combined.coverage",
+        "--include=*/python/carnot/reporting/arc_supervisor_delta.py,*/scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.06750415003625676,
+      "exit_code": 2,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/changed_coverage_ba376c8e55d4ddcb11773e7416f942c12998b45f6e04bd8ad9ac296a10241ed1.log",
+      "log_sha256": "sha256:ba376c8e55d4ddcb11773e7416f942c12998b45f6e04bd8ad9ac296a10241ed1",
+      "name": "changed_coverage",
+      "output_tail": "Name                                                               Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------------------------\npython/carnot/reporting/arc_supervisor_delta.py                      118     14    88%   60, 68, 71, 81-82, 87, 107, 116-118, 121-123, 183\nscripts/experiments/experiment_7845_v681_arc_supervisor_delta.py     162     73    55%   71, 87, 106, 222-228, 234-246, 252-310, 326-328, 347-359\n------------------------------------------------------------------------------------------------\nTOTAL                                                                280     87    69%\nCoverage failure: total of 69 is less than fail-under=100\n",
+      "passed": false,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/reporting/arc_supervisor_delta.py scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py tests/python/test_arc_supervisor_delta.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/arc_supervisor_delta.py",
+        "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+        "tests/python/test_arc_supervisor_delta.py"
+      ],
+      "duration_s": 0.011561308987438679,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/ruff_check_82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/reporting/arc_supervisor_delta.py scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py tests/python/test_arc_supervisor_delta.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/arc_supervisor_delta.py",
+        "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+        "tests/python/test_arc_supervisor_delta.py"
+      ],
+      "duration_s": 0.010155016963835806,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/ruff_format_eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy --strict python/carnot/reporting/arc_supervisor_delta.py scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/arc_supervisor_delta.py",
+        "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py"
+      ],
+      "duration_s": 0.1200250230031088,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/mypy_e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce.log",
+      "log_sha256": "sha256:e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce",
+      "name": "mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 2 source files\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py tests/python/test_arc_supervisor_delta.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_arc_supervisor_delta.py"
+      ],
+      "duration_s": 0.042091932031325996,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/scoped_spec_6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py --cold-replay /tmp/carnot-exp7845/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7845_v681_arc_supervisor_delta.py",
+        "--cold-replay",
+        "/tmp/carnot-exp7845/candidate.json"
+      ],
+      "duration_s": 0.4170425250194967,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/cold_replay_a9f869dc895cdb38afdd4a776a6ad430a412770e870bd9c30d8e174586857134.log",
+      "log_sha256": "sha256:a9f869dc895cdb38afdd4a776a6ad430a412770e870bd9c30d8e174586857134",
+      "name": "cold_replay",
+      "output_tail": "[exp7845] phase=start elapsed_s=0.000 completed_units=0\n{\"cold_replay_errors\": []}\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /tmp/carnot-exp7845/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-exp7845/candidate.json"
+      ],
+      "duration_s": 0.5651909500011243,
+      "exit_code": 1,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/adversarial_verify_19a716dd490611aefb0445620e254453788e4723c21407d17f61f3ae2ddc98e6.log",
+      "log_sha256": "sha256:19a716dd490611aefb0445620e254453788e4723c21407d17f61f3ae2ddc98e6",
+      "name": "adversarial_verify",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/tmp/carnot-exp7845/candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 7845,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_no_new_supervisor_outcomes\",\n      \"flag_count\": 3,\n      \"max_severity\": 2,\n      \"flags\": [\n        {\n          \"kind\": \"IMPLAUSIBLE_PERFECT\",\n          \"severity\": \"info\",\n          \"detail\": \"supervisor_delta_ready_score=0.0 (exactly zero). Confirm this is not a stub default.\"\n        },\n        {\n          \"kind\": \"DURATION_TOO_SHORT\",\n          \"severity\": \"critical\",\n          \"detail\": \"duration_s=0.0 but artifact declares aggregation substrate. Even loading upstream JSON takes microseconds; a value below 0.0001s suggests the duration was not measured at all.\"\n        },\n        {\n          \"kind\": \"SUBSTRATE_CLASS_MISMATCH\",\n          \"severity\": \"critical\",\n          \"detail\": \"duration_s=0.0 is below the 0.0001s floor of the declared inference_substrate_class=aggregation. Either the class is wrong or the duration was not measured.\"\n        }\n      ],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 1\n}\n",
+      "passed": false,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp7845/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7845/candidate.json"
+      ],
+      "duration_s": 0.021870435040909797,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/strict_rows_ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_rows",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "class": "diagnostic",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q -n 0 -o addopts= --no-cov",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov"
+      ],
+      "duration_s": 180.12834860401927,
+      "exit_code": -15,
+      "log_path": "results/raw/experiment_7845_v681_arc_supervisor_delta/sealed_logs/repository_health_180s_e5890fc3b1f1dd2d24030e8c84e0e779bb2361c206b20c0a79e0d56ef34ad29a.log",
+      "log_sha256": "sha256:e5890fc3b1f1dd2d24030e8c84e0e779bb2361c206b20c0a79e0d56ef34ad29a",
+      "name": "repository_health_180s",
+      "output_tail": "........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n....................................s................................... [  1%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n.............F.......................................................... [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n...",
+      "passed": false,
+      "scope": "diagnostic",
+      "timed_out": true
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false
+}
