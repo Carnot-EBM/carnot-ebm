@@ -1,0 +1,305 @@
+{
+  "changed_code": [
+    "python/carnot/experiment_8098_v701_development_methods.py",
+    "python/carnot/verify/development_methods_8098.py",
+    "scripts/experiments/experiment_8098_v701_development_methods.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8098-z5poxm0p/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_methods_8098.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_development_methods_8098.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "coverage_unit",
+      "outside_checkout": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_source_boundary_7852.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "consumers_e2e015_019",
+      "outside_checkout": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8098_v701_development_methods.py",
+        "python/carnot/verify/development_methods_8098.py",
+        "scripts/experiments/experiment_8098_v701_development_methods.py",
+        "tests/python/test_development_methods_8098.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "ruff",
+      "outside_checkout": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8098_v701_development_methods.py",
+        "python/carnot/verify/development_methods_8098.py",
+        "scripts/experiments/experiment_8098_v701_development_methods.py",
+        "tests/python/test_development_methods_8098.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "format",
+      "outside_checkout": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8098_v701_development_methods.py",
+        "python/carnot/verify/development_methods_8098.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "mypy",
+      "outside_checkout": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_development_methods_8098.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "spec_coverage",
+      "outside_checkout": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--append",
+        "--data-file=/tmp/carnot-8098-z5poxm0p/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_methods_8098.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "--fixture-root",
+        "/tmp/carnot-8098-z5poxm0p/corpus",
+        "--output",
+        "/tmp/carnot-8098-z5poxm0p/success/experiment_8098_v701_development_methods.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "cli_success",
+      "outside_checkout": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--append",
+        "--data-file=/tmp/carnot-8098-z5poxm0p/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_methods_8098.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "--cold-replay",
+        "/tmp/carnot-8098-z5poxm0p/success/experiment_8098_v701_development_methods.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "replay_success",
+      "outside_checkout": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--append",
+        "--data-file=/tmp/carnot-8098-z5poxm0p/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_methods_8098.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "--fixture-root",
+        "/tmp/carnot-8098-z5poxm0p/missing",
+        "--output",
+        "/tmp/carnot-8098-z5poxm0p/blocked/experiment_8098_v701_development_methods.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "cli_blocked",
+      "outside_checkout": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--append",
+        "--data-file=/tmp/carnot-8098-z5poxm0p/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_methods_8098.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "--cold-replay",
+        "/tmp/carnot-8098-z5poxm0p/blocked/experiment_8098_v701_development_methods.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "replay_blocked",
+      "outside_checkout": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--append",
+        "--data-file=/tmp/carnot-8098-z5poxm0p/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_methods_8098.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "--fixture-root",
+        "/tmp/carnot-8098-z5poxm0p/corpus",
+        "--output",
+        "/tmp/carnot-8098-z5poxm0p/contamination/experiment_8098_v701_development_methods.json",
+        "--mutate",
+        "contamination"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "cli_contamination",
+      "outside_checkout": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--append",
+        "--data-file=/tmp/carnot-8098-z5poxm0p/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_methods_8098.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "--cold-replay",
+        "/tmp/carnot-8098-z5poxm0p/contamination/experiment_8098_v701_development_methods.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "replay_contamination",
+      "outside_checkout": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--append",
+        "--data-file=/tmp/carnot-8098-z5poxm0p/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_methods_8098.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "--fixture-root",
+        "/tmp/carnot-8098-z5poxm0p/corpus",
+        "--output",
+        "/tmp/carnot-8098-z5poxm0p/duplicate/experiment_8098_v701_development_methods.json",
+        "--mutate",
+        "duplicate"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "cli_duplicate",
+      "outside_checkout": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--append",
+        "--data-file=/tmp/carnot-8098-z5poxm0p/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_methods_8098.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "--cold-replay",
+        "/tmp/carnot-8098-z5poxm0p/duplicate/experiment_8098_v701_development_methods.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "replay_duplicate",
+      "outside_checkout": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--append",
+        "--data-file=/tmp/carnot-8098-z5poxm0p/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_methods_8098.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "--fixture-root",
+        "/tmp/carnot-8098-z5poxm0p/corpus",
+        "--output",
+        "/tmp/carnot-8098-z5poxm0p/roles/experiment_8098_v701_development_methods.json",
+        "--mutate",
+        "roles"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "cli_roles",
+      "outside_checkout": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--append",
+        "--data-file=/tmp/carnot-8098-z5poxm0p/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_methods_8098.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "--cold-replay",
+        "/tmp/carnot-8098-z5poxm0p/roles/experiment_8098_v701_development_methods.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "replay_roles",
+      "outside_checkout": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8098-z5poxm0p/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_methods_8098.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "--fail-under=100"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "coverage_report",
+      "outside_checkout": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8098-z5poxm0p/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_methods_8098.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py",
+        "-o",
+        "/tmp/carnot-8098-z5poxm0p/coverage.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "coverage_json",
+      "outside_checkout": false
+    }
+  ]
+}

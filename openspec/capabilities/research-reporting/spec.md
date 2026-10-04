@@ -92165,3 +92165,24 @@ activation. Cold replay SHALL use immutable bytes, independently reduce task and
 historical rows, and reject altered primitive observations even after rehashing.
 No current model calls, oracle, claim, exposure or generalized-learning credit
 may be inferred from administrative or fixture success.
+# V701 methods publication (2026-10-04)
+
+## REQ-REPORT-8098
+Freeze the full V701 numerical, timing, feedback and statistical protocol and primary
+literature differences before outcomes. Preserve Exp8084's actual historical operands.
+Publish primitive denominators, separate cohort and support gates, exact byte hashes,
+phase timing, zero current model activity, and authenticated owned validation receipts.
+Terminal external blocks stay blocked; owned validation failures disqualify readiness.
+The 64-source retention panel has descriptive precision only. All generalization
+and generalized learning credit remains zero on exposed development data.
+
+## SCENARIO-REPORT-8098-CLI
+From outside the checkout, run private real CLI success, missing-input blocking,
+contamination and duplicate mutations, cold replay and aggregate/manifest tampering.
+Record argv, normal exits, durations and exact log hashes. Require scoped 100 percent
+statement coverage, Ruff, strict mypy, consumer tests, spec references and both auditors.
+
+Implemented by `python/carnot/experiment_8098_v701_development_methods.py` and
+its direct script CLI. The producer retains exact current validation logs,
+independent denominator checks and separate global health evidence. Ops and
+traceability reconciliation is delegated to the conductor by the task instruction.

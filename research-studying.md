@@ -6410,3 +6410,17 @@ EBT [2507.02092](https://arxiv.org/abs/2507.02092) supplies conditional compatib
 context. These four checks retrieved abstracts, not full method proofs.
 No paper guarantee transfers. No foundation model is trained or loaded here.
 Unknown prior exposure remains unknown, and generalized learning benefit is zero.
+# Exp8098 V701 methods ingestion — 2026-10-04
+
+Status: ingested. Exact primary response bytes, HTTP observations and SHA256
+receipts are in `results/raw/experiment_8098_v701_development_methods/literature/`.
+Evidence alignment [2608.15804](https://arxiv.org/html/2608.15804v1) was read for
+span masking, alignment and conflict limitations. KAC
+[2503.21076](https://arxiv.org/html/2503.21076v1) was read for its univariate
+Gaussian channel basis, distinct from Carnot's multivariate radial distances.
+Primary abstracts for forgetting [2511.12828](https://arxiv.org/abs/2511.12828),
+delayed feedback [2602.02634](https://arxiv.org/abs/2602.02634), and capacity
+[2606.11711](https://arxiv.org/abs/2606.11711) were ingested for retention,
+issuing-state custody and permanent feedback loss. The method source map records
+each difference. No paper guarantee transfers. Exposed development supports no
+independent generalization claim, and the retention panel cannot certify safety.

@@ -48026,3 +48026,26 @@ health SHALL be recorded separately and SHALL not become a scientific gate.
 Private fixtures SHALL preserve failed predecessor receipts, reject missing or
 changed kernel/control bytes and verify independent readiness failures. No test
 may write repository evidence. Completed negative science SHALL not request retries.
+# V701 exposed development methods (2026-10-04)
+
+## REQ-VERIFY-8098-PUBLIC
+Project official response TRAIN metadata and complete rendered sources without decoding
+quality or labels. Unite source identity, normalized content, and transitive five-token
+shingle Jaccard >= .8 components. Sort by SHA256(V701 + smallest normalized bytes),
+choose SHA256(V701-response + response ID), and seal exactly 640 clusters with
+fit128/tune64/evaluation128/stream256/retention64 before evaluator access.
+
+## REQ-VERIFY-8098-CUSTODY
+Reject public contamination, source-hash collisions, duplicate roles and changed seals.
+Keep excluded and unknown annotation slots without replacement. Preserve original
+human span character and byte offsets. Public separation and fit96 (16/class) plus
+tune48 (8/class) support have distinct readiness booleans. Other support is diagnostic.
+Known exposure and unknown history cannot establish independent generalization.
+
+## SCENARIO-VERIFY-8098-PRIVATE
+Private tests cover structured rendering, transitive duplicates, hash collisions,
+quality-independent selection, absent annotations, contamination and immutable roles.
+
+Implemented in `python/carnot/verify/development_methods_8098.py`; private
+regressions live in `tests/python/test_development_methods_8098.py`. Current
+readiness still requires the experiment's authenticated owned validation receipts.
