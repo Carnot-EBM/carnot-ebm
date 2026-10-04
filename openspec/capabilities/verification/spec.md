@@ -47903,6 +47903,19 @@ quantile, issue-before-release state machine, persisted slot128 restart and pair
 fixed-window block reduction. `tests/python/test_delayed_confidence_8000.py`
 references this requirement and exercises boundary sets, delayed identity,
 future outcomes, controls and support floors.
+# REQ-VERIFY-8120: Independently replay the new supervisor frontier
+
+Exp8120 SHALL independently recompute all reductions from primitive rows, reject
+forged outcomes, changed frontier bindings, duplicate identities and tampered
+durable receipts. Private oracle controls remain circular_positive mechanics
+with zero natural observations. An authenticated empty ledger may be ready.
+
+## SCENARIO-VERIFY-8120-COLD
+
+Run the actual script outside the checkout with no ambient PYTHONPATH. Cold
+replay accepts unchanged empty evidence and rejects forged counts, duplicate or
+removed rows and changed inventory bytes. Tests write only private temp files.
+
 # REQ-VERIFY-8107: Authenticate reader readiness independently of outcome count
 
 Qualify the actual Exp8067 reporting import before reading new outcomes.

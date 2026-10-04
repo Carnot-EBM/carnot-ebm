@@ -91577,6 +91577,35 @@ SHALL still receive its existing flag. Replay SHALL retain terminal-failure
 reports and normalize their operand shape. Preserve failed attempts and reuse
 their whole-suite diagnostic when only publication handling changes.
 
+# REQ-REPORT-8120: Inspect only the authenticated V701 supervisor delta
+
+Exp8120 SHALL reuse Exp8107's qualified reader, pin its primary, durable inventory,
+declared terminal_reports.json and reader code, and inspect only new or changed
+receipt bytes. Deduplicate run/redirect identities and preserve observed closure,
+help, action cost, arm exposure and unredirected stagnation. Completed empty
+science SHALL terminate as complete_null_no_new_outcomes. Missing external bytes
+SHALL block with the exact operand; owned failures SHALL disqualify and zero
+readiness. Current model calls, game actions, solve credit and generalization
+scores SHALL remain zero. Historical Qwen provenance is not current inference.
+The conductor owns ops/status/changelog/traceability reconciliation.
+
+## SCENARIO-REPORT-8120-FRONTIER
+
+Authenticate exact Exp8107 hashes and its declared terminal sidecar before
+scanning. Unchanged bytes yield no new event. A later authenticated redirect may
+enter only an observational reduction with explicit action/exposure denominators.
+Arm selection is confounded; any recommendation is a separately scoped future
+intervention and cannot change production policy.
+
+## SCENARIO-REPORT-8120-VALIDATION
+
+Tests precede implementation. Freeze scoped consumer, E2E-017, private CLI
+success/blocked/mutation/cold replay, Ruff, strict mypy, scoped spec coverage and
+100 percent new-code statement coverage argv before measurement. Bound children
+and record normal exits, durations and immutable log hashes. Preserve one bounded
+global health diagnostic separately. Publish identical validated bytes through
+primary_publication after adversarial verification and strict verdict row lint.
+
 # REQ-REPORT-8107: Qualify the actual V701 supervisor evidence reader
 
 Resolve the reporting import from the Exp8067 CLI and authenticate both files
