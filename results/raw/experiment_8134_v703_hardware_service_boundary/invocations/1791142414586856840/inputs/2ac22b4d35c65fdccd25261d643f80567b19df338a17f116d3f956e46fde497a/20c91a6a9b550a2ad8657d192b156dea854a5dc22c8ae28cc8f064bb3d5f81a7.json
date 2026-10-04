@@ -1,0 +1,67 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8121_v702_hardware_batch_boundary.json",
+  "primary_sha256": "sha256:20c91a6a9b550a2ad8657d192b156dea854a5dc22c8ae28cc8f064bb3d5f81a7",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8121_v702_hardware_batch_boundary.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8121_v702_hardware_batch_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8121_v702_hardware_batch_boundary.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8121_v702_hardware_batch_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 2.2690552080748603,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8121_v702_hardware_batch_boundary/terminal_logs/1791126539890344147/00_cold_replay.log",
+        "log_sha256": "sha256:f3b2ccb8a456d3c714be42e3a548a8224f89034fd424009e430cf849bbad2e60",
+        "name": "cold_replay",
+        "normal_exit": true,
+        "output_tail": "[exp8121] phase=preconditions elapsed_s=0.000 model_loads=0 device_calls=0\n[exp8121] before_numerical_replay completed=0 pending=64\n[exp8121] numerical_replay completed=16 pending=48\n[exp8121] numerical_replay completed=32 pending=32\n[exp8121] numerical_replay completed=48 pending=16\n[exp8121] numerical_replay completed=64 pending=0\n[exp8121] after_numerical_replay completed=64 pending=0\n{\"passed\": true, \"rows_checksum\": \"sha256:81f4b69b8074e33c0eaa0301fbf44b98832b6a78a9086fba9f64646f91ab22ce\"}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8121_v702_hardware_batch_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8121_v702_hardware_batch_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 0.9593217989895493,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8121_v702_hardware_batch_boundary/terminal_logs/1791126539890344147/01_adversarial.log",
+        "log_sha256": "sha256:74eacb43b9e5497f3fe9e0d26fe0a4a51785767da989d2d10f27b7d3ee85b282",
+        "name": "adversarial",
+        "normal_exit": true,
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8121_v702_hardware_batch_boundary/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8121,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_hardware_batch_boundary\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8121_v702_hardware_batch_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8121_v702_hardware_batch_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 0.03051509498618543,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8121_v702_hardware_batch_boundary/terminal_logs/1791126539890344147/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "normal_exit": true,
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

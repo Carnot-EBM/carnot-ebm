@@ -48503,3 +48503,25 @@ Cold replay outside the checkout without PYTHONPATH SHALL reject mutated reader
 hashes, missing evidence, forged firings, repeated identities and removed durable
 rows. It SHALL accept a qualified zero-firing ledger. All new statements require
 100 percent statement coverage. Test outputs stay in private temporary directories.
+## REQ-VERIFY-8134: Bound arithmetic acceleration without free omitted costs
+
+Reduce qualified Exp8132 primitive transactions and modeled exact-key acquisition.
+Retain all measured non-scoring costs including lookup memory handling,
+conversion, serialization, native crossings, persistence and timer residual.
+An unseparated scoring envelope yields a generous outer ceiling, explicitly
+not an exact arithmetic-only ceiling: unknown in-block memory/crossing cost
+remains unknown. A ceiling below 100 rules out 100x even under this generous
+assumption; a ceiling above 100 does not prove feasibility. Missing acquisition,
+cost components or natural updates suppress the corresponding exact ceiling.
+Compare cached host transactions and modeled full service with historical
+acquisition/load costs, plus the unavailable directly measured full service.
+Count distances, coefficient touches and capacity32 pending event storage for
+16..28 centers and dimension9. Evaluate 8/12/16-bit storage fixtures using the
+qualified float64 fallback guard and compare issued decisions exactly.
+
+### SCENARIO-VERIFY-8134: Missing costs and precision guards
+
+Missing or inconsistent cost rows remain excluded units. Changed board scope
+blocks only that board. Near-threshold, clipped and outside-domain fixtures
+fallback to float64 with zero issued decision disagreements. Cold replay
+rehashes inputs and independently recomputes every reduction.

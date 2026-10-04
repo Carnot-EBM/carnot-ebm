@@ -92755,3 +92755,24 @@ Unchanged frontier identities SHALL supply zero new outcomes. Missing external
 custody blocks with the actual operand. Owned failures disqualify and zero readiness.
 Freeze unit, consumer, E2E-017, CLI, lint, strict type and scoped spec commands first.
 Every added statement SHALL be covered. Publish only normally validated candidate bytes.
+## REQ-REPORT-8134: Preserve board custody across service cost blocks
+
+Exp8134 authenticates each original board receipt and available transcript
+individually. KV260 retains fabric k_max<=5, PolarFire retains Linux CPU-only
+dispatch, and GateMate retains the physical JTAG 0xffffffff block. No new board
+probe, model load, purchase, or external submission occurs. Original dates and
+hashes remain distinct from current CPU fixtures. The complete-service gate
+names its actual failing operand; missing cost never becomes zero.
+Freeze owned validation argv before evaluation. Require private CLI success,
+external block, board mutation, precision/fallback and cold replay checks,
+consumer tests, Ruff, strict mypy, 100% new-code statement coverage and scoped
+spec coverage before primary_publication. Terminal validators must exit normally.
+Historical provenance belongs in cited_upstream_artifacts; current MODEL_SPECS
+and call_ledger are empty. Exposed fixtures grant no independent learning credit.
+
+### SCENARIO-REPORT-8134: Private publication and separate board boundaries
+
+A private CLI outside the checkout without PYTHONPATH publishes a fixture,
+records a missing full-service operand as a terminal block, rejects changed
+board custody and cold-replay aggregates, and retains other boards independently.
+No validation fixture or scratch file is written into live results/.
