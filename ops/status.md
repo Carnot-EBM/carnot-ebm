@@ -17804,3 +17804,21 @@ costs. All generalized learning and deployment claims remain open.
 The literature update records primary methods and secondary-channel access
 limits. The active research-roadmap.yaml and scripts/research_conductor.py remain
 unchanged. Existing unrelated workspace audit changes are not part of this plan.
+
+## 2026-10-04 — V701 staged research plan; not activated
+
+Milestone 2026.10.701 schedules thirteen tasks, Exp8097–Exp8109, in four phases.
+The design has a full visible task table, executable JSON and canonical digest
+matching research-roadmap-next.yaml. The prior V700 design is preserved.
+
+V700 ran three scheduled experiments although its incomplete document promised
+fourteen. Its authority was disqualified, its fresh cohort was blocked, and its
+radial kernel passed numerical fixtures. V701 preserves those outcomes. It tests
+radial decisions and feedback-grown centers on explicitly exposed development
+data with within-run source separation. Independent generalization stays open.
+
+The plan uses bounded current Qwen3.8 judgments, matched memory capacity and
+admission against the fitted initial head. Native parity, complete host service
+cost, new ARC supervisor evidence and separate board limits remain included.
+Research findings were recorded before design. No experiments, publication or
+activation occurred. The active roadmap and conductor source remain unchanged.

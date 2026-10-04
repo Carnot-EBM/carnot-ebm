@@ -92121,3 +92121,29 @@ The real script-path CLI SHALL succeed with numerical fixtures, report exact
 missing input operands as blocked, reject altered dictionary bytes and replay
 from a cold process outside the checkout. Readiness requires owned validation
 and replay. Completed negative science SHALL remain terminal.
+
+## REQ-REPORT-V701-PLAN: Complete staged research authority
+
+Status: planning contract authored; experiment implementation and execution pending.
+
+The V701 design SHALL describe exactly thirteen tasks, Exp8097 through Exp8109,
+in the order stored in research-roadmap-next.yaml. Its visible table, complete
+executable JSON and canonical full-task SHA-256 SHALL agree with that YAML.
+The previous V700 design SHALL remain preserved byte-for-byte. The active roadmap
+and conductor source SHALL remain unchanged by this planning work.
+
+### SCENARIO-REPORT-V701-PLAN: Contract and activation checks
+
+Planning checks SHALL reject changed counts, IDs, titles, prompts, gates and
+failure-history entries. Every structured gate SHALL refer to an earlier task
+and an identically named required output. Private activation checks SHALL
+preserve immutable authority after the staged pathname disappears. Each prompt
+SHALL require progress at phase boundaries and around long calls, progress inside
+loops, bounded tool calls, and multiple writes for files over about 200 lines.
+
+### SCENARIO-REPORT-V701-EVIDENCE: Honest predecessor and successor scope
+
+The design SHALL record three actual V700 tasks and eleven unscheduled promises.
+It SHALL preserve Exp8083's disqualification, Exp8084's cohort block and Exp8085's
+fixture-only qualification. Exposed development data SHALL NOT gain independent
+or generalized-learning credit. Completed negative science SHALL remain terminal.

@@ -21369,3 +21369,18 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-04: Seal new source roles and ingest local-memory learning methods (⚠️ Blocked) — honest_verdict=complete_blocked_available_history; results/experiment_8084_v700_fresh_cohort_methods.json
 - 2026-10-04: Qualify a bounded radial energy head and persistent center memory (⚠️ Research Finding) — honest_verdict=complete_circular_positive_radial_memory_kernel; results/experiment_8085_v700_radial_memory_kernel.json
 - 2026-10-04: Completed operational retrospective for milestone 2026.10.700. Executed 3 experiments (0 compute-bound, 3 synthesis-only), totaling 2.0 wall-time minutes (averaging 1 minute per experiment) reconstructed from disk-mtime fallback data. The slowest experiments were synthesis task 'Seal new source roles and ingest local-memory learning methods' (1.93 minutes), synthesis task 'Bind fourteen tasks and preserve the terminal V699 evidence' (0.05 minutes), and synthesis task 'Qualify a bounded radial energy head and persistent center memory' (0.04 minutes). The locked GPU-idle indicator on compute-bound tasks is null as no compute-bound workloads were executed, while static monitor telemetry recorded 0% utilization across both RTX 3090 GPUs with 4MB allocated, which is correct behavior for synthesis-only tasks. Recommended operational improvements include adding granular intra-task sub-phase timing receipts to synthesis runners, emitting synchronous lifecycle timestamps directly into experiment receipts, deploying continuous execution-time GPU telemetry for compute-bound workloads, and restricting DualGPURunner strictly to concurrent multi-model workloads. Estimated time savings are 0% pending empirical measurement of phase receipts. Artifact: results/operational_retro_2026_10_700.json.
+
+## 2026-10-04 — Plan milestone 2026.10.701
+
+- Write thirteen ordered tasks, Exp8097–Exp8109, with complete prompts and
+  matching design/table/full JSON/digest. Preserve the incomplete V700 design.
+- Record recent primary research and secondary-channel access limits before
+  designing the experiments.
+- Replace the blocked historical-freshness premise with explicit development
+  scope. Require label-blind response selection and within-run source separation.
+- Test calibrated radial heads and continuous center-memory learning, with a
+  fitted initial reference, matched installed capacity and separate retention.
+- Include bounded Qwen3.8 captures, real native parity, complete service costs,
+  new ARC supervisor outcomes and each board's actual evidence boundary.
+- Add planning specifications and traceability. No implementation, experiment
+  activation, external publication, push or conductor change is included.

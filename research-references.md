@@ -49978,3 +49978,101 @@ Paper or vendor results do not establish Carnot performance.
 The immediate hardware path is bounded CPU memory and numerical work, with a
 Rust/PyO3 kernel and CUDA for the frozen local Qwen model. No new board purchase
 or repeat of unchanged GateMate, NPU or TSU access probes follows from this scan.
+
+## 2026-10-04 — V701 planning scan: evidence alignment and local energy memory
+
+This scan precedes the V701 experiment design. Sources cover 2025–2026.
+Rechecked papers remain prior knowledge; a fresh search does not make them new.
+The .700 cohort block prevents any claim of historical data independence.
+A new within-run split can support development experiments, with exposure disclosed.
+
+### Promising methods and explicit limits
+
+- **Hallucination Span Detection with Input-Side Evidence Alignment**, August 16,
+  2026: [primary paper](https://arxiv.org/abs/2608.15804).
+  The authors train an encoder to predict masked output tokens from input evidence.
+  This gives detection scores and input alignments. Test source dependence before
+  interpreting a judge score as evidence use. A small full-source, duplicate,
+  removed-source and mismatched-source panel can diagnose that dependence.
+  This is a mechanistic adaptation, not a replication of their trained encoder.
+  Altered sources have no inherited human correctness labels.
+- **KAC: Kolmogorov-Arnold Classifier for Continual Learning**, March 27, 2025:
+  [full method](https://arxiv.org/html/2503.21076v1),
+  [author implementation](https://github.com/Ethanhuhuhu/KAC).
+  KAC uses univariate Gaussian bases on channels. Carnot's Exp8085 uses
+  multivariate Gaussian distances to centers. These are different models.
+  The qualified Carnot kernel now permits a controlled test of adding centers
+  from released errors. Compare equal-size fixed and random-past centers.
+  Keep the mandated generator frozen. Do not claim a KAC reproduction.
+- **Catastrophic Forgetting in Kolmogorov-Arnold Networks**, November 16, 2025:
+  [primary paper](https://arxiv.org/abs/2511.12828).
+  Local activation support does not ensure retention in complex domains.
+  Measure support overlap, future decision cost and independently held-role
+  retention. A passing numerical fixture cannot establish useful learning.
+- **A Reduction from Delayed to Immediate Feedback for Online Convex
+  Optimization with Improved Guarantees**, February 2, 2026:
+  [primary paper](https://arxiv.org/abs/2602.02634).
+  The analysis separates learning loss from delay-induced drift.
+  Record the issuing state and label release state in each online update.
+  Use this distinction to audit stale feedback. Changing a basis dictionary
+  and using empirical admission guards do not inherit its convex regret bound.
+- **Capacity-Constrained Online Convex Optimization with Delayed Feedback**,
+  June 10, 2026: [primary paper](https://arxiv.org/abs/2606.11711).
+  Pending feedback consumes finite capacity. Measure occupancy and permanently
+  lost observations. The planned short stream tests implementation and a finite
+  trajectory; it cannot establish a general lifelong-learning guarantee.
+
+### Primary topic coverage and deferred work
+
+| Topic | Sources checked | Planning decision |
+|---|---|---|
+| EBM reasoning and verification | [EBT](https://arxiv.org/abs/2507.02092); [ARM–EBM](https://arxiv.org/abs/2512.15605) | Retain an exactly equivalent logistic control. An energy parameterization does not add evidence by itself. |
+| Neural constraint satisfaction | [LagONN](https://arxiv.org/abs/2505.07179); [HardNet++](https://arxiv.org/abs/2604.19669) | Defer new solver and repair stacks. Carnot's HardNet/DSP headline scope is retired. |
+| Ising and FPGA sampling | [Scalable Connectivity](https://arxiv.org/abs/2503.01177) | Charge topology and conversion costs. Dense radial evaluation does not map unchanged to existing Ising fabric. |
+| Hallucination mitigation | [Evidence alignment](https://arxiv.org/abs/2608.15804); [LettuceDetect](https://arxiv.org/abs/2502.17125) | Keep source-conditioned measurements and complete human annotation custody. No trained detector is assumed independent of RAGTruth. |
+| KAN | KAC and forgetting study above | Test local basis growth with matched capacity and explicit retention. |
+| Energy-guided decoding | [ETS](https://arxiv.org/abs/2601.21484); [Thinking Before Constraining](https://arxiv.org/abs/2601.07525) | Defer guided generation until the verifier improves useful decisions. Do not reopen retired finite-ID transport by renaming it. |
+| Thermodynamic hardware | [Extropic Z1T](https://extropic.ai/writing/z1t/) | Separate compatible arithmetic, transfer, fallback and total service costs. Vendor estimates are not local measurements. |
+| Continual learning | Delayed-feedback papers above | Preserve temporal order, independent admission labels and cold recovery. |
+
+### Secondary channels checked
+
+- **OpenReview:** ICLR 2026 searches surfaced
+  [EBT](https://openreview.net/forum?id=ZBj3Qp1bYg).
+  Direct forum access returned a browser challenge. The arXiv paper supplies
+  the method evidence; the inaccessible forum supplies no additional finding.
+- **Semantic Scholar:** attempted citing-paper endpoints for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,url&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,url&limit=20).
+  Both failed. Title-specific domain searches did not establish a verified
+  citing-paper list. Citation coverage remains incomplete.
+- **Hugging Face papers:** checked [hallucination span work](https://huggingface.co/papers?q=hallucination+span+detection),
+  [HalluGuard](https://huggingface.co/papers/2601.18753) and
+  [automatic layer selection](https://huggingface.co/papers/2605.26366).
+  Followed evidence alignment to its primary paper. Hidden-state methods remain
+  leads until GGUF access and independent labels are qualified.
+- **GitHub:** checked monthly [Python](https://github.com/trending/python?since=monthly)
+  and [Rust](https://github.com/trending/rust?since=monthly) feeds.
+  Returned pages were cached. No current relevant trending rank is established.
+  KAC's author repository provides the concrete implementation reference.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and Z1T.
+  The index returned little content. Z1T describes sparse model training and
+  FPGA/thermodynamic computation splits with preliminary efficiency estimates.
+  Neither page establishes local TSU access or Carnot workload performance.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  The page describes a constraint reasoning layer below language models.
+  It does not provide an independently reproducible training or evaluation recipe.
+
+### Corpus decision
+
+[Bi'anBench](https://arxiv.org/html/2502.19209v1) is a useful 2025 benchmark lead,
+but its perturbation and counterfactual pipelines synthesize labels with GPT-4o.
+It cannot silently replace independent human evaluation. Keep it deferred.
+Use the available human-labeled RAGTruth development material with explicit prior
+exposure instead of promising another unavailable historically fresh cohort.
+A later independent corpus is still required to close GAP-ORACLE-DISTINCT.
+
+Hardware implication: CPU, existing CUDA RTX 3090 resources and a real PyO3
+binding suffice for the proposed mechanism tests. No purchase is required.
+Preserve KV260 fabric, PolarFire Linux CPU and GateMate physical-block evidence
+separately. Sparse hardware mapping and any 100x target remain hypotheses.

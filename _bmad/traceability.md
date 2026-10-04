@@ -3629,3 +3629,19 @@ No active-roadmap or conductor modification is part of this planning change.
 | FR-11 | Admission opportunity audit, one-use delayed feedback and independent future/retention audit; Exp8063–8065 | Planned; V697 learning benefit remains null |
 | FR-05/08; NFR-01 | Content-addressed public features and loaded native complete transactions; Exp8066 | Planned; no speed claim |
 | ARC generalization floor; hardware continuity | New supervisor frontier and distinct board custody; Exp8067/8068 | Planned; no current solve or device execution |
+
+## 2026-10-04 — V701 research planning, execution pending
+
+| Requirement | Planned tasks | Claim boundary |
+|---|---|---|
+| REQ-REPORT-V701-PLAN; FR-09/10 | Exp8097, Exp8109; complete design/table/JSON/digest and staged YAML | Thirteen planned tasks; no activation or experiment execution |
+| REQ-VERIFY-V701-PLAN; FR-06/12 | Exp8098–Exp8101 | Radial typed decisions on explicitly exposed development data |
+| FR-11 | Exp8102–Exp8104 | Delayed feedback, matched memory, fitted-reference admission and independent retention audit |
+| FR-05/08; NFR-01 | Exp8105–Exp8106 | Loaded Rust binding and complete host costs; no implied deployment speedup |
+| ARC generalization floor | Exp8107 | Actual supervisor reader; refinement requires new authenticated outcomes |
+| Hardware continuity | Exp8108 | Separate KV260, PolarFire and GateMate custody; CPU precision work |
+
+The V701 literature scan in research-references.md precedes the design.
+The previous V700 document is preserved as research-roadmap-v700-preserved-20261004.md.
+The active roadmap and conductor source remain unchanged. Future tests named in
+the plan are requirements, not current execution evidence.

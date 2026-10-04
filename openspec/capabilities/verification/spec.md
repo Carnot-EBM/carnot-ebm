@@ -47982,3 +47982,27 @@ operands SHALL yield complete_blocked_<resource> with actual gate observations;
 owned failure SHALL disqualify and clear readiness. Fixture success is
 circular_positive, oracle-scoped, independent_count=0 and generalized learning
 benefit=0. Global health failures remain separately authenticated diagnostics.
+
+## REQ-VERIFY-V701-PLAN: Exposed radial decision research
+
+Status: research design authored; behavior implementation pending.
+
+Exp8098–Exp8104 SHALL use the V701 design's sealed within-run source groups,
+label-blind response selection, public/evaluator separation, fixed numerical
+methods and delayed-feedback protocol. The source population remains explicitly
+exposed development data. Human labels SHALL NOT enter capture workers.
+
+The learning experiment SHALL compare admission against the immutable fitted
+initial head, not a zero coefficient vector. It SHALL match installed center
+counts across adaptive arms and record their actual effective capacity. Retention
+checks SHALL state finite-panel precision limits. Independent generalization and
+generalized-learning scores SHALL remain zero.
+
+### SCENARIO-VERIFY-V701-PLAN: Required future conformance checks
+
+Before natural replay, tests SHALL reject future labels and a zero-reference
+admission that harms the actual fitted baseline. Source grouping, model strata,
+unknown labels, partial capture, identical-logistic parity and interrupted state
+commits SHALL have private regression checks. Native claims SHALL cross the
+loaded Rust binding. These are execution requirements, not passing results of
+this planning change.

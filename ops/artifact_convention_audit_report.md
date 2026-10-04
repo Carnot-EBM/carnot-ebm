@@ -9,36 +9,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 2 |
-| CANNOT_DETERMINE | 6 |
-
-## experiment_8075_v699_constraint_projection_kernel.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8076_v699_projected_online_learning.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8077_v699_projected_learning_audit.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
+| CHECKABLE | 1 |
+| CANNOT_DETERMINE | 7 |
 
 ## experiment_8078_v699_feature_cache_core.json
 
@@ -75,6 +47,24 @@ nothing
 none
 
 ## experiment_8082_v699_capstone.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8083_v700_contract_custody.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8084_v700_fresh_cohort_methods.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8085_v700_radial_memory_kernel.json
 
 **CANNOT_DETERMINE**
 

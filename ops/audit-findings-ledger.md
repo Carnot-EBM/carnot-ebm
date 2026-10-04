@@ -264,3 +264,4 @@ of truth, not this line.)
 | 2026-09-30 | qa_layer_authenticity_audit | adversarial_verify.py::_has_measured_intrinsic_reward_downstream_delta | SILENT_NON_FIRING | OPEN | |
 | 2026-09-30 | qa_layer_authenticity_audit | adversarial_verify.py::_has_rising_intrinsic_reward_magnitude | SILENT_NON_FIRING | OPEN | |
 | 2026-09-30 | qa_layer_authenticity_audit | adversarial_verify.py::_has_positive_goal_energy_baseline_win_evidence | SILENT_NON_FIRING | OPEN | |
+| 2026-10-04 | experiment_claim_audit | experiment_8085_v700_radial_memory_kernel.json | CLAIM_OVERSTATED | OPEN | |
