@@ -48362,3 +48362,21 @@ REQ-VERIFY-8116 candidate clarification: appended centers start with zero weight
 A committed candidate receives no extra training replay. It can learn these
 weights only from the shared four-step released-label updates after admission;
 this prevents an extra optimizer budget from masquerading as a capacity effect.
+## REQ-VERIFY-8121: Radial traffic and complete service ceilings
+
+Reuse Exp8108 Gaussian/sigmoid analytic storage bounds and float64 decision
+fallback. Random samples provide no global error guarantee or LUT guarantee.
+Dense Gaussian features require batch*centers*dimensions distance terms;
+they do not inherit sparse Ising connectivity or local B-spline updates.
+Separate ideal resident-center transfer from streaming-center transfer and
+worst-case fallback. Observed updates require qualified primitive touch rows.
+Independently sum complete-service rows; free radial arithmetic leaves every
+other measured cost, including acquisition and durable persistence. A 100x
+target requires at least 99 percent removable cost and measured device transfer.
+
+### SCENARIO-VERIFY-8121-BOUNDARY
+
+Reject missing, negative, overlapping, duplicated or incomplete service costs.
+One unavailable board blocks only its row. Cold replay recomputes precision,
+traffic and service reductions from sealed operands. Native representations
+remain unchanged, so E2E-003/004 do not apply to this reporting-only task.

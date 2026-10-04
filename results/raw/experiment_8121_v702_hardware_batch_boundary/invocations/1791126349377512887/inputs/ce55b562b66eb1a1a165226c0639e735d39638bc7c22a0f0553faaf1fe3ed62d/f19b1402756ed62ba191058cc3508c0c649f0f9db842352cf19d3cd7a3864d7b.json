@@ -1,0 +1,64 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8108_v701_radial_hardware_boundary.json",
+  "primary_sha256": "sha256:f19b1402756ed62ba191058cc3508c0c649f0f9db842352cf19d3cd7a3864d7b",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8108_v701_radial_hardware_boundary.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8108_v701_radial_hardware_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8108_v701_radial_hardware_boundary.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8108_v701_radial_hardware_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 2.0079623609781265,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8108_v701_radial_hardware_boundary/terminal_logs/1791103070119581225/00_cold_replay.log",
+        "log_sha256": "sha256:c9995e99da60300fb061efd22b874cd0bf8671f89866c9daf1f6f494682e5591",
+        "name": "cold_replay",
+        "output_tail": "[exp8108] phase=start_preconditions elapsed_s=0.000 model_loads=0 device_calls=0\n[exp8108] before_cpu_benchmark completed=0 pending=64\n[exp8108] cpu completed=16 pending=48\n[exp8108] cpu completed=32 pending=32\n[exp8108] cpu completed=48 pending=16\n[exp8108] cpu completed=64 pending=0\n[exp8108] after_cpu_benchmark completed=64 pending=0\n{\"passed\": true, \"rows_checksum\": \"sha256:64106ff08e2189523a8d1181efaf00fe2b0c97d05ff7d57d1cb4d853df39c310\"}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8108_v701_radial_hardware_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8108_v701_radial_hardware_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 2.9008029979886487,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8108_v701_radial_hardware_boundary/terminal_logs/1791103070119581225/01_adversarial.log",
+        "log_sha256": "sha256:1ce361ca3b47fd146696d844bfae8896a044180cb349139a86dbc3a05dac2525",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8108_v701_radial_hardware_boundary/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8108,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_radial_hardware_boundary\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8108_v701_radial_hardware_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8108_v701_radial_hardware_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 0.048880125978030264,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8108_v701_radial_hardware_boundary/terminal_logs/1791103070119581225/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

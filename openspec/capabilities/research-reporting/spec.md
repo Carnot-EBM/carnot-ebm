@@ -92577,3 +92577,30 @@ Implementation: `carnot.verify.independent_online_memory_8116`,
 `carnot.reporting.independent_memory_execution_8116`, the thin experiment CLI,
 and private tests implement this contract. The terminal artifact records owned
 validation outcomes; operational reconciliation remains with the conductor.
+## REQ-REPORT-8121: Batch memory and independent hardware boundaries
+
+Authenticate Exp8108 numerical inputs and each original board receipt separately.
+Preserve original dates, workload, hashes and the KV260 k_max<=5 fabric,
+PolarFire Linux CPU and GateMate 0xffffffff boundaries. Execute no board probe.
+Qualify Exp8119 batch/service costs and Exp8116 coefficient/center touches
+using exact terminal sidecars and primitive hashes. Unavailable inputs retain
+failed operands; a separate operation-count fixture grants no workload timing.
+Export packed 8/12/16-bit storage, traffic, durable writes, distance evaluations
+and float64 fallback work. Charge acquisition, transfer, fallback and persistence
+in any arithmetic-free service ceiling. Missing costs never become zero.
+Report the 100x target only under explicit assumptions. Vendor estimates are
+not local performance. Export a concrete reopen condition for every substrate.
+Freeze validation argv before measurement. Publish through primary_publication
+after normal exit, owned tests, strict types, lint, scoped spec coverage,
+100 percent new-code statement coverage, cold replay and terminal validators.
+Record existing global health separately. Current execution loads no model.
+External blocks are terminal complete_blocked_<check>; owned failures disqualify.
+Operational reconciliation is delegated to the conductor by the final operator
+instruction; do not edit ops/status, ops/changelog or _bmad/traceability.
+
+### SCENARIO-REPORT-8121-CLI
+
+Private direct CLI success, external blocking, changed board evidence, unavailable
+costs and cold numerical replay run outside results/. Mutated primitive bytes,
+aggregates, code, command manifests or validation receipts fail replay.
+Oracle fixtures are circular_positive. Independent learning scores remain zero.
