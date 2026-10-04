@@ -92868,3 +92868,24 @@ The existing authority reader accepts matching private activated copies and
 rejects missing/reordered tasks, changed prompts, stale digests and gate drift.
 Planning leaves the actual active roadmap and conductor bytes unchanged.
 Implementation and natural science remain pending until conductor execution.
+
+## REQ-REPORT-8138: Independent historical learning protocol receipt
+
+Exp8138 qualifies original stream and retention custody independently of source
+capture. Its numerical authority is V702 delayed_memory and statistical_plan.
+The four-arm20-seed private receipt proves conformance only. Current MODEL_SPECS
+and call_ledger are empty; historical Qwen identity stays in cited artifacts.
+Owned checks precede primary_publication. External blocks are complete_blocked
+with exact operands; owned failure is complete_disqualified with readiness zero.
+
+### SCENARIO-REPORT-8138-TERMINAL
+
+Run private CLI success/block/mutation/cold replay outside checkout without
+PYTHONPATH, E2E-015/019, strict validators and100 percent new statement coverage.
+Content-addressed primitive and state shards retain all original missing slots.
+The conductor owns ops/status/changelog and BMAD reconciliation per final instruction.
+
+REQ-REPORT-8138 implementation: `carnot.reporting.learning_protocol_execution_8138`
+and `scripts/experiments/experiment_8138_v704_learning_protocol.py` freeze argv,
+keep validation logs private, and publish through the checked primary writer.
+Legacy V701 roadmap-reader failures remain separate repository-health evidence.

@@ -48602,3 +48602,46 @@ A source fixture failure blocks only the source branch. Qualified historical
 stream data can still reach causal learning. Invalid quotes do not become semantic
 labels. Missing natural updates or current acquisition cannot become complete
 service evidence. These are planned requirements; no new science result is claimed.
+
+## REQ-VERIFY-8138: Independently qualify the sealed delayed protocol
+
+Authenticate Exp8111 and Exp8102 original stream256/retention64 primitives,
+missing masks and historical Qwen features. Require224/48 usable sources.
+Exp8137, fit capture and Exp8116 are not prerequisites. Preserve Exp8116's
+historical disqualification; its asserted operator override has no dated authority.
+Serialize the unchanged V702 delayed_memory and statistical_plan as authority.
+Use delay20, lr.05, growth64/128/192, source SHA256 buckets, four SGD steps,
+step grid1/.5/.25/.125 and12 strictly future single-use admission labels.
+Compare an independent event-state reference at every declared boundary.
+No tail flush or retention training is permitted. Overflow permanently loses feedback.
+
+### SCENARIO-VERIFY-8138-CONFORMANCE
+
+Test missing slots, duplicate sources, overflow, reused update/admission labels,
+restart with pending feedback, candidate deadlines, retention isolation and scalar
+prediction/gradient agreement. Exercise256 slots, four arms and20 seeds on private
+fixtures. Store repeated state bytes once in checked content-addressed shards.
+Fixture truth is circular_positive and grants zero natural learning benefit.
+
+## REQ-REPORT-8138: Publish normally validated protocol evidence
+
+Freeze owned argv before measurement. Require private outside-checkout CLI,
+external block, mutation, crash/restart, cold replay, E2E-015/019, consumers,
+Ruff, strict mypy, scoped spec coverage and100 percent new statement coverage.
+Run unchanged adversarial and strict row validators within300 seconds each.
+Owned failures disqualify and zero readiness; external blocks name exact operands.
+No current model loads occur. Publish only through primary_publication.
+Ops/status/changelog/traceability reconciliation is owned by the conductor.
+
+### SCENARIO-REPORT-8138-TERMINAL
+
+Cold replay independently recomputes rows and references and rejects changed
+source, code, config, transcript, checkpoint, receipt or aggregate bytes.
+Preserve historical primaries and excluded original source units. Independent
+and generalized learning benefit scores remain zero even when readiness is one.
+
+REQ-VERIFY-8138 implementation: `carnot.verify.learning_protocol_8138` authenticates
+historical stream primitives and executes the declared private event protocol.
+The independent scalar/event reference, flushed phase journal, content-addressed
+state records and real child-crash recovery are covered by18 private tests.
+Owned statement coverage is100 percent across the runner, publication wrapper and CLI.
