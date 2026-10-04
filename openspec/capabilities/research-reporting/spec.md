@@ -92452,3 +92452,36 @@ REQ-REPORT-8111 is implemented by
 blocked, mutation, cold-replay and terminal-failure routes preserve historical
 primaries. A failed owned terminal check publishes disqualified zero readiness
 and retains its failed candidate and report.
+
+## REQ-REPORT-8116: Publish independent online-memory primitives
+
+Publish results/experiment_8116_v702_independent_online_memory.json with raw
+evidence and a thin script-path CLI that resolves imports outside the checkout.
+Authenticate exact Exp8111 bytes, terminal sidecars, feature and evaluator refs
+without Exp8112/8113 dependencies. Freeze validation argv before measurement.
+Issue and durably seal each prediction before evaluator access and all retention
+predictions before retention labels. Independently cold-reduce per-unit Brier
+and typed costs; seeds create no new independent sources. Preserve failures.
+Current execution is no_model_load, MODEL_SPECS=[], zero invocation counts,
+with CPU verifier_ensemble_against_cached_candidates for actual head execution
+and aggregation_from_upstream_artifacts for externally blocked custody.
+Run owned/consumer/E2E-015/019 tests, Ruff, strict mypy, scoped spec coverage,
+100 percent new-code statement coverage, adversarial and strict row checks.
+Run bounded full Python suite once as diagnostic, preserving existing health
+failures separately. Normal exit and passing owned checks precede atomic
+primary_publication. Owned failure disqualifies; external absence is terminal
+complete_blocked_<actual check>; completed null science is terminal.
+Readiness records valid execution, not learning benefit. All required task
+fields carry principles. Ops/status/traceability reconciliation belongs to
+the conductor per the operator's final instruction; do not edit the conductor.
+
+### SCENARIO-REPORT-8116-TERMINAL
+
+Private CLI success, blocked, mutation and cold-replay routes preserve history
+and reject primitive, aggregate, baseline and future-label drift. Fixtures are
+circular_positive. Every owned receipt binds argv, exit, duration and log hash.
+
+Implementation: `carnot.verify.independent_online_memory_8116`,
+`carnot.reporting.independent_memory_execution_8116`, the thin experiment CLI,
+and private tests implement this contract. The terminal artifact records owned
+validation outcomes; operational reconciliation remains with the conductor.

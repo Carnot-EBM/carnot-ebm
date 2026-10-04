@@ -48255,3 +48255,42 @@ REQ-VERIFY-8111 is implemented by
 `tests/python/test_methods_stream_custody_8111.py` authenticate complete
 original selection/annotations and independently reparse historical completions.
 The genesis seal records zero residual and durable state requirements only.
+
+## REQ-VERIFY-8116: Independent delayed zero-residual radial memory
+
+Use only Exp8111-authenticated Exp8102 public stream256 and retention64 slots,
+including capture exclusions. Human exclusions retain clock positions. Preserve
+historical methods; this operator override fixes delay8, every fourth issued
+slot admission-only, learning rate .01, L2 .01, four SGD steps, unit gradient
+clipping, coefficient bounds [-4,4], and separate unpenalized intercept.
+Freeze normalization and16 farthest-first centers from available first64 public
+slots; all four arms start with zero residual plus the original Qwen logit.
+Frozen never updates; coefficient-only, random-past and released-error arms
+share labels. At96/128/160 propose at most4 centers from newest32 released
+training observations, maximum28 and matched growth capacity. Error selection
+maximizes absolute frozen-offset issued residual; random uses seeds101-120.
+Commit candidate before future admission access. Compare synchronized candidates
+on next8 newly issued admission-only labels after their release; consume once
+and never train on them. Candidate mean Brier must be <= incumbent+.01 and
+<= frozen offset+.01. Pending candidates cause missed opportunities. No tail
+flush. Record exact states, touched coefficients, pool selection, rejected
+labels, pending feedback, final heads and retention predictions before labels.
+No model load, no fitted-head dependency, no retention fit; exposed offline
+prequential evidence grants zero independent generalization credit.
+
+### SCENARIO-VERIFY-8116-CAUSAL
+
+Private tests verify original slots, delay, genesis, shared four-step training,
+bounded coefficients, frozen offset, matched candidates, single-use admission,
+missed opportunities, tail censoring and first64-only geometry.
+
+### SCENARIO-VERIFY-8116-RECOVERY
+
+Cold JSON recovery at pending feedback, candidate commit and admission boundaries
+matches uninterrupted predictions and final hashes. Changed baseline hashes,
+future-label injection and dropped original slots fail closed.
+
+REQ-VERIFY-8116 candidate clarification: appended centers start with zero weights.
+A committed candidate receives no extra training replay. It can learn these
+weights only from the shared four-step released-label updates after admission;
+this prevents an extra optimizer budget from masquerading as a capacity effect.
