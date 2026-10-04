@@ -21392,3 +21392,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-04: Measure full radial transactions and charged model acquisition (⚠️ Blocked) — honest_verdict=complete_blocked_changed_content_current_capture; results/experiment_8106_v701_radial_service_cost.json
 - 2026-10-04: Qualify the actual supervisor reader and inspect new redirect outcomes (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8107_v701_arc_supervisor_evidence.json
 - 2026-10-04: Bound radial precision and preserve each board evidence boundary (⚠️ Research Finding) — honest_verdict=complete_null_radial_hardware_boundary; results/experiment_8108_v701_radial_hardware_boundary.json
+- 2026-10-04: Independently decide thirteen outcomes and the remaining PRD gaps (⚠️ Blocked) — honest_verdict=complete_blocked_v701_capstone; results/experiment_8109_v701_capstone.json
