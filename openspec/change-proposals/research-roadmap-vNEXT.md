@@ -103,3 +103,150 @@ owns human annotations. Fit/tune labels never enter the reserved-capture worker.
 The online learner receives only released feedback; retention labels stay with
 the evaluator until all final predictions are sealed. The independent learning
 branch does not depend on Exp8112, Exp8113, Exp8114 or Exp8115.
+
+## V702 numerical freeze — Exp8111, 20261004
+
+The independent numerical contract is sealed in
+[v702-methods-and-stream-protocol.md](v702-methods-and-stream-protocol.md).
+It preserves the original 640 V701 slots and roles and freezes source
+interventions, paired typed costs, fitting, two-hypothesis correction, and
+zero-residual delayed memory before new V702 outcomes. Methods and historical
+stream readiness are separate. FR-11 has no fitted-head or fit-capture dependency.
+
+## Historical V701 reader compatibility
+
+The following byte-sealed V701 protocol is retained for historical producer
+regressions. New V702 outcomes use the independent contract linked above.
+
+## Frozen data and numerical protocol
+
+**Population and exposure.** Use official RAGTruth training responses. The split
+field lives on response rows. A public-metadata check found2515 train source IDs
+before normalization. All are treated as previously exposed development data.
+This is a changed, narrower research claim; Exp8084's block remains valid.
+
+Render complete structured sources through the existing public-source reader.
+Normalize rendered text with NFKC, casefold and collapsed whitespace. Join source
+IDs and exact normalized hashes, then connected components of five-token-shingle
+Jaccard>=.8. Keep an entire connected component in one role. Select one response
+by smallest SHA256 of `V701-response` plus response ID among train responses in
+the component. Break hash ties by source ID then response ID. Lowest numeric ID
+is forbidden: it picks `gpt-4-0613` on every training source in this checkout.
+
+Order components by SHA256 of `V701` plus their smallest normalized source bytes.
+Select the first640 public-complete components. Assign consecutive roles fit128,
+tune64,evaluation128,stream256,retention64. Freeze public model and task-type
+counts. No outcome, label, quality field or parser success selects a replacement.
+Reject malformed public sources before selection with an explicit reason.
+After selection, exclusions keep their original slots and denominators.
+
+The evaluator maps complete human span annotations to unsupported status.
+Absent or incomplete annotation status is unknown, never a negative label.
+Require fit>=96 with>=16 per class and tune>=48 with>=8 per class before GPU
+capture. Only aggregate support booleans pass to capture workers. The evaluation
+and learning support rules below cannot be repaired through label-based resampling.
+
+**Features and fitting.** The input is nine dimensional: Qwen unsupported-risk
+logit plus eight Exp7980 public lexical features. Clip the parsed probability
+only for the logit transform to [1e-6,1-1e-6], recording clipped rows. Fit mean
+and standard deviation on fit data; replace zero standard deviation with one.
+Compute geometry inside each of four source-group fit folds.
+
+Fit scalar Qwen-only, linear nine-feature, additive spline and radial heads.
+Reuse the established additive basis with its exact basis configuration sealed
+in Exp8098. Radial phi_j(x)=exp(-||x-c_j||²/(2*sigma²)). Select16 initial centers
+by deterministic farthest-first traversal with fit-source-hash ties; reserve the
+next12 fit centers. Sigma is the median positive fit pair distance, or1 if none.
+Ridge is selected from [0.0001,0.001,0.01,0.1,1] by mean fit-fold log loss;
+choose the largest tied ridge. Exclude intercept from the ridge penalty.
+Use at most256 optimizer iterations and600 seconds per fit, with finite
+parameters/objective and gradient infinity norm<=1e-7. Incomplete convergence
+is not qualified fitting. Do not increase budgets after seeing evaluation results.
+
+Tune alone fits affine logit calibration, including the same calibration step
+for every arm. Seal raw and calibrated coefficients. Equivalent logistic code
+must reproduce p(unsupported)=sigmoid(f), with E0=0 and E1=-f, within1e-10.
+Costs are accept=5*y, reject=1-y and escalate=.5. Choose minimum expected cost;
+ties escalate. Always-escalate is an explicit reference. No source intervention
+feature enters the preregistered heads.
+
+**Model work.** Only Exp8099,8101,8102 need an LLM. Each includes
+`unsloth/Qwen3.8-27B-GGUF` in MODEL_SPECS. Use the cached GGUF and embedded
+tokenizer through llama.cpp, with current CUDA offload and owned GPU receipts.
+Each call uses the qualified96-token bounded-judgment contract and a120-second
+limit. The task caps are288,128,320 calls respectively:736 calls and70656 output
+tokens maximum across the milestone. No retries or replacement of started calls.
+Resume only unstarted slots under immutable manifests. Context overflow is an
+exclusion; never silently truncate evidence. The three tasks are all
+`model_bounded_generation` with a10-second floor. No task claims full generation.
+Embedding-only or load-only work would require `model_load_no_generation` with
+its2-second floor, but no such task is scheduled. Other tasks declare no_model_load.
+
+**Online experiment.** Freeze features before temporal replay. Event order is:
+prediction issue and durable commit; candidate commitment at an opportunity;
+selection of future admission slots; label release; admission; durable update.
+Feedback releases at original slot+20. Missing slots do not compress time.
+Pending capacity is32; an unexpected overflow evicts the oldest pending item,
+records permanent feedback loss and disqualifies a claim of lossless execution.
+
+Source-ID SHA256 modulo4 assigns admission-only bucket0 and update-only others.
+The first64 slots are burn-in. Use opportunities64,128,192, with newest64
+released update rows,>=16 available updates and>=4 frozen-head issued errors.
+Shared error eligibility determines whether every adaptive arm adds4 centers.
+Controls use the reserved fit centers or seeded label-blind past rows. Record
+duplicate centers and effective rank; do not conceal degeneracy or add substitutes.
+All installed counts match. Append zero coefficients before computing candidates.
+The frozen arm retains its original16 centers and never updates.
+
+Each adaptive arm takes four mean-loss SGD steps with eta=.05 and its fit-selected
+ridge from its own current coefficients. The global compute budget is1200 seconds.
+Commit candidates before selecting the next12 unused admission rows with release
+strictly after commitment. Require>=2 per class. All arms share these labels and
+wait for the same release slot. A block must finish before the next opportunity
+and by slot256; otherwise the whole opportunity defers without label replacement.
+Test alpha=[1,.5,.25,.125], selecting the largest passing step. Passing means no
+extra false accepts, cost and Brier no worse than incumbent, and cost<=fitted
+baseline+.02 and Brier<=fitted baseline+.01 on the admission block. The baseline
+uses immutable fitted coefficients with zero padding for new centers. Admission
+checks are empirical guards, not independent certification of safety.
+
+Rejected candidates retain old coefficients and zero-weight installed centers.
+Persist all pending observations, center identities, weights and used admission
+IDs. Seeds101..120 quantify algorithm variability; they are not new data.
+Final heads and retention predictions commit before retention labels open.
+
+## Hypotheses, support and decision rules
+
+H1 is radial minus additive typed-decision utility on128 reserved source slots.
+H2 is error-center minus fixed-center utility on original stream slots65..256.
+Positive gain means control cost minus treatment cost. Minimize cost and Brier.
+These are exposed-development diagnostics, not confirmatory population tests.
+
+| Rule | H1 | H2 |
+|---|---|---|
+| Required support | >=96 complete sources;>=12/class | >=128 complete paired sources;>=8/class;>=8 nonoverlapping16-slot blocks with usable rows |
+| Primary effect | Cost-gain97.5% one-sided bootstrap lower bound>.02 | Same gain rule with moving-block bootstrap |
+| Useful action changes | >=5 beneficial sources; zero extra false accepts | Same |
+| Calibration | Brier increase<=.01 | Report issued-state Brier; retention rules also apply |
+| Other controls | Scalar, linear, equivalent logistic, always-escalate | Random-past and frozen; cost increase<=.02 against each |
+| Retention | Not a learning claim | >=48 sources;>=8/class; empirical cost increase<=.02 and Brier increase<=.01 versus frozen; no extra false accepts |
+
+Use10000 deterministic bootstrap draws. H1 resamples source groups. H2 averages
+seeds within source before moving-block resampling of original slots, primary
+block16 and sensitivities8,32. Keep missing masks inside blocks. A draw with no
+eligible rows is invalid and remains counted; fewer than9500 valid draws blocks
+the interval. The two97.5% one-sided bounds are a conservative two-question
+screen. Prior corpus exposure prevents interpreting their nominal coverage as
+independent confirmation. Report effect sizes and all harms even when gates fail.
+
+Retention intervals are descriptive. The64-source panel does not prove rare-event
+safety or general absence of forgetting. Compute class support and achievable
+precision explicitly. Generalized and independent-generalization scores remain0.
+A failed scientific effect is null. Missing external inputs are blocked. Failed
+owned validation is disqualified. Only unfinished owned work is partial.
+
+
+## Dependency graph
+
+Historical V701 dependencies are preserved in the V701 design. V702 uses the
+architecture and independent memory branch above.

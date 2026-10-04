@@ -48202,3 +48202,31 @@ saved bytes after live-path deletion and independently rebuild authority rows,
 historical dispositions and all readiness reductions. Forged rows, input hashes,
 code hashes, history or receipts SHALL fail cold replay. Tests write outside
 results and preserve original historical assertions and primaries.
+
+## REQ-VERIFY-8111: Seal independent V702 methods and stream custody
+
+Seal the numerical protocol before reopening outcomes. Authenticate exact
+Exp8098 public rendering, response selection and evaluator annotations for all
+640 original slots: fit128/tune64/evaluation128/stream256/retention64. Preserve
+unknown labels and missing captures without replacements. Independently reparse
+Exp8102 raw completions and recompute label-free features and retained masks.
+Export methods_ready_score separately from stream_input_ready_score. Neither
+stream qualification nor FR-11 may require a fitted head or new fit capture.
+FR-11 starts at zero residual over immutable Qwen offsets, warms up on slots
+1..64, evaluates slots65..256, caps centers at28, and uses four SGD steps,
+delayed feedback, separate one-use admission roles and complete durable states.
+The frozen design specifies interventions, duplicates, fitting, typed costs,
+source denominators and Bonferroni correction for exactly two hypotheses.
+
+### SCENARIO-VERIFY-8111: Independent blocks and immutable custody
+
+Private tests retain methods readiness when stream evidence is absent; reject
+label leaks, crossed roles, removed slots, mutated source bytes, raw completion
+drift and replay drift. Historical failed artifacts remain untouched. Exposed
+development grants zero independent/generalized learning credit.
+
+REQ-VERIFY-8111 is implemented by
+`python/carnot/verify/methods_stream_custody_8111.py`. Private tests in
+`tests/python/test_methods_stream_custody_8111.py` authenticate complete
+original selection/annotations and independently reparse historical completions.
+The genesis seal records zero residual and durable state requirements only.

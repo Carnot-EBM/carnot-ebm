@@ -50168,3 +50168,14 @@ No hardware purchase is needed for the next bounded studies. Existing CUDA
 resources handle the mandated Qwen model; CPU and the qualified Rust binding
 handle selectors. KV260 fabric, PolarFire Linux CPU dispatch and GateMate's
 unchanged physical/JTAG block must retain separate evidence scopes.
+
+## 2026-10-04 Exp8111 bounded primary ingestion
+
+Primary abstracts ingested: [EAEV](https://arxiv.org/abs/2609.08267),
+[KAC](https://arxiv.org/abs/2503.21076),
+[Forgetting](https://arxiv.org/abs/2511.12828),
+[Capacity-constrained delayed feedback](https://arxiv.org/abs/2606.11711), and
+[On-chip spline learning](https://arxiv.org/abs/2602.02056).
+Five exact HTML transcripts bind the method-source map in Exp8111. Mechanism
+limits and ingestion status are recorded in the matching research-studying
+appendix. No citation-service availability gate or additional fresh search was used.

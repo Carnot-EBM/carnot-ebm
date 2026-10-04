@@ -6424,3 +6424,18 @@ delayed feedback [2602.02634](https://arxiv.org/abs/2602.02634), and capacity
 issuing-state custody and permanent feedback loss. The method source map records
 each difference. No paper guarantee transfers. Exposed development supports no
 independent generalization claim, and the retention panel cannot certify safety.
+
+## 2026-10-04 Exp8111 V702 primary sources — ingested
+
+| Primary source | Status | Sealed use and mechanism limit |
+|---|---|---|
+| [EAEV 2609.08267](https://arxiv.org/abs/2609.08267) | Ingested, primary abstract | Register source perturbations and duplicate controls; whole-answer probability diagnostics do not reproduce entity alignment. |
+| [KAC 2503.21076](https://arxiv.org/abs/2503.21076) | Ingested, primary abstract | Bound radial capacity; multivariate Gaussian centers differ from channel-wise KAC bases. |
+| [Forgetting 2511.12828](https://arxiv.org/abs/2511.12828) | Ingested, primary abstract | Measure independent retention; localized support alone does not prevent high-dimensional forgetting. |
+| [Capacity 2606.11711](https://arxiv.org/abs/2606.11711) | Ingested, primary abstract | Persist finite pending feedback; empirical admission guards inherit no scheduler regret theorem. |
+| [On-chip KAN 2602.02056](https://arxiv.org/abs/2602.02056) | Ingested, primary abstract, v4 | Charge updates and memory movement; spline FPGA results are not CPU radial or Carnot hardware measurements. |
+
+Exact primary HTML bytes are retained in Exp8111's literature directory. The
+fresh primary retrieval is bounded to these five sources. The prior inaccessible
+citation service is a bibliographic limitation, not a science gate. The sealed
+protocol is `openspec/change-proposals/v702-methods-and-stream-protocol.md`.

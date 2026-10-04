@@ -92396,3 +92396,29 @@ separately. Publish only checked bytes through primary_publication after strict
 row lint and adversarial verification. Owned failures disqualify readiness.
 Operational/status/changelog/traceability reconciliation is delegated to the
 conductor by the final 2026-10-04 task instruction.
+
+## REQ-REPORT-8111: Zero-model methods publication
+
+Exp8111 SHALL freeze exact validation argv before measurement and publish only
+normally exited, checked bytes through primary_publication. Save primitive
+source rows, snapshots, protocol, state contracts, phase timings, code/config
+hashes and current validation logs. Current substrate is aggregation from
+upstream artifacts, no_model_load, MODEL_SPECS=[], no calls or trained heads.
+Owned failures disqualify both readiness fields. Missing external evidence is
+terminal complete_blocked_<check>, with the actual failed operand in the gate
+summary; methods and stream readiness remain independently reduced.
+
+### SCENARIO-REPORT-8111: Private CLI and cold replay
+
+Run real script-path success, external block, custody mutation and cold replay
+outside the checkout. Reject changed rows, snapshots, protocol and receipts.
+Require scoped consumers, Ruff, strict mypy, scoped spec references, E2E-015/019
+and 100 percent new statement coverage. One bounded full suite is diagnostic.
+Fixtures remain outside results; preserve all historical primaries/assertions.
+
+REQ-REPORT-8111 is implemented by
+`python/carnot/reporting/methods_stream_execution_8111.py` and the thin
+`experiment_8111_v702_methods_and_stream_custody.py` CLI. Private success,
+blocked, mutation, cold-replay and terminal-failure routes preserve historical
+primaries. A failed owned terminal check publishes disqualified zero readiness
+and retains its failed candidate and report.
