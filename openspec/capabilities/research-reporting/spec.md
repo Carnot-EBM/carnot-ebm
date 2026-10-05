@@ -93185,3 +93185,22 @@ digest and stale milestone fail. Cold replay independently rebuilds the fourteen
 task rows and fourteen historical dispositions and rejects changed source, code,
 sidecar, log, primitive or reduction bytes. Failed historical validation remains
 visible. No model is loaded and no milestone is activated by this experiment.
+
+## REQ-REPORT-8151: Publish source method custody after owned validation
+
+Exp8151 SHALL publish one primary with primitive evidence through primary_publication.
+The CLI SHALL accept20261005 outside the checkout without PYTHONPATH. It SHALL
+freeze validation argv before measurement and record normal exits, durations and
+log hashes. Owned failures disqualify and zero readiness. External blocks name
+exact failed operands. Source readiness requires custody and validation, without
+requiring a scientific benefit. Imported model provenance stays separate from
+zero current calls. Preserve historical primaries and operator-curated pages.
+The conductor owns status, changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8151: Private publication and terminal replay
+
+Private success, missing-source block and tamper routes exit normally. Original
+source consumers and E2E-015/016/019 remain exercised. Added statements reach
+100 percent coverage; scoped tests, Ruff, strict mypy and explicit spec checks pass.
+Cold replay independently rebuilds counts and rejects altered source, method,
+code, log, prompt, mask or reduction bytes. Unrelated repository health stays separate.

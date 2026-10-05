@@ -1,0 +1,104 @@
+{
+  "additive_basis": {
+    "basis_columns": 63,
+    "channels": 9,
+    "clipping": "fit endpoints",
+    "degree": 3,
+    "endpoint_multiplicity": 4,
+    "endpoint_padding": 1e-08,
+    "fit_quantiles": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "function": "design",
+    "intercept": "separate unpenalized",
+    "module": "carnot.verify.multivariate_energy_7982",
+    "qwen_offset": false
+  },
+  "features": [
+    "bounded_qwen_unsupported_logit",
+    "overlap_mean",
+    "overlap_maximum",
+    "negation_mismatch_mean",
+    "negation_mismatch_maximum",
+    "numeric_mismatch_mean",
+    "numeric_mismatch_maximum",
+    "uncovered_fraction_mean",
+    "uncovered_fraction_maximum"
+  ],
+  "kernel_differences": {
+    "kernel": "multivariate squared Euclidean Gaussian",
+    "old_solver": "8085 penalizes intercept and fixes ridge .01; V701 excludes intercept and uses four-fold ridge selection",
+    "online": "V701 four SGD steps replace 8085 bounded batch solve"
+  },
+  "no_paper_guarantee_transfers": true,
+  "precision_bounds": {
+    "128": {
+      "worst_case_95_normal_half_width": 0.08662058069535207,
+      "zero_event_95_upper": 0.023132405251746757,
+      "zero_event_97_5_upper": 0.028408053443543912
+    },
+    "192": {
+      "worst_case_95_normal_half_width": 0.07072540797572915,
+      "zero_event_95_upper": 0.015481679618674082,
+      "zero_event_97_5_upper": 0.019029522168779844
+    },
+    "256": {
+      "worst_case_95_normal_half_width": 0.06125,
+      "zero_event_95_upper": 0.011633876163163248,
+      "zero_event_97_5_upper": 0.014306362729039401
+    },
+    "64": {
+      "worst_case_95_normal_half_width": 0.1225,
+      "zero_event_95_upper": 0.045729702330762456,
+      "zero_event_97_5_upper": 0.056009089386636624
+    }
+  },
+  "protocol": "\n\n**Population and exposure.** Use official RAGTruth training responses. The split\nfield lives on response rows. A public-metadata check found2515 train source IDs\nbefore normalization. All are treated as previously exposed development data.\nThis is a changed, narrower research claim; Exp8084's block remains valid.\n\nRender complete structured sources through the existing public-source reader.\nNormalize rendered text with NFKC, casefold and collapsed whitespace. Join source\nIDs and exact normalized hashes, then connected components of five-token-shingle\nJaccard>=.8. Keep an entire connected component in one role. Select one response\nby smallest SHA256 of `V701-response` plus response ID among train responses in\nthe component. Break hash ties by source ID then response ID. Lowest numeric ID\nis forbidden: it picks `gpt-4-0613` on every training source in this checkout.\n\nOrder components by SHA256 of `V701` plus their smallest normalized source bytes.\nSelect the first640 public-complete components. Assign consecutive roles fit128,\ntune64,evaluation128,stream256,retention64. Freeze public model and task-type\ncounts. No outcome, label, quality field or parser success selects a replacement.\nReject malformed public sources before selection with an explicit reason.\nAfter selection, exclusions keep their original slots and denominators.\n\nThe evaluator maps complete human span annotations to unsupported status.\nAbsent or incomplete annotation status is unknown, never a negative label.\nRequire fit>=96 with>=16 per class and tune>=48 with>=8 per class before GPU\ncapture. Only aggregate support booleans pass to capture workers. The evaluation\nand learning support rules below cannot be repaired through label-based resampling.\n\n**Features and fitting.** The input is nine dimensional: Qwen unsupported-risk\nlogit plus eight Exp7980 public lexical features. Clip the parsed probability\nonly for the logit transform to [1e-6,1-1e-6], recording clipped rows. Fit mean\nand standard deviation on fit data; replace zero standard deviation with one.\nCompute geometry inside each of four source-group fit folds.\n\nFit scalar Qwen-only, linear nine-feature, additive spline and radial heads.\nReuse the established additive basis with its exact basis configuration sealed\nin Exp8098. Radial phi_j(x)=exp(-||x-c_j||\u00b2/(2*sigma\u00b2)). Select16 initial centers\nby deterministic farthest-first traversal with fit-source-hash ties; reserve the\nnext12 fit centers. Sigma is the median positive fit pair distance, or1 if none.\nRidge is selected from [0.0001,0.001,0.01,0.1,1] by mean fit-fold log loss;\nchoose the largest tied ridge. Exclude intercept from the ridge penalty.\nUse at most256 optimizer iterations and600 seconds per fit, with finite\nparameters/objective and gradient infinity norm<=1e-7. Incomplete convergence\nis not qualified fitting. Do not increase budgets after seeing evaluation results.\n\nTune alone fits affine logit calibration, including the same calibration step\nfor every arm. Seal raw and calibrated coefficients. Equivalent logistic code\nmust reproduce p(unsupported)=sigmoid(f), with E0=0 and E1=-f, within1e-10.\nCosts are accept=5*y, reject=1-y and escalate=.5. Choose minimum expected cost;\nties escalate. Always-escalate is an explicit reference. No source intervention\nfeature enters the preregistered heads.\n\n**Model work.** Only Exp8099,8101,8102 need an LLM. Each includes\n`unsloth/Qwen3.8-27B-GGUF` in MODEL_SPECS. Use the cached GGUF and embedded\ntokenizer through llama.cpp, with current CUDA offload and owned GPU receipts.\nEach call uses the qualified96-token bounded-judgment contract and a120-second\nlimit. The task caps are288,128,320 calls respectively:736 calls and70656 output\ntokens maximum across the milestone. No retries or replacement of started calls.\nResume only unstarted slots under immutable manifests. Context overflow is an\nexclusion; never silently truncate evidence. The three tasks are all\n`model_bounded_generation` with a10-second floor. No task claims full generation.\nEmbedding-only or load-only work would require `model_load_no_generation` with\nits2-second floor, but no such task is scheduled. Other tasks declare no_model_load.\n\n**Online experiment.** Freeze features before temporal replay. Event order is:\nprediction issue and durable commit; candidate commitment at an opportunity;\nselection of future admission slots; label release; admission; durable update.\nFeedback releases at original slot+20. Missing slots do not compress time.\nPending capacity is32; an unexpected overflow evicts the oldest pending item,\nrecords permanent feedback loss and disqualifies a claim of lossless execution.\n\nSource-ID SHA256 modulo4 assigns admission-only bucket0 and update-only others.\nThe first64 slots are burn-in. Use opportunities64,128,192, with newest64\nreleased update rows,>=16 available updates and>=4 frozen-head issued errors.\nShared error eligibility determines whether every adaptive arm adds4 centers.\nControls use the reserved fit centers or seeded label-blind past rows. Record\nduplicate centers and effective rank; do not conceal degeneracy or add substitutes.\nAll installed counts match. Append zero coefficients before computing candidates.\nThe frozen arm retains its original16 centers and never updates.\n\nEach adaptive arm takes four mean-loss SGD steps with eta=.05 and its fit-selected\nridge from its own current coefficients. The global compute budget is1200 seconds.\nCommit candidates before selecting the next12 unused admission rows with release\nstrictly after commitment. Require>=2 per class. All arms share these labels and\nwait for the same release slot. A block must finish before the next opportunity\nand by slot256; otherwise the whole opportunity defers without label replacement.\nTest alpha=[1,.5,.25,.125], selecting the largest passing step. Passing means no\nextra false accepts, cost and Brier no worse than incumbent, and cost<=fitted\nbaseline+.02 and Brier<=fitted baseline+.01 on the admission block. The baseline\nuses immutable fitted coefficients with zero padding for new centers. Admission\nchecks are empirical guards, not independent certification of safety.\n\nRejected candidates retain old coefficients and zero-weight installed centers.\nPersist all pending observations, center identities, weights and used admission\nIDs. Seeds101..120 quantify algorithm variability; they are not new data.\nFinal heads and retention predictions commit before retention labels open.\n\n## Hypotheses, support and decision rules\n\nH1 is radial minus additive typed-decision utility on128 reserved source slots.\nH2 is error-center minus fixed-center utility on original stream slots65..256.\nPositive gain means control cost minus treatment cost. Minimize cost and Brier.\nThese are exposed-development diagnostics, not confirmatory population tests.\n\n| Rule | H1 | H2 |\n|---|---|---|\n| Required support | >=96 complete sources;>=12/class | >=128 complete paired sources;>=8/class;>=8 nonoverlapping16-slot blocks with usable rows |\n| Primary effect | Cost-gain97.5% one-sided bootstrap lower bound>.02 | Same gain rule with moving-block bootstrap |\n| Useful action changes | >=5 beneficial sources; zero extra false accepts | Same |\n| Calibration | Brier increase<=.01 | Report issued-state Brier; retention rules also apply |\n| Other controls | Scalar, linear, equivalent logistic, always-escalate | Random-past and frozen; cost increase<=.02 against each |\n| Retention | Not a learning claim | >=48 sources;>=8/class; empirical cost increase<=.02 and Brier increase<=.01 versus frozen; no extra false accepts |\n\nUse10000 deterministic bootstrap draws. H1 resamples source groups. H2 averages\nseeds within source before moving-block resampling of original slots, primary\nblock16 and sensitivities8,32. Keep missing masks inside blocks. A draw with no\neligible rows is invalid and remains counted; fewer than9500 valid draws blocks\nthe interval. The two97.5% one-sided bounds are a conservative two-question\nscreen. Prior corpus exposure prevents interpreting their nominal coverage as\nindependent confirmation. Report effect sizes and all harms even when gates fail.\n\nRetention intervals are descriptive. The64-source panel does not prove rare-event\nsafety or general absence of forgetting. Compute class support and achievable\nprecision explicitly. Generalized and independent-generalization scores remain0.\nA failed scientific effect is null. Missing external inputs are blocked. Failed\nowned validation is disqualified. Only unfinished owned work is partial.\n\n",
+  "protocol_sha256": "sha256:ff53a866c1c29a4d17c4529e603667a9c1d430628251b5075258e991f1f2c19c",
+  "rare_event_safety_certified": false,
+  "response_selection_rule": "smallest SHA256(V701-response + response_id); ties source_id then response_id",
+  "roles": {
+    "evaluation": 128,
+    "fit": 128,
+    "retention": 64,
+    "stream": 256,
+    "tune": 64
+  },
+  "statistical_plan": {
+    "draws": 10000,
+    "exposed_development_only": true,
+    "margin": 0.02,
+    "one_sided_confidence": 0.975,
+    "primary_block": 16,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120
+    ],
+    "sensitivity_blocks": [
+      8,
+      32
+    ],
+    "unit": "source_cluster",
+    "valid_minimum": 9500
+  }
+}

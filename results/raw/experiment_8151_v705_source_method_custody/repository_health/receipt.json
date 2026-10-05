@@ -1,0 +1,27 @@
+{
+  "name": "repository_full_suite",
+  "argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+    "tests/python",
+    "-q"
+  ],
+  "expected_exit": 0,
+  "actual_exit": 2,
+  "exit_code": 2,
+  "passed": false,
+  "timed_out": false,
+  "normal_process_exit": false,
+  "classification": "diagnostic",
+  "duration_s": 198.65,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8151_v705_source_method_custody/repository_health/full_suite.log",
+  "log_sha256": "sha256:637f68b263918179d265fa6396a98d5afc1a34f296ab5caeab25b7c25c8dd083",
+  "failed_tests": [
+    "tests/python/test_arc_plan_divergence_halt_10025.py::test_live_induction_arguments_at_both_sites[None-stall]",
+    "tests/python/test_arc_plan_divergence_halt_10025.py::test_live_induction_arguments_at_both_sites[1.0-stall]",
+    "tests/python/test_arc_plan_divergence_halt_10025.py::test_live_induction_arguments_at_both_sites[0.9-stall]",
+    "tests/python/test_arc_plan_divergence_halt_10025.py::test_live_induction_arguments_at_both_sites[0.75-stall]",
+    "tests/python/test_e2e_training_sampling.py::TestE2ETrainingSampling::test_rosenbrock_langevin_convergence",
+    "tests/python/test_e2e_training_sampling.py::TestE2ETrainingSampling::test_dsm_training_reduces_loss"
+  ],
+  "interruption_reason": "Stopped after unrelated failures; no full-suite rerun. Completed 2838 passing and 6 failing tests; remainder pending."
+}

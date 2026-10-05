@@ -1,0 +1,291 @@
+{
+  "checks": [
+    {
+      "artifact_field": "resource_exists",
+      "check": "resource_exists",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8137_v704_source_protocol.json",
+      "upstream": "results/experiment_8137_v704_source_protocol.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "check": "sha256",
+      "expected": "sha256:eeaba4a4290a6953d3ba830379fba70ce9408c9af34115456928a73dbfb73648",
+      "hash": null,
+      "observed": "sha256:eeaba4a4290a6953d3ba830379fba70ce9408c9af34115456928a73dbfb73648",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8137_v704_source_protocol.json",
+      "upstream": "results/experiment_8137_v704_source_protocol.json"
+    },
+    {
+      "artifact_field": "source_custody_ready_score",
+      "check": "source_custody_ready_score",
+      "expected": 1,
+      "hash": "sha256:eeaba4a4290a6953d3ba830379fba70ce9408c9af34115456928a73dbfb73648",
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8137_v704_source_protocol.json",
+      "upstream": "results/experiment_8137_v704_source_protocol.json"
+    },
+    {
+      "artifact_field": "evidence_protocol",
+      "check": "evidence_protocol",
+      "expected": {
+        "KAN_CL_importance_anchoring": "deferred_existing_retirement",
+        "arms": [
+          "holistic",
+          "source_span"
+        ],
+        "calls_per_source": 2,
+        "delayed_memory_authority": "openspec/change-proposals/v702-methods-and-stream-protocol.md",
+        "exposure_scope": "exposed_development_within_run_disjoint",
+        "features": [
+          "holistic_logit",
+          "overlap_mean",
+          "overlap_maximum",
+          "negation_mismatch_mean",
+          "negation_mismatch_maximum",
+          "numeric_mismatch_mean",
+          "numeric_mismatch_maximum",
+          "uncovered_fraction_mean",
+          "uncovered_fraction_maximum",
+          "span_logit",
+          "valid_quote",
+          "quote_source_byte_ratio"
+        ],
+        "maximum_input_tokens": 6000,
+        "maximum_output_tokens_per_call": 128,
+        "maximum_quote_words": 32,
+        "normalization": "fit-only mean/std; zero std becomes 1",
+        "order": "source_cluster_sha256_low_bit",
+        "parser": "strict-json-finite-probability-utf8-half-open-v1",
+        "probability_clip": [
+          1e-06,
+          0.999999
+        ],
+        "prompt_prefixes": {
+          "holistic": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n",
+          "source_span": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n"
+        },
+        "quote_absence": [
+          0,
+          0
+        ],
+        "semantic_entailment_label": null,
+        "version": "v703-evidence-8124"
+      },
+      "hash": "sha256:eeaba4a4290a6953d3ba830379fba70ce9408c9af34115456928a73dbfb73648",
+      "observed": {
+        "KAN_CL_importance_anchoring": "deferred_existing_retirement",
+        "arms": [
+          "holistic",
+          "source_span"
+        ],
+        "calls_per_source": 2,
+        "delayed_memory_authority": "openspec/change-proposals/v702-methods-and-stream-protocol.md",
+        "exposure_scope": "exposed_development_within_run_disjoint",
+        "features": [
+          "holistic_logit",
+          "overlap_mean",
+          "overlap_maximum",
+          "negation_mismatch_mean",
+          "negation_mismatch_maximum",
+          "numeric_mismatch_mean",
+          "numeric_mismatch_maximum",
+          "uncovered_fraction_mean",
+          "uncovered_fraction_maximum",
+          "span_logit",
+          "valid_quote",
+          "quote_source_byte_ratio"
+        ],
+        "maximum_input_tokens": 6000,
+        "maximum_output_tokens_per_call": 128,
+        "maximum_quote_words": 32,
+        "normalization": "fit-only mean/std; zero std becomes 1",
+        "order": "source_cluster_sha256_low_bit",
+        "parser": "strict-json-finite-probability-utf8-half-open-v1",
+        "probability_clip": [
+          1e-06,
+          0.999999
+        ],
+        "prompt_prefixes": {
+          "holistic": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n",
+          "source_span": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n"
+        },
+        "quote_absence": [
+          0,
+          0
+        ],
+        "semantic_entailment_label": null,
+        "version": "v703-evidence-8124"
+      },
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8137_v704_source_protocol.json",
+      "upstream": "results/experiment_8137_v704_source_protocol.json"
+    },
+    {
+      "artifact_field": "cache_revision",
+      "check": "cache_revision",
+      "expected": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "hash": null,
+      "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "upstream": "current_cache"
+    },
+    {
+      "artifact_field": "gguf_sha256",
+      "check": "gguf_sha256",
+      "expected": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "observed": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "upstream": "current_cache"
+    },
+    {
+      "artifact_field": "runtime_executable",
+      "check": "runtime_executable",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "upstream": "current_cache"
+    },
+    {
+      "artifact_field": "runtime_sha256",
+      "check": "runtime_sha256",
+      "expected": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "hash": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "observed": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "upstream": "current_cache"
+    }
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "historical_MODEL_SPECS": [],
+      "historical_honest_verdict": "complete_disqualified_owned_validation",
+      "historical_model_invocation_counts": {
+        "generation_calls_attempted": 0,
+        "generation_calls_cancelled": 0,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 0,
+        "model_loads_cancelled": 0,
+        "model_loads_completed": 0,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0
+      },
+      "imported_model_provenance": [
+        {
+          "historical_MODEL_SPECS": [
+            "unsloth/Qwen3.8-27B-GGUF"
+          ],
+          "historical_model_invocation_counts": {
+            "generation_calls_attempted": 300,
+            "generation_calls_cancelled": 0,
+            "generation_calls_completed": 300,
+            "generation_calls_failed": 0,
+            "generation_calls_in_flight": 0,
+            "model_loads_attempted": 1,
+            "model_loads_cancelled": 0,
+            "model_loads_completed": 1,
+            "model_loads_failed": 0,
+            "model_loads_in_flight": 0
+          },
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8102_v701_learning_stream_capture.json",
+          "sha256": "sha256:32ca6d4b55322e3b31c8cf69fbc95dbb5a7fa065be8b84c5e59ce07c899623e8"
+        },
+        {
+          "historical_MODEL_SPECS": [],
+          "historical_model_invocation_counts": {
+            "generation_calls_attempted": 0,
+            "generation_calls_cancelled": 0,
+            "generation_calls_completed": 0,
+            "generation_calls_failed": 0,
+            "generation_calls_in_flight": 0,
+            "model_loads_attempted": 0,
+            "model_loads_cancelled": 0,
+            "model_loads_completed": 0,
+            "model_loads_failed": 0,
+            "model_loads_in_flight": 0
+          },
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8111_v702_methods_and_stream_custody.json",
+          "sha256": "sha256:9f0c89a0d205488ceb545ca93497e6341bbc3fd8d01a94d69c773ed6535e9ece"
+        },
+        {
+          "historical_MODEL_SPECS": [
+            "unsloth/Qwen3.8-27B-GGUF"
+          ],
+          "historical_model_invocation_counts": {
+            "generation_calls_attempted": 48,
+            "generation_calls_cancelled": 0,
+            "generation_calls_completed": 48,
+            "generation_calls_failed": 0,
+            "generation_calls_in_flight": 0,
+            "model_loads_attempted": 1,
+            "model_loads_cancelled": 0,
+            "model_loads_completed": 1,
+            "model_loads_failed": 0,
+            "model_loads_in_flight": 0
+          },
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8118_v702_fresh_acquisition_cost.json",
+          "sha256": "sha256:ffeff86ac75b20e12dc269c1db33c78764e3e24ccdf6d803cb65b12fde6b44ad"
+        }
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8137_v704_source_protocol.json",
+      "sha256": "sha256:eeaba4a4290a6953d3ba830379fba70ce9408c9af34115456928a73dbfb73648"
+    }
+  ],
+  "expected_runtime_identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "gguf_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "native_binary": {
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+    },
+    "runtime_identity": {
+      "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+    },
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+  },
+  "references": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8137_v704_source_protocol.json",
+      "sha256": "sha256:eeaba4a4290a6953d3ba830379fba70ce9408c9af34115456928a73dbfb73648",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8151_v705_source_method_custody/invocations/1791177635305798151/input-eeaba4a4290a6953d3ba830379fba70ce9408c9af34115456928a73dbfb73648.bin"
+    }
+  ],
+  "role_manifests": {
+    "evaluation": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8098_v701_development_methods/invocations/1791091874380692342/public/evaluation.json",
+      "sha256": "sha256:187e65c7a903c7e39baeb0d57816fb09a038d9a4e95e79bed820bfe80812c871"
+    },
+    "fit": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8098_v701_development_methods/invocations/1791091874380692342/public/fit.json",
+      "sha256": "sha256:3d7358a0bcd8072658c05c0042a200990b1ace58a091beb5960f833ae4d99192"
+    },
+    "tune": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8098_v701_development_methods/invocations/1791091874380692342/public/tune.json",
+      "sha256": "sha256:974303372d054e8810fd23952715d026c1eef087ed8cf44014d90e5367247aa7"
+    }
+  }
+}

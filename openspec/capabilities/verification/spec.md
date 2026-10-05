@@ -48846,3 +48846,24 @@ Outside-checkout script execution without PYTHONPATH SHALL accept20261005,
 publish private success/block/disqualified controls and reject tampered cold replay.
 Source and validator sidecar byte changes SHALL fail replay even if an attacker
 recomputes reported aggregate hashes. Historical model counts remain provenance.
+
+## REQ-VERIFY-8151: Immutable historical methods and source-only custody
+
+V701 readers SHALL default to the preserved 20261004 V701 file. An explicit
+method path requires its known SHA256; unknown hashes and changed bytes fail.
+Private tests SHALL reproduce the old IndexError and change unrelated vNEXT
+headings without changing historical methods. Production seals stay intact.
+Source qualification SHALL preserve V704's 640 paired complete-source prompts,
+320 original source slots, role masks, probability target and UTF-8 quote parser.
+It SHALL authenticate source evidence without resplitting or reading reserved labels.
+Learning-stream validation SHALL not be a source prerequisite. Expected Qwen
+revision SHALL be frozen from pinned provenance before current cache comparison.
+Whole-source overlength exclusion SHALL never truncate or relabel a source.
+Current model loads, calls, trained heads and independent science scores stay zero.
+
+### SCENARIO-VERIFY-8151: Private method, parser and custody mutations
+
+The five original failed consumer routes pass against the pinned method document.
+Private method mutation and unknown identity fail. Exact prompt, source shard,
+UTF-8 offset, malformed probability and whole-source mask assertions remain.
+Tampered primitives, code, logs and reduction claims fail cold replay.

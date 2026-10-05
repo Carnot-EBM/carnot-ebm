@@ -157,7 +157,11 @@ def main(argv: list[str] | None = None) -> int:
     os.environ["PYTHONUNBUFFERED"] = "1"
     e.progress("start")
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--date", choices=["20261004"], default="20261004")
+    parser.add_argument(
+        "--date",
+        choices=[getattr(e, "RUN_DATE", "20261004")],
+        default=getattr(e, "RUN_DATE", "20261004"),
+    )
     parser.add_argument("--root", type=Path, default=e.ROOT)
     parser.add_argument("--output", type=Path, default=e.ROOT / "results" / (e.NAME + ".json"))
     parser.add_argument("--fixture-output", type=Path)

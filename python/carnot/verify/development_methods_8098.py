@@ -23,6 +23,10 @@ Json = dict[str, Any]
 ROLES = dict(fit=128, tune=64, evaluation=128, stream=256, retention=64)
 RESPONSE_KEYS = frozenset({"id", "source_id", "split", "model", "response"})
 PUBLIC_KEYS = frozenset({"family_id", "source_bytes", "answer_bytes"})
+METHOD_PATH = Path(__file__).resolve().parents[3] / (
+    "openspec/change-proposals/research-roadmap-v701-preserved-20261004.md"
+)
+METHOD_SHA256 = "sha256:065f3d36fef036536641a495fdb9a754a6009d1714210528486b1cfd84796043"
 render = qualified.text_bytes
 normalize = qualified.normalize
 immutable = qualified.immutable
@@ -400,8 +404,10 @@ def seal(root: Path, raw: Path, mutation: str = "") -> Json:
     return plan
 
 
-def methods(design: Path) -> Json:
+def methods(design: Path = METHOD_PATH, method_hash: str = METHOD_SHA256) -> Json:
     """Seal full design text as well as exact basis choices before outcome access."""
+    if method_hash != METHOD_SHA256 or sha256_file(design) != method_hash:
+        raise ValueError("method_identity")
     protocol = (
         design.read_text()
         .split("## Frozen data and numerical protocol", 1)[1]
