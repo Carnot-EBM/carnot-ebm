@@ -19567,3 +19567,4 @@ code |
 | 2026-10-05 05:29 UTC | Qualify source capture against immutable historica | OK | 109 passed, 1 warning in 22.61s |
 | 2026-10-05 06:35 UTC | Seal release-aware learning methods and qualify us | OK | 100 passed, 1 warning in 322.26s (0:05:22) |
 | 2026-10-05 07:35 UTC | Capture bounded Qwen evidence on fixed fit and tun | OK | 94 passed, 1 warning in 38.45s |
+| 2026-10-05 08:15 UTC | Train calibrated typed decisions from matched sour | OK | 92 passed, 1 warning in 27.33s |
