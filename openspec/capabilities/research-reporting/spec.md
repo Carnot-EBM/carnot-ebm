@@ -93749,3 +93749,20 @@ Seven private tests passed. All 348 added statements have test coverage.
 The primary retains fourteen dispositions and three separate open PRD gaps.
 Repository health is a separate failed, interrupted observation. The conductor
 owns operational and traceability reconciliation.
+
+## REQ-REPORT-V707-PLAN: Bind the complete successor research schedule
+
+The V707 proposal SHALL contain fourteen ordered tasks, Exp8178 through Exp8191.
+The visible design table, full executable JSON and canonical task digest SHALL
+match research-roadmap-next.yaml. The planner SHALL preserve V706's document.
+The proposal SHALL preserve terminal failures and separate historical integrity
+from current scheduling readiness. Each task SHALL name its artifact, substrate,
+validation, progress output, chunked writes and applicable failure lineage.
+The active roadmap and conductor source SHALL remain unchanged during planning.
+
+### SCENARIO-REPORT-V707-PLAN-CONTRACT
+
+The existing authority reader accepts matching private staged and active copies.
+It rejects changed prompts, task omission, order changes, gate fields and digest.
+Planning validation uses existing guard tests and private E2E-018 authority paths.
+Status: planned; experiments remain unexecuted.

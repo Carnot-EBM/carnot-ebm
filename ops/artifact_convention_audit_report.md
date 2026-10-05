@@ -12,7 +12,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 | CHECKABLE | 2 |
 | CANNOT_DETERMINE | 6 |
 
-## experiment_8155_v705_reserved_evidence_capture.json
+## experiment_8168_sentence_energy_fit.json
 
 **CHECKABLE**
 
@@ -20,7 +20,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+The experiment was blocked at the pre-gate layer because upstream dependency `exp8167-fit-sentence-capture` failed the requirement `fit_trainable_score == 1` with an observed value of 0.
 
 ## WHAT IS MISSING
 nothing
@@ -28,31 +28,13 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8156_v705_decision_audit.json
+## experiment_8171_v706_released_feedback_learning.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8157_release_aware_learning.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8159_v705_durable_batch_service.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8160_v705_shared_acquisition_cost.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8161_v705_arc_supervisor_frontier.json
+## experiment_8172_v706_learning_benefit_audit.json
 
 **CHECKABLE**
 
@@ -60,7 +42,7 @@ reviewer call failed
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+Hypothesis H2 (error-center versus fixed-public-center) failed to demonstrate an advantage over the control arm, reporting an honest null with `h2_passed: false` and zero gain.
 
 ## WHAT IS MISSING
 nothing
@@ -68,13 +50,31 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8162_v705_hardware_workload_boundary.json
+## experiment_8173_v706_service_validation.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8163_v705_capstone.json
+## experiment_8174_v706_complete_request_cost.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8175_v706_arc_supervisor_delta.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8176_v706_hardware_workload_boundary.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8177_v706_capstone.json
 
 **CANNOT_DETERMINE**
 

@@ -49411,3 +49411,21 @@ A changed primitive or headline fails replay. Disqualified branches supply no
 science credit. An authentic repeated verdict retires only a matching documented
 scope; absent producer science cannot retire its method family. All generalization
 scores remain zero. Each remaining gap has a falsifiable next action.
+
+## REQ-VERIFY-V707-PLAN: Separate transport calibration and later learning
+
+The V707 plan SHALL qualify bounded sentence transport before scaling capture.
+Complete input sentences and sources SHALL retain original byte identities.
+Generated evidence indices SHALL remain predictions, not semantic ground truth.
+A calibrated small energy head SHALL use matched controls and reserved source
+roles. Continuous learning SHALL change a diagnosed numerical mechanism while
+preserving feedback release and independent admission. Its audit SHALL separate
+probability movement, typed decisions, retention and restart correctness.
+The generator remains frozen. Exposed data cannot establish independent benefit.
+
+### SCENARIO-VERIFY-V707-PLAN-BOUNDARIES
+
+V706's zero-yield capture cannot qualify new fitting. Its installed updates with
+zero changed decisions cannot establish FR-11 benefit. New model tasks declare
+Qwen3.8-27B GGUF and bounded generation. Artifact-only work declares no model load.
+Status: planned; task-specific specifications and tests precede implementation.

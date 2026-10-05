@@ -50556,3 +50556,105 @@ dates. Published results are hypotheses for Carnot, not local measurements.
 The scan found useful experimental ideas, not a reason to add hardware purchases.
 CUDA serves the mandated frozen Qwen model. CPU and Rust/PyO3 serve small heads.
 KV260, PolarFire and GateMate retain their separate operational obligations.
+
+## 2026-10-05 — V707 planning scan: bounded evidence and decision movement
+
+This source check precedes the V707 design. Paper claims remain external evidence.
+The new leads concern structured output and calibration retention. Existing energy,
+learning and hardware references were checked again. No model training or device
+execution occurred during this scan.
+
+### Findings selected for experiments
+
+- **Flexible and Efficient Grammar-Constrained Decoding**, February 2025,
+  revised July 2025. [Primary paper](https://arxiv.org/abs/2502.05111).
+  Token masking can enforce output syntax. This suggests a bounded relation
+  record for V706's failed sentence transport. Preserve complete input sentences;
+  output source indices instead of copying source quotes. Syntax does not prove
+  entailment. Use the installed runtime's grammar support, documented in the
+  [llama.cpp grammar guide](https://github.com/ggml-org/llama.cpp/blob/master/grammars/README.md).
+  First test a small paired canary; do not repeat a large zero-yield capture.
+- **Lost in Space: Finding the Right Tokens for Structured Output**, February
+  2025, revised August 2025. [Primary paper](https://arxiv.org/abs/2502.14969).
+  Apparently equivalent formats can change classification accuracy. Keep a
+  matched unconstrained arm in the canary. Preserve whitespace and tokenizer
+  identity. Freeze one syntax before evaluation; do not select formats using
+  reserved labels. A transport improvement is not a semantic improvement.
+- **RT4CHART**, March 2026, revised July 2026.
+  [Primary paper](https://arxiv.org/abs/2603.27752),
+  [Hugging Face discovery page](https://huggingface.co/papers/2603.27752).
+  Local claims and source-side evidence motivate the unfinished sentence study.
+  Carnot will retain original human answer labels. Predicted relations and
+  mechanically valid source indices are features, not replacement gold labels.
+- **Continual Calibration: Coverage Can Collapse Before Accuracy in Lifelong
+  LLM Fine-Tuning**, April 2026.
+  [Primary paper](https://arxiv.org/abs/2604.23987).
+  The paper separates uncertainty retention from accuracy retention. Its
+  task-specific calibration replay motivates a separate calibration-only control
+  and retention audit. Carnot adapts only a small head, not the generator.
+  The paper's exchangeability guarantees do not apply to this exposed delayed
+  stream. Measure Brier score, decision changes and false acceptance separately.
+- **KAC**, March 2025, and **Catastrophic Forgetting in KANs**, November 2025.
+  [KAC](https://arxiv.org/abs/2503.21076),
+  [author code](https://github.com/Ethanhuhuhu/KAC),
+  [forgetting paper](https://arxiv.org/abs/2511.12828).
+  Keep local radial memory and equal-capacity controls. V706 changed probabilities
+  without moving decisions. Test a learned base-logit scale with bounded convex
+  refitting before attributing failure to center selection. This is a Carnot
+  hypothesis from its measurements, not a result claimed by either paper.
+- **Delayed online convex optimization**, February 2026, and
+  **capacity-constrained delayed optimization**, June 2026.
+  [Delay reduction](https://arxiv.org/abs/2602.02634),
+  [capacity limits](https://arxiv.org/abs/2606.11711).
+  Keep label release, candidate commitment and admission distinct. Preserve the
+  qualified delay/capacity schedule. A changed optimizer receives no transferred
+  regret guarantee. Record convergence, remaining decision opportunities and
+  discarded feedback.
+
+### Requested primary-topic coverage
+
+| Topic | Checked primary source | Use or deferral |
+|---|---|---|
+| EBM reasoning and verification | [EBT](https://arxiv.org/abs/2507.02092); [ARM–EBM v4](https://arxiv.org/abs/2512.15605) | Small conditional energies remain eligible. Include exact logistic equivalence; energy notation supplies no extra correctness signal. |
+| Neural constraint satisfaction | [AS2](https://arxiv.org/abs/2603.18436) | Encoded-rule satisfaction does not validate semantic extraction. Defer another solver. |
+| Ising applications in ML | [Neural Ising Machines](https://arxiv.org/abs/2602.00302); [equilibrium propagation hybrid](https://arxiv.org/abs/2606.09112) | Learned dynamics are future sampler leads. No present bottleneck justifies another optimizer family. |
+| Hallucination detection | RT4CHART above; [HalluScoring 2026](https://arxiv.org/abs/2609.38355) | Preserve source-level units and unseen-source versus unseen-generator claim boundaries. |
+| KANs | KAC and forgetting study above | Test decision movement and retention independently. |
+| Energy-guided or constrained generation | Grammar papers above; [ETS](https://arxiv.org/abs/2601.21484) | Use bounded structural constraints now. Defer energy steering until a useful semantic reward exists. |
+| Hardware sampling | [FPGA–ASIC Ising co-design](https://arxiv.org/abs/2602.15985); [learning-to-sample hardness](https://arxiv.org/abs/2605.24752) | Charge communication and orchestration. Optimization speed does not establish sample quality. |
+| Continuous learning | Delayed feedback and continual calibration above | Calibrate from released labels only. Audit later decisions, retained calibration and restart state. |
+
+### Secondary sources and search limits
+
+- **OpenReview:** searched ICLR 2026, ICML 2026 and NeurIPS 2025 EBM work.
+  The indexed [energy-based conformal PDF](https://openreview.net/pdf?id=zCwTMRtASZ)
+  describes energy-adjusted nonconformity scores. Its forum returned a browser
+  challenge. The [difference-of-convex reasoning paper](https://openreview.net/pdf?id=QvsDTpf4yF)
+  is a convergence-method lead. Neither warrants importing a coverage or speed
+  guarantee. ICML searches did not establish another relevant primary method.
+- **Semantic Scholar:** citation API requests for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10)
+  failed. Targeted title searches did not recover a verified citing-paper list.
+  Citation discovery is incomplete; no count or citation relationship is asserted.
+- **Hugging Face papers:** inspected RT4CHART's page and primary paper. Community
+  summaries are discovery aids, not independent replications.
+- **GitHub trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned pages were
+  three weeks old. No current relevant trending claim follows. KAC author code
+  and llama.cpp grammar documentation provide concrete implementation leads.
+- **Extropic:** checked [Writing](https://extropic.ai/writing),
+  [Z1T, September 2026](https://extropic.ai/writing/z1t/) and
+  [research-agent update, October 2026](https://extropic.ai/writing/baby-thermo-rsi/).
+  Z1T explores sparse operations across TSU and digital processors. Its projected
+  figures do not measure Carnot. The research-agent announcement separates
+  execution from scientific reward. Keep acquisition, storage, readout and data
+  movement inside local service costs. No TSU access is established.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  Its public constraint-layer description provides no reproducible new training
+  recipe for this milestone. Treat it as vendor context.
+
+Use the existing CUDA runtime and CPU/Rust small heads. No purchase follows.
+Retain separate KV260 fabric, PolarFire CPU-only and GateMate JTAG boundaries.
+Exact-request reuse is a conditional service experiment; repeat frequency must
+be measured or explicitly hypothetical. It is not a new hardware speed claim.
