@@ -49040,3 +49040,25 @@ Implementation: `carnot.verify.durable_batch_8159` retains per-request clocks,
 input hashes and causal records. A request group can span several atomic commits
 under cadence when the32ms queue deadline is reached. E2E-003/004 and private
 success, block, tamper, crash and cold replay are covered by the Exp8159 tests.
+
+## REQ-VERIFY-8160: Charge one captured acquisition to matched durable branches
+
+Seal the first32 original retention sources eligible by public tokenizer and
+context checks before loading weights. Keep missing slots and loss reasons.
+Use current Qwen3.8-27B, one owned CUDA load and one generation per source.
+Allow eight fixed warmups,128 output tokens,6000 input tokens,300-second load,
+120-second calls,3000-second launch cutoff and3120-second closure. Freeze GGUF,
+revision, embedded tokenizer, chat template, runtime and CUDA offload receipts.
+Feed identical captured bytes and features to all four qualified Exp8159 arms.
+Charge acquisition plus complete host latency to each comparison. Record one
+actual reference path separately. Include startup and warmup, amortized over32.
+Readiness requires24 usable distinct sources and normal owned checks. Preserve
+all32 denominators. Component composition cannot establish an NFR-01 win.
+
+### SCENARIO-VERIFY-8160: Losses, transport and independent reconstruction
+
+Private tests SHALL retain malformed outputs, deadline losses and missing slots.
+They SHALL prove one generation per source and identical branch input hashes.
+Independently reconstruct composed rows,10000 source bootstrap draws and the
+zero-arithmetic ceiling. Exercise actual durable transport and crash/retry.
+Reject changed primitive bytes, capture hashes, source identities and headlines.

@@ -1,0 +1,185 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.verify.shared_acquisition_8160",
+        "carnot.reporting.shared_acquisition_execution_8160"
+      ],
+      "name": "worktree_imports",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8160-validation-lm51natq/focused",
+        "tests/python/test_shared_acquisition_8160.py",
+        "tests/python/test_durable_batch_8159.py::test_crashes_deduplication",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "explicit_tests",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8160-validation-lm51natq/.coverage",
+        "--include=*/verify/shared_acquisition_8160.py,*/reporting/shared_acquisition_execution_8160.py,*/scripts/experiments/experiment_8160_v705_shared_acquisition_cost.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8160-validation-lm51natq/coverage",
+        "tests/python/test_shared_acquisition_8160.py",
+        "tests/python/test_durable_batch_8159.py::test_crashes_deduplication",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "explicit_tests_and_changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8160-validation-lm51natq/.coverage",
+        "--include=*/verify/shared_acquisition_8160.py,*/reporting/shared_acquisition_execution_8160.py,*/scripts/experiments/experiment_8160_v705_shared_acquisition_cost.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/shared_acquisition_8160.py",
+        "python/carnot/reporting/shared_acquisition_execution_8160.py",
+        "scripts/experiments/experiment_8160_v705_shared_acquisition_cost.py",
+        "tests/python/test_shared_acquisition_8160.py",
+        "tests/python/test_durable_batch_8159.py::test_crashes_deduplication"
+      ],
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/shared_acquisition_8160.py",
+        "python/carnot/reporting/shared_acquisition_execution_8160.py",
+        "scripts/experiments/experiment_8160_v705_shared_acquisition_cost.py",
+        "tests/python/test_shared_acquisition_8160.py",
+        "tests/python/test_durable_batch_8159.py::test_crashes_deduplication"
+      ],
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/verify/shared_acquisition_8160.py",
+        "python/carnot/reporting/shared_acquisition_execution_8160.py",
+        "--strict",
+        "--follow-imports=silent"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_shared_acquisition_8160.py",
+        "tests/python/test_durable_batch_8159.py::test_crashes_deduplication"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 600
+    }
+  ],
+  "frozen_before_measurement": true,
+  "measurement_config": {
+    "bootstrap_draws": 10000,
+    "call_limit": 40,
+    "call_timeout_s": 120,
+    "closure_s": 3120,
+    "input_tokens": 6000,
+    "latest_launch_s": 3000,
+    "load_timeout_s": 300,
+    "max_tokens": 128,
+    "measured_calls": 32,
+    "seed": 7058160,
+    "startup_amortization_requests": 32,
+    "warmup_calls": 8
+  },
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "name": "repository_health_once",
+    "scope": "repository_health_not_science_gate",
+    "timeout_s": 1800
+  },
+  "terminal": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8160_v705_shared_acquisition_cost.py",
+        "--cold-replay",
+        "/tmp/carnot-8160-validation-lm51natq/experiment_8160_v705_shared_acquisition_cost.json"
+      ],
+      "name": "cold_replay",
+      "scope": "terminal",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-8160-validation-lm51natq/experiment_8160_v705_shared_acquisition_cost.json"
+      ],
+      "name": "adversarial",
+      "scope": "terminal",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-8160-validation-lm51natq/experiment_8160_v705_shared_acquisition_cost.json"
+      ],
+      "name": "strict_rows",
+      "scope": "terminal",
+      "timeout_s": 300
+    }
+  ]
+}

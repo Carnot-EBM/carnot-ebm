@@ -93339,3 +93339,20 @@ Implementation: `carnot.reporting.durable_batch_execution_8159` and the thin
 Exp8159 script freeze owned argv and publish checked bytes. Fourteen private
 tests cover all446 added statements, including the script. The conductor owns
 ops/status, changelog and traceability reconciliation.
+
+## REQ-REPORT-8160: Publish honest shared acquisition component costs
+
+Authenticate Exp8159 host_batch_ready_score==1 and immutable V704 methods.
+External failures terminate complete_blocked_<check> with exact failed operands.
+Owned failures terminate disqualified with readiness0. Preserve old primaries.
+Freeze validation argv before measurement. Save primitive captures, call ledger,
+GPU receipts, source/code/config hashes and normal-exit validation receipts.
+Publish checked bytes through primary_publication. No external publication.
+The conductor owns ops/status, changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8160: External CLI, terminal gates and changed-code coverage
+
+Run private E2E-016 success, block, tamper and cold replay outside the checkout
+without PYTHONPATH. Require scoped tests,100% added statement coverage, Ruff,
+strict mypy and explicit-path spec coverage. Run the full Python suite once as
+separate repository health. Use unchanged adversarial and strict row validators.
