@@ -19572,3 +19572,4 @@ code |
 | 2026-10-05 09:34 UTC | Independently test evidence-linked calibration and | OK | 87 passed, 1 warning in 102.28s (0:01:42) |
 | 2026-10-05 09:37 UTC | Learn persistent energy centers with time for late | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8152-admission-horizon-methods.learning_protocol_ready_score (actual=0 == expected=1) |
 | 2026-10-05 09:39 UTC | Audit later learning benefit retention and install | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8157-release-aware-learning) |
+| 2026-10-05 11:02 UTC | Measure complete atomic batch transactions through | OK | 95 passed, 1 warning in 51.77s |
