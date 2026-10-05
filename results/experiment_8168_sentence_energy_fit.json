@@ -1,0 +1,51 @@
+{
+  "experiment": 8168,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-10-05",
+  "started_at": "2026-10-05T18:09:34.768323+00:00",
+  "finished_at": "2026-10-05T18:09:34.768323+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Train a calibrated typed energy selector from local evidence",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp8167-fit-sentence-capture",
+  "failed_field": "fit_trainable_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8167_v706_fit_sentence_capture.json",
+  "failed_evidence_sha256": "sha256:5dc84701520534b187fa607409c1d4f7ed37e6a3b533f639728c6d3f40f2bcb4",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp8167-fit-sentence-capture",
+    "failed_field": "fit_trainable_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8167_v706_fit_sentence_capture.json",
+    "failed_evidence_sha256": "sha256:5dc84701520534b187fa607409c1d4f7ed37e6a3b533f639728c6d3f40f2bcb4"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8167-fit-sentence-capture.fit_trainable_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8167-fit-sentence-capture",
+      "artifact_field": "fit_trainable_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8167_v706_fit_sentence_capture.json",
+      "artifact_sha256": "sha256:5dc84701520534b187fa607409c1d4f7ed37e6a3b533f639728c6d3f40f2bcb4"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
