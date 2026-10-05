@@ -49235,3 +49235,20 @@ original source slots and reuses the qualified owned CUDA worker. Its reducer
 reparses raw replies and binds them to frozen source and request bytes. Private
 tests cover whole-source coverage, transport failures, token censorship, target
 custody and rehashed slot forgery. Source and class support both gate trainability.
+# REQ-VERIFY-8171: Released feedback reaches later original stream decisions
+
+Exp8171 SHALL gate only on Exp8165.learning_protocol_ready_score == 1, authenticate
+the original256 stream and64 retention slots and masks, and reuse the immutable
+V705 protocol with twenty seeds101–120. No LLM loads. Commit at64/144, retain
+deadlines144/224, delay20 and capacity32. Released update labels train four SGD
+steps; future one-use admission labels only select the frozen safety grid.
+Persist issue state before release, freeze final heads and retention predictions
+before retention labels, and report actual later changes without benefit credit.
+Rust/PyO3 computes batched radial update features; CPU owns durable state.
+
+## SCENARIO-VERIFY-8171-CAUSAL
+
+Real learner checks SHALL include restart, crash before release, duplicate
+feedback, future-label mutation and pending overflow. Missing slots keep time.
+Independent scalar reconstruction SHALL reject rehashed primitive tampering.
+Fixtures and exposed development SHALL keep both generalization scores zero.

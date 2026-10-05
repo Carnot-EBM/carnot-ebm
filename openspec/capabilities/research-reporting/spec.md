@@ -93563,3 +93563,17 @@ checks before live capture. Eighteen private tests and43 qualified checks pass.
 All447 added module and CLI statements have100 percent coverage. Frozen receipts
 also cover Ruff, strict mypy and explicit-path spec coverage. The primary uses
 checked publication and cold replay. The conductor owns ops and traceability.
+# REQ-REPORT-8171: Publish checked historical learning evidence
+
+Exp8171 SHALL freeze validation argv before measuring. Owned pytest assertions,
+100 percent added statement coverage, Ruff check/format, strict mypy and explicit
+path spec coverage SHALL exit normally. Unmodified adversarial and strict row
+validators SHALL check the candidate before primary_publication publishes it.
+External failed operands terminate complete_blocked_<check>; owned validation
+failure terminates disqualified with readiness0. Preserve historical primaries.
+
+## SCENARIO-REPORT-8171-CLI
+
+The thin CLI SHALL run outside the checkout without PYTHONPATH, with private
+success, external block, tamper and cold replay routes. Evidence SHALL bind
+source/code/config hashes, normal validation exits, logs and phase durations.

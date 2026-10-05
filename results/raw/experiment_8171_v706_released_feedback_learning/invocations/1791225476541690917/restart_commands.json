@@ -1,0 +1,38 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8171_v706_released_feedback_learning.py",
+        "--seed-input",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8171_v706_released_feedback_learning/invocations/1791225476541690917/restart_input.json",
+        "--seed-output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8171_v706_released_feedback_learning/invocations/1791225476541690917/crash",
+        "--crash-slot",
+        "64"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 73,
+      "name": "real_crash"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8171_v706_released_feedback_learning.py",
+        "--seed-input",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8171_v706_released_feedback_learning/invocations/1791225476541690917/restart_input.json",
+        "--seed-output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8171_v706_released_feedback_learning/invocations/1791225476541690917/resume",
+        "--resume-state",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8171_v706_released_feedback_learning/invocations/1791225476541690917/crash/crash_checkpoint.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "fresh_resume"
+    }
+  ]
+}
