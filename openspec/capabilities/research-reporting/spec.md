@@ -93356,3 +93356,30 @@ Run private E2E-016 success, block, tamper and cold replay outside the checkout
 without PYTHONPATH. Require scoped tests,100% added statement coverage, Ruff,
 strict mypy and explicit-path spec coverage. Run the full Python suite once as
 separate repository health. Use unchanged adversarial and strict row validators.
+
+## REQ-REPORT-8161: Reuse the qualified supervisor frontier without policy churn
+
+Exp8161 SHALL authenticate Exp8147 primary, terminal report, reader dependencies
+and saved event frontier against fixed hashes before reading current receipts.
+Reuse its qualified reader; do not renew reader authority after a code mismatch.
+Only unseen live events with resolved_by_levelup and actions_to_levelup enter
+observational per-game fired/helped and stagnation reductions. Empty evidence
+terminates complete_null_no_new_outcomes. External blocks name exact failed
+operands; owned failures disqualify and zero readiness. No LLM, game, generator
+or board probe runs. Keep MODEL_SPECS=[], no_model_load and current calls0.
+Preserve failed history, model provenance and new_solve_claim=false. No arm
+priority recommendation before30 resolved outcomes across5 games; policy stays
+unchanged. Both generalization scores remain0. Publish checked bytes through
+primary_publication. The conductor owns ops and traceability reconciliation.
+
+### SCENARIO-REPORT-8161-FRONTIER
+
+Private original reader fixtures, duplicate identities and prior-frontier events
+supply no new live credit. Missing or changed reader bytes block explicitly.
+Independent cold reduction rejects invented counters and changed source bytes.
+
+REQ-REPORT-8161 implementation: `carnot.reporting.arc_supervisor_v705_frontier`
+and its thin script reuse the Exp8147 reader, hash-bound primary and saved event
+inventory. V704 methods bind to the preserved versioned file. Private tests
+exercise original reader controls, duplicate/frontier exclusion, missing or
+changed operands, validation-log mutation and outside-checkout cold replay.

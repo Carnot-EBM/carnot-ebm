@@ -49062,3 +49062,17 @@ They SHALL prove one generation per source and identical branch input hashes.
 Independently reconstruct composed rows,10000 source bootstrap draws and the
 zero-arithmetic ceiling. Exercise actual durable transport and crash/retry.
 Reject changed primitive bytes, capture hashes, source identities and headlines.
+
+## REQ-VERIFY-8161: Validate only the added frontier adapter
+
+Freeze scoped pytest,100 percent added statement coverage, Ruff check/format,
+strict mypy, explicit-path spec coverage and E2E-017 commands before scanning.
+Run the full Python suite once as separate repository health. Save normal exits,
+durations and hashed logs. Unmodified adversarial and strict row validators and
+outside-checkout script-path cold replay SHALL pass before primary publication.
+
+### SCENARIO-VERIFY-8161-COLD
+
+Private success, missing input, tamper and cold replay run without PYTHONPATH.
+Preserve original reader assertions. Mutated frontier, code, logs, primitive
+rows or headlines fail replay. Fixtures remain circular_positive mechanics.
