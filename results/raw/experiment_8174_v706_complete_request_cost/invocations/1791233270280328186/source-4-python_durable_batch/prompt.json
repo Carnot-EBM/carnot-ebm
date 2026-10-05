@@ -1,0 +1,22 @@
+{
+  "cache_prompt": false,
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Like other transition metals gold's valence electrons, or the electrons it uses to combine with other elements, are present in more than one shell. Unusually for a metal, gold can also form compounds (aurides) in which its oxidation number is negative (-1).\\\\n\\\\npassage 2:Gold is a heavy metal (density 19.3 g cm -3) and one gram of gold can be hammered out into a thin sheet of gold a metre in area, and just 230 atoms or so thick. Gold leaf is translucent and the transmitted light is greenish blue (gold metal reflects yellow and red, leaving the greenish blue colour.\\\\n\\\\npassage 3:Gold is metallic, with a yellow colour when in a mass, but when finely divided it may be black, ruby, or purple. It is the most malleable and ductile metal; 1 ounce (28 g) of gold can be beaten out to 300 square feet. It is a soft metal and is usually alloyed to give it more strength.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are properties of gold\\\"}\", \"original_answer\": \"Properties of gold:\\n\\n* Gold has more than one shell of valence electrons, allowing it to form compounds with an oxidation number of -1.\\n* Gold is a heavy metal with a density of 19.3 g/cm\u00b3.\\n* One gram of gold can be hammered out into a thin sheet of gold covering a meter in area, and is translucent with a greenish-blue color.\\n* Gold is malleable and ductile, meaning it can be easily beaten into thin sheets and drawn out into wires without breaking.\\n* Gold is a soft metal and is typically alloyed with other metals to increase its strength.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "seed": 69058,
+  "temperature": 0,
+  "top_p": 1
+}

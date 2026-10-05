@@ -49297,3 +49297,50 @@ explicit output/decision differences, and no generated-byte equality condition.
 Private tests SHALL reject missing timing, changed upstream bytes, missing
 external inputs and rehashed receipt tampering. Cold replay SHALL independently
 recompute headlines and retain Exp8160's original disqualification.
+
+## REQ-VERIFY-8174: Measure independent complete durable requests
+
+Gate only Exp8173.service_protocol_ready_score==1. Authenticate its immutable
+input snapshot, original source manifest, deployed head, native extension and
+Qwen GGUF/revision/runtime hashes; never gate on H1 or H2. Freeze the first24
+eligible distinct original source IDs before calls. Each source gets independent
+Python durable batch and native atomic batch requests, ordered by source hash,
+at batch size8. Acquisition, parsing, features, scoring and durable acknowledgement
+belong to each request. Use at most48 main calls and two warmups,128 output tokens,
+load deadline300s, call deadline120s, launch cutoff3000s and closure4800s.
+Use the owned CUDA lease and observed offload; no simulated live fallback.
+Preserve monotonic arrival, queue, generation, parse, feature, crossing, scoring,
+persistence and response clocks without adding overlapping inclusive timers.
+Cold model load and startup amortization remain separate from warm request costs.
+Join sources without requiring generated-byte equality. Differences in generated
+outputs or typed decisions make timing descriptive pipeline evidence. Require24
+complete source pairs; NFR-01 additionally requires equivalent behavior and
+paired source bootstrap lower95 speed ratio>=10. Neither timing nor fixtures
+establish model quality, independent generalization or learning benefit.
+
+### SCENARIO-VERIFY-8174-INDEPENDENT
+
+Private tests exercise48 independent main calls, two warmups, frozen source order,
+output/decision differences, parsing loss, transport-only retry within original
+call budgets, launch censorship, loaded-extension parity, durable replay and
+rehashed timing tampering. Missing external inputs produce exact terminal blocks.
+
+## REQ-VERIFY-8174-REPLAY: Rebuild headlines from authenticated primitives
+
+Cold replay rehashes upstream/source/code/config/log/output/store evidence and
+independently reconstructs latency from clocks, reparses outputs and recomputes
+Python/native probabilities and typed decisions. Reject negative clocks,
+duplicate source-arm requests, changed persistence, forged readiness and missing
+owned normal-exit receipts. Preserve Exp8159 host scope and Exp8173 historical
+composition as separate comparisons; absent composition stays unknown.
+
+### SCENARIO-VERIFY-8174-REPLAY
+
+Private success, external block, changed output, changed clocks, changed decision,
+failed owned check and outside-checkout cold replay retain historical primaries.
+
+REQ-VERIFY-8174 implementation: `carnot.verify.complete_request_8174` authenticates
+Exp8173's immutable deployment snapshot, freezes24 original sources and records
+separate acquisitions through the qualified batch scorer and durable store.
+Private tests cover source custody, parsing loss, censorship, output differences,
+loaded native scoring, store replay and rehashed timing/decision mutations.

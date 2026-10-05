@@ -1,0 +1,22 @@
+{
+  "cache_prompt": false,
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5746 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Del Valle Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-07-29 02:22:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Recently tried this place twice. Both times the food was excellent. Great super fresh and authentic choices at a reasonable price. My new favorite Mexican take-out!\\\"},{\\\"review_date\\\":\\\"2020-10-03 07:37:20\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This hole in the wall in the middle of Old Town Goleta has a great carnitas burrito. The carnitas is as good as the carnitas Rubio's used to have. At this point in my food journey, that's worth 5 stars. And it's not one of those half beans burritos. It does have some high quality beans, but also a small medley of well-seasoned veggie type ingredients. \\\\n\\\\nThere is also no need to even consider the jumbo unless you brought a wagon to wheel that thing home - and you probably want to eat it at home or Goleta Beach because there isn't any seating thanks to Covid. Even when the dining room was open, it never seemed like there were that many people in there. That said, the couple who runs the place is very nice, the prices are downright cheap, and if you haven't heard, they have a great carnitas burrito.\\\"},{\\\"review_date\\\":\\\"2020-06-22 21:19:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I got the giant meat quesadilla and it was great! You can choose a kind of meat out of a big list with all the same price. Good combination of guac, sour cream and just a right amount of cheese. I will definitely come back and try other menu but I really liked the quesadilla that I would order it again with another choice of meat. Nice family restaurant with friendly people.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Del Valle Grill, located at 5746 Hollister Ave in Goleta, CA, is a local restaurant that specializes in Mexican cuisine. The establishment has been highly praised by customers for its authentic food, reasonable prices, and accommodating take-out service. The establishment has a 4-star rating. According to customer reviews, popular items include their carnitas burrito and giant meat quesadilla. Customers have also mentioned the freshness of the ingredients used and the generous portion sizes. The restaurant does not offer Wi-Fi or outdoor seating, and reservations are not accepted. Street parking is available and the restaurant is suitable for groups. Despite its lack of certain amenities, Del Valle Grill is celebrated for its quality food and friendly service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "seed": 69058,
+  "temperature": 0,
+  "top_p": 1
+}

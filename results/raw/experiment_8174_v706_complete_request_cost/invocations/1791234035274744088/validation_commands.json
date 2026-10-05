@@ -1,0 +1,200 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.verify.complete_request_8174",
+        "carnot.reporting.complete_request_execution_8174"
+      ],
+      "name": "worktree_imports",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8174-validation-o4vty_6h/focused",
+        "tests/python/test_complete_request_8174.py",
+        "tests/python/test_durable_batch_8159.py::test_complete_transactions_and_queue",
+        "tests/python/test_durable_batch_8159.py::test_crashes_deduplication",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "explicit_tests",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8174-validation-o4vty_6h/.coverage",
+        "--include=*/verify/complete_request_8174.py,*/reporting/complete_request_execution_8174.py,*/scripts/experiments/experiment_8174_v706_complete_request_cost.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8174-validation-o4vty_6h/coverage",
+        "tests/python/test_complete_request_8174.py",
+        "tests/python/test_durable_batch_8159.py::test_complete_transactions_and_queue",
+        "tests/python/test_durable_batch_8159.py::test_crashes_deduplication",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "explicit_tests_and_changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8174-validation-o4vty_6h/.coverage",
+        "--include=*/verify/complete_request_8174.py,*/reporting/complete_request_execution_8174.py,*/scripts/experiments/experiment_8174_v706_complete_request_cost.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/complete_request_8174.py",
+        "python/carnot/reporting/complete_request_execution_8174.py",
+        "scripts/experiments/experiment_8174_v706_complete_request_cost.py",
+        "tests/python/test_complete_request_8174.py",
+        "tests/python/test_durable_batch_8159.py",
+        "tests/python/test_durable_batch_8159.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/complete_request_8174.py",
+        "python/carnot/reporting/complete_request_execution_8174.py",
+        "scripts/experiments/experiment_8174_v706_complete_request_cost.py",
+        "tests/python/test_complete_request_8174.py",
+        "tests/python/test_durable_batch_8159.py",
+        "tests/python/test_durable_batch_8159.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/verify/complete_request_8174.py",
+        "python/carnot/reporting/complete_request_execution_8174.py",
+        "--strict",
+        "--follow-imports=silent"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_complete_request_8174.py",
+        "tests/python/test_durable_batch_8159.py",
+        "tests/python/test_durable_batch_8159.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 600
+    }
+  ],
+  "frozen_before_measurement": true,
+  "measurement_config": {
+    "batch_size": 8,
+    "bootstrap_draws": 10000,
+    "call_timeout_s": 120,
+    "closure_s": 4800,
+    "latest_launch_s": 3000,
+    "load_timeout_s": 300,
+    "main_calls": 48,
+    "max_tokens": 128,
+    "seed": 7068174,
+    "sources": 24,
+    "startup_amortization_requests": 48,
+    "warmups": 2
+  },
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "name": "repository_health_once",
+    "scope": "repository_health_not_science_gate",
+    "timeout_s": 1800
+  },
+  "terminal": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8174_v706_complete_request_cost.py",
+        "--cold-replay",
+        "/tmp/carnot-8174-validation-o4vty_6h/experiment_8174_v706_complete_request_cost.json"
+      ],
+      "name": "cold_replay",
+      "scope": "terminal",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-8174-validation-o4vty_6h/experiment_8174_v706_complete_request_cost.json"
+      ],
+      "name": "adversarial",
+      "scope": "terminal",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-8174-validation-o4vty_6h/experiment_8174_v706_complete_request_cost.json"
+      ],
+      "name": "strict_rows",
+      "scope": "terminal",
+      "timeout_s": 300
+    }
+  ]
+}

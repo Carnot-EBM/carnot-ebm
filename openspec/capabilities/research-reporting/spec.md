@@ -93626,3 +93626,47 @@ static path SHALL fail normally and cannot earn readiness.
 Direct CLI success, external block, tampered receipt and cold replay SHALL run
 outside checkout without PYTHONPATH. Native durability checks SHALL load the
 real extension and reopen durable state. Include private E2E-003/004/015/019.
+
+## REQ-REPORT-8174: Publish checked independent complete-request evidence
+
+Freeze exact owned validation argv before measurement. Use pytest node IDs only
+for pytest and real file paths for Ruff, strict mypy and explicit spec coverage.
+Run all owned assertions,100 percent added statement coverage and private
+E2E-003/004/015/019 with crash/deduplication and timing-tamper checks. Run the
+full Python suite once as separate repository health. Preserve exact expected
+and actual exits, normal completion, durations and log hashes. Unmodified
+adversarial verification, strict row lint and independent replay must pass
+before primary_publication installs checked bytes. Owned failures disqualify and
+zero readiness. Missing/retired/gate-blocked external inputs terminate
+complete_blocked_<actual_check> with exact observed operands, never partial.
+Declare live_llm_inference with model_bounded_generation and10s floor for actual
+fixed-budget model work. Zero current calls remain no_model_load. Keep current
+and imported model provenance separate. Both generalization scores stay zero.
+The conductor owns ops/status, ops/changelog and BMAD traceability reconciliation.
+
+### SCENARIO-REPORT-8174-CLI
+
+A thin script runs outside checkout without PYTHONPATH. Private fixture success,
+external block, owned failure, tamper and cold-replay paths do not write live
+results or receive live model credit. All required schema fields and primitive
+rows retain reconstructable independent source counts and frozen acceptance gates.
+
+REQ-REPORT-8174 implementation: `complete_request_execution_8174` freezes exact
+validation commands and uses checked-primary publication through a thin CLI.
+Private outside-checkout success, block, failure and cold-replay routes retain
+zero live model credit. The two owned modules and CLI have100 percent statement
+coverage; repository health is recorded separately from owned qualification.
+
+## REQ-REPORT-8174-RECOVERY: Close owned evidence without repeating acquisition
+
+Persist compatibility pairs and the complete worker result before the inherited
+adapter reduces it. If closure fails after requests and cleanup completed,
+retain original code and measurement bytes, reconstruct only facts bound by
+worker/lease/log receipts, then rerun owned validation and closure without new
+model calls. Missing recovery operands cannot earn live readiness.
+
+### SCENARIO-REPORT-8174-RECOVERY
+
+Exercise the actual inherited live-capture adapter with private transport; it
+must return after all durable rows rather than lose metadata to a missing key.
+Resume must preserve original clocks, ledger, input hashes and execution code.

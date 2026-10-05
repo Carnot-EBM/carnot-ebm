@@ -1,0 +1,22 @@
+{
+  "cache_prompt": false,
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7398 Calle Real\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-20:30\\\",\\\"Monday\\\":\\\"8:0-20:30\\\",\\\"Saturday\\\":\\\"8:0-20:30\\\",\\\"Thursday\\\":\\\"8:0-20:30\\\",\\\"Tuesday\\\":\\\"8:0-20:30\\\",\\\"Wednesday\\\":\\\"8:0-20:30\\\"},\\\"name\\\":\\\"El Sitio\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-07-30 18:57:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The service here is always excellent.  Needed to get a quick meal for my wife and I today, and couldn't have had a better experience overall.  What a local gem.\\\"},{\\\"review_date\\\":\\\"2021-03-25 02:29:58\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Food was not as cheap as I anticipated it would be. 14 dollars for a burrito and bottle of water. The burrito was pretty good, but I found the chicken to be a bit dry. The salsa has decent flavor, but was not spicy. Overall decent food\\\"},{\\\"review_date\\\":\\\"2020-09-11 02:31:03\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This El Sitio location is near home, but I've seldom been there. Now they serve only to-go, so calling your order in is a good option - ready in ten minutes. Yesterday we had 2 burritos - Adobado and pork chile verde. Both were huge and very good, for $9.50 each. You have a choice of salsas to go with. We had the verde (fairly mind). The red sauce will make you sweat, which is what you want sometimes, with a cold beer.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"El Sitio is a Mexican restaurant located at 7398 Calle Real, Goleta, CA, open from 8:00 to 20:30, Monday to Saturday. The establishment has a casual ambience and is suitable for groups. It offers take-out options but does not provide outdoor seating, Wi-Fi, or music. Street and lot parking are available, but there is no garage, valet service, or parking validation. It has an overall business rating of 4 stars. Customer reviews highlight the excellent service, good food, and quick preparation time. However, some customers have noted that the pricing might be higher than expected, with one customer mentioning a $14 charge for a burrito and bottle of water. The restaurant's burritos are praised for their size and quality, although one customer found the chicken a bit dry. The salsa is noted to have a decent flavor, but it is not particularly spicy.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "seed": 69058,
+  "temperature": 0,
+  "top_p": 1
+}
