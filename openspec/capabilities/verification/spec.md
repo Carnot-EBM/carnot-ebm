@@ -48776,3 +48776,19 @@ reduce natural primitive rows. Reject missing operands, mutated assertions,
 invented event counts, changed code/config bytes and readiness without current
 normal validation and private cold replay. Preserve repository-health failures
 separately from owned reader qualification.
+
+## REQ-VERIFY-8148: Preserve arithmetic and precision cost boundaries
+
+Exp8148 SHALL implement the cost and natural decision precision contract in
+REQ-REPORT-8148 and SCENARIO-VERIFY-8148-1. Measured scoring envelopes include
+memory and boundary work; they SHALL never be promoted to exact arithmetic
+cost. Exact arithmetic ceilings stay unknown until isolated timings exist.
+Natural branches and board receipt custody qualify independently. Public
+exposed inputs SHALL grant zero independent generalization and learning credit.
+
+REQ-VERIFY-8148 implementation: `reporting.hardware_workload_8148` counts final
+decision distance evaluations from original natural input vectors and issued
+centers. It retains unknown update scans, bus traffic and pending queue bytes.
+The 8/12/16-bit storage study retains the unquantized frozen base logit and
+uses float64 fallback before issuing a decision. Separate mixed-envelope
+outer ceilings retain host persistence and all timed non-scoring components.

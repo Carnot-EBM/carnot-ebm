@@ -93051,3 +93051,58 @@ Missing frontier or history bytes cannot be replaced by invented empty events.
 Exclude duplicate or previously seen IDs and events before the frontier clock.
 Reader conformance is circular_positive; it grants no natural benefit. Cold
 replay rejects deleted rows, changed controls, code, manifests and readiness.
+
+## REQ-REPORT-8148: Preserve independent board and natural workload custody
+
+Exp8148 SHALL use no model load and authenticate Exp8134 board originals
+independently of Exp8145 natural_service_ready_score and Exp8146
+complete_service_ready_score. Each missing, retired, changed or unqualified
+operand SHALL retain its exact field, expected and observed value. External
+blocks SHALL finish complete_blocked_<check>; unfinished owned work alone may
+be partial. Current invocation evidence SHALL exclude historical Qwen identity.
+Owned validation SHALL freeze before reductions, use private temporary output,
+include consumer tests, strict typing, lint, scoped spec coverage and 100 percent
+new statement coverage. Publication SHALL use primary_publication after normal
+terminal checks. Prior failed primaries SHALL survive. Ops reconciliation is
+owned by the conductor for this task.
+
+### SCENARIO-REPORT-8148-1: Independent missing branches
+
+Given authenticated board history and qualified natural host rows, when the
+complete service score is zero or absent, then board custody and host bounds
+survive while the exact complete service operand produces a terminal block.
+
+### SCENARIO-REPORT-8148-2: Private CLI custody and cold replay
+
+The script SHALL run outside the checkout without PYTHONPATH. Private success,
+external block, changed board bytes, missing costs, precision and cold reduction
+mutation checks SHALL assert their expected normal exits without writing results/.
+
+## REQ-VERIFY-8148: Bound arithmetic without discarding host work
+
+Natural host and complete service branches SHALL reduce separately. Amdahl's
+S_max=1/(1-f) SHALL remove only measured arithmetic. A scoring envelope that
+includes memory and native crossings SHALL give only an optimistic outer
+ceiling; its exact arithmetic fraction remains unknown. Acquisition, conversion,
+traffic, persistence and readout SHALL stay retained. Missing cost SHALL never
+be zero. A 100x target needs f>=0.99 even with infinite acceleration; an outer
+ceiling below 100 requires whole-workload redesign before a board port.
+
+### SCENARIO-VERIFY-8148-1: Natural precision and operation accounting
+
+Authenticated natural decision inputs SHALL run 8/12/16-bit storage quantization
+with authoritative float64 fallback. Count observed centers, coordinate distance
+terms, numeric bytes and pending storage, retaining unknown total traffic and
+update work. Fixture-only rows SHALL stay separate. Preserve KV260 k_max<=5,
+PolarFire Linux CPU-only and GateMate JTAG0xffffffff with original dates/hashes.
+Separate reopen conditions SHALL cover those boards, NPU and TSU. Z1T omissions
+and higher-order FPGA methods SHALL be cautions only; no speedup is imported.
+
+REQ-REPORT-8148 implementation: the thin script delegates to
+`carnot.experiment_8148_v704_hardware_workload_boundary` and reuses qualified
+custody, subprocess supervision and primary publication modules. Private tests
+in `tests/python/test_hardware_workload_8148.py` cover both workload branches,
+missing component operands, independent board mutations, frozen natural base
+logits, guarded precision, normal CLI exits and cold replay drift. The earlier
+repository-health invocation is retained separately when owned validation is
+renewed; a failed health observation grants no owned validation credit.
