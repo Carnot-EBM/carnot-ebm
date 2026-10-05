@@ -2,6 +2,35 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8145: Publish authenticated natural host costs
+
+Require Exp8143.learning_trajectory_ready_score == 1 and byte-bound terminal
+validation, natural states, public features and event keys before timing. Freeze
+owned validation argv first. Publish through primary_publication only after
+scoped units/consumers, Ruff, strict mypy, scoped spec coverage, 100 percent added
+statement coverage and normal unmodified adversarial/strict-row checks pass.
+Run the full Python suite once as separate repository health. No LLM loads:
+MODEL_SPECS=[], no_model_load, zero current counters and empty call ledger.
+Historical Qwen identity stays cited; imported residual heads are described in
+trained_head_specs. Natural query readiness and complete accepted/rejected update
+readiness are separate. Missing update categories remain unavailable. External
+blocks terminate complete_blocked with exact operands; owned failures disqualify.
+Generalization and generalized learning benefit remain zero. The conductor owns
+ops/status, ops/changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8145: Private CLI and independent replay
+
+Outside-checkout script execution without PYTHONPATH must exercise private
+success, missing upstream, changed state, failed owned checks and cold replay.
+Replay authenticates source/code/config/log bytes, rebuilds reductions and
+independently recomputes every probability and typed decision. Preserve historical
+failed primaries and primitive rows, real phase spans and bounded child receipts.
+
+REQ-REPORT-8145 implementation: the natural_service_execution_8145 runner freezes
+private validation, keeps repository health separate and publishes through the
+existing checked-primary service. The thin script supports outside-checkout
+execution, private natural-input fixtures, external blocks and cold replay.
+
 ## REQ-REPORT-8143: Publish owned-validated historical learning trajectories
 
 Freeze owned argv before measurement; run scoped units/consumers, E2E-015/019,

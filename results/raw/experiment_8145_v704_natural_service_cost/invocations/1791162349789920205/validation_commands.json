@@ -1,0 +1,140 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_8145_v704_natural_service_cost",
+        "carnot.reporting.natural_service_execution_8145"
+      ],
+      "name": "worktree_imports",
+      "scope": "changed_modules",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8145-validation-t__vl5xc/focused",
+        "tests/python/test_natural_service_cost_8145.py",
+        "tests/python/test_primary_publication_7928.py",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "explicit_tests",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8145-validation-t__vl5xc/.coverage",
+        "--include=*/experiment_8145_v704_natural_service_cost.py,*/reporting/natural_service_execution_8145.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8145-validation-t__vl5xc/coverage",
+        "tests/python/test_natural_service_cost_8145.py",
+        "tests/python/test_primary_publication_7928.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "explicit_tests_and_changed_modules",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8145-validation-t__vl5xc/.coverage",
+        "--include=*/experiment_8145_v704_natural_service_cost.py,*/reporting/natural_service_execution_8145.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "changed_modules",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8145_v704_natural_service_cost.py",
+        "python/carnot/reporting/natural_service_execution_8145.py",
+        "scripts/experiments/experiment_8145_v704_natural_service_cost.py",
+        "tests/python/test_natural_service_cost_8145.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8145_v704_natural_service_cost.py",
+        "python/carnot/reporting/natural_service_execution_8145.py",
+        "scripts/experiments/experiment_8145_v704_natural_service_cost.py",
+        "tests/python/test_natural_service_cost_8145.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_8145_v704_natural_service_cost.py",
+        "python/carnot/reporting/natural_service_execution_8145.py",
+        "--strict",
+        "--follow-imports=silent"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_natural_service_cost_8145.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 300
+    }
+  ],
+  "frozen_before_measurement": true,
+  "measurement_config": {
+    "batches": [
+      1,
+      4,
+      16,
+      64,
+      256
+    ],
+    "bootstraps": 10000,
+    "centers": 28,
+    "measurement_ceiling_s": 2400,
+    "repetitions": 30,
+    "seed": 7048145,
+    "warmups": 5
+  }
+}

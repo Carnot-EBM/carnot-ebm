@@ -2,6 +2,35 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8145: Measure natural cached learner transactions
+
+Select original natural stream vectors and authenticated Exp8143 heads/events
+before clocks start. Reuse the loaded RustRadial8105 design and checkpoint API
+with the equivalent Python Gaussian design; host arithmetic adds the historical
+logit offset exactly once. Compare scalar and batches1/4/16/64/256 with five
+warmups and thirty paired repetitions, alternating order. Require probability
+parity1e-10 and identical typed decisions. Measure cold/warm/miss/changed-content/
+eviction/restart costs including hashing, lookup, cached feature preparation,
+crossings, serialization, fsync and recovery. This is conditional cached host
+work, not current model acquisition or fresh lexical extraction. Retain original
+missing slots; reused vectors and seeds add no independent sources.
+
+### SCENARIO-VERIFY-8145: Natural categories and recovery fixtures
+
+Measure original accepted/rejected admission transactions from frozen candidates
+and released labels, with candidate fitting charged when reconstructible. Absence
+of rejection keeps combined update readiness0 without blocking query readiness.
+Deferred candidates are not rejected admissions. Injected corrupt recovery state
+is a separate circular fixture row. E2E-003/004 cross the real extension and
+restore its checkpoint. Stop new timing at2400s and preserve censored repeats.
+Use10000 paired whole-batch bootstraps of log ratios; one-sided95 percent lower
+bound >1 permits the stated host speed claim and >=10 meets its NFR-01 threshold.
+
+REQ-VERIFY-8145 implementation: experiment_8145_v704_natural_service_cost reuses
+the qualified binding and delayed admission equations on authenticated Exp8143
+seed101 evidence. Tests cross the loaded extension, restore its checkpoints,
+replay original admission and reject changed custody, states and probabilities.
+
 ## REQ-VERIFY-8143: Execute qualified delayed persistent energy memory
 
 Require Exp8138.learning_protocol_ready_score=1 and exact sealed source slots,
