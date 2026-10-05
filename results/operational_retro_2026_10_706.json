@@ -1,0 +1,61 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.706",
+  "generated_at": "2026-10-05T23:09:14Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 143.2,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify service validation and replay preserved acquisition evidence",
+      "duration_minutes": 39.41,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure independent Qwen requests through durable Python and Rust services",
+      "duration_minutes": 35.63,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bound complete-workload acceleration and retain all board obligations",
+      "duration_minutes": 31.99,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Capture bounded Qwen sentence evidence on fit and tune sources",
+      "duration_minutes": 26.56,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Inspect new live supervisor outcomes for transferable arm selection",
+      "duration_minutes": 4.25,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.706 completed 11 experiments (2 compute-bound, 9 synthesis-only) across 143.2 total wall-time minutes (averaging 13 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was concentrated in synthesis task 'Qualify service validation and replay preserved acquisition evidence' (39.41 minutes), followed by compute-bound task 'Measure independent Qwen requests through durable Python and Rust services' (35.63 minutes), synthesis task 'Bound complete-workload acceleration and retain all board obligations' (31.99 minutes), compute-bound task 'Capture bounded Qwen sentence evidence on fit and tune sources' (26.56 minutes), and synthesis task 'Inspect new live supervisor outcomes for transferable arm selection' (4.25 minutes). Point-in-time GPU monitor polling observed 0% utilization with 4MB allocated across both NVIDIA GeForce RTX 3090 GPUs outside active runs, and gpu_idle_on_compute_bound_tasks is recorded as false as neither compute-bound task exhibited idle anomalies or required multi-model parallel dispatch.",
+  "bottlenecks_identified": [
+    "Synthesis tasks accounted for the largest individual execution latency, led by 'Qualify service validation and replay preserved acquisition evidence' (39.41 minutes) and 'Bound complete-workload acceleration and retain all board obligations' (31.99 minutes), which combined for 71.40 minutes (49.9% of milestone wall time).",
+    "Compute-bound execution consumed 62.19 minutes (43.4% of milestone wall time) across two single-model Qwen workloads without intra-task stage breakdown: 'Measure independent Qwen requests through durable Python and Rust services' (35.63 minutes) and 'Capture bounded Qwen sentence evidence on fit and tune sources' (26.56 minutes).",
+    "The top four slowest experiments combined for 133.59 minutes (93.3% of the 143.2 total milestone wall-time minutes), reflecting severe execution latency concentration.",
+    "Milestone timing relied on disk-mtime fallback reconstruction due to zero commits found on the live git-log path, leaving intra-task sub-phases (service validation, replay verification, Qwen request measurement, and sentence evidence capture) uninstrumented without granular telemetry.",
+    "Static GPU monitor polling provides only point-in-time snapshots (0% utilization, 4MB allocated across both RTX 3090 GPUs) rather than continuous execution-window telemetry during active compute-bound runs."
+  ],
+  "improvements_suggested": [
+    "Profile and optimize the service validation and evidence replay pipeline in 'Qualify service validation and replay preserved acquisition evidence' (39.41 minutes) to reduce serialization and evaluation overhead.",
+    "Instrument experiment runners with granular intra-task sub-phase timers to isolate latency across model acquisition, request dispatch, inference passes, and receipt serialization.",
+    "Emit synchronous start and finish lifecycle timestamps directly into task result receipts during conductor execution to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Deploy continuous in-flight accelerator telemetry sampling during compute-bound execution windows to dynamically measure GPU utilization and memory bandwidth.",
+    "Enforce DualGPURunner orchestration strictly for concurrent workloads executing two or more distinct models in parallel, avoiding misapplication to single-model Qwen tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile and optimize the service validation and replay pipeline in 'Qualify service validation and replay preserved acquisition evidence' (which accounted for 39.41 minutes of milestone wall time).",
+    "Instrument experiment runners with granular intra-task sub-phase timers to isolate service validation, evidence replay, Qwen request processing, and artifact serialization latency.",
+    "Persist structured start and finish lifecycle timestamps directly into experiment receipt artifacts to replace disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.706 completed 11 experiments (2 compute-bound, 9 synthesis-only) in 143.2 wall-time minutes, heavily concentrated in service validation replay (39.41 minutes) and independent Qwen service measurement (35.63 minutes). Point-in-time GPU monitor polling observed 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs, and gpu_idle_on_compute_bound_tasks is false as the compute-bound tasks did not involve multi-model parallel execution. Highest-leverage operational gains lie in instrumenting granular intra-task phase timers and profiling validation replay latency, with estimated time savings set to 0% pending empirical phase telemetry."
+}

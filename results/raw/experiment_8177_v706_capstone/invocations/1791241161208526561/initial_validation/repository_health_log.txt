@@ -1,0 +1,2378 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+created: 4/4 workers
+4 workers [76029 items]
+
+........................................................................ [  0%]
+........................................................................ [  0%]
+........................................................................ [  0%]
+........................................................................ [  0%]
+........................................................................ [  0%]
+........................................................................ [  0%]
+........................................................................ [  0%]
+........................................................................ [  0%]
+........................................................................ [  0%]
+........................................................................ [  0%]
+........................................................................ [  1%]
+........................................................................ [  1%]
+........................................................................ [  1%]
+........................................................................ [  1%]
+........................................................................ [  1%]
+........................................................................ [  1%]
+........................................................................ [  1%]
+.....................................................................F.F [  1%]
+.F...................................................................... [  1%]
+........................................................................ [  1%]
+.F...................................................................... [  1%]
+........................................................................ [  2%]
+........................................................................ [  2%]
+........................................................................ [  2%]
+........................................................................ [  2%]
+........................................................................ [  2%]
+........................................................................ [  2%]
+........................................................................ [  2%]
+........................................................................ [  2%]
+........................................................................ [  2%]
+........................................................................ [  2%]
+........................................................................ [  3%]
+........................................................................ [  3%]
+........................................................................ [  3%]
+......................s................................................. [  3%]
+........................................................................ [  3%]
+........................................................................ [  3%]
+........................................................................ [  3%]
+........................................................................ [  3%]
+........................................................................ [  3%]
+........................................................................ [  3%]
+.......F................................................................ [  3%]
+........................................................................ [  4%]
+........................................................................ [  4%]
+........................................................................ [  4%]
+........................................................................ [  4%]
+........................................................................ [  4%]
+.............................................F......................F..F [  4%]
+.F...................................................................... [  4%]
+.............................................................F.....F.... [  4%]
+........................................................................ [  4%]
+........................................................................ [  4%]
+........................................................................ [  5%]
+........................................................................ [  5%]
+........................................................................ [  5%]
+........................................................................ [  5%]
+........................................................................ [  5%]
+..F..........F...FF..................................................... [  5%]
+........................................................................ [  5%]
+........................................................................ [  5%]
+........................................................................ [  5%]
+.......................................F...F............................ [  5%]
+........................................................................ [  5%]
+........................................................................ [  6%]
+........................................................................ [  6%]
+........................................................................ [  6%]
+........................................................................ [  6%]
+........................................................................ [  6%]
+...................................FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF..... [  6%]
+.....F.......F.............FF........................................... [  6%]
+................
+=================================== FAILURES ===================================
+___________ test_live_induction_arguments_at_both_sites[None-stall] ____________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe69c152b40>
+reason = 'stall', threshold = None
+
+    @pytest.mark.parametrize("reason", ["stall", "level_up_reinduction"])
+    @pytest.mark.parametrize("threshold", [None, 1.0, 0.9, 0.75])
+    def test_live_induction_arguments_at_both_sites(monkeypatch, reason, threshold):
+        """SCENARIO-ARC-WMTE-10025-THRESHOLDS observes the actual live call arguments."""
+    
+        monkeypatch.delenv("CARNOT_ARC_DISABLE_INDUCTION", raising=False)
+        if threshold is None:
+            monkeypatch.delenv("CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD", raising=False)
+        else:
+            monkeypatch.setenv("CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD", str(threshold))
+        calls = []
+    
+        def capture(**kwargs):
+            calls.append(kwargs)
+            return LlmReinductionResult(
+                planned=False,
+                model_specs="CPU fixture",
+                heldout_accuracy=0.0,
+                skipped="proposer_failed",
+            )
+    
+        monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", capture)
+        policy = agent.E3AgentPolicy(
+            "xx11",
+            proposer=SimpleNamespace(
+                model_specs="CPU fixture", induce=lambda *args, **kwargs: (False, "fixture_declines")
+            ),
+            value_head=lambda frame: 0.0,
+        )
+        policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
+        policy.root_grid = np.array([[1]], dtype=np.int16)
+        policy._pending_induction_reason = reason
+        policy._induce_and_plan()
+>       assert len(calls) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests/python/test_arc_plan_divergence_halt_10025.py:205: AssertionError
+____________ test_live_induction_arguments_at_both_sites[1.0-stall] ____________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe6f092bf80>
+reason = 'stall', threshold = 1.0
+
+    @pytest.mark.parametrize("reason", ["stall", "level_up_reinduction"])
+    @pytest.mark.parametrize("threshold", [None, 1.0, 0.9, 0.75])
+    def test_live_induction_arguments_at_both_sites(monkeypatch, reason, threshold):
+        """SCENARIO-ARC-WMTE-10025-THRESHOLDS observes the actual live call arguments."""
+    
+        monkeypatch.delenv("CARNOT_ARC_DISABLE_INDUCTION", raising=False)
+        if threshold is None:
+            monkeypatch.delenv("CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD", raising=False)
+        else:
+            monkeypatch.setenv("CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD", str(threshold))
+        calls = []
+    
+        def capture(**kwargs):
+            calls.append(kwargs)
+            return LlmReinductionResult(
+                planned=False,
+                model_specs="CPU fixture",
+                heldout_accuracy=0.0,
+                skipped="proposer_failed",
+            )
+    
+        monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", capture)
+        policy = agent.E3AgentPolicy(
+            "xx11",
+            proposer=SimpleNamespace(
+                model_specs="CPU fixture", induce=lambda *args, **kwargs: (False, "fixture_declines")
+            ),
+            value_head=lambda frame: 0.0,
+        )
+        policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
+        policy.root_grid = np.array([[1]], dtype=np.int16)
+        policy._pending_induction_reason = reason
+        policy._induce_and_plan()
+>       assert len(calls) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests/python/test_arc_plan_divergence_halt_10025.py:205: AssertionError
+____________ test_live_induction_arguments_at_both_sites[0.9-stall] ____________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe68de1e720>
+reason = 'stall', threshold = 0.9
+
+    @pytest.mark.parametrize("reason", ["stall", "level_up_reinduction"])
+    @pytest.mark.parametrize("threshold", [None, 1.0, 0.9, 0.75])
+    def test_live_induction_arguments_at_both_sites(monkeypatch, reason, threshold):
+        """SCENARIO-ARC-WMTE-10025-THRESHOLDS observes the actual live call arguments."""
+    
+        monkeypatch.delenv("CARNOT_ARC_DISABLE_INDUCTION", raising=False)
+        if threshold is None:
+            monkeypatch.delenv("CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD", raising=False)
+        else:
+            monkeypatch.setenv("CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD", str(threshold))
+        calls = []
+    
+        def capture(**kwargs):
+            calls.append(kwargs)
+            return LlmReinductionResult(
+                planned=False,
+                model_specs="CPU fixture",
+                heldout_accuracy=0.0,
+                skipped="proposer_failed",
+            )
+    
+        monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", capture)
+        policy = agent.E3AgentPolicy(
+            "xx11",
+            proposer=SimpleNamespace(
+                model_specs="CPU fixture", induce=lambda *args, **kwargs: (False, "fixture_declines")
+            ),
+            value_head=lambda frame: 0.0,
+        )
+        policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
+        policy.root_grid = np.array([[1]], dtype=np.int16)
+        policy._pending_induction_reason = reason
+        policy._induce_and_plan()
+>       assert len(calls) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests/python/test_arc_plan_divergence_halt_10025.py:205: AssertionError
+___________ test_live_induction_arguments_at_both_sites[0.75-stall] ____________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe691cda090>
+reason = 'stall', threshold = 0.75
+
+    @pytest.mark.parametrize("reason", ["stall", "level_up_reinduction"])
+    @pytest.mark.parametrize("threshold", [None, 1.0, 0.9, 0.75])
+    def test_live_induction_arguments_at_both_sites(monkeypatch, reason, threshold):
+        """SCENARIO-ARC-WMTE-10025-THRESHOLDS observes the actual live call arguments."""
+    
+        monkeypatch.delenv("CARNOT_ARC_DISABLE_INDUCTION", raising=False)
+        if threshold is None:
+            monkeypatch.delenv("CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD", raising=False)
+        else:
+            monkeypatch.setenv("CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD", str(threshold))
+        calls = []
+    
+        def capture(**kwargs):
+            calls.append(kwargs)
+            return LlmReinductionResult(
+                planned=False,
+                model_specs="CPU fixture",
+                heldout_accuracy=0.0,
+                skipped="proposer_failed",
+            )
+    
+        monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", capture)
+        policy = agent.E3AgentPolicy(
+            "xx11",
+            proposer=SimpleNamespace(
+                model_specs="CPU fixture", induce=lambda *args, **kwargs: (False, "fixture_declines")
+            ),
+            value_head=lambda frame: 0.0,
+        )
+        policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
+        policy.root_grid = np.array([[1]], dtype=np.int16)
+        policy._pending_induction_reason = reason
+        policy._induce_and_plan()
+>       assert len(calls) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests/python/test_arc_plan_divergence_halt_10025.py:205: AssertionError
+___________ test_vacuous_threshold_fires_with_trust_rejected_reason ____________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe6eebdfc20>
+
+    def test_vacuous_threshold_fires_with_trust_rejected_reason(monkeypatch):
+        """A threshold above 1.0 makes the recall test vacuous, so the fire reason must say
+        what actually fired (trust rejection), not `catastrophic_recall` -- which on a
+        recall-1.0/accuracy-0.0 cell would write the opposite of the truth into the audit
+        field. Default-threshold behaviour is pinned unchanged by the existing tests."""
+        import carnot.agentic.arc_recall_gated_resample as rgr
+    
+        monkeypatch.setenv("CARNOT_ARC_RECALL_RESAMPLE_THRESHOLD", "1.01")
+        d = rgr.decide_resample(
+            cell_recall=1.0,  # perfect recall, yet trust rejected on accuracy
+            n_changing=11,
+            downstream_rejects=True,
+            resamples_used_this_game=0,
+            tool_repair=True,
+        )
+        assert d.fire is True
+        assert d.reason == "trust_rejected_tool_loop_repair"
+        monkeypatch.setenv("CARNOT_ARC_RECALL_RESAMPLE", "1")
+        d2 = rgr.decide_resample(
+            cell_recall=0.93,
+            n_changing=11,
+            downstream_rejects=True,
+            resamples_used_this_game=0,
+            tool_repair=False,
+        )
+>       assert d2.fire is True
+E       AssertionError: assert False is True
+E        +  where False = ResampleDecision(fire=False, reason='seed_pinned_resample_would_reproduce').fire
+
+tests/python/test_arc_recall_gated_resample.py:448: AssertionError
+____________ test_req_arc_wmte_5901_repository_artifact_is_current _____________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+    def test_req_arc_wmte_5901_repository_artifact_is_current() -> None:
+        """REQ-ARC-WMTE-5901: checked-in Exp5901 JSON matches the deterministic audit."""
+    
+        expected = build_exp5901_artifact(REPO)
+        actual = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
+>       assert actual == expected
+E       AssertionError: assert {'duration_s'...unt': 5}, ...} == {'duration_s'...unt': 5}, ...}
+E         
+E         Omitting 25 identical items, use -vv to show
+E         Differing items:
+E         {'upstream_gate_and_hashes': {'exp5900_gate_replayed': True, 'exp5900_hash': 'sha256:adb2b20636747ecfed802a9b15ed50af1...xp5900_path': 'results/experiment_5900_arc_structured_evidence_memory_contract.json', 'exp5900_ready_score': 1.0, ...}} != {'upstream_gate_and_hashes': {'exp5900_gate_replayed': True, 'exp5900_hash': 'sha256:adb2b20636747ecfed802a9b15ed50af1...xp5900_path': 'results/experiment_5900_arc_structured_evidence_memory_contract.json', 'exp5900_ready_score': 1.0, ...}}
+E         {'protected_files_unchanged': {'...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests/python/test_arc_structured_memory_causal_audit.py:161: AssertionError
+_______ test_req_arc_fcp_4527_update_baseline_rejects_invalid_candidate ________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe73a10e810>
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_req_arc_fcp_4527_update_b0')
+capsys = <_pytest.capture.CaptureFixture object at 0x7fe73e4f1340>
+
+    def test_req_arc_fcp_4527_update_baseline_rejects_invalid_candidate(monkeypatch, tmp_path, capsys):
+        """REQ-ARC-FCP-4527: --update-baseline validates before persisting a new baseline."""
+    
+        candidate = _efficiency_baseline()
+        candidate["efficiency_by_game"] = dict(candidate["efficiency_by_game"])
+        candidate["efficiency_by_game"]["lp85"] = 1.0
+        candidate["per_game"] = [
+            {
+                "game": game,
+                "solved": True,
+                "actions": actions,
+                "efficiency": candidate["efficiency_by_game"][game],
+            }
+            for game, actions in candidate["actions_by_game"].items()
+        ]
+        target = tmp_path / "arc-submission-baseline.json"
+    
+        monkeypatch.setattr(gate, "BASELINE", target)
+        monkeypatch.setattr(gate, "measure", lambda _policy, _budget, _cap: candidate)
+        monkeypatch.setattr(sys, "argv", ["arc_local_submission_gate.py", "--update-baseline"])
+    
+        rc = gate.main()
+        captured = capsys.readouterr()
+    
+>       assert rc == 1
+E       assert 0 == 1
+
+tests/python/test_arc_submission_gate_verdict.py:319: AssertionError
+____ test_exp4756_required_datasets_match_what_the_kernel_actually_attaches ____
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+kernel_metadata = {'code_file': 'main.py', 'competition_sources': ['arc-prize-2026-arc-agi-3'], 'dataset_sources': ['iancblenke/carnot-a..., 'iancblenke/carnot-flashinfer-aot-sm120', 'iancblenke/carnot-qwen38-27b-nvfp4-safetensors'], 'enable_gpu': True, ...}
+
+    def test_exp4756_required_datasets_match_what_the_kernel_actually_attaches(
+        kernel_metadata,
+    ) -> None:
+        """`datasets_attached` is `REQUIRED_DATASETS.issubset(dataset_sources)`. If the two drift, the
+        readiness gate blocks the submission on a dataset the kernel deliberately does not attach."""
+        from carnot.experiment_4756_submission_package_readiness import REQUIRED_DATASETS
+    
+        attached = set(kernel_metadata["dataset_sources"])
+        missing = sorted(REQUIRED_DATASETS - attached)
+>       assert not missing, (
+            "the readiness gate requires Kaggle datasets the kernel does not request: "
+            f"{missing}; kernel requests {sorted(attached)}"
+        )
+E       AssertionError: the readiness gate requires Kaggle datasets the kernel does not request: ['iancblenke/carnot-llamacpp-mtp-binary', 'iancblenke/carnot-qwen38-27b-gguf']; kernel requests ['iancblenke/carnot-agent-code', 'iancblenke/carnot-flashinfer-aot-sm120', 'iancblenke/carnot-llamacpp-kaggle-blackwell', 'iancblenke/carnot-qwen38-27b-nvfp4-mtp', 'iancblenke/carnot-qwen38-27b-nvfp4-safetensors', 'iancblenke/carnot-vllm-wheels-py312']
+E       assert not ['iancblenke/carnot-llamacpp-mtp-binary', 'iancblenke/carnot-qwen38-27b-gguf']
+
+tests/python/test_arc_submission_gates_against_live_config.py:74: AssertionError
+_____ test_the_submitted_config_and_the_kernel_agree_on_the_model_dataset ______
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+kernel_metadata = {'code_file': 'main.py', 'competition_sources': ['arc-prize-2026-arc-agi-3'], 'dataset_sources': ['iancblenke/carnot-a..., 'iancblenke/carnot-flashinfer-aot-sm120', 'iancblenke/carnot-qwen38-27b-nvfp4-safetensors'], 'enable_gpu': True, ...}
+
+    def test_the_submitted_config_and_the_kernel_agree_on_the_model_dataset(kernel_metadata) -> None:
+        """`SUBMITTED_AGENT_CONFIG` records which dataset slug carries the weights, and the kernel
+        metadata requests it. These are written in two different files by two different concerns and
+        have no mechanical link -- so they get one here."""
+        slug = SUBMITTED_AGENT_CONFIG["frozen_generator"]["kaggle_dataset_slug"]
+>       assert slug in set(kernel_metadata["dataset_sources"]), (
+            f"the config names dataset {slug!r} but the kernel requests "
+            f"{sorted(kernel_metadata['dataset_sources'])}"
+        )
+E       AssertionError: the config names dataset 'iancblenke/carnot-qwen38-27b-gguf' but the kernel requests ['iancblenke/carnot-agent-code', 'iancblenke/carnot-flashinfer-aot-sm120', 'iancblenke/carnot-llamacpp-kaggle-blackwell', 'iancblenke/carnot-qwen38-27b-nvfp4-mtp', 'iancblenke/carnot-qwen38-27b-nvfp4-safetensors', 'iancblenke/carnot-vllm-wheels-py312']
+E       assert 'iancblenke/carnot-qwen38-27b-gguf' in {'iancblenke/carnot-agent-code', 'iancblenke/carnot-flashinfer-aot-sm120', 'iancblenke/carnot-llamacpp-kaggle-blackwel.../carnot-qwen38-27b-nvfp4-mtp', 'iancblenke/carnot-qwen38-27b-nvfp4-safetensors', 'iancblenke/carnot-vllm-wheels-py312'}
+E        +  where {'iancblenke/carnot-agent-code', 'iancblenke/carnot-flashinfer-aot-sm120', 'iancblenke/carnot-llamacpp-kaggle-blackwel.../carnot-qwen38-27b-nvfp4-mtp', 'iancblenke/carnot-qwen38-27b-nvfp4-safetensors', 'iancblenke/carnot-vllm-wheels-py312'} = set(['iancblenke/carnot-agent-code', 'iancblenke/carnot-llamacpp-kaggle-blackwell', 'iancblenke/carnot-qwen38-27b-nvfp4-mt.../carnot-vllm-wheels-py312', 'iancblenke/carnot-flashinfer-aot-sm120', 'iancblenke/carnot-qwen38-27b-nvfp4-safetensors'])
+
+tests/python/test_arc_submission_gates_against_live_config.py:109: AssertionError
+_________ TestE2ETrainingSampling.test_rosenbrock_langevin_convergence _________
+[gw1] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+self = <test_e2e_training_sampling.TestE2ETrainingSampling object at 0x7f18ec6e4ec0>
+
+    def test_rosenbrock_langevin_convergence(self) -> None:
+        """SCENARIO-CORE-001: Langevin on Rosenbrock converges toward minimum."""
+        rb = Rosenbrock(dim=2)
+        sampler = LangevinSampler(step_size=0.0001)
+        key = jrandom.PRNGKey(7)
+    
+        x0 = jnp.array([0.0, 0.0])  # energy = 1.0 at origin
+        initial_energy = float(rb.energy(x0))
+    
+        x_final = sampler.sample(rb, x0, n_steps=10000, key=key)
+        final_energy = float(rb.energy(x_final))
+    
+>       assert final_energy < initial_energy, (
+            f"Langevin on Rosenbrock: {initial_energy:.4f} -> {final_energy:.4f}"
+        )
+E       AssertionError: Langevin on Rosenbrock: 1.0000 -> 1.0217
+E       assert 1.0217122630221582 < 1.0
+
+tests/python/test_e2e_training_sampling.py:107: AssertionError
+____________ TestE2ETrainingSampling.test_dsm_training_reduces_loss ____________
+[gw1] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+self = <test_e2e_training_sampling.TestE2ETrainingSampling object at 0x7f18ec6e5190>
+
+    def test_dsm_training_reduces_loss(self) -> None:
+        """REQ-TRAIN-001: DSM training reduces loss over iterations.
+    
+        Uses a parameterized quadratic model where we can take gradients
+        w.r.t. the center parameter. The target data is centered at [1,1,1]
+        so training should push the model center toward [1,1,1].
+        """
+        key = jrandom.PRNGKey(0)
+        dim = 3
+    
+        # Target data centered at [1, 1, 1]
+        k1, key = jrandom.split(key)
+        target = jnp.ones(dim)
+        data = jrandom.normal(k1, (64, dim)) * 0.2 + target
+    
+        sigma = 0.1
+    
+        # Initial model: center at origin (wrong), scale = 1.0
+        center = jnp.zeros(dim)
+        scale = jnp.array(1.0)
+    
+        # Pre-generate noise for deterministic loss
+        k2, key = jrandom.split(key)
+        noise = jrandom.normal(k2, data.shape) * sigma
+    
+        # Compute initial loss
+        model_init = _ParameterizedQuadratic(scale, center)
+        initial_loss = float(dsm_loss(model_init, data, noise, sigma))
+    
+        # Train: gradient descent on center parameter
+        lr = 0.01
+        for step in range(50):
+            k_step, key = jrandom.split(key)
+            noise_step = jrandom.normal(k_step, data.shape) * sigma
+    
+            def loss_fn(c):
+                m = _ParameterizedQuadratic(scale, c)
+                return dsm_loss(m, data, noise_step, sigma)
+    
+            grad_c = jax.grad(loss_fn)(center)
+            center = center - lr * grad_c
+    
+        # Compute final loss
+        k3, key = jrandom.split(key)
+        noise_final = jrandom.normal(k3, data.shape) * sigma
+        model_final = _ParameterizedQuadratic(scale, center)
+        final_loss = float(dsm_loss(model_final, data, noise_final, sigma))
+    
+>       assert final_loss < initial_loss, (
+            f"Training should reduce DSM loss: {initial_loss:.4f} -> {final_loss:.4f}"
+        )
+E       AssertionError: Training should reduce DSM loss: 240.3799 -> 329.1696
+E       assert 329.1695576295807 < 240.37985568780306
+
+tests/python/test_e2e_training_sampling.py:159: AssertionError
+_____________________________ test_current_primary _____________________________
+[gw1] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+    def test_current_primary() -> None:
+        """SCENARIO-VERIFY-7943-CUSTODY: use actual current upstream byte custody."""
+>       sources, dependencies, value = core.authenticate(core.PUBLICATION, core.RUNTIME, core.UPSTREAM)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_energy_fit_7943.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/verify/energy_fit_7943.py:87: in authenticate
+    require("dependency." + name, expected, sha256_file(path) if path.is_file() else None)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+field = 'dependency.scripts/adversarial_verify.py'
+expected = 'sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa'
+observed = 'sha256:16ad1fa750f505182dd996fdd500663d0c777a55a4cd080f377db9ff18cec43c'
+
+    def require(field: str, expected: Any, observed: Any) -> None:
+        if expected != observed:
+            row = old.custody.operand(publication, field, "==", expected, observed)
+            row["upstream_id"] = "exp7941-training-publication"
+>           raise old.custody.InputBlocked([row])
+E           carnot.verify.energy_fit_7894.InputBlocked: [{'upstream_id': 'exp7941-training-publication', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7941_v689_training_publication.json', 'artifact_sha256': 'sha256:70102318c925d07d5ea26957302dc9fafa0aecf4c4afaeaa9e346060e103f6c5', 'artifact_field': 'dependency.scripts/adversarial_verify.py', 'op': '==', 'expected': 'sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa', 'observed': 'sha256:16ad1fa750f505182dd996fdd500663d0c777a55a4cd080f377db9ff18cec43c'}]
+
+python/carnot/verify/energy_fit_7943.py:59: InputBlocked
+___________________________ test_real_fixture_routes ___________________________
+[gw1] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw1/test_real_fixture_routes0')
+
+    def test_real_fixture_routes(tmp_path: Path) -> None:
+        """SCENARIO-VERIFY-7943-REPLAY: fresh fit, cold reconstruction and tamper rejection."""
+        output = tmp_path / "success/experiment_7943_fixture.json"
+>       child(tmp_path, "success", "--fixture", "--output", str(output), "--assert-ready")
+
+tests/python/test_energy_fit_7943.py:156: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw1/test_real_fixture_routes0')
+name = 'success', expected = 0
+args = ('--fixture', '--output', '/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw1/test_real_fixture_routes0/success/experiment_7943_fixture.json', '--assert-ready')
+prefix = ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '--parallel-mode', '--data-file=/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw1/test_frozen_scope0/private/.coverage', ...]
+command = CommandSpec(name='success', argv=('/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'r...gw1/test_real_fixture_routes0/success/experiment_7943_fixture.json', '--assert-ready'), scope='required', timeout_s=90)
+
+    def child(tmp_path: Path, name: str, *args: str, expected: int = 0) -> dict:
+        """Save real exits and logs so fixture success requires actual numerical fitting."""
+        prefix = [sys.executable]
+        if os.environ.get("CARNOT7943_COVERAGE_FILE"):
+            prefix += [
+                "-m",
+                "coverage",
+                "run",
+                "--parallel-mode",
+                f"--data-file={os.environ['CARNOT7943_COVERAGE_FILE']}",
+                f"--include={core.INCLUDES}",
+            ]
+        command = CommandSpec(
+            name, tuple(prefix + [core.CLI, "--date", "20260930", *args]), "required", 90
+        )
+        row = run_commands(core.ROOT, [command], log_dir=tmp_path / "logs" / name, heartbeat_s=30)[0]
+>       assert row["exit_code"] == expected, row["output_tail"]
+E       AssertionError: [exp7943] phase=start event=flushed completed=0 elapsed_s=0.000
+E         [exp7943] phase=preconditions event=source evidence blocked completed=0 elapsed_s=0.346
+E         [exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+E         [exp7303-validation:adversarial] {
+E         [exp7303-validation:adversarial]   "reports": [
+E         [exp7303-validation:adversarial]     {
+E         [exp7303-validation:adversarial]       "artifact": "/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw1/test_real_fixture_routes0/success/raw/experiment_7943_fixture/candidate.json",
+E         [exp7303-validation:adversarial]       "loaded": true,
+E         [exp7303-validation:adversarial]       "exp_id": 7943,
+E         [exp7303-validation:adversarial]       "title": "",
+E         [exp7303-validation:adversarial]       "honest_verdict": "complete_blocked_source_eligibility",
+E         [exp7303-validation:adversarial]       "flag_count": 0,
+E         [exp7303-validation:adversarial]       "max_severity": -1,
+E         [exp7303-validation:adversarial]       "flags": [],
+E         [exp7303-validation:adversarial]       "gate_version": "38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e"
+E         [exp7303-validation:adversarial]     }
+E         [exp7303-validation:adversarial]   ],
+E         [exp7303-validation:adversarial]   "flagged_count": 0
+E         [exp7303-validation:adversarial] }
+E         [exp7303-validation] after_subprocess adversarial elapsed_s=1.089 exit=0 unit=1/2
+E         [exp7303-validation] before_subprocess row_consistency elapsed_s=0.000 unit=2/2
+E         [exp7303-validation:row_consistency] 
+E         [exp7303-validation:row_consistency] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+E         [exp7303-validation:row_consistency]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+E         [exp7303-validation] after_subprocess row_consistency elapsed_s=0.045 exit=0 unit=2/2
+E         [exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+E         [exp7303-validation:adversarial] {
+E         [exp7303-validation:adversarial]   "reports": [
+E         [exp7303-validation:adversarial]     {
+E         [exp7303-validation:adversarial]       "artifact": "/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw1/test_real_fixture_routes0/success/raw/experiment_7943_fixture/terminal_candidate.json",
+E         [exp7303-validation:adversarial]       "loaded": true,
+E         [exp7303-validation:adversarial]       "exp_id": 7943,
+E         [exp7303-validation:adversarial]       "title": "",
+E         [exp7303-validation:adversarial]       "honest_verdict": "complete_blocked_source_eligibility",
+E         [exp7303-validation:adversarial]       "flag_count": 0,
+E         [exp7303-validation:adversarial]       "max_severity": -1,
+E         [exp7303-validation:adversarial]       "flags": [],
+E         [exp7303-validation:adversarial]       "gate_version": "38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e"
+E         [exp7303-validation:adversarial]     }
+E         [exp7303-validation:adversarial]   ],
+E         [exp7303-validation:adversarial]   "flagged_count": 0
+E         [exp7303-validation:adversarial] }
+E         [exp7303-validation] after_subprocess adversarial elapsed_s=1.149 exit=0 unit=1/2
+E         [exp7303-validation] before_subprocess row_consistency elapsed_s=0.000 unit=2/2
+E         [exp7303-validation:row_consistency] 
+E         [exp7303-validation:row_consistency] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+E         [exp7303-validation:row_consistency]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+E         [exp7303-validation] after_subprocess row_consistency elapsed_s=0.045 exit=0 unit=2/2
+E         [exp7943] phase=published event=sha256:9f563b9a8b4901722374d6397dd97058af83f6ae6ea3b30f7f6fe17488c88bc9 completed=0 elapsed_s=2.690
+E         
+E       assert 2 == 0
+
+tests/python/test_energy_fit_7943.py:149: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7303-validation] before_subprocess success elapsed_s=0.000 unit=1/1
+[exp7303-validation:success] [exp7943] phase=start event=flushed completed=0 elapsed_s=0.000
+[exp7303-validation:success] [exp7943] phase=preconditions event=source evidence blocked completed=0 elapsed_s=0.346
+[exp7303-validation:success] [exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:success] [exp7303-validation:adversarial] {
+[exp7303-validation:success] [exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:success] [exp7303-validation:adversarial]     {
+[exp7303-validation:success] [exp7303-validation:adversarial]       "artifact": "/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw1/test_real_fixture_routes0/success/raw/experiment_7943_fixture/candidate.json",
+[exp7303-validation:success] [exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:success] [exp7303-validation:adversarial]       "exp_id": 7943,
+[exp7303-validation:success] [exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:success] [exp7303-validation:adversarial]       "honest_verdict": "complete_blocked_source_eligibility",
+[exp7303-validation:success] [exp7303-validation:adversarial]       "flag_count": 0,
+[exp7303-validation:success] [exp7303-validation:adversarial]       "max_severity": -1,
+[exp7303-validation:success] [exp7303-validation:adversarial]       "flags": [],
+[exp7303-validation:success] [exp7303-validation:adversarial]       "gate_version": "38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e"
+[exp7303-validation:success] [exp7303-validation:adversarial]     }
+[exp7303-validation:success] [exp7303-validation:adversarial]   ],
+[exp7303-validation:success] [exp7303-validation:adversarial]   "flagged_count": 0
+[exp7303-validation:success] [exp7303-validation:adversarial] }
+[exp7303-validation:success] [exp7303-validation] after_subprocess adversarial elapsed_s=1.089 exit=0 unit=1/2
+[exp7303-validation:success] [exp7303-validation] before_subprocess row_consistency elapsed_s=0.000 unit=2/2
+[exp7303-validation:success] [exp7303-validation:row_consistency]
+[exp7303-validation:success] [exp7303-validation:row_consistency] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+[exp7303-validation:success] [exp7303-validation:row_consistency]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+[exp7303-validation:success] [exp7303-validation] after_subprocess row_consistency elapsed_s=0.045 exit=0 unit=2/2
+[exp7303-validation:success] [exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:success] [exp7303-validation:adversarial] {
+[exp7303-validation:success] [exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:success] [exp7303-validation:adversarial]     {
+[exp7303-validation:success] [exp7303-validation:adversarial]       "artifact": "/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw1/test_real_fixture_routes0/success/raw/experiment_7943_fixture/terminal_candidate.json",
+[exp7303-validation:success] [exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:success] [exp7303-validation:adversarial]       "exp_id": 7943,
+[exp7303-validation:success] [exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:success] [exp7303-validation:adversarial]       "honest_verdict": "complete_blocked_source_eligibility",
+[exp7303-validation:success] [exp7303-validation:adversarial]       "flag_count": 0,
+[exp7303-validation:success] [exp7303-validation:adversarial]       "max_severity": -1,
+[exp7303-validation:success] [exp7303-validation:adversarial]       "flags": [],
+[exp7303-validation:success] [exp7303-validation:adversarial]       "gate_version": "38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e"
+[exp7303-validation:success] [exp7303-validation:adversarial]     }
+[exp7303-validation:success] [exp7303-validation:adversarial]   ],
+[exp7303-validation:success] [exp7303-validation:adversarial]   "flagged_count": 0
+[exp7303-validation:success] [exp7303-validation:adversarial] }
+[exp7303-validation:success] [exp7303-validation] after_subprocess adversarial elapsed_s=1.149 exit=0 unit=1/2
+[exp7303-validation:success] [exp7303-validation] before_subprocess row_consistency elapsed_s=0.000 unit=2/2
+[exp7303-validation:success] [exp7303-validation:row_consistency]
+[exp7303-validation:success] [exp7303-validation:row_consistency] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+[exp7303-validation:success] [exp7303-validation:row_consistency]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+[exp7303-validation:success] [exp7303-validation] after_subprocess row_consistency elapsed_s=0.045 exit=0 unit=2/2
+[exp7303-validation:success] [exp7943] phase=published event=sha256:9f563b9a8b4901722374d6397dd97058af83f6ae6ea3b30f7f6fe17488c88bc9 completed=0 elapsed_s=2.690
+[exp7303-validation] after_subprocess success elapsed_s=6.872 exit=2 unit=1/1
+___________________ test_prefit_and_receipt_reduction[True] ____________________
+[gw1] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw1/test_prefit_and_receipt_reduct0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f17fe4c6450>
+passed = True
+
+    @pytest.mark.parametrize("passed", [True, False])
+    def test_prefit_and_receipt_reduction(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, passed: bool
+    ) -> None:
+        """SCENARIO-REPORT-7943-TERMINAL: owned route failure prevents natural fitting."""
+        original = core.isolated
+        called = []
+    
+        def isolate(path: Path) -> ModuleType:
+            module = original(path)
+            if path == Path(core.old_run.__file__):
+    
+                def execute(commands: list, raw: Path) -> list:
+                    called.extend(c.name for c in commands)
+                    return [{"name": c.name, "passed": passed} for c in commands]
+    
+                module.execute = execute
+            return module
+    
+        monkeypatch.setattr(core, "isolated", isolate)
+        run = core.driver(core.PUBLICATION)
+        _, commands = run.freeze(tmp_path / "private", tmp_path / "raw")
+        if passed:
+>           refs, deps, value = run.core.authenticate(core.RUNTIME, core.UPSTREAM)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_energy_fit_7943.py:224: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/verify/energy_fit_7943.py:254: in authenticate_current
+    sources, dependencies, value = authenticate(publication, runtime, upstream)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/verify/energy_fit_7943.py:87: in authenticate
+    require("dependency." + name, expected, sha256_file(path) if path.is_file() else None)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+field = 'dependency.scripts/adversarial_verify.py'
+expected = 'sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa'
+observed = 'sha256:16ad1fa750f505182dd996fdd500663d0c777a55a4cd080f377db9ff18cec43c'
+
+    def require(field: str, expected: Any, observed: Any) -> None:
+        if expected != observed:
+            row = old.custody.operand(publication, field, "==", expected, observed)
+            row["upstream_id"] = "exp7941-training-publication"
+>           raise old.custody.InputBlocked([row])
+E           carnot.verify.energy_fit_7894.InputBlocked: [{'upstream_id': 'exp7941-training-publication', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7941_v689_training_publication.json', 'artifact_sha256': 'sha256:70102318c925d07d5ea26957302dc9fafa0aecf4c4afaeaa9e346060e103f6c5', 'artifact_field': 'dependency.scripts/adversarial_verify.py', 'op': '==', 'expected': 'sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa', 'observed': 'sha256:16ad1fa750f505182dd996fdd500663d0c777a55a4cd080f377db9ff18cec43c'}]
+
+python/carnot/verify/energy_fit_7943.py:59: InputBlocked
+___________________ test_prefit_and_receipt_reduction[False] ___________________
+[gw1] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw1/test_prefit_and_receipt_reduct1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1814ae1010>
+passed = False
+
+    @pytest.mark.parametrize("passed", [True, False])
+    def test_prefit_and_receipt_reduction(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, passed: bool
+    ) -> None:
+        """SCENARIO-REPORT-7943-TERMINAL: owned route failure prevents natural fitting."""
+        original = core.isolated
+        called = []
+    
+        def isolate(path: Path) -> ModuleType:
+            module = original(path)
+            if path == Path(core.old_run.__file__):
+    
+                def execute(commands: list, raw: Path) -> list:
+                    called.extend(c.name for c in commands)
+                    return [{"name": c.name, "passed": passed} for c in commands]
+    
+                module.execute = execute
+            return module
+    
+        monkeypatch.setattr(core, "isolated", isolate)
+        run = core.driver(core.PUBLICATION)
+        _, commands = run.freeze(tmp_path / "private", tmp_path / "raw")
+        if passed:
+            refs, deps, value = run.core.authenticate(core.RUNTIME, core.UPSTREAM)
+            assert refs and deps and value["runtime_ready_score"] == 1
+            receipts = run.execute(commands, tmp_path / "raw")
+            assert all(r["passed"] for r in receipts)
+            late = [c for c in commands if c.scope == "late"]
+            assert run.execute(late, tmp_path / "raw")
+        else:
+            with pytest.raises(ValueError, match="qualification failed"):
+>               run.core.authenticate(core.RUNTIME, core.UPSTREAM)
+
+tests/python/test_energy_fit_7943.py:232: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/verify/energy_fit_7943.py:254: in authenticate_current
+    sources, dependencies, value = authenticate(publication, runtime, upstream)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/verify/energy_fit_7943.py:87: in authenticate
+    require("dependency." + name, expected, sha256_file(path) if path.is_file() else None)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+field = 'dependency.scripts/adversarial_verify.py'
+expected = 'sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa'
+observed = 'sha256:16ad1fa750f505182dd996fdd500663d0c777a55a4cd080f377db9ff18cec43c'
+
+    def require(field: str, expected: Any, observed: Any) -> None:
+        if expected != observed:
+            row = old.custody.operand(publication, field, "==", expected, observed)
+            row["upstream_id"] = "exp7941-training-publication"
+>           raise old.custody.InputBlocked([row])
+E           carnot.verify.energy_fit_7894.InputBlocked: [{'upstream_id': 'exp7941-training-publication', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7941_v689_training_publication.json', 'artifact_sha256': 'sha256:70102318c925d07d5ea26957302dc9fafa0aecf4c4afaeaa9e346060e103f6c5', 'artifact_field': 'dependency.scripts/adversarial_verify.py', 'op': '==', 'expected': 'sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa', 'observed': 'sha256:16ad1fa750f505182dd996fdd500663d0c777a55a4cd080f377db9ff18cec43c'}]
+
+python/carnot/verify/energy_fit_7943.py:59: InputBlocked
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw1/test_prefit_and_receipt_reduct1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1814ae1010>
+passed = False
+
+    @pytest.mark.parametrize("passed", [True, False])
+    def test_prefit_and_receipt_reduction(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, passed: bool
+    ) -> None:
+        """SCENARIO-REPORT-7943-TERMINAL: owned route failure prevents natural fitting."""
+        original = core.isolated
+        called = []
+    
+        def isolate(path: Path) -> ModuleType:
+            module = original(path)
+            if path == Path(core.old_run.__file__):
+    
+                def execute(commands: list, raw: Path) -> list:
+                    called.extend(c.name for c in commands)
+                    return [{"name": c.name, "passed": passed} for c in commands]
+    
+                module.execute = execute
+            return module
+    
+        monkeypatch.setattr(core, "isolated", isolate)
+        run = core.driver(core.PUBLICATION)
+        _, commands = run.freeze(tmp_path / "private", tmp_path / "raw")
+        if passed:
+            refs, deps, value = run.core.authenticate(core.RUNTIME, core.UPSTREAM)
+            assert refs and deps and value["runtime_ready_score"] == 1
+            receipts = run.execute(commands, tmp_path / "raw")
+            assert all(r["passed"] for r in receipts)
+            late = [c for c in commands if c.scope == "late"]
+            assert run.execute(late, tmp_path / "raw")
+        else:
+>           with pytest.raises(ValueError, match="qualification failed"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Regex pattern did not match.
+E             Expected regex: 'qualification failed'
+E             Actual message: "[{'upstream_id': 'exp7941-training-publication', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7941_v689_training_publication.json', 'artifact_sha256': 'sha256:70102318c925d07d5ea26957302dc9fafa0aecf4c4afaeaa9e346060e103f6c5', 'artifact_field': 'dependency.scripts/adversarial_verify.py', 'op': '==', 'expected': 'sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa', 'observed': 'sha256:16ad1fa750f505182dd996fdd500663d0c777a55a4cd080f377db9ff18cec43c'}]"
+
+tests/python/test_energy_fit_7943.py:231: AssertionError
+________________ test_scenario_arc_6859_no_gap_and_default_off _________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_scenario_arc_6859_no_gap_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe73a19f140>
+
+    def test_scenario_arc_6859_no_gap_and_default_off(tmp_path: Path, monkeypatch) -> None:
+        """SCENARIO-ARC-6859-NO-GAP-AND-DEFAULT-OFF preserves action identity."""
+    
+        session = InductionToolSession([])
+        transport = _transport(tmp_path / "receipts.json")
+        assert (
+            dispatch_tool(
+                session,
+                "list_transitions",
+                "{}",
+                receipt_transport=transport,
+                decision_point_identity="decision-clean",
+            )["ok"]
+            is True
+        )
+        assert transport.snapshot()["rows"] == []
+    
+        monkeypatch.delenv(receipt.ENABLE_ENV, raising=False)
+        monkeypatch.setenv(receipt.PATH_ENV, str(tmp_path / "default-off.json"))
+        assert receipt.maybe_make_first_party_tool_gap_receipt_transport("g", "run") is None
+        assert not (tmp_path / "default-off.json").exists()
+    
+        action = (1, None)
+        policy = object.__new__(E3AgentPolicy)
+        policy._first_party_tool_gap_receipt_transport = None
+        policy._provenance = None
+        policy._next_move_routed = lambda frames, latest: action
+        policy._maybe_apply_trace_automaton_action = lambda move, latest: move
+        policy.record_target_licensed_route_shadow = lambda move, **kwargs: move
+        policy.record_typed_obligation_shadow_monitor = lambda move, **kwargs: move
+        policy._record_outcome_transport_proposal = lambda *args: None
+>       assert policy.next_move([], None) is action
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_tool_gap_receipt_6859.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <carnot.agentic.arc_competition_agent.E3AgentPolicy object at 0x7fe739b67920>
+frames = [], latest = None
+
+    def next_move(self, frames, latest):
+        """THE choke point: every action the SCORED agent emits leaves through here.
+    
+        `make_carnot_agent` -> `CarnotAgent.choose_action` -> `self._policy.next_move`, so
+        this is the one function that sees every action, in order, with the policy's full
+        state at the moment of choice. That is why the per-action provenance instrument
+        hangs here and nowhere else.
+    
+        THIS IS A PASSTHROUGH WHEN THE INSTRUMENT IS OFF, which is the default and the
+        shipped configuration. `self._provenance` is None unless
+        `CARNOT_ARC_ACTION_PROVENANCE=1` was set at construction time, so the unarmed cost
+        is one attribute load, one `is None` test, and one delegating call -- no allocation,
+        no I/O, no RNG draw, and, critically, not a single different decision. The routing
+        logic itself was not modified: it lives verbatim in `_next_move_routed` below,
+        which is the pre-instrument `next_move` with constant-string branch labels added at
+        its return sites.
+        """
+        self.observe_action_outcome(latest)
+        decision_telemetry = getattr(
+            self,
+            "_decision_telemetry",
+            arc_decision_telemetry.NOOP_RECORDER,
+        )
+>       if self._arc_probe_protocol is not None:
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'E3AgentPolicy' object has no attribute '_arc_probe_protocol'
+
+python/carnot/agentic/arc_competition_agent.py:7274: AttributeError
+_ test_scenario_arc_6859_real_next_move_seam_records_action_and_later_outcome __
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_scenario_arc_6859_real_ne0')
+
+    def test_scenario_arc_6859_real_next_move_seam_records_action_and_later_outcome(
+        tmp_path: Path,
+    ) -> None:
+        """SCENARIO-ARC-6859-VISIBILITY-USE-AND-NEXT-ACTION uses E3AgentPolicy.next_move."""
+    
+        transport = _transport(tmp_path / "receipts.json")
+        receipt_identity = _unknown_gap(transport)
+        transport.record_delivery(receipt_identity, visible_text="visible")
+        action = (3, None)
+        policy = object.__new__(E3AgentPolicy)
+        policy._first_party_tool_gap_receipt_transport = transport
+        policy._provenance = None
+        policy._next_move_routed = lambda frames, latest: action
+        policy._maybe_apply_trace_automaton_action = lambda move, latest: move
+        policy.record_target_licensed_route_shadow = lambda move, **kwargs: move
+        policy.record_typed_obligation_shadow_monitor = lambda move, **kwargs: move
+        policy._record_outcome_transport_proposal = lambda *args: None
+    
+>       assert policy.next_move([], Frame(0)) is action
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_tool_gap_receipt_6859.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <carnot.agentic.arc_competition_agent.E3AgentPolicy object at 0x7fe69a081e80>
+frames = [], latest = Frame(levels_completed=0)
+
+    def next_move(self, frames, latest):
+        """THE choke point: every action the SCORED agent emits leaves through here.
+    
+        `make_carnot_agent` -> `CarnotAgent.choose_action` -> `self._policy.next_move`, so
+        this is the one function that sees every action, in order, with the policy's full
+        state at the moment of choice. That is why the per-action provenance instrument
+        hangs here and nowhere else.
+    
+        THIS IS A PASSTHROUGH WHEN THE INSTRUMENT IS OFF, which is the default and the
+        shipped configuration. `self._provenance` is None unless
+        `CARNOT_ARC_ACTION_PROVENANCE=1` was set at construction time, so the unarmed cost
+        is one attribute load, one `is None` test, and one delegating call -- no allocation,
+        no I/O, no RNG draw, and, critically, not a single different decision. The routing
+        logic itself was not modified: it lives verbatim in `_next_move_routed` below,
+        which is the pre-instrument `next_move` with constant-string branch labels added at
+        its return sites.
+        """
+        self.observe_action_outcome(latest)
+        decision_telemetry = getattr(
+            self,
+            "_decision_telemetry",
+            arc_decision_telemetry.NOOP_RECORDER,
+        )
+>       if self._arc_probe_protocol is not None:
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'E3AgentPolicy' object has no attribute '_arc_probe_protocol'
+
+python/carnot/agentic/arc_competition_agent.py:7274: AttributeError
+_______________________ test_write_artifact_returns_path _______________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_write_artifact_returns_pa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d178a40>
+
+    def test_write_artifact_returns_path(tmp_path, monkeypatch):
+        """write_artifact() returns a Path pointing at the written file."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+        assert isinstance(result, Path)
+>       assert result.exists()
+E       AssertionError: assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('results/experiment_3416_archive_v314_activate_v315.json').exists
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v314_activate_v315_3416.py:18: AssertionError
+_________________________ test_artifact_is_valid_json __________________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_artifact_is_valid_json0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d688080>
+
+    def test_artifact_is_valid_json(tmp_path, monkeypatch):
+        """The artifact file contains valid JSON."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v314_activate_v315_3416.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3416_archive_v314_activate_v315.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3416_archive_v314_activate_v315.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+___________________ test_honest_verdict_starts_with_complete ___________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_honest_verdict_starts_wit0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe7397a9220>
+
+    def test_honest_verdict_starts_with_complete(tmp_path, monkeypatch):
+        """honest_verdict must start with 'complete:' per Verdict Terminal-Prefix Discipline."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v314_activate_v315_3416.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3416_archive_v314_activate_v315.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3416_archive_v314_activate_v315.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+_______________________ test_archive_activate_ready_flag _______________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_archive_activate_ready_fl0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe73a0a1a30>
+
+    def test_archive_activate_ready_flag(tmp_path, monkeypatch):
+        """archive_v314_activate_v315_ready must be True."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v314_activate_v315_3416.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3416_archive_v314_activate_v315.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3416_archive_v314_activate_v315.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+___________________ test_inference_substrate_is_aggregation ____________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_inference_substrate_is_ag0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d179040>
+
+    def test_inference_substrate_is_aggregation(tmp_path, monkeypatch):
+        """Inference substrate must be aggregation_from_upstream_artifacts (no LLM invoked)."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v314_activate_v315_3416.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3416_archive_v314_activate_v315.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3416_archive_v314_activate_v315.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+________________ test_flagged_adversarial_artifacts_quarantined ________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_flagged_adversarial_artif0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d17baa0>
+
+    def test_flagged_adversarial_artifacts_quarantined(tmp_path, monkeypatch):
+        """exp3397 and exp3405 must appear in flagged_adversarial_artifacts."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v314_activate_v315_3416.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3416_archive_v314_activate_v315.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3416_archive_v314_activate_v315.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+____________________ test_archived_and_activated_milestones ____________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_archived_and_activated_mi0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe73a0a0f80>
+
+    def test_archived_and_activated_milestones(tmp_path, monkeypatch):
+        """Correct milestones must be named in the artifact."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v314_activate_v315_3416.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3416_archive_v314_activate_v315.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3416_archive_v314_activate_v315.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+________________ test_next_top_gap_mentions_depth_over_breadth _________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_next_top_gap_mentions_dep0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d68baa0>
+
+    def test_next_top_gap_mentions_depth_over_breadth(tmp_path, monkeypatch):
+        """next_top_gap must reference the P0.1/P0.2/Kona/G2 depth block."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v314_activate_v315_3416.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3416_archive_v314_activate_v315.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3416_archive_v314_activate_v315.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+_______________________ test_write_artifact_returns_path _______________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_write_artifact_returns_pa1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d17be30>
+
+    def test_write_artifact_returns_path(tmp_path, monkeypatch):
+        """write_artifact() returns a Path pointing at the written file."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+        assert isinstance(result, Path)
+>       assert result.exists()
+E       AssertionError: assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('results/experiment_3425_archive_v315_activate_v316.json').exists
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v315_activate_v316_3425.py:18: AssertionError
+_________________________ test_artifact_is_valid_json __________________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_artifact_is_valid_json1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d179430>
+
+    def test_artifact_is_valid_json(tmp_path, monkeypatch):
+        """The artifact file contains valid JSON."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v315_activate_v316_3425.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3425_archive_v315_activate_v316.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3425_archive_v315_activate_v316.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+___________________ test_honest_verdict_starts_with_complete ___________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_honest_verdict_starts_wit1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d688b60>
+
+    def test_honest_verdict_starts_with_complete(tmp_path, monkeypatch):
+        """honest_verdict must start with 'complete:' per Verdict Terminal-Prefix Discipline."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v315_activate_v316_3425.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3425_archive_v315_activate_v316.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3425_archive_v315_activate_v316.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+_______________________ test_archive_activate_ready_flag _______________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_archive_activate_ready_fl1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d17af90>
+
+    def test_archive_activate_ready_flag(tmp_path, monkeypatch):
+        """archive_v315_activate_v316_ready must be True."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v315_activate_v316_3425.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3425_archive_v315_activate_v316.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3425_archive_v315_activate_v316.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+___________________ test_inference_substrate_is_aggregation ____________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_inference_substrate_is_ag1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe723545be0>
+
+    def test_inference_substrate_is_aggregation(tmp_path, monkeypatch):
+        """Inference substrate must be aggregation_from_upstream_artifacts (no LLM invoked)."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v315_activate_v316_3425.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3425_archive_v315_activate_v316.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3425_archive_v315_activate_v316.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+______________ test_flagged_adversarial_artifacts_include_exp3312 ______________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_flagged_adversarial_artif1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d966630>
+
+    def test_flagged_adversarial_artifacts_include_exp3312(tmp_path, monkeypatch):
+        """exp3312 (flagged P0.1) must appear in flagged_adversarial_artifacts."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v315_activate_v316_3425.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3425_archive_v315_activate_v316.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3425_archive_v315_activate_v316.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+____________________ test_archived_and_activated_milestones ____________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_archived_and_activated_mi1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d17ba10>
+
+    def test_archived_and_activated_milestones(tmp_path, monkeypatch):
+        """Correct milestones must be named in the artifact."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v315_activate_v316_3425.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3425_archive_v315_activate_v316.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3425_archive_v315_activate_v316.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+______________ test_missing_artifacts_include_kona_and_injection _______________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_missing_artifacts_include0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d68bf80>
+
+    def test_missing_artifacts_include_kona_and_injection(tmp_path, monkeypatch):
+        """Kona gate and ensemble-vs-injection must be listed as missing."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v315_activate_v316_3425.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3425_archive_v315_activate_v316.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3425_archive_v315_activate_v316.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+__________________ test_depth_forcing_function_remains_active __________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_depth_forcing_function_re0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d1797f0>
+
+    def test_depth_forcing_function_remains_active(tmp_path, monkeypatch):
+        """depth_forcing_function_can_relax must be False — capstone was premature."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v315_activate_v316_3425.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3425_archive_v315_activate_v316.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3425_archive_v315_activate_v316.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+____________________________ test_g2_remains_unmet _____________________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_g2_remains_unmet0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d967920>
+
+    def test_g2_remains_unmet(tmp_path, monkeypatch):
+        """G2 must still be unmet — external reproducer has not run."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v315_activate_v316_3425.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3425_archive_v315_activate_v316.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3425_archive_v315_activate_v316.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+_______________________ test_write_artifact_returns_path _______________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_write_artifact_returns_pa2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d689760>
+
+    def test_write_artifact_returns_path(tmp_path, monkeypatch):
+        """write_artifact() returns a Path pointing at the written file."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+        assert isinstance(result, Path)
+>       assert result.exists()
+E       AssertionError: assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('results/experiment_3436_archive_v316_activate_v317.json').exists
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v316_activate_v317_3436.py:18: AssertionError
+_________________________ test_artifact_is_valid_json __________________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_artifact_is_valid_json2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d68ae40>
+
+    def test_artifact_is_valid_json(tmp_path, monkeypatch):
+        """The artifact file contains valid JSON."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v316_activate_v317_3436.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3436_archive_v316_activate_v317.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3436_archive_v316_activate_v317.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+___________________ test_honest_verdict_starts_with_complete ___________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_honest_verdict_starts_wit2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d964800>
+
+    def test_honest_verdict_starts_with_complete(tmp_path, monkeypatch):
+        """honest_verdict must start with 'complete:' per Verdict Terminal-Prefix Discipline."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v316_activate_v317_3436.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3436_archive_v316_activate_v317.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3436_archive_v316_activate_v317.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+_______________________ test_archive_activate_ready_flag _______________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_archive_activate_ready_fl2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe7399eb410>
+
+    def test_archive_activate_ready_flag(tmp_path, monkeypatch):
+        """archive_v316_activate_v317_ready must be True."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v316_activate_v317_3436.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3436_archive_v316_activate_v317.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3436_archive_v316_activate_v317.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+___________________ test_inference_substrate_is_aggregation ____________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_inference_substrate_is_ag2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe7399e8770>
+
+    def test_inference_substrate_is_aggregation(tmp_path, monkeypatch):
+        """Inference substrate must be aggregation_from_upstream_artifacts (no LLM invoked)."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v316_activate_v317_3436.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3436_archive_v316_activate_v317.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3436_archive_v316_activate_v317.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+____________________ test_archived_and_activated_milestones ____________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_archived_and_activated_mi2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d68a660>
+
+    def test_archived_and_activated_milestones(tmp_path, monkeypatch):
+        """Correct milestones must be named in the artifact."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v316_activate_v317_3436.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3436_archive_v316_activate_v317.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3436_archive_v316_activate_v317.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+______________ test_missing_artifacts_include_p02_kona_injection _______________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_missing_artifacts_include1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d966720>
+
+    def test_missing_artifacts_include_p02_kona_injection(tmp_path, monkeypatch):
+        """P0.2, Kona gate, and injection must be listed as missing (gemini-cli crash)."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v316_activate_v317_3436.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3436_archive_v316_activate_v317.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3436_archive_v316_activate_v317.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+___________________________ test_capstone_is_flagged ___________________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_capstone_is_flagged0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d688350>
+
+    def test_capstone_is_flagged(tmp_path, monkeypatch):
+        """Capstone exp3435 must be listed as flagged_adversarial."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v316_activate_v317_3436.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3436_archive_v316_activate_v317.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3436_archive_v316_activate_v317.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+__________________ test_depth_forcing_function_remains_active __________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_depth_forcing_function_re1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe651177cb0>
+
+    def test_depth_forcing_function_remains_active(tmp_path, monkeypatch):
+        """depth_forcing_function_can_relax must be False — P0.1 harness broken + G2 unmet."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v316_activate_v317_3436.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3436_archive_v316_activate_v317.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3436_archive_v316_activate_v317.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+____________________________ test_g2_remains_unmet _____________________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_g2_remains_unmet1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d967950>
+
+    def test_g2_remains_unmet(tmp_path, monkeypatch):
+        """G2 must still be unmet — cleanroom CI gate failed."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v316_activate_v317_3436.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3436_archive_v316_activate_v317.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3436_archive_v316_activate_v317.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+____________________________ test_p0_1_v2_is_clean _____________________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_p0_1_v2_is_clean0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe651174260>
+
+    def test_p0_1_v2_is_clean(tmp_path, monkeypatch):
+        """P0.1 v2 must be marked clean (run was authentic, harness was broken)."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v316_activate_v317_3436.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3436_archive_v316_activate_v317.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3436_archive_v316_activate_v317.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+_____________________ test_gemini_cli_outage_note_present ______________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_gemini_cli_outage_note_pr0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe64d964110>
+
+    def test_gemini_cli_outage_note_present(tmp_path, monkeypatch):
+        """The artifact must document the gemini-cli outage as root cause of 3 missing tasks."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v316_activate_v317_3436.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3436_archive_v316_activate_v317.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3436_archive_v316_activate_v317.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+_______________________ test_write_artifact_returns_path _______________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_write_artifact_returns_pa3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe651177470>
+
+    def test_write_artifact_returns_path(tmp_path, monkeypatch):
+        """write_artifact() returns a Path pointing at the written file."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+        assert isinstance(result, Path)
+>       assert result.exists()
+E       AssertionError: assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('results/experiment_3572_archive_v328_activate_v329.json').exists
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v328_activate_v329_3572.py:17: AssertionError
+______________________ test_artifact_has_required_fields _______________________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T225013-3491061-f63170a4/popen-gw3/test_artifact_has_required_fie0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe651177f50>
+
+    def test_artifact_has_required_fields(tmp_path, monkeypatch):
+        """The artifact file contains required fields."""
+        monkeypatch.chdir(tmp_path)
+        result = write_artifact()
+>       payload = json.loads(result.read_text())
+                             ^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_archive_v328_activate_v329_3572.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/tracked_results_guard.py:175: in _compat_io_open
+    return _ORIGINAL_IO_OPEN(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('results/experiment_3572_archive_v328_activate_v329.json')
+mode = 'r', args = (-1, 'locale', None, None, True, None), kwargs = {}
+
+    def opened(file, mode="r", *args, **kwargs):
+        if _writing_mode(mode):
+            dest = _target(file)
+            if dest is not None:
+                file = dest
+>       return real(file, mode, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_3572_archive_v328_activate_v329.json'
+
+/tmp/carnot-child-results-guard-x9nl1k4q/sitecustomize.py:62: FileNotFoundError
+________ test_the_three_real_acknowledgements_are_complete_and_current _________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+    def test_the_three_real_acknowledgements_are_complete_and_current() -> None:
+        """The acknowledgements committed on 2026-07-30 must be well-formed and still apply.
+    
+        If a later commit edits `arc_executable_world_model.py` this test keeps passing (it only checks
+        well-formedness), but the LINT will correctly go stale again -- which is the intended behaviour
+        and why the pin is the safety property.
+        """
+        targets = [
+            "results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json",
+            "results/outer_loop_arc_generator_concurrency_fix_20260727.json",
+            "results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json",
+        ]
+        for rel in targets:
+            d = json.loads((REPO / rel).read_text())
+            acks = d["provenance"]["freshness_acknowledgements"]
+            assert acks, rel
+            for a in acks:
+                assert len(a["sha256_now"]) == 64 and len(a["sha256_was"]) == 64, rel
+                assert a["sha256_now"] != a["sha256_was"], rel
+                assert len(a["reason"]) > 80, rel
+                assert len(a["evidence"]) > 80, rel
+                # The evidence must name where a reader can check it, not just assert inertness.
+                #
+                # FIXED 2026-07-31: this asserted `"6011" in evidence or "changelog" in evidence`, two
+                # LITERALS that were a fair proxy for the property when written -- at the time both
+                # acknowledgements on these artifacts cited exp6011 or the changelog. They stopped
+                # being a fair proxy as soon as an acknowledgement cited its evidence somewhere else.
+                # By this commit 4 of the 6 acknowledgements on EACH of these three artifacts failed
+                # the literal check while satisfying the property perfectly well, citing e.g.
+                # `results/arc_plan_in_model_depth_20260731/inertness_differential.json` and a named
+                # regression test. So the test had been RED, and silently so -- it is not in the path
+                # any per-file hook runs, and nothing else asserts on these artifacts.
+                #
+                # The replacement asserts the PROPERTY the comment always described rather than two
+                # spellings of it. This is not a loosened bar: an acknowledgement that merely asserts
+                # inertness with no pointer still fails, which is mutation-checked in the companion
+                # test below.
+                # SCOPED TO ACKNOWLEDGEMENTS WRITTEN ON OR AFTER THE DAY THE RULE BECAME REAL. Two
+                # entries dated 2026-07-30 carry genuinely strong evidence -- one is a 5,200-case
+                # differential execution -- but state it as prose without naming a file, because
+                # nothing required them to. Rewriting their text to satisfy a rule invented afterwards
+                # would be editing the historical record to flatter a later standard, which is the
+                # never-prune rule's exact prohibition. They are grandfathered by DATE and their count
+                # is pinned below, so the exception cannot quietly grow.
+                if a.get("acknowledged_date", "") >= "2026-07-31":
+                    assert _cites_a_checkable_location(a["evidence"]), (
+                        f"{rel}: evidence asserts inertness without naming anywhere a reader could go "
+                        f"and check it -- got: {a['evidence'][:200]!r}"
+                    )
+    
+            legacy = [
+                a
+                for a in acks
+                if a.get("acknowledged_date", "") < "2026-07-31"
+                and not _cites_a_checkable_location(a["evidence"])
+            ]
+>           assert len(legacy) == 2, (
+                f"{rel}: expected exactly the 2 known pre-rule acknowledgements without a cited "
+                f"location, found {len(legacy)}. A NEW one means the date guard above was bypassed "
+                f"by back-dating; an old one disappearing means historical evidence was rewritten."
+            )
+E           AssertionError: results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json: expected exactly the 2 known pre-rule acknowledgements without a cited location, found 27. A NEW one means the date guard above was bypassed by back-dating; an old one disappearing means historical evidence was rewritten.
+E           assert 27 == 2
+E            +  where 27 = len([{'acknowledged_at_commit': '2bad77981445ee690fb502080fdd6d753b244699', 'acknowledged_date': '2026-07-30', 'evidence':...load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.', ...}, ...])
+
+tests/python/test_artifact_freshness_acknowledgement_2026_07_30.py:204: AssertionError
+_____________ test_the_live_repo_artifact_is_registered_and_fresh ______________
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+    def test_the_live_repo_artifact_is_registered_and_fresh():
+        """The guard is wired to something REAL, not just unit-tested in a temp dir.
+    
+        An UNINSTRUMENTED guard -- one that passes because it is watching nothing -- is the same class
+        of defect as an uninstrumented experiment arm. This asserts the index actually names the
+        artifact the incident happened to, and that it is currently fresh.
+        """
+    
+        m = _lint()
+        index_path = REPO / "ops" / "analyzer_artifact_index.json"
+        assert index_path.exists(), "the analyser must register its output for the lint to see it"
+        index = json.loads(index_path.read_text())
+        assert index, "an empty index means the lint is watching nothing"
+        for rel in index:
+            artifact = REPO / rel
+            if not artifact.exists():
+                continue
+            status, detail, _ = m.check_artifact(artifact)
+>           assert status in ("fresh", "unverifiable"), f"{rel} is {status}: {detail}"
+E           AssertionError: results/arc_gateway_card_ground_truth_20260727.json is stale: ['drifted: scripts/arc_leaderboard_eval.py', 'drifted: python/carnot/agentic/arc_competition_agent.py']
+E           assert 'stale' in ('fresh', 'unverifiable')
+
+tests/python/test_artifact_freshness_lint.py:250: AssertionError
+__ test_the_real_stamped_artifacts_reproduce_their_stored_checksum[5632-508] ___
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+experiment = 5632, version = 508
+
+    @pytest.mark.parametrize(
+        ("experiment", "version"),
+        [(5610, 506), (5621, 507), (5632, 508), (5643, 509)],
+    )
+    def test_the_real_stamped_artifacts_reproduce_their_stored_checksum(
+        experiment: int, version: int
+    ) -> None:
+        """The A1 proof, captured so it cannot regress.
+    
+        This is stronger than "the mismatch went away": recomputing with only the gate keys removed
+        reproduces the checksum recorded at AUTHORING time, byte-exactly. That demonstrates the measured
+        record was never touched and the stamp was the sole cause of the mismatch -- which is what
+        justifies excluding the stamp instead of rewriting the artifact (forbidden: never-prune).
+    
+        Reads the committed artifacts; never writes them.
+        """
+        import importlib
+    
+        module = importlib.import_module(
+            f"carnot.experiment_{experiment}_arc_live_self_discovery_levelup_v{version}"
+        )
+        path = REPO / f"results/experiment_{experiment}_arc_live_self_discovery_levelup_v{version}.json"
+        artifact = json.loads(path.read_text(encoding="utf-8"))
+    
+        stored = artifact["reproducibility_checksum"]
+        assert stored, "artifact carries no recorded checksum to reproduce"
+        assert module.compute_artifact_checksum(artifact) == stored, (
+            "the committed artifact no longer reproduces its own recorded checksum. If a gate "
+            "annotation was added, exclude it in artifact_gate_annotations; do NOT edit the artifact."
+        )
+    
+        # The claim that adoption is safely scoped: these artifacts carry ONLY real gate keys, so the
+        # narrowed allowlist cannot be hiding a tally in them.
+        suspicious = [
+            k
+            for k in artifact
+            if k.startswith(("flagged_adversarial", "corrigendum")) and k not in GATE_ANNOTATION_FIELDS
+        ]
+>       assert not suspicious, f"unexpected gate-prefixed keys need classifying: {suspicious}"
+E       AssertionError: unexpected gate-prefixed keys need classifying: ['flagged_adversarial_cleared_note']
+E       assert not ['flagged_adversarial_cleared_note']
+
+tests/python/test_artifact_gate_annotations.py:204: AssertionError
+__ test_the_real_stamped_artifacts_reproduce_their_stored_checksum[5643-509] ___
+[gw3] linux -- Python 3.12.13 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+
+experiment = 5643, version = 509
+
+    @pytest.mark.parametrize(
+        ("experiment", "version"),
+        [(5610, 506), (5621, 507), (5632, 508), (5643, 509)],
+    )
+    def test_the_real_stamped_artifacts_reproduce_their_stored_checksum(
+        experiment: int, version: int
+    ) -> None:
+        """The A1 proof, captured so it cannot regress.
+    
+        This is stronger than "the mismatch went away": recomputing with only the gate keys removed
+        reproduces the checksum recorded at AUTHORING time, byte-exactly. That demonstrates the measured
+        record was never touched and the stamp was the sole cause of the mismatch -- which is what
+        justifies excluding the stamp instead of rewriting the artifact (forbidden: never-prune).
+    
+        Reads the committed artifacts; never writes them.
+        """
+        import importlib
+    
+        module = importlib.import_module(
+            f"carnot.experiment_{experiment}_arc_live_self_discovery_levelup_v{version}"
+        )
+        path = REPO / f"results/experiment_{experiment}_arc_live_self_discovery_levelup_v{version}.json"
+        artifact = json.loads(path.read_text(encoding="utf-8"))
+    
+        stored = artifact["reproducibility_checksum"]
+        assert stored, "artifact carries no recorded checksum to reproduce"
+        assert module.compute_artifact_checksum(artifact) == stored, (
+            "the committed artifact no longer reproduces its own recorded checksum. If a gate "
+            "annotation was added, exclude it in artifact_gate_annotations; do NOT edit the artifact."
+        )
+    
+        # The claim that adoption is safely scoped: these artifacts carry ONLY real gate keys, so the
+        # narrowed allowlist cannot be hiding a tally in them.
+        suspicious = [
+            k
+            for k in artifact
+            if k.startswith(("flagged_adversarial", "corrigendum")) and k not in GATE_ANNOTATION_FIELDS
+        ]
+>       assert not suspicious, f"unexpected gate-prefixed keys need classifying: {suspicious}"
+E       AssertionError: unexpected gate-prefixed keys need classifying: ['flagged_adversarial_cleared_note']
+E       assert not ['flagged_adversarial_cleared_note']
+
+tests/python/test_artifact_gate_annotations.py:204: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+python/carnot/extraction/coace_extractor.py:122
+python/carnot/extraction/coace_extractor.py:122
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+python/carnot/autoresearch/transpile.py:58
+python/carnot/autoresearch/transpile.py:58
+python/carnot/autoresearch/transpile.py:58
+python/carnot/autoresearch/transpile.py:58
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:58: PytestCollectionWarning: cannot collect test class 'TestVector' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)
+    @dataclass
+
+python/carnot/autoresearch/transpile.py:75
+python/carnot/autoresearch/transpile.py:75
+python/carnot/autoresearch/transpile.py:75
+python/carnot/autoresearch/transpile.py:75
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:75: PytestCollectionWarning: cannot collect test class 'TestVectorSet' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)
+    @dataclass
+
+tests/python/test_energy_premise_v3_3437.py:26
+tests/python/test_energy_premise_v3_3437.py:26
+tests/python/test_energy_premise_v3_3437.py:26
+tests/python/test_energy_premise_v3_3437.py:26
+  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_energy_premise_v3_3437.py:26: PytestUnknownMarkWarning: Unknown pytest.mark.kona - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.kona
+
+.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: 56 warnings
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+tests/python/test_respawn_queue.py:68
+tests/python/test_respawn_queue.py:68
+tests/python/test_respawn_queue.py:68
+tests/python/test_respawn_queue.py:68
+  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:68: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.no_cov
+
+tests/python/test_respawn_queue.py:97
+tests/python/test_respawn_queue.py:97
+tests/python/test_respawn_queue.py:97
+tests/python/test_respawn_queue.py:97
+  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:97: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.no_cov
+
+python/carnot/verify/python_types.py:305
+python/carnot/verify/python_types.py:305
+python/carnot/verify/python_types.py:305
+python/carnot/verify/python_types.py:305
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/python_types.py:305: PytestCollectionWarning: cannot collect test class 'TestPassConstraint' because it has a __init__ constructor (from: tests/python/test_verify_python_types.py)
+    class TestPassConstraint(BaseConstraint):
+
+tests/python/models/gibbs/test_igd_sampler.py::test_igd_sampler_sweep
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/jax/_src/ops/scatter.py:104: FutureWarning: scatter inputs have incompatible types: cannot safely cast value from dtype=int64 to dtype=int32 with jax_numpy_dtype_promotion=standard. In future JAX releases this will result in an error.
+    warnings.warn(
+
+tests/python/test_adaptive_kan.py: 10 warnings
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/models/adaptive_kan.py:661: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+
+.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 2 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (2): ['openspec/capabilities/research-reporting/spec.md', 'openspec/capabilities/verification/spec.md']. This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.
+    res = hook_impl.function(*args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_plan_divergence_halt_10025.py::test_live_induction_arguments_at_both_sites[None-stall]
+FAILED tests/python/test_arc_plan_divergence_halt_10025.py::test_live_induction_arguments_at_both_sites[1.0-stall]
+FAILED tests/python/test_arc_plan_divergence_halt_10025.py::test_live_induction_arguments_at_both_sites[0.9-stall]
+FAILED tests/python/test_arc_plan_divergence_halt_10025.py::test_live_induction_arguments_at_both_sites[0.75-stall]
+FAILED tests/python/test_arc_recall_gated_resample.py::test_vacuous_threshold_fires_with_trust_rejected_reason
+FAILED tests/python/test_arc_structured_memory_causal_audit.py::test_req_arc_wmte_5901_repository_artifact_is_current
+FAILED tests/python/test_arc_submission_gate_verdict.py::test_req_arc_fcp_4527_update_baseline_rejects_invalid_candidate
+FAILED tests/python/test_arc_submission_gates_against_live_config.py::test_exp4756_required_datasets_match_what_the_kernel_actually_attaches
+FAILED tests/python/test_arc_submission_gates_against_live_config.py::test_the_submitted_config_and_the_kernel_agree_on_the_model_dataset
+FAILED tests/python/test_e2e_training_sampling.py::TestE2ETrainingSampling::test_rosenbrock_langevin_convergence
+FAILED tests/python/test_e2e_training_sampling.py::TestE2ETrainingSampling::test_dsm_training_reduces_loss
+FAILED tests/python/test_energy_fit_7943.py::test_current_primary - carnot.ve...
+FAILED tests/python/test_energy_fit_7943.py::test_real_fixture_routes - Asser...
+FAILED tests/python/test_energy_fit_7943.py::test_prefit_and_receipt_reduction[True]
+FAILED tests/python/test_energy_fit_7943.py::test_prefit_and_receipt_reduction[False]
+FAILED tests/python/test_arc_tool_gap_receipt_6859.py::test_scenario_arc_6859_no_gap_and_default_off
+FAILED tests/python/test_arc_tool_gap_receipt_6859.py::test_scenario_arc_6859_real_next_move_seam_records_action_and_later_outcome
+FAILED tests/python/test_archive_v314_activate_v315_3416.py::test_write_artifact_returns_path
+FAILED tests/python/test_archive_v314_activate_v315_3416.py::test_artifact_is_valid_json
+FAILED tests/python/test_archive_v314_activate_v315_3416.py::test_honest_verdict_starts_with_complete
+FAILED tests/python/test_archive_v314_activate_v315_3416.py::test_archive_activate_ready_flag
+FAILED tests/python/test_archive_v314_activate_v315_3416.py::test_inference_substrate_is_aggregation
+FAILED tests/python/test_archive_v314_activate_v315_3416.py::test_flagged_adversarial_artifacts_quarantined
+FAILED tests/python/test_archive_v314_activate_v315_3416.py::test_archived_and_activated_milestones
+FAILED tests/python/test_archive_v314_activate_v315_3416.py::test_next_top_gap_mentions_depth_over_breadth
+FAILED tests/python/test_archive_v315_activate_v316_3425.py::test_write_artifact_returns_path
+FAILED tests/python/test_archive_v315_activate_v316_3425.py::test_artifact_is_valid_json
+FAILED tests/python/test_archive_v315_activate_v316_3425.py::test_honest_verdict_starts_with_complete
+FAILED tests/python/test_archive_v315_activate_v316_3425.py::test_archive_activate_ready_flag
+FAILED tests/python/test_archive_v315_activate_v316_3425.py::test_inference_substrate_is_aggregation
+FAILED tests/python/test_archive_v315_activate_v316_3425.py::test_flagged_adversarial_artifacts_include_exp3312
+FAILED tests/python/test_archive_v315_activate_v316_3425.py::test_archived_and_activated_milestones
+FAILED tests/python/test_archive_v315_activate_v316_3425.py::test_missing_artifacts_include_kona_and_injection
+FAILED tests/python/test_archive_v315_activate_v316_3425.py::test_depth_forcing_function_remains_active
+FAILED tests/python/test_archive_v315_activate_v316_3425.py::test_g2_remains_unmet
+FAILED tests/python/test_archive_v316_activate_v317_3436.py::test_write_artifact_returns_path
+FAILED tests/python/test_archive_v316_activate_v317_3436.py::test_artifact_is_valid_json
+FAILED tests/python/test_archive_v316_activate_v317_3436.py::test_honest_verdict_starts_with_complete
+FAILED tests/python/test_archive_v316_activate_v317_3436.py::test_archive_activate_ready_flag
+FAILED tests/python/test_archive_v316_activate_v317_3436.py::test_inference_substrate_is_aggregation
+FAILED tests/python/test_archive_v316_activate_v317_3436.py::test_archived_and_activated_milestones
+FAILED tests/python/test_archive_v316_activate_v317_3436.py::test_missing_artifacts_include_p02_kona_injection
+FAILED tests/python/test_archive_v316_activate_v317_3436.py::test_capstone_is_flagged
+FAILED tests/python/test_archive_v316_activate_v317_3436.py::test_depth_forcing_function_remains_active
+FAILED tests/python/test_archive_v316_activate_v317_3436.py::test_g2_remains_unmet
+FAILED tests/python/test_archive_v316_activate_v317_3436.py::test_p0_1_v2_is_clean
+FAILED tests/python/test_archive_v316_activate_v317_3436.py::test_gemini_cli_outage_note_present
+FAILED tests/python/test_archive_v328_activate_v329_3572.py::test_write_artifact_returns_path
+FAILED tests/python/test_archive_v328_activate_v329_3572.py::test_artifact_has_required_fields
+FAILED tests/python/test_artifact_freshness_acknowledgement_2026_07_30.py::test_the_three_real_acknowledgements_are_complete_and_current
+FAILED tests/python/test_artifact_freshness_lint.py::test_the_live_repo_artifact_is_registered_and_fresh
+FAILED tests/python/test_artifact_gate_annotations.py::test_the_real_stamped_artifacts_reproduce_their_stored_checksum[5632-508]
+FAILED tests/python/test_artifact_gate_annotations.py::test_the_real_stamped_artifacts_reproduce_their_stored_checksum[5643-509]
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/threading.py:359: KeyboardInterrupt
+(to show a full traceback on KeyboardInterrupt use --full-trace)
+===== 53 failed, 5002 passed, 6 skipped, 96 warnings in 536.36s (0:08:56) ======

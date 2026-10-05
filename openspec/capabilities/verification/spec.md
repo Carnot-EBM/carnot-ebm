@@ -49390,3 +49390,24 @@ Implementation: `test_hardware_workload_8176.py` covers separate scopes, origina
 receipt authentication, missing components, external blocks, owned failures,
 tamper rejection and direct cold replay. Added module and CLI coverage is scoped
 to Exp8176; complete Python repository health stays a separate observation.
+
+## REQ-VERIFY-8177: Independent V706 scientific decisions
+
+Recompute qualified cached primitives with original source masks, support and
+multiplicity. H1 unmeasured science remains blocked; the fit transport null is not
+an H1 mechanism null. H2 execution, useful future exposure, natural typed-cost
+benefit and retention SHALL remain separate. Preserve logistic equivalence and
+exposed-development scope. Seeds, sentences and repeats are not independent sources.
+Keep FR-06/12, FR-11 and FR-05/08/NFR-01 as three separate open PRD gaps. Preserve
+V706 literature mapping. Historical host service, component composition and current
+independent complete requests are distinct evidence. ARC and board receipts grant
+no science closure. Independent labels and reproduction remain prerequisites.
+Authenticate every prior_failures verdict before retiring its exact documented
+scope. Skipped natural tests cannot retire an untested scientific mechanism.
+
+### SCENARIO-VERIFY-8177: Primitive and retirement controls
+
+A changed primitive or headline fails replay. Disqualified branches supply no
+science credit. An authentic repeated verdict retires only a matching documented
+scope; absent producer science cannot retire its method family. All generalization
+scores remain zero. Each remaining gap has a falsifiable next action.

@@ -93720,3 +93720,32 @@ Implementation: `carnot.reporting.hardware_workload_8176`,
 `hardware_workload_inputs_8176`, `hardware_boundary_execution_8176` and the
 Exp8176 thin CLI. Private assertions live in `test_hardware_workload_8176.py`;
 the primary and hash-bound terminal sidecar record frozen validation receipts.
+
+## REQ-REPORT-8177: V706 terminal capstone accounting
+
+Exp8177 SHALL bind fourteen tasks Exp8164–Exp8177 to immutable activated design,
+visible table, full JSON and canonical digest. Derive primary paths from that
+contract. Preserve producer verdicts, conductor skips and missing artifacts
+separately. External unchanged blocks are complete_blocked results. They are not
+retryable partial work. Keep exact failed gate operands and original bytes.
+Load no model. Keep imported model provenance separate from zero current calls.
+Publish through primary_publication after normal owned validation, independent
+reduction, unchanged adversarial verification, strict row lint and cold replay.
+Freeze validation argv before measurement. Require scoped tests, 100 percent new
+statement coverage, Ruff, strict mypy, explicit spec checks and private E2E-018.
+Run full Python health once and report unrelated failures separately. The conductor
+owns ops and traceability reconciliation. No activation, push or external publication.
+
+### SCENARIO-REPORT-8177: Private mixed dispositions and tamper rejection
+
+Private null, blocked, missing and disqualified inputs retain fourteen dispositions.
+The direct CLI works outside the checkout without PYTHONPATH. Cold replay rejects
+changed source, code, validation logs, primitive rows or conclusions. Failed owned
+validation sets execution readiness to zero and disqualifies the capstone.
+
+REQ-REPORT-8177 implementation: `carnot.reporting.v706_capstone`,
+`carnot.reporting.v706_capstone_evidence` and the direct script CLI.
+Seven private tests passed. All 348 added statements have test coverage.
+The primary retains fourteen dispositions and three separate open PRD gaps.
+Repository health is a separate failed, interrupted observation. The conductor
+owns operational and traceability reconciliation.

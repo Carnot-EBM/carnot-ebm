@@ -1,0 +1,73 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8176_v706_hardware_workload_boundary.json",
+  "primary_sha256": "sha256:87c939826bae900889a1227801db0bed1bea4a082cd7bc0f8cbafa6af769ab91",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit": 0,
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8176_v706_hardware_workload_boundary.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8176_v706_hardware_workload_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8176_v706_hardware_workload_boundary.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8176_v706_hardware_workload_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 2.3844811290036887,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/tmp/carnot8176-c8aokxtf/terminal_1791240124916255820/0/00_cold_replay.log",
+        "log_sha256": "sha256:d9a0f6a01ff6ce5d483c3a476b8a08b1d3a1b355bc5d0193acd33f8ad5fa0918",
+        "name": "cold_replay",
+        "normal_exit": true,
+        "output_tail": "[exp8176] phase=start completed=0 pending=1 model_loads=0\n[exp8162] precision_before completed=0 pending=200\n[exp8162] precision completed=16 pending=184\n[exp8162] precision completed=32 pending=168\n[exp8162] precision completed=48 pending=152\n[exp8162] precision completed=64 pending=136\n[exp8162] precision completed=80 pending=120\n[exp8162] precision completed=96 pending=104\n[exp8162] precision completed=112 pending=88\n[exp8162] precision completed=128 pending=72\n[exp8162] precision completed=144 pending=56\n[exp8162] precision completed=160 pending=40\n[exp8162] precision completed=176 pending=24\n[exp8162] precision completed=192 pending=8\n[exp8162] precision completed=200 pending=0\n[exp8162] precision_after completed=200 pending=0\n{\"passed\": true, \"rows_checksum\": \"sha256:f4a8d58d0bd62f9d54c65e02bb78ea4c643361e57c6e70a936721afecf06ae30\"}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8176_v706_hardware_workload_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8176_v706_hardware_workload_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 6.000649146037176,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/tmp/carnot8176-c8aokxtf/terminal_1791240124916255820/1/00_adversarial.log",
+        "log_sha256": "sha256:130f12f932200293fc65ae642c8778c56605c132e68b61d8b2005307d4ecd6c1",
+        "name": "adversarial",
+        "normal_exit": true,
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8176_v706_hardware_workload_boundary/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8176,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_blocked_composition_replay_ready_score\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8176_v706_hardware_workload_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8176_v706_hardware_workload_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 0.2477679579751566,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/tmp/carnot8176-c8aokxtf/terminal_1791240124916255820/2/00_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "normal_exit": true,
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}
