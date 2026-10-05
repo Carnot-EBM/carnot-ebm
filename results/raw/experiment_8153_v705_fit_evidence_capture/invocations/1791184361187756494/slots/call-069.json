@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4865726520697320612073756d6d617279206f66207468652061727469636c6520696e20393220776f7264733a0a0a4275636b7320436f756e7479205265702e20427269616e204669747a7061747269636b20766f74656420746f20656c656374204a696d204a6f7264616e20617320537065616b6572206f662074686520486f7573652c20646573706974652063726974696369736d2066726f6d206869732044656d6f637261746963206f70706f6e656e7420616e6420696e646976697369626c652067726f7570732e204669747a7061747269636b20686173206265656e20746f757465642061732061206d6f6465726174652c206275742068697320737570706f727420666f72204a6f7264616e2c2061206661722d72696768742052657075626c6963616e2c20726169736573207175657374696f6e732061626f75742068697320706f6c69746963616c20636f757261676520616e642076616c7565732e",
+  "arm": "source_span",
+  "call_id": "sha256:a3d69df1147952d6aa1540d6b689c3d88fc7c23345a5d21b18f8552949935181:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.264364793081768,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 671,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 62,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Bucks County Rep. Brian Fitzpatrick Votes To Elevate Extremist Republican Jim Jordan To House Speaker, Twice\\nFor a second time, Bucks County\u2019s self-proclaimed moderate Congressman Brian Fitzpatrick voted Tuesday to elevate Jim Jordan, the MAGA, election denying Republican from Ohio who supports a national abortion ban, to Speaker of the House of Representatives.\\n\u201cAfter years of paying lip service to bipartisanship, Fitzpatrick doubled down on his drive to the right wing of the Republican Party by voting for Trump\u2019s hand-picked Speaker,\u201d said Ashley Ehasz , the Democratic contender for Fitzpatrick\u2019s PA01 congressional seat. \u201dWhat else would we expect from a representative who claims to represent us, but then votes with MAGA to ban abortions, restrict our freedom to vote, and take books out of our schools?\u201d\\nInternet criticisms about Fitzpatrick\u2019s vote for Jordan on Tuesday, barely a day old, remain fresh and abundant.\\n\u201cWhy does Brian Fitzpatrick lack the political courage to vote against an election-denying anti-choice extremist, while other members of the GOP are standing on the right side of justice,\u201d Ehasz added.\\nIn a 393 word statement on the Speaker Vote issued by the Congressman , Fitzpatrick didn\u2019t even have the courage to inform his constituents who he voted for, not mentioning Jordan\u2019s name once, let alone why he voted for the far-right Ohio congressman.\\n\u201cBrian Fitzpatrick makes frequent claims about his moderate stance and his bipartisanship credentials,\u201d wrote Indivisible Bucks County in a news release that pointed out the congressman\u2019s support for a national abortion ban, school book bans and the GOP\u2019s \u201csham committee to amplify conspiracy theories and discredited witnesses.\u201d\\nJordan, the founding member of the right-wing House Freedom Caucus , is alleged to have first-hand knowledge of events surrounding the January 6 insurrection and defied a Jan. 6 Committee subpoena for testimony and documents. An outspoken support of Donald Trump, Jordan has also refused to acknowledge that President Joe Biden won the 2020 election.\\n\u201cOver a dozen other Republicans had the courage to vote against Representative Jordan for Speaker, and Fitzpatrick chose to vote for Donald Trump\u2019s choice instead of joining his more principled colleagues,\u201d said Kierstyn Zolfo of Indivisible Bucks County.\\nReactions on Twitter (X) to Fitzpatrick\u2019s Support for Jim Jordan :\", \"answer\": \"Here is a summary of the article in 92 words:\\n\\nBucks County Rep. Brian Fitzpatrick voted to elect Jim Jordan as Speaker of the House, despite criticism from his Democratic opponent and indivisible groups. Fitzpatrick has been touted as a moderate, but his support for Jordan, a far-right Republican, raises questions about his political courage and values.\"}",
+  "prompt_sha256": "sha256:6c845fff2c9ce4ca4937a9880527a2c15722508413fa8cbfd0387710941b7c60",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"Bucks County\u2019s self-proclaimed moderate Congressman Brian Fitzpatrick voted Tuesday to elevate Jim Jordan\",\n  \"byte_start\": 138,\n  \"byte_end\": 226\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184573,
+    "id": "chatcmpl-1OIJx3YGVm3hNdY6LLRTRumG1YVymyjE",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1484.345,
+      "predicted_n": 62,
+      "predicted_per_second": 41.76926523146573,
+      "predicted_per_token_ms": 23.941048387096775,
+      "prompt_ms": 664.593,
+      "prompt_n": 671,
+      "prompt_per_second": 1009.6404867339861,
+      "prompt_per_token_ms": 0.990451564828614
+    },
+    "usage": {
+      "completion_tokens": 62,
+      "prompt_tokens": 671,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 733
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Bucks County Rep. Brian Fitzpatrick Votes To Elevate Extremist Republican Jim Jordan To House Speaker, Twice\\nFor a second time, Bucks County\u2019s self-proclaimed moderate Congressman Brian Fitzpatrick voted Tuesday to elevate Jim Jordan, the MAGA, election denying Republican from Ohio who supports a national abortion ban, to Speaker of the House of Representatives.\\n\u201cAfter years of paying lip service to bipartisanship, Fitzpatrick doubled down on his drive to the right wing of the Republican Party by voting for Trump\u2019s hand-picked Speaker,\u201d said Ashley Ehasz , the Democratic contender for Fitzpatrick\u2019s PA01 congressional seat. \u201dWhat else would we expect from a representative who claims to represent us, but then votes with MAGA to ban abortions, restrict our freedom to vote, and take books out of our schools?\u201d\\nInternet criticisms about Fitzpatrick\u2019s vote for Jordan on Tuesday, barely a day old, remain fresh and abundant.\\n\u201cWhy does Brian Fitzpatrick lack the political courage to vote against an election-denying anti-choice extremist, while other members of the GOP are standing on the right side of justice,\u201d Ehasz added.\\nIn a 393 word statement on the Speaker Vote issued by the Congressman , Fitzpatrick didn\u2019t even have the courage to inform his constituents who he voted for, not mentioning Jordan\u2019s name once, let alone why he voted for the far-right Ohio congressman.\\n\u201cBrian Fitzpatrick makes frequent claims about his moderate stance and his bipartisanship credentials,\u201d wrote Indivisible Bucks County in a news release that pointed out the congressman\u2019s support for a national abortion ban, school book bans and the GOP\u2019s \u201csham committee to amplify conspiracy theories and discredited witnesses.\u201d\\nJordan, the founding member of the right-wing House Freedom Caucus , is alleged to have first-hand knowledge of events surrounding the January 6 insurrection and defied a Jan. 6 Committee subpoena for testimony and documents. An outspoken support of Donald Trump, Jordan has also refused to acknowledge that President Joe Biden won the 2020 election.\\n\u201cOver a dozen other Republicans had the courage to vote against Representative Jordan for Speaker, and Fitzpatrick chose to vote for Donald Trump\u2019s choice instead of joining his more principled colleagues,\u201d said Kierstyn Zolfo of Indivisible Bucks County.\\nReactions on Twitter (X) to Fitzpatrick\u2019s Support for Jim Jordan :\", \"answer\": \"Here is a summary of the article in 92 words:\\n\\nBucks County Rep. Brian Fitzpatrick voted to elect Jim Jordan as Speaker of the House, despite criticism from his Democratic opponent and indivisible groups. Fitzpatrick has been touted as a moderate, but his support for Jordan, a far-right Republican, raises questions about his political courage and values.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 35,
+  "source_bytes": "4275636b7320436f756e7479205265702e20427269616e204669747a7061747269636b20566f74657320546f20456c65766174652045787472656d6973742052657075626c6963616e204a696d204a6f7264616e20546f20486f75736520537065616b65722c2054776963650a466f722061207365636f6e642074696d652c204275636b7320436f756e7479e28099732073656c662d70726f636c61696d6564206d6f64657261746520436f6e67726573736d616e20427269616e204669747a7061747269636b20766f746564205475657364617920746f20656c6576617465204a696d204a6f7264616e2c20746865204d4147412c20656c656374696f6e2064656e79696e672052657075626c6963616e2066726f6d204f68696f2077686f20737570706f7274732061206e6174696f6e616c2061626f7274696f6e2062616e2c20746f20537065616b6572206f662074686520486f757365206f6620526570726573656e746174697665732e0ae2809c4166746572207965617273206f6620706179696e67206c6970207365727669636520746f206269706172746973616e736869702c204669747a7061747269636b20646f75626c656420646f776e206f6e2068697320647269766520746f207468652072696768742077696e67206f66207468652052657075626c6963616e20506172747920627920766f74696e6720666f72205472756d70e28099732068616e642d7069636b656420537065616b65722ce2809d2073616964204173686c657920456861737a202c207468652044656d6f63726174696320636f6e74656e64657220666f72204669747a7061747269636be2809973205041303120636f6e6772657373696f6e616c20736561742e20e2809d5768617420656c736520776f756c64207765206578706563742066726f6d206120726570726573656e7461746976652077686f20636c61696d7320746f20726570726573656e742075732c20627574207468656e20766f7465732077697468204d41474120746f2062616e2061626f7274696f6e732c207265737472696374206f75722066726565646f6d20746f20766f74652c20616e642074616b6520626f6f6b73206f7574206f66206f7572207363686f6f6c733fe2809d0a496e7465726e65742063726974696369736d732061626f7574204669747a7061747269636be280997320766f746520666f72204a6f7264616e206f6e20547565736461792c20626172656c79206120646179206f6c642c2072656d61696e20667265736820616e64206162756e64616e742e0ae2809c57687920646f657320427269616e204669747a7061747269636b206c61636b2074686520706f6c69746963616c20636f757261676520746f20766f746520616761696e737420616e20656c656374696f6e2d64656e79696e6720616e74692d63686f6963652065787472656d6973742c207768696c65206f74686572206d656d62657273206f662074686520474f5020617265207374616e64696e67206f6e207468652072696768742073696465206f66206a7573746963652ce2809d20456861737a2061646465642e0a496e20612033393320776f72642073746174656d656e74206f6e2074686520537065616b657220566f7465206973737565642062792074686520436f6e67726573736d616e202c204669747a7061747269636b206469646ee2809974206576656e20686176652074686520636f757261676520746f20696e666f726d2068697320636f6e7374697475656e74732077686f20686520766f74656420666f722c206e6f74206d656e74696f6e696e67204a6f7264616ee2809973206e616d65206f6e63652c206c657420616c6f6e652077687920686520766f74656420666f7220746865206661722d7269676874204f68696f20636f6e67726573736d616e2e0ae2809c427269616e204669747a7061747269636b206d616b6573206672657175656e7420636c61696d732061626f757420686973206d6f646572617465207374616e636520616e6420686973206269706172746973616e736869702063726564656e7469616c732ce2809d2077726f746520496e646976697369626c65204275636b7320436f756e747920696e2061206e6577732072656c65617365207468617420706f696e746564206f75742074686520636f6e67726573736d616ee280997320737570706f727420666f722061206e6174696f6e616c2061626f7274696f6e2062616e2c207363686f6f6c20626f6f6b2062616e7320616e642074686520474f50e280997320e2809c7368616d20636f6d6d697474656520746f20616d706c69667920636f6e73706972616379207468656f7269657320616e64206469736372656469746564207769746e65737365732ee2809d0a4a6f7264616e2c2074686520666f756e64696e67206d656d626572206f66207468652072696768742d77696e6720486f7573652046726565646f6d20436175637573202c20697320616c6c6567656420746f20686176652066697273742d68616e64206b6e6f776c65646765206f66206576656e747320737572726f756e64696e6720746865204a616e75617279203620696e73757272656374696f6e20616e64206465666965642061204a616e2e203620436f6d6d697474656520737562706f656e6120666f722074657374696d6f6e7920616e6420646f63756d656e74732e20416e206f757473706f6b656e20737570706f7274206f6620446f6e616c64205472756d702c204a6f7264616e2068617320616c736f207265667573656420746f2061636b6e6f776c65646765207468617420507265736964656e74204a6f6520426964656e20776f6e20746865203230323020656c656374696f6e2e0ae2809c4f766572206120646f7a656e206f746865722052657075626c6963616e73206861642074686520636f757261676520746f20766f746520616761696e737420526570726573656e746174697665204a6f7264616e20666f7220537065616b65722c20616e64204669747a7061747269636b2063686f736520746f20766f746520666f7220446f6e616c64205472756d70e28099732063686f69636520696e7374656164206f66206a6f696e696e6720686973206d6f7265207072696e6369706c656420636f6c6c6561677565732ce2809d2073616964204b6965727374796e205a6f6c666f206f6620496e646976697369626c65204275636b7320436f756e74792e0a5265616374696f6e73206f6e20547769747465722028582920746f204669747a7061747269636be280997320537570706f727420666f72204a696d204a6f7264616e203a",
+  "source_cluster_id": "sha256:e3601a0d46485161cadd071e858a1e79977b563ead6af774940cff33fe3e09aa",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"Bucks County\u2019s self-proclaimed moderate Congressman Brian Fitzpatrick voted Tuesday to elevate Jim Jordan\",\n  \"byte_start\": 138,\n  \"byte_end\": 226\n}",
+  "unit_id": "sha256:a3d69df1147952d6aa1540d6b689c3d88fc7c23345a5d21b18f8552949935181"
+}

@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "5261737461205461636f204361746572696e67206973206120686967686c792d726174656420627573696e657373206c6f6361746564206174203333373520466f6f7468696c6c2052642c20537465203633333320696e2043617270696e74657269612c2043616c69666f726e69612e204974206f666665727320612076617269657479206f6620736572766963657320696e636c7564696e67206361746572696e672c206576656e7420706c616e6e696e672c20666f6f642064656c69766572792c20616e642062617274656e64696e672c2077697468206120737065636966696320666f637573206f6e204d65786963616e2063756973696e652e2049747320627573696e65737320686f757273206172652066726f6d20383a303020616d20746f20353a303020706d206f6e207765656b646179732c20616e6420393a303020616d20746f20323a303020706d206f6e207765656b656e64732e20437573746f6d65727320726176652061626f75742074686520627573696e6573732773206162696c69747920746f20656e68616e6365206576656e747320776974682074686569722073657276696365732e204e6f7461626c65206d656e74696f6e7320696e636c7564652061206d617267617269746120747275636b2074686174206164647320612066756e2061746d6f73706865726520746f207061727469657320616e642061206368617269736d61746963207374616666206d656d626572206e616d6564204d6172696f2e20497420686173206265656e206e6f7465642074686174205261737461205461636f204361746572696e67206973206120686974206174206d696c6974617279206576656e747320616e642077656464696e67732e2054686520627573696e65737320616c736f206f666665727320737472656574207061726b696e6720616e64206f7574646f6f722073656174696e6720746f2069747320637573746f6d6572732e",
+  "arm": "holistic",
+  "call_id": "sha256:77758793354fb575a7ed4a111a761910889fb97fe88db6b6d9407ff0ca3446d5:source_removed",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "duration_s": 0.7747152720112354,
+  "entailment_label": null,
+  "exclusion_reason": "invalid_probability_or_usage",
+  "human_target": null,
+  "input_tokens": 232,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 0,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": null,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "missing_probability",
+    "valid_quote": 0
+  },
+  "probability": null,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Rasta Taco Catering is a highly-rated business located at 3375 Foothill Rd, Ste 6333 in Carpinteria, California. It offers a variety of services including catering, event planning, food delivery, and bartending, with a specific focus on Mexican cuisine. Its business hours are from 8:00 am to 5:00 pm on weekdays, and 9:00 am to 2:00 pm on weekends. Customers rave about the business's ability to enhance events with their services. Notable mentions include a margarita truck that adds a fun atmosphere to parties and a charismatic staff member named Mario. It has been noted that Rasta Taco Catering is a hit at military events and weddings. The business also offers street parking and outdoor seating to its customers.\"}",
+  "prompt_sha256": "sha256:cf84ed51dc97cf67dd4c5d718af3d7d152ad8c56e1bdba74394eb719d2868f0e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```json\n{\"p_hallucination\": 1}\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185136,
+    "id": "chatcmpl-5iGDvjkUm73gTGw1WJQ1h1ammvrHQGI6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 369.804,
+      "predicted_n": 16,
+      "predicted_per_second": 43.2661626158722,
+      "predicted_per_token_ms": 23.11275,
+      "prompt_ms": 285.587,
+      "prompt_n": 232,
+      "prompt_per_second": 812.3619072296708,
+      "prompt_per_token_ms": 1.2309784482758621
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 232,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 248
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Rasta Taco Catering is a highly-rated business located at 3375 Foothill Rd, Ste 6333 in Carpinteria, California. It offers a variety of services including catering, event planning, food delivery, and bartending, with a specific focus on Mexican cuisine. Its business hours are from 8:00 am to 5:00 pm on weekdays, and 9:00 am to 2:00 pm on weekends. Customers rave about the business's ability to enhance events with their services. Notable mentions include a margarita truck that adds a fun atmosphere to parties and a charismatic staff member named Mario. It has been noted that Rasta Taco Catering is a hit at military events and weddings. The business also offers street parking and outdoor seating to its customers.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 4,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:cf6f88df625edc1733365cade2aeba2f217e2fa57319a9defe6bba03892b7766",
+  "started": true,
+  "status": "failed",
+  "transcript": "```json\n{\"p_hallucination\": 1}\n```",
+  "unit_id": "sha256:77758793354fb575a7ed4a111a761910889fb97fe88db6b6d9407ff0ca3446d5"
+}

@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "4865726520697320612073756d6d617279206f66207468652061727469636c6520696e2032303020776f7264733a0a0a54776f20434e4e204865726f65732c20416e757261646861204b6f6972616c6120616e6420507573687061204261736e65742c20617265207374727567676c696e6720746f20636f70652077697468207468652061667465726d617468206f6620746865206465766173746174696e672065617274687175616b6520696e204e6570616c2e204b6f6972616c612773207265686162696c69746174696f6e2063656e74657220666f7220796f756e6720776f6d656e20616e64206769726c7320686173206265656e2061666665637465642c207769746820616c6c207265736964656e747320736c656570696e67206f7574646f6f72732064756520746f20616674657273686f636b7320616e642061206c61636b206f662073616665206472696e6b696e672077617465722e204261736e65742773204561726c79204368696c64686f6f6420446576656c6f706d656e742043656e7465722068617320616c736f206265656e20666f7263656420746f2065766163756174652c207769746820737461666620616e64206368696c6472656e206c6976696e6720696e2061206e6561726279206669656c642077697468206c696d69746564207265736f75726365732e20426f7468206865726f65732061726520776f726b696e6720746972656c6573736c7920746f2070726f7669646520617373697374616e636520746f2074686f736520696e206e6565642c206465737069746520746865206368616c6c656e676573207468657920666163652e204f7468657220434e4e204865726f6573206861766520616c736f206a6f696e65642072656c696566206566666f7274732c20696e636c7564696e67204a616b6520576f6f642773205465616d2052756269636f6e2c2057696c6d61204d656c76696c6c652773204e6174696f6e616c2044697361737465722053656172636820446f6720466f756e646174696f6e2c20546f6d2048656e646572736f6e2773205368656c746572426f782c2044722e204c61757261205374616368656c2773205765204361726520536f6c61722c2041726c656e652053616d656e2773204f6e6520486561727420576f726c642d576964652c20616e6420526f62696e204c696d27732042756d692053656861742e205468657365206865726f657320686176652070726f766964656420766974616c2073657276696365732073756368206173206d65646963616c20636172652c207368656c7465722c20616e6420636c65616e20776174657220746f2074686520616666656374656420636f6d6d756e69746965732e",
+  "arm": "holistic",
+  "call_id": "sha256:3dc479c65dd28a8ad5a46be834349ae6834acdc0948894ee19c48d5b6104703c:source_removed",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "duration_s": 0.8939998189453036,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 271,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Here is a summary of the article in 200 words:\\n\\nTwo CNN Heroes, Anuradha Koirala and Pushpa Basnet, are struggling to cope with the aftermath of the devastating earthquake in Nepal. Koirala's rehabilitation center for young women and girls has been affected, with all residents sleeping outdoors due to aftershocks and a lack of safe drinking water. Basnet's Early Childhood Development Center has also been forced to evacuate, with staff and children living in a nearby field with limited resources. Both heroes are working tirelessly to provide assistance to those in need, despite the challenges they face. Other CNN Heroes have also joined relief efforts, including Jake Wood's Team Rubicon, Wilma Melville's National Disaster Search Dog Foundation, Tom Henderson's ShelterBox, Dr. Laura Stachel's We Care Solar, Arlene Samen's One Heart World-Wide, and Robin Lim's Bumi Sehat. These heroes have provided vital services such as medical care, shelter, and clean water to the affected communities.\"}",
+  "prompt_sha256": "sha256:1a497f117094e7f229e167a13b01eb5c154ec1a7d07aecaa283f913759492f80",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 1.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185166,
+    "id": "chatcmpl-BEcOIoq4pudfVVXIWD52JmS8tzvOWb2U",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 369.882,
+      "predicted_n": 16,
+      "predicted_per_second": 43.25703873127105,
+      "predicted_per_token_ms": 23.117625,
+      "prompt_ms": 320.887,
+      "prompt_n": 271,
+      "prompt_per_second": 844.5340571603087,
+      "prompt_per_token_ms": 1.1840848708487084
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 271,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 287
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Here is a summary of the article in 200 words:\\n\\nTwo CNN Heroes, Anuradha Koirala and Pushpa Basnet, are struggling to cope with the aftermath of the devastating earthquake in Nepal. Koirala's rehabilitation center for young women and girls has been affected, with all residents sleeping outdoors due to aftershocks and a lack of safe drinking water. Basnet's Early Childhood Development Center has also been forced to evacuate, with staff and children living in a nearby field with limited resources. Both heroes are working tirelessly to provide assistance to those in need, despite the challenges they face. Other CNN Heroes have also joined relief efforts, including Jake Wood's Team Rubicon, Wilma Melville's National Disaster Search Dog Foundation, Tom Henderson's ShelterBox, Dr. Laura Stachel's We Care Solar, Arlene Samen's One Heart World-Wide, and Robin Lim's Bumi Sehat. These heroes have provided vital services such as medical care, shelter, and clean water to the affected communities.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 14,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:69a7167b341c2455a0411107c163d2dc6b41b5ecb716ba2ecf50359fb01981c3",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 1.0\n}",
+  "unit_id": "sha256:3dc479c65dd28a8ad5a46be834349ae6834acdc0948894ee19c48d5b6104703c"
+}

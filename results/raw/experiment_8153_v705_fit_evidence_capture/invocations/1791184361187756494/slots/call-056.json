@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "546f207175616c69667920666f7220612073747564656e74206c6f616e2c20796f75206e65656420746f20636f6d706c657465207468652066726565206170706c69636174696f6e20666f72206665646572616c2073747564656e742061696420284641465341292e204f6e636520796f7572204641465341206170706c69636174696f6e2069732070726f6365737365642c2074686520552e532e204465706172746d656e74206f6620456475636174696f6e20757365732074686520646174612070726f766964656420746f2063616c63756c61746520796f757220656c69676962696c69747920666f722066696e616e6369616c2061696420616e642073656e64732074686520726573756c747320746f20746865207363686f6f6c7320796f75206c6973746564206f722073656c6563746564206f6e20796f7572204641465341206170706c69636174696f6e2e20546865207363686f6f6c732077696c6c20757365207468697320696e666f726d6174696f6e20746f2064657465726d696e6520796f757220656c69676962696c69747920666f722066696e616e6369616c206169642e20496620796f757220656c69676962696c69747920666f722066696e616e6369616c206169642069732064657465726d696e65642c20746865207363686f6f6c732077696c6c2073656e6420796f7520616e206177617264206c6574746572206f75746c696e696e6720746865207479706573206f662066696e616e6369616c2061696420617661696c61626c6520746f20796f752e20486f77657665722c20697420697320696d706f7274616e7420746f206e6f7465207468617420746865726520617265207370656369666963207465726d7320616e6420636f6e646974696f6e73206173736f636961746564207769746820616e792066696e616e6369616c2061696420617761726465642c2077686963682073686f756c64206265206361726566756c6c792072656164206265666f726520616363657074696e6720746865206f666665722e",
+  "arm": "holistic",
+  "call_id": "sha256:c3ab6226611c7363032733d75646041fddb612ce2c9601deffe13d6d1185ee5b:holistic",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.921365785994567,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 414,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Step 4 - Promissory Note: Read the entire Promissory Note and the Borrower's Rights and Responsibilities prior to signing the Promissory Note for a FFELP loan. For more detailed information access the Student Guide listed below.\\\\n\\\\npassage 2:Step 1 - Complete the online Free Application for Federal Student Aid (FAFSA) Application. FAFSA Application-The U.S. Department of Education uses the data from your FAFSA application to perform a statutorily required calculation and then transmits the results to the schools you listed or selected on the FAFSA.\\\\n\\\\npassage 3:Step 3 - Confirm with the financial aid office at the school you plan to attend, that the school has received all necessary information to determine your eligibility for financial aid. The school will provide to you an award letter outlining the type of financial aid that you may receive.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you qualify for student loans\\\"}\", \"answer\": \"To qualify for a student loan, you need to complete the free application for federal student aid (FAFSA). Once your FAFSA application is processed, the U.S. Department of Education uses the data provided to calculate your eligibility for financial aid and sends the results to the schools you listed or selected on your FAFSA application. The schools will use this information to determine your eligibility for financial aid. If your eligibility for financial aid is determined, the schools will send you an award letter outlining the types of financial aid available to you. However, it is important to note that there are specific terms and conditions associated with any financial aid awarded, which should be carefully read before accepting the offer.\"}",
+  "prompt_sha256": "sha256:93432e4503b66b3e091b1df3e7283d59687fac012ad963b19ca01b9bcf053648",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184549,
+    "id": "chatcmpl-ehVg8wZbof5Q94MVuAQctUSlaVbayZDW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 369.366,
+      "predicted_n": 16,
+      "predicted_per_second": 43.31746831056459,
+      "predicted_per_token_ms": 23.085375,
+      "prompt_ms": 427.549,
+      "prompt_n": 414,
+      "prompt_per_second": 968.3100650451761,
+      "prompt_per_token_ms": 1.0327270531400965
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 414,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 430
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Step 4 - Promissory Note: Read the entire Promissory Note and the Borrower's Rights and Responsibilities prior to signing the Promissory Note for a FFELP loan. For more detailed information access the Student Guide listed below.\\\\n\\\\npassage 2:Step 1 - Complete the online Free Application for Federal Student Aid (FAFSA) Application. FAFSA Application-The U.S. Department of Education uses the data from your FAFSA application to perform a statutorily required calculation and then transmits the results to the schools you listed or selected on the FAFSA.\\\\n\\\\npassage 3:Step 3 - Confirm with the financial aid office at the school you plan to attend, that the school has received all necessary information to determine your eligibility for financial aid. The school will provide to you an award letter outlining the type of financial aid that you may receive.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you qualify for student loans\\\"}\", \"answer\": \"To qualify for a student loan, you need to complete the free application for federal student aid (FAFSA). Once your FAFSA application is processed, the U.S. Department of Education uses the data provided to calculate your eligibility for financial aid and sends the results to the schools you listed or selected on your FAFSA application. The schools will use this information to determine your eligibility for financial aid. If your eligibility for financial aid is determined, the schools will send you an award letter outlining the types of financial aid available to you. However, it is important to note that there are specific terms and conditions associated with any financial aid awarded, which should be carefully read before accepting the offer.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 29,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a537465702034202d2050726f6d6973736f7279204e6f74653a20526561642074686520656e746972652050726f6d6973736f7279204e6f746520616e642074686520426f72726f77657227732052696768747320616e6420526573706f6e736962696c6974696573207072696f7220746f207369676e696e67207468652050726f6d6973736f7279204e6f746520666f722061204646454c50206c6f616e2e20466f72206d6f72652064657461696c656420696e666f726d6174696f6e20616363657373207468652053747564656e74204775696465206c69737465642062656c6f772e5c6e5c6e7061737361676520323a537465702031202d20436f6d706c65746520746865206f6e6c696e652046726565204170706c69636174696f6e20666f72204665646572616c2053747564656e74204169642028464146534129204170706c69636174696f6e2e204641465341204170706c69636174696f6e2d54686520552e532e204465706172746d656e74206f6620456475636174696f6e20757365732074686520646174612066726f6d20796f7572204641465341206170706c69636174696f6e20746f20706572666f726d2061207374617475746f72696c792072657175697265642063616c63756c6174696f6e20616e64207468656e207472616e736d6974732074686520726573756c747320746f20746865207363686f6f6c7320796f75206c6973746564206f722073656c6563746564206f6e207468652046414653412e5c6e5c6e7061737361676520333a537465702033202d20436f6e6669726d2077697468207468652066696e616e6369616c20616964206f666669636520617420746865207363686f6f6c20796f7520706c616e20746f20617474656e642c207468617420746865207363686f6f6c2068617320726563656976656420616c6c206e656365737361727920696e666f726d6174696f6e20746f2064657465726d696e6520796f757220656c69676962696c69747920666f722066696e616e6369616c206169642e20546865207363686f6f6c2077696c6c2070726f7669646520746f20796f7520616e206177617264206c6574746572206f75746c696e696e67207468652074797065206f662066696e616e6369616c20616964207468617420796f75206d617920726563656976652e5c6e5c6e222c227175657374696f6e223a22686f7720646f20796f75207175616c69667920666f722073747564656e74206c6f616e73227d",
+  "source_cluster_id": "sha256:14429bc4be567577c432c24d542fe8b9a2262c8388d8a2bb36a1e3b47f18f4ba",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.0\n}",
+  "unit_id": "sha256:c3ab6226611c7363032733d75646041fddb612ce2c9601deffe13d6d1185ee5b"
+}

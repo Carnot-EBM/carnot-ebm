@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20706173746120697320612066656d696e696e65206e6f756e20696e204974616c69616e2e20506173736167652032207374617465732074686174207468652061727469636c6520226c61222069732075736564206265666f72652066656d696e696e6520776f7264732c20616e642073696e636520706173746120697320612066656d696e696e6520776f72642c20697420776f756c6420626520726566657272656420746f20617320226c61207061737461222e",
+  "arm": "holistic",
+  "call_id": "sha256:b5fcb3991e84b73d1e8191aa70c37dbad8c44ddbc61ad39e9e83458b30e2f25e:source_mismatched",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_mismatched",
+  "denominator": 1,
+  "donor_unit_id": "sha256:d2f4d75824dbe2944cf209c67379115b39f5b03f2d484498b5372a279d6a76ab",
+  "duration_s": 0.944184381980449,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 583,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 11,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"2840 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Pizza, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-21:0\\\",\\\"Monday\\\":\\\"12:0-21:0\\\",\\\"Saturday\\\":\\\"12:0-21:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Nicky D's Wood fired Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-07-21 17:37:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Excellent wood fired pizza. I ordered the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil and Tomato. Perfect!\\\"},{\\\"review_date\\\":\\\"2018-06-03 02:28:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The best pizza money can buy IN Santa Barbara hands down .. I met Nicky D he is always there on weekends great guy to talk 2 ..\\\"},{\\\"review_date\\\":\\\"2018-05-12 03:42:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We just ate dinner here tonight! I Yelped pizza's nearby since we are from San Diego and I am so glad we found this place!!! It was sooooo good! Really good cheese and great flavor!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Based on the given passages, pasta is a feminine noun in Italian. Passage 2 states that the article \\\"la\\\" is used before feminine words, and since pasta is a feminine word, it would be referred to as \\\"la pasta\\\".\"}",
+  "prompt_sha256": "sha256:c31750f7705743175fc3390bd006d33e42948c0fbcef03656dbe76a9b2642c1b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"p_hallucination\": 1}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185145,
+    "id": "chatcmpl-XGpwTe3leh1pESVjc4FNWlpd6Q1WZxbR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 249.274,
+      "predicted_n": 11,
+      "predicted_per_second": 44.128148142204964,
+      "predicted_per_token_ms": 22.661272727272728,
+      "prompt_ms": 601.452,
+      "prompt_n": 583,
+      "prompt_per_second": 969.320910064311,
+      "prompt_per_token_ms": 1.0316500857632933
+    },
+    "usage": {
+      "completion_tokens": 11,
+      "prompt_tokens": 583,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 594
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"2840 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Pizza, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-21:0\\\",\\\"Monday\\\":\\\"12:0-21:0\\\",\\\"Saturday\\\":\\\"12:0-21:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Nicky D's Wood fired Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-07-21 17:37:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Excellent wood fired pizza. I ordered the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil and Tomato. Perfect!\\\"},{\\\"review_date\\\":\\\"2018-06-03 02:28:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The best pizza money can buy IN Santa Barbara hands down .. I met Nicky D he is always there on weekends great guy to talk 2 ..\\\"},{\\\"review_date\\\":\\\"2018-05-12 03:42:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We just ate dinner here tonight! I Yelped pizza's nearby since we are from San Diego and I am so glad we found this place!!! It was sooooo good! Really good cheese and great flavor!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Based on the given passages, pasta is a feminine noun in Italian. Passage 2 states that the article \\\"la\\\" is used before feminine words, and since pasta is a feminine word, it would be referred to as \\\"la pasta\\\".\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 7,
+  "source_bytes": "7b2261646472657373223a2232383430204465204c612056696e61205374222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a747275652c22636c61737379223a66616c73652c226469766579223a66616c73652c2268697073746572223a66616c73652c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a66616c73652c227472656e6479223a66616c73652c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a747275652c22737472656574223a66616c73652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a66616c73652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a226e6f227d2c22627573696e6573735f7374617273223a342e302c2263617465676f72696573223a2250697a7a612c2052657374617572616e7473222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a2231323a302d32313a30222c224d6f6e646179223a2231323a302d32313a30222c225361747572646179223a2231323a302d32313a30222c2253756e646179223a2231323a302d32313a30222c225468757273646179223a2231323a302d32313a30222c2254756573646179223a2231323a302d32313a30222c225765646e6573646179223a2231323a302d32313a30227d2c226e616d65223a224e69636b792044277320576f6f642066697265642050697a7a61222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323031382d30372d32312031373a33373a3238222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22457863656c6c656e7420776f6f642066697265642070697a7a612e2049206f7264657265642074686520506573746f2050697a7a6120776974682052616d616e6f2026204d6f7a7a6172656c6c6120436865657365732c205370696e6163682c204172746963686f6b652c20436869636b656e2c20426173696c20616e6420546f6d61746f2e205065726665637421227d2c7b227265766965775f64617465223a22323031382d30362d30332030323a32383a3538222c227265766965775f7374617273223a352e302c227265766965775f74657874223a2254686520626573742070697a7a61206d6f6e65792063616e2062757920494e2053616e746120426172626172612068616e647320646f776e202e2e2049206d6574204e69636b79204420686520697320616c77617973207468657265206f6e207765656b656e64732067726561742067757920746f2074616c6b2032202e2e227d2c7b227265766965775f64617465223a22323031382d30352d31322030333a34323a3537222c227265766965775f7374617273223a352e302c227265766965775f74657874223a225765206a757374206174652064696e6e6572206865726520746f6e696768742120492059656c7065642070697a7a612773206e65617262792073696e6365207765206172652066726f6d2053616e20446965676f20616e64204920616d20736f20676c616420776520666f756e64207468697320706c6163652121212049742077617320736f6f6f6f6f20676f6f6421205265616c6c7920676f6f642063686565736520616e6420677265617420666c61766f7221227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:9a17d890820157662eed680a2da12f4b7dae91841d118f5891ccdd7fa5cbd6c6",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\"p_hallucination\": 1}",
+  "unit_id": "sha256:b5fcb3991e84b73d1e8191aa70c37dbad8c44ddbc61ad39e9e83458b30e2f25e"
+}

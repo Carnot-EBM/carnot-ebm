@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "54657275204a6170616e6573652043756973696e65206973206120686967686c792072617465642072657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043616c69666f726e69612c206f66666572696e6720612076617269657479206f6620747261646974696f6e616c204a6170616e6573652064697368657320616e64206120756e697175652061746d6f7370686572652e204163636f7264696e6720746f20637573746f6d657220726576696577732c207468652072657374617572616e7420626f6173747320667265736820736561666f6f64206f7074696f6e7320616e6420657863656c6c656e7420736572766963652c207769746820746865206f776e657220616e64207374616666206265696e6720706172746963756c61726c792077656c636f6d696e672e20546865206d656e7520666561747572657320612072616e6765206f66206f7074696f6e732c20696e636c7564696e672073757368692c2061732077656c6c206173206265657220616e642077696e652c20616e642074686520616d6269616e6365206973206465736372696265642061732063617375616c2079657420636c617373792e20437573746f6d6572732068617665207072616973656420746865207175616c697479206f662074686520666f6f6420616e64207468652076616c756520666f72206d6f6e65792c207769746820736f6d65206d656e74696f6e696e672074686174206974206973206f6e65206f662074686520626573742073757368692072657374617572616e747320696e2074686520617265612e204f766572616c6c2c2054657275204a6170616e6573652043756973696e65206170706561727320746f206265206120746f702063686f69636520666f722074686f7365206c6f6f6b696e6720666f722061757468656e746963204a6170616e6573652063756973696e6520696e206120636f7a7920616e6420696e766974696e672073657474696e672e",
+  "arm": "source_span",
+  "call_id": "sha256:6ae5b28f1a2f325709986e7d351d6912b5f00b375e46f939e08f05f1e323babc:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.1048852000385523,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 737,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 53,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"1305 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Japanese, Restaurants, Beer, Wine & Spirits, Food, Sushi Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-21:30\\\",\\\"Tuesday\\\":\\\"17:0-21:30\\\",\\\"Wednesday\\\":\\\"17:0-21:30\\\"},\\\"name\\\":\\\"Teru Japanese Cuisine\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-08 02:19:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Fresh seafood with selections from Japan. Great ambiance. The owners are lovely and the service was great. Excellent experience. Best sushi in Santa Barbara.\\\"},{\\\"review_date\\\":\\\"2021-12-26 22:22:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"No ka oi. After living in Hawaii for 19 years and embracing the Japanese culture and food...Best in Santa Barbara.\\\"},{\\\"review_date\\\":\\\"2021-12-19 18:45:35\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is great. Chef owned and operated with a Japanese family run staff. The fish is extremely consistent and is of a slightly higher grade than anyplace else in town. The cold Sake list is affordable but good and the special board is local and or seasonal changing weekly or so. Best sushi in town. Ambiance is nice but its geared towards foodies and all the $ seems to be on the plates.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Teru Japanese Cuisine is a highly rated restaurant located in Santa Barbara, California, offering a variety of traditional Japanese dishes and a unique atmosphere. According to customer reviews, the restaurant boasts fresh seafood options and excellent service, with the owner and staff being particularly welcoming. The menu features a range of options, including sushi, as well as beer and wine, and the ambiance is described as casual yet classy. Customers have praised the quality of the food and the value for money, with some mentioning that it is one of the best sushi restaurants in the area. Overall, Teru Japanese Cuisine appears to be a top choice for those looking for authentic Japanese cuisine in a cozy and inviting setting.\"}",
+  "prompt_sha256": "sha256:7e47d835eb5bef586166d0736ad3fdb4a2e5710356070a0e521d885462d79aff",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"\\\"casual\\\":false,\\\"classy\\\":true\",\n  \"byte_start\": 108,\n  \"byte_end\": 131\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184669,
+    "id": "chatcmpl-d4QioPYXsSdY84QciyRsrHjR6vNgjPRM",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1276.673,
+      "predicted_n": 53,
+      "predicted_per_second": 41.514154368424805,
+      "predicted_per_token_ms": 24.088169811320753,
+      "prompt_ms": 707.951,
+      "prompt_n": 737,
+      "prompt_per_second": 1041.0325008369223,
+      "prompt_per_token_ms": 0.9605848032564451
+    },
+    "usage": {
+      "completion_tokens": 53,
+      "prompt_tokens": 737,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 790
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"1305 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Japanese, Restaurants, Beer, Wine & Spirits, Food, Sushi Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-21:30\\\",\\\"Tuesday\\\":\\\"17:0-21:30\\\",\\\"Wednesday\\\":\\\"17:0-21:30\\\"},\\\"name\\\":\\\"Teru Japanese Cuisine\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-08 02:19:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Fresh seafood with selections from Japan. Great ambiance. The owners are lovely and the service was great. Excellent experience. Best sushi in Santa Barbara.\\\"},{\\\"review_date\\\":\\\"2021-12-26 22:22:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"No ka oi. After living in Hawaii for 19 years and embracing the Japanese culture and food...Best in Santa Barbara.\\\"},{\\\"review_date\\\":\\\"2021-12-19 18:45:35\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is great. Chef owned and operated with a Japanese family run staff. The fish is extremely consistent and is of a slightly higher grade than anyplace else in town. The cold Sake list is affordable but good and the special board is local and or seasonal changing weekly or so. Best sushi in town. Ambiance is nice but its geared towards foodies and all the $ seems to be on the plates.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Teru Japanese Cuisine is a highly rated restaurant located in Santa Barbara, California, offering a variety of traditional Japanese dishes and a unique atmosphere. According to customer reviews, the restaurant boasts fresh seafood options and excellent service, with the owner and staff being particularly welcoming. The menu features a range of options, including sushi, as well as beer and wine, and the ambiance is described as casual yet classy. Customers have praised the quality of the food and the value for money, with some mentioning that it is one of the best sushi restaurants in the area. Overall, Teru Japanese Cuisine appears to be a top choice for those looking for authentic Japanese cuisine in a cozy and inviting setting.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 63,
+  "source_bytes": "7b2261646472657373223a2231333035205374617465205374222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a66616c73652c22636c61737379223a747275652c226469766579223a66616c73652c2268697073746572223a66616c73652c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a66616c73652c227472656e6479223a66616c73652c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a747275652c226c6f74223a66616c73652c22737472656574223a747275652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a66616c73652c2252657374617572616e7473476f6f64466f7247726f757073223a6e756c6c2c2252657374617572616e74735265736572766174696f6e73223a747275652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a6e756c6c7d2c22627573696e6573735f7374617273223a342e352c2263617465676f72696573223a224a6170616e6573652c2052657374617572616e74732c20426565722c2057696e65202620537069726974732c20466f6f642c2053757368692042617273222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a2231373a302d32323a30222c224d6f6e646179223a22303a302d303a30222c225361747572646179223a2231373a302d32323a30222c225468757273646179223a2231373a302d32313a3330222c2254756573646179223a2231373a302d32313a3330222c225765646e6573646179223a2231373a302d32313a3330227d2c226e616d65223a2254657275204a6170616e6573652043756973696e65222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323032322d30312d30382030323a31393a3135222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22467265736820736561666f6f6420776974682073656c656374696f6e732066726f6d204a6170616e2e20477265617420616d6269616e63652e20546865206f776e65727320617265206c6f76656c7920616e64207468652073657276696365207761732067726561742e20457863656c6c656e7420657870657269656e63652e204265737420737573686920696e2053616e746120426172626172612e227d2c7b227265766965775f64617465223a22323032312d31322d32362032323a32323a3532222c227265766965775f7374617273223a352e302c227265766965775f74657874223a224e6f206b61206f692e204166746572206c6976696e6720696e2048617761696920666f7220313920796561727320616e6420656d62726163696e6720746865204a6170616e6573652063756c7475726520616e6420666f6f642e2e2e4265737420696e2053616e746120426172626172612e227d2c7b227265766965775f64617465223a22323032312d31322d31392031383a34353a3335222c227265766965775f7374617273223a352e302c227265766965775f74657874223a225468697320706c6163652069732067726561742e2043686566206f776e656420616e64206f7065726174656420776974682061204a6170616e6573652066616d696c792072756e2073746166662e2054686520666973682069732065787472656d656c7920636f6e73697374656e7420616e64206973206f66206120736c696768746c7920686967686572206772616465207468616e20616e79706c61636520656c736520696e20746f776e2e2054686520636f6c642053616b65206c697374206973206166666f726461626c652062757420676f6f6420616e6420746865207370656369616c20626f617264206973206c6f63616c20616e64206f7220736561736f6e616c206368616e67696e67207765656b6c79206f7220736f2e204265737420737573686920696e20746f776e2e20416d6269616e6365206973206e69636520627574206974732067656172656420746f776172647320666f6f6469657320616e6420616c6c207468652024207365656d7320746f206265206f6e2074686520706c617465732e227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:0d45f44e789f19b47d6b895a5a6c101b976cb4babe2bfe9e721207c6b1ac3365",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"\\\"casual\\\":false,\\\"classy\\\":true\",\n  \"byte_start\": 108,\n  \"byte_end\": 131\n}",
+  "unit_id": "sha256:6ae5b28f1a2f325709986e7d351d6912b5f00b375e46f939e08f05f1e323babc"
+}

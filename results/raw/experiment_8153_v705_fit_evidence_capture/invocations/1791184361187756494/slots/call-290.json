@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20746865206d61696e20646966666572656e636573206265747765656e2054696572203320616e642054696572203420656e67696e6573206172653a0a0a312e205468652070726573656e6365206f6620612044696573656c20506172746963756c6174652046696c74657220284450462920696e2054696572203420656e67696e65732c20776869636820616374732061732061206d7566666c657220616e64207265647563657320706172746963756c617465206d61747465722028504d2920656d697373696f6e732e0a322e20546865206164646974696f6e206f6620616e20457868617573742047617320526563697263756c6174696f6e2028454752292073797374656d20696e2054696572203420656e67696e657320746f20726564756365206f7869646573206f66206e6974726f67656e20284e4f782920656d697373696f6e732e0a0a5468657265666f72652c2054696572203420656e67696e65732068617665206d6f726520737472696e67656e7420656d697373696f6e7320636f6e74726f6c7320636f6d706172656420746f2054696572203320656e67696e65732c20726573756c74696e6720696e20636c65616e657220656d697373696f6e732e",
+  "arm": "holistic",
+  "call_id": "sha256:e444b8b8a4c98e05a63d56336014d5e6a7285a482290fc3829ce1eb2b752bfa4:holistic",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.9188403909793124,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 432,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Below is a diagram from Cummins showing the difference between the Tier 3 engines and the Tier 4 Interim engines. As shown below the muffler is replaced by the Diesel Particulate Filter (DPF) which also acts as a muffler; plus the addition of the Exhaust Gas Recirculation (EGR) system.\\\\n\\\\npassage 2:Tier 4 refers to a set of emissions requirements established by the EPA to reduce emissions of particulate matter (PM), oxides of nitrogen (NOx) and other harmful toxins from new, non-road diesel engines. As part of this clean-air initiative, the EPA established acceptable levels of emissions in diesel engines.\\\\n\\\\npassage 3:The Tier 1to 3 standards are met primarily through improvementsin the combustion process with no, or only limited useof exhaust aftertreatment (oxidation catalysts). In 2004, the EPA signed the final rule introducing Tier 4emission standards, to be phased-in over the period of2008 to 2015.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between tier 3 and tier 4 engines\\\"}\", \"answer\": \"Based on the given passages, the main differences between Tier 3 and Tier 4 engines are:\\n\\n1. The presence of a Diesel Particulate Filter (DPF) in Tier 4 engines, which acts as a muffler and reduces particulate matter (PM) emissions.\\n2. The addition of an Exhaust Gas Recirculation (EGR) system in Tier 4 engines to reduce oxides of nitrogen (NOx) emissions.\\n\\nTherefore, Tier 4 engines have more stringent emissions controls compared to Tier 3 engines, resulting in cleaner emissions.\"}",
+  "prompt_sha256": "sha256:a5d135f8a2743e9c0aae6bb5b1ff3850d31bfdae5c45254d9c9fccf24fc19243",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184965,
+    "id": "chatcmpl-JntfLOZXDTmgGHMjZxRhlOUcnSUiHl9E",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 369.702,
+      "predicted_n": 16,
+      "predicted_per_second": 43.27809965864399,
+      "predicted_per_token_ms": 23.106375,
+      "prompt_ms": 429.875,
+      "prompt_n": 432,
+      "prompt_per_second": 1004.9432974701949,
+      "prompt_per_token_ms": 0.9950810185185185
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 432,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 448
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Below is a diagram from Cummins showing the difference between the Tier 3 engines and the Tier 4 Interim engines. As shown below the muffler is replaced by the Diesel Particulate Filter (DPF) which also acts as a muffler; plus the addition of the Exhaust Gas Recirculation (EGR) system.\\\\n\\\\npassage 2:Tier 4 refers to a set of emissions requirements established by the EPA to reduce emissions of particulate matter (PM), oxides of nitrogen (NOx) and other harmful toxins from new, non-road diesel engines. As part of this clean-air initiative, the EPA established acceptable levels of emissions in diesel engines.\\\\n\\\\npassage 3:The Tier 1to 3 standards are met primarily through improvementsin the combustion process with no, or only limited useof exhaust aftertreatment (oxidation catalysts). In 2004, the EPA signed the final rule introducing Tier 4emission standards, to be phased-in over the period of2008 to 2015.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between tier 3 and tier 4 engines\\\"}\", \"answer\": \"Based on the given passages, the main differences between Tier 3 and Tier 4 engines are:\\n\\n1. The presence of a Diesel Particulate Filter (DPF) in Tier 4 engines, which acts as a muffler and reduces particulate matter (PM) emissions.\\n2. The addition of an Exhaust Gas Recirculation (EGR) system in Tier 4 engines to reduce oxides of nitrogen (NOx) emissions.\\n\\nTherefore, Tier 4 engines have more stringent emissions controls compared to Tier 3 engines, resulting in cleaner emissions.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 18,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a42656c6f772069732061206469616772616d2066726f6d2043756d6d696e732073686f77696e672074686520646966666572656e6365206265747765656e207468652054696572203320656e67696e657320616e64207468652054696572203420496e746572696d20656e67696e65732e2041732073686f776e2062656c6f7720746865206d7566666c6572206973207265706c61636564206279207468652044696573656c20506172746963756c6174652046696c74657220284450462920776869636820616c736f20616374732061732061206d7566666c65723b20706c757320746865206164646974696f6e206f662074686520457868617573742047617320526563697263756c6174696f6e2028454752292073797374656d2e5c6e5c6e7061737361676520323a5469657220342072656665727320746f206120736574206f6620656d697373696f6e7320726571756972656d656e74732065737461626c6973686564206279207468652045504120746f2072656475636520656d697373696f6e73206f6620706172746963756c617465206d61747465722028504d292c206f7869646573206f66206e6974726f67656e20284e4f782920616e64206f74686572206861726d66756c20746f78696e732066726f6d206e65772c206e6f6e2d726f61642064696573656c20656e67696e65732e2041732070617274206f66207468697320636c65616e2d61697220696e69746961746976652c20746865204550412065737461626c69736865642061636365707461626c65206c6576656c73206f6620656d697373696f6e7320696e2064696573656c20656e67696e65732e5c6e5c6e7061737361676520333a54686520546965722031746f2033207374616e646172647320617265206d6574207072696d6172696c79207468726f75676820696d70726f76656d656e7473696e2074686520636f6d62757374696f6e2070726f636573732077697468206e6f2c206f72206f6e6c79206c696d69746564207573656f66206578686175737420616674657274726561746d656e7420286f7869646174696f6e20636174616c79737473292e20496e20323030342c2074686520455041207369676e6564207468652066696e616c2072756c6520696e74726f647563696e6720546965722034656d697373696f6e207374616e64617264732c20746f206265207068617365642d696e206f7665722074686520706572696f64206f663230303820746f20323031352e5c6e5c6e222c227175657374696f6e223a22776861742069732074686520646966666572656e6365206265747765656e2074696572203320616e642074696572203420656e67696e6573227d",
+  "source_cluster_id": "sha256:2c6156cfbd5d60d86ae89b36f117c62d5c854b2149e78dbc6bea806a57571fe2",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.0\n}",
+  "unit_id": "sha256:e444b8b8a4c98e05a63d56336014d5e6a7285a482290fc3829ce1eb2b752bfa4"
+}

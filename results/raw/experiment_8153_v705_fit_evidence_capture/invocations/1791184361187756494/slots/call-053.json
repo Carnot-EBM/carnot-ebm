@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "54776f2073686f6f74696e6773206f6363757272656420696e2057617368696e67746f6e2c20442e432e2c207769746820617574686f7269746965732073746174696e672074686579207765726520636f6e6e65637465642e205468652073686f6f74696e677320737461727465642077697468206120646f6d6573746963206b69646e617070696e6720696e636964656e742c20616e6420612067756172642061742074686520552e532e2043656e73757320427572656175207761732073686f74207768656e20617070726f616368696e6720746865207375737065637427732076656869636c652e20546865207375737065637420666c656420616e64206120636861736520656e737565642c20656e64696e6720696e20612073686f6f746f757420616e64206c656176696e6720616e206f66666963657220616e6420746865207375737065637420696e6a757265642e2054686520706f6c6963652063686965662062656c6965766573207468652073616d652063617220616e6420706572736f6e207765726520696e766f6c76656420696e20746865206b69646e617070696e672e205468652076696374696d2077617320666f756e6420616e6420696e20676f6f6420636f6e646974696f6e2e20546865206964656e746974696573206f662074686f736520696e766f6c7665642077657265206e6f7420646973636c6f7365642e",
+  "arm": "holistic",
+  "call_id": "sha256:6e5c8f2ca7bac6ea66ba86ac3d26c872361ffad15878f737723f37ae53d2752e:holistic",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.8871265830239281,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 470,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Washington (CNN)Washington was rocked late Thursday by shootings -- one at the gates of the U.S. Census Bureau's headquarters and another in a popular area packed with restaurant patrons. The shootings were connected, authorities said. They began with what authorities believe was a domestic kidnapping incident, according to D.C. Police Chief Cathy Lanier. The suspect's vehicle was spotted outside the Census Bureau, which is in Suitland, Maryland. A guard apparently approached the vehicle and saw two people arguing. That guard was then shot at least once in the upper body, said Prince George's County Fire Department spokesman Mark Brady. The guard was in extremely critical condition, according to Brady. The police chief said the suspect then fled the scene. Officers picked up the chase, and the suspect fired gunshots at multiple locations, Lanier said. The chase ended in a crash on Washington's busy H Street. A shootout ensues, Lanier said. An officer and the suspect were wounded, according to the police chief. Both were conscious and talking when they left the scene. \\\"Right now, we have every reason to believe that the car that we have in this last incident here is the same car involved and the same person involved in the kidnapping,\\\" she said. Lanier told reporters the kidnapping victim was located and is in good condition. She did not identify the suspect, nor the guard, nor the officer who were injured. Steve Brusk reported from Washington. Dana Ford wrote from Atlanta. CNN's Greg Botelho also contributed to this report.\\n\", \"answer\": \"Two shootings occurred in Washington, D.C., with authorities stating they were connected. The shootings started with a domestic kidnapping incident, and a guard at the U.S. Census Bureau was shot when approaching the suspect's vehicle. The suspect fled and a chase ensued, ending in a shootout and leaving an officer and the suspect injured. The police chief believes the same car and person were involved in the kidnapping. The victim was found and in good condition. The identities of those involved were not disclosed.\"}",
+  "prompt_sha256": "sha256:863f7039b8a4448f12f4182f2477dbaa49659c6acffd97831b7b911d5d0335ca",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184545,
+    "id": "chatcmpl-1onebP8EUA7CoC7YoBNCCPEuxUSV52Jg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 320.7,
+      "predicted_n": 14,
+      "predicted_per_second": 43.65450576863112,
+      "predicted_per_token_ms": 22.907142857142855,
+      "prompt_ms": 459.893,
+      "prompt_n": 470,
+      "prompt_per_second": 1021.9768511371124,
+      "prompt_per_token_ms": 0.978495744680851
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 470,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 484
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Washington (CNN)Washington was rocked late Thursday by shootings -- one at the gates of the U.S. Census Bureau's headquarters and another in a popular area packed with restaurant patrons. The shootings were connected, authorities said. They began with what authorities believe was a domestic kidnapping incident, according to D.C. Police Chief Cathy Lanier. The suspect's vehicle was spotted outside the Census Bureau, which is in Suitland, Maryland. A guard apparently approached the vehicle and saw two people arguing. That guard was then shot at least once in the upper body, said Prince George's County Fire Department spokesman Mark Brady. The guard was in extremely critical condition, according to Brady. The police chief said the suspect then fled the scene. Officers picked up the chase, and the suspect fired gunshots at multiple locations, Lanier said. The chase ended in a crash on Washington's busy H Street. A shootout ensues, Lanier said. An officer and the suspect were wounded, according to the police chief. Both were conscious and talking when they left the scene. \\\"Right now, we have every reason to believe that the car that we have in this last incident here is the same car involved and the same person involved in the kidnapping,\\\" she said. Lanier told reporters the kidnapping victim was located and is in good condition. She did not identify the suspect, nor the guard, nor the officer who were injured. Steve Brusk reported from Washington. Dana Ford wrote from Atlanta. CNN's Greg Botelho also contributed to this report.\\n\", \"answer\": \"Two shootings occurred in Washington, D.C., with authorities stating they were connected. The shootings started with a domestic kidnapping incident, and a guard at the U.S. Census Bureau was shot when approaching the suspect's vehicle. The suspect fled and a chase ensued, ending in a shootout and leaving an officer and the suspect injured. The police chief believes the same car and person were involved in the kidnapping. The victim was found and in good condition. The identities of those involved were not disclosed.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 27,
+  "source_bytes": "57617368696e67746f6e2028434e4e2957617368696e67746f6e2077617320726f636b6564206c6174652054687572736461792062792073686f6f74696e6773202d2d206f6e6520617420746865206761746573206f662074686520552e532e2043656e7375732042757265617527732068656164717561727465727320616e6420616e6f7468657220696e206120706f70756c61722061726561207061636b656420776974682072657374617572616e7420706174726f6e732e205468652073686f6f74696e6773207765726520636f6e6e65637465642c20617574686f72697469657320736169642e205468657920626567616e2077697468207768617420617574686f7269746965732062656c6965766520776173206120646f6d6573746963206b69646e617070696e6720696e636964656e742c206163636f7264696e6720746f20442e432e20506f6c696365204368696566204361746879204c616e6965722e20546865207375737065637427732076656869636c65207761732073706f74746564206f757473696465207468652043656e737573204275726561752c20776869636820697320696e20537569746c616e642c204d6172796c616e642e2041206775617264206170706172656e746c7920617070726f6163686564207468652076656869636c6520616e64207361772074776f2070656f706c652061726775696e672e205468617420677561726420776173207468656e2073686f74206174206c65617374206f6e636520696e2074686520757070657220626f64792c2073616964205072696e63652047656f726765277320436f756e74792046697265204465706172746d656e742073706f6b65736d616e204d61726b2042726164792e205468652067756172642077617320696e2065787472656d656c7920637269746963616c20636f6e646974696f6e2c206163636f7264696e6720746f2042726164792e2054686520706f6c6963652063686965662073616964207468652073757370656374207468656e20666c656420746865207363656e652e204f66666963657273207069636b6564207570207468652063686173652c20616e642074686520737573706563742066697265642067756e73686f7473206174206d756c7469706c65206c6f636174696f6e732c204c616e69657220736169642e2054686520636861736520656e64656420696e2061206372617368206f6e2057617368696e67746f6e277320627573792048205374726565742e20412073686f6f746f757420656e737565732c204c616e69657220736169642e20416e206f66666963657220616e64207468652073757370656374207765726520776f756e6465642c206163636f7264696e6720746f2074686520706f6c6963652063686965662e20426f7468207765726520636f6e7363696f757320616e642074616c6b696e67207768656e2074686579206c65667420746865207363656e652e20225269676874206e6f772c207765206861766520657665727920726561736f6e20746f2062656c69657665207468617420746865206361722074686174207765206861766520696e2074686973206c61737420696e636964656e742068657265206973207468652073616d652063617220696e766f6c76656420616e64207468652073616d6520706572736f6e20696e766f6c76656420696e20746865206b69646e617070696e672c222073686520736169642e204c616e69657220746f6c64207265706f727465727320746865206b69646e617070696e672076696374696d20776173206c6f636174656420616e6420697320696e20676f6f6420636f6e646974696f6e2e2053686520646964206e6f74206964656e746966792074686520737573706563742c206e6f72207468652067756172642c206e6f7220746865206f6666696365722077686f207765726520696e6a757265642e20537465766520427275736b207265706f727465642066726f6d2057617368696e67746f6e2e2044616e6120466f72642077726f74652066726f6d2041746c616e74612e20434e4e2773204772656720426f74656c686f20616c736f20636f6e747269627574656420746f2074686973207265706f72742e0a",
+  "source_cluster_id": "sha256:6896043359d602608595b836e71b2e05ea32d2ddcb02bf907ca80f11c8c6599d",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:6e5c8f2ca7bac6ea66ba86ac3d26c872361ffad15878f737723f37ae53d2752e"
+}

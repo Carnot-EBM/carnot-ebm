@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c2068657265206172652074686520737465707320746f206174746163682061206c656467657220626f61726420746f206120686f75736520666f72206120706174696f20636f7665723a0a0a312e2044657465726d696e652074686520636f72726563742068656967687420666f7220746865206c656467657220626f6172643a204d6561737572652074686520686569676874206f662074686520736f6666697420626f6172642061626f76652074686520736c6964696e6720676c61737320646f6f7220746f2064657465726d696e6520776865726520746865206c656467657220626f6172642073686f756c6420626520706f736974696f6e65642e204d616b65207375726520746865206c656467657220626f617264206973206c6576656c20616e6420686f72697a6f6e74616c20776974682074686520726f6f662e0a322e20496e7374616c6c2077616c6c20626f6c7473206f72206c6167207363726577733a205573652077616c6c20626f6c7473206f72206c61672073637265777320746f2073656375726520746865206c656467657220626f61726420746f2074686520686f7573652e204472696c6c20612070696c6f7420686f6c65207468726f75676820746865206c656467657220626f61726420616e6420696e746f207468652072696d206a6f697374206f662074686520686f7573652c207468656e20696e736572742061206c616720736372657720616e64207761736865722e205469676874656e207468652073637265772077697468206120736f636b6574207772656e63682e0a332e2043757420666c617368696e67207374726970733a2043757420657175616c20737472697073206f6620776174657270726f6f662073656c662d6164686572696e67206d656d6272616e6520616e64206d6574616c20666c617368696e6720746865206c656e677468206f6620746865206c656467657220626f61726420616e64203620696e6368657320776964652e0a342e204174746163682074686520666c617368696e673a204170706c792074686520666c617368696e672073747269707320746f20746865206c656467657220626f6172642c207374617274696e672066726f6d2074686520626f74746f6d20616e6420776f726b696e6720757077617264732e20456e737572652074686520666c617368696e6720697320736563757265642074696768746c7920746f20746865206c656467657220626f61726420616e64206f7665726c61707320746865206564676573206f662074686520626f6172642e0a352e205265696e666f7263652077697468206164646974696f6e616c20666c617368696e673a20416464206164646974696f6e616c20666c617368696e67207374726970732061742074686520656176657320616e642072616b65206564676573206f662074686520726f6f6620746f20656e737572652070726f70657220647261696e61676520616e642070726f74656374696f6e20616761696e737420776174657220696e74727573696f6e2e0a0a506c65617365206e6f746520746861742074686520706173736167657320646f206e6f742070726f7669646520737065636966696320696e737472756374696f6e7320666f7220617474616368696e6720746865206c656467657220626f61726420746f207468652074776f20706f737473206f6e20746865206f70706f736974652073696465206f662074686520706174696f2e20497420697320617373756d656420746861742074686573652064657461696c732077696c6c2062652061646472657373656420696e2073756273657175656e74207061737361676573206f7220736570617261746520696e737472756374696f6e732e",
+  "arm": "source_span",
+  "call_id": "sha256:511c516240be29ffc65636f64c5750b1bec4da0249bbd713d4b667782963e15f:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.538669721921906,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 790,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 69,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:We would like to build a pergola over a patio outside a sliding glass door. I would like it to be attached to the house on one side and 2 posts on the opposite side. The soffit enclosing the rafters comes right above the sliding door so there is no room to attach a ledger board above the door.The fascia board has a gutter attached to it. would like it to be attached to the house on one side and 2 posts on the opposite side. The soffit enclosing the rafters comes right above the sliding door so there is no room to attach a ledger board above the door. The fascia board has a gutter attached to it.\\\\n\\\\npassage 2:Installing a ledger board ensures the structural support of your patio cover. A ledger is a pressure-treated board that attaches to an existing wall to anchor a new construction or attachment and support the weight load.se the drill to make a 3/8-inch pilot hole through the ledger and into the home's rim joist. Place a lag screw and washer into the hole and tighten with the socket wrench by turning clockwise. Cut equal strips of waterproof self-adhering membrane and metal flashing the length of the ledger and 6 inches wide.\\\\n\\\\npassage 3:1 Position the ledger board. 2  The first step in attaching a patio roofto a house structureisto place the ledger board at the correct height, horizontal and level with the roof.The ledger board should be fastened securely in place with wall bolts or lag screws.3  Reinforce with flashing. The first step in attaching a patio roofto a house structureisto place the ledger board at the correct height, horizontal and level with the roof.The ledger board should be fastened securely in place with wall bolts or lag screws. 2  Reinforce with flashing.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to attach a ledger board to a house for a patio cover\\\"}\", \"answer\": \"Based on the given passages, here are the steps to attach a ledger board to a house for a patio cover:\\n\\n1. Determine the correct height for the ledger board: Measure the height of the soffit board above the sliding glass door to determine where the ledger board should be positioned. Make sure the ledger board is level and horizontal with the roof.\\n2. Install wall bolts or lag screws: Use wall bolts or lag screws to secure the ledger board to the house. Drill a pilot hole through the ledger board and into the rim joist of the house, then insert a lag screw and washer. Tighten the screw with a socket wrench.\\n3. Cut flashing strips: Cut equal strips of waterproof self-adhering membrane and metal flashing the length of the ledger board and 6 inches wide.\\n4. Attach the flashing: Apply the flashing strips to the ledger board, starting from the bottom and working upwards. Ensure the flashing is secured tightly to the ledger board and overlaps the edges of the board.\\n5. Reinforce with additional flashing: Add additional flashing strips at the eaves and rake edges of the roof to ensure proper drainage and protection against water intrusion.\\n\\nPlease note that the passages do not provide specific instructions for attaching the ledger board to the two posts on the opposite side of the patio. It is assumed that these details will be addressed in subsequent passages or separate instructions.\"}",
+  "prompt_sha256": "sha256:047e83f791221a29b5eda96ede46c013c54e09ad88cbd86405d684749f98b363",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"Cut equal strips of waterproof self-adhering membrane and metal flashing the length of the ledger and 6 inches wide.\",\n  \"byte_start\": 1063,\n  \"byte_end\": 1143\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184947,
+    "id": "chatcmpl-WFbmtGQkmIdRQvXEge2KLCkcLLExDlwx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1655.395,
+      "predicted_n": 69,
+      "predicted_per_second": 41.6818946535419,
+      "predicted_per_token_ms": 23.99123188405797,
+      "prompt_ms": 756.092,
+      "prompt_n": 790,
+      "prompt_per_second": 1044.8463943541262,
+      "prompt_per_token_ms": 0.9570784810126582
+    },
+    "usage": {
+      "completion_tokens": 69,
+      "prompt_tokens": 790,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 859
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:We would like to build a pergola over a patio outside a sliding glass door. I would like it to be attached to the house on one side and 2 posts on the opposite side. The soffit enclosing the rafters comes right above the sliding door so there is no room to attach a ledger board above the door.The fascia board has a gutter attached to it. would like it to be attached to the house on one side and 2 posts on the opposite side. The soffit enclosing the rafters comes right above the sliding door so there is no room to attach a ledger board above the door. The fascia board has a gutter attached to it.\\\\n\\\\npassage 2:Installing a ledger board ensures the structural support of your patio cover. A ledger is a pressure-treated board that attaches to an existing wall to anchor a new construction or attachment and support the weight load.se the drill to make a 3/8-inch pilot hole through the ledger and into the home's rim joist. Place a lag screw and washer into the hole and tighten with the socket wrench by turning clockwise. Cut equal strips of waterproof self-adhering membrane and metal flashing the length of the ledger and 6 inches wide.\\\\n\\\\npassage 3:1 Position the ledger board. 2  The first step in attaching a patio roofto a house structureisto place the ledger board at the correct height, horizontal and level with the roof.The ledger board should be fastened securely in place with wall bolts or lag screws.3  Reinforce with flashing. The first step in attaching a patio roofto a house structureisto place the ledger board at the correct height, horizontal and level with the roof.The ledger board should be fastened securely in place with wall bolts or lag screws. 2  Reinforce with flashing.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to attach a ledger board to a house for a patio cover\\\"}\", \"answer\": \"Based on the given passages, here are the steps to attach a ledger board to a house for a patio cover:\\n\\n1. Determine the correct height for the ledger board: Measure the height of the soffit board above the sliding glass door to determine where the ledger board should be positioned. Make sure the ledger board is level and horizontal with the roof.\\n2. Install wall bolts or lag screws: Use wall bolts or lag screws to secure the ledger board to the house. Drill a pilot hole through the ledger board and into the rim joist of the house, then insert a lag screw and washer. Tighten the screw with a socket wrench.\\n3. Cut flashing strips: Cut equal strips of waterproof self-adhering membrane and metal flashing the length of the ledger board and 6 inches wide.\\n4. Attach the flashing: Apply the flashing strips to the ledger board, starting from the bottom and working upwards. Ensure the flashing is secured tightly to the ledger board and overlaps the edges of the board.\\n5. Reinforce with additional flashing: Add additional flashing strips at the eaves and rake edges of the roof to ensure proper drainage and protection against water intrusion.\\n\\nPlease note that the passages do not provide specific instructions for attaching the ledger board to the two posts on the opposite side of the patio. It is assumed that these details will be addressed in subsequent passages or separate instructions.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 12,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a576520776f756c64206c696b6520746f206275696c64206120706572676f6c61206f766572206120706174696f206f757473696465206120736c6964696e6720676c61737320646f6f722e204920776f756c64206c696b6520697420746f20626520617474616368656420746f2074686520686f757365206f6e206f6e65207369646520616e64203220706f737473206f6e20746865206f70706f7369746520736964652e2054686520736f6666697420656e636c6f73696e6720746865207261667465727320636f6d65732072696768742061626f76652074686520736c6964696e6720646f6f7220736f207468657265206973206e6f20726f6f6d20746f206174746163682061206c656467657220626f6172642061626f76652074686520646f6f722e5468652066617363696120626f6172642068617320612067757474657220617474616368656420746f2069742e20776f756c64206c696b6520697420746f20626520617474616368656420746f2074686520686f757365206f6e206f6e65207369646520616e64203220706f737473206f6e20746865206f70706f7369746520736964652e2054686520736f6666697420656e636c6f73696e6720746865207261667465727320636f6d65732072696768742061626f76652074686520736c6964696e6720646f6f7220736f207468657265206973206e6f20726f6f6d20746f206174746163682061206c656467657220626f6172642061626f76652074686520646f6f722e205468652066617363696120626f6172642068617320612067757474657220617474616368656420746f2069742e5c6e5c6e7061737361676520323a496e7374616c6c696e672061206c656467657220626f61726420656e737572657320746865207374727563747572616c20737570706f7274206f6620796f757220706174696f20636f7665722e2041206c656467657220697320612070726573737572652d7472656174656420626f617264207468617420617474616368657320746f20616e206578697374696e672077616c6c20746f20616e63686f722061206e657720636f6e737472756374696f6e206f72206174746163686d656e7420616e6420737570706f72742074686520776569676874206c6f61642e736520746865206472696c6c20746f206d616b65206120332f382d696e63682070696c6f7420686f6c65207468726f75676820746865206c656467657220616e6420696e746f2074686520686f6d6527732072696d206a6f6973742e20506c6163652061206c616720736372657720616e642077617368657220696e746f2074686520686f6c6520616e64207469676874656e20776974682074686520736f636b6574207772656e6368206279207475726e696e6720636c6f636b776973652e2043757420657175616c20737472697073206f6620776174657270726f6f662073656c662d6164686572696e67206d656d6272616e6520616e64206d6574616c20666c617368696e6720746865206c656e677468206f6620746865206c656467657220616e64203620696e6368657320776964652e5c6e5c6e7061737361676520333a3120506f736974696f6e20746865206c656467657220626f6172642e20322020546865206669727374207374657020696e20617474616368696e67206120706174696f20726f6f66746f206120686f757365207374727563747572656973746f20706c61636520746865206c656467657220626f6172642061742074686520636f7272656374206865696768742c20686f72697a6f6e74616c20616e64206c6576656c20776974682074686520726f6f662e546865206c656467657220626f6172642073686f756c642062652066617374656e6564207365637572656c7920696e20706c61636520776974682077616c6c20626f6c7473206f72206c6167207363726577732e3320205265696e666f726365207769746820666c617368696e672e20546865206669727374207374657020696e20617474616368696e67206120706174696f20726f6f66746f206120686f757365207374727563747572656973746f20706c61636520746865206c656467657220626f6172642061742074686520636f7272656374206865696768742c20686f72697a6f6e74616c20616e64206c6576656c20776974682074686520726f6f662e546865206c656467657220626f6172642073686f756c642062652066617374656e6564207365637572656c7920696e20706c61636520776974682077616c6c20626f6c7473206f72206c6167207363726577732e203220205265696e666f726365207769746820666c617368696e672e5c6e5c6e222c227175657374696f6e223a22686f7720746f206174746163682061206c656467657220626f61726420746f206120686f75736520666f72206120706174696f20636f766572227d",
+  "source_cluster_id": "sha256:25fba83d15be1cbcd2af4c98242669dc537ad1518d4fbb7feb1f44874d348011",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"Cut equal strips of waterproof self-adhering membrane and metal flashing the length of the ledger and 6 inches wide.\",\n  \"byte_start\": 1063,\n  \"byte_end\": 1143\n}",
+  "unit_id": "sha256:511c516240be29ffc65636f64c5750b1bec4da0249bbd713d4b667782963e15f"
+}

@@ -48903,3 +48903,31 @@ uses the qualified trainer and guards with a separate scalar event interpreter.
 `tests/python/test_admission_horizon_methods_8152.py` retains private positive,
 rejected, late-label, overflow, missing-mask, crash/resume and old-expiry controls.
 The terminal Exp8152 artifact records actual custody and qualification receipts.
+
+## REQ-VERIFY-8153: Fixed fit and tune evidence capture
+
+Exp8153 SHALL consume the exact Exp8151 source_protocol_ready_score and its
+immutable source and method manifests. It SHALL freeze the original fit128 and
+tune64 slots, both complete-source prompt arms, and three holistic diagnostics
+on the first16 original fit slots before model loading. Cyclic mismatch SHALL
+use only those fixed donors. Interventions SHALL carry no human target.
+
+The capture SHALL use only owned live CUDA Qwen3.8-27B generation, one load with
+a 300-second deadline, 120-second calls, a 3000-second launch cutoff and closure
+by3120 seconds. Both original arms SHALL be excluded if either rendered prompt
+exceeds6000 input tokens. Output SHALL be bounded at128 tokens. No source SHALL
+be truncated or replaced. Every attempted and unstarted call SHALL remain in
+primitive evidence, with real usage, failures, censoring and CUDA receipts.
+
+Probability validity SHALL use the unchanged Exp8124 parser independently of
+quote validity. Capture readiness SHALL require normal owned validation and
+at least96 fit pairs and48 tune pairs. Trainability alone SHALL additionally
+require12 original human targets per class in each role. Source sensitivity
+SHALL be descriptive and SHALL NOT determine readiness.
+
+### SCENARIO-VERIFY-8153: Private capture transport and cancellation
+
+Private scripted traffic SHALL exercise paired overlength exclusion, malformed
+probabilities, invalid quotes, call timeout/cancellation, launch cutoff and fixed
+interventions. These tests SHALL not claim model inference or independent
+science. All new statements SHALL receive100% measured test coverage.

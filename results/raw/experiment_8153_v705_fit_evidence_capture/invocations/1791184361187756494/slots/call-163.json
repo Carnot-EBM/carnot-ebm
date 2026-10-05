@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4120647265737320776f726e2062792056697669656e204c6569676820617320536361726c657474204f274861726120696e2022476f6e652057697468207468652057696e64222068617320736f6c6420666f7220243133372c3030302061742061756374696f6e2e20546865206f75746669742077617320626f75676874206279206120636f6c6c6563746f7220646563616465732061676f20666f72206a75737420243230206173206974207761732061626f757420746f206265206469736361726465642e205468652074776f2d706965636520656e73656d626c652077617320746865206d6f737420736f75676874206166746572206974656d20616d6f6e672031353020706965636573206f662022476f6e652057697468207468652057696e6422206d656d6f726162696c696120757020666f722061756374696f6e2066726f6d2074686520636f6c6c656374696f6e206f66204a616d65732054756d626c696e2c206120666f726d657220556e6976657273616c2053747564696f7320776f726b65722e",
+  "arm": "holistic",
+  "call_id": "sha256:c5b894d6859e2c1f07bd6553af432867a56a2bc45e93bbcf6aff7e257569ae90:holistic",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.0433744731126353,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 581,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"A dress worn by Vivien Leigh as she played Scarlett O'Hara in \\\"Gone With the Wind\\\" has fetched $137,000 at an auction. That's a pretty healthy profit for the collector who bought the outfit decades ago for a mere $20 as it was on the verge of being tossed out. The outfit, a gray two-piece ensemble, was sold at an auction in Beverly Hills, California, on Saturday, according to Heritage Auctions. It was the most sought after item among roughly 150 pieces of \\\"Gone With the Wind\\\" memorabilia on sale in the auction. They come from the huge collection amassed by James Tumblin, who used to work at Universal Studios. Tumblin said he came across the Scarlett O'Hara dress in the early 1960s while doing some research at a costume company. \\\"I saw this dress on the floor and a docent told me not to bother to pick it up, because they were throwing it away,\\\" he said, according to The Telegraph. \\\"I asked if he would sell it to me,\\\" he said. \\\"I had noticed there was a printed label saying Selznick International Pictures and 'Scarlett production dress' was written in ink.\\\" From that savvy purchase, his \\\"Gone With the Wind\\\" collection snowballed. Other standout items include a straw hat worn by Leigh in a number of scenes in the movie and a gray wool suit worn by Clark Gable as his character, Rhett Butler, kicks down the door of Scarlett O'Hara's boudoir. The dress -- a jacket and full skirt ensemble -- was worn in several key scenes in the 1939 movie, including when Scarlett O'Hara encounters Butler and when she gets attacked in the shanty town. The outfit has suffered a little with age, however. When Leigh wore it in the movie, it was slate blue-gray. Over the years, it's faded to light gray. But that didn't deter the winning bidder on Saturday.\\n\", \"answer\": \"A dress worn by Vivien Leigh as Scarlett O'Hara in \\\"Gone With the Wind\\\" has sold for $137,000 at auction. The outfit was bought by a collector decades ago for just $20 as it was about to be discarded. The two-piece ensemble was the most sought after item among 150 pieces of \\\"Gone With the Wind\\\" memorabilia up for auction from the collection of James Tumblin, a former Universal Studios worker.\"}",
+  "prompt_sha256": "sha256:0563767fb484416d8da11356c89e0fd95488d2bb8b83e3f2af1355ab51a37b59",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184739,
+    "id": "chatcmpl-dkhKWiqjr9YPVZPHsSBvvChCtNczFno7",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 322.043,
+      "predicted_n": 14,
+      "predicted_per_second": 43.47245554165127,
+      "predicted_per_token_ms": 23.003071428571428,
+      "prompt_ms": 604.491,
+      "prompt_n": 581,
+      "prompt_per_second": 961.1392063736267,
+      "prompt_per_token_ms": 1.0404320137693632
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 581,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 595
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"A dress worn by Vivien Leigh as she played Scarlett O'Hara in \\\"Gone With the Wind\\\" has fetched $137,000 at an auction. That's a pretty healthy profit for the collector who bought the outfit decades ago for a mere $20 as it was on the verge of being tossed out. The outfit, a gray two-piece ensemble, was sold at an auction in Beverly Hills, California, on Saturday, according to Heritage Auctions. It was the most sought after item among roughly 150 pieces of \\\"Gone With the Wind\\\" memorabilia on sale in the auction. They come from the huge collection amassed by James Tumblin, who used to work at Universal Studios. Tumblin said he came across the Scarlett O'Hara dress in the early 1960s while doing some research at a costume company. \\\"I saw this dress on the floor and a docent told me not to bother to pick it up, because they were throwing it away,\\\" he said, according to The Telegraph. \\\"I asked if he would sell it to me,\\\" he said. \\\"I had noticed there was a printed label saying Selznick International Pictures and 'Scarlett production dress' was written in ink.\\\" From that savvy purchase, his \\\"Gone With the Wind\\\" collection snowballed. Other standout items include a straw hat worn by Leigh in a number of scenes in the movie and a gray wool suit worn by Clark Gable as his character, Rhett Butler, kicks down the door of Scarlett O'Hara's boudoir. The dress -- a jacket and full skirt ensemble -- was worn in several key scenes in the 1939 movie, including when Scarlett O'Hara encounters Butler and when she gets attacked in the shanty town. The outfit has suffered a little with age, however. When Leigh wore it in the movie, it was slate blue-gray. Over the years, it's faded to light gray. But that didn't deter the winning bidder on Saturday.\\n\", \"answer\": \"A dress worn by Vivien Leigh as Scarlett O'Hara in \\\"Gone With the Wind\\\" has sold for $137,000 at auction. The outfit was bought by a collector decades ago for just $20 as it was about to be discarded. The two-piece ensemble was the most sought after item among 150 pieces of \\\"Gone With the Wind\\\" memorabilia up for auction from the collection of James Tumblin, a former Universal Studios worker.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 82,
+  "source_bytes": "4120647265737320776f726e2062792056697669656e204c656967682061732073686520706c6179656420536361726c657474204f274861726120696e2022476f6e652057697468207468652057696e642220686173206665746368656420243133372c30303020617420616e2061756374696f6e2e20546861742773206120707265747479206865616c7468792070726f66697420666f722074686520636f6c6c6563746f722077686f20626f7567687420746865206f757466697420646563616465732061676f20666f722061206d6572652024323020617320697420776173206f6e20746865207665726765206f66206265696e6720746f73736564206f75742e20546865206f75746669742c206120677261792074776f2d706965636520656e73656d626c652c2077617320736f6c6420617420616e2061756374696f6e20696e2042657665726c792048696c6c732c2043616c69666f726e69612c206f6e2053617475726461792c206163636f7264696e6720746f2048657269746167652041756374696f6e732e2049742077617320746865206d6f737420736f75676874206166746572206974656d20616d6f6e6720726f7567686c792031353020706965636573206f662022476f6e652057697468207468652057696e6422206d656d6f726162696c6961206f6e2073616c6520696e207468652061756374696f6e2e205468657920636f6d652066726f6d20746865206875676520636f6c6c656374696f6e20616d6173736564206279204a616d65732054756d626c696e2c2077686f207573656420746f20776f726b20617420556e6976657273616c2053747564696f732e2054756d626c696e20736169642068652063616d65206163726f73732074686520536361726c657474204f274861726120647265737320696e20746865206561726c79203139363073207768696c6520646f696e6720736f6d65207265736561726368206174206120636f7374756d6520636f6d70616e792e202249207361772074686973206472657373206f6e2074686520666c6f6f7220616e64206120646f63656e7420746f6c64206d65206e6f7420746f20626f7468657220746f207069636b2069742075702c206265636175736520746865792077657265207468726f77696e6720697420617761792c2220686520736169642c206163636f7264696e6720746f205468652054656c6567726170682e2022492061736b656420696620686520776f756c642073656c6c20697420746f206d652c2220686520736169642e20224920686164206e6f7469636564207468657265207761732061207072696e746564206c6162656c20736179696e672053656c7a6e69636b20496e7465726e6174696f6e616c20506963747572657320616e642027536361726c6574742070726f64756374696f6e2064726573732720776173207772697474656e20696e20696e6b2e222046726f6d20746861742073617676792070757263686173652c206869732022476f6e652057697468207468652057696e642220636f6c6c656374696f6e20736e6f7762616c6c65642e204f74686572207374616e646f7574206974656d7320696e636c75646520612073747261772068617420776f726e206279204c6569676820696e2061206e756d626572206f66207363656e657320696e20746865206d6f76696520616e642061206772617920776f6f6c207375697420776f726e20627920436c61726b204761626c6520617320686973206368617261637465722c205268657474204275746c65722c206b69636b7320646f776e2074686520646f6f72206f6620536361726c657474204f2748617261277320626f75646f69722e20546865206472657373202d2d2061206a61636b657420616e642066756c6c20736b69727420656e73656d626c65202d2d2077617320776f726e20696e207365766572616c206b6579207363656e657320696e207468652031393339206d6f7669652c20696e636c7564696e67207768656e20536361726c657474204f274861726120656e636f756e74657273204275746c657220616e64207768656e2073686520676574732061747461636b656420696e20746865207368616e747920746f776e2e20546865206f7574666974206861732073756666657265642061206c6974746c652077697468206167652c20686f77657665722e205768656e204c6569676820776f726520697420696e20746865206d6f7669652c2069742077617320736c61746520626c75652d677261792e204f766572207468652079656172732c206974277320666164656420746f206c6967687420677261792e204275742074686174206469646e2774206465746572207468652077696e6e696e6720626964646572206f6e2053617475726461792e0a",
+  "source_cluster_id": "sha256:05af6134eec80c91e92de6cc83e4c96a4e7fe5992ce19bcc42c796600711b85b",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:c5b894d6859e2c1f07bd6553af432867a56a2bc45e93bbcf6aff7e257569ae90"
+}

@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "224e69636b792044277320576f6f642066697265642050697a7a6122206973206120686967686c792d7261746564206c6f63616c20627573696e657373206c6f63617465642061742032383430204465204c612056696e612053742c2053616e746120426172626172612c2043412e205468652072657374617572616e74207370656369616c697a657320696e2073657276696e672070697a7a6120616e64206973206f70656e206576657279206461792066726f6d2031323a303020746f2032313a30302e205468657920646f206e6f74206f666665722057694669206f72206f7574646f6f722073656174696e672c20627574207468657920646f2070726f76696465207061726b696e67206c6f747320666f7220637573746f6d6572732e205468657920616c736f206f666665722074616b652d6f7574206f7074696f6e7320616e6420617265207375697461626c6520666f722067726f7570732e205468652072657374617572616e7427732061746d6f7370686572652069732063617375616c2e20437573746f6d6572732068617665207072616973656420746865207175616c697479206f6620746865697220776f6f642d66697265642070697a7a612c2077697468207370656369666963206d656e74696f6e206f662074686520506573746f2050697a7a6120776974682052616d616e6f2026204d6f7a7a6172656c6c6120436865657365732c205370696e6163682c204172746963686f6b652c20436869636b656e2c20426173696c2c20616e6420546f6d61746f2e20437573746f6d657273206861766520616c736f206d656e74696f6e65642074686520667269656e646c7920736572766963652070726f766964656420627920746865206f776e65722c204e69636b7920442c2077686f206973206f6674656e2070726573656e74206174207468652072657374617572616e742c20657370656369616c6c79206f6e207765656b656e64732e",
+  "arm": "holistic",
+  "call_id": "sha256:d2f4d75824dbe2944cf209c67379115b39f5b03f2d484498b5372a279d6a76ab:source_removed",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "duration_s": 0.7824094449169934,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 227,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"\\\"Nicky D's Wood fired Pizza\\\" is a highly-rated local business located at 2840 De La Vina St, Santa Barbara, CA. The restaurant specializes in serving pizza and is open every day from 12:00 to 21:00. They do not offer WiFi or outdoor seating, but they do provide parking lots for customers. They also offer take-out options and are suitable for groups. The restaurant's atmosphere is casual. Customers have praised the quality of their wood-fired pizza, with specific mention of the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil, and Tomato. Customers have also mentioned the friendly service provided by the owner, Nicky D, who is often present at the restaurant, especially on weekends.\"}",
+  "prompt_sha256": "sha256:2251cda25062bbb50670d46dc2545214680011cc9a49c5d5c592c3025f9c542d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185147,
+    "id": "chatcmpl-Ba7xwjYE9ZdmjMFXXjm24QBgjTPiubzD",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.19,
+      "predicted_n": 14,
+      "predicted_per_second": 43.58790746909929,
+      "predicted_per_token_ms": 22.94214285714286,
+      "prompt_ms": 273.127,
+      "prompt_n": 227,
+      "prompt_per_second": 831.1151954951359,
+      "prompt_per_token_ms": 1.2032026431718061
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 227,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 241
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"\\\"Nicky D's Wood fired Pizza\\\" is a highly-rated local business located at 2840 De La Vina St, Santa Barbara, CA. The restaurant specializes in serving pizza and is open every day from 12:00 to 21:00. They do not offer WiFi or outdoor seating, but they do provide parking lots for customers. They also offer take-out options and are suitable for groups. The restaurant's atmosphere is casual. Customers have praised the quality of their wood-fired pizza, with specific mention of the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil, and Tomato. Customers have also mentioned the friendly service provided by the owner, Nicky D, who is often present at the restaurant, especially on weekends.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 8,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:12c288a6fc13915988b0d7d7783a79b051ef0a997089ec9ad04e6d499f3763bd",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 1\n}",
+  "unit_id": "sha256:d2f4d75824dbe2944cf209c67379115b39f5b03f2d484498b5372a279d6a76ab"
+}

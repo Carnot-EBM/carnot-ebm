@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4665646572616c206167656e747320696e2054657861732068617665207365697a6564206f76657220243132206d696c6c696f6e20776f727468206f6620647275677320696e206a757374207468726565206461797320617420696e7465726e6174696f6e616c206272696467657320616c6f6e6720746865204d657869636f20626f726465722e20546865206c617267657374207365697a75726520776173206f76657220312c32303020706f756e6473206f66206d657468616d70686574616d696e652068696464656e20616d6f6e67206a616c6170656e6f20706570706572732c2076616c756564206174202431302e37206d696c6c696f6e2e204f74686572207365697a7572657320696e636c7564656420636f6361696e6520616e64206d657468616d70686574616d696e6520636f6e6365616c656420696e2063617220736561747320616e6420636f6d706172746d656e74732c20746f74616c696e67206f76657220243730302c3030302e205369782070656f706c65207765726520617272657374656420696e20636f6e6e656374696f6e2077697468207468652062757374732e205468697320636f6d6573206173206f6666696369616c7320636f6e74696e756520746f20626174746c65206472756720736d7567676c696e6720616c6f6e67207468652054657861732d4d657869636f20626f726465722e",
+  "arm": "source_span",
+  "call_id": "sha256:6c861974b638f0c4389abc59da8932be3ab84fc6f71832a22c82e103c91da351:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.4126809070585296,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 797,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 63,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Texas Border: Drugs Worth $12M Seized in Just 3 Days\\nFederal Agents have had a productive October in the ongoing battle against drug smuggling along the Texas - Mexico border. Over the course of three days, they seized more than 12 million dollars worth of dope in multiple cases at International Bridges into the state.\\nThe largest load of dope represented their hottest case - literally. In Pharr, U.S. Customs and Border Protection (CBP) Officers inspecting a tractor-trailer loaded with jalapenos from Mexico found it was also carrying a load of methamphetamine --- a big one.\\nCBP Officers found packages of meth buried under all those hot peppers, so they began tossing the meth in buckets. By the time the entire trailer of jalapenos had been searched, they filled 72 buckets with 9,426 packages of methamphetamine weighing 1,205.48 pounds. That added up to $10.7 million dollars worth of dope lost by one of the Mexican Cartels.\\nIn El Paso, CBP officers working at the Bridge of the Americas and the Paso Del Norte International Bridge found more than 100 pounds of cocaine and methamphetamine in three separate foiled smuggling attempts in less than an hour. The drugs were found concealed in several different compartments including the one shown above. Others were hidden in car seats - as shown below.\\nOne smuggler managed to squeeze the large load shown below into vehicle seats!\\nThese three seizures together added up to about $700,000 worth of drugs.\\nFinally, CBP officers at the Gateway International Bridge in Brownsville also made a significant seizure while inspecting a van driving into Texas from Mexico.\\nOfficers discovered 93 packages hidden within the vehicle containing 100.81 pounds of methamphetamine with a street value of $927,038.\\nFor those keeping score that's more than $12 million dollars worth of cocaine and methamphetamine found at three International Bridges in Texas over three days in five different busts which resulted in six arrests.\\n-Just another week along the border.\\nDo you believe enough is being done to secure the Texas Border with Mexico?\\nShare your opinions in the comments to this article.\\nWant more stories like this? Be sure to \\\"like\\\" this article and follow me on theNewsbreak app!\\nOther stories by Jack Beaversabout Texas Border issues include:\\nTexas Border: Lawmen Killed on Both Sides of Rio Grande\\nTexas Border: Tennessee Troops Deploy\\nTexas Border: Cartel Gunfights & Smuggling Busts\\nTexas Border: Lawmen Killed on Both Sides of Rio Grande\\nTexas Buses 58K Migrants to Sanctuary Cities\\nMake Money Writing For Newsbreak!APPLY HERE\", \"answer\": \"Federal agents in Texas have seized over $12 million worth of drugs in just three days at international bridges along the Mexico border. The largest seizure was over 1,200 pounds of methamphetamine hidden among jalapeno peppers, valued at $10.7 million. Other seizures included cocaine and methamphetamine concealed in car seats and compartments, totaling over $700,000. Six people were arrested in connection with the busts. This comes as officials continue to battle drug smuggling along the Texas-Mexico border.\"}",
+  "prompt_sha256": "sha256:8f8489ab426b422ad5ba9a6564b056871fd6685fd4cccefba9194c952b059efd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"more than 12 million dollars worth of dope in multiple cases at International Bridges into the state\",\n  \"byte_start\": 156,\n  \"byte_end\": 246\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185071,
+    "id": "chatcmpl-vuP5zAyH2JTeKHJ2rPkSx7h96WEPFPbR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1513.926,
+      "predicted_n": 63,
+      "predicted_per_second": 41.61365879177714,
+      "predicted_per_token_ms": 24.030571428571427,
+      "prompt_ms": 762.057,
+      "prompt_n": 797,
+      "prompt_per_second": 1045.8535253924576,
+      "prompt_per_token_ms": 0.9561568381430364
+    },
+    "usage": {
+      "completion_tokens": 63,
+      "prompt_tokens": 797,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 860
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Texas Border: Drugs Worth $12M Seized in Just 3 Days\\nFederal Agents have had a productive October in the ongoing battle against drug smuggling along the Texas - Mexico border. Over the course of three days, they seized more than 12 million dollars worth of dope in multiple cases at International Bridges into the state.\\nThe largest load of dope represented their hottest case - literally. In Pharr, U.S. Customs and Border Protection (CBP) Officers inspecting a tractor-trailer loaded with jalapenos from Mexico found it was also carrying a load of methamphetamine --- a big one.\\nCBP Officers found packages of meth buried under all those hot peppers, so they began tossing the meth in buckets. By the time the entire trailer of jalapenos had been searched, they filled 72 buckets with 9,426 packages of methamphetamine weighing 1,205.48 pounds. That added up to $10.7 million dollars worth of dope lost by one of the Mexican Cartels.\\nIn El Paso, CBP officers working at the Bridge of the Americas and the Paso Del Norte International Bridge found more than 100 pounds of cocaine and methamphetamine in three separate foiled smuggling attempts in less than an hour. The drugs were found concealed in several different compartments including the one shown above. Others were hidden in car seats - as shown below.\\nOne smuggler managed to squeeze the large load shown below into vehicle seats!\\nThese three seizures together added up to about $700,000 worth of drugs.\\nFinally, CBP officers at the Gateway International Bridge in Brownsville also made a significant seizure while inspecting a van driving into Texas from Mexico.\\nOfficers discovered 93 packages hidden within the vehicle containing 100.81 pounds of methamphetamine with a street value of $927,038.\\nFor those keeping score that's more than $12 million dollars worth of cocaine and methamphetamine found at three International Bridges in Texas over three days in five different busts which resulted in six arrests.\\n-Just another week along the border.\\nDo you believe enough is being done to secure the Texas Border with Mexico?\\nShare your opinions in the comments to this article.\\nWant more stories like this? Be sure to \\\"like\\\" this article and follow me on theNewsbreak app!\\nOther stories by Jack Beaversabout Texas Border issues include:\\nTexas Border: Lawmen Killed on Both Sides of Rio Grande\\nTexas Border: Tennessee Troops Deploy\\nTexas Border: Cartel Gunfights & Smuggling Busts\\nTexas Border: Lawmen Killed on Both Sides of Rio Grande\\nTexas Buses 58K Migrants to Sanctuary Cities\\nMake Money Writing For Newsbreak!APPLY HERE\", \"answer\": \"Federal agents in Texas have seized over $12 million worth of drugs in just three days at international bridges along the Mexico border. The largest seizure was over 1,200 pounds of methamphetamine hidden among jalapeno peppers, valued at $10.7 million. Other seizures included cocaine and methamphetamine concealed in car seats and compartments, totaling over $700,000. Six people were arrested in connection with the busts. This comes as officials continue to battle drug smuggling along the Texas-Mexico border.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 48,
+  "source_bytes": "546578617320426f726465723a20447275677320576f727468202431324d205365697a656420696e204a757374203320446179730a4665646572616c204167656e747320686176652068616420612070726f64756374697665204f63746f62657220696e20746865206f6e676f696e6720626174746c6520616761696e7374206472756720736d7567676c696e6720616c6f6e6720746865205465786173202d204d657869636f20626f726465722e204f7665722074686520636f75727365206f6620746872656520646179732c2074686579207365697a6564206d6f7265207468616e203132206d696c6c696f6e20646f6c6c61727320776f727468206f6620646f706520696e206d756c7469706c6520636173657320617420496e7465726e6174696f6e616c204272696467657320696e746f207468652073746174652e0a546865206c617267657374206c6f6164206f6620646f706520726570726573656e74656420746865697220686f74746573742063617365202d206c69746572616c6c792e20496e2050686172722c20552e532e20437573746f6d7320616e6420426f726465722050726f74656374696f6e202843425029204f6666696365727320696e7370656374696e6720612074726163746f722d747261696c6572206c6f616465642077697468206a616c6170656e6f732066726f6d204d657869636f20666f756e642069742077617320616c736f206361727279696e672061206c6f6164206f66206d657468616d70686574616d696e65202d2d2d206120626967206f6e652e0a434250204f6666696365727320666f756e64207061636b61676573206f66206d6574682062757269656420756e64657220616c6c2074686f736520686f7420706570706572732c20736f207468657920626567616e20746f7373696e6720746865206d65746820696e206275636b6574732e204279207468652074696d652074686520656e7469726520747261696c6572206f66206a616c6170656e6f7320686164206265656e2073656172636865642c20746865792066696c6c6564203732206275636b657473207769746820392c343236207061636b61676573206f66206d657468616d70686574616d696e65207765696768696e6720312c3230352e343820706f756e64732e205468617420616464656420757020746f202431302e37206d696c6c696f6e20646f6c6c61727320776f727468206f6620646f7065206c6f7374206279206f6e65206f6620746865204d65786963616e2043617274656c732e0a496e20456c205061736f2c20434250206f6666696365727320776f726b696e672061742074686520427269646765206f662074686520416d65726963617320616e6420746865205061736f2044656c204e6f72746520496e7465726e6174696f6e616c2042726964676520666f756e64206d6f7265207468616e2031303020706f756e6473206f6620636f6361696e6520616e64206d657468616d70686574616d696e6520696e20746872656520736570617261746520666f696c656420736d7567676c696e6720617474656d70747320696e206c657373207468616e20616e20686f75722e20546865206472756773207765726520666f756e6420636f6e6365616c656420696e207365766572616c20646966666572656e7420636f6d706172746d656e747320696e636c7564696e6720746865206f6e652073686f776e2061626f76652e204f746865727320776572652068696464656e20696e20636172207365617473202d2061732073686f776e2062656c6f772e0a4f6e6520736d7567676c6572206d616e6167656420746f2073717565657a6520746865206c61726765206c6f61642073686f776e2062656c6f7720696e746f2076656869636c65207365617473210a5468657365207468726565207365697a7572657320746f67657468657220616464656420757020746f2061626f757420243730302c30303020776f727468206f662064727567732e0a46696e616c6c792c20434250206f6666696365727320617420746865204761746577617920496e7465726e6174696f6e616c2042726964676520696e2042726f776e7376696c6c6520616c736f206d6164652061207369676e69666963616e74207365697a757265207768696c6520696e7370656374696e6720612076616e2064726976696e6720696e746f2054657861732066726f6d204d657869636f2e0a4f6666696365727320646973636f7665726564203933207061636b616765732068696464656e2077697468696e207468652076656869636c6520636f6e7461696e696e67203130302e383120706f756e6473206f66206d657468616d70686574616d696e6520776974682061207374726565742076616c7565206f6620243932372c3033382e0a466f722074686f7365206b656570696e672073636f726520746861742773206d6f7265207468616e20243132206d696c6c696f6e20646f6c6c61727320776f727468206f6620636f6361696e6520616e64206d657468616d70686574616d696e6520666f756e6420617420746872656520496e7465726e6174696f6e616c204272696467657320696e205465786173206f766572207468726565206461797320696e206669766520646966666572656e7420627573747320776869636820726573756c74656420696e2073697820617272657374732e0a2d4a75737420616e6f74686572207765656b20616c6f6e672074686520626f726465722e0a446f20796f752062656c6965766520656e6f756768206973206265696e6720646f6e6520746f207365637572652074686520546578617320426f726465722077697468204d657869636f3f0a536861726520796f7572206f70696e696f6e7320696e2074686520636f6d6d656e747320746f20746869732061727469636c652e0a57616e74206d6f72652073746f72696573206c696b6520746869733f204265207375726520746f20226c696b652220746869732061727469636c6520616e6420666f6c6c6f77206d65206f6e207468654e657773627265616b20617070210a4f746865722073746f72696573206279204a61636b204265617665727361626f757420546578617320426f726465722069737375657320696e636c7564653a0a546578617320426f726465723a204c61776d656e204b696c6c6564206f6e20426f7468205369646573206f662052696f204772616e64650a546578617320426f726465723a2054656e6e65737365652054726f6f7073204465706c6f790a546578617320426f726465723a2043617274656c2047756e666967687473202620536d7567676c696e672042757374730a546578617320426f726465723a204c61776d656e204b696c6c6564206f6e20426f7468205369646573206f662052696f204772616e64650a54657861732042757365732035384b204d696772616e747320746f2053616e637475617279204369746965730a4d616b65204d6f6e65792057726974696e6720466f72204e657773627265616b214150504c592048455245",
+  "source_cluster_id": "sha256:c975c3e6d829193fdda0795be42879dc8b1d25f5f033029896a592c7bcf66fff",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"more than 12 million dollars worth of dope in multiple cases at International Bridges into the state\",\n  \"byte_start\": 156,\n  \"byte_end\": 246\n}",
+  "unit_id": "sha256:6c861974b638f0c4389abc59da8932be3ab84fc6f71832a22c82e103c91da351"
+}

@@ -93228,3 +93228,21 @@ and the thin Exp8152 script freeze commands, retain private validation logs,
 and publish through the existing primary publication helper. Historical code
 uses immutable Exp8111 snapshots and the versioned V702/V705 protocol files.
 Natural benefit and independent generalization scores remain zero.
+
+## REQ-REPORT-8153: Byte-bound terminal evidence publication
+
+Exp8153 SHALL preserve failed historical primaries and publish one primary via
+primary_publication only after frozen owned commands exit normally. Missing or
+gate-blocked upstream work SHALL produce complete_blocked_<actual_check> with
+the exact operand. Owned failures SHALL produce complete_disqualified and zero
+readiness. Primitive rows, source/code/config hashes, invocation ledger, usage,
+phase durations and validation logs SHALL permit independent headline replay.
+Current inference SHALL remain separate from imported model provenance.
+
+### SCENARIO-REPORT-8153: External CLI and cold replay
+
+The thin script SHALL execute outside the checkout without PYTHONPATH. Private
+success, upstream block and tamper checks SHALL run through the real CLI. Cold
+replay SHALL reject altered primitives, prompts, code, ledger and aggregates.
+E2E-016 fixture and replay SHALL pass. Unmodified adversarial verification and
+strict verdict row consistency SHALL validate the candidate before publication.

@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "412066616e20637265617465642061207061726f647920747261696c657220666f7220224261746d616e20762e2053757065726d616e3a204461776e206f66204a75737469636522207573696e6720636c61737369632073757065726865726f20666f6f7461676520666561747572696e67204164616d205765737420616e64204368726973746f7068657220526565766520696e7374656164206f662042656e204166666c65636b20616e642048656e727920436176696c6c2e205468652031382d796561722d6f6c642063726561746f722073746172746564206d616b696e6720596f755475626520766964656f73207768656e2068652077617320313120616e64206861732073696e636520776f726b656420666f7220746865204d61646520496e204e6574776f726b20696e204e61736876696c6c652c2054656e6e65737365652e20486973207061726f647920747261696c657220726563656976656420706f73697469766520666565646261636b2066726f6d20766965776572732e",
+  "arm": "holistic",
+  "call_id": "sha256:2752fc20de4f5c0934a3b3e4e41657162d6d526f093ab549680516359ec1c7a2:holistic",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.9042383310152218,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 461,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"The much-discussed trailer for \\\"Batman v. Superman: Dawn of Justice\\\" just got a makeover. Soon after the trailer went up late on Friday, YouTuber Bobby Burns got to work on doing his own version using classic superhero footage. Instead of Ben Affleck and Henry Cavill facing off, this version wonders what it would be like if comics' classic characters Adam West and Christopher Reeve took their places. CNN spoke to 18-year-old Burns about what motivated him to make his now-viral video. (Warner Bros. Pictures, the studio behind \\\"Batman v. Superman,\\\" is owned by Time Warner, as is CNN.) CNN: When did you start making YouTube videos like this? Burns: At age 11. I work for the Made In Network in Nashville, Tennessee. CNN: Where did this idea come from? Burns: I'm pretty hyped for \\\"Batman v. Superman.\\\" As soon as I saw the trailer, my brain immediately went to the classic \\\"Batman\\\" [TV series] and I thought how funny it would be if this film was made at the time. CNN: What were you looking to accomplish? Burns: I wanted to contrast the old with the new. CNN: What kind of reaction have you received? Burns: Within an hour of the trailer going up, I went to work on the edit. Within four hours, my edit was finished and up on the Internet. The reaction has been great! It's awesome to see so many people enjoying what I made. Take a look at the fan trailer below:.\\n\", \"answer\": \"A fan created a parody trailer for \\\"Batman v. Superman: Dawn of Justice\\\" using classic superhero footage featuring Adam West and Christopher Reeve instead of Ben Affleck and Henry Cavill. The 18-year-old creator started making YouTube videos when he was 11 and has since worked for the Made In Network in Nashville, Tennessee. His parody trailer received positive feedback from viewers.\"}",
+  "prompt_sha256": "sha256:9dd3a950b43a4fda2f9e09bb705f5c52fc8859c1c89d14272ab9a50f39229680",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184740,
+    "id": "chatcmpl-omvecU2zOnUKBU7C3s3MRknN9XHzRQDV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.549,
+      "predicted_n": 14,
+      "predicted_per_second": 43.5392428525668,
+      "predicted_per_token_ms": 22.967785714285714,
+      "prompt_ms": 462.633,
+      "prompt_n": 461,
+      "prompt_per_second": 996.4702042439687,
+      "prompt_per_token_ms": 1.0035422993492407
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 461,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 475
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"The much-discussed trailer for \\\"Batman v. Superman: Dawn of Justice\\\" just got a makeover. Soon after the trailer went up late on Friday, YouTuber Bobby Burns got to work on doing his own version using classic superhero footage. Instead of Ben Affleck and Henry Cavill facing off, this version wonders what it would be like if comics' classic characters Adam West and Christopher Reeve took their places. CNN spoke to 18-year-old Burns about what motivated him to make his now-viral video. (Warner Bros. Pictures, the studio behind \\\"Batman v. Superman,\\\" is owned by Time Warner, as is CNN.) CNN: When did you start making YouTube videos like this? Burns: At age 11. I work for the Made In Network in Nashville, Tennessee. CNN: Where did this idea come from? Burns: I'm pretty hyped for \\\"Batman v. Superman.\\\" As soon as I saw the trailer, my brain immediately went to the classic \\\"Batman\\\" [TV series] and I thought how funny it would be if this film was made at the time. CNN: What were you looking to accomplish? Burns: I wanted to contrast the old with the new. CNN: What kind of reaction have you received? Burns: Within an hour of the trailer going up, I went to work on the edit. Within four hours, my edit was finished and up on the Internet. The reaction has been great! It's awesome to see so many people enjoying what I made. Take a look at the fan trailer below:.\\n\", \"answer\": \"A fan created a parody trailer for \\\"Batman v. Superman: Dawn of Justice\\\" using classic superhero footage featuring Adam West and Christopher Reeve instead of Ben Affleck and Henry Cavill. The 18-year-old creator started making YouTube videos when he was 11 and has since worked for the Made In Network in Nashville, Tennessee. His parody trailer received positive feedback from viewers.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 83,
+  "source_bytes": "546865206d7563682d64697363757373656420747261696c657220666f7220224261746d616e20762e2053757065726d616e3a204461776e206f66204a75737469636522206a75737420676f742061206d616b656f7665722e20536f6f6e2061667465722074686520747261696c65722077656e74207570206c617465206f6e204672696461792c20596f75547562657220426f626279204275726e7320676f7420746f20776f726b206f6e20646f696e6720686973206f776e2076657273696f6e207573696e6720636c61737369632073757065726865726f20666f6f746167652e20496e7374656164206f662042656e204166666c65636b20616e642048656e727920436176696c6c20666163696e67206f66662c20746869732076657273696f6e20776f6e64657273207768617420697420776f756c64206265206c696b6520696620636f6d6963732720636c61737369632063686172616374657273204164616d205765737420616e64204368726973746f7068657220526565766520746f6f6b20746865697220706c616365732e20434e4e2073706f6b6520746f2031382d796561722d6f6c64204275726e732061626f75742077686174206d6f746976617465642068696d20746f206d616b6520686973206e6f772d766972616c20766964656f2e20285761726e65722042726f732e2050696374757265732c207468652073747564696f20626568696e6420224261746d616e20762e2053757065726d616e2c22206973206f776e65642062792054696d65205761726e65722c20617320697320434e4e2e2920434e4e3a205768656e2064696420796f75207374617274206d616b696e6720596f755475626520766964656f73206c696b6520746869733f204275726e733a204174206167652031312e204920776f726b20666f7220746865204d61646520496e204e6574776f726b20696e204e61736876696c6c652c2054656e6e65737365652e20434e4e3a205768657265206469642074686973206964656120636f6d652066726f6d3f204275726e733a2049276d2070726574747920687970656420666f7220224261746d616e20762e2053757065726d616e2e2220417320736f6f6e2061732049207361772074686520747261696c65722c206d7920627261696e20696d6d6564696174656c792077656e7420746f2074686520636c617373696320224261746d616e22205b5456207365726965735d20616e6420492074686f7567687420686f772066756e6e7920697420776f756c6420626520696620746869732066696c6d20776173206d616465206174207468652074696d652e20434e4e3a2057686174207765726520796f75206c6f6f6b696e6720746f206163636f6d706c6973683f204275726e733a20492077616e74656420746f20636f6e747261737420746865206f6c64207769746820746865206e65772e20434e4e3a2057686174206b696e64206f66207265616374696f6e206861766520796f752072656365697665643f204275726e733a2057697468696e20616e20686f7572206f662074686520747261696c657220676f696e672075702c20492077656e7420746f20776f726b206f6e2074686520656469742e2057697468696e20666f757220686f7572732c206d792065646974207761732066696e697368656420616e64207570206f6e2074686520496e7465726e65742e20546865207265616374696f6e20686173206265656e20677265617421204974277320617765736f6d6520746f2073656520736f206d616e792070656f706c6520656e6a6f79696e6720776861742049206d6164652e2054616b652061206c6f6f6b206174207468652066616e20747261696c65722062656c6f773a2e0a",
+  "source_cluster_id": "sha256:dccd8ef6d240e9cbb9755b4ebdffdddf8afc9304cf3a4d7ad4c1b788a82454b6",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:2752fc20de4f5c0934a3b3e4e41657162d6d526f093ab549680516359ec1c7a2"
+}

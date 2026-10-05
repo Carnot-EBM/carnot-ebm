@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4c696c6c792773205461636f732069732061206c6f63616c204d65786963616e2072657374617572616e74206c6f6361746564206174203331302043686170616c6120537420696e2053616e746120426172626172612c2043412e205468652072657374617572616e74206f666665727320612076617269657479206f662061757468656e746963204d65786963616e2064697368657320616e64206973206b6e6f776e20666f722069747320737472656574207461636f732e20437573746f6d65727320686176652070726169736564207468652072657374617572616e7420666f722069747320776964652073656c656374696f6e206f662063686f6963657320616e6420746865206162696c69747920746f20637573746f6d697a6520746865697220746f7070696e67732e200a0a5468652072657374617572616e74206f706572617465732066726f6d2031303a303020414d20746f20393a303020504d206f6e205765646e65736461797320746f2053756e646179732c2070726f766964696e6720616d706c652074696d6520666f7220637573746f6d65727320746f20656e6a6f79207468656972206d65616c732e200a0a416c74686f7567682074686520627573696e65737320646f6573206e6f742070726f76696465206f7574646f6f722073656174696e672c206974206f666665727320612073706163696f757320696e646f6f722064696e696e672061726561207769746820706c656e7479206f66207461626c65732e20437573746f6d6572732068617665206d656e74696f6e65642074686174207468652072657374617572616e74206170706561727320756e617373756d696e672066726f6d20746865206f7574736964652c206275742074686520696e746572696f72206973206c6172676572207468616e2065787065637465642e200a0a437573746f6d657273206861766520616c736f206e6f7465642074686520717569636b20616e6420656666696369656e742073657276696365206174204c696c6c792773205461636f732e20546865207374616666206973207072616973656420666f722074686569722070726f6d7074207072657061726174696f6e206f66206f72646572732c20656e737572696e6720746861742074686520666f6f642069732073657276656420686f742e200a0a496e207465726d73206f66207061726b696e672c207468652072657374617572616e74206f6666657273206672656520737472656574207061726b696e6720696e2074686520617265612c2070726f766964696e6720636f6e76656e69656e636520666f7220637573746f6d6572732e200a0a4f766572616c6c2c204c696c6c792773205461636f732068617320726563656976656420706f73697469766520726576696577732c207769746820637573746f6d65727320656e6a6f79696e672074686520666c61766f7266756c20616e642064656c6963696f757320737472656574207461636f7320617420616e206166666f726461626c652070726963652e2054686520636869636b656e2066616a69746173207461636f2c20736c6f772d636f6f6b65642077697468207065707065727320616e64206f6e696f6e732c20686173206265656e20706172746963756c61726c79207072616973656420666f722069747320746173746520616e642066726573686e6573732e205768696c6520736f6d6520637573746f6d6572732068617665206d656e74696f6e6564207468617420746865206361726e652061736164612077617320736c696768746c79206472792c20746865206f766572616c6c2064696e696e6720657870657269656e6365206174204c696c6c792773205461636f7320686173206265656e2073617469736679696e672c207769746820637573746f6d6572732065787072657373696e6720746865697220696e74656e74696f6e20746f2072657475726e20616e6420747279206f74686572207461636f73206f6e20746865206d656e752e",
+  "arm": "source_span",
+  "call_id": "sha256:3bcbaa69499f8b537c4fe594ffc6fca0f94782bc12ff57879edee2792688338a:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.699286371935159,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 1009,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 28,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"310 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Mexican, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"10:0-21:0\\\",\\\"Sunday\\\":\\\"10:0-21:0\\\",\\\"Thursday\\\":\\\"10:0-21:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Lilly's Tacos\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 02:18:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Super authentic and very good. There's a good amount of choices and you put your own toppings on!\\\"},{\\\"review_date\\\":\\\"2022-01-13 16:25:11\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"-Food-\\\\nThese are delicious and very similar to street tacos! The carne asada was a little dry, but overall it was yummy. Pork and chicken were my favorite! But I wouldn't say it is worth $2.50 per taco! I'd rather go to a taco truck to get cheaper tacos. \\\\n\\\\n-Service-\\\\n10/10! The workers are very quick with preparing orders and the food comes out hot! \\\\n\\\\n-Looks-\\\\nIt doesn't look like much outside, but it is way larger inside that expected. There are a ton of tables indoors and no tables outside. \\\\n\\\\n-Other-\\\\nThere's plenty of free street parking wowing the area!\\\"},{\\\"review_date\\\":\\\"2022-01-12 06:24:59\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Great street tacos at an affordable price. I had the chicken fajitas taco and it was super tasty and fresh. The meat was slow cooked with peppers and onions. The portion was enough for almost two tacos. I would next time try one of the grilled meat tacos. The only bummer is they don't offer chips. The salsa was spicy hot but good. I will return to try other tacos!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Lilly's Tacos is a local Mexican restaurant located at 310 Chapala St in Santa Barbara, CA. The restaurant offers a variety of authentic Mexican dishes and is known for its street tacos. Customers have praised the restaurant for its wide selection of choices and the ability to customize their toppings. \\n\\nThe restaurant operates from 10:00 AM to 9:00 PM on Wednesdays to Sundays, providing ample time for customers to enjoy their meals. \\n\\nAlthough the business does not provide outdoor seating, it offers a spacious indoor dining area with plenty of tables. Customers have mentioned that the restaurant appears unassuming from the outside, but the interior is larger than expected. \\n\\nCustomers have also noted the quick and efficient service at Lilly's Tacos. The staff is praised for their prompt preparation of orders, ensuring that the food is served hot. \\n\\nIn terms of parking, the restaurant offers free street parking in the area, providing convenience for customers. \\n\\nOverall, Lilly's Tacos has received positive reviews, with customers enjoying the flavorful and delicious street tacos at an affordable price. The chicken fajitas taco, slow-cooked with peppers and onions, has been particularly praised for its taste and freshness. While some customers have mentioned that the carne asada was slightly dry, the overall dining experience at Lilly's Tacos has been satisfying, with customers expressing their intention to return and try other tacos on the menu.\"}",
+  "prompt_sha256": "sha256:454ebb6b524fe6e1506486a100e515edf3260ef4e54010e5ef9b8204eaa23117",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"p_hallucination\": 0, \"quote\": null, \"byte_start\": null, \"byte_end\": null}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184872,
+    "id": "chatcmpl-BMLCAORu7Htt3xNn5dTfnnaZSGyI1Wk2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 669.747,
+      "predicted_n": 28,
+      "predicted_per_second": 41.80683153489303,
+      "predicted_per_token_ms": 23.91953571428571,
+      "prompt_ms": 905.951,
+      "prompt_n": 1009,
+      "prompt_per_second": 1113.7467699687952,
+      "prompt_per_token_ms": 0.8978701684836472
+    },
+    "usage": {
+      "completion_tokens": 28,
+      "prompt_tokens": 1009,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1037
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"310 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Mexican, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"10:0-21:0\\\",\\\"Sunday\\\":\\\"10:0-21:0\\\",\\\"Thursday\\\":\\\"10:0-21:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Lilly's Tacos\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 02:18:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Super authentic and very good. There's a good amount of choices and you put your own toppings on!\\\"},{\\\"review_date\\\":\\\"2022-01-13 16:25:11\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"-Food-\\\\nThese are delicious and very similar to street tacos! The carne asada was a little dry, but overall it was yummy. Pork and chicken were my favorite! But I wouldn't say it is worth $2.50 per taco! I'd rather go to a taco truck to get cheaper tacos. \\\\n\\\\n-Service-\\\\n10/10! The workers are very quick with preparing orders and the food comes out hot! \\\\n\\\\n-Looks-\\\\nIt doesn't look like much outside, but it is way larger inside that expected. There are a ton of tables indoors and no tables outside. \\\\n\\\\n-Other-\\\\nThere's plenty of free street parking wowing the area!\\\"},{\\\"review_date\\\":\\\"2022-01-12 06:24:59\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Great street tacos at an affordable price. I had the chicken fajitas taco and it was super tasty and fresh. The meat was slow cooked with peppers and onions. The portion was enough for almost two tacos. I would next time try one of the grilled meat tacos. The only bummer is they don't offer chips. The salsa was spicy hot but good. I will return to try other tacos!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Lilly's Tacos is a local Mexican restaurant located at 310 Chapala St in Santa Barbara, CA. The restaurant offers a variety of authentic Mexican dishes and is known for its street tacos. Customers have praised the restaurant for its wide selection of choices and the ability to customize their toppings. \\n\\nThe restaurant operates from 10:00 AM to 9:00 PM on Wednesdays to Sundays, providing ample time for customers to enjoy their meals. \\n\\nAlthough the business does not provide outdoor seating, it offers a spacious indoor dining area with plenty of tables. Customers have mentioned that the restaurant appears unassuming from the outside, but the interior is larger than expected. \\n\\nCustomers have also noted the quick and efficient service at Lilly's Tacos. The staff is praised for their prompt preparation of orders, ensuring that the food is served hot. \\n\\nIn terms of parking, the restaurant offers free street parking in the area, providing convenience for customers. \\n\\nOverall, Lilly's Tacos has received positive reviews, with customers enjoying the flavorful and delicious street tacos at an affordable price. The chicken fajitas taco, slow-cooked with peppers and onions, has been particularly praised for its taste and freshness. While some customers have mentioned that the carne asada was slightly dry, the overall dining experience at Lilly's Tacos has been satisfying, with customers expressing their intention to return and try other tacos on the menu.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 119,
+  "source_bytes": "7b2261646472657373223a223331302043686170616c61205374222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a747275652c22636c61737379223a66616c73652c226469766579223a6e756c6c2c2268697073746572223a66616c73652c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a66616c73652c227472656e6479223a66616c73652c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a66616c73652c22737472656574223a747275652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a66616c73652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a226e6f227d2c22627573696e6573735f7374617273223a342e352c2263617465676f72696573223a224d65786963616e2c2052657374617572616e7473222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a2231303a302d32313a30222c224d6f6e646179223a22303a302d303a30222c225361747572646179223a2231303a302d32313a30222c2253756e646179223a2231303a302d32313a30222c225468757273646179223a2231303a302d32313a30222c225765646e6573646179223a2231303a302d32313a30227d2c226e616d65223a224c696c6c792773205461636f73222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323032322d30312d31382030323a31383a3139222c227265766965775f7374617273223a352e302c227265766965775f74657874223a2253757065722061757468656e74696320616e64207665727920676f6f642e2054686572652773206120676f6f6420616d6f756e74206f662063686f6963657320616e6420796f752070757420796f7572206f776e20746f7070696e6773206f6e21227d2c7b227265766965775f64617465223a22323032322d30312d31332031363a32353a3131222c227265766965775f7374617273223a342e302c227265766965775f74657874223a222d466f6f642d5c6e5468657365206172652064656c6963696f757320616e6420766572792073696d696c617220746f20737472656574207461636f732120546865206361726e65206173616461207761732061206c6974746c65206472792c20627574206f766572616c6c206974207761732079756d6d792e20506f726b20616e6420636869636b656e2077657265206d79206661766f726974652120427574204920776f756c646e27742073617920697420697320776f7274682024322e353020706572207461636f21204927642072617468657220676f20746f2061207461636f20747275636b20746f206765742063686561706572207461636f732e205c6e5c6e2d536572766963652d5c6e31302f3130212054686520776f726b65727320617265207665727920717569636b207769746820707265706172696e67206f726465727320616e642074686520666f6f6420636f6d6573206f757420686f7421205c6e5c6e2d4c6f6f6b732d5c6e497420646f65736e2774206c6f6f6b206c696b65206d756368206f7574736964652c2062757420697420697320776179206c617267657220696e7369646520746861742065787065637465642e20546865726520617265206120746f6e206f66207461626c657320696e646f6f727320616e64206e6f207461626c6573206f7574736964652e205c6e5c6e2d4f746865722d5c6e5468657265277320706c656e7479206f66206672656520737472656574207061726b696e6720776f77696e6720746865206172656121227d2c7b227265766965775f64617465223a22323032322d30312d31322030363a32343a3539222c227265766965775f7374617273223a342e302c227265766965775f74657874223a22477265617420737472656574207461636f7320617420616e206166666f726461626c652070726963652e2049206861642074686520636869636b656e2066616a69746173207461636f20616e642069742077617320737570657220746173747920616e642066726573682e20546865206d6561742077617320736c6f7720636f6f6b65642077697468207065707065727320616e64206f6e696f6e732e2054686520706f7274696f6e2077617320656e6f75676820666f7220616c6d6f73742074776f207461636f732e204920776f756c64206e6578742074696d6520747279206f6e65206f6620746865206772696c6c6564206d656174207461636f732e20546865206f6e6c792062756d6d6572206973207468657920646f6e2774206f666665722063686970732e205468652073616c73612077617320737069637920686f742062757420676f6f642e20492077696c6c2072657475726e20746f20747279206f74686572207461636f7321227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:d176eb80206f27de12671b4ccd4a1b882eb83067472a6d554539340648c42543",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\"p_hallucination\": 0, \"quote\": null, \"byte_start\": null, \"byte_end\": null}",
+  "unit_id": "sha256:3bcbaa69499f8b537c4fe594ffc6fca0f94782bc12ff57879edee2792688338a"
+}

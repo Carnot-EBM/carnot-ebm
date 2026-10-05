@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "536f757468204361726f6c696e6120706f6c696365206f666669636572204d69636861656c20536c6167657220686173206265656e20636861726765642077697468206d75726465722061667465722073686f6f74696e6720616e20756e61726d656420626c61636b206d616e2c2057616c7465722053636f74742c2065696768742074696d65732e204120766964656f206f662074686520696e636964656e742c2074616b656e2062792070617373657262792046656964696e2053616e74616e612c2073686f7773207468617420536c616765722073686f742061742053636f74742061732068652072616e20617761792c20636f6e747261727920746f2074686520696e697469616c20706f6c696365207265706f72742077686963682073746174656420746861742053636f74742068616420747269656420746f2074616b6520536c6167657227732054617365722e2054686520766964656f2073686f77732061206461726b206f626a6563742066616c6c696e6720626568696e642053636f747420616e642068697474696e67207468652067726f756e64206265666f726520536c61676572206f70656e7320666972652c2062757420697420697320756e636c65617220776865746865722074686973206973207468652054617365722e2053616e74616e612073617973207468617420616c74686f7567682068652068656172642074686520736f756e64206f662061205461736572206265696e6720757365642c20686520646964206e6f74207365652053636f747420677261622069742e20536c616765722077617320746865206669727374206f666669636572206f6e20746865207363656e652c20616e64207265706f7274732066726f6d206f74686572206f666669636572732073756767657374207468617420746865792061727269766564206166746572207468652073686f6f74696e67206861642074616b656e20706c6163652e2054686520706f6c696365207265706f727420646f6573206e6f7420696e636c75646520612073746174656d656e742066726f6d20536c616765722e2041732074686520536f757468204361726f6c696e61204c617720456e666f7263656d656e74204469766973696f6e2069732063757272656e746c7920696e7665737469676174696e672074686520696e636964656e742c20746865204e6f72746820436861726c6573746f6e20506f6c696365204465706172746d656e74206973206e6f742070726f766964696e6720616e79206675727468657220696e666f726d6174696f6e2e20536c6167657220686173206265656e2066697265642066726f6d2074686520706f6c69636520666f7263652e",
+  "arm": "holistic",
+  "call_id": "sha256:a4e674ff886d1aa94601eae3d3075714130d31eddef5ea6deb74a2adb7a630da:source_removed",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "duration_s": 0.7455992450704798,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 260,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"South Carolina police officer Michael Slager has been charged with murder after shooting an unarmed black man, Walter Scott, eight times. A video of the incident, taken by passerby Feidin Santana, shows that Slager shot at Scott as he ran away, contrary to the initial police report which stated that Scott had tried to take Slager's Taser. The video shows a dark object falling behind Scott and hitting the ground before Slager opens fire, but it is unclear whether this is the Taser. Santana says that although he heard the sound of a Taser being used, he did not see Scott grab it. Slager was the first officer on the scene, and reports from other officers suggest that they arrived after the shooting had taken place. The police report does not include a statement from Slager. As the South Carolina Law Enforcement Division is currently investigating the incident, the North Charleston Police Department is not providing any further information. Slager has been fired from the police force.\"}",
+  "prompt_sha256": "sha256:8714372a569c8908d70c73259d455affdeec9f4a8e2e5e83a649b15df2940ddb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185173,
+    "id": "chatcmpl-LD0UG9fBEclTSIWNeY2KxTf42HHrIfWK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.416,
+      "predicted_n": 14,
+      "predicted_per_second": 43.55725912835702,
+      "predicted_per_token_ms": 22.958285714285715,
+      "prompt_ms": 292.092,
+      "prompt_n": 260,
+      "prompt_per_second": 890.1305068266164,
+      "prompt_per_token_ms": 1.1234307692307692
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 260,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 274
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"South Carolina police officer Michael Slager has been charged with murder after shooting an unarmed black man, Walter Scott, eight times. A video of the incident, taken by passerby Feidin Santana, shows that Slager shot at Scott as he ran away, contrary to the initial police report which stated that Scott had tried to take Slager's Taser. The video shows a dark object falling behind Scott and hitting the ground before Slager opens fire, but it is unclear whether this is the Taser. Santana says that although he heard the sound of a Taser being used, he did not see Scott grab it. Slager was the first officer on the scene, and reports from other officers suggest that they arrived after the shooting had taken place. The police report does not include a statement from Slager. As the South Carolina Law Enforcement Division is currently investigating the incident, the North Charleston Police Department is not providing any further information. Slager has been fired from the police force.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 16,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:61bd35eb122f6c338d6d9550a1ec14a1b012f6abd62a1599fc058803a16a2a4c",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 1\n}",
+  "unit_id": "sha256:a4e674ff886d1aa94601eae3d3075714130d31eddef5ea6deb74a2adb7a630da"
+}

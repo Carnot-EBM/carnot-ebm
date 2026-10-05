@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c2068657265206172652074686520737465707320746f20636f6f6b2061206475636b20696e20746865206f76656e3a0a0a312e205072656865617420746865206f76656e20746f2034303020646567726565732046202820706173736167652032292e0a322e20536561736f6e2074686520656e74697265206475636b20627265617374207769746820657373656e63652028706173736167652032292e0a332e2048656174206120636173742069726f6e20736b696c6c6574206f72206f74686572206f76656e2d7361666520736b696c6c6574206f766572206d656469756d20686561742028706173736167652033292e0a342e20506c61636520746865206475636b206c65677320696e207468652070616e20776974682074686520736b696e20736964657320646f776e2028706173736167652033292e0a352e20436f6f6b20746865206475636b206c65677320756e74696c2074686520736b696e2069732062726f776e2c2061626f75742033206d696e757465732028706173736167652033292e0a362e20506c616365207468652070616e20696e20746865206f76656e2028706173736167652033292e0a372e20526f61737420746865206475636b20696e2074686520707265686561746564206f76656e20666f72203120686f75722028706173736167652031292e0a382e2053706f6f6e20312f3420637570206d656c74656420627574746572206f76657220746865206475636b20616e6420636f6e74696e756520636f6f6b696e6720666f7220616e206164646974696f6e616c203435206d696e757465732028706173736167652031292e0a392e205275622073616c742c207065707065722c20616e642070617072696b6120696e746f2074686520736b696e206f6620746865206475636b2028706173736167652031292e0a31302e2052656d6f76652074686520726f617374696e672070616e2066726f6d20746865206f76656e20616e64207465737420746f206d616b65207375726520746865206475636b2069732066696e697368656420636f6f6b696e672028706173736167652033292e0a0a4e6f74653a2054686520706173736167657320646f206e6f742073706563696679207468652073697a65206f6620746865206475636b206f72207468652064657369726564206c6576656c206f6620646f6e656e6573732c20736f2074686520636f6f6b696e672074696d65206d6179206e65656420746f2062652061646a7573746564206163636f7264696e676c792e",
+  "arm": "holistic",
+  "call_id": "sha256:13e56a974421ce1a898d69ead7992ac8ae51cf64bac589c8288c81d8eb3448ee:holistic",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.3334028059616685,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 816,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.8,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.8,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 Roast duck in preheated oven for 1 hour. 2  Spoon 1/4 cup melted butter over bird, and continue cooking for 45 more minutes. 3  Spoon remaining 1/4 cup melted butter over duck, and cook for 15 more minutes, or until golden brown. Rub salt, pepper, and paprika into the skin of the duck. 2  Place in a roasting pan. 3  Roast duck in preheated oven for 1 hour. 4  Spoon 1/4 cup melted butter over bird, and continue cooking for 45 more minutes.\\\\n\\\\npassage 2:Directions. Preheat the oven to 400 degrees F. Season the entire duck breast with Essence. In a large saute pan, over medium heat, add the olive oil. When the oil is hot, add the duck breast, skin side down. Sear for 6 minutes. Flip the duck breast over and place the pan in the oven.Roast the breasts for 8 to 10 minutes for medium rare. Remove the pan from the oven and allow the duck breasts to rest 2 to 3 minutes before slicing. Slice each duck breast, on the bias, into 1/2-inch pieces.irections. Preheat the oven to 400 degrees F. Season the entire duck breast with Essence. In a large saute pan, over medium heat, add the olive oil. When the oil is hot, add the duck breast, skin side down. Sear for 6 minutes. Flip the duck breast over and place the pan in the oven.\\\\n\\\\npassage 3:Heat a cast iron skillet or other oven-safe skillet over medium heat. Place the duck legs in the pan with the skin sides down. Sprinkle the legs with salt and pepper and allow them to cook until the skin is brown, about 3 minutes.. Remove the roasting pan from the oven and test to make sure the duck is finished cooking. 1  Insert a cooking thermometer into the thickest portion of the duck meat, either the breast or thigh. 2  Be sure the thermometer is not touching any bones.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook a duck in the oven\\\"}\", \"answer\": \"Based on the given passages, here are the steps to cook a duck in the oven:\\n\\n1. Preheat the oven to 400 degrees F ( passage 2).\\n2. Season the entire duck breast with essence (passage 2).\\n3. Heat a cast iron skillet or other oven-safe skillet over medium heat (passage 3).\\n4. Place the duck legs in the pan with the skin sides down (passage 3).\\n5. Cook the duck legs until the skin is brown, about 3 minutes (passage 3).\\n6. Place the pan in the oven (passage 3).\\n7. Roast the duck in the preheated oven for 1 hour (passage 1).\\n8. Spoon 1/4 cup melted butter over the duck and continue cooking for an additional 45 minutes (passage 1).\\n9. Rub salt, pepper, and paprika into the skin of the duck (passage 1).\\n10. Remove the roasting pan from the oven and test to make sure the duck is finished cooking (passage 3).\\n\\nNote: The passages do not specify the size of the duck or the desired level of doneness, so the cooking time may need to be adjusted accordingly.\"}",
+  "prompt_sha256": "sha256:101261ef0891895d23a6171c13966972875e6fcb8c08cd20587acf775d8d3740",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.8\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184548,
+    "id": "chatcmpl-9MLGPjokGsomT3KaVmmlZROGeplXdPU2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 369.866,
+      "predicted_n": 16,
+      "predicted_per_second": 43.25890998361569,
+      "predicted_per_token_ms": 23.116625,
+      "prompt_ms": 777.221,
+      "prompt_n": 816,
+      "prompt_per_second": 1049.8944315709432,
+      "prompt_per_token_ms": 0.9524767156862746
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 816,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 832
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 Roast duck in preheated oven for 1 hour. 2  Spoon 1/4 cup melted butter over bird, and continue cooking for 45 more minutes. 3  Spoon remaining 1/4 cup melted butter over duck, and cook for 15 more minutes, or until golden brown. Rub salt, pepper, and paprika into the skin of the duck. 2  Place in a roasting pan. 3  Roast duck in preheated oven for 1 hour. 4  Spoon 1/4 cup melted butter over bird, and continue cooking for 45 more minutes.\\\\n\\\\npassage 2:Directions. Preheat the oven to 400 degrees F. Season the entire duck breast with Essence. In a large saute pan, over medium heat, add the olive oil. When the oil is hot, add the duck breast, skin side down. Sear for 6 minutes. Flip the duck breast over and place the pan in the oven.Roast the breasts for 8 to 10 minutes for medium rare. Remove the pan from the oven and allow the duck breasts to rest 2 to 3 minutes before slicing. Slice each duck breast, on the bias, into 1/2-inch pieces.irections. Preheat the oven to 400 degrees F. Season the entire duck breast with Essence. In a large saute pan, over medium heat, add the olive oil. When the oil is hot, add the duck breast, skin side down. Sear for 6 minutes. Flip the duck breast over and place the pan in the oven.\\\\n\\\\npassage 3:Heat a cast iron skillet or other oven-safe skillet over medium heat. Place the duck legs in the pan with the skin sides down. Sprinkle the legs with salt and pepper and allow them to cook until the skin is brown, about 3 minutes.. Remove the roasting pan from the oven and test to make sure the duck is finished cooking. 1  Insert a cooking thermometer into the thickest portion of the duck meat, either the breast or thigh. 2  Be sure the thermometer is not touching any bones.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook a duck in the oven\\\"}\", \"answer\": \"Based on the given passages, here are the steps to cook a duck in the oven:\\n\\n1. Preheat the oven to 400 degrees F ( passage 2).\\n2. Season the entire duck breast with essence (passage 2).\\n3. Heat a cast iron skillet or other oven-safe skillet over medium heat (passage 3).\\n4. Place the duck legs in the pan with the skin sides down (passage 3).\\n5. Cook the duck legs until the skin is brown, about 3 minutes (passage 3).\\n6. Place the pan in the oven (passage 3).\\n7. Roast the duck in the preheated oven for 1 hour (passage 1).\\n8. Spoon 1/4 cup melted butter over the duck and continue cooking for an additional 45 minutes (passage 1).\\n9. Rub salt, pepper, and paprika into the skin of the duck (passage 1).\\n10. Remove the roasting pan from the oven and test to make sure the duck is finished cooking (passage 3).\\n\\nNote: The passages do not specify the size of the duck or the desired level of doneness, so the cooking time may need to be adjusted accordingly.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 28,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a3120526f617374206475636b20696e20707265686561746564206f76656e20666f72203120686f75722e2032202053706f6f6e20312f3420637570206d656c74656420627574746572206f76657220626972642c20616e6420636f6e74696e756520636f6f6b696e6720666f72203435206d6f7265206d696e757465732e2033202053706f6f6e2072656d61696e696e6720312f3420637570206d656c74656420627574746572206f766572206475636b2c20616e6420636f6f6b20666f72203135206d6f7265206d696e757465732c206f7220756e74696c20676f6c64656e2062726f776e2e205275622073616c742c207065707065722c20616e642070617072696b6120696e746f2074686520736b696e206f6620746865206475636b2e20322020506c61636520696e206120726f617374696e672070616e2e20332020526f617374206475636b20696e20707265686561746564206f76656e20666f72203120686f75722e2034202053706f6f6e20312f3420637570206d656c74656420627574746572206f76657220626972642c20616e6420636f6e74696e756520636f6f6b696e6720666f72203435206d6f7265206d696e757465732e5c6e5c6e7061737361676520323a446972656374696f6e732e205072656865617420746865206f76656e20746f20343030206465677265657320462e20536561736f6e2074686520656e74697265206475636b20627265617374207769746820457373656e63652e20496e2061206c617267652073617574652070616e2c206f766572206d656469756d20686561742c2061646420746865206f6c697665206f696c2e205768656e20746865206f696c20697320686f742c2061646420746865206475636b206272656173742c20736b696e207369646520646f776e2e205365617220666f722036206d696e757465732e20466c697020746865206475636b20627265617374206f76657220616e6420706c616365207468652070616e20696e20746865206f76656e2e526f61737420746865206272656173747320666f72203820746f203130206d696e7574657320666f72206d656469756d20726172652e2052656d6f7665207468652070616e2066726f6d20746865206f76656e20616e6420616c6c6f7720746865206475636b206272656173747320746f2072657374203220746f2033206d696e75746573206265666f726520736c6963696e672e20536c6963652065616368206475636b206272656173742c206f6e2074686520626961732c20696e746f20312f322d696e6368207069656365732e6972656374696f6e732e205072656865617420746865206f76656e20746f20343030206465677265657320462e20536561736f6e2074686520656e74697265206475636b20627265617374207769746820457373656e63652e20496e2061206c617267652073617574652070616e2c206f766572206d656469756d20686561742c2061646420746865206f6c697665206f696c2e205768656e20746865206f696c20697320686f742c2061646420746865206475636b206272656173742c20736b696e207369646520646f776e2e205365617220666f722036206d696e757465732e20466c697020746865206475636b20627265617374206f76657220616e6420706c616365207468652070616e20696e20746865206f76656e2e5c6e5c6e7061737361676520333a48656174206120636173742069726f6e20736b696c6c6574206f72206f74686572206f76656e2d7361666520736b696c6c6574206f766572206d656469756d20686561742e20506c61636520746865206475636b206c65677320696e207468652070616e20776974682074686520736b696e20736964657320646f776e2e20537072696e6b6c6520746865206c65677320776974682073616c7420616e642070657070657220616e6420616c6c6f77207468656d20746f20636f6f6b20756e74696c2074686520736b696e2069732062726f776e2c2061626f75742033206d696e757465732e2e2052656d6f76652074686520726f617374696e672070616e2066726f6d20746865206f76656e20616e64207465737420746f206d616b65207375726520746865206475636b2069732066696e697368656420636f6f6b696e672e20312020496e73657274206120636f6f6b696e6720746865726d6f6d6574657220696e746f2074686520746869636b65737420706f7274696f6e206f6620746865206475636b206d6561742c206569746865722074686520627265617374206f722074686967682e20322020426520737572652074686520746865726d6f6d65746572206973206e6f7420746f756368696e6720616e7920626f6e65732e5c6e5c6e222c227175657374696f6e223a22686f7720746f20636f6f6b2061206475636b20696e20746865206f76656e227d",
+  "source_cluster_id": "sha256:a00e5ab718ccaccd46c64da95592dd44e8316863f9730ec694f9ad06410893d9",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.8\n}",
+  "unit_id": "sha256:13e56a974421ce1a898d69ead7992ac8ae51cf64bac589c8288c81d8eb3448ee"
+}

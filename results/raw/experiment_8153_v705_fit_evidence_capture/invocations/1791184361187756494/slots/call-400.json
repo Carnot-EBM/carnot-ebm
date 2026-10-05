@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "5468726565206d6574686f64732063616e206265207573656420746f20736f6f7468652061206d6f75746820736f72652066726f6d20626974696e672067756d732e2046697273742c20796f752063616e206170706c79206120736d616c6c20616d6f756e74206f662031303025207075726520686f6e657920746f2074686520736f726520617265612074687265652074696d657320612064617920666f7220666976652064617973207573696e67206120712d7469702e20486f6e65792068617320616e746962616374657269616c2070726f7065727469657320746861742063616e2068656c7020747265617420736f72652067756d7320616e6420756c636572732e205365636f6e642c20796f752063616e206472696e6b206368616d6f6d696c65207465612e204166746572207374656570696e67207468652074656120666f722066697665206d696e757465732c20636f6f6c20697420736c696768746c7920616e642073776973682069742061726f756e6420796f7572206d6f757468206265666f7265207377616c6c6f77696e672e2046696e616c6c792c20796f752063616e206170706c7920616c6f6520766572612067656c206469726563746c7920746f2074686520696e666c616d65642067756d206166746572206272757368696e6720796f75722074656574682e20416c6f6520766572612063616e2068656c70206375726520696e666c616d65642067756d20746973737565732c206f72616c206c6573696f6e732c20616e642067756d206162736365737365732e",
+  "arm": "holistic",
+  "call_id": "sha256:de933dc47053ac40f475a4abadf1993d3c03ba18bc8432b2d74f32fe1de15ea0:source_removed",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "duration_s": 0.7236769590526819,
+  "entailment_label": null,
+  "exclusion_reason": "invalid_probability_or_usage",
+  "human_target": null,
+  "input_tokens": 196,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 0,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": null,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "missing_probability",
+    "valid_quote": 0
+  },
+  "probability": null,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Three methods can be used to soothe a mouth sore from biting gums. First, you can apply a small amount of 100% pure honey to the sore area three times a day for five days using a q-tip. Honey has antibacterial properties that can help treat sore gums and ulcers. Second, you can drink chamomile tea. After steeping the tea for five minutes, cool it slightly and swish it around your mouth before swallowing. Finally, you can apply aloe vera gel directly to the inflamed gum after brushing your teeth. Aloe vera can help cure inflamed gum tissues, oral lesions, and gum abscesses.\"}",
+  "prompt_sha256": "sha256:3136144280cd46219b2dd1f8083df05199f46eadddea33efed98d219029b906c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```json\n{\"p_hallucination\": 1}\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185142,
+    "id": "chatcmpl-G3LYChtH4ECvoxKYoPwWOg3jU7BW4Nmk",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 369.619,
+      "predicted_n": 16,
+      "predicted_per_second": 43.28781799636923,
+      "predicted_per_token_ms": 23.1011875,
+      "prompt_ms": 253.844,
+      "prompt_n": 196,
+      "prompt_per_second": 772.1277635082965,
+      "prompt_per_token_ms": 1.2951224489795918
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 196,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 212
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Three methods can be used to soothe a mouth sore from biting gums. First, you can apply a small amount of 100% pure honey to the sore area three times a day for five days using a q-tip. Honey has antibacterial properties that can help treat sore gums and ulcers. Second, you can drink chamomile tea. After steeping the tea for five minutes, cool it slightly and swish it around your mouth before swallowing. Finally, you can apply aloe vera gel directly to the inflamed gum after brushing your teeth. Aloe vera can help cure inflamed gum tissues, oral lesions, and gum abscesses.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 6,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:d6f02bb02b501aba2df7bf173cf2e30e11d3f0ffadc033a51f5c230e44f33004",
+  "started": true,
+  "status": "failed",
+  "transcript": "```json\n{\"p_hallucination\": 1}\n```",
+  "unit_id": "sha256:de933dc47053ac40f475a4abadf1993d3c03ba18bc8432b2d74f32fe1de15ea0"
+}

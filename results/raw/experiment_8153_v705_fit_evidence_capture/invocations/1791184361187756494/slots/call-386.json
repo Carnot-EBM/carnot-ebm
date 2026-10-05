@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20686572652773206120627269656620616e7377657220746f20746865207175657374696f6e2022486f7720746f2073746f7020666c69657320636f6d696e67207468726f756768207468652077696e646f77223a0a0a546f2073746f7020666c6965732066726f6d20636f6d696e67207468726f756768207468652077696e646f772c207472792074686520666f6c6c6f77696e67206d6574686f64733a0a0a312e204b65657020796f757220686f757365206f7220627573696e65737320636c65616e20616e642073616e6974697a65642c20616e64207468726f772061776179206f7665727269706520616e6420726f7474696e672066727569747320616e6420766567657461626c65732e0a322e20506c616365207472617073206f7574646f6f727320616e642063726561746520612064656c6963696f757320626c6f6f6420616e6420626f6e65206665617374696e67207a6f6e6520746f206c75726520666c69657320617761792066726f6d2074686520686f7573652e0a332e204b656570206120726f6f6d2066726565206f6620756e656174656e20666f6f6420616e64206f746865722074726173682c20616e64206b65657020676172626167652063616e7320616e642064756d7073746572732061732066617220617761792066726f6d2077696e646f777320616e6420686f6d657320617320706f737369626c652e0a342e2048616e67206120737469636b792074726170206e65617220612077696e646f7720746f206361707475726520616e7920737472617920666c696573207468617420646f2067657420696e746f206120686f6d652e0a0a4966207468657365206d6574686f647320646f206e6f7420776f726b2c20636f6e7369646572207573696e672077696e646f772073637265656e73206f7220726570616972696e6720616e7920746f726e2073637265656e7320746f2070726576656e7420666c6965732066726f6d20656e746572696e67207468726f756768207468652077696e646f772e204164646974696f6e616c6c792c20636865636b20666f7220616e79206f7468657220656e74727920706f696e747320696e2074686520686f6d652c2073756368206173206f70656e20646f6f7273206f722076656e74732c20616e64207365616c207468656d20746f2070726576656e7420666c6965732066726f6d20656e746572696e672e",
+  "arm": "holistic",
+  "call_id": "sha256:afbc53c67c23b61cb44d181f4198309ab17782044b25dad1c2529100148c9c9c:source_mismatched",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_mismatched",
+  "denominator": 1,
+  "donor_unit_id": "sha256:1a68ac2fa07b48f6222675d2fa4d96cbc276e196b10f31d0e483e54aa92f2526",
+  "duration_s": 1.1210883969906718,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 722,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"1 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-13:30\\\",\\\"Sunday\\\":\\\"7:30-13:30\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Tuesday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine\u2019s American Bakery & Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:31:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very nice place for breakfast close to Stearns Wharf. And if you like French toast, try the Kahula Banana! Wow! Amazing. \\\\n\\\\nService is excellent! Order at the bakery counter and your order will be served at your table. Indoor and outdoor seating. Good coffee too!\\\\n\\\\nThis is the breakfast place!\\\"},{\\\"review_date\\\":\\\"2022-01-19 03:51:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome location and great food. Customer service is top notch   and food comes out quick.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the espresso chocolate chip scone and it was perfect! The breakfast looked delicious. The service was quick and great. Would recommend! Lovely seating looking out to the beach.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Based on the given passages, here's a brief answer to the question \\\"How to stop flies coming through the window\\\":\\n\\nTo stop flies from coming through the window, try the following methods:\\n\\n1. Keep your house or business clean and sanitized, and throw away overripe and rotting fruits and vegetables.\\n2. Place traps outdoors and create a delicious blood and bone feasting zone to lure flies away from the house.\\n3. Keep a room free of uneaten food and other trash, and keep garbage cans and dumpsters as far away from windows and homes as possible.\\n4. Hang a sticky trap near a window to capture any stray flies that do get into a home.\\n\\nIf these methods do not work, consider using window screens or repairing any torn screens to prevent flies from entering through the window. Additionally, check for any other entry points in the home, such as open doors or vents, and seal them to prevent flies from entering.\"}",
+  "prompt_sha256": "sha256:57fc9e7c50af91a4f54ddda90edeebb0d135de564adbf9914b5f4e0b50c4b1f9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185128,
+    "id": "chatcmpl-dudeJshXd93G2nC9HGZqSce6f3cQjCuz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.855,
+      "predicted_n": 14,
+      "predicted_per_second": 43.497848409998284,
+      "predicted_per_token_ms": 22.989642857142858,
+      "prompt_ms": 701.559,
+      "prompt_n": 722,
+      "prompt_per_second": 1029.1365373404092,
+      "prompt_per_token_ms": 0.9716883656509695
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 722,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 736
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"1 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-13:30\\\",\\\"Sunday\\\":\\\"7:30-13:30\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Tuesday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine\u2019s American Bakery & Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:31:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very nice place for breakfast close to Stearns Wharf. And if you like French toast, try the Kahula Banana! Wow! Amazing. \\\\n\\\\nService is excellent! Order at the bakery counter and your order will be served at your table. Indoor and outdoor seating. Good coffee too!\\\\n\\\\nThis is the breakfast place!\\\"},{\\\"review_date\\\":\\\"2022-01-19 03:51:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome location and great food. Customer service is top notch   and food comes out quick.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the espresso chocolate chip scone and it was perfect! The breakfast looked delicious. The service was quick and great. Would recommend! Lovely seating looking out to the beach.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Based on the given passages, here's a brief answer to the question \\\"How to stop flies coming through the window\\\":\\n\\nTo stop flies from coming through the window, try the following methods:\\n\\n1. Keep your house or business clean and sanitized, and throw away overripe and rotting fruits and vegetables.\\n2. Place traps outdoors and create a delicious blood and bone feasting zone to lure flies away from the house.\\n3. Keep a room free of uneaten food and other trash, and keep garbage cans and dumpsters as far away from windows and homes as possible.\\n4. Hang a sticky trap near a window to capture any stray flies that do get into a home.\\n\\nIf these methods do not work, consider using window screens or repairing any torn screens to prevent flies from entering through the window. Additionally, check for any other entry points in the home, such as open doors or vents, and seal them to prevent flies from entering.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 1,
+  "source_bytes": "7b2261646472657373223a2231205374617465205374222c2261747472696275746573223a7b22416d6269656e6365223a6e756c6c2c22427573696e6573735061726b696e67223a7b22676172616765223a6e756c6c2c226c6f74223a66616c73652c22737472656574223a747275652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a747275652c2252657374617572616e7473476f6f64466f7247726f757073223a6e756c6c2c2252657374617572616e74735265736572766174696f6e73223a6e756c6c2c2252657374617572616e747354616b654f7574223a6e756c6c2c2257694669223a2266726565227d2c22627573696e6573735f7374617273223a352e302c2263617465676f72696573223a22466f6f642c2042616b65726965732c2052657374617572616e74732c20506174697373657269652f43616b652053686f702c2043616665732c20436f66666565202620546561222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a22373a33302d31333a3330222c224d6f6e646179223a22303a302d303a30222c225361747572646179223a22373a33302d31333a3330222c2253756e646179223a22373a33302d31333a3330222c225468757273646179223a22373a33302d31333a3330222c2254756573646179223a22373a33302d31333a3330222c225765646e6573646179223a22373a33302d31333a3330227d2c226e616d65223a224a65616e6e696e65e280997320416d65726963616e2042616b65727920262052657374617572616e74222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323032322d30312d31392031373a33313a3231222c227265766965775f7374617273223a352e302c227265766965775f74657874223a2256657279206e69636520706c61636520666f7220627265616b6661737420636c6f736520746f2053746561726e732057686172662e20416e6420696620796f75206c696b65204672656e636820746f6173742c2074727920746865204b6168756c612042616e616e612120576f772120416d617a696e672e205c6e5c6e5365727669636520697320657863656c6c656e7421204f72646572206174207468652062616b65727920636f756e74657220616e6420796f7572206f726465722077696c6c2062652073657276656420617420796f7572207461626c652e20496e646f6f7220616e64206f7574646f6f722073656174696e672e20476f6f6420636f6666656520746f6f215c6e5c6e546869732069732074686520627265616b6661737420706c61636521227d2c7b227265766965775f64617465223a22323032322d30312d31392030333a35313a3037222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22417765736f6d65206c6f636174696f6e20616e6420677265617420666f6f642e20437573746f6d6572207365727669636520697320746f70206e6f746368202020616e6420666f6f6420636f6d6573206f757420717569636b2e227d2c7b227265766965775f64617465223a22323032322d30312d31352031373a34383a3138222c227265766965775f7374617273223a352e302c227265766965775f74657874223a2249206f7264657265642074686520657370726573736f2063686f636f6c61746520636869702073636f6e6520616e64206974207761732070657266656374212054686520627265616b66617374206c6f6f6b65642064656c6963696f75732e2054686520736572766963652077617320717569636b20616e642067726561742e20576f756c64207265636f6d6d656e6421204c6f76656c792073656174696e67206c6f6f6b696e67206f757420746f207468652062656163682e227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:2bafa81b856aa98ea3543d8455f436b8571ed954ae017f05edca2d20dc44dc37",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 1\n}",
+  "unit_id": "sha256:afbc53c67c23b61cb44d181f4198309ab17782044b25dad1c2529100148c9c9c"
+}

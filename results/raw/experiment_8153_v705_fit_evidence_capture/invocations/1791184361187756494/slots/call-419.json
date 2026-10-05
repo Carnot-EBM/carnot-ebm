@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "4865726520697320616e206f626a656374697665206f76657276696577206f6620746865204d6167696320506974612043616665206261736564206f6e20746865207374727563747572656420646174612070726f76696465643a0a0a546865204d616769632050697461204361666520697320612052657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043616c69666f726e69612c206f66666572696e67204d6964646c65204561737465726e20616e64204d65646974657272616e65616e2063756973696e652e20546865206361666520686173206120726174696e67206f6620342e3020737461727320616e64206973206f70656e2066726f6d2031313a333020414d20746f20333a303020414d2c20736576656e20646179732061207765656b2e2054686520627573696e6573732070726f7669646573206f7574646f6f722073656174696e6720616e6420576946692c2062757420646f6573206e6f74206f66666572207265736572766174696f6e73206f722076616c69646174696f6e20666f72207061726b696e672e205468652061746d6f7370686572652069732063617375616c20616e642077656c636f6d696e672c2077697468206e6f206c697665206d75736963206f7220616d6269616e6365206665617475726573206c69737465642e0a0a5265766965777320666f7220746865206361666520617265206d697865642c207769746820736f6d6520637573746f6d657273207072616973696e6720746865207175616c69747920616e642076616c7565206f662074686520666f6f642c20706172746963756c61726c7920746865206265656620616e6420636869636b656e207368617761726d612e20486f77657665722c206f7468657273206861766520636f6d706c61696e65642061626f757420746865206761726c696320636f6e74656e7420696e20736f6d65206469736865732c206c656164696e6720746f20646973636f6d666f727420616e6420626164206272656174682e204164646974696f6e616c6c792c20736f6d65207265766965776572732068617665206e6f74656420746861742074686520736572766963652063616e20626520736c6f7720616e6420696e636f6e73697374656e742c2077697468206c6f6e6720776169742074696d657320616e6420696e636f7272656374206f72646572732e204f766572616c6c2c20746865204d6167696320506974612043616665207365656d7320746f206f6666657220646563656e74204d6964646c65204561737465726e2063756973696e652c20627574206d6179206e65656420746f20696d70726f766520697473207365727669636520616e64206d656e75206f7074696f6e7320746f206d65657420637573746f6d6572206578706563746174696f6e732e",
+  "arm": "holistic",
+  "call_id": "sha256:2005471700d7e8aba119b33d5f2c14974817b1cc55bc76f1163fade845e6f1ab:source_mismatched",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_mismatched",
+  "denominator": 1,
+  "donor_unit_id": "sha256:1b0a2fedf0eaf67566bf1336e1c5ec446d3c81752bbc752b1788f6bf5be535e7",
+  "duration_s": 0.8152332250028849,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 500,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 11,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:More recently they have become symbolic of sinister things. A snake ring worn on the first finger suggests this is an egotistical person and they are using the snake to enhance their status. A snake ring on the second finger suggests this is a materialistic person and they are using the snake to enhance their wealth.\\\\n\\\\npassage 2:(Laughs) Snakes, I think many times we have spoken why snakes, and what is the significance of a snake. Fundamentally, one aspect of this is that it is the symbolism for the Kundalini because of its nature, and its similarity with that of a snake in terms of movement and stillness.\\\\n\\\\npassage 3:A snake ring on the third finger suggests this is an emotional person and they are using the snake to mitigate their emotions. A snake ring on the fourth (little) finger, suggests this is a person with sexual inhibitions and they are using the snake to either hide or overcome this problem.\\\\n\\\\n\\\",\\\"question\\\":\\\"what does a snake ring symbolize\\\"}\", \"answer\": \"Here is an objective overview of the Magic Pita Cafe based on the structured data provided:\\n\\nThe Magic Pita Cafe is a Restaurant located in Santa Barbara, California, offering Middle Eastern and Mediterranean cuisine. The cafe has a rating of 4.0 stars and is open from 11:30 AM to 3:00 AM, seven days a week. The business provides outdoor seating and WiFi, but does not offer reservations or validation for parking. The atmosphere is casual and welcoming, with no live music or ambiance features listed.\\n\\nReviews for the cafe are mixed, with some customers praising the quality and value of the food, particularly the beef and chicken shawarma. However, others have complained about the garlic content in some dishes, leading to discomfort and bad breath. Additionally, some reviewers have noted that the service can be slow and inconsistent, with long wait times and incorrect orders. Overall, the Magic Pita Cafe seems to offer decent Middle Eastern cuisine, but may need to improve its service and menu options to meet customer expectations.\"}",
+  "prompt_sha256": "sha256:fb8236b9e92ca17230ddcf03082e7b1fe871ec56fb453c681eeb1d274c94ee78",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"p_hallucination\": 1}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185160,
+    "id": "chatcmpl-O1QCixhbjH3xxvkT4qjck7dr2coXTY9Z",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 248.92,
+      "predicted_n": 11,
+      "predicted_per_second": 44.190904708340035,
+      "predicted_per_token_ms": 22.62909090909091,
+      "prompt_ms": 467.899,
+      "prompt_n": 500,
+      "prompt_per_second": 1068.6066864857587,
+      "prompt_per_token_ms": 0.935798
+    },
+    "usage": {
+      "completion_tokens": 11,
+      "prompt_tokens": 500,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 511
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:More recently they have become symbolic of sinister things. A snake ring worn on the first finger suggests this is an egotistical person and they are using the snake to enhance their status. A snake ring on the second finger suggests this is a materialistic person and they are using the snake to enhance their wealth.\\\\n\\\\npassage 2:(Laughs) Snakes, I think many times we have spoken why snakes, and what is the significance of a snake. Fundamentally, one aspect of this is that it is the symbolism for the Kundalini because of its nature, and its similarity with that of a snake in terms of movement and stillness.\\\\n\\\\npassage 3:A snake ring on the third finger suggests this is an emotional person and they are using the snake to mitigate their emotions. A snake ring on the fourth (little) finger, suggests this is a person with sexual inhibitions and they are using the snake to either hide or overcome this problem.\\\\n\\\\n\\\",\\\"question\\\":\\\"what does a snake ring symbolize\\\"}\", \"answer\": \"Here is an objective overview of the Magic Pita Cafe based on the structured data provided:\\n\\nThe Magic Pita Cafe is a Restaurant located in Santa Barbara, California, offering Middle Eastern and Mediterranean cuisine. The cafe has a rating of 4.0 stars and is open from 11:30 AM to 3:00 AM, seven days a week. The business provides outdoor seating and WiFi, but does not offer reservations or validation for parking. The atmosphere is casual and welcoming, with no live music or ambiance features listed.\\n\\nReviews for the cafe are mixed, with some customers praising the quality and value of the food, particularly the beef and chicken shawarma. However, others have complained about the garlic content in some dishes, leading to discomfort and bad breath. Additionally, some reviewers have noted that the service can be slow and inconsistent, with long wait times and incorrect orders. Overall, the Magic Pita Cafe seems to offer decent Middle Eastern cuisine, but may need to improve its service and menu options to meet customer expectations.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 12,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4d6f726520726563656e746c7920746865792068617665206265636f6d652073796d626f6c6963206f662073696e6973746572207468696e67732e204120736e616b652072696e6720776f726e206f6e207468652066697273742066696e676572207375676765737473207468697320697320616e2065676f746973746963616c20706572736f6e20616e64207468657920617265207573696e672074686520736e616b6520746f20656e68616e6365207468656972207374617475732e204120736e616b652072696e67206f6e20746865207365636f6e642066696e67657220737567676573747320746869732069732061206d6174657269616c697374696320706572736f6e20616e64207468657920617265207573696e672074686520736e616b6520746f20656e68616e6365207468656972207765616c74682e5c6e5c6e7061737361676520323a284c61756768732920536e616b65732c2049207468696e6b206d616e792074696d657320776520686176652073706f6b656e2077687920736e616b65732c20616e64207768617420697320746865207369676e69666963616e6365206f66206120736e616b652e2046756e64616d656e74616c6c792c206f6e6520617370656374206f6620746869732069732074686174206974206973207468652073796d626f6c69736d20666f7220746865204b756e64616c696e692062656361757365206f6620697473206e61747572652c20616e64206974732073696d696c617269747920776974682074686174206f66206120736e616b6520696e207465726d73206f66206d6f76656d656e7420616e64207374696c6c6e6573732e5c6e5c6e7061737361676520333a4120736e616b652072696e67206f6e207468652074686972642066696e676572207375676765737473207468697320697320616e20656d6f74696f6e616c20706572736f6e20616e64207468657920617265207573696e672074686520736e616b6520746f206d6974696761746520746865697220656d6f74696f6e732e204120736e616b652072696e67206f6e2074686520666f7572746820286c6974746c65292066696e6765722c2073756767657374732074686973206973206120706572736f6e20776974682073657875616c20696e6869626974696f6e7320616e64207468657920617265207573696e672074686520736e616b6520746f206569746865722068696465206f72206f766572636f6d6520746869732070726f626c656d2e5c6e5c6e222c227175657374696f6e223a227768617420646f6573206120736e616b652072696e672073796d626f6c697a65227d",
+  "source_cluster_id": "sha256:03d0eeadb123741a1b093494ba7b4d1e62aa170eff9f513b0632843197a8baf4",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\"p_hallucination\": 1}",
+  "unit_id": "sha256:2005471700d7e8aba119b33d5f2c14974817b1cc55bc76f1163fade845e6f1ab"
+}

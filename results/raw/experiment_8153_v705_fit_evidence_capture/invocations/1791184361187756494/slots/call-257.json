@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "546f2062617262656375652072696273206f6e20612063686172636f616c206772696c6c2c20737461727420627920636f6e74726f6c6c696e67207468652074656d7065726174757265207573696e672074686520626f74746f6d2f736964652076656e7473206f6e20796f7572206772696c6c2e2041646a7573742074686520746f702076656e7420746f2062652068616c66206f70656e20616e64206c656176652069742061732069732e205468656e2c20706c616365207072652d736f616b65642068617264776f6f64206368697073206f72206368756e6b73206f6e2074686520636f616c7320616e6420636c6f736520746865206772696c6c20746f206c65742074686520736d6f6b6520626567696e2e205468726f7567686f75742074686520636f6f6b696e67206379636c652c20796f752077696c6c206e65656420746f20616464206d6f726520636f616c73202861726f756e6420382920746f206d61696e7461696e207468652074656d70657261747572652e204d6f6e69746f72207468652074656d706572617475726520636c6f73656c7920616e6420616e746963697061746520616464696e67206d6f726520636f616c732061626f7574203135206d696e7574657320696e20616476616e63652e",
+  "arm": "source_span",
+  "call_id": "sha256:d49da6c12f8ed54622aa58f0efe60dc79ce49d612148e5a262b39f28ae307585:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.4757082510041073,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 481,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 38,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:You can put sauce on the side or on the top, or both. You can serve yours with macaroni salad, potato salad, baked beans, I always put pickles on mine. Thanks for watching, for more information on how to cook ribs on a charcoal grill, check us out on the web, at About.com.\\\\n\\\\npassage 2:1 To barbecue ribs on a charcoal grill, you control the temperature with the bottom/side vents on your grill. 2  Adjust the top vent to half open, and leave it alone. 3  Put a big ol' handful of hardwood chips or chunks (pre-soaked in water for about an hour) on the coals. 4  Now, close the grill and let the smoke get started.\\\\n\\\\npassage 3:1 You will need to fire-up some more coals (about 8, or so), several times during the cooking cycle, to maintain the temperature. 2  Closely monitor the temperature. 3  and anticipate this with about a 15-minute lead. 4  To barbecue ribs on a charcoal grill, you control the temperature with the bottom/side vents on your grill.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to barbecue ribs on a charcoal grill\\\"}\", \"answer\": \"To barbecue ribs on a charcoal grill, start by controlling the temperature using the bottom/side vents on your grill. Adjust the top vent to be half open and leave it as is. Then, place pre-soaked hardwood chips or chunks on the coals and close the grill to let the smoke begin. Throughout the cooking cycle, you will need to add more coals (around 8) to maintain the temperature. Monitor the temperature closely and anticipate adding more coals about 15 minutes in advance.\"}",
+  "prompt_sha256": "sha256:91bf54e226bc7e82138b7ed44f734fdd10aa8729637ad0c8deaa40be63b426d0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184910,
+    "id": "chatcmpl-U74FiDI6CQRUF6l7o9cG1cYJo62eZycT",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 909.881,
+      "predicted_n": 38,
+      "predicted_per_second": 41.7637031655788,
+      "predicted_per_token_ms": 23.944236842105262,
+      "prompt_ms": 464.441,
+      "prompt_n": 481,
+      "prompt_per_second": 1035.653613699049,
+      "prompt_per_token_ms": 0.9655738045738045
+    },
+    "usage": {
+      "completion_tokens": 38,
+      "prompt_tokens": 481,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 519
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:You can put sauce on the side or on the top, or both. You can serve yours with macaroni salad, potato salad, baked beans, I always put pickles on mine. Thanks for watching, for more information on how to cook ribs on a charcoal grill, check us out on the web, at About.com.\\\\n\\\\npassage 2:1 To barbecue ribs on a charcoal grill, you control the temperature with the bottom/side vents on your grill. 2  Adjust the top vent to half open, and leave it alone. 3  Put a big ol' handful of hardwood chips or chunks (pre-soaked in water for about an hour) on the coals. 4  Now, close the grill and let the smoke get started.\\\\n\\\\npassage 3:1 You will need to fire-up some more coals (about 8, or so), several times during the cooking cycle, to maintain the temperature. 2  Closely monitor the temperature. 3  and anticipate this with about a 15-minute lead. 4  To barbecue ribs on a charcoal grill, you control the temperature with the bottom/side vents on your grill.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to barbecue ribs on a charcoal grill\\\"}\", \"answer\": \"To barbecue ribs on a charcoal grill, start by controlling the temperature using the bottom/side vents on your grill. Adjust the top vent to be half open and leave it as is. Then, place pre-soaked hardwood chips or chunks on the coals and close the grill to let the smoke begin. Throughout the cooking cycle, you will need to add more coals (around 8) to maintain the temperature. Monitor the temperature closely and anticipate adding more coals about 15 minutes in advance.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 1,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a596f752063616e20707574207361756365206f6e207468652073696465206f72206f6e2074686520746f702c206f7220626f74682e20596f752063616e20736572766520796f7572732077697468206d616361726f6e692073616c61642c20706f7461746f2073616c61642c2062616b6564206265616e732c204920616c7761797320707574207069636b6c6573206f6e206d696e652e205468616e6b7320666f72207761746368696e672c20666f72206d6f726520696e666f726d6174696f6e206f6e20686f7720746f20636f6f6b2072696273206f6e20612063686172636f616c206772696c6c2c20636865636b207573206f7574206f6e20746865207765622c2061742041626f75742e636f6d2e5c6e5c6e7061737361676520323a3120546f2062617262656375652072696273206f6e20612063686172636f616c206772696c6c2c20796f7520636f6e74726f6c207468652074656d706572617475726520776974682074686520626f74746f6d2f736964652076656e7473206f6e20796f7572206772696c6c2e2032202041646a7573742074686520746f702076656e7420746f2068616c66206f70656e2c20616e64206c6561766520697420616c6f6e652e20332020507574206120626967206f6c272068616e6466756c206f662068617264776f6f64206368697073206f72206368756e6b7320287072652d736f616b656420696e20776174657220666f722061626f757420616e20686f757229206f6e2074686520636f616c732e203420204e6f772c20636c6f736520746865206772696c6c20616e64206c65742074686520736d6f6b652067657420737461727465642e5c6e5c6e7061737361676520333a3120596f752077696c6c206e65656420746f20666972652d757020736f6d65206d6f726520636f616c73202861626f757420382c206f7220736f292c207365766572616c2074696d657320647572696e672074686520636f6f6b696e67206379636c652c20746f206d61696e7461696e207468652074656d70657261747572652e20322020436c6f73656c79206d6f6e69746f72207468652074656d70657261747572652e20332020616e6420616e7469636970617465207468697320776974682061626f757420612031352d6d696e757465206c6561642e20342020546f2062617262656375652072696273206f6e20612063686172636f616c206772696c6c2c20796f7520636f6e74726f6c207468652074656d706572617475726520776974682074686520626f74746f6d2f736964652076656e7473206f6e20796f7572206772696c6c2e5c6e5c6e222c227175657374696f6e223a22686f7720746f2062617262656375652072696273206f6e20612063686172636f616c206772696c6c227d",
+  "source_cluster_id": "sha256:55cbee8f19abb02c029a6500338d3591228abd11c17c2514122089d99d10fe9e",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+  "unit_id": "sha256:d49da6c12f8ed54622aa58f0efe60dc79ce49d612148e5a262b39f28ae307585"
+}

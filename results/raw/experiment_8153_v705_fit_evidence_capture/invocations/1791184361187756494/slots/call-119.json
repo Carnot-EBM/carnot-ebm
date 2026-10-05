@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4c6f7373206d697469676174696f6e20697320612070726f636573732075736564206279206d6f727467616765206c656e6465727320746f20776f726b2077697468206275796572732077686f206172652064656c696e7175656e74206f6e20746865697220686f6d65206c6f616e732e20497420696e766f6c766573206d6f64696679696e6720746865207465726d73206f66206120686f6d65206c6f616e2c20616c6c6f77696e672074686520686f6d656f776e657220746f2073656c6c207468652070726f706572747920666f72206c657373207468616e206973206f7765642c206f72207472616e7366657272696e67207468652064656564206261636b20746f20746865206c656e6465722e2054686520676f616c20697320746f207265647563652074686520706f74656e7469616c206c6f7373206265696e6720696e6375727265642062792061206c656e646572207768656e2074686520626f72726f7765722069732064656c696e7175656e742e20546869732063616e20696e636c756465206c6f776572696e672074686520696e746572657374207261746520616e6420657874656e64696e6720746865207465726d20746f20757020746f2034302079656172732e204e65772070726f636564757265732068617665206265656e2070757420696e20706c61636520746f20666163696c697461746520626f72726f77657273e280992061636365737320746f20666f7265636c6f737572652061766f6964616e6365206f7074696f6e732c2070726f766964696e6720636f6e73697374656e7420616e64206d65616e696e6766756c2070726f74656374696f6e7320666f7220626f72726f776572732e",
+  "arm": "source_span",
+  "call_id": "sha256:e25519ebb5d90b84812774fb1aa1194519abf8fa370f9a812d6a27fba8764577:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.18177205696702,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 470,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 64,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Loss Mitigation. Loss mitigation is a process used by mortgage lenders to work with buyers who are delinquent on their home loans. Through the loss mitigation process, a lender may modify the terms of a home loan, allowing the homeowner to sell the property for less than is owed, or transfer the deed back to the lender. The goals of loss mitigation are to reduce the potential loss being incurred by a lender when the borrower is delinquent.\\\\n\\\\npassage 2:Kinds of loss mitigation. Loan modification: This is a process whereby a homeowner's mortgage is modified and both lender and homeowner are bound by the new terms. The most common modifications are lowering the interest rate and extending the term to up to 40 years.\\\\n\\\\npassage 3:putting in place new procedures to facilitate borrowers\u2019 access to foreclosure avoidance options. The new rules are designed to provide consistent and meaningful protections for borrowers, and to give industry necessary flexibility. The following summary highlights the key provisions. Foreclosure process The new CFPB mortgage rules provide important new\\\\n\\\\n\\\",\\\"question\\\":\\\"what of the procedures of a loss mitigation mortgage\\\"}\", \"answer\": \"Loss mitigation is a process used by mortgage lenders to work with buyers who are delinquent on their home loans. It involves modifying the terms of a home loan, allowing the homeowner to sell the property for less than is owed, or transferring the deed back to the lender. The goal is to reduce the potential loss being incurred by a lender when the borrower is delinquent. This can include lowering the interest rate and extending the term to up to 40 years. New procedures have been put in place to facilitate borrowers\u2019 access to foreclosure avoidance options, providing consistent and meaningful protections for borrowers.\"}",
+  "prompt_sha256": "sha256:87ba1cf9db031be9fb44d7f538642b2beef18ae346ddc64c10124117410355ba",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"The most common modifications are lowering the interest rate and extending the term to up to 40 years.\",\n  \"byte_start\": 456,\n  \"byte_end\": 538\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184661,
+    "id": "chatcmpl-OTicwJlSGwv5Wr1BbPjpBXUB4be3aXTM",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1542.119,
+      "predicted_n": 64,
+      "predicted_per_second": 41.50133679696574,
+      "predicted_per_token_ms": 24.095609375,
+      "prompt_ms": 463.98,
+      "prompt_n": 470,
+      "prompt_per_second": 1012.9746971852235,
+      "prompt_per_token_ms": 0.9871914893617022
+    },
+    "usage": {
+      "completion_tokens": 64,
+      "prompt_tokens": 470,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 534
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Loss Mitigation. Loss mitigation is a process used by mortgage lenders to work with buyers who are delinquent on their home loans. Through the loss mitigation process, a lender may modify the terms of a home loan, allowing the homeowner to sell the property for less than is owed, or transfer the deed back to the lender. The goals of loss mitigation are to reduce the potential loss being incurred by a lender when the borrower is delinquent.\\\\n\\\\npassage 2:Kinds of loss mitigation. Loan modification: This is a process whereby a homeowner's mortgage is modified and both lender and homeowner are bound by the new terms. The most common modifications are lowering the interest rate and extending the term to up to 40 years.\\\\n\\\\npassage 3:putting in place new procedures to facilitate borrowers\u2019 access to foreclosure avoidance options. The new rules are designed to provide consistent and meaningful protections for borrowers, and to give industry necessary flexibility. The following summary highlights the key provisions. Foreclosure process The new CFPB mortgage rules provide important new\\\\n\\\\n\\\",\\\"question\\\":\\\"what of the procedures of a loss mitigation mortgage\\\"}\", \"answer\": \"Loss mitigation is a process used by mortgage lenders to work with buyers who are delinquent on their home loans. It involves modifying the terms of a home loan, allowing the homeowner to sell the property for less than is owed, or transferring the deed back to the lender. The goal is to reduce the potential loss being incurred by a lender when the borrower is delinquent. This can include lowering the interest rate and extending the term to up to 40 years. New procedures have been put in place to facilitate borrowers\u2019 access to foreclosure avoidance options, providing consistent and meaningful protections for borrowers.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 60,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4c6f7373204d697469676174696f6e2e204c6f7373206d697469676174696f6e20697320612070726f636573732075736564206279206d6f727467616765206c656e6465727320746f20776f726b2077697468206275796572732077686f206172652064656c696e7175656e74206f6e20746865697220686f6d65206c6f616e732e205468726f75676820746865206c6f7373206d697469676174696f6e2070726f636573732c2061206c656e646572206d6179206d6f6469667920746865207465726d73206f66206120686f6d65206c6f616e2c20616c6c6f77696e672074686520686f6d656f776e657220746f2073656c6c207468652070726f706572747920666f72206c657373207468616e206973206f7765642c206f72207472616e73666572207468652064656564206261636b20746f20746865206c656e6465722e2054686520676f616c73206f66206c6f7373206d697469676174696f6e2061726520746f207265647563652074686520706f74656e7469616c206c6f7373206265696e6720696e6375727265642062792061206c656e646572207768656e2074686520626f72726f7765722069732064656c696e7175656e742e5c6e5c6e7061737361676520323a4b696e6473206f66206c6f7373206d697469676174696f6e2e204c6f616e206d6f64696669636174696f6e3a205468697320697320612070726f636573732077686572656279206120686f6d656f776e65722773206d6f727467616765206973206d6f64696669656420616e6420626f7468206c656e64657220616e6420686f6d656f776e65722061726520626f756e6420627920746865206e6577207465726d732e20546865206d6f737420636f6d6d6f6e206d6f64696669636174696f6e7320617265206c6f776572696e672074686520696e746572657374207261746520616e6420657874656e64696e6720746865207465726d20746f20757020746f2034302079656172732e5c6e5c6e7061737361676520333a70757474696e6720696e20706c616365206e65772070726f6365647572657320746f20666163696c697461746520626f72726f77657273e280992061636365737320746f20666f7265636c6f737572652061766f6964616e6365206f7074696f6e732e20546865206e65772072756c6573206172652064657369676e656420746f2070726f7669646520636f6e73697374656e7420616e64206d65616e696e6766756c2070726f74656374696f6e7320666f7220626f72726f776572732c20616e6420746f206769766520696e647573747279206e656365737361727920666c65786962696c6974792e2054686520666f6c6c6f77696e672073756d6d61727920686967686c696768747320746865206b65792070726f766973696f6e732e20466f7265636c6f737572652070726f6365737320546865206e65772043465042206d6f7274676167652072756c65732070726f7669646520696d706f7274616e74206e65775c6e5c6e222c227175657374696f6e223a2277686174206f66207468652070726f63656475726573206f662061206c6f7373206d697469676174696f6e206d6f727467616765227d",
+  "source_cluster_id": "sha256:d1f40952b276ffb8bed5c913a2bb5a9d66d0de4ba74def0d8f0573a4fab1592c",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"The most common modifications are lowering the interest rate and extending the term to up to 40 years.\",\n  \"byte_start\": 456,\n  \"byte_end\": 538\n}",
+  "unit_id": "sha256:e25519ebb5d90b84812774fb1aa1194519abf8fa370f9a812d6a27fba8764577"
+}

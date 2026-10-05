@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "537572652120486572652773206d7920616e73776572206261736564206f6e2074686520676976656e2070617373616765733a0a0a4c696e6561722042757320546f706f6c6f67793a2041206e6574776f726b20776865726520616c6c206e6f6465732061726520636f6e6e656374656420746f20612073696e676c65207472616e736d697373696f6e206d656469756d20776974682074776f20656e64706f696e74732c206372656174696e672061206c696e656172206275732e2028506173736167652031290a0a44697374726962757465642042757320546f706f6c6f67793a2041206e6574776f726b20776865726520616c6c206e6f6465732061726520636f6e6e656374656420746f206120636f6d6d6f6e207472616e736d697373696f6e206d656469756d2077697468206d6f7265207468616e2074776f20656e64706f696e74732c20666f726d6564206279206272616e6368696e6720746865206d61696e2073656374696f6e206f6620746865207472616e736d697474696e67206d656469756d2e2028506173736167652031290a0a5374617220546f706f6c6f67793a2041206e6574776f726b207768657265206561636820636f6d707574657220697320636f6e6e656374656420746f20612063656e7472616c20687562207573696e67206120706f696e742d746f2d706f696e7420636f6e6e656374696f6e2e2028506173736167652032290a0a4d65736820546f706f6c6f67793a2041206e6574776f726b207768657265206d657373616765732063616e2074616b6520616e79206f66207365766572616c20706f737369626c652070617468732066726f6d20736f7572636520746f2064657374696e6174696f6e2c20696e74726f64756365642074686520636f6e63657074206f6620726f757465732e2028506173736167652033290a0a4e6f746520746861742074686520706173736167657320646f206e6f742070726f7669646520696e666f726d6174696f6e2061626f757420746865206d65616e696e67206f662052696e67206f72205472656520746f706f6c6f67792c20736f204920616d20756e61626c6520746f20616e737765722074686f7365207061727473206f6620746865207175657374696f6e2e",
+  "arm": "holistic",
+  "call_id": "sha256:417da3bc98d8dfa28743579175827f69ccbceefb82213979f3767a0adcc8db0a:holistic",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.8865649059880525,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 469,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 Linear Bus: If all network nodes are connected to a combine transmission medium that has two endpoints the Bus is Linear. 2  Distributed Bus: If all network nodes are connected to a combine transmission medium that has more than two endpoints created by branching the main section of the transmitting medium.\\\\n\\\\npassage 2:This type of network is also difficult to troubleshoot. For these reasons, this type of topology is not used for large networks, such as those covering an entire building. Star. In star topology, each computer is connected to a central hub using a point-to-point connection\\\\n\\\\npassage 3:Mesh topology introduces the concept of routes. Unlike each of the previous topologies, messages sent on a mesh network can take any of several possible paths from source to destination. (Recall that even in a ring, although two cable paths exist, messages can only travel in one direction.) Some WANs, most notably the Internet, employ mesh routing.\\\\n\\\\n\\\",\\\"question\\\":\\\"meaning of each types of topology network\\\"}\", \"answer\": \"Sure! Here's my answer based on the given passages:\\n\\nLinear Bus Topology: A network where all nodes are connected to a single transmission medium with two endpoints, creating a linear bus. (Passage 1)\\n\\nDistributed Bus Topology: A network where all nodes are connected to a common transmission medium with more than two endpoints, formed by branching the main section of the transmitting medium. (Passage 1)\\n\\nStar Topology: A network where each computer is connected to a central hub using a point-to-point connection. (Passage 2)\\n\\nMesh Topology: A network where messages can take any of several possible paths from source to destination, introduced the concept of routes. (Passage 3)\\n\\nNote that the passages do not provide information about the meaning of Ring or Tree topology, so I am unable to answer those parts of the question.\"}",
+  "prompt_sha256": "sha256:92b8eb0041cda683c8e80ef4f760c9d96ccf4441ba5b5d7b80056d2c41ecbd88",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184952,
+    "id": "chatcmpl-KRJCqykqoLxqZlKrTzYm3pTBiCWEARnK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.35,
+      "predicted_n": 14,
+      "predicted_per_second": 43.56620507235102,
+      "predicted_per_token_ms": 22.95357142857143,
+      "prompt_ms": 461.313,
+      "prompt_n": 469,
+      "prompt_per_second": 1016.6633066919857,
+      "prompt_per_token_ms": 0.9836098081023454
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 469,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 483
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 Linear Bus: If all network nodes are connected to a combine transmission medium that has two endpoints the Bus is Linear. 2  Distributed Bus: If all network nodes are connected to a combine transmission medium that has more than two endpoints created by branching the main section of the transmitting medium.\\\\n\\\\npassage 2:This type of network is also difficult to troubleshoot. For these reasons, this type of topology is not used for large networks, such as those covering an entire building. Star. In star topology, each computer is connected to a central hub using a point-to-point connection\\\\n\\\\npassage 3:Mesh topology introduces the concept of routes. Unlike each of the previous topologies, messages sent on a mesh network can take any of several possible paths from source to destination. (Recall that even in a ring, although two cable paths exist, messages can only travel in one direction.) Some WANs, most notably the Internet, employ mesh routing.\\\\n\\\\n\\\",\\\"question\\\":\\\"meaning of each types of topology network\\\"}\", \"answer\": \"Sure! Here's my answer based on the given passages:\\n\\nLinear Bus Topology: A network where all nodes are connected to a single transmission medium with two endpoints, creating a linear bus. (Passage 1)\\n\\nDistributed Bus Topology: A network where all nodes are connected to a common transmission medium with more than two endpoints, formed by branching the main section of the transmitting medium. (Passage 1)\\n\\nStar Topology: A network where each computer is connected to a central hub using a point-to-point connection. (Passage 2)\\n\\nMesh Topology: A network where messages can take any of several possible paths from source to destination, introduced the concept of routes. (Passage 3)\\n\\nNote that the passages do not provide information about the meaning of Ring or Tree topology, so I am unable to answer those parts of the question.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 14,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a31204c696e656172204275733a20496620616c6c206e6574776f726b206e6f6465732061726520636f6e6e656374656420746f206120636f6d62696e65207472616e736d697373696f6e206d656469756d2074686174206861732074776f20656e64706f696e74732074686520427573206973204c696e6561722e203220204469737472696275746564204275733a20496620616c6c206e6574776f726b206e6f6465732061726520636f6e6e656374656420746f206120636f6d62696e65207472616e736d697373696f6e206d656469756d207468617420686173206d6f7265207468616e2074776f20656e64706f696e74732063726561746564206279206272616e6368696e6720746865206d61696e2073656374696f6e206f6620746865207472616e736d697474696e67206d656469756d2e5c6e5c6e7061737361676520323a546869732074797065206f66206e6574776f726b20697320616c736f20646966666963756c7420746f2074726f75626c6573686f6f742e20466f7220746865736520726561736f6e732c20746869732074797065206f6620746f706f6c6f6779206973206e6f74207573656420666f72206c61726765206e6574776f726b732c20737563682061732074686f736520636f766572696e6720616e20656e74697265206275696c64696e672e20537461722e20496e207374617220746f706f6c6f67792c206561636820636f6d707574657220697320636f6e6e656374656420746f20612063656e7472616c20687562207573696e67206120706f696e742d746f2d706f696e7420636f6e6e656374696f6e5c6e5c6e7061737361676520333a4d65736820746f706f6c6f677920696e74726f64756365732074686520636f6e63657074206f6620726f757465732e20556e6c696b652065616368206f66207468652070726576696f757320746f706f6c6f676965732c206d657373616765732073656e74206f6e2061206d657368206e6574776f726b2063616e2074616b6520616e79206f66207365766572616c20706f737369626c652070617468732066726f6d20736f7572636520746f2064657374696e6174696f6e2e2028526563616c6c2074686174206576656e20696e20612072696e672c20616c74686f7567682074776f206361626c652070617468732065786973742c206d657373616765732063616e206f6e6c792074726176656c20696e206f6e6520646972656374696f6e2e2920536f6d652057414e732c206d6f7374206e6f7461626c792074686520496e7465726e65742c20656d706c6f79206d65736820726f7574696e672e5c6e5c6e222c227175657374696f6e223a226d65616e696e67206f662065616368207479706573206f6620746f706f6c6f6779206e6574776f726b227d",
+  "source_cluster_id": "sha256:3953f07b85ff94186a382fe4cf5237e733ebe5208a62f4c6619172ca3f949a10",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:417da3bc98d8dfa28743579175827f69ccbceefb82213979f3767a0adcc8db0a"
+}

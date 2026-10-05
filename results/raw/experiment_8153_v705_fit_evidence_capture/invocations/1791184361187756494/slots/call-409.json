@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "426c656e6465727320496e207468652047726173732069732061206a756963652062617220616e642072657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043616c69666f726e69612e2054686579206f6666657220612076617269657479206f6620736d6f6f74686965732c206a75696365732c20616e6420666f6f64206f7074696f6e732c20616e6420636174657220746f207665676574617269616e20616e6420766567616e2064696574732e204163636f7264696e6720746f207468656972206c697374656420686f7572732c207468657920617265206f70656e20736576656e20646179732061207765656b2c207769746820657874656e64656420686f757273206f6e207765656b656e64732e2054686520627573696e65737320686173206120332e352d7374617220726174696e6720616e64206f666665727320616d656e6974696573207375636820617320667265652057692d466920616e642074616b652d6f75742073657276696365732e20486f77657665722c20736f6d6520637573746f6d6572732068617665207265706f7274656420697373756573207769746820746865207175616c697479206f66207468656972206472696e6b732c20696e636c7564696e6720746f6f206d7563682069636520616e64206e6f7420656e6f7567682066727569742c20616e6420706f6f7220637573746f6d657220736572766963652e204164646974696f6e616c6c792c2074686572652068617665206265656e20636f6d706c61696e74732061626f757420746865206c61636b206f66206f7267616e696320616e64206e6f6e2d474d4f20696e6772656469656e7473207573656420696e2074686569722070726f64756374732e204465737069746520746865736520636f6e6365726e732c20426c656e6465727320496e207468652047726173732072656d61696e73206120706f70756c61722073706f7420666f72206865616c74682d636f6e7363696f757320696e646976696475616c73206c6f6f6b696e6720666f7220717569636b20616e64206e7574726974696f7573206d65616c7320616e64206472696e6b732e",
+  "arm": "holistic",
+  "call_id": "sha256:a825923cdaea973b8ce8ecc863a277158626cb786c7d63e36b896760a591bf40:source_removed",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "duration_s": 0.9077627169899642,
+  "entailment_label": null,
+  "exclusion_reason": "invalid_probability_or_usage",
+  "human_target": null,
+  "input_tokens": 221,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 0,
+  "order": 1,
+  "output_tokens": 22,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": null,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "missing_probability",
+    "valid_quote": 0
+  },
+  "probability": null,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Blenders In the Grass is a juice bar and restaurant located in Santa Barbara, California. They offer a variety of smoothies, juices, and food options, and cater to vegetarian and vegan diets. According to their listed hours, they are open seven days a week, with extended hours on weekends. The business has a 3.5-star rating and offers amenities such as free Wi-Fi and take-out services. However, some customers have reported issues with the quality of their drinks, including too much ice and not enough fruit, and poor customer service. Additionally, there have been complaints about the lack of organic and non-GMO ingredients used in their products. Despite these concerns, Blenders In the Grass remains a popular spot for health-conscious individuals looking for quick and nutritious meals and drinks.\"}",
+  "prompt_sha256": "sha256:754e8b25be3de8fe58e2f436ebcd591854598db78891baf24fc082c92537ca61",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```json\n{\n  \"p_hallucination\": 1.0\n}\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185150,
+    "id": "chatcmpl-jYCDNR7wUIJQksInKNs8nJPWXhCQ9XMu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 514.464,
+      "predicted_n": 22,
+      "predicted_per_second": 42.762953287304846,
+      "predicted_per_token_ms": 23.384727272727275,
+      "prompt_ms": 271.696,
+      "prompt_n": 221,
+      "prompt_per_second": 813.4091042930332,
+      "prompt_per_token_ms": 1.2293936651583712
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 221,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 243
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Blenders In the Grass is a juice bar and restaurant located in Santa Barbara, California. They offer a variety of smoothies, juices, and food options, and cater to vegetarian and vegan diets. According to their listed hours, they are open seven days a week, with extended hours on weekends. The business has a 3.5-star rating and offers amenities such as free Wi-Fi and take-out services. However, some customers have reported issues with the quality of their drinks, including too much ice and not enough fruit, and poor customer service. Additionally, there have been complaints about the lack of organic and non-GMO ingredients used in their products. Despite these concerns, Blenders In the Grass remains a popular spot for health-conscious individuals looking for quick and nutritious meals and drinks.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 9,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:dddceea7ec23d285b505da80ef37e799450027506cb25d914b57a180927e6839",
+  "started": true,
+  "status": "failed",
+  "transcript": "```json\n{\n  \"p_hallucination\": 1.0\n}\n```",
+  "unit_id": "sha256:a825923cdaea973b8ce8ecc863a277158626cb786c7d63e36b896760a591bf40"
+}

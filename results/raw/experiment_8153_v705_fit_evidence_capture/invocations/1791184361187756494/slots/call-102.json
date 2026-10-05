@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e207468652070726f7669646564207374727563747572656420646174612c206865726520697320616e206f626a656374697665206f76657276696577206f662044617665277320446f6773204772696c6c3a0a0a44617665277320446f6773204772696c6c206973206120706f70756c61722072657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043616c69666f726e69612c2073657276696e6720686f7420646f677320616e64206f74686572206661737420666f6f64206974656d732e2054686520627573696e65737320686173206120726174696e67206f6620342e3520737461727320616e64206f666665727320612063617375616c2064696e696e6720657870657269656e63652077697468206f7574646f6f722073656174696e672e205468652072657374617572616e74206973206f70656e20736576656e20646179732061207765656b2066726f6d20313120414d20746f20313020504d2c20776974682076617279696e6720686f757273206f6e20646966666572656e7420646179732e204163636f7264696e6720746f20637573746f6d657220726576696577732c2074686520737461666620697320667269656e646c7920616e642068656c7066756c2c20616e6420746865206d656e75206f7074696f6e7320617265206469766572736520616e642064656c6963696f75732e205374616e646f7574206974656d7320696e636c75646520746865205461636f20446f672c20776869636820636f6d62696e6573206120686f7420646f672077697468207461636f20746f7070696e67732c20616e6420746865206c6f616465642066726965732c207768696368206c6f6f6b2061707065616c696e672e20437573746f6d6572732068617665207072616973656420746865207175616c697479206f662074686520666f6f6420616e64207468652076616c756520666f72206d6f6e65792e205768696c6520736f6d652068617665206e6f7465642074686174207468652061746d6f7370686572652069732063617375616c20616e6420756e72656d61726b61626c652c206f7468657273206861766520646573637269626564206974206173207472656e647920616e642075707363616c652e204f766572616c6c2c2044617665277320446f6773204772696c6c206170706561727320746f2062652061206d7573742d76697369742064657374696e6174696f6e20666f7220686f7420646f6720656e74687573696173747320616e642074686f7365207365656b696e67206120717569636b20616e642073617469736679696e67206d65616c20696e20612072656c617865642073657474696e672e",
+  "arm": "source_span",
+  "call_id": "sha256:fd650327a2fc5e1079acd81e07bdcac42f874ed3df18b34f6066ae7732d5b999:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.223990930011496,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 975,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 48,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"149 S Turnpike Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Hot Dogs\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-0:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-0:0\\\",\\\"Thursday\\\":\\\"11:0-0:0\\\",\\\"Tuesday\\\":\\\"11:0-23:0\\\",\\\"Wednesday\\\":\\\"11:0-23:0\\\"},\\\"name\\\":\\\"Dave's Dogs Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-07 20:49:54\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I was looking forward to eating at Dave's Dog for some time and it did not disappoint.\\\\n\\\\nFor Starter's, you may find this place in the corner of the shopping center with seating options along the wall/windows. They also had a great amount of outdoor seating. \\\\n\\\\nThe staff was great and really helpful. \\\\n\\\\nThe options for Hot Dogs was great! I wanted everything on the menu, but I do not have the stomach to do that. However, I do recommend the Taco Dog. Yes, it's everything a taco has on top of the hot dog (except for the tortillas of course). In theory, this does not sound all that appetizing, but believe me, it was/is perfectly executed. It does have spicy salsa, but not too crazy (I would say if you can't handle bare minimum spice, this is your warning, but if you can, please try it).\\\\n\\\\nI added a few more photos of the other Hot Dogs I ordered (which were good as well).\\\"},{\\\"review_date\\\":\\\"2022-01-05 06:17:54\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I gotta say I've been to a lot of gourmet hot dog joints and this made for the perfect Friday night in! I had the hot Cheetos and cream cheese dog and it was delicious. Their loaded fries looked good too and so want to get that next time!\\\"},{\\\"review_date\\\":\\\"2021-12-31 06:04:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best hot dogs in Santa Barbara by far! Favorites are the Chicago, Hawaiian, & Santa Barbara dogs. The deep fried Oreos are divine. Always get great service & consistently fantastic food. Check out Dave's - you'll be back for more!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Based on the provided structured data, here is an objective overview of Dave's Dogs Grill:\\n\\nDave's Dogs Grill is a popular restaurant located in Santa Barbara, California, serving hot dogs and other fast food items. The business has a rating of 4.5 stars and offers a casual dining experience with outdoor seating. The restaurant is open seven days a week from 11 AM to 10 PM, with varying hours on different days. According to customer reviews, the staff is friendly and helpful, and the menu options are diverse and delicious. Standout items include the Taco Dog, which combines a hot dog with taco toppings, and the loaded fries, which look appealing. Customers have praised the quality of the food and the value for money. While some have noted that the atmosphere is casual and unremarkable, others have described it as trendy and upscale. Overall, Dave's Dogs Grill appears to be a must-visit destination for hot dog enthusiasts and those seeking a quick and satisfying meal in a relaxed setting.\"}",
+  "prompt_sha256": "sha256:77097f644d52623818dbd18ab8edbe5d83fb4141a6478b9d86af27c962c07a72",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"\\\"upscale\\\":false\",\n  \"byte_start\": 214,\n  \"byte_end\": 226\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184631,
+    "id": "chatcmpl-f81g3BxsyH5LjSCwfL2YxlL5Mj8cDXJn",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1149.708,
+      "predicted_n": 48,
+      "predicted_per_second": 41.74973123610516,
+      "predicted_per_token_ms": 23.952250000000003,
+      "prompt_ms": 898.584,
+      "prompt_n": 975,
+      "prompt_per_second": 1085.0404636628298,
+      "prompt_per_token_ms": 0.9216246153846154
+    },
+    "usage": {
+      "completion_tokens": 48,
+      "prompt_tokens": 975,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1023
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"149 S Turnpike Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Hot Dogs\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-0:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-0:0\\\",\\\"Thursday\\\":\\\"11:0-0:0\\\",\\\"Tuesday\\\":\\\"11:0-23:0\\\",\\\"Wednesday\\\":\\\"11:0-23:0\\\"},\\\"name\\\":\\\"Dave's Dogs Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-07 20:49:54\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I was looking forward to eating at Dave's Dog for some time and it did not disappoint.\\\\n\\\\nFor Starter's, you may find this place in the corner of the shopping center with seating options along the wall/windows. They also had a great amount of outdoor seating. \\\\n\\\\nThe staff was great and really helpful. \\\\n\\\\nThe options for Hot Dogs was great! I wanted everything on the menu, but I do not have the stomach to do that. However, I do recommend the Taco Dog. Yes, it's everything a taco has on top of the hot dog (except for the tortillas of course). In theory, this does not sound all that appetizing, but believe me, it was/is perfectly executed. It does have spicy salsa, but not too crazy (I would say if you can't handle bare minimum spice, this is your warning, but if you can, please try it).\\\\n\\\\nI added a few more photos of the other Hot Dogs I ordered (which were good as well).\\\"},{\\\"review_date\\\":\\\"2022-01-05 06:17:54\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I gotta say I've been to a lot of gourmet hot dog joints and this made for the perfect Friday night in! I had the hot Cheetos and cream cheese dog and it was delicious. Their loaded fries looked good too and so want to get that next time!\\\"},{\\\"review_date\\\":\\\"2021-12-31 06:04:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best hot dogs in Santa Barbara by far! Favorites are the Chicago, Hawaiian, & Santa Barbara dogs. The deep fried Oreos are divine. Always get great service & consistently fantastic food. Check out Dave's - you'll be back for more!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Based on the provided structured data, here is an objective overview of Dave's Dogs Grill:\\n\\nDave's Dogs Grill is a popular restaurant located in Santa Barbara, California, serving hot dogs and other fast food items. The business has a rating of 4.5 stars and offers a casual dining experience with outdoor seating. The restaurant is open seven days a week from 11 AM to 10 PM, with varying hours on different days. According to customer reviews, the staff is friendly and helpful, and the menu options are diverse and delicious. Standout items include the Taco Dog, which combines a hot dog with taco toppings, and the loaded fries, which look appealing. Customers have praised the quality of the food and the value for money. While some have noted that the atmosphere is casual and unremarkable, others have described it as trendy and upscale. Overall, Dave's Dogs Grill appears to be a must-visit destination for hot dog enthusiasts and those seeking a quick and satisfying meal in a relaxed setting.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 52,
+  "source_bytes": "7b2261646472657373223a223134392053205475726e70696b65205264222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a747275652c22636c61737379223a66616c73652c226469766579223a6e756c6c2c2268697073746572223a6e756c6c2c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a6e756c6c2c227472656e6479223a747275652c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a747275652c22737472656574223a66616c73652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a747275652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a226e6f227d2c22627573696e6573735f7374617273223a342e352c2263617465676f72696573223a2252657374617572616e74732c20486f7420446f6773222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a2231313a302d303a30222c224d6f6e646179223a22303a302d303a30222c225361747572646179223a2231313a302d303a30222c225468757273646179223a2231313a302d303a30222c2254756573646179223a2231313a302d32333a30222c225765646e6573646179223a2231313a302d32333a30227d2c226e616d65223a2244617665277320446f6773204772696c6c222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323032322d30312d30372032303a34393a3534222c227265766965775f7374617273223a352e302c227265766965775f74657874223a224920776173206c6f6f6b696e6720666f727761726420746f20656174696e672061742044617665277320446f6720666f7220736f6d652074696d6520616e6420697420646964206e6f74206469736170706f696e742e5c6e5c6e466f72205374617274657227732c20796f75206d61792066696e64207468697320706c61636520696e2074686520636f726e6572206f66207468652073686f7070696e672063656e74657220776974682073656174696e67206f7074696f6e7320616c6f6e67207468652077616c6c2f77696e646f77732e205468657920616c736f20686164206120677265617420616d6f756e74206f66206f7574646f6f722073656174696e672e205c6e5c6e5468652073746166662077617320677265617420616e64207265616c6c792068656c7066756c2e205c6e5c6e546865206f7074696f6e7320666f7220486f7420446f6773207761732067726561742120492077616e7465642065766572797468696e67206f6e20746865206d656e752c20627574204920646f206e6f742068617665207468652073746f6d61636820746f20646f20746861742e20486f77657665722c204920646f207265636f6d6d656e6420746865205461636f20446f672e205965732c20697427732065766572797468696e672061207461636f20686173206f6e20746f70206f662074686520686f7420646f67202865786365707420666f722074686520746f7274696c6c6173206f6620636f75727365292e20496e207468656f72792c207468697320646f6573206e6f7420736f756e6420616c6c2074686174206170706574697a696e672c206275742062656c69657665206d652c206974207761732f697320706572666563746c792065786563757465642e20497420646f657320686176652073706963792073616c73612c20627574206e6f7420746f6f206372617a7920284920776f756c642073617920696620796f752063616e27742068616e646c652062617265206d696e696d756d2073706963652c207468697320697320796f7572207761726e696e672c2062757420696620796f752063616e2c20706c6561736520747279206974292e5c6e5c6e49206164646564206120666577206d6f72652070686f746f73206f6620746865206f7468657220486f7420446f67732049206f72646572656420287768696368207765726520676f6f642061732077656c6c292e227d2c7b227265766965775f64617465223a22323032322d30312d30352030363a31373a3534222c227265766965775f7374617273223a342e302c227265766965775f74657874223a224920676f747461207361792049277665206265656e20746f2061206c6f74206f6620676f75726d657420686f7420646f67206a6f696e747320616e642074686973206d61646520666f7220746865207065726665637420467269646179206e6967687420696e212049206861642074686520686f742043686565746f7320616e6420637265616d2063686565736520646f6720616e64206974207761732064656c6963696f75732e205468656972206c6f61646564206672696573206c6f6f6b656420676f6f6420746f6f20616e6420736f2077616e7420746f206765742074686174206e6578742074696d6521227d2c7b227265766965775f64617465223a22323032312d31322d33312030363a30343a3136222c227265766965775f7374617273223a352e302c227265766965775f74657874223a224265737420686f7420646f677320696e2053616e746120426172626172612062792066617221204661766f72697465732061726520746865204368696361676f2c20486177616969616e2c20262053616e7461204261726261726120646f67732e205468652064656570206672696564204f72656f732061726520646976696e652e20416c77617973206765742067726561742073657276696365202620636f6e73697374656e746c792066616e74617374696320666f6f642e20436865636b206f757420446176652773202d20796f75276c6c206265206261636b20666f72206d6f726521227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:be4bd11316773082d28d46db4baea2d09ff1b902ff4233100745fc7a56ae7a65",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"\\\"upscale\\\":false\",\n  \"byte_start\": 214,\n  \"byte_end\": 226\n}",
+  "unit_id": "sha256:fd650327a2fc5e1079acd81e07bdcac42f874ed3df18b34f6066ae7732d5b999"
+}

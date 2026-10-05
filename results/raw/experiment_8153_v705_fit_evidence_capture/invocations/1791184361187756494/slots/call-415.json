@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e",
+  "arm": "holistic",
+  "call_id": "sha256:4e81df93883ce5c26a38ec81bb73233edd0fe45e464f1a16aa2901f09b1f9fe4:source_removed",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "duration_s": 0.5670852690236643,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 71,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 13,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Unable to answer based on given passages.\"}",
+  "prompt_sha256": "sha256:b69f221ab04d1ee5582590595b58a974634507e990188ac1e65a87514c4e5da8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"p_hallucination\": 0.0}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185156,
+    "id": "chatcmpl-1Z1B0BTsZdWFTIDakB74qwGuL3Eeh0HU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 296.824,
+      "predicted_n": 13,
+      "predicted_per_second": 43.796997547368136,
+      "predicted_per_token_ms": 22.832615384615387,
+      "prompt_ms": 170.369,
+      "prompt_n": 71,
+      "prompt_per_second": 416.7424824938809,
+      "prompt_per_token_ms": 2.3995633802816903
+    },
+    "usage": {
+      "completion_tokens": 13,
+      "prompt_tokens": 71,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 84
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Unable to answer based on given passages.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 11,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:3cf0a195088c4a9be466140a7aae0b86e027f43cc73ef653b7a0608aa2b7369c",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\"p_hallucination\": 0.0}",
+  "unit_id": "sha256:4e81df93883ce5c26a38ec81bb73233edd0fe45e464f1a16aa2901f09b1f9fe4"
+}

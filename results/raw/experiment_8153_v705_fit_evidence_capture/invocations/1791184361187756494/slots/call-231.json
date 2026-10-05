@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4572696361204b696e736d616e2c206120666f726d657220466c6f7269646120537461746520556e69766572736974792073747564656e742c206861732066696c65642061206c61777375697420616761696e7374204a616d6569732057696e73746f6e2c206120666f726d65722046535520666f6f7462616c6c20706c617965722c20616c6c6567696e6720746861742068652072617065642068657220696e20446563656d62657220323031322e204b696e736d616e2068617320616c736f20616363757365642057696e73746f6e206f662066616c736520696d707269736f6e6d656e7420616e6420696e74656e74696f6e616c20696e666c696374696f6e206f6620656d6f74696f6e616c2064697374726573732e2057696e73746f6e206861732064656e6965642074686520616c6c65676174696f6e732c20736179696e67207468617420746865207365782077617320636f6e73656e7375616c2e204b696e736d616e2773206c61777965722c204a6f686e20436c756e652c20737461746564207468617420746865206c617773756974207761732066696c6564206e6f772062656361757365207468657920646964206e6f742077616e7420746f207761697420756e74696c2074686520657665206f6620746865204e464c206472616674206f722061667465722057696e73746f6e20686164207369676e6564206120636f6e74726163742e2057696e73746f6e20697320657870656374656420746f206265206120746f70207069636b20696e207468652064726166742c20776869636820737461727473206f6e20417072696c2033302e204b696e736d616e2068617320616c736f20737565642046535520696e204a616e756172792e",
+  "arm": "source_span",
+  "call_id": "sha256:6dd436f897bcb4660b555fc6124d19ebf516e90a2191b6e48c54ef9b3330c665:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.206529361079447,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 869,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 53,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Erica Kinsman, a former Florida State University student who has accused star football player Jameis Winston of rape, has filed a lawsuit against the Heisman Trophy-winning quarterback, her lawyer said Thursday. Kinsman has said Winston raped her in December 2012.  A prosecutor decided against bringing criminal charges in the case. In the lawsuit filed Thursday, Kinsman alleges sexual battery, false imprisonment and intentional infliction of emotional distress. Winston has said the sex was consensual. CNN obtained the following statement from Winston's attorney David Cornwell. \\\"This stunt was expected,\\\" the statement said. \\\"Ms. Kinsman's false accusations have already been exposed and rejected six times.  This time will be no different. Mr. Winston welcomes the opportunity to clear his name with the truth. Mr. Winston is looking forward to the upcoming [NFL] draft.  He will not permit this ploy to distract him as he begins the journey of fulfilling his lifelong dream of being a championship quarterback in the National Football League.\\\" CNN doesn't normally identify the alleged victims of sexual assault; however, Kinsman revealed her name this year in a documentary about rape on college campuses. FSU hearing clears Winston. Winston led the Florida State Seminoles to a national championship for the 2013 season and won the Heisman, given to the most outstanding collegiate football player. He is expected to be a top pick in the NFL Draft, which begins April 30. \\\"As for timing, we didn't want to wait until the eve of the draft or after he signed a contract,\\\" said Kinsman's attorney John Clune. \\\"As soon as we finished the various motions briefing on the FSU case, we turned our attention to Jameis and got it filed.\\\" Kinsman also sued the university in January. According to police documents in the rape case, Kinsman said Winston raped her after she had been drinking with friends at a bar in Tallahassee. She said an unknown man gave her a shot glass of liquid before they left the bar. Kinsman also said she did not remember much of what happened next but that she remembered being in a ground-floor apartment, where Winston took off her clothes and had sex with her despite her objections, according to police documents. Kinsman reported the alleged assault to FSU campus police that night. A month later, in January 2013, she told Tallahassee police that Winston was the attacker. Tallahassee's interim police chief at the time, Tom Coe, said the woman \\\"broke off contact\\\" with investigators in February 2013 and didn't want to go forward with the case. The woman's family said a detective warned her attorney that Tallahassee is a \\\"big football town\\\" and that life could be miserable if she pursued the case. Winston didn't play during the 2012 season but came to Florida State as one of the nation's top quarterback recruits, according to recruiting rankings.\\n\", \"answer\": \"Erica Kinsman, a former Florida State University student, has filed a lawsuit against Jameis Winston, a former FSU football player, alleging that he raped her in December 2012. Kinsman has also accused Winston of false imprisonment and intentional infliction of emotional distress. Winston has denied the allegations, saying that the sex was consensual. Kinsman's lawyer, John Clune, stated that the lawsuit was filed now because they did not want to wait until the eve of the NFL draft or after Winston had signed a contract. Winston is expected to be a top pick in the draft, which starts on April 30. Kinsman has also sued FSU in January.\"}",
+  "prompt_sha256": "sha256:b2f83a077499b31ace71aeff31ab4204892e1ec98575a241564e6548d10f9c74",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"Winston has said the sex was consensual.\",\n  \"byte_start\": 438,\n  \"byte_end\": 473\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184863,
+    "id": "chatcmpl-GCQZQvxqbKFl8SSFDGaCKmn9HdcvPl95",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1270.836,
+      "predicted_n": 53,
+      "predicted_per_second": 41.70483052101137,
+      "predicted_per_token_ms": 23.978037735849057,
+      "prompt_ms": 814.533,
+      "prompt_n": 869,
+      "prompt_per_second": 1066.8689911888162,
+      "prompt_per_token_ms": 0.9373222094361335
+    },
+    "usage": {
+      "completion_tokens": 53,
+      "prompt_tokens": 869,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 922
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Erica Kinsman, a former Florida State University student who has accused star football player Jameis Winston of rape, has filed a lawsuit against the Heisman Trophy-winning quarterback, her lawyer said Thursday. Kinsman has said Winston raped her in December 2012.  A prosecutor decided against bringing criminal charges in the case. In the lawsuit filed Thursday, Kinsman alleges sexual battery, false imprisonment and intentional infliction of emotional distress. Winston has said the sex was consensual. CNN obtained the following statement from Winston's attorney David Cornwell. \\\"This stunt was expected,\\\" the statement said. \\\"Ms. Kinsman's false accusations have already been exposed and rejected six times.  This time will be no different. Mr. Winston welcomes the opportunity to clear his name with the truth. Mr. Winston is looking forward to the upcoming [NFL] draft.  He will not permit this ploy to distract him as he begins the journey of fulfilling his lifelong dream of being a championship quarterback in the National Football League.\\\" CNN doesn't normally identify the alleged victims of sexual assault; however, Kinsman revealed her name this year in a documentary about rape on college campuses. FSU hearing clears Winston. Winston led the Florida State Seminoles to a national championship for the 2013 season and won the Heisman, given to the most outstanding collegiate football player. He is expected to be a top pick in the NFL Draft, which begins April 30. \\\"As for timing, we didn't want to wait until the eve of the draft or after he signed a contract,\\\" said Kinsman's attorney John Clune. \\\"As soon as we finished the various motions briefing on the FSU case, we turned our attention to Jameis and got it filed.\\\" Kinsman also sued the university in January. According to police documents in the rape case, Kinsman said Winston raped her after she had been drinking with friends at a bar in Tallahassee. She said an unknown man gave her a shot glass of liquid before they left the bar. Kinsman also said she did not remember much of what happened next but that she remembered being in a ground-floor apartment, where Winston took off her clothes and had sex with her despite her objections, according to police documents. Kinsman reported the alleged assault to FSU campus police that night. A month later, in January 2013, she told Tallahassee police that Winston was the attacker. Tallahassee's interim police chief at the time, Tom Coe, said the woman \\\"broke off contact\\\" with investigators in February 2013 and didn't want to go forward with the case. The woman's family said a detective warned her attorney that Tallahassee is a \\\"big football town\\\" and that life could be miserable if she pursued the case. Winston didn't play during the 2012 season but came to Florida State as one of the nation's top quarterback recruits, according to recruiting rankings.\\n\", \"answer\": \"Erica Kinsman, a former Florida State University student, has filed a lawsuit against Jameis Winston, a former FSU football player, alleging that he raped her in December 2012. Kinsman has also accused Winston of false imprisonment and intentional infliction of emotional distress. Winston has denied the allegations, saying that the sex was consensual. Kinsman's lawyer, John Clune, stated that the lawsuit was filed now because they did not want to wait until the eve of the NFL draft or after Winston had signed a contract. Winston is expected to be a top pick in the draft, which starts on April 30. Kinsman has also sued FSU in January.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 116,
+  "source_bytes": "4572696361204b696e736d616e2c206120666f726d657220466c6f7269646120537461746520556e69766572736974792073747564656e742077686f206861732061636375736564207374617220666f6f7462616c6c20706c61796572204a616d6569732057696e73746f6e206f6620726170652c206861732066696c65642061206c61777375697420616761696e73742074686520486569736d616e2054726f7068792d77696e6e696e6720717561727465726261636b2c20686572206c617779657220736169642054687572736461792e204b696e736d616e2068617320736169642057696e73746f6e2072617065642068657220696e20446563656d62657220323031322e2020412070726f73656375746f72206465636964656420616761696e7374206272696e67696e67206372696d696e616c206368617267657320696e2074686520636173652e20496e20746865206c6177737569742066696c65642054687572736461792c204b696e736d616e20616c6c656765732073657875616c20626174746572792c2066616c736520696d707269736f6e6d656e7420616e6420696e74656e74696f6e616c20696e666c696374696f6e206f6620656d6f74696f6e616c2064697374726573732e2057696e73746f6e20686173207361696420746865207365782077617320636f6e73656e7375616c2e20434e4e206f627461696e65642074686520666f6c6c6f77696e672073746174656d656e742066726f6d2057696e73746f6e2773206174746f726e657920446176696420436f726e77656c6c2e202254686973207374756e74207761732065787065637465642c22207468652073746174656d656e7420736169642e20224d732e204b696e736d616e27732066616c73652061636375736174696f6e73206861766520616c7265616479206265656e206578706f73656420616e642072656a6563746564207369782074696d65732e2020546869732074696d652077696c6c206265206e6f20646966666572656e742e204d722e2057696e73746f6e2077656c636f6d657320746865206f70706f7274756e69747920746f20636c65617220686973206e616d652077697468207468652074727574682e204d722e2057696e73746f6e206973206c6f6f6b696e6720666f727761726420746f20746865207570636f6d696e67205b4e464c5d2064726166742e202048652077696c6c206e6f74207065726d6974207468697320706c6f7920746f2064697374726163742068696d20617320686520626567696e7320746865206a6f75726e6579206f662066756c66696c6c696e6720686973206c6966656c6f6e6720647265616d206f66206265696e672061206368616d70696f6e7368697020717561727465726261636b20696e20746865204e6174696f6e616c20466f6f7462616c6c204c65616775652e2220434e4e20646f65736e2774206e6f726d616c6c79206964656e746966792074686520616c6c656765642076696374696d73206f662073657875616c2061737361756c743b20686f77657665722c204b696e736d616e2072657665616c656420686572206e616d652074686973207965617220696e206120646f63756d656e746172792061626f75742072617065206f6e20636f6c6c6567652063616d70757365732e204653552068656172696e6720636c656172732057696e73746f6e2e2057696e73746f6e206c65642074686520466c6f726964612053746174652053656d696e6f6c657320746f2061206e6174696f6e616c206368616d70696f6e7368697020666f7220746865203230313320736561736f6e20616e6420776f6e2074686520486569736d616e2c20676976656e20746f20746865206d6f7374206f75747374616e64696e6720636f6c6c65676961746520666f6f7462616c6c20706c617965722e20486520697320657870656374656420746f206265206120746f70207069636b20696e20746865204e464c2044726166742c20776869636820626567696e7320417072696c2033302e2022417320666f722074696d696e672c207765206469646e27742077616e7420746f207761697420756e74696c2074686520657665206f6620746865206472616674206f72206166746572206865207369676e6564206120636f6e74726163742c222073616964204b696e736d616e2773206174746f726e6579204a6f686e20436c756e652e2022417320736f6f6e2061732077652066696e69736865642074686520766172696f7573206d6f74696f6e73206272696566696e67206f6e207468652046535520636173652c207765207475726e6564206f757220617474656e74696f6e20746f204a616d65697320616e6420676f742069742066696c65642e22204b696e736d616e20616c736f20737565642074686520756e697665727369747920696e204a616e756172792e204163636f7264696e6720746f20706f6c69636520646f63756d656e747320696e20746865207261706520636173652c204b696e736d616e20736169642057696e73746f6e207261706564206865722061667465722073686520686164206265656e206472696e6b696e67207769746820667269656e647320617420612062617220696e2054616c6c616861737365652e20536865207361696420616e20756e6b6e6f776e206d616e20676176652068657220612073686f7420676c617373206f66206c6971756964206265666f72652074686579206c65667420746865206261722e204b696e736d616e20616c736f20736169642073686520646964206e6f742072656d656d626572206d756368206f6620776861742068617070656e6564206e657874206275742074686174207368652072656d656d6265726564206265696e6720696e20612067726f756e642d666c6f6f722061706172746d656e742c2077686572652057696e73746f6e20746f6f6b206f66662068657220636c6f7468657320616e642068616420736578207769746820686572206465737069746520686572206f626a656374696f6e732c206163636f7264696e6720746f20706f6c69636520646f63756d656e74732e204b696e736d616e207265706f727465642074686520616c6c656765642061737361756c7420746f204653552063616d70757320706f6c6963652074686174206e696768742e2041206d6f6e7468206c617465722c20696e204a616e7561727920323031332c2073686520746f6c642054616c6c6168617373656520706f6c69636520746861742057696e73746f6e20776173207468652061747461636b65722e2054616c6c61686173736565277320696e746572696d20706f6c696365206368696566206174207468652074696d652c20546f6d20436f652c20736169642074686520776f6d616e202262726f6b65206f666620636f6e7461637422207769746820696e76657374696761746f727320696e204665627275617279203230313320616e64206469646e27742077616e7420746f20676f20666f727761726420776974682074686520636173652e2054686520776f6d616e27732066616d696c792073616964206120646574656374697665207761726e656420686572206174746f726e657920746861742054616c6c616861737365652069732061202262696720666f6f7462616c6c20746f776e2220616e642074686174206c69666520636f756c64206265206d6973657261626c652069662073686520707572737565642074686520636173652e2057696e73746f6e206469646e277420706c617920647572696e6720746865203230313220736561736f6e206275742063616d6520746f20466c6f72696461205374617465206173206f6e65206f6620746865206e6174696f6e277320746f7020717561727465726261636b2072656372756974732c206163636f7264696e6720746f2072656372756974696e672072616e6b696e67732e0a",
+  "source_cluster_id": "sha256:b3317158c8251f5ced2502f74fa6d75ecd36dfb5371b72611f5396702a580476",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"Winston has said the sex was consensual.\",\n  \"byte_start\": 438,\n  \"byte_end\": 473\n}",
+  "unit_id": "sha256:6dd436f897bcb4660b555fc6124d19ebf516e90a2191b6e48c54ef9b3330c665"
+}

@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "53757265212048657265277320616e206f626a656374697665206f76657276696577206f66204d6f6e792773204d65786963616e20466f6f64206261736564206f6e207468652070726f7669646564207374727563747572656420646174613a0a0a4d6f6e792773204d65786963616e20466f6f64206973206120706f70756c6172204d65786963616e2072657374617572616e74206c6f636174656420696e20746865206865617274206f662053616e746120426172626172612c2043616c69666f726e69612e205769746820616e206176657261676520726174696e67206f6620342e35207374617273206f7574206f662035206261736564206f6e20746872656520637573746f6d657220726576696577732c20746869732072657374617572616e74206973206b6e6f776e20666f72206974732064656c6963696f757320616e642061757468656e746963204d65786963616e2063756973696e652e20546865206d656e7520666561747572657320612076617269657479206f66206469736865732c20696e636c7564696e67207461636f732c206275727269746f732c20616e6420717565736164696c6c61732c20616c6c206d616465207769746820667265736820616e6420666c61766f7266756c20696e6772656469656e74732e0a0a4f6e6520637573746f6d65722072617665642061626f7574207468652067756163616d6f6c652c2064657363726962696e672069742061732022746869636b657220726174686572207468616e20637265616d792220616e64207265636f6d6d656e64696e6720746865207069636f2064652067616c6c6f20636f6e2067756163616d6f6c652e20416e6f7468657220637573746f6d65722070726169736564207468652072657374617572616e742773206672657368207269636520616e64206265616e732c2061732077656c6c206173207468652064656c6963696f7573206d6f6c6520616e64206d616e676f2073616c73612e204120746869726420726576696577657220656e6a6f79656420746865207461636f732c2073746174696e672074686174207468657920776572652066756c6c206f6620666c61766f7220616e64206120686967686c69676874206f66207468656972206d65616c2e0a0a5468652072657374617572616e7420686173206120636f7a7920616e642063617375616c2061746d6f7370686572652c2077697468206e6f2057694669206f72206f7574646f6f722073656174696e6720617661696c61626c652e20486f77657665722c20637573746f6d6572732063616e20656e6a6f792074616b656f7574206f722064696e6520696e20647572696e672069747320686f757273206f66206f7065726174696f6e2c207768696368206172652066726f6d2031303a333020414d20746f20333a333020504d2066726f6d204d6f6e64617920746f204672696461792c20616e642031303a333020414d20746f20343a303020504d206f6e2053617475726461792e204465737069746520746865206c696d6974656420686f75727320616e64206c61636b206f6620576946692c204d6f6e792773204d65786963616e20466f6f642072656d61696e73206120706f70756c61722063686f69636520616d6f6e67206c6f63616c7320616e642076697369746f727320616c696b652c2077697468206d616e792072657475726e20637573746f6d65727320616e642068696768207072616973652066726f6d207265766965776572732e",
+  "arm": "source_span",
+  "call_id": "sha256:3cd07cc9b62e6c79d5419aad1d177e4e9478462143c799da8be688a950eda3a9:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.074865431059152,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 860,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 47,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"217 E Anacapa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-15:30\\\",\\\"Monday\\\":\\\"10:30-15:30\\\",\\\"Saturday\\\":\\\"10:30-15:30\\\",\\\"Thursday\\\":\\\"10:30-15:30\\\",\\\"Tuesday\\\":\\\"10:30-15:30\\\",\\\"Wednesday\\\":\\\"10:30-15:30\\\"},\\\"name\\\":\\\"Mony's Mexican Food\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 22:50:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"All four of us had an amazing experience. Guacamole is the thicker rather than creamy. More so a pico de gallo con guacamole. \\\\n\\\\nBurrito had some great fresh rice and beans! \\\\n\\\\nGive a try of the mole and mango salsa. We went back for more!\\\"},{\\\"review_date\\\":\\\"2022-01-08 21:08:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The tacos tasted unbelievably good, there was so much flavor in them which was the highlight.\\\"},{\\\"review_date\\\":\\\"2021-12-21 04:00:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best tacos and salsa bar in SB. Very reasonable too, friendly staff. Avocado salsa is so yummy.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Sure! Here's an objective overview of Mony's Mexican Food based on the provided structured data:\\n\\nMony's Mexican Food is a popular Mexican restaurant located in the heart of Santa Barbara, California. With an average rating of 4.5 stars out of 5 based on three customer reviews, this restaurant is known for its delicious and authentic Mexican cuisine. The menu features a variety of dishes, including tacos, burritos, and quesadillas, all made with fresh and flavorful ingredients.\\n\\nOne customer raved about the guacamole, describing it as \\\"thicker rather than creamy\\\" and recommending the pico de gallo con guacamole. Another customer praised the restaurant's fresh rice and beans, as well as the delicious mole and mango salsa. A third reviewer enjoyed the tacos, stating that they were full of flavor and a highlight of their meal.\\n\\nThe restaurant has a cozy and casual atmosphere, with no WiFi or outdoor seating available. However, customers can enjoy takeout or dine in during its hours of operation, which are from 10:30 AM to 3:30 PM from Monday to Friday, and 10:30 AM to 4:00 PM on Saturday. Despite the limited hours and lack of WiFi, Mony's Mexican Food remains a popular choice among locals and visitors alike, with many return customers and high praise from reviewers.\"}",
+  "prompt_sha256": "sha256:e2a1119069e5ccc689f32098b1c5851038158c4503e002526d19320daaaffa7b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"p_hallucination\": 1, \"quote\": \"Saturday\\\":\\\"10:30-15:30\", \"byte_start\": 438, \"byte_end\": 458}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184777,
+    "id": "chatcmpl-bdvhMmQK2kSftSIWCgxcyUHV1xeariHp",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1125.56,
+      "predicted_n": 47,
+      "predicted_per_second": 41.756992075055976,
+      "predicted_per_token_ms": 23.948085106382976,
+      "prompt_ms": 810.952,
+      "prompt_n": 860,
+      "prompt_per_second": 1060.4820014008226,
+      "prompt_per_token_ms": 0.9429674418604651
+    },
+    "usage": {
+      "completion_tokens": 47,
+      "prompt_tokens": 860,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 907
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"217 E Anacapa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-15:30\\\",\\\"Monday\\\":\\\"10:30-15:30\\\",\\\"Saturday\\\":\\\"10:30-15:30\\\",\\\"Thursday\\\":\\\"10:30-15:30\\\",\\\"Tuesday\\\":\\\"10:30-15:30\\\",\\\"Wednesday\\\":\\\"10:30-15:30\\\"},\\\"name\\\":\\\"Mony's Mexican Food\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 22:50:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"All four of us had an amazing experience. Guacamole is the thicker rather than creamy. More so a pico de gallo con guacamole. \\\\n\\\\nBurrito had some great fresh rice and beans! \\\\n\\\\nGive a try of the mole and mango salsa. We went back for more!\\\"},{\\\"review_date\\\":\\\"2022-01-08 21:08:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The tacos tasted unbelievably good, there was so much flavor in them which was the highlight.\\\"},{\\\"review_date\\\":\\\"2021-12-21 04:00:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best tacos and salsa bar in SB. Very reasonable too, friendly staff. Avocado salsa is so yummy.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Sure! Here's an objective overview of Mony's Mexican Food based on the provided structured data:\\n\\nMony's Mexican Food is a popular Mexican restaurant located in the heart of Santa Barbara, California. With an average rating of 4.5 stars out of 5 based on three customer reviews, this restaurant is known for its delicious and authentic Mexican cuisine. The menu features a variety of dishes, including tacos, burritos, and quesadillas, all made with fresh and flavorful ingredients.\\n\\nOne customer raved about the guacamole, describing it as \\\"thicker rather than creamy\\\" and recommending the pico de gallo con guacamole. Another customer praised the restaurant's fresh rice and beans, as well as the delicious mole and mango salsa. A third reviewer enjoyed the tacos, stating that they were full of flavor and a highlight of their meal.\\n\\nThe restaurant has a cozy and casual atmosphere, with no WiFi or outdoor seating available. However, customers can enjoy takeout or dine in during its hours of operation, which are from 10:30 AM to 3:30 PM from Monday to Friday, and 10:30 AM to 4:00 PM on Saturday. Despite the limited hours and lack of WiFi, Mony's Mexican Food remains a popular choice among locals and visitors alike, with many return customers and high praise from reviewers.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 93,
+  "source_bytes": "7b2261646472657373223a22323137204520416e6163617061205374222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a747275652c22636c61737379223a66616c73652c226469766579223a6e756c6c2c2268697073746572223a6e756c6c2c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a66616c73652c227472656e6479223a6e756c6c2c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a66616c73652c22737472656574223a747275652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a6e756c6c2c2252657374617572616e7473476f6f64466f7247726f757073223a66616c73652c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a226e6f227d2c22627573696e6573735f7374617273223a342e352c2263617465676f72696573223a2252657374617572616e74732c204d65786963616e222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a2231303a33302d31353a3330222c224d6f6e646179223a2231303a33302d31353a3330222c225361747572646179223a2231303a33302d31353a3330222c225468757273646179223a2231303a33302d31353a3330222c2254756573646179223a2231303a33302d31353a3330222c225765646e6573646179223a2231303a33302d31353a3330227d2c226e616d65223a224d6f6e792773204d65786963616e20466f6f64222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323032322d30312d31372032323a35303a3136222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22416c6c20666f7572206f662075732068616420616e20616d617a696e6720657870657269656e63652e2047756163616d6f6c652069732074686520746869636b657220726174686572207468616e20637265616d792e204d6f726520736f2061207069636f2064652067616c6c6f20636f6e2067756163616d6f6c652e205c6e5c6e4275727269746f2068616420736f6d65206772656174206672657368207269636520616e64206265616e7321205c6e5c6e47697665206120747279206f6620746865206d6f6c6520616e64206d616e676f2073616c73612e2057652077656e74206261636b20666f72206d6f726521227d2c7b227265766965775f64617465223a22323032322d30312d30382032313a30383a3338222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22546865207461636f732074617374656420756e62656c69657661626c7920676f6f642c2074686572652077617320736f206d75636820666c61766f7220696e207468656d207768696368207761732074686520686967686c696768742e227d2c7b227265766965775f64617465223a22323032312d31322d32312030343a30303a3133222c227265766965775f7374617273223a352e302c227265766965775f74657874223a2242657374207461636f7320616e642073616c73612062617220696e2053422e205665727920726561736f6e61626c6520746f6f2c20667269656e646c792073746166662e2041766f6361646f2073616c736120697320736f2079756d6d792e227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:92313a447d30cab78230786ad4aae2afcb20ae024fe3cca30dca523fc9d489d7",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\"p_hallucination\": 1, \"quote\": \"Saturday\\\":\\\"10:30-15:30\", \"byte_start\": 438, \"byte_end\": 458}",
+  "unit_id": "sha256:3cd07cc9b62e6c79d5419aad1d177e4e9478462143c799da8be688a950eda3a9"
+}

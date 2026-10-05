@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20686572652773206120627269656620616e7377657220746f20746865207175657374696f6e2022486f7720746f2073746f7020666c69657320636f6d696e67207468726f756768207468652077696e646f77223a0a0a546f2073746f7020666c6965732066726f6d20636f6d696e67207468726f756768207468652077696e646f772c207472792074686520666f6c6c6f77696e67206d6574686f64733a0a0a312e204b65657020796f757220686f757365206f7220627573696e65737320636c65616e20616e642073616e6974697a65642c20616e64207468726f772061776179206f7665727269706520616e6420726f7474696e672066727569747320616e6420766567657461626c65732e0a322e20506c616365207472617073206f7574646f6f727320616e642063726561746520612064656c6963696f757320626c6f6f6420616e6420626f6e65206665617374696e67207a6f6e6520746f206c75726520666c69657320617761792066726f6d2074686520686f7573652e0a332e204b656570206120726f6f6d2066726565206f6620756e656174656e20666f6f6420616e64206f746865722074726173682c20616e64206b65657020676172626167652063616e7320616e642064756d7073746572732061732066617220617761792066726f6d2077696e646f777320616e6420686f6d657320617320706f737369626c652e0a342e2048616e67206120737469636b792074726170206e65617220612077696e646f7720746f206361707475726520616e7920737472617920666c696573207468617420646f2067657420696e746f206120686f6d652e0a0a4966207468657365206d6574686f647320646f206e6f7420776f726b2c20636f6e7369646572207573696e672077696e646f772073637265656e73206f7220726570616972696e6720616e7920746f726e2073637265656e7320746f2070726576656e7420666c6965732066726f6d20656e746572696e67207468726f756768207468652077696e646f772e204164646974696f6e616c6c792c20636865636b20666f7220616e79206f7468657220656e74727920706f696e747320696e2074686520686f6d652c2073756368206173206f70656e20646f6f7273206f722076656e74732c20616e64207365616c207468656d20746f2070726576656e7420666c6965732066726f6d20656e746572696e672e",
+  "arm": "holistic",
+  "call_id": "sha256:afbc53c67c23b61cb44d181f4198309ab17782044b25dad1c2529100148c9c9c:source_removed",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "duration_s": 0.9535986949922517,
+  "entailment_label": null,
+  "exclusion_reason": "invalid_probability_or_usage",
+  "human_target": null,
+  "input_tokens": 261,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 0,
+  "order": 1,
+  "output_tokens": 22,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": null,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "missing_probability",
+    "valid_quote": 0
+  },
+  "probability": null,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Based on the given passages, here's a brief answer to the question \\\"How to stop flies coming through the window\\\":\\n\\nTo stop flies from coming through the window, try the following methods:\\n\\n1. Keep your house or business clean and sanitized, and throw away overripe and rotting fruits and vegetables.\\n2. Place traps outdoors and create a delicious blood and bone feasting zone to lure flies away from the house.\\n3. Keep a room free of uneaten food and other trash, and keep garbage cans and dumpsters as far away from windows and homes as possible.\\n4. Hang a sticky trap near a window to capture any stray flies that do get into a home.\\n\\nIf these methods do not work, consider using window screens or repairing any torn screens to prevent flies from entering through the window. Additionally, check for any other entry points in the home, such as open doors or vents, and seal them to prevent flies from entering.\"}",
+  "prompt_sha256": "sha256:bfe23f86221a28641aa61cf277dd22583b4dfee57062e668426c5b2002c232a1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```json\n{\n  \"p_hallucination\": 1.0\n}\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185127,
+    "id": "chatcmpl-grMeD9YNNs12QtG70Gre0RCYDL9C8FmG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 514.954,
+      "predicted_n": 22,
+      "predicted_per_second": 42.722262571025766,
+      "predicted_per_token_ms": 23.406999999999996,
+      "prompt_ms": 321.185,
+      "prompt_n": 261,
+      "prompt_per_second": 812.6157821816087,
+      "prompt_per_token_ms": 1.2305938697318008
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 261,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 283
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Based on the given passages, here's a brief answer to the question \\\"How to stop flies coming through the window\\\":\\n\\nTo stop flies from coming through the window, try the following methods:\\n\\n1. Keep your house or business clean and sanitized, and throw away overripe and rotting fruits and vegetables.\\n2. Place traps outdoors and create a delicious blood and bone feasting zone to lure flies away from the house.\\n3. Keep a room free of uneaten food and other trash, and keep garbage cans and dumpsters as far away from windows and homes as possible.\\n4. Hang a sticky trap near a window to capture any stray flies that do get into a home.\\n\\nIf these methods do not work, consider using window screens or repairing any torn screens to prevent flies from entering through the window. Additionally, check for any other entry points in the home, such as open doors or vents, and seal them to prevent flies from entering.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 1,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:2bafa81b856aa98ea3543d8455f436b8571ed954ae017f05edca2d20dc44dc37",
+  "started": true,
+  "status": "failed",
+  "transcript": "```json\n{\n  \"p_hallucination\": 1.0\n}\n```",
+  "unit_id": "sha256:afbc53c67c23b61cb44d181f4198309ab17782044b25dad1c2529100148c9c9c"
+}

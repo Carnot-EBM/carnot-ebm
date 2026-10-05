@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "5468726565206d6574686f64732063616e206265207573656420746f20736f6f7468652061206d6f75746820736f72652066726f6d20626974696e672067756d732e2046697273742c20796f752063616e206170706c79206120736d616c6c20616d6f756e74206f662031303025207075726520686f6e657920746f2074686520736f726520617265612074687265652074696d657320612064617920666f7220666976652064617973207573696e67206120712d7469702e20486f6e65792068617320616e746962616374657269616c2070726f7065727469657320746861742063616e2068656c7020747265617420736f72652067756d7320616e6420756c636572732e205365636f6e642c20796f752063616e206472696e6b206368616d6f6d696c65207465612e204166746572207374656570696e67207468652074656120666f722066697665206d696e757465732c20636f6f6c20697420736c696768746c7920616e642073776973682069742061726f756e6420796f7572206d6f757468206265666f7265207377616c6c6f77696e672e2046696e616c6c792c20796f752063616e206170706c7920616c6f6520766572612067656c206469726563746c7920746f2074686520696e666c616d65642067756d206166746572206272757368696e6720796f75722074656574682e20416c6f6520766572612063616e2068656c70206375726520696e666c616d65642067756d20746973737565732c206f72616c206c6573696f6e732c20616e642067756d206162736365737365732e",
+  "arm": "holistic",
+  "call_id": "sha256:de933dc47053ac40f475a4abadf1993d3c03ba18bc8432b2d74f32fe1de15ea0:source_mismatched",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_mismatched",
+  "denominator": 1,
+  "donor_unit_id": "sha256:b5fcb3991e84b73d1e8191aa70c37dbad8c44ddbc61ad39e9e83458b30e2f25e",
+  "duration_s": 0.8480044309981167,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 431,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Singulars [edit]. Every singular noun ends in-a, -o, or-e; with very few exceptions, the nouns that end in-o are masculine and the nouns that end in-a are feminine (-e is generally masculine but not always).\\\\n\\\\npassage 2:Hi! that's time to learn how to recognize feminine words from masculine one. An evidence of the gender is the article. We put: 1  il/lo /for the masculine words such as: il prezz o, il bar, lo zain o, lo zuccher o. 2  la for the feminine words such as: la piazz a, la stazion e, la casa.\\\\n\\\\npassage 3:Nouns, i.e. the words for people, things, places and ideas, are all either masculine (m.) or feminine (f.) in Italian. It is important to know whether a noun is masculine or feminine because there are m. and f. words for a and the, and m. and f.\\\\n\\\\n\\\",\\\"question\\\":\\\"is pasta masculine or feminine in italian\\\"}\", \"answer\": \"Three methods can be used to soothe a mouth sore from biting gums. First, you can apply a small amount of 100% pure honey to the sore area three times a day for five days using a q-tip. Honey has antibacterial properties that can help treat sore gums and ulcers. Second, you can drink chamomile tea. After steeping the tea for five minutes, cool it slightly and swish it around your mouth before swallowing. Finally, you can apply aloe vera gel directly to the inflamed gum after brushing your teeth. Aloe vera can help cure inflamed gum tissues, oral lesions, and gum abscesses.\"}",
+  "prompt_sha256": "sha256:bd788cdbda7a48160453a56f858dbfb8754f3a2e7f4651da49cfaeeb36cd0263",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185143,
+    "id": "chatcmpl-1BBtJXsXspuJsB47CaYZqrl5lwUErqRs",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.783,
+      "predicted_n": 14,
+      "predicted_per_second": 43.5075811960234,
+      "predicted_per_token_ms": 22.9845,
+      "prompt_ms": 431.86,
+      "prompt_n": 431,
+      "prompt_per_second": 998.0086139026536,
+      "prompt_per_token_ms": 1.0019953596287703
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 431,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 445
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Singulars [edit]. Every singular noun ends in-a, -o, or-e; with very few exceptions, the nouns that end in-o are masculine and the nouns that end in-a are feminine (-e is generally masculine but not always).\\\\n\\\\npassage 2:Hi! that's time to learn how to recognize feminine words from masculine one. An evidence of the gender is the article. We put: 1  il/lo /for the masculine words such as: il prezz o, il bar, lo zain o, lo zuccher o. 2  la for the feminine words such as: la piazz a, la stazion e, la casa.\\\\n\\\\npassage 3:Nouns, i.e. the words for people, things, places and ideas, are all either masculine (m.) or feminine (f.) in Italian. It is important to know whether a noun is masculine or feminine because there are m. and f. words for a and the, and m. and f.\\\\n\\\\n\\\",\\\"question\\\":\\\"is pasta masculine or feminine in italian\\\"}\", \"answer\": \"Three methods can be used to soothe a mouth sore from biting gums. First, you can apply a small amount of 100% pure honey to the sore area three times a day for five days using a q-tip. Honey has antibacterial properties that can help treat sore gums and ulcers. Second, you can drink chamomile tea. After steeping the tea for five minutes, cool it slightly and swish it around your mouth before swallowing. Finally, you can apply aloe vera gel directly to the inflamed gum after brushing your teeth. Aloe vera can help cure inflamed gum tissues, oral lesions, and gum abscesses.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 6,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a53696e67756c617273205b656469745d2e2045766572792073696e67756c6172206e6f756e20656e647320696e2d612c202d6f2c206f722d653b207769746820766572792066657720657863657074696f6e732c20746865206e6f756e73207468617420656e6420696e2d6f20617265206d617363756c696e6520616e6420746865206e6f756e73207468617420656e6420696e2d61206172652066656d696e696e6520282d652069732067656e6572616c6c79206d617363756c696e6520627574206e6f7420616c77617973292e5c6e5c6e7061737361676520323a486921207468617427732074696d6520746f206c6561726e20686f7720746f207265636f676e697a652066656d696e696e6520776f7264732066726f6d206d617363756c696e65206f6e652e20416e2065766964656e6365206f66207468652067656e646572206973207468652061727469636c652e205765207075743a20312020696c2f6c6f202f666f7220746865206d617363756c696e6520776f72647320737563682061733a20696c207072657a7a206f2c20696c206261722c206c6f207a61696e206f2c206c6f207a756363686572206f2e203220206c6120666f72207468652066656d696e696e6520776f72647320737563682061733a206c61207069617a7a20612c206c61207374617a696f6e20652c206c6120636173612e5c6e5c6e7061737361676520333a4e6f756e732c20692e652e2074686520776f72647320666f722070656f706c652c207468696e67732c20706c6163657320616e642069646561732c2061726520616c6c20656974686572206d617363756c696e6520286d2e29206f722066656d696e696e652028662e2920696e204974616c69616e2e20497420697320696d706f7274616e7420746f206b6e6f7720776865746865722061206e6f756e206973206d617363756c696e65206f722066656d696e696e65206265636175736520746865726520617265206d2e20616e6420662e20776f72647320666f72206120616e64207468652c20616e64206d2e20616e6420662e5c6e5c6e222c227175657374696f6e223a226973207061737461206d617363756c696e65206f722066656d696e696e6520696e206974616c69616e227d",
+  "source_cluster_id": "sha256:d6f02bb02b501aba2df7bf173cf2e30e11d3f0ffadc033a51f5c230e44f33004",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 1\n}",
+  "unit_id": "sha256:de933dc47053ac40f475a4abadf1993d3c03ba18bc8432b2d74f32fe1de15ea0"
+}

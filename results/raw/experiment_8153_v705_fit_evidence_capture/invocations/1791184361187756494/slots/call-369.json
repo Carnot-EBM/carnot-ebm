@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c2068657265277320686f77206120666c61742073637265656e20545620776f726b733a0a0a466c61742073637265656e20545673207573652065697468657220706c61736d61206f72204c434420746563686e6f6c6f677920746f2070726f6475636520696d616765732e20496e206120706c61736d612054562c2063656c6c7320636f6e7461696e696e672078656e6f6e20616e64206e656f6e206761736573206172652073616e64776963686564206265747765656e2074776f20736865657473206f6620676c6173732e20456c656374726f6465732061726520617272616e67656420696e20612067726964207061747465726e206f6e206569746865722073696465206f66207468652063656c6c732c20616e64207768656e20616e20656c6563747269632070756c7365206973206170706c6965642c207468652067617365732070726f6475636520756c74726176696f6c65742070686f746f6e73207468617420726561637420776974682070686f7370686f72206d6174657269616c20746f2070726f64756365206c696768742e20496e20616e204c43442054562c2074696e79206c69717569642d6372797374616c2d66696c6c65642063656c6c7320617265207573656420696e7374656164206f6620706c61736d612063656c6c732e204120627269676874207768697465206c6967687420626568696e64207468652063656c6c7320696c6c756d696e61746573207468656d20746f206372656174652074686520696d6167652e0a0a536f2c20696e2073756d6d6172792c20666c61742073637265656e2054567320776f726b206279207573696e6720656c65637472696369747920746f20657863697465206761736573206f72206c6971756964732c207768696368207468656e2070726f64756365206c6967687420746f206372656174652074686520696d61676573206f6e207468652073637265656e2e",
+  "arm": "holistic",
+  "call_id": "sha256:cdda1ef89c03b642a412396fcbb32b5a8cd6f9027dacc3c96b94cedd5f2db093:holistic",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.0955132299568504,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 596,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:The set-up. Housed between two sheets of glass is the technology that allows flat screen TVs to work. Depending on the type of flat screen TV, the process can differ slightly. In a plasma TVs are cells that contain the gases xenon and neon as well as electrodes.There are two types of electrodes, display and address, that are arranged in a grid-like pattern on either side of the cells.n a LCD flat screen TV, tiny liquid-crystal-filled cells are between the glass sheets. A bright white light is located behind the cells and illuminates them to create the picture.\\\\n\\\\npassage 2:Like said earlier, a LED TV is an enhanced and improved version of a LCD TV. LED TVs have slimmer and thinner body panel. The back-light intensity and brightness is much more. Pixel clarity is fine and clear. The baseline functioning of LED is that it illuminates the LCD panels by using LED technology.his chemical is what makes the pixels red, green, or blue. When the plasma TV is electronically turned on, the electricity causes the colored phosphors to produce light. This in turn paints the moving pictures on the screen. For more information on plasma televisions, read How a Plasma TV Works.\\\\n\\\\npassage 3:Powering the picture. The power supply enters the TV and creates the energy needed to create the picture. In a plasma TV, electric pulses excite the gases, which produce release ultraviolet photons. These photons react with the phosphor material that is contained in the cells. The phosphor then produces light.n a LCD flat screen TV, tiny liquid-crystal-filled cells are between the glass sheets. A bright white light is located behind the cells and illuminates them to create the picture.\\\\n\\\\n\\\",\\\"question\\\":\\\"how does a flat screen tv work\\\"}\", \"answer\": \"Based on the given passages, here's how a flat screen TV works:\\n\\nFlat screen TVs use either plasma or LCD technology to produce images. In a plasma TV, cells containing xenon and neon gases are sandwiched between two sheets of glass. Electrodes are arranged in a grid pattern on either side of the cells, and when an electric pulse is applied, the gases produce ultraviolet photons that react with phosphor material to produce light. In an LCD TV, tiny liquid-crystal-filled cells are used instead of plasma cells. A bright white light behind the cells illuminates them to create the image.\\n\\nSo, in summary, flat screen TVs work by using electricity to excite gases or liquids, which then produce light to create the images on the screen.\"}",
+  "prompt_sha256": "sha256:d03a4517680c28f2d72b382119291d687fc20bc2d4043a8631d6c3270eacbf42",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185103,
+    "id": "chatcmpl-U3UepG2Q4wEcebudqmXZbyULqwrDPBNA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 371.079,
+      "predicted_n": 16,
+      "predicted_per_second": 43.117503280972514,
+      "predicted_per_token_ms": 23.1924375,
+      "prompt_ms": 607.505,
+      "prompt_n": 596,
+      "prompt_per_second": 981.0618842643271,
+      "prompt_per_token_ms": 1.0193036912751678
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 596,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 612
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:The set-up. Housed between two sheets of glass is the technology that allows flat screen TVs to work. Depending on the type of flat screen TV, the process can differ slightly. In a plasma TVs are cells that contain the gases xenon and neon as well as electrodes.There are two types of electrodes, display and address, that are arranged in a grid-like pattern on either side of the cells.n a LCD flat screen TV, tiny liquid-crystal-filled cells are between the glass sheets. A bright white light is located behind the cells and illuminates them to create the picture.\\\\n\\\\npassage 2:Like said earlier, a LED TV is an enhanced and improved version of a LCD TV. LED TVs have slimmer and thinner body panel. The back-light intensity and brightness is much more. Pixel clarity is fine and clear. The baseline functioning of LED is that it illuminates the LCD panels by using LED technology.his chemical is what makes the pixels red, green, or blue. When the plasma TV is electronically turned on, the electricity causes the colored phosphors to produce light. This in turn paints the moving pictures on the screen. For more information on plasma televisions, read How a Plasma TV Works.\\\\n\\\\npassage 3:Powering the picture. The power supply enters the TV and creates the energy needed to create the picture. In a plasma TV, electric pulses excite the gases, which produce release ultraviolet photons. These photons react with the phosphor material that is contained in the cells. The phosphor then produces light.n a LCD flat screen TV, tiny liquid-crystal-filled cells are between the glass sheets. A bright white light is located behind the cells and illuminates them to create the picture.\\\\n\\\\n\\\",\\\"question\\\":\\\"how does a flat screen tv work\\\"}\", \"answer\": \"Based on the given passages, here's how a flat screen TV works:\\n\\nFlat screen TVs use either plasma or LCD technology to produce images. In a plasma TV, cells containing xenon and neon gases are sandwiched between two sheets of glass. Electrodes are arranged in a grid pattern on either side of the cells, and when an electric pulse is applied, the gases produce ultraviolet photons that react with phosphor material to produce light. In an LCD TV, tiny liquid-crystal-filled cells are used instead of plasma cells. A bright white light behind the cells illuminates them to create the image.\\n\\nSo, in summary, flat screen TVs work by using electricity to excite gases or liquids, which then produce light to create the images on the screen.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 57,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a546865207365742d75702e20486f75736564206265747765656e2074776f20736865657473206f6620676c6173732069732074686520746563686e6f6c6f6779207468617420616c6c6f777320666c61742073637265656e2054567320746f20776f726b2e20446570656e64696e67206f6e207468652074797065206f6620666c61742073637265656e2054562c207468652070726f636573732063616e2064696666657220736c696768746c792e20496e206120706c61736d6120545673206172652063656c6c73207468617420636f6e7461696e207468652067617365732078656e6f6e20616e64206e656f6e2061732077656c6c20617320656c656374726f6465732e5468657265206172652074776f207479706573206f6620656c656374726f6465732c20646973706c617920616e6420616464726573732c20746861742061726520617272616e67656420696e206120677269642d6c696b65207061747465726e206f6e206569746865722073696465206f66207468652063656c6c732e6e2061204c434420666c61742073637265656e2054562c2074696e79206c69717569642d6372797374616c2d66696c6c65642063656c6c7320617265206265747765656e2074686520676c617373207368656574732e204120627269676874207768697465206c69676874206973206c6f636174656420626568696e64207468652063656c6c7320616e6420696c6c756d696e61746573207468656d20746f206372656174652074686520706963747572652e5c6e5c6e7061737361676520323a4c696b652073616964206561726c6965722c2061204c454420545620697320616e20656e68616e63656420616e6420696d70726f7665642076657273696f6e206f662061204c43442054562e204c454420545673206861766520736c696d6d657220616e64207468696e6e657220626f64792070616e656c2e20546865206261636b2d6c6967687420696e74656e7369747920616e64206272696768746e657373206973206d756368206d6f72652e20506978656c20636c61726974792069732066696e6520616e6420636c6561722e2054686520626173656c696e652066756e6374696f6e696e67206f66204c4544206973207468617420697420696c6c756d696e6174657320746865204c43442070616e656c73206279207573696e67204c454420746563686e6f6c6f67792e686973206368656d6963616c2069732077686174206d616b65732074686520706978656c73207265642c20677265656e2c206f7220626c75652e205768656e2074686520706c61736d6120545620697320656c656374726f6e6963616c6c79207475726e6564206f6e2c2074686520656c656374726963697479206361757365732074686520636f6c6f7265642070686f7370686f727320746f2070726f64756365206c696768742e205468697320696e207475726e207061696e747320746865206d6f76696e67207069637475726573206f6e207468652073637265656e2e20466f72206d6f726520696e666f726d6174696f6e206f6e20706c61736d612074656c65766973696f6e732c207265616420486f77206120506c61736d6120545620576f726b732e5c6e5c6e7061737361676520333a506f776572696e672074686520706963747572652e2054686520706f77657220737570706c7920656e746572732074686520545620616e6420637265617465732074686520656e65726779206e656564656420746f206372656174652074686520706963747572652e20496e206120706c61736d612054562c20656c6563747269632070756c73657320657863697465207468652067617365732c2077686963682070726f647563652072656c6561736520756c74726176696f6c65742070686f746f6e732e2054686573652070686f746f6e732072656163742077697468207468652070686f7370686f72206d6174657269616c207468617420697320636f6e7461696e656420696e207468652063656c6c732e205468652070686f7370686f72207468656e2070726f6475636573206c696768742e6e2061204c434420666c61742073637265656e2054562c2074696e79206c69717569642d6372797374616c2d66696c6c65642063656c6c7320617265206265747765656e2074686520676c617373207368656574732e204120627269676874207768697465206c69676874206973206c6f636174656420626568696e64207468652063656c6c7320616e6420696c6c756d696e61746573207468656d20746f206372656174652074686520706963747572652e5c6e5c6e222c227175657374696f6e223a22686f7720646f6573206120666c61742073637265656e20747620776f726b227d",
+  "source_cluster_id": "sha256:4074cc2e1343d83727439f828e46bd483b2ed3994efb094485fae03f5949416f",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.0\n}",
+  "unit_id": "sha256:cdda1ef89c03b642a412396fcbb32b5a8cd6f9027dacc3c96b94cedd5f2db093"
+}

@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4e6563746172204561746572792026204c6f756e676520697320612072657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043616c69666f726e69612e2054686520627573696e657373206f666665727320612076617269657479206f6620416d65726963616e2063756973696e6520616e6420746170617320626172732c2061732077656c6c206173206e696768746c696665206f7074696f6e732e205468657920617265206f70656e2066726f6d204d6f6e64617920746f2053756e646179206265747765656e2035706d20616e6420313a3330616d2e20437573746f6d6572732063616e207061726b207468656972206361727320696e2074686520737472656574206f72206761726167652c20616e64207265736572766174696f6e732063616e206265206d61646520666f722064696e696e67206174207468652072657374617572616e742e204f7574646f6f722073656174696e6720697320617661696c61626c652c20616e642057692d46692069732070726f766964656420666f7220667265652e205468652072657374617572616e7420616c736f206f66666572732074616b656f757420616e64206973207375697461626c6520666f722067726f7570732e0a0a4163636f7264696e6720746f20637573746f6d657220726576696577732c207468652072657374617572616e74206861732061206869676820726174696e67206f662034206f7574206f6620352073746172732e204f6e6520637573746f6d6572207072616973656420746865207369676e617475726520636f636b7461696c7320616e642074686520696e6372656469626c6520666f6f642c20706172746963756c61726c79207468652066696c6574206d69676e6f6e2e20416e6f7468657220637573746f6d657220657870726573736564206469736170706f696e746d656e7420776974682074686520636c6f73656420737461747573206f66207468652072657374617572616e74206465737069746520776861742074686520646f6f7220616e642059656c7020696e646963617465642c20616e6420746865206c61636b206f6620676f6f6420666f6f642e20486f77657665722c20616e6f7468657220637573746f6d65722077686f2076697369746564207468652072657374617572616e7420656e6a6f7965642074686520616d6269616e636520616e642074686520666f6f642c20696e636c7564696e67207468652066696c657420737465616b20626974652c20637572726965642066697368207461636f732c2068756d6d757320616e6420666c617462726561642c20616e642074686520636869636b656e206b65626162732e205468657920616c736f2061707072656369617465642074686520617474656e74696f6e206f6620746865206f776e65722c20427261642c2077686f20636865636b6564206f6e207468656972207365727669636520616e6420666f6f642e204f766572616c6c2c206974207365656d732074686174207468652072657374617572616e7420686173206120676f6f642072657075746174696f6e20616d6f6e6720637573746f6d65727320666f722069747320666f6f6420616e642061746d6f7370686572652e",
+  "arm": "source_span",
+  "call_id": "sha256:16f41f900ae54cc9f0f607d92f6f078c605605c42f617914cfd8ecd5239c3dbc:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.9722201090771705,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 996,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 39,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"20 E Cota St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":true,\\\"romantic\\\":true,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Bars, American (New), Tapas Bars, Restaurants, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-1:30\\\",\\\"Monday\\\":\\\"17:0-1:30\\\",\\\"Saturday\\\":\\\"17:0-1:30\\\",\\\"Sunday\\\":\\\"17:0-1:30\\\",\\\"Thursday\\\":\\\"17:0-1:30\\\",\\\"Tuesday\\\":\\\"17:0-1:30\\\",\\\"Wednesday\\\":\\\"17:0-1:30\\\"},\\\"name\\\":\\\"Nectar Eatery & Lounge\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2017-12-04 14:11:04\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Go for the amazing signature cocktails, return for their incredible food. I wasn't disappointed. Filet Mignon was incredible.  Getting great service is rare. I was pleasantly greeted, had all food questions answered with enthusiasm for what was offered and everything arrived in a timely matter.\\\"},{\\\"review_date\\\":\\\"2017-11-28 08:01:54\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Whatever. Annoyed. Closed when the door and yelp said they were open. Not good food... because we didn't have any.\\\"},{\\\"review_date\\\":\\\"2017-11-27 01:00:23\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I love places that you can hang out, actually talk with your table and enjoy awesome food. We had the following:\\\\nFilet Steak Bite (Kashmiri almond sauce was the best!)\\\\nCurried Fish Tacos (good but not enough spice for my taste)\\\\nHummus and flat bread were delicious\\\\nOnion Pakoras date tamarind chutney was a perfect balance\\\\nNectar Fries tasty spices \\\\nChili Lemongrass Shrimp (scampi sauce with a little kick was amazing)\\\\nChicken kebabs tender and juicy, loved the flavor\\\\n\\\\nI will definitely keep coming back and different items and bring more friends. A really nice touch was that the owner Brad came around to say hi and check on food, drinks and service. We asked about his story and he told us about his experiences in the biz. It's great to see a locally owned restaurant doing well.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Nectar Eatery & Lounge is a restaurant located in Santa Barbara, California. The business offers a variety of American cuisine and tapas bars, as well as nightlife options. They are open from Monday to Sunday between 5pm and 1:30am. Customers can park their cars in the street or garage, and reservations can be made for dining at the restaurant. Outdoor seating is available, and Wi-Fi is provided for free. The restaurant also offers takeout and is suitable for groups.\\n\\nAccording to customer reviews, the restaurant has a high rating of 4 out of 5 stars. One customer praised the signature cocktails and the incredible food, particularly the filet mignon. Another customer expressed disappointment with the closed status of the restaurant despite what the door and Yelp indicated, and the lack of good food. However, another customer who visited the restaurant enjoyed the ambiance and the food, including the filet steak bite, curried fish tacos, hummus and flatbread, and the chicken kebabs. They also appreciated the attention of the owner, Brad, who checked on their service and food. Overall, it seems that the restaurant has a good reputation among customers for its food and atmosphere.\"}",
+  "prompt_sha256": "sha256:03dbf391b6cf60a78bb35414e68b509111e0c9a5da4ac0633b36ce4ef94a7321",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"p_hallucination\": 1, \"quote\": \"OutdoorSeating\\\":false\", \"byte_start\": 314, \"byte_end\": 331}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185085,
+    "id": "chatcmpl-7vpSPJilcTANYnU6cotApue7dM95Xsww",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 938.416,
+      "predicted_n": 39,
+      "predicted_per_second": 41.55939370172716,
+      "predicted_per_token_ms": 24.06194871794872,
+      "prompt_ms": 902.512,
+      "prompt_n": 996,
+      "prompt_per_second": 1103.5864343077988,
+      "prompt_per_token_ms": 0.9061365461847389
+    },
+    "usage": {
+      "completion_tokens": 39,
+      "prompt_tokens": 996,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1035
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"20 E Cota St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":true,\\\"romantic\\\":true,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Bars, American (New), Tapas Bars, Restaurants, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-1:30\\\",\\\"Monday\\\":\\\"17:0-1:30\\\",\\\"Saturday\\\":\\\"17:0-1:30\\\",\\\"Sunday\\\":\\\"17:0-1:30\\\",\\\"Thursday\\\":\\\"17:0-1:30\\\",\\\"Tuesday\\\":\\\"17:0-1:30\\\",\\\"Wednesday\\\":\\\"17:0-1:30\\\"},\\\"name\\\":\\\"Nectar Eatery & Lounge\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2017-12-04 14:11:04\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Go for the amazing signature cocktails, return for their incredible food. I wasn't disappointed. Filet Mignon was incredible.  Getting great service is rare. I was pleasantly greeted, had all food questions answered with enthusiasm for what was offered and everything arrived in a timely matter.\\\"},{\\\"review_date\\\":\\\"2017-11-28 08:01:54\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Whatever. Annoyed. Closed when the door and yelp said they were open. Not good food... because we didn't have any.\\\"},{\\\"review_date\\\":\\\"2017-11-27 01:00:23\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I love places that you can hang out, actually talk with your table and enjoy awesome food. We had the following:\\\\nFilet Steak Bite (Kashmiri almond sauce was the best!)\\\\nCurried Fish Tacos (good but not enough spice for my taste)\\\\nHummus and flat bread were delicious\\\\nOnion Pakoras date tamarind chutney was a perfect balance\\\\nNectar Fries tasty spices \\\\nChili Lemongrass Shrimp (scampi sauce with a little kick was amazing)\\\\nChicken kebabs tender and juicy, loved the flavor\\\\n\\\\nI will definitely keep coming back and different items and bring more friends. A really nice touch was that the owner Brad came around to say hi and check on food, drinks and service. We asked about his story and he told us about his experiences in the biz. It's great to see a locally owned restaurant doing well.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Nectar Eatery & Lounge is a restaurant located in Santa Barbara, California. The business offers a variety of American cuisine and tapas bars, as well as nightlife options. They are open from Monday to Sunday between 5pm and 1:30am. Customers can park their cars in the street or garage, and reservations can be made for dining at the restaurant. Outdoor seating is available, and Wi-Fi is provided for free. The restaurant also offers takeout and is suitable for groups.\\n\\nAccording to customer reviews, the restaurant has a high rating of 4 out of 5 stars. One customer praised the signature cocktails and the incredible food, particularly the filet mignon. Another customer expressed disappointment with the closed status of the restaurant despite what the door and Yelp indicated, and the lack of good food. However, another customer who visited the restaurant enjoyed the ambiance and the food, including the filet steak bite, curried fish tacos, hummus and flatbread, and the chicken kebabs. They also appreciated the attention of the owner, Brad, who checked on their service and food. Overall, it seems that the restaurant has a good reputation among customers for its food and atmosphere.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 52,
+  "source_bytes": "7b2261646472657373223a223230204520436f7461205374222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a66616c73652c22636c61737379223a66616c73652c226469766579223a66616c73652c2268697073746572223a66616c73652c22696e74696d617465223a747275652c22726f6d616e746963223a747275652c22746f757269737479223a66616c73652c227472656e6479223a747275652c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a66616c73652c22737472656574223a747275652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a66616c73652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a747275652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a2266726565227d2c22627573696e6573735f7374617273223a342e302c2263617465676f72696573223a22426172732c20416d65726963616e20284e6577292c20546170617320426172732c2052657374617572616e74732c204e696768746c696665222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a2231373a302d313a3330222c224d6f6e646179223a2231373a302d313a3330222c225361747572646179223a2231373a302d313a3330222c2253756e646179223a2231373a302d313a3330222c225468757273646179223a2231373a302d313a3330222c2254756573646179223a2231373a302d313a3330222c225765646e6573646179223a2231373a302d313a3330227d2c226e616d65223a224e6563746172204561746572792026204c6f756e6765222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323031372d31322d30342031343a31313a3034222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22476f20666f722074686520616d617a696e67207369676e617475726520636f636b7461696c732c2072657475726e20666f7220746865697220696e6372656469626c6520666f6f642e2049207761736e2774206469736170706f696e7465642e2046696c6574204d69676e6f6e2077617320696e6372656469626c652e202047657474696e67206772656174207365727669636520697320726172652e20492077617320706c656173616e746c7920677265657465642c2068616420616c6c20666f6f64207175657374696f6e7320616e737765726564207769746820656e746875736961736d20666f72207768617420776173206f66666572656420616e642065766572797468696e67206172726976656420696e20612074696d656c79206d61747465722e227d2c7b227265766965775f64617465223a22323031372d31312d32382030383a30313a3534222c227265766965775f7374617273223a312e302c227265766965775f74657874223a2257686174657665722e20416e6e6f7965642e20436c6f736564207768656e2074686520646f6f7220616e642079656c70207361696420746865792077657265206f70656e2e204e6f7420676f6f6420666f6f642e2e2e2062656361757365207765206469646e2774206861766520616e792e227d2c7b227265766965775f64617465223a22323031372d31312d32372030313a30303a3233222c227265766965775f7374617273223a342e302c227265766965775f74657874223a2249206c6f766520706c61636573207468617420796f752063616e2068616e67206f75742c2061637475616c6c792074616c6b207769746820796f7572207461626c6520616e6420656e6a6f7920617765736f6d6520666f6f642e205765206861642074686520666f6c6c6f77696e673a5c6e46696c657420537465616b204269746520284b6173686d69726920616c6d6f6e642073617563652077617320746865206265737421295c6e437572726965642046697368205461636f732028676f6f6420627574206e6f7420656e6f75676820737069636520666f72206d79207461737465295c6e48756d6d757320616e6420666c617420627265616420776572652064656c6963696f75735c6e4f6e696f6e2050616b6f72617320646174652074616d6172696e6420636875746e657920776173206120706572666563742062616c616e63655c6e4e656374617220467269657320746173747920737069636573205c6e4368696c69204c656d6f6e677261737320536872696d7020287363616d706920736175636520776974682061206c6974746c65206b69636b2077617320616d617a696e67295c6e436869636b656e206b65626162732074656e64657220616e64206a756963792c206c6f7665642074686520666c61766f725c6e5c6e492077696c6c20646566696e6974656c79206b65657020636f6d696e67206261636b20616e6420646966666572656e74206974656d7320616e64206272696e67206d6f726520667269656e64732e2041207265616c6c79206e69636520746f75636820776173207468617420746865206f776e657220427261642063616d652061726f756e6420746f2073617920686920616e6420636865636b206f6e20666f6f642c206472696e6b7320616e6420736572766963652e2057652061736b65642061626f7574206869732073746f727920616e6420686520746f6c642075732061626f75742068697320657870657269656e63657320696e207468652062697a2e204974277320677265617420746f207365652061206c6f63616c6c79206f776e65642072657374617572616e7420646f696e672077656c6c2e227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:12ca5750d9e959395b4a34d4eea2e23639663c2aafb85298adac6301b3b1d967",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\"p_hallucination\": 1, \"quote\": \"OutdoorSeating\\\":false\", \"byte_start\": 314, \"byte_end\": 331}",
+  "unit_id": "sha256:16f41f900ae54cc9f0f607d92f6f078c605605c42f617914cfd8ecd5239c3dbc"
+}

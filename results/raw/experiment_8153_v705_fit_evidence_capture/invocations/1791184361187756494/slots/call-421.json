@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c206120736e616b652072696e672063616e2073796d626f6c697a6520766172696f7573207468696e677320646570656e64696e67206f6e207468652066696e67657220697420697320776f726e206f6e2e204f6e207468652066697273742066696e6765722c20697420737567676573747320616e2065676f746973746963616c20706572736f6e207573696e672074686520736e616b6520746f20656e68616e6365207468656972207374617475732e204f6e20746865207365636f6e642066696e6765722c2069742073756767657374732061206d6174657269616c697374696320706572736f6e207573696e672074686520736e616b6520746f20656e68616e6365207468656972207765616c74682e204f6e207468652074686972642066696e6765722c20697420737567676573747320616e20656d6f74696f6e616c20706572736f6e207573696e672074686520736e616b6520746f206d6974696761746520746865697220656d6f74696f6e732e204f6e2074686520666f757274682066696e6765722c206974207375676765737473206120706572736f6e20776974682073657875616c20696e6869626974696f6e73207573696e672074686520736e616b6520746f206569746865722068696465206f72206f766572636f6d6520746869732070726f626c656d2e",
+  "arm": "holistic",
+  "call_id": "sha256:1b0a2fedf0eaf67566bf1336e1c5ec446d3c81752bbc752b1788f6bf5be535e7:source_removed",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "duration_s": 0.7180802410002798,
+  "entailment_label": null,
+  "exclusion_reason": "invalid_probability_or_usage",
+  "human_target": null,
+  "input_tokens": 167,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 0,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": null,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "missing_probability",
+    "valid_quote": 0
+  },
+  "probability": null,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Based on the given passages, a snake ring can symbolize various things depending on the finger it is worn on. On the first finger, it suggests an egotistical person using the snake to enhance their status. On the second finger, it suggests a materialistic person using the snake to enhance their wealth. On the third finger, it suggests an emotional person using the snake to mitigate their emotions. On the fourth finger, it suggests a person with sexual inhibitions using the snake to either hide or overcome this problem.\"}",
+  "prompt_sha256": "sha256:22326fa91b2aa67099a8ccd7af2f8798c82702b4b3eb54776afed40c4c867256",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```json\n{\"p_hallucination\": 1}\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185162,
+    "id": "chatcmpl-VgsQ3zlf4JvRUg1yTuocGOWBsU3PMTrh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 369.762,
+      "predicted_n": 16,
+      "predicted_per_second": 43.27107707119715,
+      "predicted_per_token_ms": 23.110125,
+      "prompt_ms": 247.19,
+      "prompt_n": 167,
+      "prompt_per_second": 675.5936728832073,
+      "prompt_per_token_ms": 1.4801796407185628
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 167,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 183
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Based on the given passages, a snake ring can symbolize various things depending on the finger it is worn on. On the first finger, it suggests an egotistical person using the snake to enhance their status. On the second finger, it suggests a materialistic person using the snake to enhance their wealth. On the third finger, it suggests an emotional person using the snake to mitigate their emotions. On the fourth finger, it suggests a person with sexual inhibitions using the snake to either hide or overcome this problem.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 13,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:d24b9a3e609ce915d7902c9bb9eba0e5d9088e1d2e0239377a0e1d372bb7e366",
+  "started": true,
+  "status": "failed",
+  "transcript": "```json\n{\"p_hallucination\": 1}\n```",
+  "unit_id": "sha256:1b0a2fedf0eaf67566bf1336e1c5ec446d3c81752bbc752b1788f6bf5be535e7"
+}

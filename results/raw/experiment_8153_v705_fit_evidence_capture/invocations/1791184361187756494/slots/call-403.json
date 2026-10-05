@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20706173746120697320612066656d696e696e65206e6f756e20696e204974616c69616e2e20506173736167652032207374617465732074686174207468652061727469636c6520226c61222069732075736564206265666f72652066656d696e696e6520776f7264732c20616e642073696e636520706173746120697320612066656d696e696e6520776f72642c20697420776f756c6420626520726566657272656420746f20617320226c61207061737461222e",
+  "arm": "holistic",
+  "call_id": "sha256:b5fcb3991e84b73d1e8191aa70c37dbad8c44ddbc61ad39e9e83458b30e2f25e:source_removed",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "duration_s": 0.7329139600042254,
+  "entailment_label": null,
+  "exclusion_reason": "invalid_probability_or_usage",
+  "human_target": null,
+  "input_tokens": 112,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 0,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": null,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "missing_probability",
+    "valid_quote": 0
+  },
+  "probability": null,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Based on the given passages, pasta is a feminine noun in Italian. Passage 2 states that the article \\\"la\\\" is used before feminine words, and since pasta is a feminine word, it would be referred to as \\\"la pasta\\\".\"}",
+  "prompt_sha256": "sha256:583c2f7bea67d92ffe931959ee9fd0407710291bfe2106020abf214cb3cde8a2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```json\n{\"p_hallucination\": 1}\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185144,
+    "id": "chatcmpl-GGR1Ye2UVXN4GwRnLTzn7y9uFppIBIFR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 369.379,
+      "predicted_n": 16,
+      "predicted_per_second": 43.315943786733946,
+      "predicted_per_token_ms": 23.0861875,
+      "prompt_ms": 193.421,
+      "prompt_n": 112,
+      "prompt_per_second": 579.04777661164,
+      "prompt_per_token_ms": 1.7269732142857142
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 112,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 128
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Based on the given passages, pasta is a feminine noun in Italian. Passage 2 states that the article \\\"la\\\" is used before feminine words, and since pasta is a feminine word, it would be referred to as \\\"la pasta\\\".\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 7,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:9a17d890820157662eed680a2da12f4b7dae91841d118f5891ccdd7fa5cbd6c6",
+  "started": true,
+  "status": "failed",
+  "transcript": "```json\n{\"p_hallucination\": 1}\n```",
+  "unit_id": "sha256:b5fcb3991e84b73d1e8191aa70c37dbad8c44ddbc61ad39e9e83458b30e2f25e"
+}

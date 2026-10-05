@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e205468652070617373616765732070726f766964656420646f206e6f7420636f6e7461696e20696e666f726d6174696f6e2061626f7574207468652063757272656e74207765617468657220666f72656361737420696e204c6f6e67204265616368206f7220616e79207570636f6d696e67207765617468657220636f6e646974696f6e732e2054686520666972737420706173736167652070726f7669646573206120666f72656361737420666f7220417072696c203234746820616e6420323574682c207768696c6520746865207365636f6e6420706173736167652070726f766964657320612031302d646179207765617468657220666f726563617374207374617274696e672066726f6d20417072696c20323074682e20486f77657665722c20746865207175657374696f6e2061736b7320666f72207468652063757272656e74207765617468657220666f72656361737420696e204c6f6e672042656163682c207768696368206973206e6f7420617661696c61626c6520696e2074686520676976656e2070617373616765732e",
+  "arm": "source_span",
+  "call_id": "sha256:131464178e53948fca8b073b7fd68326ed85119e0d04ce4b985eaf07ece39615:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.5034192489692941,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 441,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 40,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Monday:The Long Beach forecast for Apr 24 is 70 degrees and Sunny. There is 53 percentage chance of rain and 6 mph winds from the South. Tuesday:The Long Beach forecast for Apr 25 is 68 degrees and Sunny. There is 58 percentage chance of rain and 7 mph winds from the South-Southwest.\\\\n\\\\npassage 2:Long Beach 10 Day Weather. 1  Thursday:The Long Beach forecast for Apr 20 is 73 degrees and Sunny. There is 35 percentage chance of rain and 9 mph winds from the West. 2  Friday:The Long Beach forecast for Apr 21 is 82 degrees and Sunny. There is 21 percentage chance of rain and 3 mph winds from the Northwest.\\\\n\\\\npassage 3:For more than 20 years Earth Networks has operated the world\u2019s largest and most comprehensive weather observation, lightning detection, and climate networks. We are now leveraging our big data smarts to deliver on the promise of IoT.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather forecast in long beach\\\"}\", \"answer\": \"Unable to answer based on given passages. The passages provided do not contain information about the current weather forecast in Long Beach or any upcoming weather conditions. The first passage provides a forecast for April 24th and 25th, while the second passage provides a 10-day weather forecast starting from April 20th. However, the question asks for the current weather forecast in Long Beach, which is not available in the given passages.\"}",
+  "prompt_sha256": "sha256:64ef802a78f0f61de341dd72e67231d9c973ceccdbf9e9342d9c6bb4124feda3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0.0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184998,
+    "id": "chatcmpl-rqqaMb9ArYAnEztr1Z3cSEVOHfICmd1b",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 952.81,
+      "predicted_n": 40,
+      "predicted_per_second": 41.981087520072215,
+      "predicted_per_token_ms": 23.820249999999998,
+      "prompt_ms": 434.743,
+      "prompt_n": 441,
+      "prompt_per_second": 1014.3924111486557,
+      "prompt_per_token_ms": 0.98581179138322
+    },
+    "usage": {
+      "completion_tokens": 40,
+      "prompt_tokens": 441,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 481
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Monday:The Long Beach forecast for Apr 24 is 70 degrees and Sunny. There is 53 percentage chance of rain and 6 mph winds from the South. Tuesday:The Long Beach forecast for Apr 25 is 68 degrees and Sunny. There is 58 percentage chance of rain and 7 mph winds from the South-Southwest.\\\\n\\\\npassage 2:Long Beach 10 Day Weather. 1  Thursday:The Long Beach forecast for Apr 20 is 73 degrees and Sunny. There is 35 percentage chance of rain and 9 mph winds from the West. 2  Friday:The Long Beach forecast for Apr 21 is 82 degrees and Sunny. There is 21 percentage chance of rain and 3 mph winds from the Northwest.\\\\n\\\\npassage 3:For more than 20 years Earth Networks has operated the world\u2019s largest and most comprehensive weather observation, lightning detection, and climate networks. We are now leveraging our big data smarts to deliver on the promise of IoT.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather forecast in long beach\\\"}\", \"answer\": \"Unable to answer based on given passages. The passages provided do not contain information about the current weather forecast in Long Beach or any upcoming weather conditions. The first passage provides a forecast for April 24th and 25th, while the second passage provides a 10-day weather forecast starting from April 20th. However, the question asks for the current weather forecast in Long Beach, which is not available in the given passages.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 28,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4d6f6e6461793a546865204c6f6e6720426561636820666f72656361737420666f7220417072203234206973203730206465677265657320616e642053756e6e792e2054686572652069732035332070657263656e74616765206368616e6365206f66207261696e20616e642036206d70682077696e64732066726f6d2074686520536f7574682e20547565736461793a546865204c6f6e6720426561636820666f72656361737420666f7220417072203235206973203638206465677265657320616e642053756e6e792e2054686572652069732035382070657263656e74616765206368616e6365206f66207261696e20616e642037206d70682077696e64732066726f6d2074686520536f7574682d536f757468776573742e5c6e5c6e7061737361676520323a4c6f6e672042656163682031302044617920576561746865722e2031202054687572736461793a546865204c6f6e6720426561636820666f72656361737420666f7220417072203230206973203733206465677265657320616e642053756e6e792e2054686572652069732033352070657263656e74616765206368616e6365206f66207261696e20616e642039206d70682077696e64732066726f6d2074686520576573742e203220204672696461793a546865204c6f6e6720426561636820666f72656361737420666f7220417072203231206973203832206465677265657320616e642053756e6e792e2054686572652069732032312070657263656e74616765206368616e6365206f66207261696e20616e642033206d70682077696e64732066726f6d20746865204e6f727468776573742e5c6e5c6e7061737361676520333a466f72206d6f7265207468616e203230207965617273204561727468204e6574776f726b7320686173206f706572617465642074686520776f726c64e2809973206c61726765737420616e64206d6f737420636f6d70726568656e736976652077656174686572206f62736572766174696f6e2c206c696768746e696e6720646574656374696f6e2c20616e6420636c696d617465206e6574776f726b732e20576520617265206e6f77206c657665726167696e67206f757220626967206461746120736d6172747320746f2064656c69766572206f6e207468652070726f6d697365206f6620496f542e5c6e5c6e222c227175657374696f6e223a227765617468657220666f72656361737420696e206c6f6e67206265616368227d",
+  "source_cluster_id": "sha256:c04e5eaba334e769f44e48341c544e36e94bf8cc21b3aa1cd8b0f8fceafe5aaf",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0.0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+  "unit_id": "sha256:131464178e53948fca8b073b7fd68326ed85119e0d04ce4b985eaf07ece39615"
+}

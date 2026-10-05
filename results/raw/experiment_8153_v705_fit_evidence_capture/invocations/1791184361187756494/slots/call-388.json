@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "4a65616e6e696e65e280997320416d65726963616e2042616b65727920262052657374617572616e74206973206c6f6361746564206f6e20312053746174652053747265657420696e2053616e746120426172626172612c2043616c69666f726e69612e2049742062656c6f6e677320746f207365766572616c2063617465676f7269657320696e636c7564696e6720466f6f642c2042616b65726965732c2052657374617572616e74732c20506174697373657269652f43616b652053686f702c2043616665732c20616e6420436f666665652026205465612e2054686520627573696e657373206f706572617465732066726f6d204d6f6e64617920746f2053756e646179207769746820686f7572732076617279696e6720736c696768746c792065616368206461792e20437573746f6d6572732063616e207061726b2074686569722076656869636c6573206f6e2074686520737472656574206f7220696e2061206e6561726279206c6f742c206275742076616c6574207061726b696e67206973206e6f7420617661696c61626c652e20546865726520617265206e6f207265736572766174696f6e7320726571756972656420666f7220746869732072657374617572616e742c20616e6420626f746820696e646f6f7220616e64206f7574646f6f722073656174696e67206f7074696f6e732061726520617661696c61626c652e205769466920697320667265652c20616e642074616b656f757420697320616c736f206f6666657265642e200a0a5468652072657374617572616e742068617320726563656976656420706f73697469766520726576696577732066726f6d2069747320637573746f6d6572732e204f6e6520637573746f6d6572207072616973656420746865204b6168756c612042616e616e61204672656e636820746f6173742061732022616d617a696e672220616e64206e6f74656420746861742074686520736572766963652077617320657863656c6c656e742e20416e6f7468657220637573746f6d657220636f6d6d656e64656420746865206c6f636174696f6e20616e642074686520666f6f64207175616c6974792c207768696c65206120746869726420637573746f6d6572206170707265636961746564207468652066617374207365727669636520616e6420746865206c6f76656c792073656174696e6720617265612e204f766572616c6c2c204a65616e6e696e65e280997320416d65726963616e2042616b65727920262052657374617572616e74207365656d73206c696b65206120706f70756c61722073706f7420666f7220627265616b66617374207769746820676f6f6420666f6f642c20736572766963652c20616e6420616d6269616e63652e",
+  "arm": "holistic",
+  "call_id": "sha256:1a68ac2fa07b48f6222675d2fa4d96cbc276e196b10f31d0e483e54aa92f2526:source_removed",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "duration_s": 0.8085017539560795,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 264,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Jeannine\u2019s American Bakery & Restaurant is located on 1 State Street in Santa Barbara, California. It belongs to several categories including Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, and Coffee & Tea. The business operates from Monday to Sunday with hours varying slightly each day. Customers can park their vehicles on the street or in a nearby lot, but valet parking is not available. There are no reservations required for this restaurant, and both indoor and outdoor seating options are available. WiFi is free, and takeout is also offered. \\n\\nThe restaurant has received positive reviews from its customers. One customer praised the Kahula Banana French toast as \\\"amazing\\\" and noted that the service was excellent. Another customer commended the location and the food quality, while a third customer appreciated the fast service and the lovely seating area. Overall, Jeannine\u2019s American Bakery & Restaurant seems like a popular spot for breakfast with good food, service, and ambiance.\"}",
+  "prompt_sha256": "sha256:c7b886585907eebdfc816e6f861e5457df1073e889e931d9a48022af751bdedc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185130,
+    "id": "chatcmpl-bo3ZutA6Xayn962FsaYsnJ2XzRuK1lqP",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 369.812,
+      "predicted_n": 16,
+      "predicted_per_second": 43.265226655706144,
+      "predicted_per_token_ms": 23.11325,
+      "prompt_ms": 321.582,
+      "prompt_n": 264,
+      "prompt_per_second": 820.941470604698,
+      "prompt_per_token_ms": 1.2181136363636362
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 264,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 280
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Jeannine\u2019s American Bakery & Restaurant is located on 1 State Street in Santa Barbara, California. It belongs to several categories including Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, and Coffee & Tea. The business operates from Monday to Sunday with hours varying slightly each day. Customers can park their vehicles on the street or in a nearby lot, but valet parking is not available. There are no reservations required for this restaurant, and both indoor and outdoor seating options are available. WiFi is free, and takeout is also offered. \\n\\nThe restaurant has received positive reviews from its customers. One customer praised the Kahula Banana French toast as \\\"amazing\\\" and noted that the service was excellent. Another customer commended the location and the food quality, while a third customer appreciated the fast service and the lovely seating area. Overall, Jeannine\u2019s American Bakery & Restaurant seems like a popular spot for breakfast with good food, service, and ambiance.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 2,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:91cf0828a4c2382e6f6438f2ae2c0ce2e7d44404e8b03aed160eb2e3595ef4b5",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.0\n}",
+  "unit_id": "sha256:1a68ac2fa07b48f6222675d2fa4d96cbc276e196b10f31d0e483e54aa92f2526"
+}

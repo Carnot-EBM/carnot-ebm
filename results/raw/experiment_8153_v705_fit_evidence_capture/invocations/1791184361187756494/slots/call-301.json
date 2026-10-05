@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "426f6479204c616e6775616765205370656369616c6973742044617272656e205374616e746f6e20616e616c797a6564205072696e63652048617272792773206265686176696f7220617420746865205553204772616e64205072697820616e6420636c61696d732074686174206865206170706561727320746f206265206d6f72652072656c6178656420616e6420636f6d666f727461626c65207468616e2068652068617320696e2061207768696c652e204861727279206672657175656e746c792075736573206869732068616e647320696e2068697320706f636b6574732061732061206469737472657373207369676e616c2c2062757420686520646964206e6f7420646f20736f2061742074686973206576656e742c20696e6469636174696e6720746861742068652066656c74206174206561736520616e6420656e6a6f7965642073686f77696e67206f66662068697320747275652073656c662e205374616e746f6e2062656c696576657320746861742048617272792077616e747320746f206265206f70656e20616e6420686f6e65737420776974682070656f706c652c20616e642068652069732077696c6c696e6720746f20656e676167652077697468207468656d20776974686f757420616e792070726574656e7365732e",
+  "arm": "source_span",
+  "call_id": "sha256:83794664596f68282651089bc20e3d84bbe9ac89cb2d7a33d9b5372baffa70a1:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.6857245180290192,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 661,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 38,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Prince Harry is \\\"On Top Of the world\\\" and has stopped using his \\\"Distress signals\\\"\\nAccording to a body language specialist, Prince Harry was \\\"his most relaxed self\\\" at the US Grand Prix because he was \\\"on top of the world\\\" and wanted to showcase \\\"who he really is\\\".\\nThey claimed that the Duke of Sussex didn't exhibit any symptoms of anxiety or stress and instead appeared \\\"elated\\\" and \\\"completely natural\\\".\\nFollowing an analysis of Harry's most recent engagement, body language expert Darren Stanton came to the conclusion that, although the prince frequently indicates that he is experiencing \\\"pressure\\\" by putting his hands in his pockets, on this occasion he was communicating that he felt \\\"free\\\" as he was observed \\\"mucking in\\\" and \\\"letting himself go\\\".\\nStanton, speaking on behalf of Betfair Casino, stated: \\\"Prince Harry appears to be at his best at ease when he is at the Grand Prix.\\n\\\"He is welcoming everyone in with open arms.\\n\\\"Even though he is alone, he is happy and doesn't mind being self-sufficient.\\n\\\"He is expressing to everyone how joyful, pleased, and authentic he feels. Harry is entirely natural; he's not under any pressure or tension. It indicates that he enjoys getting his hands dirty and letting go.\\\"\\nThe expert went on to say that because the monarch wasn't trying to hide his feelings, he appeared to be happier than he had been in a long time.\\n\\\"Harry will put his hands in his pockets or twiddle his ring finger to attempt to mask how he is truly feeling when he is stressed.\\n\\\"It's a distress signal, and he has used this frequently on engagements, but, here, Harry is a man feeling on top of the world, but also very calm in this environment,\\\" Stanton said.\\nThe Duke, he continued, appeared to be experiencing his actual self, one in which \\\"he can let go and he doesn't want to hide any of that.\\\"\\nHe clarified that Harry gave the impression of wanting to be \\\"open and honest\\\" and share his life with others.\\n\\\"He's prepared to get involved and show people who he really is deep down\\\", Stanton stated.\", \"answer\": \"Body Language Specialist Darren Stanton analyzed Prince Harry's behavior at the US Grand Prix and claims that he appears to be more relaxed and comfortable than he has in a while. Harry frequently uses his hands in his pockets as a distress signal, but he did not do so at this event, indicating that he felt at ease and enjoyed showing off his true self. Stanton believes that Harry wants to be open and honest with people, and he is willing to engage with them without any pretenses.\"}",
+  "prompt_sha256": "sha256:c1e2268f43a56777f8c5d6bcb4098ed0f7eef12812aa74f56af158f8bd77e5ce",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184984,
+    "id": "chatcmpl-ELANLeCCrcIhnUS7hLjP05JlgLANyYZd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 905.214,
+      "predicted_n": 38,
+      "predicted_per_second": 41.979023744661475,
+      "predicted_per_token_ms": 23.82142105263158,
+      "prompt_ms": 664.306,
+      "prompt_n": 661,
+      "prompt_per_second": 995.0233777807215,
+      "prompt_per_token_ms": 1.0050015128593042
+    },
+    "usage": {
+      "completion_tokens": 38,
+      "prompt_tokens": 661,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 699
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Prince Harry is \\\"On Top Of the world\\\" and has stopped using his \\\"Distress signals\\\"\\nAccording to a body language specialist, Prince Harry was \\\"his most relaxed self\\\" at the US Grand Prix because he was \\\"on top of the world\\\" and wanted to showcase \\\"who he really is\\\".\\nThey claimed that the Duke of Sussex didn't exhibit any symptoms of anxiety or stress and instead appeared \\\"elated\\\" and \\\"completely natural\\\".\\nFollowing an analysis of Harry's most recent engagement, body language expert Darren Stanton came to the conclusion that, although the prince frequently indicates that he is experiencing \\\"pressure\\\" by putting his hands in his pockets, on this occasion he was communicating that he felt \\\"free\\\" as he was observed \\\"mucking in\\\" and \\\"letting himself go\\\".\\nStanton, speaking on behalf of Betfair Casino, stated: \\\"Prince Harry appears to be at his best at ease when he is at the Grand Prix.\\n\\\"He is welcoming everyone in with open arms.\\n\\\"Even though he is alone, he is happy and doesn't mind being self-sufficient.\\n\\\"He is expressing to everyone how joyful, pleased, and authentic he feels. Harry is entirely natural; he's not under any pressure or tension. It indicates that he enjoys getting his hands dirty and letting go.\\\"\\nThe expert went on to say that because the monarch wasn't trying to hide his feelings, he appeared to be happier than he had been in a long time.\\n\\\"Harry will put his hands in his pockets or twiddle his ring finger to attempt to mask how he is truly feeling when he is stressed.\\n\\\"It's a distress signal, and he has used this frequently on engagements, but, here, Harry is a man feeling on top of the world, but also very calm in this environment,\\\" Stanton said.\\nThe Duke, he continued, appeared to be experiencing his actual self, one in which \\\"he can let go and he doesn't want to hide any of that.\\\"\\nHe clarified that Harry gave the impression of wanting to be \\\"open and honest\\\" and share his life with others.\\n\\\"He's prepared to get involved and show people who he really is deep down\\\", Stanton stated.\", \"answer\": \"Body Language Specialist Darren Stanton analyzed Prince Harry's behavior at the US Grand Prix and claims that he appears to be more relaxed and comfortable than he has in a while. Harry frequently uses his hands in his pockets as a distress signal, but he did not do so at this event, indicating that he felt at ease and enjoyed showing off his true self. Stanton believes that Harry wants to be open and honest with people, and he is willing to engage with them without any pretenses.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 23,
+  "source_bytes": "5072696e636520486172727920697320224f6e20546f70204f662074686520776f726c642220616e64206861732073746f70706564207573696e672068697320224469737472657373207369676e616c73220a4163636f7264696e6720746f206120626f6479206c616e6775616765207370656369616c6973742c205072696e6365204861727279207761732022686973206d6f73742072656c617865642073656c662220617420746865205553204772616e64205072697820626563617573652068652077617320226f6e20746f70206f662074686520776f726c642220616e642077616e74656420746f2073686f7763617365202277686f206865207265616c6c79206973222e0a5468657920636c61696d65642074686174207468652044756b65206f6620537573736578206469646e2774206578686962697420616e792073796d70746f6d73206f6620616e7869657479206f722073747265737320616e6420696e73746561642061707065617265642022656c617465642220616e642022636f6d706c6574656c79206e61747572616c222e0a466f6c6c6f77696e6720616e20616e616c79736973206f662048617272792773206d6f737420726563656e7420656e676167656d656e742c20626f6479206c616e6775616765206578706572742044617272656e205374616e746f6e2063616d6520746f2074686520636f6e636c7573696f6e20746861742c20616c74686f75676820746865207072696e6365206672657175656e746c7920696e64696361746573207468617420686520697320657870657269656e63696e6720227072657373757265222062792070757474696e67206869732068616e647320696e2068697320706f636b6574732c206f6e2074686973206f63636173696f6e2068652077617320636f6d6d756e69636174696e6720746861742068652066656c742022667265652220617320686520776173206f6273657276656420226d75636b696e6720696e2220616e6420226c657474696e672068696d73656c6620676f222e0a5374616e746f6e2c20737065616b696e67206f6e20626568616c66206f66204265746661697220436173696e6f2c207374617465643a20225072696e6365204861727279206170706561727320746f2062652061742068697320626573742061742065617365207768656e20686520697320617420746865204772616e6420507269782e0a2248652069732077656c636f6d696e672065766572796f6e6520696e2077697468206f70656e2061726d732e0a224576656e2074686f75676820686520697320616c6f6e652c20686520697320686170707920616e6420646f65736e2774206d696e64206265696e672073656c662d73756666696369656e742e0a2248652069732065787072657373696e6720746f2065766572796f6e6520686f77206a6f7966756c2c20706c65617365642c20616e642061757468656e746963206865206665656c732e20486172727920697320656e746972656c79206e61747572616c3b2068652773206e6f7420756e64657220616e79207072657373757265206f722074656e73696f6e2e20497420696e64696361746573207468617420686520656e6a6f79732067657474696e67206869732068616e647320646972747920616e64206c657474696e6720676f2e220a546865206578706572742077656e74206f6e20746f207361792074686174206265636175736520746865206d6f6e61726368207761736e277420747279696e6720746f206869646520686973206665656c696e67732c20686520617070656172656420746f2062652068617070696572207468616e20686520686164206265656e20696e2061206c6f6e672074696d652e0a2248617272792077696c6c20707574206869732068616e647320696e2068697320706f636b657473206f722074776964646c65206869732072696e672066696e67657220746f20617474656d707420746f206d61736b20686f77206865206973207472756c79206665656c696e67207768656e2068652069732073747265737365642e0a22497427732061206469737472657373207369676e616c2c20616e642068652068617320757365642074686973206672657175656e746c79206f6e20656e676167656d656e74732c206275742c20686572652c2048617272792069732061206d616e206665656c696e67206f6e20746f70206f662074686520776f726c642c2062757420616c736f20766572792063616c6d20696e207468697320656e7669726f6e6d656e742c22205374616e746f6e20736169642e0a5468652044756b652c20686520636f6e74696e7565642c20617070656172656420746f20626520657870657269656e63696e67206869732061637475616c2073656c662c206f6e6520696e207768696368202268652063616e206c657420676f20616e6420686520646f65736e27742077616e7420746f206869646520616e79206f6620746861742e220a486520636c61726966696564207468617420486172727920676176652074686520696d7072657373696f6e206f662077616e74696e6720746f20626520226f70656e20616e6420686f6e6573742220616e6420736861726520686973206c6966652077697468206f74686572732e0a224865277320707265706172656420746f2067657420696e766f6c76656420616e642073686f772070656f706c652077686f206865207265616c6c79206973206465657020646f776e222c205374616e746f6e207374617465642e",
+  "source_cluster_id": "sha256:44417ef15151c503bd5e0958bcec4b8320f1f085730ec3864200c10e075babe4",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+  "unit_id": "sha256:83794664596f68282651089bc20e3d84bbe9ac89cb2d7a33d9b5372baffa70a1"
+}

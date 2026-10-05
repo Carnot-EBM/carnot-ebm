@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4865726520697320616e206f626a656374697665206f76657276696577206f66204d69736f2048756e677279206261736564206f6e207468652070726f7669646564207374727563747572656420646174613a0a0a4d69736f2048756e6772792069732061204a6170616e6573652072657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043616c69666f726e69612e205468652072657374617572616e74206f66666572732073757368692c20646f2d69742d796f757273656c6620666f6f642c20616e642074616b6573207265736572766174696f6e732e204974206861732066726565205769466920616e64206f7574646f6f722073656174696e672c20616e64206973206f70656e20736576656e20646179732061207765656b2066726f6d2031303a3330616d20746f20393a3030706d2e204163636f7264696e6720746f20726576696577732c207468652072657374617572616e742068617320612063617375616c2061746d6f73706865726520616e642074686520737461666620697320667269656e646c792c2062757420746865207175616c697479206f6620666f6f64206d617920626520696e636f6e73697374656e742e204f6e65207265766965776572206d656e74696f6e656420746861742074686520637563756d62657273207573656420696e206120646973682077657265206e6f742066726573682c207768696c6520616e6f74686572207265766965776572206861642061206e6567617469766520657870657269656e636520776974682064656c69766572792e204164646974696f6e616c6c792c2074686572652068617665206265656e207265706f727473206f66207468652072657374617572616e74206265696e6720636c6f73656420666f72206275696c64696e67206d61696e74656e616e63652c20736f206974206d6179206265206265737420746f2063616c6c206168656164206f7220636865636b207468652072657374617572616e7427732077656273697465206265666f7265207669736974696e672e204f766572616c6c2c204d69736f2048756e6772792068617320616e206176657261676520726174696e67206f6620332e30206f7574206f6620342e30207374617273206261736564206f6e20746872656520726576696577732e",
+  "arm": "source_span",
+  "call_id": "sha256:a5c1e7f19fadb94f2ce8674c87d408aed2f3155833281034a354a1531a84d3f3:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.094963184907101,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 820,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 50,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"134 E Canon Perdido St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Japanese, Sushi Bars, Do-It-Yourself Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-21:0\\\",\\\"Monday\\\":\\\"10:30-21:0\\\",\\\"Saturday\\\":\\\"10:30-21:0\\\",\\\"Sunday\\\":\\\"10:30-21:0\\\",\\\"Thursday\\\":\\\"10:30-21:0\\\",\\\"Tuesday\\\":\\\"10:30-21:0\\\",\\\"Wednesday\\\":\\\"10:30-21:0\\\"},\\\"name\\\":\\\"Miso Hungry\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-08-29 04:51:05\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Miso closed...sign on the door for six weeks stating that they're closed for building maintenance. Didn't work out for them here.\\\"},{\\\"review_date\\\":\\\"2018-07-12 20:00:32\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"It was my first time and they were really nice and friendly but the quality of food was not there. I paid over $11 for a shrimp salad. The cucumbers werent even fresh. They looked spoiled.\\\"},{\\\"review_date\\\":\\\"2018-07-07 22:54:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Tried to order delivery, they let us know it'd be about an hour wait and then never showed up. When we called back they said it would be another 20 minutes and never showed up. If you can't pay enough employees to deliver food don't offer it on your website. Can't comment on the food because we never got any.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Here is an objective overview of Miso Hungry based on the provided structured data:\\n\\nMiso Hungry is a Japanese restaurant located in Santa Barbara, California. The restaurant offers sushi, do-it-yourself food, and takes reservations. It has free WiFi and outdoor seating, and is open seven days a week from 10:30am to 9:00pm. According to reviews, the restaurant has a casual atmosphere and the staff is friendly, but the quality of food may be inconsistent. One reviewer mentioned that the cucumbers used in a dish were not fresh, while another reviewer had a negative experience with delivery. Additionally, there have been reports of the restaurant being closed for building maintenance, so it may be best to call ahead or check the restaurant's website before visiting. Overall, Miso Hungry has an average rating of 3.0 out of 4.0 stars based on three reviews.\"}",
+  "prompt_sha256": "sha256:404f9776b8f3da6e8e3c681d0f026880fa43eeca160a48618d63d4263f7bc8d2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"RestaurantsReservations\\\":false\",\n  \"byte_start\": 438,\n  \"byte_end\": 461\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184536,
+    "id": "chatcmpl-0SMH2uPq9z5DztmGIycJpJMRogsGGwU6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1192.951,
+      "predicted_n": 50,
+      "predicted_per_second": 41.91286984964177,
+      "predicted_per_token_ms": 23.85902,
+      "prompt_ms": 776.655,
+      "prompt_n": 820,
+      "prompt_per_second": 1055.809851220941,
+      "prompt_per_token_ms": 0.947140243902439
+    },
+    "usage": {
+      "completion_tokens": 50,
+      "prompt_tokens": 820,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 870
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"134 E Canon Perdido St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Japanese, Sushi Bars, Do-It-Yourself Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-21:0\\\",\\\"Monday\\\":\\\"10:30-21:0\\\",\\\"Saturday\\\":\\\"10:30-21:0\\\",\\\"Sunday\\\":\\\"10:30-21:0\\\",\\\"Thursday\\\":\\\"10:30-21:0\\\",\\\"Tuesday\\\":\\\"10:30-21:0\\\",\\\"Wednesday\\\":\\\"10:30-21:0\\\"},\\\"name\\\":\\\"Miso Hungry\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-08-29 04:51:05\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Miso closed...sign on the door for six weeks stating that they're closed for building maintenance. Didn't work out for them here.\\\"},{\\\"review_date\\\":\\\"2018-07-12 20:00:32\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"It was my first time and they were really nice and friendly but the quality of food was not there. I paid over $11 for a shrimp salad. The cucumbers werent even fresh. They looked spoiled.\\\"},{\\\"review_date\\\":\\\"2018-07-07 22:54:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Tried to order delivery, they let us know it'd be about an hour wait and then never showed up. When we called back they said it would be another 20 minutes and never showed up. If you can't pay enough employees to deliver food don't offer it on your website. Can't comment on the food because we never got any.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Here is an objective overview of Miso Hungry based on the provided structured data:\\n\\nMiso Hungry is a Japanese restaurant located in Santa Barbara, California. The restaurant offers sushi, do-it-yourself food, and takes reservations. It has free WiFi and outdoor seating, and is open seven days a week from 10:30am to 9:00pm. According to reviews, the restaurant has a casual atmosphere and the staff is friendly, but the quality of food may be inconsistent. One reviewer mentioned that the cucumbers used in a dish were not fresh, while another reviewer had a negative experience with delivery. Additionally, there have been reports of the restaurant being closed for building maintenance, so it may be best to call ahead or check the restaurant's website before visiting. Overall, Miso Hungry has an average rating of 3.0 out of 4.0 stars based on three reviews.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 24,
+  "source_bytes": "7b2261646472657373223a2231333420452043616e6f6e205065726469646f205374222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a747275652c22636c61737379223a66616c73652c226469766579223a66616c73652c2268697073746572223a66616c73652c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a66616c73652c227472656e6479223a66616c73652c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a747275652c22737472656574223a747275652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a747275652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a2266726565227d2c22627573696e6573735f7374617273223a342e302c2263617465676f72696573223a22466f6f642c204a6170616e6573652c20537573686920426172732c20446f2d49742d596f757273656c6620466f6f642c2052657374617572616e7473222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a2231303a33302d32313a30222c224d6f6e646179223a2231303a33302d32313a30222c225361747572646179223a2231303a33302d32313a30222c2253756e646179223a2231303a33302d32313a30222c225468757273646179223a2231303a33302d32313a30222c2254756573646179223a2231303a33302d32313a30222c225765646e6573646179223a2231303a33302d32313a30227d2c226e616d65223a224d69736f2048756e677279222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323031382d30382d32392030343a35313a3035222c227265766965775f7374617273223a332e302c227265766965775f74657874223a224d69736f20636c6f7365642e2e2e7369676e206f6e2074686520646f6f7220666f7220736978207765656b732073746174696e672074686174207468657927726520636c6f73656420666f72206275696c64696e67206d61696e74656e616e63652e204469646e277420776f726b206f757420666f72207468656d20686572652e227d2c7b227265766965775f64617465223a22323031382d30372d31322032303a30303a3332222c227265766965775f7374617273223a312e302c227265766965775f74657874223a22497420776173206d792066697273742074696d6520616e6420746865792077657265207265616c6c79206e69636520616e6420667269656e646c792062757420746865207175616c697479206f6620666f6f6420776173206e6f742074686572652e20492070616964206f7665722024313120666f72206120736872696d702073616c61642e2054686520637563756d6265727320776572656e74206576656e2066726573682e2054686579206c6f6f6b65642073706f696c65642e227d2c7b227265766965775f64617465223a22323031382d30372d30372032323a35343a3139222c227265766965775f7374617273223a312e302c227265766965775f74657874223a22547269656420746f206f726465722064656c69766572792c2074686579206c6574207573206b6e6f7720697427642062652061626f757420616e20686f7572207761697420616e64207468656e206e657665722073686f7765642075702e205768656e2077652063616c6c6564206261636b2074686579207361696420697420776f756c6420626520616e6f74686572203230206d696e7574657320616e64206e657665722073686f7765642075702e20496620796f752063616e27742070617920656e6f75676820656d706c6f7965657320746f2064656c6976657220666f6f6420646f6e2774206f66666572206974206f6e20796f757220776562736974652e2043616e277420636f6d6d656e74206f6e2074686520666f6f642062656361757365207765206e6576657220676f7420616e792e227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:f18f297198e0d59db94dcb4ae3188a8d717667f5d0737cc786cbd400d58d724f",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"RestaurantsReservations\\\":false\",\n  \"byte_start\": 438,\n  \"byte_end\": 461\n}",
+  "unit_id": "sha256:a5c1e7f19fadb94f2ce8674c87d408aed2f3155833281034a354a1531a84d3f3"
+}

@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "426c656e6465727320496e207468652047726173732069732061206a756963652062617220616e642072657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043616c69666f726e69612e2054686579206f6666657220612076617269657479206f6620736d6f6f74686965732c206a75696365732c20616e6420666f6f64206f7074696f6e732c20616e6420636174657220746f207665676574617269616e20616e6420766567616e2064696574732e204163636f7264696e6720746f207468656972206c697374656420686f7572732c207468657920617265206f70656e20736576656e20646179732061207765656b2c207769746820657874656e64656420686f757273206f6e207765656b656e64732e2054686520627573696e65737320686173206120332e352d7374617220726174696e6720616e64206f666665727320616d656e6974696573207375636820617320667265652057692d466920616e642074616b652d6f75742073657276696365732e20486f77657665722c20736f6d6520637573746f6d6572732068617665207265706f7274656420697373756573207769746820746865207175616c697479206f66207468656972206472696e6b732c20696e636c7564696e6720746f6f206d7563682069636520616e64206e6f7420656e6f7567682066727569742c20616e6420706f6f7220637573746f6d657220736572766963652e204164646974696f6e616c6c792c2074686572652068617665206265656e20636f6d706c61696e74732061626f757420746865206c61636b206f66206f7267616e696320616e64206e6f6e2d474d4f20696e6772656469656e7473207573656420696e2074686569722070726f64756374732e204465737069746520746865736520636f6e6365726e732c20426c656e6465727320496e207468652047726173732072656d61696e73206120706f70756c61722073706f7420666f72206865616c74682d636f6e7363696f757320696e646976696475616c73206c6f6f6b696e6720666f7220717569636b20616e64206e7574726974696f7573206d65616c7320616e64206472696e6b732e",
+  "arm": "holistic",
+  "call_id": "sha256:a825923cdaea973b8ce8ecc863a277158626cb786c7d63e36b896760a591bf40:source_mismatched",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_mismatched",
+  "denominator": 1,
+  "donor_unit_id": "sha256:7d3f7c11c5099341fb0feb022290515c4f92b2488c9aec9d694ac2b9f12d06c9",
+  "duration_s": 1.2761974070454016,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 860,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"432 E Haley St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Organic Stores, Breakfast & Brunch, Live/Raw Food, Juice Bars & Smoothies, Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-17:30\\\",\\\"Monday\\\":\\\"7:30-17:30\\\",\\\"Saturday\\\":\\\"9:0-16:0\\\",\\\"Thursday\\\":\\\"7:30-17:30\\\",\\\"Tuesday\\\":\\\"7:30-17:30\\\",\\\"Wednesday\\\":\\\"7:30-17:30\\\"},\\\"name\\\":\\\"AH Juice Organics\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-08 21:58:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Caution! friendly and good food but...  No one is masked or rubber gloved preparing or serving food. And this is at the height of the pandemic \\\\\\\"viral blizzard\\\\\\\".  I asked how they could do that, not follow guidelines at this time. The young man said \\\\\\\"we just stay healthy\\\\\\\".  Uh, don't you understand symptomless transmission?  Don't you know you can easily infect others? You are serving food! You are fine to say it's OK to walk around outside firing a loaded gun. \\\\n\\\\nHesitatingly paid my to-go order and won't be back.\\\"},{\\\"review_date\\\":\\\"2021-12-25 17:42:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We stopped here for organic coffee but wow they have a lot of items! We will be back to try more stuff!\\\"},{\\\"review_date\\\":\\\"2021-12-17 22:14:34\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I've been to Ah Juice a few times in the past and enjoyed my food. I was very disappointed to see that this business is not using masks despite a current public health order requiring masks. No staff members were masked and there was no attempt to require masks of customers who were standing in line indoors. It's one thing to decide not to wear a mask when visiting friends, but it's totally different when you are operating a business dealing with the public. Do they also think it's not necessary to follow public health requirements that restaurant employees wash their hands after going to the bathroom or handling raw meat? For a place that supposedly serves healthy food, they have sent a clear message that their preferences are more important than their customers' and employees' health. I won't be returning.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Blenders In the Grass is a juice bar and restaurant located in Santa Barbara, California. They offer a variety of smoothies, juices, and food options, and cater to vegetarian and vegan diets. According to their listed hours, they are open seven days a week, with extended hours on weekends. The business has a 3.5-star rating and offers amenities such as free Wi-Fi and take-out services. However, some customers have reported issues with the quality of their drinks, including too much ice and not enough fruit, and poor customer service. Additionally, there have been complaints about the lack of organic and non-GMO ingredients used in their products. Despite these concerns, Blenders In the Grass remains a popular spot for health-conscious individuals looking for quick and nutritious meals and drinks.\"}",
+  "prompt_sha256": "sha256:48d3333431ace44894cecae4a25d4b53c7e9fe5a0bb54f62a21f48eb800f85ca",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 1.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185152,
+    "id": "chatcmpl-r7egneieH8MIQP1OCmDuTHr1D7KXkNZT",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 370.505,
+      "predicted_n": 16,
+      "predicted_per_second": 43.18430250603905,
+      "predicted_per_token_ms": 23.1565625,
+      "prompt_ms": 808.736,
+      "prompt_n": 860,
+      "prompt_per_second": 1063.3878051675701,
+      "prompt_per_token_ms": 0.9403906976744186
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 860,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 876
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"432 E Haley St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Organic Stores, Breakfast & Brunch, Live/Raw Food, Juice Bars & Smoothies, Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-17:30\\\",\\\"Monday\\\":\\\"7:30-17:30\\\",\\\"Saturday\\\":\\\"9:0-16:0\\\",\\\"Thursday\\\":\\\"7:30-17:30\\\",\\\"Tuesday\\\":\\\"7:30-17:30\\\",\\\"Wednesday\\\":\\\"7:30-17:30\\\"},\\\"name\\\":\\\"AH Juice Organics\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-08 21:58:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Caution! friendly and good food but...  No one is masked or rubber gloved preparing or serving food. And this is at the height of the pandemic \\\\\\\"viral blizzard\\\\\\\".  I asked how they could do that, not follow guidelines at this time. The young man said \\\\\\\"we just stay healthy\\\\\\\".  Uh, don't you understand symptomless transmission?  Don't you know you can easily infect others? You are serving food! You are fine to say it's OK to walk around outside firing a loaded gun. \\\\n\\\\nHesitatingly paid my to-go order and won't be back.\\\"},{\\\"review_date\\\":\\\"2021-12-25 17:42:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We stopped here for organic coffee but wow they have a lot of items! We will be back to try more stuff!\\\"},{\\\"review_date\\\":\\\"2021-12-17 22:14:34\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I've been to Ah Juice a few times in the past and enjoyed my food. I was very disappointed to see that this business is not using masks despite a current public health order requiring masks. No staff members were masked and there was no attempt to require masks of customers who were standing in line indoors. It's one thing to decide not to wear a mask when visiting friends, but it's totally different when you are operating a business dealing with the public. Do they also think it's not necessary to follow public health requirements that restaurant employees wash their hands after going to the bathroom or handling raw meat? For a place that supposedly serves healthy food, they have sent a clear message that their preferences are more important than their customers' and employees' health. I won't be returning.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Blenders In the Grass is a juice bar and restaurant located in Santa Barbara, California. They offer a variety of smoothies, juices, and food options, and cater to vegetarian and vegan diets. According to their listed hours, they are open seven days a week, with extended hours on weekends. The business has a 3.5-star rating and offers amenities such as free Wi-Fi and take-out services. However, some customers have reported issues with the quality of their drinks, including too much ice and not enough fruit, and poor customer service. Additionally, there have been complaints about the lack of organic and non-GMO ingredients used in their products. Despite these concerns, Blenders In the Grass remains a popular spot for health-conscious individuals looking for quick and nutritious meals and drinks.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 9,
+  "source_bytes": "7b2261646472657373223a2234333220452048616c6579205374222c2261747472696275746573223a7b22416d6269656e6365223a6e756c6c2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a66616c73652c22737472656574223a747275652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a747275652c2252657374617572616e7473476f6f64466f7247726f757073223a6e756c6c2c2252657374617572616e74735265736572766174696f6e73223a6e756c6c2c2252657374617572616e747354616b654f7574223a747275652c2257694669223a2266726565227d2c22627573696e6573735f7374617273223a332e352c2263617465676f72696573223a224f7267616e69632053746f7265732c20427265616b666173742026204272756e63682c204c6976652f52617720466f6f642c204a756963652042617273202620536d6f6f74686965732c20466f6f642c2052657374617572616e7473222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a22373a33302d31373a3330222c224d6f6e646179223a22373a33302d31373a3330222c225361747572646179223a22393a302d31363a30222c225468757273646179223a22373a33302d31373a3330222c2254756573646179223a22373a33302d31373a3330222c225765646e6573646179223a22373a33302d31373a3330227d2c226e616d65223a224148204a75696365204f7267616e696373222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323032322d30312d30382032313a35383a3139222c227265766965775f7374617273223a312e302c227265766965775f74657874223a2243617574696f6e2120667269656e646c7920616e6420676f6f6420666f6f64206275742e2e2e20204e6f206f6e65206973206d61736b6564206f722072756262657220676c6f76656420707265706172696e67206f722073657276696e6720666f6f642e20416e6420746869732069732061742074686520686569676874206f66207468652070616e64656d6963205c22766972616c20626c697a7a6172645c222e2020492061736b656420686f77207468657920636f756c6420646f20746861742c206e6f7420666f6c6c6f772067756964656c696e657320617420746869732074696d652e2054686520796f756e67206d616e2073616964205c227765206a7573742073746179206865616c7468795c222e202055682c20646f6e277420796f7520756e6465727374616e642073796d70746f6d6c657373207472616e736d697373696f6e3f2020446f6e277420796f75206b6e6f7720796f752063616e20656173696c7920696e66656374206f74686572733f20596f75206172652073657276696e6720666f6f642120596f75206172652066696e6520746f207361792069742773204f4b20746f2077616c6b2061726f756e64206f75747369646520666972696e672061206c6f616465642067756e2e205c6e5c6e48657369746174696e676c792070616964206d7920746f2d676f206f7264657220616e6420776f6e2774206265206261636b2e227d2c7b227265766965775f64617465223a22323032312d31322d32352031373a34323a3437222c227265766965775f7374617273223a352e302c227265766965775f74657874223a2257652073746f70706564206865726520666f72206f7267616e696320636f666665652062757420776f77207468657920686176652061206c6f74206f66206974656d73212057652077696c6c206265206261636b20746f20747279206d6f726520737475666621227d2c7b227265766965775f64617465223a22323032312d31322d31372032323a31343a3334222c227265766965775f7374617273223a312e302c227265766965775f74657874223a2249277665206265656e20746f204168204a756963652061206665772074696d657320696e20746865207061737420616e6420656e6a6f796564206d7920666f6f642e2049207761732076657279206469736170706f696e74656420746f207365652074686174207468697320627573696e657373206973206e6f74207573696e67206d61736b73206465737069746520612063757272656e74207075626c6963206865616c7468206f7264657220726571756972696e67206d61736b732e204e6f207374616666206d656d626572732077657265206d61736b656420616e6420746865726520776173206e6f20617474656d707420746f2072657175697265206d61736b73206f6620637573746f6d6572732077686f2077657265207374616e64696e6720696e206c696e6520696e646f6f72732e2049742773206f6e65207468696e6720746f20646563696465206e6f7420746f20776561722061206d61736b207768656e207669736974696e6720667269656e64732c20627574206974277320746f74616c6c7920646966666572656e74207768656e20796f7520617265206f7065726174696e67206120627573696e657373206465616c696e67207769746820746865207075626c69632e20446f207468657920616c736f207468696e6b2069742773206e6f74206e656365737361727920746f20666f6c6c6f77207075626c6963206865616c746820726571756972656d656e747320746861742072657374617572616e7420656d706c6f7965657320776173682074686569722068616e647320616674657220676f696e6720746f207468652062617468726f6f6d206f722068616e646c696e6720726177206d6561743f20466f72206120706c616365207468617420737570706f7365646c7920736572766573206865616c74687920666f6f642c207468657920686176652073656e74206120636c656172206d657373616765207468617420746865697220707265666572656e63657320617265206d6f726520696d706f7274616e74207468616e20746865697220637573746f6d6572732720616e6420656d706c6f7965657327206865616c74682e204920776f6e27742062652072657475726e696e672e227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:dddceea7ec23d285b505da80ef37e799450027506cb25d914b57a180927e6839",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 1.0\n}",
+  "unit_id": "sha256:a825923cdaea973b8ce8ecc863a277158626cb786c7d63e36b896760a591bf40"
+}

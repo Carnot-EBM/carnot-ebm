@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "576f6f6479277320526f756e647570204261722026204772696c6c20686173207265636569766564206d6978656420726576696577732066726f6d2069747320637573746f6d6572732e205768696c6520736f6d6520706174726f6e7320707261697365207468652072657374617572616e74277320616d6269616e636520616e64206f7574646f6f722073656174696e672c206f7468657273206861766520636f6d706c61696e65642061626f757420706f6f72207365727669636520616e642073756270617220666f6f64207175616c6974792e2041207265766965772066726f6d204175677573742032303131207374617465732074686174207468652067726f757020776169746564206f766572203435206d696e7574657320666f722073657276696365206465737069746520686176696e67207461626c6573206e65617262792074686174207765726520617474656e64656420746f206d756c7469706c652074696d65732c20686967686c69676874696e672074686520696e636f6e73697374656e7420737461666620706572666f726d616e63652e20416e6f746865722072657669657765722066726f6d204a756e652032303131206e6f74657320746861742074686520666f6f6420776173206f766572636f6f6b656420616e642064657363726962657320697420617320226d65682c22207768696c65206120746869726420706174726f6e2077686f207669736974656420696e204a756c79203230313120666f756e6420746865206d656e75206f7074696f6e7320756e696d707265737369766520616e64206e6f746564207468617420746865204672656e63682066726965732077657265206f766572207361756365642e20556e666f7274756e6174656c792c2074686520627573696e657373206170706561727320746f2068617665207374727567676c65642077697468206d61696e7461696e696e6720636f6e73697374656e74207175616c69747920616e6420667269656e646c7920736572766963652c207768696368206d617920646574657220706f74656e7469616c20637573746f6d6572732066726f6d207669736974696e672e",
+  "arm": "holistic",
+  "call_id": "sha256:f3dba093e6b70bc47df12346bc26ecd4c37fa349099209426de4e50a43678830:holistic",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.1427098630229011,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 719,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"Earl Warren Showgrounds, 3400 Calle Real\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":2.0,\\\"categories\\\":\\\"Barbeque, Bars, Restaurants, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Woody's Roundup Bar & Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2011-08-28 01:17:20\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"We were here for a dog show this weekend and decided to stop for some liquid libation and decided to order some food... We NEVER saw a waiter and sat in the covered area for over 45 minutes.  Tables to the left of us and tables to the right of us were waited on... Although one of them had to ask for service numerous times.  They even mentioned that we were waiting for service.  I finally went to the bar to get my drinks myself... 16 bucks for a screwdriver (with no vodka really), a heiniken and a coke. Don't waste your time or money.  Definitely won't last if it doesn't improve.  Hopefully next years dog show will have something better in place.\\\"},{\\\"review_date\\\":\\\"2011-06-20 16:00:50\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Place looks ridden hard and the food is well, meh.\\\"},{\\\"review_date\\\":\\\"2011-06-17 16:15:16\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Overcooked....not real woodys food..they only served wings as an appetizer and they were 7 to an order for $8!...french fries should not have had the woodys name attached to them. over sauced the pulled pork sandwich..probably to cover up the taste..was gonna get a drink but they said they were outa an ingredient.  this was my second time here so i was giving them a second chance.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Woody's Roundup Bar & Grill has received mixed reviews from its customers. While some patrons praise the restaurant's ambiance and outdoor seating, others have complained about poor service and subpar food quality. A review from August 2011 states that the group waited over 45 minutes for service despite having tables nearby that were attended to multiple times, highlighting the inconsistent staff performance. Another reviewer from June 2011 notes that the food was overcooked and describes it as \\\"meh,\\\" while a third patron who visited in July 2011 found the menu options unimpressive and noted that the French fries were over sauced. Unfortunately, the business appears to have struggled with maintaining consistent quality and friendly service, which may deter potential customers from visiting.\"}",
+  "prompt_sha256": "sha256:f31ad2139eaf3b57a8203f61f38193cd1f79736ea25167a73de8af13c67d9d88",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184964,
+    "id": "chatcmpl-iFF3VkXZf7ZX2OkY1j6t7GwmWUP5h2A9",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.862,
+      "predicted_n": 14,
+      "predicted_per_second": 43.49690239916486,
+      "predicted_per_token_ms": 22.99014285714286,
+      "prompt_ms": 699.96,
+      "prompt_n": 719,
+      "prompt_per_second": 1027.2015543745356,
+      "prompt_per_token_ms": 0.973518776077886
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 719,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 733
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"Earl Warren Showgrounds, 3400 Calle Real\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":2.0,\\\"categories\\\":\\\"Barbeque, Bars, Restaurants, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Woody's Roundup Bar & Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2011-08-28 01:17:20\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"We were here for a dog show this weekend and decided to stop for some liquid libation and decided to order some food... We NEVER saw a waiter and sat in the covered area for over 45 minutes.  Tables to the left of us and tables to the right of us were waited on... Although one of them had to ask for service numerous times.  They even mentioned that we were waiting for service.  I finally went to the bar to get my drinks myself... 16 bucks for a screwdriver (with no vodka really), a heiniken and a coke. Don't waste your time or money.  Definitely won't last if it doesn't improve.  Hopefully next years dog show will have something better in place.\\\"},{\\\"review_date\\\":\\\"2011-06-20 16:00:50\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Place looks ridden hard and the food is well, meh.\\\"},{\\\"review_date\\\":\\\"2011-06-17 16:15:16\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Overcooked....not real woodys food..they only served wings as an appetizer and they were 7 to an order for $8!...french fries should not have had the woodys name attached to them. over sauced the pulled pork sandwich..probably to cover up the taste..was gonna get a drink but they said they were outa an ingredient.  this was my second time here so i was giving them a second chance.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Woody's Roundup Bar & Grill has received mixed reviews from its customers. While some patrons praise the restaurant's ambiance and outdoor seating, others have complained about poor service and subpar food quality. A review from August 2011 states that the group waited over 45 minutes for service despite having tables nearby that were attended to multiple times, highlighting the inconsistent staff performance. Another reviewer from June 2011 notes that the food was overcooked and describes it as \\\"meh,\\\" while a third patron who visited in July 2011 found the menu options unimpressive and noted that the French fries were over sauced. Unfortunately, the business appears to have struggled with maintaining consistent quality and friendly service, which may deter potential customers from visiting.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 17,
+  "source_bytes": "7b2261646472657373223a224561726c2057617272656e2053686f7767726f756e64732c20333430302043616c6c65205265616c222c2261747472696275746573223a7b22416d6269656e6365223a6e756c6c2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a66616c73652c22737472656574223a66616c73652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a747275652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a6e756c6c2c2252657374617572616e747354616b654f7574223a6e756c6c2c2257694669223a6e756c6c7d2c22627573696e6573735f7374617273223a322e302c2263617465676f72696573223a2242617262657175652c20426172732c2052657374617572616e74732c204e696768746c696665222c2263697479223a2253616e74612042617262617261222c22686f757273223a6e756c6c2c226e616d65223a22576f6f6479277320526f756e647570204261722026204772696c6c222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323031312d30382d32382030313a31373a3230222c227265766965775f7374617273223a312e302c227265766965775f74657874223a2257652077657265206865726520666f72206120646f672073686f772074686973207765656b656e6420616e64206465636964656420746f2073746f7020666f7220736f6d65206c6971756964206c69626174696f6e20616e64206465636964656420746f206f7264657220736f6d6520666f6f642e2e2e205765204e455645522073617720612077616974657220616e642073617420696e2074686520636f7665726564206172656120666f72206f766572203435206d696e757465732e20205461626c657320746f20746865206c656674206f6620757320616e64207461626c657320746f20746865207269676874206f66207573207765726520776169746564206f6e2e2e2e20416c74686f756768206f6e65206f66207468656d2068616420746f2061736b20666f722073657276696365206e756d65726f75732074696d65732e202054686579206576656e206d656e74696f6e6564207468617420776520776572652077616974696e6720666f7220736572766963652e2020492066696e616c6c792077656e7420746f207468652062617220746f20676574206d79206472696e6b73206d7973656c662e2e2e203136206275636b7320666f722061207363726577647269766572202877697468206e6f20766f646b61207265616c6c79292c2061206865696e696b656e20616e64206120636f6b652e20446f6e277420776173746520796f75722074696d65206f72206d6f6e65792e2020446566696e6974656c7920776f6e2774206c61737420696620697420646f65736e277420696d70726f76652e2020486f706566756c6c79206e65787420796561727320646f672073686f772077696c6c206861766520736f6d657468696e672062657474657220696e20706c6163652e227d2c7b227265766965775f64617465223a22323031312d30362d32302031363a30303a3530222c227265766965775f7374617273223a322e302c227265766965775f74657874223a22506c616365206c6f6f6b732072696464656e206861726420616e642074686520666f6f642069732077656c6c2c206d65682e227d2c7b227265766965775f64617465223a22323031312d30362d31372031363a31353a3136222c227265766965775f7374617273223a312e302c227265766965775f74657874223a224f766572636f6f6b65642e2e2e2e6e6f74207265616c20776f6f64797320666f6f642e2e74686579206f6e6c79207365727665642077696e677320617320616e206170706574697a657220616e6420746865792077657265203720746f20616e206f7264657220666f72202438212e2e2e6672656e63682066726965732073686f756c64206e6f742068617665206861642074686520776f6f647973206e616d6520617474616368656420746f207468656d2e206f76657220736175636564207468652070756c6c656420706f726b2073616e64776963682e2e70726f6261626c7920746f20636f766572207570207468652074617374652e2e77617320676f6e6e61206765742061206472696e6b206275742074686579207361696420746865792077657265206f75746120616e20696e6772656469656e742e20207468697320776173206d79207365636f6e642074696d65206865726520736f20692077617320676976696e67207468656d2061207365636f6e64206368616e63652e227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:dbf39e4feaea198dc526faa42e71dda3f8fca034bec631773d914efd9048e157",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 1\n}",
+  "unit_id": "sha256:f3dba093e6b70bc47df12346bc26ecd4c37fa349099209426de4e50a43678830"
+}

@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "54686520464249206861732061646465642041726e616c646f204a696d696e657a2c20612034312d796561722d6f6c64206d616e2c20746f2069747320546f70203130204d6f73742057616e746564206c6973742064756520746f20736572696f7573206368617267657320696e2054657861732e2048652069732061636375736564206f66207374616262696e6720686973206e65776c7977656420776966652c2045737472656c6c6120436172726572612c20746f20646561746820696e20686572204261746f6e20526f7567652061706172746d656e742074776f2079656172732061676f2e204120243235302c30303020726577617264206973206265696e67206f66666572656420666f7220696e666f726d6174696f6e206c656164696e6720746f20686973206172726573742c20616e64207468652046424920636f6e7369646572732068696d2061726d656420616e642064616e6765726f75732e",
+  "arm": "source_span",
+  "call_id": "sha256:f172e69bccdcf5e4b10cfd8a14fe9a9d4923103cd30450cfb66b8b446a8b90d5:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.2446059400681406,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 715,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 59,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"FBI Top 10 Most Wanted fugitive wanted on serious charges in Texas, reward offered for information\\nOne of the fugitives on the FBI's Top 10 Most Wanted is wanted on multiple charges in Texas, per officials from the department.\\nAccording to the FBI, on May 11, 2012, a couple from Texas exchanged marriage vows and celebrated with a reception shortly after. Less than 48 hours later, per officials, the 26-year-old bride, Estrella Carrera, was tragically discovered in her apartment's bathtub, still in her wedding attire, having succumbed to fatal stab wounds.\\nThe FBI has formally accused her newlywed, now 41-year-old Arnaldo Jiminez, of being responsible for this terrible crime. According to investigators, Jiminez allegedly stabbed Estrella while they were in his black four-door Maserati, and then he moved her lifeless body to the bathtub in her Burbank, Illinois apartment.\\nThe FBI's pursuit of evidence in this case began with their focus on Jiminez's movements. Officials stated that they discovered that on May 12, his cellphone signal was traced to various locations, spanning from Chicago to Southern Illinois, Memphis, Tennessee, and finally culminating in Arkansas, all within a single day. The following day, his cell phone was registered in Houston, Texas, and eventually traced to Hidalgo, Mexico, according to investigators.\\nDuring the same year, law enforcement arrested Jiminez's brother on drug-related charges, which led to the discovery of Arnaldo's Maserati stored in the garage, according to a statement from the FBI. Traces of blood were found inside the vehicle, further supporting the theory that Jiminez may have committed the crime in the car before moving the body to the bathtub, per FBI officials.\\nInvestigators stated they suspect that Jiminez's brother might have driven him to Mexico in the same vehicle and left him there. Since the night of the wedding, Jiminez has managed to elude authorities and remains unaccounted for. FBI officials believe he is likely in hiding in Mexico, specifically in the Santiago Papasquiaro area or in Reynosa, Tamaulipas.\\nA $250,000 reward is being offered for information leading to Jimenez's arrest, per officials.\\nFBI officials also stated that Jimenez should be considered armed and dangerous. If you have any information concerning this person, please call 1-800-CALL-FBI or contact your nearest American Embassy or Consulate.\", \"answer\": \"The FBI has added Arnaldo Jiminez, a 41-year-old man, to its Top 10 Most Wanted list due to serious charges in Texas. He is accused of stabbing his newlywed wife, Estrella Carrera, to death in her Baton Rouge apartment two years ago. A $250,000 reward is being offered for information leading to his arrest, and the FBI considers him armed and dangerous.\"}",
+  "prompt_sha256": "sha256:6b9a617598a535d6e18f976b76a59b497dadfbe1b7b4264e758c91463e2174f2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"moved her lifeless body to the bathtub in her Burbank, Illinois apartment\",\n  \"byte_start\": 638,\n  \"byte_end\": 698\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185042,
+    "id": "chatcmpl-XGBbC8BsBwcU1gs4i9ds9P6GomQ4CRSI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1422.506,
+      "predicted_n": 59,
+      "predicted_per_second": 41.476099222077096,
+      "predicted_per_token_ms": 24.11027118644068,
+      "prompt_ms": 704.331,
+      "prompt_n": 715,
+      "prompt_per_second": 1015.1477075409147,
+      "prompt_per_token_ms": 0.9850783216783217
+    },
+    "usage": {
+      "completion_tokens": 59,
+      "prompt_tokens": 715,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 774
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"FBI Top 10 Most Wanted fugitive wanted on serious charges in Texas, reward offered for information\\nOne of the fugitives on the FBI's Top 10 Most Wanted is wanted on multiple charges in Texas, per officials from the department.\\nAccording to the FBI, on May 11, 2012, a couple from Texas exchanged marriage vows and celebrated with a reception shortly after. Less than 48 hours later, per officials, the 26-year-old bride, Estrella Carrera, was tragically discovered in her apartment's bathtub, still in her wedding attire, having succumbed to fatal stab wounds.\\nThe FBI has formally accused her newlywed, now 41-year-old Arnaldo Jiminez, of being responsible for this terrible crime. According to investigators, Jiminez allegedly stabbed Estrella while they were in his black four-door Maserati, and then he moved her lifeless body to the bathtub in her Burbank, Illinois apartment.\\nThe FBI's pursuit of evidence in this case began with their focus on Jiminez's movements. Officials stated that they discovered that on May 12, his cellphone signal was traced to various locations, spanning from Chicago to Southern Illinois, Memphis, Tennessee, and finally culminating in Arkansas, all within a single day. The following day, his cell phone was registered in Houston, Texas, and eventually traced to Hidalgo, Mexico, according to investigators.\\nDuring the same year, law enforcement arrested Jiminez's brother on drug-related charges, which led to the discovery of Arnaldo's Maserati stored in the garage, according to a statement from the FBI. Traces of blood were found inside the vehicle, further supporting the theory that Jiminez may have committed the crime in the car before moving the body to the bathtub, per FBI officials.\\nInvestigators stated they suspect that Jiminez's brother might have driven him to Mexico in the same vehicle and left him there. Since the night of the wedding, Jiminez has managed to elude authorities and remains unaccounted for. FBI officials believe he is likely in hiding in Mexico, specifically in the Santiago Papasquiaro area or in Reynosa, Tamaulipas.\\nA $250,000 reward is being offered for information leading to Jimenez's arrest, per officials.\\nFBI officials also stated that Jimenez should be considered armed and dangerous. If you have any information concerning this person, please call 1-800-CALL-FBI or contact your nearest American Embassy or Consulate.\", \"answer\": \"The FBI has added Arnaldo Jiminez, a 41-year-old man, to its Top 10 Most Wanted list due to serious charges in Texas. He is accused of stabbing his newlywed wife, Estrella Carrera, to death in her Baton Rouge apartment two years ago. A $250,000 reward is being offered for information leading to his arrest, and the FBI considers him armed and dangerous.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 40,
+  "source_bytes": "46424920546f70203130204d6f73742057616e7465642066756769746976652077616e746564206f6e20736572696f7573206368617267657320696e2054657861732c20726577617264206f66666572656420666f7220696e666f726d6174696f6e0a4f6e65206f662074686520667567697469766573206f6e2074686520464249277320546f70203130204d6f73742057616e7465642069732077616e746564206f6e206d756c7469706c65206368617267657320696e2054657861732c20706572206f6666696369616c732066726f6d20746865206465706172746d656e742e0a4163636f7264696e6720746f20746865204642492c206f6e204d61792031312c20323031322c206120636f75706c652066726f6d2054657861732065786368616e676564206d6172726961676520766f777320616e642063656c656272617465642077697468206120726563657074696f6e2073686f72746c792061667465722e204c657373207468616e20343820686f757273206c617465722c20706572206f6666696369616c732c207468652032362d796561722d6f6c642062726964652c2045737472656c6c6120436172726572612c2077617320747261676963616c6c7920646973636f766572656420696e206865722061706172746d656e74277320626174687475622c207374696c6c20696e206865722077656464696e67206174746972652c20686176696e672073756363756d62656420746f20666174616c207374616220776f756e64732e0a546865204642492068617320666f726d616c6c79206163637573656420686572206e65776c797765642c206e6f772034312d796561722d6f6c642041726e616c646f204a696d696e657a2c206f66206265696e6720726573706f6e7369626c6520666f722074686973207465727269626c65206372696d652e204163636f7264696e6720746f20696e76657374696761746f72732c204a696d696e657a20616c6c656765646c7920737461626265642045737472656c6c61207768696c652074686579207765726520696e2068697320626c61636b20666f75722d646f6f72204d617365726174692c20616e64207468656e206865206d6f76656420686572206c6966656c65737320626f647920746f20746865206261746874756220696e206865722042757262616e6b2c20496c6c696e6f69732061706172746d656e742e0a5468652046424927732070757273756974206f662065766964656e636520696e2074686973206361736520626567616e207769746820746865697220666f637573206f6e204a696d696e657a2773206d6f76656d656e74732e204f6666696369616c73207374617465642074686174207468657920646973636f76657265642074686174206f6e204d61792031322c206869732063656c6c70686f6e65207369676e616c207761732074726163656420746f20766172696f7573206c6f636174696f6e732c207370616e6e696e672066726f6d204368696361676f20746f20536f75746865726e20496c6c696e6f69732c204d656d706869732c2054656e6e65737365652c20616e642066696e616c6c792063756c6d696e6174696e6720696e2041726b616e7361732c20616c6c2077697468696e20612073696e676c65206461792e2054686520666f6c6c6f77696e67206461792c206869732063656c6c2070686f6e6520776173207265676973746572656420696e20486f7573746f6e2c2054657861732c20616e64206576656e7475616c6c792074726163656420746f20486964616c676f2c204d657869636f2c206163636f7264696e6720746f20696e76657374696761746f72732e0a447572696e67207468652073616d6520796561722c206c617720656e666f7263656d656e74206172726573746564204a696d696e657a27732062726f74686572206f6e20647275672d72656c6174656420636861726765732c207768696368206c656420746f2074686520646973636f76657279206f662041726e616c646f2773204d617365726174692073746f72656420696e20746865206761726167652c206163636f7264696e6720746f20612073746174656d656e742066726f6d20746865204642492e20547261636573206f6620626c6f6f64207765726520666f756e6420696e73696465207468652076656869636c652c206675727468657220737570706f7274696e6720746865207468656f72792074686174204a696d696e657a206d6179206861766520636f6d6d697474656420746865206372696d6520696e2074686520636172206265666f7265206d6f76696e672074686520626f647920746f2074686520626174687475622c2070657220464249206f6666696369616c732e0a496e76657374696761746f727320737461746564207468657920737573706563742074686174204a696d696e657a27732062726f74686572206d6967687420686176652064726976656e2068696d20746f204d657869636f20696e207468652073616d652076656869636c6520616e64206c6566742068696d2074686572652e2053696e636520746865206e69676874206f66207468652077656464696e672c204a696d696e657a20686173206d616e6167656420746f20656c75646520617574686f72697469657320616e642072656d61696e7320756e6163636f756e74656420666f722e20464249206f6666696369616c732062656c69657665206865206973206c696b656c7920696e20686964696e6720696e204d657869636f2c207370656369666963616c6c7920696e207468652053616e746961676f20506170617371756961726f2061726561206f7220696e205265796e6f73612c2054616d61756c697061732e0a4120243235302c30303020726577617264206973206265696e67206f66666572656420666f7220696e666f726d6174696f6e206c656164696e6720746f204a696d656e657a2773206172726573742c20706572206f6666696369616c732e0a464249206f6666696369616c7320616c736f207374617465642074686174204a696d656e657a2073686f756c6420626520636f6e736964657265642061726d656420616e642064616e6765726f75732e20496620796f75206861766520616e7920696e666f726d6174696f6e20636f6e6365726e696e67207468697320706572736f6e2c20706c656173652063616c6c20312d3830302d43414c4c2d464249206f7220636f6e7461637420796f7572206e65617265737420416d65726963616e20456d6261737379206f7220436f6e73756c6174652e",
+  "source_cluster_id": "sha256:42c4e13401d050060cae9a7ca70ec1b4ad818e9401e2209993416c62c90dabb0",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"moved her lifeless body to the bathtub in her Burbank, Illinois apartment\",\n  \"byte_start\": 638,\n  \"byte_end\": 698\n}",
+  "unit_id": "sha256:f172e69bccdcf5e4b10cfd8a14fe9a9d4923103cd30450cfb66b8b446a8b90d5"
+}

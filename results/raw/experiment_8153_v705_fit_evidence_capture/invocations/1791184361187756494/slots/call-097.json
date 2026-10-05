@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4120746f74616c206f6620382c343830206d696772616e747320776572652072657363756564206f66662074686520636f617374206f66204974616c792066726f6d2046726964617920746f204d6f6e6461792c206163636f7264696e6720746f20746865204974616c69616e20636f6173742067756172642e2054686520636f61737420677561726420616c736f20726563656976656420534f532063616c6c732066726f6d20323020626f61747320696e206469737472657373206f6e204d6f6e6461792e20486f77657665722c20275361766520746865204368696c6472656e27206665617273207468617420343030206d696772616e747320636f756c64206265206d697373696e6720616674657220612073686970206361727279696e67203535302070656f706c652063617073697a656420696e20746865204d65646974657272616e65616e205365612e20546865204974616c69616e20636f6173742067756172642069732074616b696e6720746865207265706f727420736572696f75736c792c2074686f7567682069742068617320666f756e64206e6f2065766964656e636520746f20636f6e6669726d2074686520696e636964656e742e",
+  "arm": "holistic",
+  "call_id": "sha256:04562c1460950beef1e2020e134e4bc88924f31722d39a3888917178f86125c1:holistic",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.048464903025888,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 589,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Rome (CNN)Italy is coping with a rising wave of desperate migrants from Africa and Middle East hoping to make it to Europe. From Friday to Monday, a total of 8,480 migrants were rescued, according to the Italian coast guard, which said it received on Monday -- alone -- SOS calls from 20 boats in distress. On Tuesday, a spokesman with Save the Children told CNN the group fears 400 migrants could be missing, citing testimony from survivors who said their ship carrying 550 people capsized in the Mediterranean Sea about 80 miles off the Libyan coast. The Italian coast guard, however, told CNN that while it is taking the report seriously, it cannot confirm such an incident and has not yet found evidence at sea to indicate a migrant boat carrying approximately 550 has capsized with 145 rescued. An operation that included boats and planes did not find any survivors, nor bodies, nor any evidence to indicate a particular boat capsized, Coast Guard official Filippo Marini said. There has been a recent upsurge in migrant boats crossing the Mediterranean into Italy and an increase in rescues performed by the Italian Coast Guard to aid migrant boats. Why migrants are dying trying to reach Italy. According to the International Organization for Migration, Italy registered more than 10,000 migrants arriving in the first three months of 2015, and about 2,000 were rescued at sea during the first weekend of April in the Channel of Sicily. Most migrants recorded this year come from countries in West Africa as well as Somalia and Syria, the IOM said. They use Libya as a country of transit. At least 480 migrants have died while crossing the Mediterranean since the beginning of the year, often because of bad weather and overcrowded vessels used by smugglers, the IOM said. Sometimes the captains and crews abandon the ships, leaving passengers to fend for themselves. Last week: 978 migrants rescued in one day in Mediterranean Sea. CNN's Ralph Ellis contributed to this report.\\n\", \"answer\": \"A total of 8,480 migrants were rescued off the coast of Italy from Friday to Monday, according to the Italian coast guard. The coast guard also received SOS calls from 20 boats in distress on Monday. However, 'Save the Children' fears that 400 migrants could be missing after a ship carrying 550 people capsized in the Mediterranean Sea. The Italian coast guard is taking the report seriously, though it has found no evidence to confirm the incident.\"}",
+  "prompt_sha256": "sha256:eb6cc52f3233a13b9553f8b1ad7bec21a99aae0a8a9c7e8700f4576fbbb68b0f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184619,
+    "id": "chatcmpl-g43PsXllERnrgZ5sMovtmmGf5qcQT3GQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.772,
+      "predicted_n": 14,
+      "predicted_per_second": 43.509068532998526,
+      "predicted_per_token_ms": 22.983714285714285,
+      "prompt_ms": 607.437,
+      "prompt_n": 589,
+      "prompt_per_second": 969.6478811794474,
+      "prompt_per_token_ms": 1.03130220713073
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 589,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 603
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Rome (CNN)Italy is coping with a rising wave of desperate migrants from Africa and Middle East hoping to make it to Europe. From Friday to Monday, a total of 8,480 migrants were rescued, according to the Italian coast guard, which said it received on Monday -- alone -- SOS calls from 20 boats in distress. On Tuesday, a spokesman with Save the Children told CNN the group fears 400 migrants could be missing, citing testimony from survivors who said their ship carrying 550 people capsized in the Mediterranean Sea about 80 miles off the Libyan coast. The Italian coast guard, however, told CNN that while it is taking the report seriously, it cannot confirm such an incident and has not yet found evidence at sea to indicate a migrant boat carrying approximately 550 has capsized with 145 rescued. An operation that included boats and planes did not find any survivors, nor bodies, nor any evidence to indicate a particular boat capsized, Coast Guard official Filippo Marini said. There has been a recent upsurge in migrant boats crossing the Mediterranean into Italy and an increase in rescues performed by the Italian Coast Guard to aid migrant boats. Why migrants are dying trying to reach Italy. According to the International Organization for Migration, Italy registered more than 10,000 migrants arriving in the first three months of 2015, and about 2,000 were rescued at sea during the first weekend of April in the Channel of Sicily. Most migrants recorded this year come from countries in West Africa as well as Somalia and Syria, the IOM said. They use Libya as a country of transit. At least 480 migrants have died while crossing the Mediterranean since the beginning of the year, often because of bad weather and overcrowded vessels used by smugglers, the IOM said. Sometimes the captains and crews abandon the ships, leaving passengers to fend for themselves. Last week: 978 migrants rescued in one day in Mediterranean Sea. CNN's Ralph Ellis contributed to this report.\\n\", \"answer\": \"A total of 8,480 migrants were rescued off the coast of Italy from Friday to Monday, according to the Italian coast guard. The coast guard also received SOS calls from 20 boats in distress on Monday. However, 'Save the Children' fears that 400 migrants could be missing after a ship carrying 550 people capsized in the Mediterranean Sea. The Italian coast guard is taking the report seriously, though it has found no evidence to confirm the incident.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 49,
+  "source_bytes": "526f6d652028434e4e294974616c7920697320636f70696e672077697468206120726973696e672077617665206f6620646573706572617465206d696772616e74732066726f6d2041667269636120616e64204d6964646c65204561737420686f70696e6720746f206d616b6520697420746f204575726f70652e2046726f6d2046726964617920746f204d6f6e6461792c206120746f74616c206f6620382c343830206d696772616e7473207765726520726573637565642c206163636f7264696e6720746f20746865204974616c69616e20636f6173742067756172642c2077686963682073616964206974207265636569766564206f6e204d6f6e646179202d2d20616c6f6e65202d2d20534f532063616c6c732066726f6d20323020626f61747320696e2064697374726573732e204f6e20547565736461792c20612073706f6b65736d616e2077697468205361766520746865204368696c6472656e20746f6c6420434e4e207468652067726f757020666561727320343030206d696772616e747320636f756c64206265206d697373696e672c20636974696e672074657374696d6f6e792066726f6d207375727669766f72732077686f20736169642074686569722073686970206361727279696e67203535302070656f706c652063617073697a656420696e20746865204d65646974657272616e65616e205365612061626f7574203830206d696c6573206f666620746865204c696279616e20636f6173742e20546865204974616c69616e20636f6173742067756172642c20686f77657665722c20746f6c6420434e4e2074686174207768696c652069742069732074616b696e6720746865207265706f727420736572696f75736c792c2069742063616e6e6f7420636f6e6669726d207375636820616e20696e636964656e7420616e6420686173206e6f742079657420666f756e642065766964656e63652061742073656120746f20696e6469636174652061206d696772616e7420626f6174206361727279696e6720617070726f78696d6174656c7920353530206861732063617073697a656420776974682031343520726573637565642e20416e206f7065726174696f6e207468617420696e636c7564656420626f61747320616e6420706c616e657320646964206e6f742066696e6420616e79207375727669766f72732c206e6f7220626f646965732c206e6f7220616e792065766964656e636520746f20696e646963617465206120706172746963756c617220626f61742063617073697a65642c20436f617374204775617264206f6666696369616c2046696c6970706f204d6172696e6920736169642e20546865726520686173206265656e206120726563656e74207570737572676520696e206d696772616e7420626f6174732063726f7373696e6720746865204d65646974657272616e65616e20696e746f204974616c7920616e6420616e20696e63726561736520696e207265736375657320706572666f726d656420627920746865204974616c69616e20436f61737420477561726420746f20616964206d696772616e7420626f6174732e20576879206d696772616e747320617265206479696e6720747279696e6720746f207265616368204974616c792e204163636f7264696e6720746f2074686520496e7465726e6174696f6e616c204f7267616e697a6174696f6e20666f72204d6967726174696f6e2c204974616c792072656769737465726564206d6f7265207468616e2031302c303030206d696772616e7473206172726976696e6720696e20746865206669727374207468726565206d6f6e746873206f6620323031352c20616e642061626f757420322c303030207765726520726573637565642061742073656120647572696e6720746865206669727374207765656b656e64206f6620417072696c20696e20746865204368616e6e656c206f6620536963696c792e204d6f7374206d696772616e7473207265636f726465642074686973207965617220636f6d652066726f6d20636f756e747269657320696e2057657374204166726963612061732077656c6c20617320536f6d616c696120616e642053797269612c2074686520494f4d20736169642e205468657920757365204c69627961206173206120636f756e747279206f66207472616e7369742e204174206c6561737420343830206d696772616e747320686176652064696564207768696c652063726f7373696e6720746865204d65646974657272616e65616e2073696e63652074686520626567696e6e696e67206f662074686520796561722c206f6674656e2062656361757365206f6620626164207765617468657220616e64206f76657263726f776465642076657373656c73207573656420627920736d7567676c6572732c2074686520494f4d20736169642e20536f6d6574696d657320746865206361707461696e7320616e64206372657773206162616e646f6e207468652073686970732c206c656176696e672070617373656e6765727320746f2066656e6420666f72207468656d73656c7665732e204c617374207765656b3a20393738206d696772616e7473207265736375656420696e206f6e652064617920696e204d65646974657272616e65616e205365612e20434e4e27732052616c706820456c6c697320636f6e747269627574656420746f2074686973207265706f72742e0a",
+  "source_cluster_id": "sha256:b238b4948ef876cd15749d1c8c35c94b40fd6ef5ff2444a70c22516066c8c96b",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:04562c1460950beef1e2020e134e4bc88924f31722d39a3888917178f86125c1"
+}

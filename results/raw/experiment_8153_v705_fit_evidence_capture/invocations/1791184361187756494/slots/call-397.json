@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "456c205461636f204772616e646520697320612063617375616c204d65786963616e2072657374617572616e74206c6f636174656420617420313039362043617369746173205061737320526420696e2043617270696e74657269612c2043412e205468652072657374617572616e74206973206f70656e2066726f6d203920414d20746f203820504d2066726f6d205475657364617920746f20546875727364617920616e6420536174757264617920746f2053756e6461792c207768696c65206f6e204672696461797320697420636c6f736573206174203320504d2e20497420697320636c6f736564206f6e204d6f6e646179732e20456c205461636f204772616e6465206f6666657273206f7574646f6f722073656174696e6720616e64206973207375697461626c6520666f722067726f7570732e20497420646f6573206e6f742070726f76696465205769466920616e6420646f6573206e6f7420616363657074207265736572766174696f6e732e205468652072657374617572616e7420686173206120332d7374617220726174696e67206f766572616c6c2c2062757420736f6d6520637573746f6d65727320726174652069742068696768657220666f722069747320657863656c6c656e7420666f6f642c2067656e65726f757320706f7274696f6e732c206772656174207072696365732c20616e6420657863656c6c656e7420736572766963652e205369676e61747572652064697368657320696e636c75646520746865204368696c652052656c6c656e6f2c20637269737079207461636f732c206361726e65206173616461206275727269746f732c20616e642043616c646f2037204d617265732e20486f77657665722c206f6e6520637573746f6d6572206e6f7465642061206c61636b206f6620434f5649442d313920736166657479206d6561737572657320696e20706c61636520647572696e6720746865697220766973697420696e204d6172636820323032312e",
+  "arm": "holistic",
+  "call_id": "sha256:2d205472157764a144d6db1a9aa42a067a643c9b8e5bf53f4c876ca8b51582a4:source_removed",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "duration_s": 0.7274461900815368,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 233,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"El Taco Grande is a casual Mexican restaurant located at 1096 Casitas Pass Rd in Carpinteria, CA. The restaurant is open from 9 AM to 8 PM from Tuesday to Thursday and Saturday to Sunday, while on Fridays it closes at 3 PM. It is closed on Mondays. El Taco Grande offers outdoor seating and is suitable for groups. It does not provide WiFi and does not accept reservations. The restaurant has a 3-star rating overall, but some customers rate it higher for its excellent food, generous portions, great prices, and excellent service. Signature dishes include the Chile Relleno, crispy tacos, carne asada burritos, and Caldo 7 Mares. However, one customer noted a lack of COVID-19 safety measures in place during their visit in March 2021.\"}",
+  "prompt_sha256": "sha256:43482f04121a627089b2f8acf269198c682ecb83de1e11f0392cdd4a344660ac",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185139,
+    "id": "chatcmpl-I1HRxn7Bw2RLJ43K47dAcRBngARjTn9f",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 320.55,
+      "predicted_n": 14,
+      "predicted_per_second": 43.67493370768991,
+      "predicted_per_token_ms": 22.896428571428572,
+      "prompt_ms": 287.017,
+      "prompt_n": 233,
+      "prompt_per_second": 811.798604263859,
+      "prompt_per_token_ms": 1.231832618025751
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 233,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 247
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"El Taco Grande is a casual Mexican restaurant located at 1096 Casitas Pass Rd in Carpinteria, CA. The restaurant is open from 9 AM to 8 PM from Tuesday to Thursday and Saturday to Sunday, while on Fridays it closes at 3 PM. It is closed on Mondays. El Taco Grande offers outdoor seating and is suitable for groups. It does not provide WiFi and does not accept reservations. The restaurant has a 3-star rating overall, but some customers rate it higher for its excellent food, generous portions, great prices, and excellent service. Signature dishes include the Chile Relleno, crispy tacos, carne asada burritos, and Caldo 7 Mares. However, one customer noted a lack of COVID-19 safety measures in place during their visit in March 2021.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 5,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:96a3609a9815537412739dded9ea88b4c6162af135a8f4da173233b19b5a73cf",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 1\n}",
+  "unit_id": "sha256:2d205472157764a144d6db1a9aa42a067a643c9b8e5bf53f4c876ca8b51582a4"
+}

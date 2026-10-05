@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "526176656e7320616e642063726f77732064696666657220696e207365766572616c20776179732e20526176656e7320617265206c6172676572207468616e2063726f77732c20616e642061726520746865206c617267657374207065726368696e672062697264732e205468657920616c736f206861766520612064656e736520616e642073686167677920706c756d6167652c20706172746963756c61726c792061726f756e6420746865207468726f61742c207768696c652063726f77732068617665206120736d6f6f746820746578747572652e2054686520726176656e27732062696c6c2069732068656176696572207468616e207468652063726f7727732e20546865207461696c206f6620612063726f77207370726561647320696e746f20612066616e2d6c696b652073747275637475726520647572696e6720666c696768742c207768696c6520746865207461696c206f66206120726176656e207370726561647320696e746f20612077656467652073686170652e20426f7468207370656369657320617265206b6e6f776e20666f7220746865697220696e74656c6c6967656e63652c20696e636c7564696e6720746f6f6c207573652c20656e656d79206964656e74696669636174696f6e2c2070726f626c656d2d736f6c76696e672c20616e64206d696d696372792e205468652073697a6520646966666572656e6365206265747765656e207468652074776f20697320757375616c6c79206e6f7469636561626c65207768656e207468657920617265207365656e20746f6765746865722e",
+  "arm": "holistic",
+  "call_id": "sha256:b032beea2e91655a5974dcff0e2881bba0dd3bfef7b09de8d95f41a35b021a99:holistic",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.9014337200205773,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 456,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Physical Differences. Crows and ravens differ physically from one another, their size being the most noticeable. Ravens are larger than crows, making them the largest perching birds. Crows have a smooth texture whereas the raven has a dense and shaggy plumage particularly around the throat. The bill of the raven is also heavier than the crow's bill. During flight, the spreading of the tail can distinguish the crow and raven apart. The tail of the crow spreads into a fan-like structure while the tail of the raven spreads into a wedge shape.\\\\n\\\\npassage 2:Difference between Crows and Ravens. Crows and ravens are birds of the Corvidae family that are mainly renowned for their intelligence in tool use, enemy identification, problem solving and mimicry.\\\\n\\\\npassage 3:Telling the birds apart if they are seen together is a simple matter, as the size difference between the species will be obvious. It is not always possible to determine whether a large, black corvid is an American crow or a common raven, but using different opportunities to try can be a great chance to sharpen your bird identification skills.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between ravens and crows\\\"}\", \"answer\": \"Ravens and crows differ in several ways. Ravens are larger than crows, and are the largest perching birds. They also have a dense and shaggy plumage, particularly around the throat, while crows have a smooth texture. The raven's bill is heavier than the crow's. The tail of a crow spreads into a fan-like structure during flight, while the tail of a raven spreads into a wedge shape. Both species are known for their intelligence, including tool use, enemy identification, problem-solving, and mimicry. The size difference between the two is usually noticeable when they are seen together.\"}",
+  "prompt_sha256": "sha256:48905e67b982d22b1a878a586adf768b998656fcb8a3f3470b71a51600eb33b7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184699,
+    "id": "chatcmpl-Pgt5Xwa2Kjs5xlye61sLWrh7femcgaKF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.799,
+      "predicted_n": 14,
+      "predicted_per_second": 43.50541797830323,
+      "predicted_per_token_ms": 22.985642857142857,
+      "prompt_ms": 460.533,
+      "prompt_n": 456,
+      "prompt_per_second": 990.157057148999,
+      "prompt_per_token_ms": 1.0099407894736843
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 456,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 470
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Physical Differences. Crows and ravens differ physically from one another, their size being the most noticeable. Ravens are larger than crows, making them the largest perching birds. Crows have a smooth texture whereas the raven has a dense and shaggy plumage particularly around the throat. The bill of the raven is also heavier than the crow's bill. During flight, the spreading of the tail can distinguish the crow and raven apart. The tail of the crow spreads into a fan-like structure while the tail of the raven spreads into a wedge shape.\\\\n\\\\npassage 2:Difference between Crows and Ravens. Crows and ravens are birds of the Corvidae family that are mainly renowned for their intelligence in tool use, enemy identification, problem solving and mimicry.\\\\n\\\\npassage 3:Telling the birds apart if they are seen together is a simple matter, as the size difference between the species will be obvious. It is not always possible to determine whether a large, black corvid is an American crow or a common raven, but using different opportunities to try can be a great chance to sharpen your bird identification skills.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between ravens and crows\\\"}\", \"answer\": \"Ravens and crows differ in several ways. Ravens are larger than crows, and are the largest perching birds. They also have a dense and shaggy plumage, particularly around the throat, while crows have a smooth texture. The raven's bill is heavier than the crow's. The tail of a crow spreads into a fan-like structure during flight, while the tail of a raven spreads into a wedge shape. Both species are known for their intelligence, including tool use, enemy identification, problem-solving, and mimicry. The size difference between the two is usually noticeable when they are seen together.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 71,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a506879736963616c20446966666572656e6365732e2043726f777320616e6420726176656e732064696666657220706879736963616c6c792066726f6d206f6e6520616e6f746865722c2074686569722073697a65206265696e6720746865206d6f7374206e6f7469636561626c652e20526176656e7320617265206c6172676572207468616e2063726f77732c206d616b696e67207468656d20746865206c617267657374207065726368696e672062697264732e2043726f77732068617665206120736d6f6f7468207465787475726520776865726561732074686520726176656e2068617320612064656e736520616e642073686167677920706c756d61676520706172746963756c61726c792061726f756e6420746865207468726f61742e205468652062696c6c206f662074686520726176656e20697320616c736f2068656176696572207468616e207468652063726f7727732062696c6c2e20447572696e6720666c696768742c2074686520737072656164696e67206f6620746865207461696c2063616e2064697374696e6775697368207468652063726f7720616e6420726176656e2061706172742e20546865207461696c206f66207468652063726f77207370726561647320696e746f20612066616e2d6c696b6520737472756374757265207768696c6520746865207461696c206f662074686520726176656e207370726561647320696e746f20612077656467652073686170652e5c6e5c6e7061737361676520323a446966666572656e6365206265747765656e2043726f777320616e6420526176656e732e2043726f777320616e6420726176656e7320617265206269726473206f662074686520436f7276696461652066616d696c79207468617420617265206d61696e6c792072656e6f776e656420666f7220746865697220696e74656c6c6967656e636520696e20746f6f6c207573652c20656e656d79206964656e74696669636174696f6e2c2070726f626c656d20736f6c76696e6720616e64206d696d696372792e5c6e5c6e7061737361676520333a54656c6c696e6720746865206269726473206170617274206966207468657920617265207365656e20746f67657468657220697320612073696d706c65206d61747465722c206173207468652073697a6520646966666572656e6365206265747765656e2074686520737065636965732077696c6c206265206f6276696f75732e204974206973206e6f7420616c7761797320706f737369626c6520746f2064657465726d696e6520776865746865722061206c617267652c20626c61636b20636f7276696420697320616e20416d65726963616e2063726f77206f72206120636f6d6d6f6e20726176656e2c20627574207573696e6720646966666572656e74206f70706f7274756e697469657320746f207472792063616e2062652061206772656174206368616e636520746f207368617270656e20796f75722062697264206964656e74696669636174696f6e20736b696c6c732e5c6e5c6e222c227175657374696f6e223a22776861742069732074686520646966666572656e6365206265747765656e20726176656e7320616e642063726f7773227d",
+  "source_cluster_id": "sha256:ab32a74c2a40c0969dddaa4baa308273ee6a5a1a30018bf9daefb03b8d66ba12",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:b032beea2e91655a5974dcff0e2881bba0dd3bfef7b09de8d95f41a35b021a99"
+}

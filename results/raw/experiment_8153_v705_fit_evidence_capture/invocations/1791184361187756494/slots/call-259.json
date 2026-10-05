@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "537572652120486572652773207468652073756d6d61727920696e20373020776f7264733a0a0a536f757468204b6f7265612773205072696d65204d696e6973746572204c65652057616e2d6b6f6f206f66666572656420746f2072657369676e20616d6964206120706f6c69746963616c207363616e64616c206f76657220616c6c65676564206272696265727920616e6420636f7272757074696f6e2e20536576656e20706f6c6974696369616e732c20696e636c7564696e67204c656520616e642074686f7365206c696e6b656420746f20507265736964656e74205061726b204765756e2d6879652c2061726520756e64657220696e7665737469676174696f6e2e204c65652064656e69657320616c6c65676174696f6e732c206275742074686520507265736964656e742069732074616b696e67207468656d20736572696f75736c7920616e64206861732070726f6d6973656420746f20726f6f74206f757420636f7272757074696f6e2e",
+  "arm": "holistic",
+  "call_id": "sha256:8df63fcd3c4f90e558b1aade15d4a9e0ca6b3e10f180a45ea01a8d87793b3df8:holistic",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.9478413220494986,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 483,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Seoul (CNN)South Korea's Prime Minister Lee Wan-koo offered to resign on Monday amid a growing political scandal. Lee will stay in his official role until South Korean President Park Geun-hye accepts his resignation. He has transferred his role of chairing Cabinet meetings to the deputy prime minister for the time being, according to his office. Park heard about the resignation and called it \\\"regrettable,\\\" according to the South Korean presidential office. Calls for Lee to resign began after South Korean tycoon Sung Woan-jong was found hanging from a tree in Seoul in an apparent suicide on April 9. Sung, who was under investigation for fraud and bribery, left a note listing names and amounts of cash given to top officials, including those who work for the President. Lee and seven other politicians with links to the South Korean President are under investigation. A special prosecutor's team has been established to investigate the case. Lee had adamantly denied the allegations as the scandal escalated: \\\"If there are any evidence, I will give out my life. As a Prime Minister, I will accept Prosecutor Office's investigation first.\\\" Park has said that she is taking the accusations very seriously. Before departing on her trip to Central and South America, she condemned political corruption in her country. \\\"Corruption and deep-rooted evil are issues that can lead to taking away people's lives. We take this very seriously.\\\" \\\"We must make sure to set straight this issue as a matter of political reform. I will not forgive anyone who is responsible for corruption or wrongdoing.\\\" Park is in Peru and is expected to arrive back to South Korea on April 27. CNN's Paula Hancocks contributed to this report.\\n\", \"answer\": \"Sure! Here's the summary in 70 words:\\n\\nSouth Korea's Prime Minister Lee Wan-koo offered to resign amid a political scandal over alleged bribery and corruption. Seven politicians, including Lee and those linked to President Park Geun-hye, are under investigation. Lee denies allegations, but the President is taking them seriously and has promised to root out corruption.\"}",
+  "prompt_sha256": "sha256:a2e7746bdd186c28993f8d95a85ccd9f6819acf380414c839fde12533e0a6cc2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184913,
+    "id": "chatcmpl-DuHt4ailXgX1y9gTIMxiINsRaRr7ISgS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 369.712,
+      "predicted_n": 16,
+      "predicted_per_second": 43.27692906911326,
+      "predicted_per_token_ms": 23.107,
+      "prompt_ms": 465.45,
+      "prompt_n": 483,
+      "prompt_per_second": 1037.7054463422494,
+      "prompt_per_token_ms": 0.9636645962732919
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 483,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 499
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Seoul (CNN)South Korea's Prime Minister Lee Wan-koo offered to resign on Monday amid a growing political scandal. Lee will stay in his official role until South Korean President Park Geun-hye accepts his resignation. He has transferred his role of chairing Cabinet meetings to the deputy prime minister for the time being, according to his office. Park heard about the resignation and called it \\\"regrettable,\\\" according to the South Korean presidential office. Calls for Lee to resign began after South Korean tycoon Sung Woan-jong was found hanging from a tree in Seoul in an apparent suicide on April 9. Sung, who was under investigation for fraud and bribery, left a note listing names and amounts of cash given to top officials, including those who work for the President. Lee and seven other politicians with links to the South Korean President are under investigation. A special prosecutor's team has been established to investigate the case. Lee had adamantly denied the allegations as the scandal escalated: \\\"If there are any evidence, I will give out my life. As a Prime Minister, I will accept Prosecutor Office's investigation first.\\\" Park has said that she is taking the accusations very seriously. Before departing on her trip to Central and South America, she condemned political corruption in her country. \\\"Corruption and deep-rooted evil are issues that can lead to taking away people's lives. We take this very seriously.\\\" \\\"We must make sure to set straight this issue as a matter of political reform. I will not forgive anyone who is responsible for corruption or wrongdoing.\\\" Park is in Peru and is expected to arrive back to South Korea on April 27. CNN's Paula Hancocks contributed to this report.\\n\", \"answer\": \"Sure! Here's the summary in 70 words:\\n\\nSouth Korea's Prime Minister Lee Wan-koo offered to resign amid a political scandal over alleged bribery and corruption. Seven politicians, including Lee and those linked to President Park Geun-hye, are under investigation. Lee denies allegations, but the President is taking them seriously and has promised to root out corruption.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 2,
+  "source_bytes": "53656f756c2028434e4e29536f757468204b6f7265612773205072696d65204d696e6973746572204c65652057616e2d6b6f6f206f66666572656420746f2072657369676e206f6e204d6f6e64617920616d696420612067726f77696e6720706f6c69746963616c207363616e64616c2e204c65652077696c6c207374617920696e20686973206f6666696369616c20726f6c6520756e74696c20536f757468204b6f7265616e20507265736964656e74205061726b204765756e2d6879652061636365707473206869732072657369676e6174696f6e2e20486520686173207472616e736665727265642068697320726f6c65206f66206368616972696e6720436162696e6574206d656574696e677320746f2074686520646570757479207072696d65206d696e697374657220666f72207468652074696d65206265696e672c206163636f7264696e6720746f20686973206f66666963652e205061726b2068656172642061626f7574207468652072657369676e6174696f6e20616e642063616c6c656420697420227265677265747461626c652c22206163636f7264696e6720746f2074686520536f757468204b6f7265616e20707265736964656e7469616c206f66666963652e2043616c6c7320666f72204c656520746f2072657369676e20626567616e20616674657220536f757468204b6f7265616e207479636f6f6e2053756e6720576f616e2d6a6f6e672077617320666f756e642068616e67696e672066726f6d2061207472656520696e2053656f756c20696e20616e206170706172656e742073756963696465206f6e20417072696c20392e2053756e672c2077686f2077617320756e64657220696e7665737469676174696f6e20666f7220667261756420616e6420627269626572792c206c6566742061206e6f7465206c697374696e67206e616d657320616e6420616d6f756e7473206f66206361736820676976656e20746f20746f70206f6666696369616c732c20696e636c7564696e672074686f73652077686f20776f726b20666f722074686520507265736964656e742e204c656520616e6420736576656e206f7468657220706f6c6974696369616e732077697468206c696e6b7320746f2074686520536f757468204b6f7265616e20507265736964656e742061726520756e64657220696e7665737469676174696f6e2e2041207370656369616c2070726f73656375746f722773207465616d20686173206265656e2065737461626c697368656420746f20696e7665737469676174652074686520636173652e204c656520686164206164616d616e746c792064656e6965642074686520616c6c65676174696f6e7320617320746865207363616e64616c20657363616c617465643a202249662074686572652061726520616e792065766964656e63652c20492077696c6c2067697665206f7574206d79206c6966652e2041732061205072696d65204d696e69737465722c20492077696c6c206163636570742050726f73656375746f72204f6666696365277320696e7665737469676174696f6e2066697273742e22205061726b2068617320736169642074686174207368652069732074616b696e67207468652061636375736174696f6e73207665727920736572696f75736c792e204265666f726520646570617274696e67206f6e20686572207472697020746f2043656e7472616c20616e6420536f75746820416d65726963612c2073686520636f6e64656d6e656420706f6c69746963616c20636f7272757074696f6e20696e2068657220636f756e7472792e2022436f7272757074696f6e20616e6420646565702d726f6f746564206576696c206172652069737375657320746861742063616e206c65616420746f2074616b696e6720617761792070656f706c652773206c697665732e2057652074616b652074686973207665727920736572696f75736c792e2220225765206d757374206d616b65207375726520746f2073657420737472616967687420746869732069737375652061732061206d6174746572206f6620706f6c69746963616c207265666f726d2e20492077696c6c206e6f7420666f726769766520616e796f6e652077686f20697320726573706f6e7369626c6520666f7220636f7272757074696f6e206f722077726f6e67646f696e672e22205061726b20697320696e205065727520616e6420697320657870656374656420746f20617272697665206261636b20746f20536f757468204b6f726561206f6e20417072696c2032372e20434e4e2773205061756c612048616e636f636b7320636f6e747269627574656420746f2074686973207265706f72742e0a",
+  "source_cluster_id": "sha256:8a03d7b23dbcfdf9e6fbba6e5c8e0ccc4063e4edec57368c9fbf2140f0f2129b",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.0\n}",
+  "unit_id": "sha256:8df63fcd3c4f90e558b1aade15d4a9e0ca6b3e10f180a45ea01a8d87793b3df8"
+}

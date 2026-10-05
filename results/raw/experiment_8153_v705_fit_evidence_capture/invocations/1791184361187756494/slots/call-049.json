@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c206120676f6f64207361666574792063756c74757265206973206f6e65207768657265207361666574792069732076616c75656420617320686967686c792061732070726f64756374697669747920616e64206d616e616765727320616e642073757065727669736f7273206172652068656c64206163636f756e7461626c6520666f722073616665747920696e207468652073616d65206d616e6e65722061732070726f64756374696f6e2e20497420697320616c736f2061626f757420676f6f64207361666574792061747469747564657320696e2070656f706c6520616e6420676f6f6420736166657479206d616e6167656d656e742065737461626c6973686564206279206f7267616e697a6174696f6e732e20546865204e6174696f6e616c2053616665747920436f756e63696c27732053616665747920436c696d617465205375727665792063616e2062652075736564206173206120676f6f64206d65616e73206f6620617373657373696e67207361666574792063756c747572652e",
+  "arm": "source_span",
+  "call_id": "sha256:bfeced756a445efbfbd6a8fb4c6a4cb0b43914196e29f7d79da266df1ba2734f:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.9095253879204392,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 424,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 58,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Learning more about safety culture. A large number of factors contribute to whether you have a good or a. bad safety culture. The table below lists the main factors; indicates. what would show that you had a good safety culture, and what would. support the safety culture.\\\\n\\\\npassage 2:A true safety culture is established when safety is valued as highly as productivity. Managers and supervisors need to be held accountable for safety in the same manner as production. Safety culture is about good safety attitudes in people but it is also good safety management established by organisations. Good safety culture means giving the highest priority to safety. The National Safety Council has a Safety Climate Survey that impressed the author as a good means of assessing safety culture.\\\\n\\\\npassage 3:Common topic 4: Safety culture. Introduction. What is safety culture? \u201cThe safety culture of an organisation is the. product of individual and group values, attitudes, perceptions, competencies, and. patterns of behaviour that determine the. commitment to, and the style and proficiency. of, an organisation\u2019s health and safety.\\\\n\\\\n\\\",\\\"question\\\":\\\"what makes a good safety culture\\\"}\", \"answer\": \"Based on the given passages, a good safety culture is one where safety is valued as highly as productivity and managers and supervisors are held accountable for safety in the same manner as production. It is also about good safety attitudes in people and good safety management established by organizations. The National Safety Council's Safety Climate Survey can be used as a good means of assessing safety culture.\"}",
+  "prompt_sha256": "sha256:753628e6eb2348097eeeaefa8b126bbd469c1f16b47daf87755974bc63e8a0b6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"A true safety culture is established when safety is valued as highly as productivity.\",\n  \"byte_start\": 333,\n  \"byte_end\": 397\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184540,
+    "id": "chatcmpl-ey8RA3RY2lyOOr2fyA8OAh9BPZjPJ2Fs",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1383.772,
+      "predicted_n": 58,
+      "predicted_per_second": 41.91441942747794,
+      "predicted_per_token_ms": 23.85813793103448,
+      "prompt_ms": 427.185,
+      "prompt_n": 424,
+      "prompt_per_second": 992.5442138651872,
+      "prompt_per_token_ms": 1.0075117924528303
+    },
+    "usage": {
+      "completion_tokens": 58,
+      "prompt_tokens": 424,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 482
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Learning more about safety culture. A large number of factors contribute to whether you have a good or a. bad safety culture. The table below lists the main factors; indicates. what would show that you had a good safety culture, and what would. support the safety culture.\\\\n\\\\npassage 2:A true safety culture is established when safety is valued as highly as productivity. Managers and supervisors need to be held accountable for safety in the same manner as production. Safety culture is about good safety attitudes in people but it is also good safety management established by organisations. Good safety culture means giving the highest priority to safety. The National Safety Council has a Safety Climate Survey that impressed the author as a good means of assessing safety culture.\\\\n\\\\npassage 3:Common topic 4: Safety culture. Introduction. What is safety culture? \u201cThe safety culture of an organisation is the. product of individual and group values, attitudes, perceptions, competencies, and. patterns of behaviour that determine the. commitment to, and the style and proficiency. of, an organisation\u2019s health and safety.\\\\n\\\\n\\\",\\\"question\\\":\\\"what makes a good safety culture\\\"}\", \"answer\": \"Based on the given passages, a good safety culture is one where safety is valued as highly as productivity and managers and supervisors are held accountable for safety in the same manner as production. It is also about good safety attitudes in people and good safety management established by organizations. The National Safety Council's Safety Climate Survey can be used as a good means of assessing safety culture.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 25,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4c6561726e696e67206d6f72652061626f7574207361666574792063756c747572652e2041206c61726765206e756d626572206f6620666163746f727320636f6e7472696275746520746f207768657468657220796f752068617665206120676f6f64206f7220612e20626164207361666574792063756c747572652e20546865207461626c652062656c6f77206c6973747320746865206d61696e20666163746f72733b20696e646963617465732e207768617420776f756c642073686f77207468617420796f7520686164206120676f6f64207361666574792063756c747572652c20616e64207768617420776f756c642e20737570706f727420746865207361666574792063756c747572652e5c6e5c6e7061737361676520323a412074727565207361666574792063756c747572652069732065737461626c6973686564207768656e207361666574792069732076616c75656420617320686967686c792061732070726f6475637469766974792e204d616e616765727320616e642073757065727669736f7273206e65656420746f2062652068656c64206163636f756e7461626c6520666f722073616665747920696e207468652073616d65206d616e6e65722061732070726f64756374696f6e2e205361666574792063756c747572652069732061626f757420676f6f64207361666574792061747469747564657320696e2070656f706c652062757420697420697320616c736f20676f6f6420736166657479206d616e6167656d656e742065737461626c6973686564206279206f7267616e69736174696f6e732e20476f6f64207361666574792063756c74757265206d65616e7320676976696e67207468652068696768657374207072696f7269747920746f207361666574792e20546865204e6174696f6e616c2053616665747920436f756e63696c2068617320612053616665747920436c696d61746520537572766579207468617420696d707265737365642074686520617574686f72206173206120676f6f64206d65616e73206f6620617373657373696e67207361666574792063756c747572652e5c6e5c6e7061737361676520333a436f6d6d6f6e20746f70696320343a205361666574792063756c747572652e20496e74726f64756374696f6e2e2057686174206973207361666574792063756c747572653f20e2809c546865207361666574792063756c74757265206f6620616e206f7267616e69736174696f6e206973207468652e2070726f64756374206f6620696e646976696475616c20616e642067726f75702076616c7565732c206174746974756465732c2070657263657074696f6e732c20636f6d706574656e636965732c20616e642e207061747465726e73206f66206265686176696f757220746861742064657465726d696e65207468652e20636f6d6d69746d656e7420746f2c20616e6420746865207374796c6520616e642070726f66696369656e63792e206f662c20616e206f7267616e69736174696f6ee2809973206865616c746820616e64207361666574792e5c6e5c6e222c227175657374696f6e223a2277686174206d616b6573206120676f6f64207361666574792063756c74757265227d",
+  "source_cluster_id": "sha256:7bf0d93681631c06dae2c34c077d9c00611b1f07c7124f23d989115d0a3fa24e",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"A true safety culture is established when safety is valued as highly as productivity.\",\n  \"byte_start\": 333,\n  \"byte_end\": 397\n}",
+  "unit_id": "sha256:bfeced756a445efbfbd6a8fb4c6a4cb0b43914196e29f7d79da266df1ba2734f"
+}

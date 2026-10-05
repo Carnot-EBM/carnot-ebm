@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4d6172696f2056616c656e6369612c2033362c2077617320617272657374656420696e204d6172616e612c204172697a6f6e612c206166746572206120706f6c696365206f6666696365722064656c696265726174656c792073747275636b2068696d2077697468206120706174726f6c20636172207768696c652068652077617320686f6c64696e6720612073686f706c69667465642067756e2e2056616c656e63696120686164206669726564207468652067756e20696e746f2074686520616972206265666f726520746865206f666669636572206869742068696d2e20486520666163657320313520636861726765732c20696e636c7564696e672073686f706c696674696e6720746865207269666c652066726f6d20612057616c6d6172742e205468652073746f726520636c65726b2068616420676976656e2068696d207468652067756e20616e6420616d6d756e6974696f6e2c2062656c696576696e6720686520776f756c6420627265616b207468652063617365206f70656e2077697468207468652062756c6c65747320696e736964652e20506f6c6963652073617920746865206f666669636572277320616374696f6e732077657265206a75737469666965642c20616e642057616c6d6172742068617320737461746564207468617420746865697220636c65726b20616374656420617070726f7072696174656c792e2056616c656e6369612072656d61696e7320696e206a61696c20616e642077696c6c2061707065617220696e20636f757274206f6e204d61792031382e",
+  "arm": "source_span",
+  "call_id": "sha256:5e4837b417347cb9a8602c8f32fdbad3f897722be9c0e9d9dcff9daf70665960:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.7462904599960893,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 733,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 80,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"At first police in Marana, Arizona, thought the shoplifted gun Mario Valencia held as he walked through a busy office park was locked and unable to fire. The cable through the lever and trigger couldn't be taken off, an officer was told by an employee of the Walmart where Valencia took the gun and some rounds of ammunition. But just 10 seconds after the worker told police that ... a shot. Valencia had fired into the air, and less than a minute later a police car slammed into him in a move that ended a crime spree and sparked nationwide discussion on the officer's unusual tactic. The 36-year-old Valencia was hospitalized and within a few days transferred to jail where he faces 15 charges, including shoplifting the .30-30 rifle. That February morning, police have said, Valencia committed several crimes in nearby Tucson before stealing a car and driving to the Walmart in Marana. There he went to the sporting goods department, asked to see a rifle, then told an employee he wanted the ammunition. Officer who drove into suspect justified, chief says. The woman told police she gave Valencia the rounds because he told her he would break the case with the bullets inside. He also told her not to do anything stupid. In spite of that she also said she didn't feel threatened, leading police to charge him with shoplifting and not armed robbery. Walmart told CNN's Miguel Marquez that  the store clerk acted appropriately, even using a code to alert security to call police. Valencia took the gun and ammo and fled into a nearby business park where he encountered an officer in a slow-moving patrol car. At one point he pointed the weapon at an officer and at another he pointed it at his head. The officer told him several times to put down the gun, police have said. The officers that were tailing him assumed that he likely couldn't shoot anyone because of the store's lock. Marana police on Thursday said the cable gun lock was still on the rifle when it was recovered. But the wire that goes through the trigger and the lever to reload the gun were loose enough to allow it to still be used, police said. It also should have been wrapped through the lever twice, not once, police said. A Walmart spokesman told CNN that the rifle had been properly locked and might have been affected by the hard blow caused by the police car. Valencia, who is in Pima County Jail, will appear in court again on May 18.\\n\", \"answer\": \"Mario Valencia, 36, was arrested in Marana, Arizona, after a police officer deliberately struck him with a patrol car while he was holding a shoplifted gun. Valencia had fired the gun into the air before the officer hit him. He faces 15 charges, including shoplifting the rifle from a Walmart. The store clerk had given him the gun and ammunition, believing he would break the case open with the bullets inside. Police say the officer's actions were justified, and Walmart has stated that their clerk acted appropriately. Valencia remains in jail and will appear in court on May 18.\"}",
+  "prompt_sha256": "sha256:de4507390e05369f4ec8b3fad414d6ff2a53b840d0f09805801d8f45f9c2e7ce",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"The 36-year-old Valencia was hospitalized and within a few days transferred to jail where he faces 15 charges, including shoplifting the .30-30 rifle.\",\n  \"byte_start\": 463,\n  \"byte_end\": 597\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184993,
+    "id": "chatcmpl-2meMgRMe7RFh4ehbPpyhMpr8nNlpM8bW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1931.835,
+      "predicted_n": 80,
+      "predicted_per_second": 41.411404183069465,
+      "predicted_per_token_ms": 24.1479375,
+      "prompt_ms": 706.379,
+      "prompt_n": 733,
+      "prompt_per_second": 1037.6865676924144,
+      "prompt_per_token_ms": 0.9636821282401091
+    },
+    "usage": {
+      "completion_tokens": 80,
+      "prompt_tokens": 733,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 813
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"At first police in Marana, Arizona, thought the shoplifted gun Mario Valencia held as he walked through a busy office park was locked and unable to fire. The cable through the lever and trigger couldn't be taken off, an officer was told by an employee of the Walmart where Valencia took the gun and some rounds of ammunition. But just 10 seconds after the worker told police that ... a shot. Valencia had fired into the air, and less than a minute later a police car slammed into him in a move that ended a crime spree and sparked nationwide discussion on the officer's unusual tactic. The 36-year-old Valencia was hospitalized and within a few days transferred to jail where he faces 15 charges, including shoplifting the .30-30 rifle. That February morning, police have said, Valencia committed several crimes in nearby Tucson before stealing a car and driving to the Walmart in Marana. There he went to the sporting goods department, asked to see a rifle, then told an employee he wanted the ammunition. Officer who drove into suspect justified, chief says. The woman told police she gave Valencia the rounds because he told her he would break the case with the bullets inside. He also told her not to do anything stupid. In spite of that she also said she didn't feel threatened, leading police to charge him with shoplifting and not armed robbery. Walmart told CNN's Miguel Marquez that  the store clerk acted appropriately, even using a code to alert security to call police. Valencia took the gun and ammo and fled into a nearby business park where he encountered an officer in a slow-moving patrol car. At one point he pointed the weapon at an officer and at another he pointed it at his head. The officer told him several times to put down the gun, police have said. The officers that were tailing him assumed that he likely couldn't shoot anyone because of the store's lock. Marana police on Thursday said the cable gun lock was still on the rifle when it was recovered. But the wire that goes through the trigger and the lever to reload the gun were loose enough to allow it to still be used, police said. It also should have been wrapped through the lever twice, not once, police said. A Walmart spokesman told CNN that the rifle had been properly locked and might have been affected by the hard blow caused by the police car. Valencia, who is in Pima County Jail, will appear in court again on May 18.\\n\", \"answer\": \"Mario Valencia, 36, was arrested in Marana, Arizona, after a police officer deliberately struck him with a patrol car while he was holding a shoplifted gun. Valencia had fired the gun into the air before the officer hit him. He faces 15 charges, including shoplifting the rifle from a Walmart. The store clerk had given him the gun and ammunition, believing he would break the case open with the bullets inside. Police say the officer's actions were justified, and Walmart has stated that their clerk acted appropriately. Valencia remains in jail and will appear in court on May 18.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 26,
+  "source_bytes": "417420666972737420706f6c69636520696e204d6172616e612c204172697a6f6e612c2074686f75676874207468652073686f706c69667465642067756e204d6172696f2056616c656e6369612068656c642061732068652077616c6b6564207468726f75676820612062757379206f6666696365207061726b20776173206c6f636b656420616e6420756e61626c6520746f20666972652e20546865206361626c65207468726f75676820746865206c6576657220616e64207472696767657220636f756c646e27742062652074616b656e206f66662c20616e206f6666696365722077617320746f6c6420627920616e20656d706c6f796565206f66207468652057616c6d6172742077686572652056616c656e63696120746f6f6b207468652067756e20616e6420736f6d6520726f756e6473206f6620616d6d756e6974696f6e2e20427574206a757374203130207365636f6e64732061667465722074686520776f726b657220746f6c6420706f6c6963652074686174202e2e2e20612073686f742e2056616c656e6369612068616420666972656420696e746f20746865206169722c20616e64206c657373207468616e2061206d696e757465206c61746572206120706f6c6963652063617220736c616d6d656420696e746f2068696d20696e2061206d6f7665207468617420656e6465642061206372696d6520737072656520616e6420737061726b6564206e6174696f6e776964652064697363757373696f6e206f6e20746865206f666669636572277320756e757375616c207461637469632e205468652033362d796561722d6f6c642056616c656e6369612077617320686f73706974616c697a656420616e642077697468696e2061206665772064617973207472616e7366657272656420746f206a61696c20776865726520686520666163657320313520636861726765732c20696e636c7564696e672073686f706c696674696e6720746865202e33302d3330207269666c652e2054686174204665627275617279206d6f726e696e672c20706f6c696365206861766520736169642c2056616c656e63696120636f6d6d6974746564207365766572616c206372696d657320696e206e656172627920547563736f6e206265666f726520737465616c696e6720612063617220616e642064726976696e6720746f207468652057616c6d61727420696e204d6172616e612e2054686572652068652077656e7420746f207468652073706f7274696e6720676f6f6473206465706172746d656e742c2061736b656420746f207365652061207269666c652c207468656e20746f6c6420616e20656d706c6f7965652068652077616e7465642074686520616d6d756e6974696f6e2e204f6666696365722077686f2064726f766520696e746f2073757370656374206a75737469666965642c20636869656620736179732e2054686520776f6d616e20746f6c6420706f6c6963652073686520676176652056616c656e6369612074686520726f756e6473206265636175736520686520746f6c642068657220686520776f756c6420627265616b2074686520636173652077697468207468652062756c6c65747320696e736964652e20486520616c736f20746f6c6420686572206e6f7420746f20646f20616e797468696e67207374757069642e20496e207370697465206f6620746861742073686520616c736f207361696420736865206469646e2774206665656c20746872656174656e65642c206c656164696e6720706f6c69636520746f206368617267652068696d20776974682073686f706c696674696e6720616e64206e6f742061726d656420726f62626572792e2057616c6d61727420746f6c6420434e4e2773204d696775656c204d61727175657a207468617420207468652073746f726520636c65726b20616374656420617070726f7072696174656c792c206576656e207573696e67206120636f646520746f20616c65727420736563757269747920746f2063616c6c20706f6c6963652e2056616c656e63696120746f6f6b207468652067756e20616e6420616d6d6f20616e6420666c656420696e746f2061206e656172627920627573696e657373207061726b20776865726520686520656e636f756e746572656420616e206f66666963657220696e206120736c6f772d6d6f76696e6720706174726f6c206361722e204174206f6e6520706f696e7420686520706f696e7465642074686520776561706f6e20617420616e206f66666963657220616e6420617420616e6f7468657220686520706f696e7465642069742061742068697320686561642e20546865206f66666963657220746f6c642068696d207365766572616c2074696d657320746f2070757420646f776e207468652067756e2c20706f6c696365206861766520736169642e20546865206f6666696365727320746861742077657265207461696c696e672068696d20617373756d65642074686174206865206c696b656c7920636f756c646e27742073686f6f7420616e796f6e652062656361757365206f66207468652073746f72652773206c6f636b2e204d6172616e6120706f6c696365206f6e205468757273646179207361696420746865206361626c652067756e206c6f636b20776173207374696c6c206f6e20746865207269666c65207768656e20697420776173207265636f76657265642e20427574207468652077697265207468617420676f6573207468726f75676820746865207472696767657220616e6420746865206c6576657220746f2072656c6f6164207468652067756e2077657265206c6f6f736520656e6f75676820746f20616c6c6f7720697420746f207374696c6c20626520757365642c20706f6c69636520736169642e20497420616c736f2073686f756c642068617665206265656e2077726170706564207468726f75676820746865206c657665722074776963652c206e6f74206f6e63652c20706f6c69636520736169642e20412057616c6d6172742073706f6b65736d616e20746f6c6420434e4e207468617420746865207269666c6520686164206265656e2070726f7065726c79206c6f636b656420616e64206d696768742068617665206265656e20616666656374656420627920746865206861726420626c6f77206361757365642062792074686520706f6c696365206361722e2056616c656e6369612c2077686f20697320696e2050696d6120436f756e7479204a61696c2c2077696c6c2061707065617220696e20636f75727420616761696e206f6e204d61792031382e0a",
+  "source_cluster_id": "sha256:10dbba82f0d6f81fd4e25220d212cb7f81e8cbf8b42876156645173fc1b16a49",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"The 36-year-old Valencia was hospitalized and within a few days transferred to jail where he faces 15 charges, including shoplifting the .30-30 rifle.\",\n  \"byte_start\": 463,\n  \"byte_end\": 597\n}",
+  "unit_id": "sha256:5e4837b417347cb9a8602c8f32fdbad3f897722be9c0e9d9dcff9daf70665960"
+}

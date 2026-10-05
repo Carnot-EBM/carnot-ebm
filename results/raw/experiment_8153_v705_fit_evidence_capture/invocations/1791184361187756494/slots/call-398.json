@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "456c205461636f204772616e646520697320612063617375616c204d65786963616e2072657374617572616e74206c6f636174656420617420313039362043617369746173205061737320526420696e2043617270696e74657269612c2043412e205468652072657374617572616e74206973206f70656e2066726f6d203920414d20746f203820504d2066726f6d205475657364617920746f20546875727364617920616e6420536174757264617920746f2053756e6461792c207768696c65206f6e204672696461797320697420636c6f736573206174203320504d2e20497420697320636c6f736564206f6e204d6f6e646179732e20456c205461636f204772616e6465206f6666657273206f7574646f6f722073656174696e6720616e64206973207375697461626c6520666f722067726f7570732e20497420646f6573206e6f742070726f76696465205769466920616e6420646f6573206e6f7420616363657074207265736572766174696f6e732e205468652072657374617572616e7420686173206120332d7374617220726174696e67206f766572616c6c2c2062757420736f6d6520637573746f6d65727320726174652069742068696768657220666f722069747320657863656c6c656e7420666f6f642c2067656e65726f757320706f7274696f6e732c206772656174207072696365732c20616e6420657863656c6c656e7420736572766963652e205369676e61747572652064697368657320696e636c75646520746865204368696c652052656c6c656e6f2c20637269737079207461636f732c206361726e65206173616461206275727269746f732c20616e642043616c646f2037204d617265732e20486f77657665722c206f6e6520637573746f6d6572206e6f7465642061206c61636b206f6620434f5649442d313920736166657479206d6561737572657320696e20706c61636520647572696e6720746865697220766973697420696e204d6172636820323032312e",
+  "arm": "holistic",
+  "call_id": "sha256:2d205472157764a144d6db1a9aa42a067a643c9b8e5bf53f4c876ca8b51582a4:source_mismatched",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_mismatched",
+  "denominator": 1,
+  "donor_unit_id": "sha256:de933dc47053ac40f475a4abadf1993d3c03ba18bc8432b2d74f32fe1de15ea0",
+  "duration_s": 0.878189853974618,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 462,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 Honey can produce hydrogen peroxide and kill bacteria by dehydrating it. It can be used to treat sore gums, ulcers and other problems inside the mouth.  Use a q-tip to apply a small amount of 100% pure honey to sore areas inside your mouth. Do this three times a day for five days.\\\\n\\\\npassage 2:Soothe sore gums with chamomile tea. Put one tea bag of chamomile in a cup of boiling water. Allow to to steep for five minutes and cool slightly before drinking. Swish the tea around your mouth to sooth your gums before swallowing.\\\\n\\\\npassage 3:Apply aloe vera on sore gums. Aloe vera can be directly applied to red and inflamed gum tissues. It can also be used to cure viral oral lesions, ulcers, and gum abscesses. After brushing your teeth, apply a small amount of natural aloe vera gel directly to the inflamed gums.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to soothe mouth sore caused from biting gums\\\"}\", \"answer\": \"El Taco Grande is a casual Mexican restaurant located at 1096 Casitas Pass Rd in Carpinteria, CA. The restaurant is open from 9 AM to 8 PM from Tuesday to Thursday and Saturday to Sunday, while on Fridays it closes at 3 PM. It is closed on Mondays. El Taco Grande offers outdoor seating and is suitable for groups. It does not provide WiFi and does not accept reservations. The restaurant has a 3-star rating overall, but some customers rate it higher for its excellent food, generous portions, great prices, and excellent service. Signature dishes include the Chile Relleno, crispy tacos, carne asada burritos, and Caldo 7 Mares. However, one customer noted a lack of COVID-19 safety measures in place during their visit in March 2021.\"}",
+  "prompt_sha256": "sha256:21cc480da05b513fcab8b91b3e273003633d2375c1364ae2e8214e73c5165d20",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185140,
+    "id": "chatcmpl-AyGuK9HRZBzTzutl0b5hXjULIYZuEdon",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.499,
+      "predicted_n": 14,
+      "predicted_per_second": 43.54601414001287,
+      "predicted_per_token_ms": 22.964214285714288,
+      "prompt_ms": 460.385,
+      "prompt_n": 462,
+      "prompt_per_second": 1003.507933577332,
+      "prompt_per_token_ms": 0.996504329004329
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 462,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 476
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 Honey can produce hydrogen peroxide and kill bacteria by dehydrating it. It can be used to treat sore gums, ulcers and other problems inside the mouth.  Use a q-tip to apply a small amount of 100% pure honey to sore areas inside your mouth. Do this three times a day for five days.\\\\n\\\\npassage 2:Soothe sore gums with chamomile tea. Put one tea bag of chamomile in a cup of boiling water. Allow to to steep for five minutes and cool slightly before drinking. Swish the tea around your mouth to sooth your gums before swallowing.\\\\n\\\\npassage 3:Apply aloe vera on sore gums. Aloe vera can be directly applied to red and inflamed gum tissues. It can also be used to cure viral oral lesions, ulcers, and gum abscesses. After brushing your teeth, apply a small amount of natural aloe vera gel directly to the inflamed gums.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to soothe mouth sore caused from biting gums\\\"}\", \"answer\": \"El Taco Grande is a casual Mexican restaurant located at 1096 Casitas Pass Rd in Carpinteria, CA. The restaurant is open from 9 AM to 8 PM from Tuesday to Thursday and Saturday to Sunday, while on Fridays it closes at 3 PM. It is closed on Mondays. El Taco Grande offers outdoor seating and is suitable for groups. It does not provide WiFi and does not accept reservations. The restaurant has a 3-star rating overall, but some customers rate it higher for its excellent food, generous portions, great prices, and excellent service. Signature dishes include the Chile Relleno, crispy tacos, carne asada burritos, and Caldo 7 Mares. However, one customer noted a lack of COVID-19 safety measures in place during their visit in March 2021.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 5,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a3120486f6e65792063616e2070726f6475636520687964726f67656e207065726f7869646520616e64206b696c6c206261637465726961206279206465687964726174696e672069742e2049742063616e206265207573656420746f20747265617420736f72652067756d732c20756c6365727320616e64206f746865722070726f626c656d7320696e7369646520746865206d6f7574682e2020557365206120712d74697020746f206170706c79206120736d616c6c20616d6f756e74206f662031303025207075726520686f6e657920746f20736f726520617265617320696e7369646520796f7572206d6f7574682e20446f20746869732074687265652074696d657320612064617920666f72206669766520646179732e5c6e5c6e7061737361676520323a536f6f74686520736f72652067756d732077697468206368616d6f6d696c65207465612e20507574206f6e652074656120626167206f66206368616d6f6d696c6520696e206120637570206f6620626f696c696e672077617465722e20416c6c6f7720746f20746f20737465657020666f722066697665206d696e7574657320616e6420636f6f6c20736c696768746c79206265666f7265206472696e6b696e672e20537769736820746865207465612061726f756e6420796f7572206d6f75746820746f20736f6f746820796f75722067756d73206265666f7265207377616c6c6f77696e672e5c6e5c6e7061737361676520333a4170706c7920616c6f652076657261206f6e20736f72652067756d732e20416c6f6520766572612063616e206265206469726563746c79206170706c69656420746f2072656420616e6420696e666c616d65642067756d20746973737565732e2049742063616e20616c736f206265207573656420746f206375726520766972616c206f72616c206c6573696f6e732c20756c636572732c20616e642067756d206162736365737365732e204166746572206272757368696e6720796f75722074656574682c206170706c79206120736d616c6c20616d6f756e74206f66206e61747572616c20616c6f6520766572612067656c206469726563746c7920746f2074686520696e666c616d65642067756d732e5c6e5c6e222c227175657374696f6e223a22686f7720746f20736f6f746865206d6f75746820736f7265206361757365642066726f6d20626974696e672067756d73227d",
+  "source_cluster_id": "sha256:96a3609a9815537412739dded9ea88b4c6162af135a8f4da173233b19b5a73cf",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 1\n}",
+  "unit_id": "sha256:2d205472157764a144d6db1a9aa42a067a643c9b8e5bf53f4c876ca8b51582a4"
+}

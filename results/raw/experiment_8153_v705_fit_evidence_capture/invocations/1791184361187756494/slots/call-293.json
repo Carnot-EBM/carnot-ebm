@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "53616c6d6f6e656c6c612062616374657269612061726520726f642d7368617065642c206e6f6e2073706f72652d666f726d696e672c206d6f74696c65206d6963726f6265732e20546865792068617665207468696e2063656c6c2077616c6c7320616e6420617265206772616d2d6e656761746976652e205468657920617265206265747765656e203220616e642035206d6963726f6d6574657273206c6f6e6720616e6420302e3720746f20312e35206d6963726f6d657465727320696e206469616d657465722e2054686579206861766520666c6167656c6c612c20776869636820617265207461696c2d6c696b652070726f6a656374696f6e73206d616465206f662070726f7465696e7320746861742068656c702074686520626163746572696120746f206d6f76652e20546865726520617265206d6f7265207468616e20322c30303020646966666572656e74207365726f7479706573206f662053616c6d6f6e656c6c612c206275742053616c6d6f6e656c6c6120456e74657269746964697320616e642053616c6d6f6e656c6c612054797068696d757269756d206361757365206d6f7265207468616e20353025206f662068756d616e20696e66656374696f6e732e",
+  "arm": "source_span",
+  "call_id": "sha256:ab24356a340d4a85c8efaef0722cb70b0d15b39604a1258a5b9e0c9250ea14e1:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.2751855440437794,
+  "entailment_label": null,
+  "exclusion_reason": "invalid_probability_or_usage",
+  "human_target": null,
+  "input_tokens": 588,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 0,
+  "order": 1,
+  "output_tokens": 65,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": null,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "missing_probability",
+    "valid_quote": 0
+  },
+  "probability": null,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Salmonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.almonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.\\\\n\\\\npassage 2:Salmonella bacteria are rod-shaped, non spore-forming motile microbes that can be found in poultry, pigs, cows, pets, and many wild animals.There are more than 2,000 different serotypes of the bacteria, but it's Salmonella Enteritidis and Salmonella Typhimurium that cause more than 50% of human infections.almonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.\\\\n\\\\npassage 3:Physical. Salmonella bacteria are rod-shaped gram-negative bacteria. Gram-negative bacteria do not retain the crystal violet dye used in the gram staining method due to the fact that they have cell walls that are thin.Gram-negative bacteria are often harmful to a host, which is the case for many of the Salmonella bacteria.Salmonella bacteria are between 2 and 5 micrometers long and 0.7 to 1.5 micrometers in diameter. They have flagella, which are tail-like projections made of proteins that help the bacteria to move.ram-negative bacteria do not retain the crystal violet dye used in the gram staining method due to the fact that they have cell walls that are thin. Gram-negative bacteria are often harmful to a host, which is the case for many of the Salmonella bacteria.\\\\n\\\\n\\\",\\\"question\\\":\\\"salmonella bacteria characteristics\\\"}\", \"answer\": \"Salmonella bacteria are rod-shaped, non spore-forming, motile microbes. They have thin cell walls and are gram-negative. They are between 2 and 5 micrometers long and 0.7 to 1.5 micrometers in diameter. They have flagella, which are tail-like projections made of proteins that help the bacteria to move. There are more than 2,000 different serotypes of Salmonella, but Salmonella Enteritidis and Salmonella Typhimurium cause more than 50% of human infections.\"}",
+  "prompt_sha256": "sha256:93cdd6e38bc91522e9a143c98d27fe8d61632326d69da8eb1fd13001622685eb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```json\n{\n  \"p_hallucination\": 0,\n  \"quote\": \"Salmonella bacteria are rod-shaped, non spore-forming motile microbes\",\n  \"byte_start\": 255,\n  \"byte_end\": 313\n}\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184971,
+    "id": "chatcmpl-H24O2xaVl8nrD9xl9r0E7H1P6hAC3frR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1557.866,
+      "predicted_n": 65,
+      "predicted_per_second": 41.723742606873756,
+      "predicted_per_token_ms": 23.96716923076923,
+      "prompt_ms": 604.15,
+      "prompt_n": 588,
+      "prompt_per_second": 973.2682280890508,
+      "prompt_per_token_ms": 1.0274659863945579
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 588,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 653
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Salmonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.almonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.\\\\n\\\\npassage 2:Salmonella bacteria are rod-shaped, non spore-forming motile microbes that can be found in poultry, pigs, cows, pets, and many wild animals.There are more than 2,000 different serotypes of the bacteria, but it's Salmonella Enteritidis and Salmonella Typhimurium that cause more than 50% of human infections.almonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.\\\\n\\\\npassage 3:Physical. Salmonella bacteria are rod-shaped gram-negative bacteria. Gram-negative bacteria do not retain the crystal violet dye used in the gram staining method due to the fact that they have cell walls that are thin.Gram-negative bacteria are often harmful to a host, which is the case for many of the Salmonella bacteria.Salmonella bacteria are between 2 and 5 micrometers long and 0.7 to 1.5 micrometers in diameter. They have flagella, which are tail-like projections made of proteins that help the bacteria to move.ram-negative bacteria do not retain the crystal violet dye used in the gram staining method due to the fact that they have cell walls that are thin. Gram-negative bacteria are often harmful to a host, which is the case for many of the Salmonella bacteria.\\\\n\\\\n\\\",\\\"question\\\":\\\"salmonella bacteria characteristics\\\"}\", \"answer\": \"Salmonella bacteria are rod-shaped, non spore-forming, motile microbes. They have thin cell walls and are gram-negative. They are between 2 and 5 micrometers long and 0.7 to 1.5 micrometers in diameter. They have flagella, which are tail-like projections made of proteins that help the bacteria to move. There are more than 2,000 different serotypes of Salmonella, but Salmonella Enteritidis and Salmonella Typhimurium cause more than 50% of human infections.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 19,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a53616c6d6f6e656c6c612062616374657269612061726520746865206d6f737420636f6d6d6f6e206361757365206f6620666f6f6420626f726e6520696c6c6e65737365732e2046696e64206f7574206d6f72652061626f75742073616c6d6f6e656c6c61206261637465726961206368617261637465726973746963732077697468206f75722073616c6d6f6e656c6c61204641512e616c6d6f6e656c6c612062616374657269612061726520746865206d6f737420636f6d6d6f6e206361757365206f6620666f6f6420626f726e6520696c6c6e65737365732e2046696e64206f7574206d6f72652061626f75742073616c6d6f6e656c6c61206261637465726961206368617261637465726973746963732077697468206f75722073616c6d6f6e656c6c61204641512e5c6e5c6e7061737361676520323a53616c6d6f6e656c6c612062616374657269612061726520726f642d7368617065642c206e6f6e2073706f72652d666f726d696e67206d6f74696c65206d6963726f62657320746861742063616e20626520666f756e6420696e20706f756c7472792c20706967732c20636f77732c20706574732c20616e64206d616e792077696c6420616e696d616c732e546865726520617265206d6f7265207468616e20322c30303020646966666572656e74207365726f7479706573206f66207468652062616374657269612c2062757420697427732053616c6d6f6e656c6c6120456e74657269746964697320616e642053616c6d6f6e656c6c612054797068696d757269756d2074686174206361757365206d6f7265207468616e20353025206f662068756d616e20696e66656374696f6e732e616c6d6f6e656c6c612062616374657269612061726520746865206d6f737420636f6d6d6f6e206361757365206f6620666f6f6420626f726e6520696c6c6e65737365732e2046696e64206f7574206d6f72652061626f75742073616c6d6f6e656c6c61206261637465726961206368617261637465726973746963732077697468206f75722073616c6d6f6e656c6c61204641512e5c6e5c6e7061737361676520333a506879736963616c2e2053616c6d6f6e656c6c612062616374657269612061726520726f642d736861706564206772616d2d6e656761746976652062616374657269612e204772616d2d6e6567617469766520626163746572696120646f206e6f742072657461696e20746865206372797374616c2076696f6c657420647965207573656420696e20746865206772616d20737461696e696e67206d6574686f642064756520746f2074686520666163742074686174207468657920686176652063656c6c2077616c6c73207468617420617265207468696e2e4772616d2d6e6567617469766520626163746572696120617265206f6674656e206861726d66756c20746f206120686f73742c20776869636820697320746865206361736520666f72206d616e79206f66207468652053616c6d6f6e656c6c612062616374657269612e53616c6d6f6e656c6c6120626163746572696120617265206265747765656e203220616e642035206d6963726f6d6574657273206c6f6e6720616e6420302e3720746f20312e35206d6963726f6d657465727320696e206469616d657465722e2054686579206861766520666c6167656c6c612c20776869636820617265207461696c2d6c696b652070726f6a656374696f6e73206d616465206f662070726f7465696e7320746861742068656c702074686520626163746572696120746f206d6f76652e72616d2d6e6567617469766520626163746572696120646f206e6f742072657461696e20746865206372797374616c2076696f6c657420647965207573656420696e20746865206772616d20737461696e696e67206d6574686f642064756520746f2074686520666163742074686174207468657920686176652063656c6c2077616c6c73207468617420617265207468696e2e204772616d2d6e6567617469766520626163746572696120617265206f6674656e206861726d66756c20746f206120686f73742c20776869636820697320746865206361736520666f72206d616e79206f66207468652053616c6d6f6e656c6c612062616374657269612e5c6e5c6e222c227175657374696f6e223a2273616c6d6f6e656c6c6120626163746572696120636861726163746572697374696373227d",
+  "source_cluster_id": "sha256:2628158ff35d36de95df39f8ddc2f417a74dc38ded52f1229a8f244d783ec0ac",
+  "started": true,
+  "status": "failed",
+  "transcript": "```json\n{\n  \"p_hallucination\": 0,\n  \"quote\": \"Salmonella bacteria are rod-shaped, non spore-forming motile microbes\",\n  \"byte_start\": 255,\n  \"byte_end\": 313\n}\n```",
+  "unit_id": "sha256:ab24356a340d4a85c8efaef0722cb70b0d15b39604a1258a5b9e0c9250ea14e1"
+}

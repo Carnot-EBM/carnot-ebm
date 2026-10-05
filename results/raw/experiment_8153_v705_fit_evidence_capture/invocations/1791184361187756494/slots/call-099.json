@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e207468652070726f76696465642070617373616765732c20686572652061726520736f6d652072656d656469657320666f72207472656174696e6720746f6e67756520736f7265733a0a0a312e204d61676963206d6f757468776173683a204120686f6d656d6164652076657273696f6e206f66207468697320707265736372697074696f6e206d6978747572652063616e2070726f76696465207061696e2072656c69656620666f7220746f6e67756520616e64206f74686572206d6f75746820756c636572732e2028506173736167652031290a322e2053616c742077617465722072696e73653a2052696e73696e6720746865206d6f757468207769746820612073616c7420776174657220736f6c7574696f6e207365766572616c2074696d65732061206461792063616e2068656c70206b65657020746865206172656120636c65616e20616e642070726f766964652074656d706f72617279207061696e2072656c6965662e2028506173736167652032290a332e2053747261776265727269657320616e64206f72616e6765733a20506c6163696e672061207765742074656120626167206f6e207468652073706f74206f662074686520746f6e67756520776865726520796f75206665656c207468652073636f726368656420616e64206275726e696e672073656e736174696f6e2063616e2068656c70206162736f726220746865207061696e20616e6420697320616e2065666665637469766520686f6d652072656d6564792e2028506173736167652033290a0a556e61626c6520746f20616e73776572206261736564206f6e2074686520676976656e2070617373616765732e",
+  "arm": "source_span",
+  "call_id": "sha256:438eae9a524c5c668afcd2e4da47651a3a6e3f582caf73b769a03d7d0b7e0d7d:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.2505127150798216,
+  "entailment_label": null,
+  "exclusion_reason": "invalid_probability_or_usage",
+  "human_target": null,
+  "input_tokens": 450,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 0,
+  "order": 1,
+  "output_tokens": 68,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": null,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "missing_probability",
+    "valid_quote": 0
+  },
+  "probability": null,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Magic mouthwash is a prescription mixture typically used to treat mouth sores caused by cancer treatment. However, a modified homemade version can provide pain relief for tongue and other mouth ulcers.\\\\n\\\\npassage 2:Salt Water Mouth Rinse. Rinsing your mouth several times daily with a simple salt water solution helps keep the area clean and might provide temporary pain relief caused by tongue ulcers. Mix one-half teaspoon of salt in a cup of warm water. If the solution stings too much, dilute it with more warm water.\\\\n\\\\npassage 3:Strawberries and oranges are also traditional forms of vitamin C that can be safely consumed. Try placing a wet tea bag on the spot of the tongue where you feel the scorched and burning sensation. The tea bag will help absorb the pain and is an effective home remedy.\\\\n\\\\n\\\",\\\"question\\\":\\\"tongue sores remedy\\\"}\", \"answer\": \"Based on the provided passages, here are some remedies for treating tongue sores:\\n\\n1. Magic mouthwash: A homemade version of this prescription mixture can provide pain relief for tongue and other mouth ulcers. (Passage 1)\\n2. Salt water rinse: Rinsing the mouth with a salt water solution several times a day can help keep the area clean and provide temporary pain relief. (Passage 2)\\n3. Strawberries and oranges: Placing a wet tea bag on the spot of the tongue where you feel the scorched and burning sensation can help absorb the pain and is an effective home remedy. (Passage 3)\\n\\nUnable to answer based on the given passages.\"}",
+  "prompt_sha256": "sha256:136a53bb48c3fd5179cb6b6fc0f58c3a00a10f68496a163180332d2a46bea423",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```json\n{\n  \"p_hallucination\": 0.0,\n  \"quote\": \"Strawberries and oranges are also traditional forms of vitamin C that can be safely consumed.\",\n  \"byte_start\": 438,\n  \"byte_end\": 518\n}\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184623,
+    "id": "chatcmpl-EF7VTVqYA7KSKY4cJOmtJnrRGQYNLm50",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1638.377,
+      "predicted_n": 68,
+      "predicted_per_second": 41.50448889358188,
+      "predicted_per_token_ms": 24.093779411764704,
+      "prompt_ms": 436.582,
+      "prompt_n": 450,
+      "prompt_per_second": 1030.7342034257024,
+      "prompt_per_token_ms": 0.9701822222222222
+    },
+    "usage": {
+      "completion_tokens": 68,
+      "prompt_tokens": 450,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 518
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Magic mouthwash is a prescription mixture typically used to treat mouth sores caused by cancer treatment. However, a modified homemade version can provide pain relief for tongue and other mouth ulcers.\\\\n\\\\npassage 2:Salt Water Mouth Rinse. Rinsing your mouth several times daily with a simple salt water solution helps keep the area clean and might provide temporary pain relief caused by tongue ulcers. Mix one-half teaspoon of salt in a cup of warm water. If the solution stings too much, dilute it with more warm water.\\\\n\\\\npassage 3:Strawberries and oranges are also traditional forms of vitamin C that can be safely consumed. Try placing a wet tea bag on the spot of the tongue where you feel the scorched and burning sensation. The tea bag will help absorb the pain and is an effective home remedy.\\\\n\\\\n\\\",\\\"question\\\":\\\"tongue sores remedy\\\"}\", \"answer\": \"Based on the provided passages, here are some remedies for treating tongue sores:\\n\\n1. Magic mouthwash: A homemade version of this prescription mixture can provide pain relief for tongue and other mouth ulcers. (Passage 1)\\n2. Salt water rinse: Rinsing the mouth with a salt water solution several times a day can help keep the area clean and provide temporary pain relief. (Passage 2)\\n3. Strawberries and oranges: Placing a wet tea bag on the spot of the tongue where you feel the scorched and burning sensation can help absorb the pain and is an effective home remedy. (Passage 3)\\n\\nUnable to answer based on the given passages.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 50,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4d61676963206d6f75746877617368206973206120707265736372697074696f6e206d697874757265207479706963616c6c79207573656420746f207472656174206d6f75746820736f726573206361757365642062792063616e6365722074726561746d656e742e20486f77657665722c2061206d6f64696669656420686f6d656d6164652076657273696f6e2063616e2070726f76696465207061696e2072656c69656620666f7220746f6e67756520616e64206f74686572206d6f75746820756c636572732e5c6e5c6e7061737361676520323a53616c74205761746572204d6f7574682052696e73652e2052696e73696e6720796f7572206d6f757468207365766572616c2074696d6573206461696c79207769746820612073696d706c652073616c7420776174657220736f6c7574696f6e2068656c7073206b65657020746865206172656120636c65616e20616e64206d696768742070726f766964652074656d706f72617279207061696e2072656c6965662063617573656420627920746f6e67756520756c636572732e204d6978206f6e652d68616c662074656173706f6f6e206f662073616c7420696e206120637570206f66207761726d2077617465722e2049662074686520736f6c7574696f6e207374696e677320746f6f206d7563682c2064696c7574652069742077697468206d6f7265207761726d2077617465722e5c6e5c6e7061737361676520333a53747261776265727269657320616e64206f72616e6765732061726520616c736f20747261646974696f6e616c20666f726d73206f6620766974616d696e204320746861742063616e20626520736166656c7920636f6e73756d65642e2054727920706c6163696e672061207765742074656120626167206f6e207468652073706f74206f662074686520746f6e67756520776865726520796f75206665656c207468652073636f726368656420616e64206275726e696e672073656e736174696f6e2e2054686520746561206261672077696c6c2068656c70206162736f726220746865207061696e20616e6420697320616e2065666665637469766520686f6d652072656d6564792e5c6e5c6e222c227175657374696f6e223a22746f6e67756520736f7265732072656d656479227d",
+  "source_cluster_id": "sha256:f90d0d5fa29e02ac4e3688ec887cbea917efeb33ae4353eec8afffd1d3821608",
+  "started": true,
+  "status": "failed",
+  "transcript": "```json\n{\n  \"p_hallucination\": 0.0,\n  \"quote\": \"Strawberries and oranges are also traditional forms of vitamin C that can be safely consumed.\",\n  \"byte_start\": 438,\n  \"byte_end\": 518\n}\n```",
+  "unit_id": "sha256:438eae9a524c5c668afcd2e4da47651a3a6e3f582caf73b769a03d7d0b7e0d7d"
+}

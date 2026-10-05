@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4368696361676f20416c6465726d616e2043687269732054616c6961666572726f20686173206f70706f736564204d61796f72204272616e646f6e204a6f686e736f6e277320706c616e20746f207475726e2074686520416d756e6473656e205061726b204669656c6420486f75736520696e746f2061207368656c74657220666f7220323030206d696772616e747320666f72206174206c6561737420736978206d6f6e7468732e2054616c6961666572726f20617267756573207468617420746865206d6f76652c20776869636820776f756c642063726561746520746865206369747927732032326e64206d696772616e74207368656c7465722c20776f756c642074616b65207265736f75726365732066726f6d20636f6d6d756e697469657320746861742063616e2774206166666f726420746f206c6f7365207468656d2c20657861636572626174696e672074656e73696f6e73206265747765656e204166726963616e20416d65726963616e20616e64204c6174696e6f20636f6d6d756e69746965732e2048652069732064756520746f20686f6c64206120636f6d6d756e697479206d656574696e6720746f2064697363757373207468652069737375652e20546865206d61796f7227732061646d696e697374726174696f6e20646566656e64656420746865206465636973696f6e2c20636974696e6720746865206e65656420746f2061646472657373207468652068756d616e6974617269616e2063726973697320637265617465642062792074686520696e666c7578206f66206d696772616e74732e",
+  "arm": "source_span",
+  "call_id": "sha256:0c7391a2e79e8965e9303e59f7255d975880b1f136e9ec70cfa77d86224ef909:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.7277066359529272,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 724,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 38,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Chicago Alderman Irate Over Migrant Shelter Plan at Amundsen Park Field House\\n29th Ward Ald. Chris Taliaferro plans a community meeting Tuesday at the field house to discuss taking resources from communities that can't spare them\\nAlderman Chris Taliaferro (29th) has voiced his strong objections to Mayor Brandon Johnson's plan to transform the Amundsen Park Field House into a temporary shelter for 200 migrants for a minimum of six months. This move comes amid increasing tensions between African American and Latino communities in the city due to the ongoing migrant crisis.\\nJust three days after Alderman Taliaferro warned about the rising tensions stemming from the migrant crisis, he received the news that the Johnson administration intends to establish a shelter at Amundsen Park Field House, located at 6200 W. Bloomingdale Ave. in Galewood. This would mark the city's 22nd migrant shelter.\\nIn response to this development, Alderman Taliaferro has scheduled a community meeting at the field house at 6 p.m. on Tuesday, giving his constituents an opportunity to express their frustrations and concerns.\\nTaliaferro expressed his concerns, stating, \\\"We can't argue in one sentence, 'Let's provide opportunities for youth to get them to stop coming downtown,' and then take those opportunities away from the youth. We can't take these resources, especially in our underserved communities. This goes against everything that we're trying to do to reduce violence.\\\"\\nThe alderman emphasized the importance of offering alternatives to young people to prevent them from engaging in negative activities. He anticipates a crowded and emotional meeting where constituents will voice their concerns about the impact of the migrant shelter on their community.\\nWhile the Chicago Park District has proposed moving programming to Rutherford Sayre Park at 6871 W. Belden Ave., Taliaferro argues that this change is not feasible for the area's seniors who rely on park district programs and would need to travel a considerable distance to access them.\\nMayor Johnson's administration has defended the decision to convert the field house, citing the need to address the humanitarian crisis created by the influx of migrants and the challenges in accommodating them in police stations and airports. The situation has been further complicated by Texas Governor Greg Abbott's plan to send buses to Chicago around the clock, increasing the urgency of providing shelter and support to these individuals.\", \"answer\": \"Chicago Alderman Chris Taliaferro has opposed Mayor Brandon Johnson's plan to turn the Amundsen Park Field House into a shelter for 200 migrants for at least six months. Taliaferro argues that the move, which would create the city's 22nd migrant shelter, would take resources from communities that can't afford to lose them, exacerbating tensions between African American and Latino communities. He is due to hold a community meeting to discuss the issue. The mayor's administration defended the decision, citing the need to address the humanitarian crisis created by the influx of migrants.\"}",
+  "prompt_sha256": "sha256:09aecd42ec0df1dbc135cdfad2f7e3eae0398e2253f1e315d29813e10ec25161",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184882,
+    "id": "chatcmpl-2bSRVRMWJe4unnqXiMt182PcGnfZmnUP",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 906.034,
+      "predicted_n": 38,
+      "predicted_per_second": 41.94103091053979,
+      "predicted_per_token_ms": 23.843,
+      "prompt_ms": 706.218,
+      "prompt_n": 724,
+      "prompt_per_second": 1025.1791939599386,
+      "prompt_per_token_ms": 0.975439226519337
+    },
+    "usage": {
+      "completion_tokens": 38,
+      "prompt_tokens": 724,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 762
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Chicago Alderman Irate Over Migrant Shelter Plan at Amundsen Park Field House\\n29th Ward Ald. Chris Taliaferro plans a community meeting Tuesday at the field house to discuss taking resources from communities that can't spare them\\nAlderman Chris Taliaferro (29th) has voiced his strong objections to Mayor Brandon Johnson's plan to transform the Amundsen Park Field House into a temporary shelter for 200 migrants for a minimum of six months. This move comes amid increasing tensions between African American and Latino communities in the city due to the ongoing migrant crisis.\\nJust three days after Alderman Taliaferro warned about the rising tensions stemming from the migrant crisis, he received the news that the Johnson administration intends to establish a shelter at Amundsen Park Field House, located at 6200 W. Bloomingdale Ave. in Galewood. This would mark the city's 22nd migrant shelter.\\nIn response to this development, Alderman Taliaferro has scheduled a community meeting at the field house at 6 p.m. on Tuesday, giving his constituents an opportunity to express their frustrations and concerns.\\nTaliaferro expressed his concerns, stating, \\\"We can't argue in one sentence, 'Let's provide opportunities for youth to get them to stop coming downtown,' and then take those opportunities away from the youth. We can't take these resources, especially in our underserved communities. This goes against everything that we're trying to do to reduce violence.\\\"\\nThe alderman emphasized the importance of offering alternatives to young people to prevent them from engaging in negative activities. He anticipates a crowded and emotional meeting where constituents will voice their concerns about the impact of the migrant shelter on their community.\\nWhile the Chicago Park District has proposed moving programming to Rutherford Sayre Park at 6871 W. Belden Ave., Taliaferro argues that this change is not feasible for the area's seniors who rely on park district programs and would need to travel a considerable distance to access them.\\nMayor Johnson's administration has defended the decision to convert the field house, citing the need to address the humanitarian crisis created by the influx of migrants and the challenges in accommodating them in police stations and airports. The situation has been further complicated by Texas Governor Greg Abbott's plan to send buses to Chicago around the clock, increasing the urgency of providing shelter and support to these individuals.\", \"answer\": \"Chicago Alderman Chris Taliaferro has opposed Mayor Brandon Johnson's plan to turn the Amundsen Park Field House into a shelter for 200 migrants for at least six months. Taliaferro argues that the move, which would create the city's 22nd migrant shelter, would take resources from communities that can't afford to lose them, exacerbating tensions between African American and Latino communities. He is due to hold a community meeting to discuss the issue. The mayor's administration defended the decision, citing the need to address the humanitarian crisis created by the influx of migrants.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 122,
+  "source_bytes": "4368696361676f20416c6465726d616e204972617465204f766572204d696772616e74205368656c74657220506c616e20617420416d756e6473656e205061726b204669656c6420486f7573650a32397468205761726420416c642e2043687269732054616c6961666572726f20706c616e73206120636f6d6d756e697479206d656574696e67205475657364617920617420746865206669656c6420686f75736520746f20646973637573732074616b696e67207265736f75726365732066726f6d20636f6d6d756e697469657320746861742063616e2774207370617265207468656d0a416c6465726d616e2043687269732054616c6961666572726f202832397468292068617320766f6963656420686973207374726f6e67206f626a656374696f6e7320746f204d61796f72204272616e646f6e204a6f686e736f6e277320706c616e20746f207472616e73666f726d2074686520416d756e6473656e205061726b204669656c6420486f75736520696e746f20612074656d706f72617279207368656c74657220666f7220323030206d696772616e747320666f722061206d696e696d756d206f6620736978206d6f6e7468732e2054686973206d6f766520636f6d657320616d696420696e6372656173696e672074656e73696f6e73206265747765656e204166726963616e20416d65726963616e20616e64204c6174696e6f20636f6d6d756e697469657320696e2074686520636974792064756520746f20746865206f6e676f696e67206d696772616e74206372697369732e0a4a757374207468726565206461797320616674657220416c6465726d616e2054616c6961666572726f207761726e65642061626f75742074686520726973696e672074656e73696f6e73207374656d6d696e672066726f6d20746865206d696772616e74206372697369732c20686520726563656976656420746865206e657773207468617420746865204a6f686e736f6e2061646d696e697374726174696f6e20696e74656e647320746f2065737461626c6973682061207368656c74657220617420416d756e6473656e205061726b204669656c6420486f7573652c206c6f6361746564206174203632303020572e20426c6f6f6d696e6764616c65204176652e20696e2047616c65776f6f642e205468697320776f756c64206d61726b20746865206369747927732032326e64206d696772616e74207368656c7465722e0a496e20726573706f6e736520746f207468697320646576656c6f706d656e742c20416c6465726d616e2054616c6961666572726f20686173207363686564756c6564206120636f6d6d756e697479206d656574696e6720617420746865206669656c6420686f757365206174203620702e6d2e206f6e20547565736461792c20676976696e672068697320636f6e7374697475656e747320616e206f70706f7274756e69747920746f2065787072657373207468656972206672757374726174696f6e7320616e6420636f6e6365726e732e0a54616c6961666572726f206578707265737365642068697320636f6e6365726e732c2073746174696e672c202257652063616e277420617267756520696e206f6e652073656e74656e63652c20274c657427732070726f76696465206f70706f7274756e697469657320666f7220796f75746820746f20676574207468656d20746f2073746f7020636f6d696e6720646f776e746f776e2c2720616e64207468656e2074616b652074686f7365206f70706f7274756e697469657320617761792066726f6d2074686520796f7574682e2057652063616e27742074616b65207468657365207265736f75726365732c20657370656369616c6c7920696e206f757220756e64657273657276656420636f6d6d756e69746965732e205468697320676f657320616761696e73742065766572797468696e67207468617420776527726520747279696e6720746f20646f20746f207265647563652076696f6c656e63652e220a54686520616c6465726d616e20656d70686173697a65642074686520696d706f7274616e6365206f66206f66666572696e6720616c7465726e61746976657320746f20796f756e672070656f706c6520746f2070726576656e74207468656d2066726f6d20656e676167696e6720696e206e6567617469766520616374697669746965732e20486520616e74696369706174657320612063726f7764656420616e6420656d6f74696f6e616c206d656574696e6720776865726520636f6e7374697475656e74732077696c6c20766f69636520746865697220636f6e6365726e732061626f75742074686520696d70616374206f6620746865206d696772616e74207368656c746572206f6e20746865697220636f6d6d756e6974792e0a5768696c6520746865204368696361676f205061726b204469737472696374206861732070726f706f736564206d6f76696e672070726f6772616d6d696e6720746f20527574686572666f7264205361797265205061726b206174203638373120572e2042656c64656e204176652e2c2054616c6961666572726f2061726775657320746861742074686973206368616e6765206973206e6f74206665617369626c6520666f7220746865206172656127732073656e696f72732077686f2072656c79206f6e207061726b2064697374726963742070726f6772616d7320616e6420776f756c64206e65656420746f2074726176656c206120636f6e736964657261626c652064697374616e636520746f20616363657373207468656d2e0a4d61796f72204a6f686e736f6e27732061646d696e697374726174696f6e2068617320646566656e64656420746865206465636973696f6e20746f20636f6e7665727420746865206669656c6420686f7573652c20636974696e6720746865206e65656420746f2061646472657373207468652068756d616e6974617269616e2063726973697320637265617465642062792074686520696e666c7578206f66206d696772616e747320616e6420746865206368616c6c656e67657320696e206163636f6d6d6f646174696e67207468656d20696e20706f6c6963652073746174696f6e7320616e6420616972706f7274732e2054686520736974756174696f6e20686173206265656e206675727468657220636f6d706c69636174656420627920546578617320476f7665726e6f722047726567204162626f7474277320706c616e20746f2073656e6420627573657320746f204368696361676f2061726f756e642074686520636c6f636b2c20696e6372656173696e672074686520757267656e6379206f662070726f766964696e67207368656c74657220616e6420737570706f727420746f20746865736520696e646976696475616c732e",
+  "source_cluster_id": "sha256:4d3aad6e0e5c81369ed27eec2ad3af71f6fea031fdc9b3efb12bde95df2d7590",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+  "unit_id": "sha256:0c7391a2e79e8965e9303e59f7255d975880b1f136e9ec70cfa77d86224ef909"
+}

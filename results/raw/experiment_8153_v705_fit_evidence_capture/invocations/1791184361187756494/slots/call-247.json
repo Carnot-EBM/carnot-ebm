@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20746865206176657261676520636f737420666f7220706572736f6e616c20746178207072657061726174696f6e2076617269657320646570656e64696e67206f6e2074686520636f6d706c6578697479206f66207468652072657475726e20616e642074686520726567696f6e2e0a0a4163636f7264696e6720746f205061737361676520312c2074686520617665726167652066656520666f72206120466f726d20313034302077697468205363686564756c65204120616e642061207374617465207461782072657475726e20697320243239362e205468652066656520666f72206120466f726d203130343020776974686f7574206974656d697a656420646564756374696f6e7320697320243132392e0a0a5061737361676520322073746174657320746861742074686520617665726167652074617820707265702066656520666f7220616e206974656d697a656420466f726d20313034302077697468205363686564756c65204120706c75732061207374617465207461782072657475726e20697320243232392e20466f72206120466f726d203130343020616e642073746174652072657475726e20776974686f7574206974656d697a656420646564756374696f6e732c2074686520617665726167652070726963652064726f707320746f20243132392e0a0a506173736167652033206d656e74696f6e7320746861742074617820707265702066656573207661727920726567696f6e616c6c792c207769746820746865206c6f7765737420636f73747320696e2074686520224561737420536f7574682043656e7472616c2220726567696f6e2028414c2c204b592c204d532c20544e292c207768657265206120466f726d203130343020776974682061205363686564756c65204120616e642073746174652072657475726e20617665726167657320243133372e0a0a5468657265666f72652c20746865206176657261676520636f737420666f7220706572736f6e616c20746178207072657061726174696f6e2063616e2072616e67652066726f6d202431323920746f20243239362c20646570656e64696e67206f6e2074686520636f6d706c6578697479206f66207468652072657475726e20616e642074686520726567696f6e2e",
+  "arm": "source_span",
+  "call_id": "sha256:f5cabba122f5218163830de9f414ada0cd486d0949b84fd8a1fc5c275e268c25:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 3.1789897590642795,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 877,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 93,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Our fees are generally form-based. For example, if your tax return includes Form 1040, Schedule A, and Oregon Form 40, we would charge a fixed price for each these forms. For the 2015 filing season our fee for Form 1040 is $195, Schedule A is $56 and Oregon 40 is $45 for a total preparation fee of $296.Below is a table which outlines some of the most common tax return situations and our fees for preparing forms associated with these returns.ees for preparing corporate and partnership returns vary according to the complexity of the tax return. The average fee ranges from $650 - $1,000 with some returns falling below or above these amounts.\\\\n\\\\npassage 2:I just ran across a bit of interesting information on the cost of tax preparation from the National Society of Accountants. According to their biennial survey, the average tax prep fee for an itemized Form 1040 with Schedule A plus a state tax return is $229.For a Form 1040 and state return without itemized deductions, the average price drops to $129.Update: Be sure to check out this recent post from GetRichSlowly with tons of additional data on tax preparation costs for 2012.or those of us with more complex returns, here\u2019s a rundown of average costs for other IRS tax forms: 1  $212 for Form 1040 Schedule C (profit or loss from business). 2  $551 for Form 1065 (partnership). 3  $692 for Form 1120 (corporation).\\\\n\\\\npassage 3:Tax prep fees also vary regionally, so the above average aren\u2019t necessarily applicable depending on where you live. The lowest costs are in the \u201cEast South Central\u201d region (AL, KY, MS, TN) where a Form 1040 with a Schedule A and state return averages $137.or those of us with more complex returns, here\u2019s a rundown of average costs for other IRS tax forms: 1  $212 for Form 1040 Schedule C (profit or loss from business). 2  $551 for Form 1065 (partnership). 3  $692 for Form 1120 (corporation).\\\\n\\\\n\\\",\\\"question\\\":\\\"average cost for personal tax preparation\\\"}\", \"answer\": \"Based on the given passages, the average cost for personal tax preparation varies depending on the complexity of the return and the region.\\n\\nAccording to Passage 1, the average fee for a Form 1040 with Schedule A and a state tax return is $296. The fee for a Form 1040 without itemized deductions is $129.\\n\\nPassage 2 states that the average tax prep fee for an itemized Form 1040 with Schedule A plus a state tax return is $229. For a Form 1040 and state return without itemized deductions, the average price drops to $129.\\n\\nPassage 3 mentions that tax prep fees vary regionally, with the lowest costs in the \\\"East South Central\\\" region (AL, KY, MS, TN), where a Form 1040 with a Schedule A and state return averages $137.\\n\\nTherefore, the average cost for personal tax preparation can range from $129 to $296, depending on the complexity of the return and the region.\"}",
+  "prompt_sha256": "sha256:e4cb259ad843db442512e78532b0c5efe934ea8fbc33777d39f46ae04cf55a35",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"For the 2015 filing season our fee for Form 1040 is $195, Schedule A is $56 and Oregon 40 is $45 for a total preparation fee of $296.\",\n  \"byte_start\": 137,\n  \"byte_end\": 253\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184891,
+    "id": "chatcmpl-uJ8509mrL1ruyTauYBYB6CqvskDeVg6P",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2243.244,
+      "predicted_n": 93,
+      "predicted_per_second": 41.4578173395315,
+      "predicted_per_token_ms": 24.120903225806455,
+      "prompt_ms": 815.404,
+      "prompt_n": 877,
+      "prompt_per_second": 1075.5404682832068,
+      "prompt_per_token_ms": 0.9297651083238312
+    },
+    "usage": {
+      "completion_tokens": 93,
+      "prompt_tokens": 877,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 970
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Our fees are generally form-based. For example, if your tax return includes Form 1040, Schedule A, and Oregon Form 40, we would charge a fixed price for each these forms. For the 2015 filing season our fee for Form 1040 is $195, Schedule A is $56 and Oregon 40 is $45 for a total preparation fee of $296.Below is a table which outlines some of the most common tax return situations and our fees for preparing forms associated with these returns.ees for preparing corporate and partnership returns vary according to the complexity of the tax return. The average fee ranges from $650 - $1,000 with some returns falling below or above these amounts.\\\\n\\\\npassage 2:I just ran across a bit of interesting information on the cost of tax preparation from the National Society of Accountants. According to their biennial survey, the average tax prep fee for an itemized Form 1040 with Schedule A plus a state tax return is $229.For a Form 1040 and state return without itemized deductions, the average price drops to $129.Update: Be sure to check out this recent post from GetRichSlowly with tons of additional data on tax preparation costs for 2012.or those of us with more complex returns, here\u2019s a rundown of average costs for other IRS tax forms: 1  $212 for Form 1040 Schedule C (profit or loss from business). 2  $551 for Form 1065 (partnership). 3  $692 for Form 1120 (corporation).\\\\n\\\\npassage 3:Tax prep fees also vary regionally, so the above average aren\u2019t necessarily applicable depending on where you live. The lowest costs are in the \u201cEast South Central\u201d region (AL, KY, MS, TN) where a Form 1040 with a Schedule A and state return averages $137.or those of us with more complex returns, here\u2019s a rundown of average costs for other IRS tax forms: 1  $212 for Form 1040 Schedule C (profit or loss from business). 2  $551 for Form 1065 (partnership). 3  $692 for Form 1120 (corporation).\\\\n\\\\n\\\",\\\"question\\\":\\\"average cost for personal tax preparation\\\"}\", \"answer\": \"Based on the given passages, the average cost for personal tax preparation varies depending on the complexity of the return and the region.\\n\\nAccording to Passage 1, the average fee for a Form 1040 with Schedule A and a state tax return is $296. The fee for a Form 1040 without itemized deductions is $129.\\n\\nPassage 2 states that the average tax prep fee for an itemized Form 1040 with Schedule A plus a state tax return is $229. For a Form 1040 and state return without itemized deductions, the average price drops to $129.\\n\\nPassage 3 mentions that tax prep fees vary regionally, with the lowest costs in the \\\"East South Central\\\" region (AL, KY, MS, TN), where a Form 1040 with a Schedule A and state return averages $137.\\n\\nTherefore, the average cost for personal tax preparation can range from $129 to $296, depending on the complexity of the return and the region.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 124,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4f75722066656573206172652067656e6572616c6c7920666f726d2d62617365642e20466f72206578616d706c652c20696620796f7572207461782072657475726e20696e636c7564657320466f726d20313034302c205363686564756c6520412c20616e64204f7265676f6e20466f726d2034302c20776520776f756c6420636861726765206120666978656420707269636520666f72206561636820746865736520666f726d732e20466f722074686520323031352066696c696e6720736561736f6e206f75722066656520666f7220466f726d203130343020697320243139352c205363686564756c6520412069732024353620616e64204f7265676f6e2034302069732024343520666f72206120746f74616c207072657061726174696f6e20666565206f6620243239362e42656c6f772069732061207461626c65207768696368206f75746c696e657320736f6d65206f6620746865206d6f737420636f6d6d6f6e207461782072657475726e20736974756174696f6e7320616e64206f7572206665657320666f7220707265706172696e6720666f726d73206173736f63696174656420776974682074686573652072657475726e732e65657320666f7220707265706172696e6720636f72706f7261746520616e6420706172746e6572736869702072657475726e732076617279206163636f7264696e6720746f2074686520636f6d706c6578697479206f6620746865207461782072657475726e2e205468652061766572616765206665652072616e6765732066726f6d2024363530202d2024312c303030207769746820736f6d652072657475726e732066616c6c696e672062656c6f77206f722061626f766520746865736520616d6f756e74732e5c6e5c6e7061737361676520323a49206a7573742072616e206163726f7373206120626974206f6620696e746572657374696e6720696e666f726d6174696f6e206f6e2074686520636f7374206f6620746178207072657061726174696f6e2066726f6d20746865204e6174696f6e616c20536f6369657479206f66204163636f756e74616e74732e204163636f7264696e6720746f207468656972206269656e6e69616c207375727665792c2074686520617665726167652074617820707265702066656520666f7220616e206974656d697a656420466f726d20313034302077697468205363686564756c65204120706c75732061207374617465207461782072657475726e20697320243232392e466f72206120466f726d203130343020616e642073746174652072657475726e20776974686f7574206974656d697a656420646564756374696f6e732c2074686520617665726167652070726963652064726f707320746f20243132392e5570646174653a204265207375726520746f20636865636b206f7574207468697320726563656e7420706f73742066726f6d2047657452696368536c6f776c79207769746820746f6e73206f66206164646974696f6e616c2064617461206f6e20746178207072657061726174696f6e20636f73747320666f7220323031322e6f722074686f7365206f662075732077697468206d6f726520636f6d706c65782072657475726e732c2068657265e280997320612072756e646f776e206f66206176657261676520636f73747320666f72206f74686572204952532074617820666f726d733a203120202432313220666f7220466f726d2031303430205363686564756c652043202870726f666974206f72206c6f73732066726f6d20627573696e657373292e203220202435353120666f7220466f726d20313036352028706172746e657273686970292e203320202436393220666f7220466f726d20313132302028636f72706f726174696f6e292e5c6e5c6e7061737361676520333a5461782070726570206665657320616c736f207661727920726567696f6e616c6c792c20736f207468652061626f76652061766572616765206172656ee2809974206e65636573736172696c79206170706c696361626c6520646570656e64696e67206f6e20776865726520796f75206c6976652e20546865206c6f7765737420636f7374732061726520696e2074686520e2809c4561737420536f7574682043656e7472616ce2809d20726567696f6e2028414c2c204b592c204d532c20544e29207768657265206120466f726d203130343020776974682061205363686564756c65204120616e642073746174652072657475726e20617665726167657320243133372e6f722074686f7365206f662075732077697468206d6f726520636f6d706c65782072657475726e732c2068657265e280997320612072756e646f776e206f66206176657261676520636f73747320666f72206f74686572204952532074617820666f726d733a203120202432313220666f7220466f726d2031303430205363686564756c652043202870726f666974206f72206c6f73732066726f6d20627573696e657373292e203220202435353120666f7220466f726d20313036352028706172746e657273686970292e203320202436393220666f7220466f726d20313132302028636f72706f726174696f6e292e5c6e5c6e222c227175657374696f6e223a226176657261676520636f737420666f7220706572736f6e616c20746178207072657061726174696f6e227d",
+  "source_cluster_id": "sha256:e016f109659a331c31a4b000928529ee15aa2b8ddc2fbae75f92083023958000",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"For the 2015 filing season our fee for Form 1040 is $195, Schedule A is $56 and Oregon 40 is $45 for a total preparation fee of $296.\",\n  \"byte_start\": 137,\n  \"byte_end\": 253\n}",
+  "unit_id": "sha256:f5cabba122f5218163830de9f414ada0cd486d0949b84fd8a1fc5c275e268c25"
+}

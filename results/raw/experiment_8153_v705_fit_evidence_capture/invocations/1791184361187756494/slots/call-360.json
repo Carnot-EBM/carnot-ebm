@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20616464696e67204570736f6d2073616c747320746f20612062617468206f72207377696d6d696e67206f7220666c6f6174696e6720696e2077617465722063616e2068656c7020776974682073776f6c6c656e206665657420616e6420616e6b6c6573206279207265647563696e6720746865207377656c6c696e672e204164646974696f6e616c6c792c2072657374696e672074686520696e6a7572656420616e6b6c65206f7220666f6f7420616e64207573696e6720616e20696365207061636b2063616e20616c736f2068656c702077697468207377656c6c696e672e20497420697320696d706f7274616e7420746f206e6f74652074686174207365656b696e67206d65646963616c20616476696365206973207265636f6d6d656e64656420696620636f6e6365726e65642061626f75742073776f6c6c656e2066656574206f7220616e6b6c65732e",
+  "arm": "source_span",
+  "call_id": "sha256:a4f9b44e339b52378fac65bef3c35f9138bbcdf5c27f4129b7aab97eaf85ecb2:source_span",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.0034609959693626,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 581,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 53,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Adding a healthy dose of Epsom salts to the tub is another way to boost that bath. Like the grapefruit oil, you can also just use a bucket, if you\u2019re only having swelling in your feet and ankles. If your calves are swollen, too, a bath is probably your best bet. Epsom salts are like magic for swelling.wimming or even floating in water can help with swollen feet and ankles. The pressure from the water can help get things moving in your legs, and floating gives your circulatory system a break from gravity\u2019s constant pull. If you don\u2019t have a pool, check out local gyms to see what they offer. 10.\\\\n\\\\npassage 2:Check out some of these natural solutions to help relieve swollen feet and ankles! Swelling in your feet and ankles is called edema, and there are a lot of things that can cause the problem, from high blood pressure to pregnancy.wimming or even floating in water can help with swollen feet and ankles. The pressure from the water can help get things moving in your legs, and floating gives your circulatory system a break from gravity\u2019s constant pull. If you don\u2019t have a pool, check out local gyms to see what they offer. 10.\\\\n\\\\npassage 3:Swollen ankles and feet. Swollen ankles and swollen feet are common and are often caused by fluid retention, or oedema. The cause of the swelling can range from an injury to medical conditions. Seek medical advice if you are concerned about swollen feet or ankles.o reduce the swelling from a foot or ankle injury, rest to avoid walking on the injured ankle or foot. Use an ice pack wrapped in a towel (don\u2019t use in direct contact with the skin) for up to 20 minutes, reapply if necessary after a 20 minute break.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cure a swollen foot\\\"}\", \"answer\": \"Based on the given passages, adding Epsom salts to a bath or swimming or floating in water can help with swollen feet and ankles by reducing the swelling. Additionally, resting the injured ankle or foot and using an ice pack can also help with swelling. It is important to note that seeking medical advice is recommended if concerned about swollen feet or ankles.\"}",
+  "prompt_sha256": "sha256:abef3f86705cba5f3edebd17c80a99f1cc5f2617af5f05e0efc9202aee577870",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"Epsom salts are like magic for swelling\",\n  \"byte_start\": 214,\n  \"byte_end\": 248\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185088,
+    "id": "chatcmpl-J8lKyNnGyzNvqcedNl6Q3GjG94X0TGIQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1269.909,
+      "predicted_n": 53,
+      "predicted_per_second": 41.73527394482597,
+      "predicted_per_token_ms": 23.960547169811324,
+      "prompt_ms": 605.571,
+      "prompt_n": 581,
+      "prompt_per_second": 959.4250715440468,
+      "prompt_per_token_ms": 1.042290877796902
+    },
+    "usage": {
+      "completion_tokens": 53,
+      "prompt_tokens": 581,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 634
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Adding a healthy dose of Epsom salts to the tub is another way to boost that bath. Like the grapefruit oil, you can also just use a bucket, if you\u2019re only having swelling in your feet and ankles. If your calves are swollen, too, a bath is probably your best bet. Epsom salts are like magic for swelling.wimming or even floating in water can help with swollen feet and ankles. The pressure from the water can help get things moving in your legs, and floating gives your circulatory system a break from gravity\u2019s constant pull. If you don\u2019t have a pool, check out local gyms to see what they offer. 10.\\\\n\\\\npassage 2:Check out some of these natural solutions to help relieve swollen feet and ankles! Swelling in your feet and ankles is called edema, and there are a lot of things that can cause the problem, from high blood pressure to pregnancy.wimming or even floating in water can help with swollen feet and ankles. The pressure from the water can help get things moving in your legs, and floating gives your circulatory system a break from gravity\u2019s constant pull. If you don\u2019t have a pool, check out local gyms to see what they offer. 10.\\\\n\\\\npassage 3:Swollen ankles and feet. Swollen ankles and swollen feet are common and are often caused by fluid retention, or oedema. The cause of the swelling can range from an injury to medical conditions. Seek medical advice if you are concerned about swollen feet or ankles.o reduce the swelling from a foot or ankle injury, rest to avoid walking on the injured ankle or foot. Use an ice pack wrapped in a towel (don\u2019t use in direct contact with the skin) for up to 20 minutes, reapply if necessary after a 20 minute break.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cure a swollen foot\\\"}\", \"answer\": \"Based on the given passages, adding Epsom salts to a bath or swimming or floating in water can help with swollen feet and ankles by reducing the swelling. Additionally, resting the injured ankle or foot and using an ice pack can also help with swelling. It is important to note that seeking medical advice is recommended if concerned about swollen feet or ankles.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 53,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a416464696e672061206865616c74687920646f7365206f66204570736f6d2073616c747320746f207468652074756220697320616e6f746865722077617920746f20626f6f7374207468617420626174682e204c696b65207468652067726170656672756974206f696c2c20796f752063616e20616c736f206a757374207573652061206275636b65742c20696620796f75e280997265206f6e6c7920686176696e67207377656c6c696e6720696e20796f7572206665657420616e6420616e6b6c65732e20496620796f75722063616c766573206172652073776f6c6c656e2c20746f6f2c206120626174682069732070726f6261626c7920796f75722062657374206265742e204570736f6d2073616c747320617265206c696b65206d6167696320666f72207377656c6c696e672e77696d6d696e67206f72206576656e20666c6f6174696e6720696e2077617465722063616e2068656c7020776974682073776f6c6c656e206665657420616e6420616e6b6c65732e205468652070726573737572652066726f6d207468652077617465722063616e2068656c7020676574207468696e6773206d6f76696e6720696e20796f7572206c6567732c20616e6420666c6f6174696e6720676976657320796f75722063697263756c61746f72792073797374656d206120627265616b2066726f6d2067726176697479e280997320636f6e7374616e742070756c6c2e20496620796f7520646f6ee28099742068617665206120706f6f6c2c20636865636b206f7574206c6f63616c2067796d7320746f2073656520776861742074686579206f666665722e2031302e5c6e5c6e7061737361676520323a436865636b206f757420736f6d65206f66207468657365206e61747572616c20736f6c7574696f6e7320746f2068656c702072656c696576652073776f6c6c656e206665657420616e6420616e6b6c657321205377656c6c696e6720696e20796f7572206665657420616e6420616e6b6c65732069732063616c6c6564206564656d612c20616e64207468657265206172652061206c6f74206f66207468696e677320746861742063616e206361757365207468652070726f626c656d2c2066726f6d206869676820626c6f6f6420707265737375726520746f20707265676e616e63792e77696d6d696e67206f72206576656e20666c6f6174696e6720696e2077617465722063616e2068656c7020776974682073776f6c6c656e206665657420616e6420616e6b6c65732e205468652070726573737572652066726f6d207468652077617465722063616e2068656c7020676574207468696e6773206d6f76696e6720696e20796f7572206c6567732c20616e6420666c6f6174696e6720676976657320796f75722063697263756c61746f72792073797374656d206120627265616b2066726f6d2067726176697479e280997320636f6e7374616e742070756c6c2e20496620796f7520646f6ee28099742068617665206120706f6f6c2c20636865636b206f7574206c6f63616c2067796d7320746f2073656520776861742074686579206f666665722e2031302e5c6e5c6e7061737361676520333a53776f6c6c656e20616e6b6c657320616e6420666565742e2053776f6c6c656e20616e6b6c657320616e642073776f6c6c656e20666565742061726520636f6d6d6f6e20616e6420617265206f6674656e2063617573656420627920666c75696420726574656e74696f6e2c206f72206f6564656d612e20546865206361757365206f6620746865207377656c6c696e672063616e2072616e67652066726f6d20616e20696e6a75727920746f206d65646963616c20636f6e646974696f6e732e205365656b206d65646963616c2061647669636520696620796f752061726520636f6e6365726e65642061626f75742073776f6c6c656e2066656574206f7220616e6b6c65732e6f2072656475636520746865207377656c6c696e672066726f6d206120666f6f74206f7220616e6b6c6520696e6a7572792c207265737420746f2061766f69642077616c6b696e67206f6e2074686520696e6a7572656420616e6b6c65206f7220666f6f742e2055736520616e20696365207061636b207772617070656420696e206120746f77656c2028646f6ee28099742075736520696e2064697265637420636f6e7461637420776974682074686520736b696e2920666f7220757020746f203230206d696e757465732c2072656170706c79206966206e65636573736172792061667465722061203230206d696e75746520627265616b2e5c6e5c6e222c227175657374696f6e223a22686f7720746f206375726520612073776f6c6c656e20666f6f74227d",
+  "source_cluster_id": "sha256:6bbd6167b2779932bc17785dd8d9343a65a1e9d0b84a675d86278e9ef1ec5e41",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"Epsom salts are like magic for swelling\",\n  \"byte_start\": 214,\n  \"byte_end\": 248\n}",
+  "unit_id": "sha256:a4f9b44e339b52378fac65bef3c35f9138bbcdf5c27f4129b7aab97eaf85ecb2"
+}

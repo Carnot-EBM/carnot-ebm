@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "436f6d6d756e696361626c652064697365617365732063616e206265207061737365642066726f6d206f6e6520706572736f6e20746f20616e6f746865722c207768696c65206e6f6e2d636f6d6d756e696361626c652064697365617365732063616e6e6f74206265207472616e736d69747465642e20436f6d6d756e696361626c6520646973656173657320617265206f6674656e20616375746520616e642063617573656420627920766972757365732c207768696c65206e6f6e2d636f6d6d756e696361626c6520646973656173657320617265206368726f6e696320616e642063616e206c6173742061206c6f6e672074696d652e20536f6d65206578616d706c6573206f6620636f6d6d756e696361626c652064697365617365732061726520636869636b656e20706f782c207768696c65206e6f6e2d636f6d6d756e696361626c6520646973656173657320696e636c7564652063616e6365727320616e642072657370697261746f72792073797374656d20636f6e646974696f6e732e",
+  "arm": "holistic",
+  "call_id": "sha256:f4fa68709969c7e8286191eb00d1151d45406d8cfc76edb9095747672516d2b7:holistic",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.8576803379692137,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 337,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Communicable disease refers to diseases that can pass from one person to another. Non-communicable diseases occur in one person and cannot be passed on to another person. Communicable diseases are also known as infectious diseases, and non-communicable diseases are referred to as chronic.\\\\n\\\\npassage 2:One important difference between communicable and non-communicable disease is that non-communicable diseases tend to be chronic, which means they last a long time and progress slowly. Communicable diseases are more likely to be acute, which means the disease develops quickly.\\\\n\\\\npassage 3:Cancers are one category of non-communicable diseases that cannot be spread to others. Chicken pox and other conditions caused by viruses are communicable diseases. Non-infectious diseases involving the respiratory system are a class of non-communicable conditions.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between communicable and non communicable diseases\\\"}\", \"answer\": \"Communicable diseases can be passed from one person to another, while non-communicable diseases cannot be transmitted. Communicable diseases are often acute and caused by viruses, while non-communicable diseases are chronic and can last a long time. Some examples of communicable diseases are chicken pox, while non-communicable diseases include cancers and respiratory system conditions.\"}",
+  "prompt_sha256": "sha256:d302ebc234963ed11e3a7945965529ed63f4b575124b0ebd522f3aef2788af26",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184712,
+    "id": "chatcmpl-UCjaxukbo0pEcofp3Jaw2pFsp73JaNcW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 370.066,
+      "predicted_n": 16,
+      "predicted_per_second": 43.23553095934239,
+      "predicted_per_token_ms": 23.129125,
+      "prompt_ms": 358.174,
+      "prompt_n": 337,
+      "prompt_per_second": 940.8834812130417,
+      "prompt_per_token_ms": 1.0628308605341246
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 337,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 353
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Communicable disease refers to diseases that can pass from one person to another. Non-communicable diseases occur in one person and cannot be passed on to another person. Communicable diseases are also known as infectious diseases, and non-communicable diseases are referred to as chronic.\\\\n\\\\npassage 2:One important difference between communicable and non-communicable disease is that non-communicable diseases tend to be chronic, which means they last a long time and progress slowly. Communicable diseases are more likely to be acute, which means the disease develops quickly.\\\\n\\\\npassage 3:Cancers are one category of non-communicable diseases that cannot be spread to others. Chicken pox and other conditions caused by viruses are communicable diseases. Non-infectious diseases involving the respiratory system are a class of non-communicable conditions.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between communicable and non communicable diseases\\\"}\", \"answer\": \"Communicable diseases can be passed from one person to another, while non-communicable diseases cannot be transmitted. Communicable diseases are often acute and caused by viruses, while non-communicable diseases are chronic and can last a long time. Some examples of communicable diseases are chicken pox, while non-communicable diseases include cancers and respiratory system conditions.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 75,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a436f6d6d756e696361626c6520646973656173652072656665727320746f20646973656173657320746861742063616e20706173732066726f6d206f6e6520706572736f6e20746f20616e6f746865722e204e6f6e2d636f6d6d756e696361626c65206469736561736573206f6363757220696e206f6e6520706572736f6e20616e642063616e6e6f7420626520706173736564206f6e20746f20616e6f7468657220706572736f6e2e20436f6d6d756e696361626c652064697365617365732061726520616c736f206b6e6f776e20617320696e66656374696f75732064697365617365732c20616e64206e6f6e2d636f6d6d756e696361626c652064697365617365732061726520726566657272656420746f206173206368726f6e69632e5c6e5c6e7061737361676520323a4f6e6520696d706f7274616e7420646966666572656e6365206265747765656e20636f6d6d756e696361626c6520616e64206e6f6e2d636f6d6d756e696361626c6520646973656173652069732074686174206e6f6e2d636f6d6d756e696361626c652064697365617365732074656e6420746f206265206368726f6e69632c207768696368206d65616e732074686579206c6173742061206c6f6e672074696d6520616e642070726f677265737320736c6f776c792e20436f6d6d756e696361626c6520646973656173657320617265206d6f7265206c696b656c7920746f2062652061637574652c207768696368206d65616e7320746865206469736561736520646576656c6f707320717569636b6c792e5c6e5c6e7061737361676520333a43616e6365727320617265206f6e652063617465676f7279206f66206e6f6e2d636f6d6d756e696361626c6520646973656173657320746861742063616e6e6f742062652073707265616420746f206f74686572732e20436869636b656e20706f7820616e64206f7468657220636f6e646974696f6e732063617573656420627920766972757365732061726520636f6d6d756e696361626c652064697365617365732e204e6f6e2d696e66656374696f757320646973656173657320696e766f6c76696e67207468652072657370697261746f72792073797374656d20617265206120636c617373206f66206e6f6e2d636f6d6d756e696361626c6520636f6e646974696f6e732e5c6e5c6e222c227175657374696f6e223a22776861742069732074686520646966666572656e6365206265747765656e20636f6d6d756e696361626c6520616e64206e6f6e20636f6d6d756e696361626c65206469736561736573227d",
+  "source_cluster_id": "sha256:f4984d97cb02218065a47814f5741d23e65bb0cbfacbc142ff6b145a22ee274c",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.0\n}",
+  "unit_id": "sha256:f4fa68709969c7e8286191eb00d1151d45406d8cfc76edb9095747672516d2b7"
+}

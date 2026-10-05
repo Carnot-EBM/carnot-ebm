@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "5a616b692d75722d5265686d616e204c616b6876692c206120746f70206c6561646572206f662074686520746572726f726973742067726f7570204c6173686b61722d652d54616962612c207761732072656c6561736564206f6e206261696c20696e2050616b697374616e206166746572207965617273206f6620646574656e74696f6e2e204c616b6876692077617320636861726765642077697468206d61737465726d696e64696e67207468652032303038204d756d62616920746572726f722061747461636b732074686174206c656674206f766572203136302070656f706c6520646561642e20496e6469612068617320636f6e64656d6e6564204c616b68766927732072656c656173652c206163637573696e672050616b697374616e206f6620686176696e67206120226475616c20706f6c69637922206f6e206465616c696e67207769746820746572726f72697374732e2050616b697374616e277320466f726569676e204f666669636520726573706f6e6465642c20626c616d696e6720496e64696127732064656c617920696e20636f6f7065726174696e67207769746820746865206361736520616e64207765616b656e696e67207468652070726f7365637574696f6e2e205468652072656c65617365206f66204c616b6876692068617320686967686c69676874656420746865206c6f6e672d72756e6e696e672074656e73696f6e73206265747765656e20496e64696120616e642050616b697374616e2c2077686f20686176652068616420746872656520776172732073696e636520746865697220706172746974696f6e2e",
+  "arm": "holistic",
+  "call_id": "sha256:c576389b6f6be07023e12e170f42d6a282f9d3fa490cd17b71a887bed433d0a2:holistic",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.1447553560137749,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 712,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"A  man charged with planning the deadly 2008 Mumbai terror attacks in India has been released on bail in Pakistan after years of detention, prompting sharp criticism from India. Zaki-ur-Rehman Lakhvi, a top leader of the terrorist group Lashkar-e-Taiba, was released early Friday from a jail in the Pakistani city of Rawalpindi, according to Yahya Mujahid, spokesman for Jamaat-ud-Dawa, a group with which Lakhvi is affiliated. Lakhvi was charged in Pakistan in 2009, accused of masterminding the November 2008 terror attacks that left more than 160 people dead in Mumbai, India's most populous city. Lakhvi still faces trial in the case. But an anti-terrorism court granted Lakhvi bail last year, a decision the Pakistani government said it would challenge. That challenge lasted until Thursday, when the Lahore High Court ordered his release, CNN affiliate and Pakistani outlet GEO News reported. Lakhvi posted bail totaling 2 million Pakistani rupees (more than $19,000), according to GEO News. India, Pakistan's neighbor and rival, condemned Lakhvi's bail release on Friday. The country contacted Pakistan's foreign secretary to underline \\\"that this has reinforced the perception that Pakistan has a dual policy on dealing with terrorists, and those who have carried out attacks or are posing a threat to India are being dealt with differently,\\\" said Syed Akbaruddin, a spokesman for India's Ministry of External Affairs. The accusation that Pakistan might treat India differently highlights long-running tensions between the two nuclear-armed neighbors, which have fought three wars against each other since their partition at the end of British colonial rule. Pakistan's Foreign Office responded Friday by saying, \\\"It would not be proper to cast aspersions on Pakistan's commitment to countering terrorism at a time when Pakistan has entered a critical stage of defeating the menace of terrorism.\\\" The Foreign Office also blamed what it said was India's delay in cooperating in the case, saying it \\\"weakened the prosecution.\\\" In the Mumbai attacks, heavily armed men stormed landmark buildings around Mumbai, including luxury hotels, the city's historic Victoria Terminus train station and a Jewish cultural center. India executed the last surviving gunman from the attacks in 2012. Other suspects were all killed during the series of attacks, which went on for three days. More about the Mumbai attacks. CNN's Harmeet Singh contributed to this report.\\n\", \"answer\": \"Zaki-ur-Rehman Lakhvi, a top leader of the terrorist group Lashkar-e-Taiba, was released on bail in Pakistan after years of detention. Lakhvi was charged with masterminding the 2008 Mumbai terror attacks that left over 160 people dead. India has condemned Lakhvi's release, accusing Pakistan of having a \\\"dual policy\\\" on dealing with terrorists. Pakistan's Foreign Office responded, blaming India's delay in cooperating with the case and weakening the prosecution. The release of Lakhvi has highlighted the long-running tensions between India and Pakistan, who have had three wars since their partition.\"}",
+  "prompt_sha256": "sha256:aae05c79eaf592616430f63e114e8ae7b746bbe80bf94870a27e677cb1fdb194",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791184987,
+    "id": "chatcmpl-rF1CkIuvAvAnrcgqmzuqgnyxaGp0nzWg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 322.202,
+      "predicted_n": 14,
+      "predicted_per_second": 43.45100278707147,
+      "predicted_per_token_ms": 23.01442857142857,
+      "prompt_ms": 701.993,
+      "prompt_n": 712,
+      "prompt_per_second": 1014.2551279001358,
+      "prompt_per_token_ms": 0.9859452247191012
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 712,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 726
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"A  man charged with planning the deadly 2008 Mumbai terror attacks in India has been released on bail in Pakistan after years of detention, prompting sharp criticism from India. Zaki-ur-Rehman Lakhvi, a top leader of the terrorist group Lashkar-e-Taiba, was released early Friday from a jail in the Pakistani city of Rawalpindi, according to Yahya Mujahid, spokesman for Jamaat-ud-Dawa, a group with which Lakhvi is affiliated. Lakhvi was charged in Pakistan in 2009, accused of masterminding the November 2008 terror attacks that left more than 160 people dead in Mumbai, India's most populous city. Lakhvi still faces trial in the case. But an anti-terrorism court granted Lakhvi bail last year, a decision the Pakistani government said it would challenge. That challenge lasted until Thursday, when the Lahore High Court ordered his release, CNN affiliate and Pakistani outlet GEO News reported. Lakhvi posted bail totaling 2 million Pakistani rupees (more than $19,000), according to GEO News. India, Pakistan's neighbor and rival, condemned Lakhvi's bail release on Friday. The country contacted Pakistan's foreign secretary to underline \\\"that this has reinforced the perception that Pakistan has a dual policy on dealing with terrorists, and those who have carried out attacks or are posing a threat to India are being dealt with differently,\\\" said Syed Akbaruddin, a spokesman for India's Ministry of External Affairs. The accusation that Pakistan might treat India differently highlights long-running tensions between the two nuclear-armed neighbors, which have fought three wars against each other since their partition at the end of British colonial rule. Pakistan's Foreign Office responded Friday by saying, \\\"It would not be proper to cast aspersions on Pakistan's commitment to countering terrorism at a time when Pakistan has entered a critical stage of defeating the menace of terrorism.\\\" The Foreign Office also blamed what it said was India's delay in cooperating in the case, saying it \\\"weakened the prosecution.\\\" In the Mumbai attacks, heavily armed men stormed landmark buildings around Mumbai, including luxury hotels, the city's historic Victoria Terminus train station and a Jewish cultural center. India executed the last surviving gunman from the attacks in 2012. Other suspects were all killed during the series of attacks, which went on for three days. More about the Mumbai attacks. CNN's Harmeet Singh contributed to this report.\\n\", \"answer\": \"Zaki-ur-Rehman Lakhvi, a top leader of the terrorist group Lashkar-e-Taiba, was released on bail in Pakistan after years of detention. Lakhvi was charged with masterminding the 2008 Mumbai terror attacks that left over 160 people dead. India has condemned Lakhvi's release, accusing Pakistan of having a \\\"dual policy\\\" on dealing with terrorists. Pakistan's Foreign Office responded, blaming India's delay in cooperating with the case and weakening the prosecution. The release of Lakhvi has highlighted the long-running tensions between India and Pakistan, who have had three wars since their partition.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "tune",
+  "slot": 24,
+  "source_bytes": "4120206d616e2063686172676564207769746820706c616e6e696e672074686520646561646c792032303038204d756d62616920746572726f722061747461636b7320696e20496e64696120686173206265656e2072656c6561736564206f6e206261696c20696e2050616b697374616e206166746572207965617273206f6620646574656e74696f6e2c2070726f6d7074696e672073686172702063726974696369736d2066726f6d20496e6469612e205a616b692d75722d5265686d616e204c616b6876692c206120746f70206c6561646572206f662074686520746572726f726973742067726f7570204c6173686b61722d652d54616962612c207761732072656c6561736564206561726c79204672696461792066726f6d2061206a61696c20696e207468652050616b697374616e692063697479206f6620526177616c70696e64692c206163636f7264696e6720746f205961687961204d756a616869642c2073706f6b65736d616e20666f72204a616d6161742d75642d446177612c20612067726f75702077697468207768696368204c616b68766920697320616666696c69617465642e204c616b68766920776173206368617267656420696e2050616b697374616e20696e20323030392c2061636375736564206f66206d61737465726d696e64696e6720746865204e6f76656d626572203230303820746572726f722061747461636b732074686174206c656674206d6f7265207468616e203136302070656f706c65206465616420696e204d756d6261692c20496e6469612773206d6f737420706f70756c6f757320636974792e204c616b687669207374696c6c20666163657320747269616c20696e2074686520636173652e2042757420616e20616e74692d746572726f7269736d20636f757274206772616e746564204c616b687669206261696c206c61737420796561722c2061206465636973696f6e207468652050616b697374616e6920676f7665726e6d656e74207361696420697420776f756c64206368616c6c656e67652e2054686174206368616c6c656e6765206c617374656420756e74696c2054687572736461792c207768656e20746865204c61686f7265204869676820436f757274206f726465726564206869732072656c656173652c20434e4e20616666696c6961746520616e642050616b697374616e69206f75746c65742047454f204e657773207265706f727465642e204c616b68766920706f73746564206261696c20746f74616c696e672032206d696c6c696f6e2050616b697374616e692072757065657320286d6f7265207468616e202431392c303030292c206163636f7264696e6720746f2047454f204e6577732e20496e6469612c2050616b697374616e2773206e65696768626f7220616e6420726976616c2c20636f6e64656d6e6564204c616b6876692773206261696c2072656c65617365206f6e204672696461792e2054686520636f756e74727920636f6e7461637465642050616b697374616e277320666f726569676e2073656372657461727920746f20756e6465726c696e65202274686174207468697320686173207265696e666f72636564207468652070657263657074696f6e20746861742050616b697374616e206861732061206475616c20706f6c696379206f6e206465616c696e67207769746820746572726f72697374732c20616e642074686f73652077686f20686176652063617272696564206f75742061747461636b73206f722061726520706f73696e6720612074687265617420746f20496e64696120617265206265696e67206465616c74207769746820646966666572656e746c792c222073616964205379656420416b626172756464696e2c20612073706f6b65736d616e20666f7220496e6469612773204d696e6973747279206f662045787465726e616c20416666616972732e205468652061636375736174696f6e20746861742050616b697374616e206d6967687420747265617420496e64696120646966666572656e746c7920686967686c6967687473206c6f6e672d72756e6e696e672074656e73696f6e73206265747765656e207468652074776f206e75636c6561722d61726d6564206e65696768626f72732c207768696368206861766520666f75676874207468726565207761727320616761696e73742065616368206f746865722073696e636520746865697220706172746974696f6e2061742074686520656e64206f66204272697469736820636f6c6f6e69616c2072756c652e2050616b697374616e277320466f726569676e204f666669636520726573706f6e6465642046726964617920627920736179696e672c2022497420776f756c64206e6f742062652070726f70657220746f206361737420617370657273696f6e73206f6e2050616b697374616e277320636f6d6d69746d656e7420746f20636f756e746572696e6720746572726f7269736d20617420612074696d65207768656e2050616b697374616e2068617320656e7465726564206120637269746963616c207374616765206f6620646566656174696e6720746865206d656e616365206f6620746572726f7269736d2e222054686520466f726569676e204f666669636520616c736f20626c616d6564207768617420697420736169642077617320496e64696127732064656c617920696e20636f6f7065726174696e6720696e2074686520636173652c20736179696e6720697420227765616b656e6564207468652070726f7365637574696f6e2e2220496e20746865204d756d6261692061747461636b732c2068656176696c792061726d6564206d656e2073746f726d6564206c616e646d61726b206275696c64696e67732061726f756e64204d756d6261692c20696e636c7564696e67206c757875727920686f74656c732c207468652063697479277320686973746f72696320566963746f726961205465726d696e757320747261696e2073746174696f6e20616e642061204a65776973682063756c747572616c2063656e7465722e20496e64696120657865637574656420746865206c61737420737572766976696e672067756e6d616e2066726f6d207468652061747461636b7320696e20323031322e204f74686572207375737065637473207765726520616c6c206b696c6c656420647572696e672074686520736572696573206f662061747461636b732c2077686963682077656e74206f6e20666f7220746872656520646179732e204d6f72652061626f757420746865204d756d6261692061747461636b732e20434e4e2773204861726d6565742053696e676820636f6e747269627574656420746f2074686973207265706f72742e0a",
+  "source_cluster_id": "sha256:9dd7711d44819c6c35a6e81bc51db96fe2ef982f8b9eb6703654c7fe7de7e36b",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:c576389b6f6be07023e12e170f42d6a282f9d3fa490cd17b71a887bed433d0a2"
+}

@@ -1,0 +1,91 @@
+{
+  "answer_bytes": "4865726520697320616e206f626a656374697665206f76657276696577206f6620746865204d6167696320506974612043616665206261736564206f6e20746865207374727563747572656420646174612070726f76696465643a0a0a546865204d616769632050697461204361666520697320612052657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043616c69666f726e69612c206f66666572696e67204d6964646c65204561737465726e20616e64204d65646974657272616e65616e2063756973696e652e20546865206361666520686173206120726174696e67206f6620342e3020737461727320616e64206973206f70656e2066726f6d2031313a333020414d20746f20333a303020414d2c20736576656e20646179732061207765656b2e2054686520627573696e6573732070726f7669646573206f7574646f6f722073656174696e6720616e6420576946692c2062757420646f6573206e6f74206f66666572207265736572766174696f6e73206f722076616c69646174696f6e20666f72207061726b696e672e205468652061746d6f7370686572652069732063617375616c20616e642077656c636f6d696e672c2077697468206e6f206c697665206d75736963206f7220616d6269616e6365206665617475726573206c69737465642e0a0a5265766965777320666f7220746865206361666520617265206d697865642c207769746820736f6d6520637573746f6d657273207072616973696e6720746865207175616c69747920616e642076616c7565206f662074686520666f6f642c20706172746963756c61726c7920746865206265656620616e6420636869636b656e207368617761726d612e20486f77657665722c206f7468657273206861766520636f6d706c61696e65642061626f757420746865206761726c696320636f6e74656e7420696e20736f6d65206469736865732c206c656164696e6720746f20646973636f6d666f727420616e6420626164206272656174682e204164646974696f6e616c6c792c20736f6d65207265766965776572732068617665206e6f74656420746861742074686520736572766963652063616e20626520736c6f7720616e6420696e636f6e73697374656e742c2077697468206c6f6e6720776169742074696d657320616e6420696e636f7272656374206f72646572732e204f766572616c6c2c20746865204d6167696320506974612043616665207365656d7320746f206f6666657220646563656e74204d6964646c65204561737465726e2063756973696e652c20627574206d6179206e65656420746f20696d70726f766520697473207365727669636520616e64206d656e75206f7074696f6e7320746f206d65657420637573746f6d6572206578706563746174696f6e732e",
+  "arm": "holistic",
+  "call_id": "sha256:2005471700d7e8aba119b33d5f2c14974817b1cc55bc76f1163fade845e6f1ab:source_removed",
+  "capture_identity": "sha256:34dabbd68839ebc02dca3bef642473ee606e4fab618b81a7647b6864ff54adb3",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "duration_s": 0.8874927599681541,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 277,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Here is an objective overview of the Magic Pita Cafe based on the structured data provided:\\n\\nThe Magic Pita Cafe is a Restaurant located in Santa Barbara, California, offering Middle Eastern and Mediterranean cuisine. The cafe has a rating of 4.0 stars and is open from 11:30 AM to 3:00 AM, seven days a week. The business provides outdoor seating and WiFi, but does not offer reservations or validation for parking. The atmosphere is casual and welcoming, with no live music or ambiance features listed.\\n\\nReviews for the cafe are mixed, with some customers praising the quality and value of the food, particularly the beef and chicken shawarma. However, others have complained about the garlic content in some dishes, leading to discomfort and bad breath. Additionally, some reviewers have noted that the service can be slow and inconsistent, with long wait times and incorrect orders. Overall, the Magic Pita Cafe seems to offer decent Middle Eastern cuisine, but may need to improve its service and menu options to meet customer expectations.\"}",
+  "prompt_sha256": "sha256:85af2dec6c1d0a0538f01c68605d1d82ef576cd02fc329692392b6ea5acfe8cf",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791185159,
+    "id": "chatcmpl-rZWrtRQqc4FQbSb43r0ex5TmDZIe1Iea",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 369.78,
+      "predicted_n": 16,
+      "predicted_per_second": 43.268970739358544,
+      "predicted_per_token_ms": 23.11125,
+      "prompt_ms": 325.084,
+      "prompt_n": 277,
+      "prompt_per_second": 852.087460471755,
+      "prompt_per_token_ms": 1.1735884476534295
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 277,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 293
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\", \"answer\": \"Here is an objective overview of the Magic Pita Cafe based on the structured data provided:\\n\\nThe Magic Pita Cafe is a Restaurant located in Santa Barbara, California, offering Middle Eastern and Mediterranean cuisine. The cafe has a rating of 4.0 stars and is open from 11:30 AM to 3:00 AM, seven days a week. The business provides outdoor seating and WiFi, but does not offer reservations or validation for parking. The atmosphere is casual and welcoming, with no live music or ambiance features listed.\\n\\nReviews for the cafe are mixed, with some customers praising the quality and value of the food, particularly the beef and chicken shawarma. However, others have complained about the garlic content in some dishes, leading to discomfort and bad breath. Additionally, some reviewers have noted that the service can be slow and inconsistent, with long wait times and incorrect orders. Overall, the Magic Pita Cafe seems to offer decent Middle Eastern cuisine, but may need to improve its service and menu options to meet customer expectations.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70553,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "fit",
+  "slot": 12,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:03d0eeadb123741a1b093494ba7b4d1e62aa170eff9f513b0632843197a8baf4",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.0\n}",
+  "unit_id": "sha256:2005471700d7e8aba119b33d5f2c14974817b1cc55bc76f1163fade845e6f1ab"
+}
