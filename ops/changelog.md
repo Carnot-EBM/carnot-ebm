@@ -21475,3 +21475,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-05: Measure continuous energy learning while future decisions remain (⚠️ Research Finding) — honest_verdict=complete_null_trajectory_complete_audit_pending; results/experiment_8171_v706_released_feedback_learning.json
 - 2026-10-05: Audit later decision benefit and independent retention labels (⚠️ Research Finding) — honest_verdict=complete_null_no_later_typed_cost_benefit; results/experiment_8172_v706_learning_benefit_audit.json
 - 2026-10-05: Qualify service validation and replay preserved acquisition evidence (✅ Complete) — honest_verdict=complete_positive_service_validation; results/experiment_8173_v706_service_validation.json
+- 2026-10-05: Measure independent Qwen requests through durable Python and Rust services (⚠️ Research Finding) — honest_verdict=complete_null_complete_request_cost; results/experiment_8174_v706_complete_request_cost.json
