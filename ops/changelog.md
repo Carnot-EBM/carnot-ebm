@@ -21456,3 +21456,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-05: Seal reserved Qwen evidence and frozen predictions (⚠️ Research Finding) — honest_verdict=complete_null_reserved_evidence_sealed; results/experiment_8155_v705_reserved_evidence_capture.json
 - 2026-10-05: Independently test evidence-linked calibration and decision cost (⚠️ Research Finding) — honest_verdict=complete_null_decision_development_null; results/experiment_8156_v705_decision_audit.json
 - 2026-10-05: Measure complete atomic batch transactions through Python and Rust (✅ Complete) — honest_verdict=complete_positive_durable_batch_service_measured; results/experiment_8159_v705_durable_batch_service.json
+- 2026-10-05: Measure current Qwen acquisition plus matched durable service branches (⚠️ Research Finding) — honest_verdict=complete_disqualified_shared_acquisition_cost; results/experiment_8160_v705_shared_acquisition_cost.json
