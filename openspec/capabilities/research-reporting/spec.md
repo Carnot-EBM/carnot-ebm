@@ -93697,3 +93697,26 @@ Implementation: `carnot.reporting.arc_supervisor_v706_delta` and
 `scripts/experiments/experiment_8175_v706_arc_supervisor_delta.py`; assertions in
 `tests/python/test_arc_supervisor_delta_8175.py`. Validation is recorded in the
 hash-bound Exp8175 primary and terminal sidecar.
+# REQ-REPORT-8176: Bound V706 workloads without granting new board execution
+
+Exp8176 SHALL authenticate original board receipts independently, preserve dates,
+KV260 fabric k_max<=5, PolarFire Linux CPU-only dispatch and GateMate JTAG
+0xffffffff. Read Exp8173.composition_replay_ready_score and
+Exp8174.complete_service_ready_score exactly. Reduce each scope separately from
+qualified Exp8159 host batches. A missing branch SHALL retain other qualified
+evidence and terminate complete_blocked_<check> with exact observed operands.
+Use immutable historical methods and hashes; MODEL_SPECS=[], no_model_load,
+zero current calls and separately imported model provenance. Both benefit
+scores remain zero. Keep reopen conditions for each board and NPU/TSU access.
+The conductor owns ops and BMAD reconciliation.
+
+## SCENARIO-REPORT-8176-INDEPENDENT
+
+Private missing composition, absent components and altered board receipts retain
+host and complete-request evidence where independently qualified. Board terminal
+conditions remain separate from software readiness and no new probes occur.
+
+Implementation: `carnot.reporting.hardware_workload_8176`,
+`hardware_workload_inputs_8176`, `hardware_boundary_execution_8176` and the
+Exp8176 thin CLI. Private assertions live in `test_hardware_workload_8176.py`;
+the primary and hash-bound terminal sidecar record frozen validation receipts.

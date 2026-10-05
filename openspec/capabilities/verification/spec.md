@@ -49366,3 +49366,27 @@ Implementation: `carnot.reporting.arc_supervisor_v706_delta` and
 `scripts/experiments/experiment_8175_v706_arc_supervisor_delta.py`; assertions in
 `tests/python/test_arc_supervisor_delta_8175.py`. Validation is recorded in the
 hash-bound Exp8175 primary and terminal sidecar.
+# REQ-VERIFY-8176: Reconstruct optimistic acceleration bounds and validate closure
+
+Retain source processing, acquisition, transfer, queue, durable storage and
+readout. Mixed scoring timers SHALL supply only optimistic outer ceilings.
+Compute exact Amdahl 1/(1-f) only for separately measured removable arithmetic;
+100x requires f>=.99. Reuse the natural precision envelope for8/12/16-bit
+storage and float64 fallback, reporting operations, bytes and unknown incremental
+fallback costs. Freeze validation argv before measurement, require normal owned
+exits,100 percent added statement coverage, Ruff check/format, strict mypy and
+explicit-path spec coverage. Run full Python health once separately. Publish
+only through primary_publication after unchanged adversarial and strict row
+checks and independent cold replay. Owned failures disqualify/readiness0.
+
+## SCENARIO-VERIFY-8176-CLI
+
+Run private success, missing-component block, altered receipt, external missing
+and cold replay outside checkout without PYTHONPATH. Reject rehashed operand,
+headline, shard, code and validation-log mutations. Fixtures never earn source
+independence or model calls. Keep a falsifiable redesign of the measured bottleneck.
+
+Implementation: `test_hardware_workload_8176.py` covers separate scopes, original
+receipt authentication, missing components, external blocks, owned failures,
+tamper rejection and direct cold replay. Added module and CLI coverage is scoped
+to Exp8176; complete Python repository health stays a separate observation.
