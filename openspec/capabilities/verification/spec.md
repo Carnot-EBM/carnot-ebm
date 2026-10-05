@@ -49203,3 +49203,35 @@ statements have100 percent coverage. Eleven private tests cover parser, source
 mutation, role custody, blocked inputs, rehashed forgery and cold replay. Forty-five
 qualified E2E/consumer checks pass. Local semantic capture and head fitting remain
 future measured work; the present receipt freezes their methods only.
+
+## REQ-VERIFY-8167: Capture bounded sentence transport on original fit and tune sources
+
+Exp8167 SHALL authenticate Exp8166.sentence_protocol_ready_score == 1 and its frozen protocol hash.
+Use original fit128 and tune64 source slots in order. Preserve full source and answer bytes.
+Reuse the authenticated embedded tokenizer, owned CUDA worker, lease and checkpoint ledger.
+Use only unsloth/Qwen3.8-27B-GGUF at the frozen revision and native runtime hashes.
+Use at most two requests per source, four complete sentences per request and256 output tokens.
+Limit main attempts to384 and diagnostic attempts to16. Retry transport failure at most once within those budgets.
+Stop launches by3000 seconds, load by300 seconds and each call by120 seconds. Reserve closure within4800 seconds.
+Checkpoint every eight source slots. Preserve parser failures, missing historical sources and budget censorship separately.
+A local prediction requires all original sentences with valid transport. Original human labels open only after predictions seal.
+Trainability requires96 complete fit and48 complete tune sources and12 original targets per class in each role.
+The first eight eligible fit sources receive one source-removed and one fixed mismatched-source request.
+Diagnostics have no human labels. Report elicited probability sensitivity separately from byte-valid quotes.
+These diagnostics adapt GASP ideas without token-likelihood GASP or learning benefit claims.
+
+### SCENARIO-VERIFY-8167-TRANSPORT
+
+Private fixtures SHALL cover two-request sentence completeness, UTF-8 quotes, parser failure, overlength,
+transport retry, timeout cancellation, budget censorship, checkpoint identity and source independence.
+
+### SCENARIO-VERIFY-8167-REPLAY
+
+Independent cold replay SHALL reject source, prompt, answer, sentence, ledger, headline and receipt tampering.
+Trainability SHALL remain zero when either source support or original class support fails.
+
+REQ-VERIFY-8167 implementation: `carnot.verify.fit_sentence_capture_8167` retains
+original source slots and reuses the qualified owned CUDA worker. Its reducer
+reparses raw replies and binds them to frozen source and request bytes. Private
+tests cover whole-source coverage, transport failures, token censorship, target
+custody and rehashed slot forgery. Source and class support both gate trainability.

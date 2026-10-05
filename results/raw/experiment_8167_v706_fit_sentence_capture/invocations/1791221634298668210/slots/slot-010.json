@@ -1,0 +1,118 @@
+{
+  "answer_bytes": "556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e",
+  "answer_sha256": "sha256:873986f526b95d4e03f516684812941baf096e4ce119836f0ea73c54d19e5552",
+  "arm": "sentence_evidence",
+  "calls": [
+    {
+      "answer_sha256": "sha256:873986f526b95d4e03f516684812941baf096e4ce119836f0ea73c54d19e5552",
+      "attempt": 1,
+      "call_id": "sha256:4e81df93883ce5c26a38ec81bb73233edd0fe45e464f1a16aa2901f09b1f9fe4:original:0",
+      "duration_s": 1.954550298047252,
+      "group_sha256": "sha256:c30c63c18c6c2c38e1f851518c2206a032346c6a14edbd88cf0c208bd97544c8",
+      "input_tokens": 423,
+      "model_sha256": null,
+      "output_tokens": 54,
+      "parsed": {
+        "quote_validity_is_entailment": false,
+        "rows": [],
+        "status": "escalated"
+      },
+      "prompt": "{\"instruction\": \"Return one JSON item per sentence_index: p_unsupported, relation (entailed/contradicted/baseless), verbatim source quote or null, UTF-8 byte_start and byte_end or null.\", \"source\": \"{\\\"passages\\\":\\\"passage 1:Steps to Recover Files from memory card. Step1. You can connect your memory card to your computer via a card reader or USB cable. Then, you need to download and install the data recovery software on your computer. Run the software and choose a recovery option. Step2.\\\\n\\\\npassage 2:Select  Graphics  and click . Next  button to start your picture recovery job. Step 2. Select the disk where you lost your data and click  Scan  button, the software will quickly scan the selected disk to find all your lost pictures.\\\\n\\\\npassage 3:Step 6: For Recuva, select all the images you want to restore, and click the Recover button. Choose a place you want to restore the files to. You will want to choose somewhere you can access easily, like the desktop or your pictures folder. It's best not to save them back to the memory card.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to recover deleted photos from memory card without any software\\\"}\", \"answer\": \"Unable to answer based on given passages.\", \"sentences\": [{\"sentence_index\": 0, \"byte_start\": 0, \"byte_end\": 41, \"sentence_bytes\": \"556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e\", \"complete\": true, \"text\": \"Unable to answer based on given passages.\"}]}",
+      "prompt_sha256": "sha256:34d68dfdaa2766cecb077aec1bfcf9f05be5216dabec734462fd4d018712d485",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"sentence_index\": 0,\n  \"p_unsupported\": true,\n  \"relation\": \"baseless\",\n  \"source_quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1791222023,
+        "id": "chatcmpl-sd0xDuzL5OVeCeWPmLoOGqaf8GJRM6lF",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 1289.467,
+          "predicted_n": 54,
+          "predicted_per_second": 41.877768101083625,
+          "predicted_per_token_ms": 23.87901851851852,
+          "prompt_ms": 428.551,
+          "prompt_n": 423,
+          "prompt_per_second": 987.0470492426806,
+          "prompt_per_token_ms": 1.0131229314420804
+        },
+        "usage": {
+          "completion_tokens": 54,
+          "prompt_tokens": 423,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 477
+        }
+      },
+      "request": {
+        "cache_prompt": false,
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "max_tokens": 256,
+        "messages": [
+          {
+            "content": "{\"instruction\": \"Return one JSON item per sentence_index: p_unsupported, relation (entailed/contradicted/baseless), verbatim source quote or null, UTF-8 byte_start and byte_end or null.\", \"source\": \"{\\\"passages\\\":\\\"passage 1:Steps to Recover Files from memory card. Step1. You can connect your memory card to your computer via a card reader or USB cable. Then, you need to download and install the data recovery software on your computer. Run the software and choose a recovery option. Step2.\\\\n\\\\npassage 2:Select  Graphics  and click . Next  button to start your picture recovery job. Step 2. Select the disk where you lost your data and click  Scan  button, the software will quickly scan the selected disk to find all your lost pictures.\\\\n\\\\npassage 3:Step 6: For Recuva, select all the images you want to restore, and click the Recover button. Choose a place you want to restore the files to. You will want to choose somewhere you can access easily, like the desktop or your pictures folder. It's best not to save them back to the memory card.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to recover deleted photos from memory card without any software\\\"}\", \"answer\": \"Unable to answer based on given passages.\", \"sentences\": [{\"sentence_index\": 0, \"byte_start\": 0, \"byte_end\": 41, \"sentence_bytes\": \"556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e\", \"complete\": true, \"text\": \"Unable to answer based on given passages.\"}]}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 70667,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "sentence_indices": [
+        0
+      ],
+      "source_sha256": "sha256:0d7ba15810a99604443b48e434da084e81263fa6903e73e88824e3380e423a8b",
+      "status": "completed",
+      "transcript": "{\n  \"sentence_index\": 0,\n  \"p_unsupported\": true,\n  \"relation\": \"baseless\",\n  \"source_quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}"
+    }
+  ],
+  "capture_identity": "sha256:e1b41f8c46645f5c7580bf9e75e293617c532fdaf390d30a5d8425399a16eeee",
+  "condition": "original",
+  "denominator": 1,
+  "exclusion_reason": "parser_failure",
+  "family_id": "sha256:4e81df93883ce5c26a38ec81bb73233edd0fe45e464f1a16aa2901f09b1f9fe4",
+  "group_sha256": "sha256:c30c63c18c6c2c38e1f851518c2206a032346c6a14edbd88cf0c208bd97544c8",
+  "historical_present": true,
+  "human_target": null,
+  "local_features": null,
+  "metric": "full_sentence_transport",
+  "model": "gpt-4-0613",
+  "numerator": 0,
+  "order": 10,
+  "response_id": "16296",
+  "role": "fit",
+  "sentences": [
+    {
+      "byte_end": 41,
+      "byte_start": 0,
+      "complete": true,
+      "sentence_bytes": "556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e",
+      "sentence_index": 0
+    }
+  ],
+  "slot": 11,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a537465707320746f205265636f7665722046696c65732066726f6d206d656d6f727920636172642e2053746570312e20596f752063616e20636f6e6e65637420796f7572206d656d6f7279206361726420746f20796f757220636f6d7075746572207669612061206361726420726561646572206f7220555342206361626c652e205468656e2c20796f75206e65656420746f20646f776e6c6f616420616e6420696e7374616c6c207468652064617461207265636f7665727920736f667477617265206f6e20796f757220636f6d70757465722e2052756e2074686520736f66747761726520616e642063686f6f73652061207265636f76657279206f7074696f6e2e2053746570322e5c6e5c6e7061737361676520323a53656c656374202047726170686963732020616e6420636c69636b202e204e6578742020627574746f6e20746f20737461727420796f75722070696374757265207265636f76657279206a6f622e205374657020322e2053656c65637420746865206469736b20776865726520796f75206c6f737420796f7572206461746120616e6420636c69636b20205363616e2020627574746f6e2c2074686520736f6674776172652077696c6c20717569636b6c79207363616e207468652073656c6563746564206469736b20746f2066696e6420616c6c20796f7572206c6f73742070696374757265732e5c6e5c6e7061737361676520333a5374657020363a20466f72205265637576612c2073656c65637420616c6c2074686520696d6167657320796f752077616e7420746f20726573746f72652c20616e6420636c69636b20746865205265636f76657220627574746f6e2e2043686f6f7365206120706c61636520796f752077616e7420746f20726573746f7265207468652066696c657320746f2e20596f752077696c6c2077616e7420746f2063686f6f736520736f6d65776865726520796f752063616e2061636365737320656173696c792c206c696b6520746865206465736b746f70206f7220796f757220706963747572657320666f6c6465722e20497427732062657374206e6f7420746f2073617665207468656d206261636b20746f20746865206d656d6f727920636172642e5c6e5c6e222c227175657374696f6e223a22686f7720746f207265636f7665722064656c657465642070686f746f732066726f6d206d656d6f7279206361726420776974686f757420616e7920736f667477617265227d",
+  "source_cluster_id": "sha256:3cf0a195088c4a9be466140a7aae0b86e027f43cc73ef653b7a0608aa2b7369c",
+  "source_id": "12208",
+  "source_ids": [
+    "12208"
+  ],
+  "source_sha256": "sha256:0d7ba15810a99604443b48e434da084e81263fa6903e73e88824e3380e423a8b",
+  "status": "failed",
+  "task_type": "QA",
+  "unit_id": "sha256:4e81df93883ce5c26a38ec81bb73233edd0fe45e464f1a16aa2901f09b1f9fe4"
+}

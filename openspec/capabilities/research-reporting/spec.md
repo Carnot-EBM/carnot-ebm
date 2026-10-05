@@ -93538,3 +93538,28 @@ unit/E2E, added-code coverage, Ruff, strict mypy and explicit-path spec checks.
 Primitive text, requests, baseline outputs, source/code hashes and durable receipt
 logs bind the methods artifact. Repository-wide Python health is recorded once
 as a separate diagnostic. The conductor owns ops and traceability reconciliation.
+
+## REQ-REPORT-8167: Publish checked sentence capture without benefit claims
+
+Exp8167 SHALL save primitive source and sentence rows, exact prompts, replies, attempts and token counts.
+Bind source, sentence, group, model, runtime, code and config by hashes. Import V705 controls as historical provenance only.
+Declare current live_llm_inference/model_bounded_generation only for measured live generation, with a10 second floor.
+Freeze owned validation argv before measurement. Run all scoped assertions,100 percent added statement coverage,
+Ruff check and format, strict mypy and explicit-path spec coverage with normally exited receipts.
+Run private CLI success, external block, tamper and cold replay outside checkout without PYTHONPATH.
+Run unmodified adversarial_verify and strict verdict_row_consistency_lint before primary_publication.
+Missing or gate-blocked external inputs terminate complete_blocked_<check> with exact observed operands.
+Owned failures terminate disqualified with readiness zero. Fixtures and exposed development establish no independent generalization.
+Keep generalization and benefit scores zero. Preserve historical primaries and operator-curated publication pages.
+The conductor owns ops/status/changelog and traceability reconciliation for this task.
+
+### SCENARIO-REPORT-8167-CLI
+
+Private direct script execution SHALL publish a circular fixture, retain external blocks and reject tampered cold replay.
+Repository-wide Python health SHALL run once and remain separate from owned validation. No external publication.
+
+REQ-REPORT-8167 implementation: the thin Exp8167 CLI freezes and runs owned
+checks before live capture. Eighteen private tests and43 qualified checks pass.
+All447 added module and CLI statements have100 percent coverage. Frozen receipts
+also cover Ruff, strict mypy and explicit-path spec coverage. The primary uses
+checked publication and cold replay. The conductor owns ops and traceability.

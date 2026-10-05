@@ -1,0 +1,119 @@
+{
+  "answer_bytes": "556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e",
+  "answer_sha256": "sha256:873986f526b95d4e03f516684812941baf096e4ce119836f0ea73c54d19e5552",
+  "arm": "sentence_evidence",
+  "calls": [
+    {
+      "answer_sha256": "sha256:873986f526b95d4e03f516684812941baf096e4ce119836f0ea73c54d19e5552",
+      "attempt": 1,
+      "call_id": "sha256:4e81df93883ce5c26a38ec81bb73233edd0fe45e464f1a16aa2901f09b1f9fe4:source_removed:0",
+      "duration_s": 2.2833594020921737,
+      "group_sha256": "sha256:c30c63c18c6c2c38e1f851518c2206a032346c6a14edbd88cf0c208bd97544c8",
+      "input_tokens": 201,
+      "model_sha256": null,
+      "output_tokens": 74,
+      "parsed": {
+        "quote_validity_is_entailment": false,
+        "rows": [],
+        "status": "escalated"
+      },
+      "prompt": "{\"instruction\": \"Return JSON array: sentence_index, p_unsupported, relation (entailed/contradicted/baseless), quote, byte_start, byte_end. Null quotes have null offsets.\", \"source\": \"\", \"answer\": \"Unable to answer based on given passages.\", \"sentences\": [{\"sentence_index\": 0, \"byte_start\": 0, \"byte_end\": 41, \"sentence_bytes\": \"556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e\", \"complete\": true, \"text\": \"Unable to answer based on given passages.\"}]}",
+      "prompt_sha256": "sha256:58618e5580233ac401cabbaa4e567e55c1505046150b4b5aa0370c4718fec789",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "```json\n[\n  {\n    \"sentence_index\": 0,\n    \"p_unsupported\": true,\n    \"relation\": \"baseless\",\n    \"quote\": \"Unable to answer based on given passages.\",\n    \"byte_start\": 0,\n    \"byte_end\": 41\n  }\n]\n```",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1791223217,
+        "id": "chatcmpl-13315FA57IF2LMk7TcGdS5nCupt7zmpC",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 1848.038,
+          "predicted_n": 74,
+          "predicted_per_second": 40.04246665923536,
+          "predicted_per_token_ms": 24.973486486486486,
+          "prompt_ms": 296.084,
+          "prompt_n": 201,
+          "prompt_per_second": 678.8614041961065,
+          "prompt_per_token_ms": 1.4730547263681593
+        },
+        "usage": {
+          "completion_tokens": 74,
+          "prompt_tokens": 201,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 275
+        }
+      },
+      "request": {
+        "cache_prompt": false,
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "max_tokens": 256,
+        "messages": [
+          {
+            "content": "{\"instruction\": \"Return JSON array: sentence_index, p_unsupported, relation (entailed/contradicted/baseless), quote, byte_start, byte_end. Null quotes have null offsets.\", \"source\": \"\", \"answer\": \"Unable to answer based on given passages.\", \"sentences\": [{\"sentence_index\": 0, \"byte_start\": 0, \"byte_end\": 41, \"sentence_bytes\": \"556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e\", \"complete\": true, \"text\": \"Unable to answer based on given passages.\"}]}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 70667,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "sentence_indices": [
+        0
+      ],
+      "source_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": "completed",
+      "transcript": "```json\n[\n  {\n    \"sentence_index\": 0,\n    \"p_unsupported\": true,\n    \"relation\": \"baseless\",\n    \"quote\": \"Unable to answer based on given passages.\",\n    \"byte_start\": 0,\n    \"byte_end\": 41\n  }\n]\n```"
+    }
+  ],
+  "capture_identity": "sha256:e1b41f8c46645f5c7580bf9e75e293617c532fdaf390d30a5d8425399a16eeee",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "exclusion_reason": "parser_failure",
+  "family_id": "sha256:4e81df93883ce5c26a38ec81bb73233edd0fe45e464f1a16aa2901f09b1f9fe4",
+  "group_sha256": "sha256:c30c63c18c6c2c38e1f851518c2206a032346c6a14edbd88cf0c208bd97544c8",
+  "historical_present": true,
+  "human_target": null,
+  "local_features": null,
+  "metric": "full_sentence_transport",
+  "model": "gpt-4-0613",
+  "numerator": 0,
+  "order": 10,
+  "response_id": "16296",
+  "role": "fit",
+  "sentences": [
+    {
+      "byte_end": 41,
+      "byte_start": 0,
+      "complete": true,
+      "sentence_bytes": "556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e",
+      "sentence_index": 0
+    }
+  ],
+  "slot": 11,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:3cf0a195088c4a9be466140a7aae0b86e027f43cc73ef653b7a0608aa2b7369c",
+  "source_id": "12208",
+  "source_ids": [
+    "12208"
+  ],
+  "source_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "status": "failed",
+  "task_type": "QA",
+  "unit_id": "sha256:4e81df93883ce5c26a38ec81bb73233edd0fe45e464f1a16aa2901f09b1f9fe4"
+}

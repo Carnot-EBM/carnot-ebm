@@ -1,0 +1,127 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20706173746120697320612066656d696e696e65206e6f756e20696e204974616c69616e2e20506173736167652032207374617465732074686174207468652061727469636c6520226c61222069732075736564206265666f72652066656d696e696e6520776f7264732c20616e642073696e636520706173746120697320612066656d696e696e6520776f72642c20697420776f756c6420626520726566657272656420746f20617320226c61207061737461222e",
+  "answer_sha256": "sha256:a30f94ea1e1c743ccb819af8a2c550bd1e6795969e80551403930ee101d26fb8",
+  "arm": "sentence_evidence",
+  "calls": [
+    {
+      "answer_sha256": "sha256:a30f94ea1e1c743ccb819af8a2c550bd1e6795969e80551403930ee101d26fb8",
+      "attempt": 1,
+      "call_id": "sha256:b5fcb3991e84b73d1e8191aa70c37dbad8c44ddbc61ad39e9e83458b30e2f25e:source_removed:0",
+      "duration_s": 3.8065992610063404,
+      "group_sha256": "sha256:b326ff24e054576e671ef6a42dae4161dbaffe116dcedd4af25ed6b8b022a7a4",
+      "input_tokens": 663,
+      "model_sha256": null,
+      "output_tokens": 119,
+      "parsed": {
+        "quote_validity_is_entailment": false,
+        "rows": [],
+        "status": "escalated"
+      },
+      "prompt": "{\"instruction\": \"Return JSON array: sentence_index, p_unsupported, relation (entailed/contradicted/baseless), quote, byte_start, byte_end. Null quotes have null offsets.\", \"source\": \"\", \"answer\": \"Based on the given passages, pasta is a feminine noun in Italian. Passage 2 states that the article \\\"la\\\" is used before feminine words, and since pasta is a feminine word, it would be referred to as \\\"la pasta\\\".\", \"sentences\": [{\"sentence_index\": 0, \"byte_start\": 0, \"byte_end\": 66, \"sentence_bytes\": \"4261736564206f6e2074686520676976656e2070617373616765732c20706173746120697320612066656d696e696e65206e6f756e20696e204974616c69616e2e20\", \"complete\": true, \"text\": \"Based on the given passages, pasta is a feminine noun in Italian. \"}, {\"sentence_index\": 1, \"byte_start\": 66, \"byte_end\": 210, \"sentence_bytes\": \"506173736167652032207374617465732074686174207468652061727469636c6520226c61222069732075736564206265666f72652066656d696e696e6520776f7264732c20616e642073696e636520706173746120697320612066656d696e696e6520776f72642c20697420776f756c6420626520726566657272656420746f20617320226c61207061737461222e\", \"complete\": true, \"text\": \"Passage 2 states that the article \\\"la\\\" is used before feminine words, and since pasta is a feminine word, it would be referred to as \\\"la pasta\\\".\"}]}",
+      "prompt_sha256": "sha256:c6c0ac213ab3f531cd59c946cf973f13a7f1ca28b28e3b755c8b6e07afe02156",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "```json\n[\n  {\n    \"sentence_index\": 0,\n    \"p_unsupported\": true,\n    \"relation\": \"baseless\",\n    \"quote\": null,\n    \"byte_start\": null,\n    \"byte_end\": null\n  },\n  {\n    \"sentence_index\": 1,\n    \"p_unsupported\": true,\n    \"relation\": \"baseless\",\n    \"quote\": null,\n    \"byte_start\": null,\n    \"byte_end\": null\n  }\n]\n```",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1791223181,
+        "id": "chatcmpl-nuFbPQ0VOrQVLmXVkXqHdUcLaEjodnyZ",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 2884.765,
+          "predicted_n": 119,
+          "predicted_per_second": 41.251193771416396,
+          "predicted_per_token_ms": 24.24172268907563,
+          "prompt_ms": 786.745,
+          "prompt_n": 663,
+          "prompt_per_second": 842.7126959815442,
+          "prompt_per_token_ms": 1.1866440422322775
+        },
+        "usage": {
+          "completion_tokens": 119,
+          "prompt_tokens": 663,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 782
+        }
+      },
+      "request": {
+        "cache_prompt": false,
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "max_tokens": 256,
+        "messages": [
+          {
+            "content": "{\"instruction\": \"Return JSON array: sentence_index, p_unsupported, relation (entailed/contradicted/baseless), quote, byte_start, byte_end. Null quotes have null offsets.\", \"source\": \"\", \"answer\": \"Based on the given passages, pasta is a feminine noun in Italian. Passage 2 states that the article \\\"la\\\" is used before feminine words, and since pasta is a feminine word, it would be referred to as \\\"la pasta\\\".\", \"sentences\": [{\"sentence_index\": 0, \"byte_start\": 0, \"byte_end\": 66, \"sentence_bytes\": \"4261736564206f6e2074686520676976656e2070617373616765732c20706173746120697320612066656d696e696e65206e6f756e20696e204974616c69616e2e20\", \"complete\": true, \"text\": \"Based on the given passages, pasta is a feminine noun in Italian. \"}, {\"sentence_index\": 1, \"byte_start\": 66, \"byte_end\": 210, \"sentence_bytes\": \"506173736167652032207374617465732074686174207468652061727469636c6520226c61222069732075736564206265666f72652066656d696e696e6520776f7264732c20616e642073696e636520706173746120697320612066656d696e696e6520776f72642c20697420776f756c6420626520726566657272656420746f20617320226c61207061737461222e\", \"complete\": true, \"text\": \"Passage 2 states that the article \\\"la\\\" is used before feminine words, and since pasta is a feminine word, it would be referred to as \\\"la pasta\\\".\"}]}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 70667,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "sentence_indices": [
+        0,
+        1
+      ],
+      "source_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": "completed",
+      "transcript": "```json\n[\n  {\n    \"sentence_index\": 0,\n    \"p_unsupported\": true,\n    \"relation\": \"baseless\",\n    \"quote\": null,\n    \"byte_start\": null,\n    \"byte_end\": null\n  },\n  {\n    \"sentence_index\": 1,\n    \"p_unsupported\": true,\n    \"relation\": \"baseless\",\n    \"quote\": null,\n    \"byte_start\": null,\n    \"byte_end\": null\n  }\n]\n```"
+    }
+  ],
+  "capture_identity": "sha256:e1b41f8c46645f5c7580bf9e75e293617c532fdaf390d30a5d8425399a16eeee",
+  "condition": "source_removed",
+  "denominator": 1,
+  "donor_unit_id": null,
+  "exclusion_reason": "parser_failure",
+  "family_id": "sha256:b5fcb3991e84b73d1e8191aa70c37dbad8c44ddbc61ad39e9e83458b30e2f25e",
+  "group_sha256": "sha256:b326ff24e054576e671ef6a42dae4161dbaffe116dcedd4af25ed6b8b022a7a4",
+  "historical_present": true,
+  "human_target": null,
+  "local_features": null,
+  "metric": "full_sentence_transport",
+  "model": "llama-2-13b-chat",
+  "numerator": 0,
+  "order": 6,
+  "response_id": "16174",
+  "role": "fit",
+  "sentences": [
+    {
+      "byte_end": 66,
+      "byte_start": 0,
+      "complete": true,
+      "sentence_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20706173746120697320612066656d696e696e65206e6f756e20696e204974616c69616e2e20",
+      "sentence_index": 0
+    },
+    {
+      "byte_end": 210,
+      "byte_start": 66,
+      "complete": true,
+      "sentence_bytes": "506173736167652032207374617465732074686174207468652061727469636c6520226c61222069732075736564206265666f72652066656d696e696e6520776f7264732c20616e642073696e636520706173746120697320612066656d696e696e6520776f72642c20697420776f756c6420626520726566657272656420746f20617320226c61207061737461222e",
+      "sentence_index": 1
+    }
+  ],
+  "slot": 7,
+  "source_bytes": "",
+  "source_cluster_id": "sha256:9a17d890820157662eed680a2da12f4b7dae91841d118f5891ccdd7fa5cbd6c6",
+  "source_id": "12187",
+  "source_ids": [
+    "12187"
+  ],
+  "source_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "status": "failed",
+  "task_type": "QA",
+  "unit_id": "sha256:b5fcb3991e84b73d1e8191aa70c37dbad8c44ddbc61ad39e9e83458b30e2f25e"
+}

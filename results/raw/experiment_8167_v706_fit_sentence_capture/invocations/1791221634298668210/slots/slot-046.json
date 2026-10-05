@@ -1,0 +1,118 @@
+{
+  "answer_bytes": "556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e",
+  "answer_sha256": "sha256:873986f526b95d4e03f516684812941baf096e4ce119836f0ea73c54d19e5552",
+  "arm": "sentence_evidence",
+  "calls": [
+    {
+      "answer_sha256": "sha256:873986f526b95d4e03f516684812941baf096e4ce119836f0ea73c54d19e5552",
+      "attempt": 1,
+      "call_id": "sha256:c0b7160f26719e8498613c2e07c96e719a2fd2dac20aea67e815545e87369e6e:original:0",
+      "duration_s": 1.9075524209765717,
+      "group_sha256": "sha256:cbb4b3353acfdf7807cafb545021024db049ce7491cb2f9961a5709f1dc72687",
+      "input_tokens": 459,
+      "model_sha256": null,
+      "output_tokens": 54,
+      "parsed": {
+        "quote_validity_is_entailment": false,
+        "rows": [],
+        "status": "escalated"
+      },
+      "prompt": "{\"instruction\": \"Return one JSON item per sentence_index: p_unsupported, relation (entailed/contradicted/baseless), verbatim source quote or null, UTF-8 byte_start and byte_end or null.\", \"source\": \"{\\\"passages\\\":\\\"passage 1:HD Digital Traffic\u00b2 is our best traffic solution. HD Digital Traffic receives updates up to every 30 seconds, making it up to 10 times faster than other traffic systems. That means, driving 60 mph, your d\u0113zl 770LMTHD can receive traffic messages up to every half-mile. On the road, a few seconds\u2019 notice can save minutes or even hours of delay. HD Digital Traffic can tell you how many minutes of delay to expect and if there are any possible detours.\\\\n\\\\npassage 2:As you drive on your route, AT&T Navigator periodically checks your route for traffic alerts. If there is a slowdown or other traffic alert, it will notify you and give you the option to avoid that portion of the route.\\\\n\\\\npassage 3:How do I cancel my subscription to AT&T Navigator? To cancel the subscription and fee you must go online at att.com/directbill or call AT&T at 1-800-331-0500. Deleting AT&T Navigator from your device does not stop the monthly charge.\\\\n\\\\n\\\",\\\"question\\\":\\\"how much i navigator hd traffic\\\"}\", \"answer\": \"Unable to answer based on given passages.\", \"sentences\": [{\"sentence_index\": 0, \"byte_start\": 0, \"byte_end\": 41, \"sentence_bytes\": \"556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e\", \"complete\": true, \"text\": \"Unable to answer based on given passages.\"}]}",
+      "prompt_sha256": "sha256:2a858fbaeaff73b76c7dcf5e6185a2900af8634ee0914db7225e912bc5be82ef",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"sentence_index\": 0,\n  \"p_unsupported\": true,\n  \"relation\": \"baseless\",\n  \"source_quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1791222245,
+        "id": "chatcmpl-hm2NhiiWzDGfLoIuNJ1gSCVLCT7390a6",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 1291.931,
+          "predicted_n": 54,
+          "predicted_per_second": 41.79789787535093,
+          "predicted_per_token_ms": 23.924648148148147,
+          "prompt_ms": 461.892,
+          "prompt_n": 459,
+          "prompt_per_second": 993.7387960822009,
+          "prompt_per_token_ms": 1.0063006535947712
+        },
+        "usage": {
+          "completion_tokens": 54,
+          "prompt_tokens": 459,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 513
+        }
+      },
+      "request": {
+        "cache_prompt": false,
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "max_tokens": 256,
+        "messages": [
+          {
+            "content": "{\"instruction\": \"Return one JSON item per sentence_index: p_unsupported, relation (entailed/contradicted/baseless), verbatim source quote or null, UTF-8 byte_start and byte_end or null.\", \"source\": \"{\\\"passages\\\":\\\"passage 1:HD Digital Traffic\u00b2 is our best traffic solution. HD Digital Traffic receives updates up to every 30 seconds, making it up to 10 times faster than other traffic systems. That means, driving 60 mph, your d\u0113zl 770LMTHD can receive traffic messages up to every half-mile. On the road, a few seconds\u2019 notice can save minutes or even hours of delay. HD Digital Traffic can tell you how many minutes of delay to expect and if there are any possible detours.\\\\n\\\\npassage 2:As you drive on your route, AT&T Navigator periodically checks your route for traffic alerts. If there is a slowdown or other traffic alert, it will notify you and give you the option to avoid that portion of the route.\\\\n\\\\npassage 3:How do I cancel my subscription to AT&T Navigator? To cancel the subscription and fee you must go online at att.com/directbill or call AT&T at 1-800-331-0500. Deleting AT&T Navigator from your device does not stop the monthly charge.\\\\n\\\\n\\\",\\\"question\\\":\\\"how much i navigator hd traffic\\\"}\", \"answer\": \"Unable to answer based on given passages.\", \"sentences\": [{\"sentence_index\": 0, \"byte_start\": 0, \"byte_end\": 41, \"sentence_bytes\": \"556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e\", \"complete\": true, \"text\": \"Unable to answer based on given passages.\"}]}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 70667,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "sentence_indices": [
+        0
+      ],
+      "source_sha256": "sha256:261086314029f0e8ba16f80de2a7b3d5dd2798da1a4dd6dea8a593c3dd1b2801",
+      "status": "completed",
+      "transcript": "{\n  \"sentence_index\": 0,\n  \"p_unsupported\": true,\n  \"relation\": \"baseless\",\n  \"source_quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}"
+    }
+  ],
+  "capture_identity": "sha256:e1b41f8c46645f5c7580bf9e75e293617c532fdaf390d30a5d8425399a16eeee",
+  "condition": "original",
+  "denominator": 1,
+  "exclusion_reason": "parser_failure",
+  "family_id": "sha256:c0b7160f26719e8498613c2e07c96e719a2fd2dac20aea67e815545e87369e6e",
+  "group_sha256": "sha256:cbb4b3353acfdf7807cafb545021024db049ce7491cb2f9961a5709f1dc72687",
+  "historical_present": true,
+  "human_target": null,
+  "local_features": null,
+  "metric": "full_sentence_transport",
+  "model": "gpt-4-0613",
+  "numerator": 0,
+  "order": 46,
+  "response_id": "14082",
+  "role": "fit",
+  "sentences": [
+    {
+      "byte_end": 41,
+      "byte_start": 0,
+      "complete": true,
+      "sentence_bytes": "556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e",
+      "sentence_index": 0
+    }
+  ],
+  "slot": 47,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4844204469676974616c2054726166666963c2b2206973206f75722062657374207472616666696320736f6c7574696f6e2e204844204469676974616c2054726166666963207265636569766573207570646174657320757020746f206576657279203330207365636f6e64732c206d616b696e6720697420757020746f2031302074696d657320666173746572207468616e206f7468657220747261666669632073797374656d732e2054686174206d65616e732c2064726976696e67203630206d70682c20796f75722064c4937a6c203737304c4d5448442063616e20726563656976652074726166666963206d6573736167657320757020746f2065766572792068616c662d6d696c652e204f6e2074686520726f61642c206120666577207365636f6e6473e28099206e6f746963652063616e2073617665206d696e75746573206f72206576656e20686f757273206f662064656c61792e204844204469676974616c20547261666669632063616e2074656c6c20796f7520686f77206d616e79206d696e75746573206f662064656c617920746f2065787065637420616e642069662074686572652061726520616e7920706f737369626c65206465746f7572732e5c6e5c6e7061737361676520323a417320796f75206472697665206f6e20796f757220726f7574652c2041542654204e6176696761746f7220706572696f646963616c6c7920636865636b7320796f757220726f75746520666f72207472616666696320616c657274732e204966207468657265206973206120736c6f77646f776e206f72206f74686572207472616666696320616c6572742c2069742077696c6c206e6f7469667920796f7520616e64206769766520796f7520746865206f7074696f6e20746f2061766f6964207468617420706f7274696f6e206f662074686520726f7574652e5c6e5c6e7061737361676520333a486f7720646f20492063616e63656c206d7920737562736372697074696f6e20746f2041542654204e6176696761746f723f20546f2063616e63656c2074686520737562736372697074696f6e20616e642066656520796f75206d75737420676f206f6e6c696e65206174206174742e636f6d2f64697265637462696c6c206f722063616c6c204154265420617420312d3830302d3333312d303530302e2044656c6574696e672041542654204e6176696761746f722066726f6d20796f75722064657669636520646f6573206e6f742073746f7020746865206d6f6e74686c79206368617267652e5c6e5c6e222c227175657374696f6e223a22686f77206d7563682069206e6176696761746f722068642074726166666963227d",
+  "source_cluster_id": "sha256:560e3881ef384ec2cf593f02fff90a940b2bda52df3afba098fa2031845c2c52",
+  "source_id": "15267",
+  "source_ids": [
+    "15267"
+  ],
+  "source_sha256": "sha256:261086314029f0e8ba16f80de2a7b3d5dd2798da1a4dd6dea8a593c3dd1b2801",
+  "status": "failed",
+  "task_type": "QA",
+  "unit_id": "sha256:c0b7160f26719e8498613c2e07c96e719a2fd2dac20aea67e815545e87369e6e"
+}

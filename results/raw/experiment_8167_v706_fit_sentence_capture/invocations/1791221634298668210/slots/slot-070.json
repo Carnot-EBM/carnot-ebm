@@ -1,0 +1,163 @@
+{
+  "answer_bytes": "526176656e7320616e642063726f77732064696666657220696e207365766572616c20776179732e20526176656e7320617265206c6172676572207468616e2063726f77732c20616e642061726520746865206c617267657374207065726368696e672062697264732e205468657920616c736f206861766520612064656e736520616e642073686167677920706c756d6167652c20706172746963756c61726c792061726f756e6420746865207468726f61742c207768696c652063726f77732068617665206120736d6f6f746820746578747572652e2054686520726176656e27732062696c6c2069732068656176696572207468616e207468652063726f7727732e20546865207461696c206f6620612063726f77207370726561647320696e746f20612066616e2d6c696b652073747275637475726520647572696e6720666c696768742c207768696c6520746865207461696c206f66206120726176656e207370726561647320696e746f20612077656467652073686170652e20426f7468207370656369657320617265206b6e6f776e20666f7220746865697220696e74656c6c6967656e63652c20696e636c7564696e6720746f6f6c207573652c20656e656d79206964656e74696669636174696f6e2c2070726f626c656d2d736f6c76696e672c20616e64206d696d696372792e205468652073697a6520646966666572656e6365206265747765656e207468652074776f20697320757375616c6c79206e6f7469636561626c65207768656e207468657920617265207365656e20746f6765746865722e",
+  "answer_sha256": "sha256:f5a63b7d2fd53a9b4f96ad3a9404e295c69243832ebdec19b7e4f56815e93c0e",
+  "arm": "sentence_evidence",
+  "calls": [
+    {
+      "answer_sha256": "sha256:f5a63b7d2fd53a9b4f96ad3a9404e295c69243832ebdec19b7e4f56815e93c0e",
+      "attempt": 1,
+      "call_id": "sha256:b032beea2e91655a5974dcff0e2881bba0dd3bfef7b09de8d95f41a35b021a99:original:0",
+      "duration_s": 7.433692037011497,
+      "group_sha256": "sha256:6615391ab1bbc4ede808efe6897e979f94a278908d984e30afbbcb461fd46bad",
+      "input_tokens": 1215,
+      "model_sha256": null,
+      "output_tokens": 256,
+      "parsed": {
+        "quote_validity_is_entailment": false,
+        "rows": [],
+        "status": "escalated"
+      },
+      "prompt": "{\"instruction\": \"Return one JSON item per sentence_index: p_unsupported, relation (entailed/contradicted/baseless), verbatim source quote or null, UTF-8 byte_start and byte_end or null.\", \"source\": \"{\\\"passages\\\":\\\"passage 1:Physical Differences. Crows and ravens differ physically from one another, their size being the most noticeable. Ravens are larger than crows, making them the largest perching birds. Crows have a smooth texture whereas the raven has a dense and shaggy plumage particularly around the throat. The bill of the raven is also heavier than the crow's bill. During flight, the spreading of the tail can distinguish the crow and raven apart. The tail of the crow spreads into a fan-like structure while the tail of the raven spreads into a wedge shape.\\\\n\\\\npassage 2:Difference between Crows and Ravens. Crows and ravens are birds of the Corvidae family that are mainly renowned for their intelligence in tool use, enemy identification, problem solving and mimicry.\\\\n\\\\npassage 3:Telling the birds apart if they are seen together is a simple matter, as the size difference between the species will be obvious. It is not always possible to determine whether a large, black corvid is an American crow or a common raven, but using different opportunities to try can be a great chance to sharpen your bird identification skills.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between ravens and crows\\\"}\", \"answer\": \"Ravens and crows differ in several ways. Ravens are larger than crows, and are the largest perching birds. They also have a dense and shaggy plumage, particularly around the throat, while crows have a smooth texture. The raven's bill is heavier than the crow's. The tail of a crow spreads into a fan-like structure during flight, while the tail of a raven spreads into a wedge shape. Both species are known for their intelligence, including tool use, enemy identification, problem-solving, and mimicry. The size difference between the two is usually noticeable when they are seen together.\", \"sentences\": [{\"sentence_index\": 0, \"byte_start\": 0, \"byte_end\": 41, \"sentence_bytes\": \"526176656e7320616e642063726f77732064696666657220696e207365766572616c20776179732e20\", \"complete\": true, \"text\": \"Ravens and crows differ in several ways. \"}, {\"sentence_index\": 1, \"byte_start\": 41, \"byte_end\": 107, \"sentence_bytes\": \"526176656e7320617265206c6172676572207468616e2063726f77732c20616e642061726520746865206c617267657374207065726368696e672062697264732e20\", \"complete\": true, \"text\": \"Ravens are larger than crows, and are the largest perching birds. \"}, {\"sentence_index\": 2, \"byte_start\": 107, \"byte_end\": 217, \"sentence_bytes\": \"5468657920616c736f206861766520612064656e736520616e642073686167677920706c756d6167652c20706172746963756c61726c792061726f756e6420746865207468726f61742c207768696c652063726f77732068617665206120736d6f6f746820746578747572652e20\", \"complete\": true, \"text\": \"They also have a dense and shaggy plumage, particularly around the throat, while crows have a smooth texture. \"}, {\"sentence_index\": 3, \"byte_start\": 217, \"byte_end\": 262, \"sentence_bytes\": \"54686520726176656e27732062696c6c2069732068656176696572207468616e207468652063726f7727732e20\", \"complete\": true, \"text\": \"The raven's bill is heavier than the crow's. \"}]}",
+      "prompt_sha256": "sha256:eafcdf5a10d1ef10c99e134eff177d395abc3f37fb3163cce4045e73ae162fdc",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "length",
+            "index": 0,
+            "message": {
+              "content": "```json\n[\n  {\n    \"sentence_index\": 0,\n    \"p_unsupported\": 0.0,\n    \"relation\": \"baseless\",\n    \"source_quote\": null,\n    \"byte_start\": null,\n    \"byte_end\": null\n  },\n  {\n    \"sentence_index\": 1,\n    \"p_unsupported\": 0.0,\n    \"relation\": \"entailed\",\n    \"source_quote\": \"Ravens are larger than crows, making them the largest perching birds.\",\n    \"byte_start\": 103,\n    \"byte_end\": 167\n  },\n  {\n    \"sentence_index\": 2,\n    \"p_unsupported\": 0.0,\n    \"relation\": \"entailed\",\n    \"source_quote\": \"Crows have a smooth texture whereas the raven has a dense and shaggy plumage particularly around the throat.\",\n    \"byte_start\": 168,\n    \"byte_end\": 263\n  },\n  {\n    \"sentence_index\": 3,\n    \"p_unsupported\": 0.0,",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1791222391,
+        "id": "chatcmpl-52h7nH8t7UHKPUjKMGwuOGba8kJaZHAk",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 6226.316,
+          "predicted_n": 256,
+          "predicted_per_second": 41.115805879431754,
+          "predicted_per_token_ms": 24.321546875,
+          "prompt_ms": 1066.905,
+          "prompt_n": 1215,
+          "prompt_per_second": 1138.8080475768695,
+          "prompt_per_token_ms": 0.8781111111111111
+        },
+        "usage": {
+          "completion_tokens": 256,
+          "prompt_tokens": 1215,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 1471
+        }
+      },
+      "request": {
+        "cache_prompt": false,
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "max_tokens": 256,
+        "messages": [
+          {
+            "content": "{\"instruction\": \"Return one JSON item per sentence_index: p_unsupported, relation (entailed/contradicted/baseless), verbatim source quote or null, UTF-8 byte_start and byte_end or null.\", \"source\": \"{\\\"passages\\\":\\\"passage 1:Physical Differences. Crows and ravens differ physically from one another, their size being the most noticeable. Ravens are larger than crows, making them the largest perching birds. Crows have a smooth texture whereas the raven has a dense and shaggy plumage particularly around the throat. The bill of the raven is also heavier than the crow's bill. During flight, the spreading of the tail can distinguish the crow and raven apart. The tail of the crow spreads into a fan-like structure while the tail of the raven spreads into a wedge shape.\\\\n\\\\npassage 2:Difference between Crows and Ravens. Crows and ravens are birds of the Corvidae family that are mainly renowned for their intelligence in tool use, enemy identification, problem solving and mimicry.\\\\n\\\\npassage 3:Telling the birds apart if they are seen together is a simple matter, as the size difference between the species will be obvious. It is not always possible to determine whether a large, black corvid is an American crow or a common raven, but using different opportunities to try can be a great chance to sharpen your bird identification skills.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between ravens and crows\\\"}\", \"answer\": \"Ravens and crows differ in several ways. Ravens are larger than crows, and are the largest perching birds. They also have a dense and shaggy plumage, particularly around the throat, while crows have a smooth texture. The raven's bill is heavier than the crow's. The tail of a crow spreads into a fan-like structure during flight, while the tail of a raven spreads into a wedge shape. Both species are known for their intelligence, including tool use, enemy identification, problem-solving, and mimicry. The size difference between the two is usually noticeable when they are seen together.\", \"sentences\": [{\"sentence_index\": 0, \"byte_start\": 0, \"byte_end\": 41, \"sentence_bytes\": \"526176656e7320616e642063726f77732064696666657220696e207365766572616c20776179732e20\", \"complete\": true, \"text\": \"Ravens and crows differ in several ways. \"}, {\"sentence_index\": 1, \"byte_start\": 41, \"byte_end\": 107, \"sentence_bytes\": \"526176656e7320617265206c6172676572207468616e2063726f77732c20616e642061726520746865206c617267657374207065726368696e672062697264732e20\", \"complete\": true, \"text\": \"Ravens are larger than crows, and are the largest perching birds. \"}, {\"sentence_index\": 2, \"byte_start\": 107, \"byte_end\": 217, \"sentence_bytes\": \"5468657920616c736f206861766520612064656e736520616e642073686167677920706c756d6167652c20706172746963756c61726c792061726f756e6420746865207468726f61742c207768696c652063726f77732068617665206120736d6f6f746820746578747572652e20\", \"complete\": true, \"text\": \"They also have a dense and shaggy plumage, particularly around the throat, while crows have a smooth texture. \"}, {\"sentence_index\": 3, \"byte_start\": 217, \"byte_end\": 262, \"sentence_bytes\": \"54686520726176656e27732062696c6c2069732068656176696572207468616e207468652063726f7727732e20\", \"complete\": true, \"text\": \"The raven's bill is heavier than the crow's. \"}]}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 70667,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "sentence_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "source_sha256": "sha256:9c4eeb201771f6cf3e0c8cc74bdfdca78919b287aab72f546a1835f39c33b423",
+      "status": "completed",
+      "transcript": "```json\n[\n  {\n    \"sentence_index\": 0,\n    \"p_unsupported\": 0.0,\n    \"relation\": \"baseless\",\n    \"source_quote\": null,\n    \"byte_start\": null,\n    \"byte_end\": null\n  },\n  {\n    \"sentence_index\": 1,\n    \"p_unsupported\": 0.0,\n    \"relation\": \"entailed\",\n    \"source_quote\": \"Ravens are larger than crows, making them the largest perching birds.\",\n    \"byte_start\": 103,\n    \"byte_end\": 167\n  },\n  {\n    \"sentence_index\": 2,\n    \"p_unsupported\": 0.0,\n    \"relation\": \"entailed\",\n    \"source_quote\": \"Crows have a smooth texture whereas the raven has a dense and shaggy plumage particularly around the throat.\",\n    \"byte_start\": 168,\n    \"byte_end\": 263\n  },\n  {\n    \"sentence_index\": 3,\n    \"p_unsupported\": 0.0,"
+    }
+  ],
+  "capture_identity": "sha256:e1b41f8c46645f5c7580bf9e75e293617c532fdaf390d30a5d8425399a16eeee",
+  "condition": "original",
+  "denominator": 1,
+  "exclusion_reason": "output_token_budget",
+  "family_id": "sha256:b032beea2e91655a5974dcff0e2881bba0dd3bfef7b09de8d95f41a35b021a99",
+  "group_sha256": "sha256:6615391ab1bbc4ede808efe6897e979f94a278908d984e30afbbcb461fd46bad",
+  "historical_present": true,
+  "human_target": null,
+  "local_features": null,
+  "metric": "full_sentence_transport",
+  "model": "gpt-4-0613",
+  "numerator": 0,
+  "order": 70,
+  "response_id": "14658",
+  "role": "fit",
+  "sentences": [
+    {
+      "byte_end": 41,
+      "byte_start": 0,
+      "complete": true,
+      "sentence_bytes": "526176656e7320616e642063726f77732064696666657220696e207365766572616c20776179732e20",
+      "sentence_index": 0
+    },
+    {
+      "byte_end": 107,
+      "byte_start": 41,
+      "complete": true,
+      "sentence_bytes": "526176656e7320617265206c6172676572207468616e2063726f77732c20616e642061726520746865206c617267657374207065726368696e672062697264732e20",
+      "sentence_index": 1
+    },
+    {
+      "byte_end": 217,
+      "byte_start": 107,
+      "complete": true,
+      "sentence_bytes": "5468657920616c736f206861766520612064656e736520616e642073686167677920706c756d6167652c20706172746963756c61726c792061726f756e6420746865207468726f61742c207768696c652063726f77732068617665206120736d6f6f746820746578747572652e20",
+      "sentence_index": 2
+    },
+    {
+      "byte_end": 262,
+      "byte_start": 217,
+      "complete": true,
+      "sentence_bytes": "54686520726176656e27732062696c6c2069732068656176696572207468616e207468652063726f7727732e20",
+      "sentence_index": 3
+    },
+    {
+      "byte_end": 384,
+      "byte_start": 262,
+      "complete": true,
+      "sentence_bytes": "546865207461696c206f6620612063726f77207370726561647320696e746f20612066616e2d6c696b652073747275637475726520647572696e6720666c696768742c207768696c6520746865207461696c206f66206120726176656e207370726561647320696e746f20612077656467652073686170652e20",
+      "sentence_index": 4
+    },
+    {
+      "byte_end": 503,
+      "byte_start": 384,
+      "complete": true,
+      "sentence_bytes": "426f7468207370656369657320617265206b6e6f776e20666f7220746865697220696e74656c6c6967656e63652c20696e636c7564696e6720746f6f6c207573652c20656e656d79206964656e74696669636174696f6e2c2070726f626c656d2d736f6c76696e672c20616e64206d696d696372792e20",
+      "sentence_index": 5
+    },
+    {
+      "byte_end": 589,
+      "byte_start": 503,
+      "complete": true,
+      "sentence_bytes": "5468652073697a6520646966666572656e6365206265747765656e207468652074776f20697320757375616c6c79206e6f7469636561626c65207768656e207468657920617265207365656e20746f6765746865722e",
+      "sentence_index": 6
+    }
+  ],
+  "slot": 71,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a506879736963616c20446966666572656e6365732e2043726f777320616e6420726176656e732064696666657220706879736963616c6c792066726f6d206f6e6520616e6f746865722c2074686569722073697a65206265696e6720746865206d6f7374206e6f7469636561626c652e20526176656e7320617265206c6172676572207468616e2063726f77732c206d616b696e67207468656d20746865206c617267657374207065726368696e672062697264732e2043726f77732068617665206120736d6f6f7468207465787475726520776865726561732074686520726176656e2068617320612064656e736520616e642073686167677920706c756d61676520706172746963756c61726c792061726f756e6420746865207468726f61742e205468652062696c6c206f662074686520726176656e20697320616c736f2068656176696572207468616e207468652063726f7727732062696c6c2e20447572696e6720666c696768742c2074686520737072656164696e67206f6620746865207461696c2063616e2064697374696e6775697368207468652063726f7720616e6420726176656e2061706172742e20546865207461696c206f66207468652063726f77207370726561647320696e746f20612066616e2d6c696b6520737472756374757265207768696c6520746865207461696c206f662074686520726176656e207370726561647320696e746f20612077656467652073686170652e5c6e5c6e7061737361676520323a446966666572656e6365206265747765656e2043726f777320616e6420526176656e732e2043726f777320616e6420726176656e7320617265206269726473206f662074686520436f7276696461652066616d696c79207468617420617265206d61696e6c792072656e6f776e656420666f7220746865697220696e74656c6c6967656e636520696e20746f6f6c207573652c20656e656d79206964656e74696669636174696f6e2c2070726f626c656d20736f6c76696e6720616e64206d696d696372792e5c6e5c6e7061737361676520333a54656c6c696e6720746865206269726473206170617274206966207468657920617265207365656e20746f67657468657220697320612073696d706c65206d61747465722c206173207468652073697a6520646966666572656e6365206265747765656e2074686520737065636965732077696c6c206265206f6276696f75732e204974206973206e6f7420616c7761797320706f737369626c6520746f2064657465726d696e6520776865746865722061206c617267652c20626c61636b20636f7276696420697320616e20416d65726963616e2063726f77206f72206120636f6d6d6f6e20726176656e2c20627574207573696e6720646966666572656e74206f70706f7274756e697469657320746f207472792063616e2062652061206772656174206368616e636520746f207368617270656e20796f75722062697264206964656e74696669636174696f6e20736b696c6c732e5c6e5c6e222c227175657374696f6e223a22776861742069732074686520646966666572656e6365206265747765656e20726176656e7320616e642063726f7773227d",
+  "source_cluster_id": "sha256:ab32a74c2a40c0969dddaa4baa308273ee6a5a1a30018bf9daefb03b8d66ba12",
+  "source_id": "15364",
+  "source_ids": [
+    "15364"
+  ],
+  "source_sha256": "sha256:9c4eeb201771f6cf3e0c8cc74bdfdca78919b287aab72f546a1835f39c33b423",
+  "status": "censored",
+  "task_type": "QA",
+  "unit_id": "sha256:b032beea2e91655a5974dcff0e2881bba0dd3bfef7b09de8d95f41a35b021a99"
+}
