@@ -21449,3 +21449,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
   generator training, push, external publication or conductor modification.
 - 2026-10-05: Bind fourteen tasks and preserve V704 terminal evidence (⚠️ Research Finding) — honest_verdict=complete_null_contract_custody; results/experiment_8150_v705_contract_custody.json
 - 2026-10-05: Qualify source capture against immutable historical methods (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8151_v705_source_method_custody.json
+- 2026-10-05: Seal release-aware learning methods and qualify useful future exposure (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8152_v705_admission_horizon_methods.json
