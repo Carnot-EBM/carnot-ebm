@@ -19553,3 +19553,4 @@ code |
 | 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7825_v680_training_runtime.json age-week 1: OPEN 7 days: CLAIM_OVERST |
 | 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_claim_text age-week 1: OPEN 7 days: REAL_BUG  |
 | 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8085_v700_radial_memory_kernel.json age-week 0: OPEN 1 days: CLAIM_OV |
+| 2026-10-05 00:07 UTC | Learn persistent energy centers from correctly del | OK | 90 passed, 1 warning in 211.54s (0:03:31) |
