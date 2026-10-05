@@ -153,7 +153,8 @@ def main(argv: list[str] | None = None, *, experiment: ModuleType = e) -> int:
     os.environ["PYTHONUNBUFFERED"] = "1"
     e.progress("start")
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--date", choices=["20261004"], default="20261004")
+    run_date = getattr(e, "RUN_DATE", "20261004")
+    parser.add_argument("--date", choices=[run_date], default=run_date)
     parser.add_argument("--root", type=Path, default=e.ROOT)
     parser.add_argument("--design", type=Path, default=e.ROOT / e.DESIGN)
     parser.add_argument("--staged", type=Path, default=e.ROOT / "research-roadmap-next.yaml")

@@ -93160,3 +93160,28 @@ The private E2E-018 lifecycle checks SHALL run without publishing a result.
 
 Implementation status: planning documents only. Experiment code and scientific
 claims remain pending. Each task extends its own specifications before code edits.
+
+## REQ-REPORT-8150: Preserve V704 terminal evidence and bind V705 authority
+
+Exp8150 SHALL bind exactly fourteen tasks Exp8150 through Exp8163 using the
+qualified authority reader, literal Exact task contract heading, full machine
+JSON and canonical task digest. It SHALL observe activation without changing it.
+It SHALL snapshot ten declared V704 primaries, terminal validation sidecars,
+the immutable V704 authority and conductor dispositions. Four source gate skips
+SHALL retain absent scientific verdicts, including administrative fallback notices.
+Exp8149's current blocked primary and earlier logged disqualification SHALL be
+reported separately. Historical failures SHALL not invalidate scheduling custody.
+Current model calls, trained heads and scientific generalization credit stay zero.
+Owned failures disqualify and zero readiness; external blocks name exact operands.
+Publication requires normal validators, private E2E checks, strict lint/type/spec
+checks and 100 percent statement coverage of added code. Historical methods SHALL
+come from immutable snapshots and preserved versioned files, never mutable vNEXT.
+The runner SHALL accept date20261005 and work outside the checkout without PYTHONPATH.
+
+### SCENARIO-REPORT-8150: Private authority and publication boundaries
+
+Matching authority passes; changed title, prompt, gate, ID, count, order, heading,
+digest and stale milestone fail. Cold replay independently rebuilds the fourteen
+task rows and fourteen historical dispositions and rejects changed source, code,
+sidecar, log, primitive or reduction bytes. Failed historical validation remains
+visible. No model is loaded and no milestone is activated by this experiment.

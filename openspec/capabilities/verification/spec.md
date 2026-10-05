@@ -48829,3 +48829,20 @@ input. Zero useful future exposure cannot establish learning benefit. A componen
 cost estimate cannot establish independently measured deployment performance.
 All comparative tasks retain per-unit evidence and all external blocks name their
 failed gate operands. Experiment implementation and empirical results are pending.
+
+## REQ-VERIFY-8150: Independent terminal custody replay
+
+Private E2E-018 copies SHALL cover matching and stale active authority, task
+mutations, cold replay and owned validation failure. Recompute readiness and
+counts from sealed authority, original conductor rows and preserved primaries.
+Ten historical primaries and four source gate skips SHALL be distinct. A failed
+historical source validator and the capstone's earlier logged verdict SHALL not
+overwrite their current primary bytes or become measured null source results.
+Every added statement SHALL be exercised with tests that retain these assertions.
+
+### SCENARIO-VERIFY-8150: Immutable evidence and dated CLI
+
+Outside-checkout script execution without PYTHONPATH SHALL accept20261005,
+publish private success/block/disqualified controls and reject tampered cold replay.
+Source and validator sidecar byte changes SHALL fail replay even if an attacker
+recomputes reported aggregate hashes. Historical model counts remain provenance.
