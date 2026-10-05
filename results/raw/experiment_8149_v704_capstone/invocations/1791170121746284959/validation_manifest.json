@@ -1,0 +1,171 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.reporting.v704_capstone",
+        "carnot.reporting.v704_capstone_evidence"
+      ],
+      "name": "worktree_imports",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8149-_yj230qp/pytest/focused",
+        "tests/python/test_v704_capstone_8149.py",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot8149-_yj230qp/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_v704_capstone_8149.py",
+        "--basetemp=/tmp/carnot8149-_yj230qp/covered"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot8149-_yj230qp/coverage.ini",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot8149-_yj230qp/coverage.json"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v704_capstone.py",
+        "python/carnot/reporting/v704_capstone_evidence.py",
+        "scripts/experiments/experiment_8149_v704_capstone.py",
+        "tests/python/test_v704_capstone_8149.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v704_capstone.py",
+        "python/carnot/reporting/v704_capstone_evidence.py",
+        "scripts/experiments/experiment_8149_v704_capstone.py",
+        "tests/python/test_v704_capstone_8149.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=skip",
+        "python/carnot/reporting/v704_capstone.py",
+        "python/carnot/reporting/v704_capstone_evidence.py"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_v704_capstone_8149.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "--basetemp=/tmp/carnot8149-_yj230qp/consumers"
+      ],
+      "name": "consumers_E2E018",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/publication_gate.py",
+        "--json"
+      ],
+      "name": "publication_gate",
+      "scope": "publication",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/summarize_artifact.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8136_v704_contract_custody.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8137_v704_source_protocol.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8138_v704_learning_protocol.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8139_fit_evidence_capture.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8143_v704_delayed_energy_memory.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8144_v704_learning_audit.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8145_v704_natural_service_cost.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8146_v704_live_service_cost.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8147_v704_arc_reader_renewal.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8148_v704_hardware_workload_boundary.json"
+      ],
+      "name": "upstream_summaries",
+      "scope": "upstream_inventory",
+      "timeout_s": 120
+    }
+  ],
+  "owned": [
+    "python/carnot/reporting/v704_capstone.py",
+    "python/carnot/reporting/v704_capstone_evidence.py",
+    "scripts/experiments/experiment_8149_v704_capstone.py"
+  ]
+}

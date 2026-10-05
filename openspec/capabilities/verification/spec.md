@@ -48792,3 +48792,22 @@ centers. It retains unknown update scans, bus traffic and pending queue bytes.
 The 8/12/16-bit storage study retains the unquantized frozen base logit and
 uses float64 fallback before issuing a decision. Separate mixed-envelope
 outer ceilings retain host persistence and all timed non-scoring components.
+
+## REQ-VERIFY-8149: Independent source, learning and service capstone reductions
+
+H1 source decisions and H2 later learning/retention SHALL use original masks,
+source support, matched controls, fixed H1/H2 Holm multiplicity and development
+exposure. Seeds and timing repetitions add no semantic sources. Recompute H2
+statistics and service costs from hash-bound primitive rows using qualified
+reducers. Missing H1 contributes family p=1 without changing H2 to missing.
+Record FR-06/12, FR-11, FR-05/08/NFR-01 and every hardware obligation separately.
+ARC reader/frontier evidence grants zero new solve credit. Preserve stable
+publication_gate.py G1/G2/G3/G4, paper_ready and unmet_gates. Independent
+and generalized learning scores remain zero for exposed development.
+
+### SCENARIO-VERIFY-8149-BRANCHES
+
+A qualified supported null H2 is retained when H1 is unavailable. Disqualified
+or flagged primitive rows cannot enter benefit reductions. Original excluded
+slots and retention safety remain visible. Whole-service readiness zero blocks
+that service claim without invalidating measured natural host timings.

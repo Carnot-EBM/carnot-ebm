@@ -1,0 +1,98 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8143_v704_delayed_energy_memory.json",
+  "primary_sha256": "sha256:424f737b8f52fa1bf96fbd4051519a4bc24dea254bdfa6fab1af63e787b4f2a4",
+  "report": {
+    "checks": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8143_v704_delayed_energy_memory.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8143_v704_delayed_energy_memory/terminal_candidate.json"
+        ],
+        "classification": "required",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8143_v704_delayed_energy_memory.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8143_v704_delayed_energy_memory/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8143_v704_delayed_energy_memory.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8143_v704_delayed_energy_memory/terminal_candidate.json"
+        ],
+        "deadline_s": 300,
+        "duration_s": 18.037500263075344,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/tmp/carnot-8143-validation-mqwclko_/sealed_logs/cold_replay-60e19b16f00392faa92eee8736b98d3b4b3056c06e5469c4fda0a22733891f6a.log",
+        "log_sha256": "sha256:60e19b16f00392faa92eee8736b98d3b4b3056c06e5469c4fda0a22733891f6a",
+        "name": "cold_replay",
+        "normal_exit": true,
+        "output_tail": "[exp8143] phase=start completed=0 pending=0\n[exp8143] phase=cold_seed_complete completed=1 pending=19\n[exp8143] phase=cold_seed_complete completed=2 pending=18\n[exp8143] phase=cold_seed_complete completed=3 pending=17\n[exp8143] phase=cold_seed_complete completed=4 pending=16\n[exp8143] phase=cold_seed_complete completed=5 pending=15\n[exp8143] phase=cold_seed_complete completed=6 pending=14\n[exp8143] phase=cold_seed_complete completed=7 pending=13\n[exp8143] phase=cold_seed_complete completed=8 pending=12\n[exp8143] phase=cold_seed_complete completed=9 pending=11\n[exp8143] phase=cold_seed_complete completed=10 pending=10\n[exp8143] phase=cold_seed_complete completed=11 pending=9\n[exp8143] phase=cold_seed_complete completed=12 pending=8\n[exp8143] phase=cold_seed_complete completed=13 pending=7\n[exp8143] phase=cold_seed_complete completed=14 pending=6\n[exp8143] phase=cold_seed_complete completed=15 pending=5\n[exp8143] phase=cold_seed_complete completed=16 pending=4\n[exp8143] phase=cold_seed_complete completed=17 pending=3\n[exp8143] phase=cold_seed_complete completed=18 pending=2\n[exp8143] phase=cold_seed_complete completed=19 pending=1\n[exp8143] phase=cold_seed_complete completed=20 pending=0\n[exp8143] phase=replay_passed completed=0 pending=0\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8143_v704_delayed_energy_memory/terminal_candidate.json"
+        ],
+        "classification": "required",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8143_v704_delayed_energy_memory/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8143_v704_delayed_energy_memory/terminal_candidate.json"
+        ],
+        "deadline_s": 300,
+        "duration_s": 14.149053974077106,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/tmp/carnot-8143-validation-mqwclko_/sealed_logs/adversarial_verify-591c1d7e7de5c6a9b5c5ac0aff2d853560ee4e20156cc92add41df4b298b5909.log",
+        "log_sha256": "sha256:591c1d7e7de5c6a9b5c5ac0aff2d853560ee4e20156cc92add41df4b298b5909",
+        "name": "adversarial_verify",
+        "normal_exit": true,
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8143_v704_delayed_energy_memory/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8143,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_trajectory_complete_audit_pending\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8143_v704_delayed_energy_memory/terminal_candidate.json"
+        ],
+        "classification": "required",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8143_v704_delayed_energy_memory/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8143_v704_delayed_energy_memory/terminal_candidate.json"
+        ],
+        "deadline_s": 300,
+        "duration_s": 0.9168281540041789,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/tmp/carnot-8143-validation-mqwclko_/sealed_logs/strict_row_lint-ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_row_lint",
+        "normal_exit": true,
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      }
+    ],
+    "passed": true
+  }
+}

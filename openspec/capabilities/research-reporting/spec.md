@@ -93106,3 +93106,37 @@ missing component operands, independent board mutations, frozen natural base
 logits, guarded precision, normal CLI exits and cold replay drift. The earlier
 repository-health invocation is retained separately when owned validation is
 renewed; a failed health observation grants no owned validation credit.
+
+## REQ-REPORT-8149: Terminal V704 accounting with independent branch evidence
+
+Exp8149 SHALL bind the fourteen complete Exp8136–Exp8149 dictionaries to the
+visible table, machine JSON, canonical digest and immutable activation snapshots.
+It SHALL preserve producer verdicts, unpublished conductor statuses and missing
+operands separately. Missing, retired or unchanged external scientific inputs
+terminate complete_blocked_<check>, never partial. Failed or flagged producers
+remain excluded from scientific benefits. Accounting completion is separate from
+science readiness. No model loads or generation are permitted; current MODEL_SPECS
+and call_ledger are empty and historical identities stay in cited provenance.
+Each prior failure SHALL be compared with its authentic producer verdict or exact
+conductor status. Environmental absence SHALL retire no new method family.
+Freeze owned validation commands before reductions. Require private CLI execution
+outside the checkout without PYTHONPATH, E2E-018, consumer tests, Ruff, strict
+mypy, scoped spec references and 100 percent added statement coverage. Preserve
+normal exits, durations and log hashes. Independently cold-reduce saved primitives
+and run unchanged adversarial and strict verdict-row validators before atomic
+primary_publication. Owned failure disqualifies readiness. Keep repository-health
+failures separate. The conductor owns ops and traceability reconciliation.
+
+### SCENARIO-REPORT-8149-MIXED
+
+Given disqualified source qualification, missing source tasks, supported null
+learning and bounded service measurements, all fourteen task dispositions remain
+visible. H1 is blocked; H2 can be a valid null; service and each board obligation
+keep their own limits. Completion cannot produce independent generalization.
+
+### SCENARIO-REPORT-8149-CUSTODY
+
+Private success, missing-input and disqualified-source routes exit normally.
+Prompt or table mutation prevents activation. Cold replay rejects changed saved
+rows, reduction claims, code, validation logs and source bytes. Prior unpublished
+honest_verdict remains explicitly missing alongside its exact conductor status.
