@@ -2,6 +2,34 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8143: Publish owned-validated historical learning trajectories
+
+Freeze owned argv before measurement; run scoped units/consumers, E2E-015/019,
+private outside-checkout CLI success/block/mutation/cold replay, Ruff, strict
+mypy,100 percent added statement coverage and scoped spec coverage. Run the full
+Python suite once as separate repository health. Unmodified adversarial and strict
+row validators must exit normally. Keep validation files outside live results.
+Publish only checked bytes through primary_publication; preserve failed primaries.
+External failure is complete_blocked with exact operand; owned failure disqualifies
+and zeros readiness. A complete causal null may export trajectory readiness1.
+No LLM loads: MODEL_SPECS=[], no_model_load, zero counters and empty call ledger.
+Historical model identity stays cited; small residual heads have trained_head_specs.
+Keep per-source rows, admission/learning/lost rows, head/state/retention manifests,
+hashes and real phase counts. Both generalization scores remain0; the later audit
+decides benefit. The conductor owns status/changelog/BMAD reconciliation.
+
+### SCENARIO-REPORT-8143: Terminal evidence and mutation rejection
+
+Private circular fixtures grant zero natural evidence. Missing sources keep
+original slots and exclusion masks; seeds add no independent sources. Independently
+rebuild reductions and readiness, reject transcript/aggregate/source/code mutations,
+and retain normal exit/duration/log hashes for every frozen owned command.
+
+REQ-REPORT-8143 implementation: `carnot.reporting.delayed_energy_execution_8143`
+and the script-path CLI freeze scoped checks, preserve historical primaries,
+retain private validation receipts and publish only independently replayed bytes.
+The tests cover causal state, external gates, real restart and terminal mutations.
+
 ## REQ-REPORT-8137: Publish a validated no-model source protocol
 
 Exp8137 SHALL publish primitive source rows, frozen capture requests, permission

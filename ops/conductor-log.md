@@ -19515,3 +19515,41 @@ code |
 | 2026-10-04 23:23 UTC | Train calibrated energy decisions with equal-infor | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8139-fit-evidence-capture) |
 | 2026-10-04 23:23 UTC | Capture reserved Qwen evidence after every decisio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8140-evidence-energy-fit) |
 | 2026-10-04 23:23 UTC | Independently measure evidence-linked calibration | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8141-reserved-evidence-capture) |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_add_variant_denominators_from_value age-week 5: OPEN 35  |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_finite_float age-week 5: OPEN 35 days: SILENT_NON_FIRING |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_control_null_metric age-week 5: OPEN 35 day |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_positive_control_null_claim age-week 5: OPEN 35 days: |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_positive_control_failed_or_unchecked age-week 5: OPEN 35 |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_false_negative_risk age-week 5: OPEN 35 days: SILEN |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6798_csl_causal_safety_byte_audit.json age-week 5: OPEN 35 days: CLAI |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_comparative_claim age-week 5: OPEN 35 days: SILENT_NO |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_ceiling_saturation age-week 5: OPEN 35 days: SILENT |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_metric_from_top_or_pass_rates age-week 5: OPEN 35 days:  |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_metric_items_from_top_or_pass_rates age-week 5: OPEN 35  |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_degenerate_separation age-week 5: OPEN 35 days: SIL |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_control_arm_key age-week 5: OPEN 35 days: SILENT_NON_ |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_documented_identical_controls age-week 5: OPEN 35 days:  |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6813_selective_priority_arbiter_ab.json age-week 5: OPEN 35 days: CLA |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_arm_numeric_value age-week 5: OPEN 35 days: SILENT_NON_F |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_passing_positive_control_key age-week 5: OPEN 35 days: S |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_legitimate_pair age-week 5: OPEN 35 days: SILENT_NON_FIR |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_declared_honest_zero_delta age-week 5: OPEN 35 days:  |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_implausible_perfect age-week 5: OPEN 35 days: SILEN |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_sign_anomaly age-week 5: OPEN 35 days: SILENT_NON_F |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_compute_bound_marker age-week 5: OPEN 35 days: SILEN |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_inference_substrate_text age-week 5: OPEN 35 days: SILEN |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7098_v623_sota_ingestion.json age-week 4: OPEN 28 days: CLAIM_OVERSTA |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7284_v640_commit_prototype.json age-week 3: OPEN 21 days: CLAIM_OVERS |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7298_v641_snapshot_journal.json age-week 3: OPEN 21 days: CLAIM_OVERS |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7468_v654_residual_learner.json age-week 2: OPEN 14 days: CLAIM_OVERS |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_marker_present age-week 2: OPEN 14 days: REAL_BUG o |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7482_v655_importance_anchor.json age-week 2: OPEN 14 days: CLAIM_OVER |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_has_paired_significance age-week 2: OPEN 14 d |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_circular_moat_overclaim age-week 2: OPEN 14 days: S |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_verdict_class_consistency age-week 2: OPEN 14 days: |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_descriptor_key_present age-week 1: OPEN 7 days: REAL_BUG |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_validated_substrate_class_floor age-week 1: OPEN 7 days: |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7817_v679_arc_runner_qualification.json age-week 1: OPEN 7 days: CLAI |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7825_v680_training_runtime.json age-week 1: OPEN 7 days: CLAIM_OVERST |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_claim_text age-week 1: OPEN 7 days: REAL_BUG  |
+| 2026-10-05 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8085_v700_radial_memory_kernel.json age-week 0: OPEN 1 days: CLAIM_OV |

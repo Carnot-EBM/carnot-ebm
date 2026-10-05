@@ -2,6 +2,34 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8143: Execute qualified delayed persistent energy memory
+
+Require Exp8138.learning_protocol_ready_score=1 and exact sealed source slots,
+masks and numerical protocol. Reuse its executable four-arm engine with seeds
+101..120 as repeats. Start from historical Qwen plus zero residual; public slots
+1..64 alone determine geometry. Evaluate original slots65..256 with delay20,
+capacity32, growth64/128/192,16..28 centers and four SGD steps at lr.05/ridge.01.
+Source SHA256 bucket0 admits only; newest64 released update rows require16 rows
+and4 frozen issued errors. Commit before12 unused future admission labels with
+2/class; retain zero-weight growth on rejection and expire incomplete candidates.
+Keep couplings fixed within issuance, preserve pending/optimizer/RNG/used masks,
+checkpoint every32 slots and each opportunity, and never flush the unresolved tail.
+Seal every final head and retention prediction before any retention label opens.
+Report duplicates and effective rank without replacement; stop CPU science at1200s.
+
+### SCENARIO-VERIFY-8143: Custody, causal restart and retention isolation
+
+Test missing/mutated qualification, delayed opaque labels, pending overflow,
+future admission, duplicate/rank reporting, final-head seals and no tail flush.
+Crash a real process at a durable boundary, resume in a fresh process and compare
+all predictions and final states against uninterrupted execution. Cold replay
+rehashes exact sources/code/config and independently reexecutes and reduces rows.
+
+REQ-VERIFY-8143 implementation: `carnot.verify.delayed_energy_memory_8143` wraps
+the qualified Exp8138 engine with a release-only label vault, durable journals,
+original-slot checkpoints and sealed heads/retention. Frozen crash and fresh
+resume commands compare the historical seed101 state with uninterrupted bytes.
+
 ## REQ-VERIFY-8137: Qualify source transport after private seal failure
 
 Reproduce the Exp8124 private PermissionError before repair. Mutable private
