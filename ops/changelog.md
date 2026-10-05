@@ -21467,3 +21467,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-05: Inspect only new live supervisor outcomes for transferable refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8161_v705_arc_supervisor_frontier.json
 - 2026-10-05: Bound durable workload acceleration and preserve each board obligation (⚠️ Blocked) — honest_verdict=complete_blocked_acquisition_composition_ready_score; results/experiment_8162_v705_hardware_workload_boundary.json
 - 2026-10-05: Decide fourteen outcomes and the remaining PRD gaps independently (⚠️ Blocked) — honest_verdict=complete_blocked_required_checks_passed; results/experiment_8163_v705_capstone.json
+- 2026-10-05: Bind fourteen tasks and preserve V705 terminal evidence (⚠️ Blocked) — honest_verdict=complete_blocked_sha256; results/experiment_8164_v706_contract_custody.json
