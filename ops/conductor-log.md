@@ -19569,3 +19569,4 @@ code |
 | 2026-10-05 07:35 UTC | Capture bounded Qwen evidence on fixed fit and tun | OK | 94 passed, 1 warning in 38.45s |
 | 2026-10-05 08:15 UTC | Train calibrated typed decisions from matched sour | OK | 92 passed, 1 warning in 27.33s |
 | 2026-10-05 08:57 UTC | Seal reserved Qwen evidence and frozen predictions | OK | 91 passed, 1 warning in 29.13s |
+| 2026-10-05 09:34 UTC | Independently test evidence-linked calibration and | OK | 87 passed, 1 warning in 102.28s (0:01:42) |
