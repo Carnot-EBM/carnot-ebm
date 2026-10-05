@@ -48987,3 +48987,30 @@ Private tests exercise parser/capture/replay, overlength pairs, invalid quotes,
 timeouts, cutoff, runtime drift, altered heads/prompts, overlapping roles and
 targets opened before prediction seal. Public source and frozen head changes
 fail custody. Predictions contain no human targets and preserve original order.
+
+## REQ-VERIFY-8156: Independent exposed source decision audit
+
+Authenticate immutable reserved calls, predictions, heads, original source roles
+and preserved V704 methods before opening evaluator targets. Reconstruct frozen
+probabilities, typed actions and costs independently; retain every missing mask.
+Join original human targets and independently rebuild targets from retained human
+annotations. Require96 paired sources and12 per class. Load no language model.
+H1 is additive-cubic cost minus radial16 cost. Use10000 source-cluster paired
+bootstrap draws, at least9500 valid, one-sided97.5 percent lower bound above.02,
+five improved sources, no extra false accepts, Brier increase at most.01 and
+no other learned control cost disadvantage above.02. H1/H2 share family alpha.05.
+Report every arm versus scalar and always-escalate controls. Source interventions
+have no target. Intervals are descriptive exposed development; generalization0.
+
+### SCENARIO-VERIFY-8156: Custody, nulls and independent arithmetic
+
+Private join-key, prediction-clock, human-label, missing-row and aggregate
+mutations SHALL fail independent replay. Positive private detection is circular.
+A supported null is complete; absent qualified producers terminate blocked with
+exact failed operands. Preserve original assertions and historical primaries.
+
+REQ-VERIFY-8156 implementation: `python/carnot/verify/decision_audit_8156.py` and
+`scripts/experiments/experiment_8156_v705_decision_audit.py`. Six private tests
+in `tests/python/test_decision_audit_8156.py` cover all315 added statements.
+The measured exposed panel retains original source masks and target-free source
+interventions. Operational reconciliation remains assigned to the conductor.

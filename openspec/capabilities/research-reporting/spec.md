@@ -93293,3 +93293,26 @@ Implementation: `python/carnot/verify/reserved_evidence_capture_8155.py` and its
 thin script-path CLI bind original role masks, frozen heads, primitive calls,
 sealed probabilities/actions and normal validation receipts. Private tests use
 temporary paths. Operational reconciliation remains assigned to the conductor.
+
+## REQ-REPORT-8156: Publish independently reconstructed decision evidence
+
+Exp8156 SHALL publish one terminal primary through primary_publication after
+frozen scoped tests,100 percent added statement coverage, Ruff, strict mypy,
+explicit-path spec coverage and private success/block/tamper/cold replay. Run
+the full Python suite once as separate repository health. Unmodified adversarial
+verification and strict row lint SHALL exit normally. Owned failures disqualify
+and zero audit readiness. Bind primitive inputs, code, config, clocks and logs.
+Current model calls are0; imported provenance and small heads are separate.
+
+### SCENARIO-REPORT-8156: External script-path and terminal validation
+
+The CLI SHALL work outside checkout without PYTHONPATH. Replay SHALL reconstruct
+headlines from primitives and reject drift, labels opened before prediction
+sealing and changed validation logs. Readiness and H1 benefit are separate.
+The conductor owns ops/status, changelog and traceability reconciliation.
+
+REQ-REPORT-8156 implementation: `python/carnot/verify/decision_audit_8156.py` and
+`scripts/experiments/experiment_8156_v705_decision_audit.py`. Six private tests
+in `tests/python/test_decision_audit_8156.py` cover all315 added statements.
+The measured exposed panel retains original source masks and target-free source
+interventions. Operational reconciliation remains assigned to the conductor.
