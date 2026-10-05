@@ -19583,3 +19583,6 @@ code |
 | 2026-10-05 16:33 UTC | Qualify release-aware learning with complete negat | OK | 105 passed, 1 warning in 565.42s (0:09:25) |
 | 2026-10-05 17:05 UTC | Freeze lossless sentence evidence and a matched de | OK | 92 passed, 1 warning in 21.05s |
 | 2026-10-05 18:06 UTC | Capture bounded Qwen sentence evidence on fit and  | OK | 99 passed, 1 warning in 34.11s |
+| 2026-10-05 18:10 UTC | Train a calibrated typed energy selector from loca | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8167-fit-sentence-capture.fit_trainable_score (actual=0 == expected=1) |
+| 2026-10-05 18:12 UTC | Seal reserved sentence evidence and frozen typed p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8168-sentence-energy-fit) |
+| 2026-10-05 18:12 UTC | Test sentence evidence benefit with source-level u | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8169-reserved-sentence-capture) |
