@@ -48762,3 +48762,17 @@ REQ-VERIFY-8144 implementation: the independent `learning_audit_8144` reader
 reconstructs scalar gradients, installed centers, admission, pending clocks,
 RNG state, sealed retention predictions and interrupted/resumed parity.
 Its tests retain missing slots and distinguish oracle controls from natural data.
+# REQ-VERIFY-8147: Independently validate renewed supervisor reader custody
+
+Freeze scoped unit, consumer, E2E-017, CLI, Ruff, strict mypy, scoped spec and
+100 percent added statement coverage commands before measuring. Keep all
+mutable tests private. Validate final bytes with unchanged adversarial and
+strict row readers and a cold script-path process outside the checkout.
+
+## SCENARIO-VERIFY-8147-COLD
+
+Recompute original fixture assertions from sealed source events and independently
+reduce natural primitive rows. Reject missing operands, mutated assertions,
+invented event counts, changed code/config bytes and readiness without current
+normal validation and private cold replay. Preserve repository-health failures
+separately from owned reader qualification.

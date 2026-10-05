@@ -93022,3 +93022,32 @@ REQ-REPORT-8144 implementation: `carnot.verify.learning_audit_8144`,
 `tests/python/test_learning_audit_8144.py` covers independent equations,
 source reductions, custody mutations and private CLI terminal publication.
 The primary carries exact frozen validation and new-code coverage receipts.
+# REQ-REPORT-8147: Renew reader custody independently of failed receipts
+
+Exp8147 SHALL preserve the exact Exp8120/8133 primary and manifest bytes and
+their failed expectations. Authenticate the Exp8107 event frontier as history,
+without requiring an old validation manifest as current readiness authority.
+Freeze current code and owned validation argv before the reader runs. Qualify
+sealed primitive supported, missing, mutation and empty routes through E2E-017,
+including private script-path execution outside the checkout without PYTHONPATH.
+Reader readiness requires normal current validation and private cold replay.
+Scan only unseen event identities after the authenticated frontier within120s.
+Retain raw supervisor outcomes, level-up distances and unredirected stagnations.
+Zero authentic new outcomes terminate complete_null_no_new_outcomes. Missing
+history blocks with exact operands; owned failures disqualify and zero readiness.
+Models, games, live policy changes, submissions and new solve credit remain zero.
+Priority recommendations require30 resolved firings across5 games, matched
+within-game comparisons and held-game checks. Smaller samples stay descriptive.
+The conductor owns ops, changelog and traceability reconciliation.
+
+## SCENARIO-REPORT-8147-CUSTODY
+
+Failed historical expectations remain unchanged while the new receipt binds
+current code, manifest, original fixture assertions and primitive transcript.
+Missing frontier or history bytes cannot be replaced by invented empty events.
+
+## SCENARIO-REPORT-8147-FRONTIER
+
+Exclude duplicate or previously seen IDs and events before the frontier clock.
+Reader conformance is circular_positive; it grants no natural benefit. Cold
+replay rejects deleted rows, changed controls, code, manifests and readiness.
