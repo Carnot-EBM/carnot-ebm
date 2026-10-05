@@ -49280,3 +49280,20 @@ Private E2E-016 tests cover future labels, reused admission, missing slots,
 seed duplication, rejected heads and rehashed headline tampering. Original
 assertions and historical methods remain unchanged. New statements have100
 percent coverage. Natural exposure changes probabilities without decision gain.
+# REQ-VERIFY-8173: Replay only authenticated measured acquisition operands
+
+Authenticate Exp8160 and Exp8159 primary, primitive, source-mask, transcript,
+validation-log and original code bytes against immutable versioned hashes.
+No LLM loads: MODEL_SPECS=[] and no_model_load. Imported model provenance and
+original measurement durations SHALL remain separate from repair validation.
+Missing measured acquisition, warmup, startup or service operands stay unknown;
+a qualified harness SHALL NOT recover an absent scientific comparison.
+Generalization and learning-benefit scores remain zero. Freeze the next service
+protocol to distinct complete-request repetitions joined on original source,
+explicit output/decision differences, and no generated-byte equality condition.
+
+## SCENARIO-VERIFY-8173-CUSTODY
+
+Private tests SHALL reject missing timing, changed upstream bytes, missing
+external inputs and rehashed receipt tampering. Cold replay SHALL independently
+recompute headlines and retain Exp8160's original disqualification.

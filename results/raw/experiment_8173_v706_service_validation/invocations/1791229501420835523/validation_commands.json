@@ -1,0 +1,190 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.reporting.service_validation_8173",
+        "carnot.reporting.shared_acquisition_execution_8160"
+      ],
+      "name": "worktree_imports",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8173-validation-mixjnl3u/focused",
+        "tests/python/test_service_validation_8173.py",
+        "tests/python/test_shared_acquisition_8160.py",
+        "tests/python/test_durable_batch_8159.py::test_crashes_deduplication",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "explicit_tests",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8173-validation-mixjnl3u/.coverage",
+        "--include=*/reporting/service_validation_8173.py,*/reporting/shared_acquisition_execution_8160.py,*/scripts/experiments/experiment_8173_v706_service_validation.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8173-validation-mixjnl3u/coverage",
+        "tests/python/test_service_validation_8173.py",
+        "tests/python/test_shared_acquisition_8160.py",
+        "tests/python/test_durable_batch_8159.py::test_crashes_deduplication",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "explicit_tests_and_changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8173-validation-mixjnl3u/.coverage",
+        "--include=*/reporting/service_validation_8173.py,*/reporting/shared_acquisition_execution_8160.py,*/scripts/experiments/experiment_8173_v706_service_validation.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/service_validation_8173.py",
+        "python/carnot/reporting/shared_acquisition_execution_8160.py",
+        "scripts/experiments/experiment_8173_v706_service_validation.py",
+        "tests/python/test_service_validation_8173.py",
+        "tests/python/test_shared_acquisition_8160.py",
+        "tests/python/test_durable_batch_8159.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/service_validation_8173.py",
+        "python/carnot/reporting/shared_acquisition_execution_8160.py",
+        "scripts/experiments/experiment_8173_v706_service_validation.py",
+        "tests/python/test_service_validation_8173.py",
+        "tests/python/test_shared_acquisition_8160.py",
+        "tests/python/test_durable_batch_8159.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/reporting/service_validation_8173.py",
+        "python/carnot/reporting/shared_acquisition_execution_8160.py",
+        "--strict",
+        "--follow-imports=silent"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_service_validation_8173.py",
+        "tests/python/test_shared_acquisition_8160.py",
+        "tests/python/test_durable_batch_8159.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 600
+    }
+  ],
+  "frozen_before_measurement": true,
+  "protocol": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v706-service-validation-protocol.json",
+    "sha256": "sha256:b8dff0065aaa629c39aab92b24f7adeaaf80fc740ffb330f81fe9fa13a7f47dc"
+  },
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "name": "repository_health_once",
+    "scope": "separate_repository_health",
+    "timeout_s": 1800
+  },
+  "terminal": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8173_v706_service_validation.py",
+        "--cold-replay",
+        "/tmp/carnot-8173-validation-mixjnl3u/experiment_8173_v706_service_validation.json"
+      ],
+      "name": "cold_replay",
+      "scope": "terminal",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-8173-validation-mixjnl3u/experiment_8173_v706_service_validation.json"
+      ],
+      "name": "adversarial",
+      "scope": "terminal",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-8173-validation-mixjnl3u/experiment_8173_v706_service_validation.json"
+      ],
+      "name": "strict_rows",
+      "scope": "terminal",
+      "timeout_s": 300
+    }
+  ]
+}

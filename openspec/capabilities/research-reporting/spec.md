@@ -93602,3 +93602,27 @@ Ten private tests cover source reductions, direct CLI success, external blocks,
 tamper rejection and cold replay. All177 new module and CLI statements have100
 percent coverage. Frozen commands retain separate full-suite health evidence.
 The conductor owns ops and traceability reconciliation.
+# REQ-REPORT-8173: Qualify service argv without rewriting measurement history
+
+The owned Exp8160 runner SHALL retain pytest node selectors only for pytest.
+Ruff, strict mypy and explicit-path spec checks SHALL receive real file paths.
+Exp8173 SHALL freeze commands, retain original assertions, require normal owned
+validation and direct private CLI exits, and cover all added statements.
+Run the complete Python suite once as separate repository health. Publish through
+primary_publication after unchanged adversarial and strict row checks pass.
+Keep service_protocol_ready_score separate from composition_replay_ready_score.
+Preserve historical primaries, original code hashes and original durations.
+Owned failure means disqualified/readiness zero; external failures mean terminal
+blocked with exact gate operands. The conductor owns ops and traceability updates.
+
+## SCENARIO-REPORT-8173-ARGV
+
+Reproduce Ruff's original node-selector failure. Corrected static argv SHALL
+use the test file while pytest retains test_crashes_deduplication. An invalid
+static path SHALL fail normally and cannot earn readiness.
+
+## SCENARIO-REPORT-8173-CLI
+
+Direct CLI success, external block, tampered receipt and cold replay SHALL run
+outside checkout without PYTHONPATH. Native durability checks SHALL load the
+real extension and reopen durable state. Include private E2E-003/004/015/019.

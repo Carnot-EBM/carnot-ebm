@@ -34,11 +34,7 @@ def validation_plan(private: Path) -> list[CommandSpec]:
     )
     result = []
     for command in commands:
-        # Static tools read files; only pytest understands a test node selector.
-        args = command.argv
-        if command.name in {"ruff_check", "ruff_format", "scoped_spec_coverage"}:
-            args = tuple(a.split("::", 1)[0] for a in args)
-        argv = tuple(a + ",*/" + e.CLI if a.startswith("--include=") else a for a in args)
+        argv = tuple(a + ",*/" + e.CLI if a.startswith("--include=") else a for a in command.argv)
         if command.name == "changed_module_mypy":
             argv += ("--strict", "--follow-imports=silent")
         result.append(CommandSpec(command.name, argv, command.scope, 600))
