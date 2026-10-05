@@ -92917,3 +92917,52 @@ REQ-REPORT-8138 implementation: `carnot.reporting.learning_protocol_execution_81
 and `scripts/experiments/experiment_8138_v704_learning_protocol.py` freeze argv,
 keep validation logs private, and publish through the checked primary writer.
 Legacy V701 roadmap-reader failures remain separate repository-health evidence.
+
+## REQ-REPORT-8144: Independently audit sealed later learning and retention
+
+Require Exp8143.learning_trajectory_ready_score==1 and authenticated primitive
+states, predictions and reserved labels. An unchanged missing or retired input
+terminates complete_blocked_<operand>, with exact expected and observed fields.
+Owned failure terminates complete_disqualified_owned_validation with readiness0.
+Publish only after frozen scoped unit, consumer, E2E-015/019, lint, strict type,
+100 percent new statement coverage and terminal validators exit normally.
+Run the full Python suite once as separate repository-health evidence.
+Current MODEL_SPECS=[] and no_model_load distinguish imported Qwen provenance.
+Save independent primitive rows, transcripts, source/code/config byte hashes,
+phase spans, normal-exit validation receipts and a bound terminal sidecar.
+Expose learning_audit_ready_score separately from h2_development_signal_score.
+Exposed development confers zero external generalization or generalized learning
+credit. Never claim lifelong safety or convex regret. Preserve failed history.
+The conductor owns ops/status, ops/changelog and BMAD reconciliation.
+
+### SCENARIO-REPORT-8144-1: Private script-path publication and replay
+
+Outside the checkout with PYTHONPATH removed, a private circular fixture
+publishes, cold-replays, and rejects changed aggregates, missing state,
+changed labels and malicious causal order. External blocks remain terminal.
+Original assertions and historical primaries remain unchanged.
+
+## REQ-REPORT-8144-H2: Source-level benefit requires later loss reduction
+
+Average seeds inside each source before moving original-slot block resampling.
+Retain missing masks. Use primary16, sensitivity8/32, 10000 draws, at least9500
+valid draws and one-sided97.5 percent bounds. Require128 complete later sources,
+8/class and8 nonoverlapping original-slot blocks. H2 compares error-center with
+fixed-public-center typed cost. Benefit requires lower gain bound>.02, at least5
+improved sources, zero extra false accepts, Brier increase<=.01 and no other
+matched adaptive control advantage>.02 cost. Retention requires48 sources,
+8/class, cost increase<=.02, Brier increase<=.01 and zero extra false accepts.
+A discriminating private positive control must pass before interpreting a null.
+Insufficient support is a limitation, never evidence that self-learning fails.
+
+### SCENARIO-REPORT-8144-2: Seeds, masks and discriminating controls
+
+Duplicating seeds adds no independent sources. Missing slots keep their original
+positions. A synthetic real prediction improvement passes the same reduction
+and gates; identical predictions fail benefit while a supported null can be ready.
+
+REQ-REPORT-8144 implementation: `carnot.verify.learning_audit_8144`,
+`carnot.reporting.learning_audit_execution_8144` and the thin Exp8144 CLI.
+`tests/python/test_learning_audit_8144.py` covers independent equations,
+source reductions, custody mutations and private CLI terminal publication.
+The primary carries exact frozen validation and new-code coverage receipts.

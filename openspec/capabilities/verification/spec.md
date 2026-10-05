@@ -48673,3 +48673,33 @@ historical stream primitives and executes the declared private event protocol.
 The independent scalar/event reference, flushed phase journal, content-addressed
 state records and real child-crash recovery are covered by18 private tests.
 Owned statement coverage is100 percent across the runner, publication wrapper and CLI.
+
+## REQ-VERIFY-8144: Rebuild causal heads without producer transitions
+
+Independently replay issue, durable commit, candidate, release and admission
+from primitive events. Scalar gradients, public geometry, center selection and
+admission cost/Brier gates reconstruct final heads. Validate all candidate-grid
+and installed predictions; reject future labels, reused admission and tail flush.
+Check pending clocks, installed/effective centers, overflow, prediction changes,
+accepted/rejected opportunities and decision headroom. Independently seal all
+retention predictions and final reconstructed heads before reserved label access.
+Rehash original label bytes, states and restart checkpoints. Cold reconstruction
+and historical interrupted/resumed suffixes must agree with the uninterrupted
+trajectory. Current audit does not train a new deployed model.
+
+### SCENARIO-VERIFY-8144-1: Causal and recovery mutations
+
+Missing state, reordered events, changed release labels, changed prediction grids,
+forged candidate gradients, reused admissions and extra tail releases fail the
+independent reader. Changed retention labels fail custody before scoring. Saved
+reconstructed predictions precede reserved label decoding. Cold replay rebuilds
+source reductions rather than accepting producer summaries.
+
+REQ-VERIFY-8144 also checks the reserved public traversal, final RNG state and
+exact issued-row count. An authenticated primitive that fails owned equations
+records the failure and terminates disqualified, rather than losing its primary.
+
+REQ-VERIFY-8144 implementation: the independent `learning_audit_8144` reader
+reconstructs scalar gradients, installed centers, admission, pending clocks,
+RNG state, sealed retention predictions and interrupted/resumed parity.
+Its tests retain missing slots and distinguish oracle controls from natural data.
