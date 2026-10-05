@@ -19587,3 +19587,4 @@ code |
 | 2026-10-05 18:12 UTC | Seal reserved sentence evidence and frozen typed p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8168-sentence-energy-fit) |
 | 2026-10-05 18:12 UTC | Test sentence evidence benefit with source-level u | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8169-reserved-sentence-capture) |
 | 2026-10-05 19:01 UTC | Measure continuous energy learning while future de | OK | 89 passed, 1 warning in 245.29s (0:04:05) |
+| 2026-10-05 19:24 UTC | Audit later decision benefit and independent reten | OK | 91 passed, 1 warning in 38.50s |
