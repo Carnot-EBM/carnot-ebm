@@ -93204,3 +93204,27 @@ source consumers and E2E-015/016/019 remain exercised. Added statements reach
 100 percent coverage; scoped tests, Ruff, strict mypy and explicit spec checks pass.
 Cold replay independently rebuilds counts and rejects altered source, method,
 code, log, prompt, mask or reduction bytes. Unrelated repository health stays separate.
+
+## REQ-REPORT-8152: Publish sealed admission-horizon methods
+
+Exp8152 SHALL preserve historical primaries and publish one terminal primary
+through primary_publication only after normal owned validation. Freeze argv
+before measurement; retain exits, duration and log hashes. Require scoped tests,
+100 percent added statement coverage, Ruff check/format, strict mypy, explicit
+spec references, private E2E success/block/tamper/cold replay, unchanged adversarial
+and strict row validators. Full-suite health is recorded separately. Owned
+failure disqualifies and forces readiness0. No model calls or natural benefit.
+
+### SCENARIO-REPORT-8152-CLI
+
+Run script paths outside checkout without PYTHONPATH. Keep all test mutations
+private. Readiness1 requires original historical custody and scalar fixture
+conformance; fixtures have oracle status and both generalization scores0.
+Primitive rows preserve units, denominators, missing masks, source/code/config
+hashes, event references and immutable hashed protocol. No external publication.
+
+REQ-REPORT-8152 implementation: `carnot.reporting.admission_horizon_execution_8152`
+and the thin Exp8152 script freeze commands, retain private validation logs,
+and publish through the existing primary publication helper. Historical code
+uses immutable Exp8111 snapshots and the versioned V702/V705 protocol files.
+Natural benefit and independent generalization scores remain zero.

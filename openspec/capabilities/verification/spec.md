@@ -48867,3 +48867,39 @@ The five original failed consumer routes pass against the pinned method document
 Private method mutation and unknown identity fail. Exact prompt, source shard,
 UTF-8 offset, malformed probability and whole-source mask assertions remain.
 Tampered primitives, code, logs and reduction claims fail cold replay.
+
+# REQ-VERIFY-8152: Release-aware finite learning horizon
+
+Seal V705 before new outcomes. Keep delay20, capacity32, one-use12 future
+admission labels with two per class, four SGD steps, rate.05, ridge.01 and all
+V702 safety guards. Commit/grow at64 and144, expire at144 and224. Process issue,
+release, admission, expiry, then commitment. Use opportunity-indexed public
+centers and equal16-to24 budgets. Frozen Qwen remains a fourth arm. No LLM loads.
+Authenticate original256 stream and64 retention slots and missing masks directly
+from qualified historical captures; require224/48 usable. Bind immutable methods.
+
+## SCENARIO-VERIFY-8152-REFERENCE
+
+Independent scalar events qualify positive, rejected, late-label, overflow and
+crash/resume fixtures. A positive fixture installs by208 and issues at least32
+usable later predictions from changed state. Preserve a fixture with the old
+expiry failure and reconstruct V704 raw commitment/expiry/release/install/issue
+slots without retraining or new natural outcomes. Fixture credit is circular.
+
+## SCENARIO-VERIFY-8152-CUSTODY
+
+Missing, retired or gate-blocked historical operands yield terminal
+complete_blocked_<actual_check> with exact expected/observed operands. A changed
+protocol, source, transcript, grid or reduction fails cold replay even if its
+headline checksum was updated. Seal exact H2 and small-head configuration.
+
+REQ-VERIFY-8152 historical code custody SHALL bind Exp8111's existing immutable
+source snapshots, rather than compare old producer hashes against corrected
+mutable checkout files. Exp8102 capture primitives are authenticated directly
+against original stream/retention role manifests. This reuses no Exp8151 result.
+
+REQ-VERIFY-8152 implementation: `carnot.verify.admission_horizon_methods_8152`
+uses the qualified trainer and guards with a separate scalar event interpreter.
+`tests/python/test_admission_horizon_methods_8152.py` retains private positive,
+rejected, late-label, overflow, missing-mask, crash/resume and old-expiry controls.
+The terminal Exp8152 artifact records actual custody and qualification receipts.

@@ -6465,3 +6465,23 @@ deferred under the existing retirement. No literature-service access gates scien
   No sufficiency encoder, fitted calibration or risk-coverage score is measured.
   Source: https://arxiv.org/html/2605.03534 . Primary HTML bytes are archived with
   hashes below Exp8137 raw evidence. Citation-service failure cannot gate science.
+
+## 20261005 — Exp8152 release-aware admission horizon
+
+Read the primary methods in [delayed reduction](https://arxiv.org/html/2602.02634v1)
+sections 3/5 and [capacity-constrained feedback](https://arxiv.org/html/2606.11711v1)
+section 4. They motivate explicit prediction/release clocks and lost-feedback
+accounting. Our oldest eviction and nonlinear heads inherit no convex regret bound.
+[KAC](https://arxiv.org/html/2503.21076v1) sections 3.3/3.4 motivate Gaussian
+capacity controls and retention. Its channel-wise classifier differs from our
+multivariate residual head. [SURE-RAG](https://arxiv.org/html/2605.03534v1)
+sections III/IV separate evidence sufficiency from confidence and selective risk;
+our binary historical labels do not establish semantic sufficiency.
+
+The four-method map, exact H2 plan and head parameters are sealed in
+`openspec/change-proposals/v705-admission-horizon-protocol.json`. Primary HTML
+snapshots and serial fetch receipts are under Exp8152 raw evidence. One bounded
+Semantic Scholar sweep returned HTTP429 and no new sources; no fan-out followed.
+V704 admissions at248 leave no resolved later predictions. V705 private fixtures
+qualify earlier installation and changed future exposure only. Natural benefit
+and independent generalization remain unqualified.
