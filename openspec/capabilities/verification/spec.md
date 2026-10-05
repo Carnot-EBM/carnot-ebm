@@ -49344,3 +49344,25 @@ Exp8173's immutable deployment snapshot, freezes24 original sources and records
 separate acquisitions through the qualified batch scorer and durable store.
 Private tests cover source custody, parsing loss, censorship, output differences,
 loaded native scoring, store replay and rehashed timing/decision mutations.
+
+## REQ-VERIFY-8175: Validate the added supervisor delta adapter
+
+Freeze owned argv before measurement. Preserve original reader assertions and
+private fixtures outside results. Require100 percent added statement coverage,
+scoped pytest, Ruff check/format, strict mypy and explicit-file spec coverage.
+Run the full Python suite once as separate repository health. Direct script
+success, external block, tamper and cold replay run outside checkout without
+PYTHONPATH. Recompute headlines and rehash source/code/config/validation logs;
+run unchanged adversarial_verify and strict verdict_row_consistency_lint before
+checked-primary publication. Required children must exit normally.
+
+### SCENARIO-VERIFY-8175-COLD
+
+Private tests exercise missing sources, changed frontier and reader bytes,
+duplicate events, old clocks, forged counters, changed shards and validation
+logs. Cold replay rejects tampering while historical primaries remain intact.
+
+Implementation: `carnot.reporting.arc_supervisor_v706_delta` and
+`scripts/experiments/experiment_8175_v706_arc_supervisor_delta.py`; assertions in
+`tests/python/test_arc_supervisor_delta_8175.py`. Validation is recorded in the
+hash-bound Exp8175 primary and terminal sidecar.

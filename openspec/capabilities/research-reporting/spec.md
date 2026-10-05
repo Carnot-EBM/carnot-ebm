@@ -93670,3 +93670,30 @@ model calls. Missing recovery operands cannot earn live readiness.
 Exercise the actual inherited live-capture adapter with private transport; it
 must return after all durable rows rather than lose metadata to a missing key.
 Resume must preserve original clocks, ledger, input hashes and execution code.
+
+## REQ-REPORT-8175: Read only the qualified supervisor outcome delta
+
+Exp8175 SHALL authenticate Exp8161 primary, terminal qualification, reader code
+and receipt inventory against immutable hashes before examining unseen live
+E3AgentPolicy/make_carnot_agent supervisor events after its finished_at frontier.
+Reuse the qualified reader. Preserve historical primaries and imported model
+provenance. Load no model: MODEL_SPECS=[], no_model_load, current calls0.
+An empty authenticated delta completes complete_null_no_new_outcomes. External
+missing or changed operands complete blocked with exact gate values. Owned
+failures disqualify and zero readiness. Report per-game fired/helped observations
+and unresolved stagnations without causal benefit, new solves or policy changes.
+No arm priority recommendation before30 resolved outcomes across5 games, matched
+within-game conditions and reserved held-game evidence. Both benefit scores stay0.
+Publish only checked bytes through primary_publication. The conductor owns ops
+and BMAD reconciliation.
+
+### SCENARIO-REPORT-8175-FRONTIER
+
+Private duplicate events, prior identities and pre-frontier timestamps add no
+live credit. Missing inputs and changed reader/frontier hashes block with exact
+operands. New qualified outcomes remain descriptive below the30/5 threshold.
+
+Implementation: `carnot.reporting.arc_supervisor_v706_delta` and
+`scripts/experiments/experiment_8175_v706_arc_supervisor_delta.py`; assertions in
+`tests/python/test_arc_supervisor_delta_8175.py`. Validation is recorded in the
+hash-bound Exp8175 primary and terminal sidecar.
