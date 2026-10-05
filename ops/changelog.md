@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-05 — Operational retrospective for milestone 2026.10.705
+
+- Wrote `results/operational_retro_2026_10_705.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.705`. Authoritative disk-mtime fallback data records 12 experiments completed (3 compute-bound, 9 synthesis-only) across 127.9 total wall-time minutes (average 11 minutes per experiment).
+- Execution wall time was led by synthesis task 'Measure complete atomic batch transactions through Python and Rust' (58.31 minutes), followed by compute-bound tasks 'Measure current Qwen acquisition plus matched durable service branches' (32.7 minutes), 'Capture bounded Qwen evidence on fixed fit and tune sources' (13.89 minutes), and 'Seal reserved Qwen evidence and frozen predictions' (9.21 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs; `gpu_idle_on_compute_bound_tasks` is false as no compute-bound idle anomalies or multi-model parallel dispatch requirements were present.
+- Recommended operational improvements: profile cross-language atomic batch transaction latency, instrument experiment runners with intra-task sub-phase timers, and persist structured lifecycle timestamps directly into result receipts.
+
 ## 2026-10-03 — Exp8084 private seal destination repair
 
 - Scope the existing-terminal guard to publication so an existing default
