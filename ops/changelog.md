@@ -21429,3 +21429,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-05: Learn persistent energy centers from correctly delayed feedback (⚠️ Research Finding) — honest_verdict=complete_null_trajectory_complete_audit_pending; results/experiment_8143_v704_delayed_energy_memory.json
 - 2026-10-05: Independently test later learning benefit retention and recovery (⚠️ Research Finding) — honest_verdict=complete_null_no_later_typed_cost_benefit; results/experiment_8144_v704_learning_audit.json
 - 2026-10-05: Measure natural learner transactions through the loaded Rust binding (⚠️ Research Finding) — honest_verdict=complete_null_natural_host_cost_measured_rejection_unavailable; results/experiment_8145_v704_natural_service_cost.json
+- 2026-10-05: Measure complete Qwen acquisition and natural scoring transactions (⚠️ Research Finding) — honest_verdict=complete_null_bounded_live_service_cost; results/experiment_8146_v704_live_service_cost.json
