@@ -21432,3 +21432,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-05: Measure complete Qwen acquisition and natural scoring transactions (⚠️ Research Finding) — honest_verdict=complete_null_bounded_live_service_cost; results/experiment_8146_v704_live_service_cost.json
 - 2026-10-05: Qualify an independent ARC supervisor reader and inspect new outcomes (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8147_v704_arc_reader_renewal.json
 - 2026-10-05: Bound acceleration from natural workloads and preserve board custody (⚠️ Blocked) — honest_verdict=complete_blocked_complete_service_ready_score; results/experiment_8148_v704_hardware_workload_boundary.json
+- 2026-10-05: Decide fourteen outcomes and the remaining PRD gaps independently (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8149_v704_capstone.json
