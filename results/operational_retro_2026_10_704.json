@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.704",
+  "generated_at": "2026-10-05T03:32:12Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 27.9,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure complete Qwen acquisition and natural scoring transactions",
+      "duration_minutes": 13.12,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure natural learner transactions through the loaded Rust binding",
+      "duration_minutes": 6.06,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Decide fourteen outcomes and the remaining PRD gaps independently",
+      "duration_minutes": 4.22,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Learn persistent energy centers from correctly delayed feedback",
+      "duration_minutes": 1.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify delayed learning independently of source capture",
+      "duration_minutes": 1.16,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.704 completed 10 experiments (1 compute-bound, 9 synthesis-only) across 27.9 total wall-time minutes (averaging 3 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was concentrated in the sole compute-bound experiment 'Measure complete Qwen acquisition and natural scoring transactions' (13.12 minutes), followed by synthesis tasks 'Measure natural learner transactions through the loaded Rust binding' (6.06 minutes), 'Decide fourteen outcomes and the remaining PRD gaps independently' (4.22 minutes), 'Learn persistent energy centers from correctly delayed feedback' (1.2 minutes), and 'Qualify delayed learning independently of source capture' (1.16 minutes). Point-in-time GPU monitor polling observed 0% utilization across both NVIDIA GeForce RTX 3090 GPUs with 4MB memory allocated, and locked gpu_idle_on_compute_bound_tasks is false as the compute-bound workload engaged GPU resources during active execution without parallel multi-model dispatch requirements.",
+  "bottlenecks_identified": [
+    "Compute-bound execution in 'Measure complete Qwen acquisition and natural scoring transactions' accounted for 13.12 of the 27.9 total milestone wall-time minutes (47.0%), representing the single largest latency concentration.",
+    "Serial execution across the top three tasks ('Measure complete Qwen acquisition and natural scoring transactions', 'Measure natural learner transactions through the loaded Rust binding', and 'Decide fourteen outcomes and the remaining PRD gaps independently') consumed 23.40 minutes (83.9% of milestone wall time).",
+    "Milestone timing relied on disk-mtime fallback reconstruction due to zero commits found on the live git-log path, leaving intra-task phases (model acquisition, scoring transactions, Rust binding transitions, and artifact serialization) uninstrumented without sub-phase telemetry.",
+    "Static GPU monitor polling provides only point-in-time snapshots (0% utilization, 4MB allocated across both RTX 3090 GPUs) rather than continuous execution-window telemetry during compute-bound workloads."
+  ],
+  "improvements_suggested": [
+    "Instrument experiment runners with granular intra-task sub-phase timers to isolate latency across model acquisition, scoring transactions, Rust binding calls, and receipt serialization.",
+    "Emit synchronous start and completion lifecycle timestamps directly into task result receipts during conductor execution to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Profile and optimize the Qwen acquisition and scoring pipeline in 'Measure complete Qwen acquisition and natural scoring transactions' (13.12 minutes) to reduce compute-bound transaction overhead.",
+    "Stream continuous execution-window GPU telemetry during compute-bound runs rather than relying on static point-in-time monitor snapshots.",
+    "Enforce DualGPURunner orchestration strictly for concurrent workloads executing two or more distinct models in parallel, avoiding misapplication to single-model tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument experiment runners with granular intra-task sub-phase timers to isolate model acquisition, scoring transactions, and artifact serialization latency.",
+    "Profile and optimize the Qwen model acquisition and scoring transaction pipeline in 'Measure complete Qwen acquisition and natural scoring transactions' (which accounted for 13.12 minutes of milestone wall time).",
+    "Persist structured start and finish lifecycle timestamps directly into experiment receipt artifacts to replace disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.704 completed 10 experiments (1 compute-bound, 9 synthesis-only) in 27.9 wall-time minutes, with wall time led by Qwen acquisition and scoring (13.12 minutes) and Rust binding learner transactions (6.06 minutes). Static GPU monitor polling observed 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs, and gpu_idle_on_compute_bound_tasks is false as the single compute-bound task engaged GPU compute without multi-model parallelism. Highest-leverage operational gains lie in instrumenting granular sub-phase execution timers and profiling long-running model acquisition pipelines, with estimated time savings set to 0% pending empirical phase telemetry."
+}

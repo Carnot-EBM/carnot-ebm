@@ -7246,4 +7246,12 @@ Operational evidence addendum: this entry supersedes earlier operational asserti
 - key result: honest operational negative — 5 synthesis-only experiments completed in 29.3 wall-time minutes led by radial service costs with qualified receipt storage (17.53 min), verification learning gap decisions (4.64 min), supervisor reader qualification (3.60 min), and acceleration boundary preservation (3.22 min), while 0 compute-bound experiments were executed and available records lack intra-task stage breakdowns
 - acceptance: no data available this milestone
 
+### Milestone 2026.10.704
+
+- exp_range: no data available this milestone
+- theme: Complete Qwen acquisition and natural scoring transactions, Rust learner bindings, and independent PRD gap decisions across a hybrid compute-synthesis set lacking sub-phase telemetry
+- key result: honest operational negative — 10 experiments (1 compute-bound, 9 synthesis-only) completed in 27.9 wall-time minutes led by Qwen acquisition and natural scoring transactions (13.12 min), Rust binding learner transactions (6.06 min), and independent PRD gap decisions (4.22 min), while available records lack intra-task stage breakdowns, continuous execution-window GPU telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
+
 
