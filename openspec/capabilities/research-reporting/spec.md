@@ -93514,3 +93514,27 @@ REQ-REPORT-8165 implementation: `carnot.reporting.learning_qualification_executi
 and the thin Exp8165 script reuse the qualified command supervisor and publication
 helper. Validation includes both original Exp8152 assertions and new private CLI
 routes; full-suite diagnostics remain separate from owned readiness.
+
+## REQ-REPORT-8166: Publish a validated zero-model sentence protocol
+
+Freeze owned argv before measurement. Require scoped pytest with all assertions,
+100 percent added statement coverage, Ruff check/format, strict mypy, explicit
+spec paths and applicable private E2E-015/016 success/block/tamper/cold routes.
+Record normal exits, duration and hashed logs. Run unmodified adversarial_verify
+and strict verdict_row_consistency_lint before primary_publication. Owned failure
+sets readiness0/disqualified. Methods readiness supplies no scientific benefit;
+exposed sources remain exposed_development_within_run_disjoint, generalization0.
+The conductor owns ops/status/changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8166-CLI
+
+Direct script execution outside checkout without PYTHONPATH SHALL publish private
+circular fixtures, terminal external blocks and reject tampering on replay.
+Historical primaries and operator-curated pages stay intact. No external publish.
+
+REQ-REPORT-8166 implementation: the thin Exp8166 CLI reuses the qualified child
+supervisor and primary_publication. Frozen argv produce normal owned exits for
+unit/E2E, added-code coverage, Ruff, strict mypy and explicit-path spec checks.
+Primitive text, requests, baseline outputs, source/code hashes and durable receipt
+logs bind the methods artifact. Repository-wide Python health is recorded once
+as a separate diagnostic. The conductor owns ops and traceability reconciliation.

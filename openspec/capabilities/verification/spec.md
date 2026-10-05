@@ -49167,3 +49167,39 @@ reuses the unchanged V705 numerical implementation and binds exact protocol
 bytes. `tests/python/test_admission_horizon_methods_8152.py` adds the statement847
 regression; `tests/python/test_learning_qualification_8165.py` covers the new
 receipt identity, negative replay and original historical custody.
+
+## REQ-VERIFY-8166: Freeze lossless sentence evidence before semantic capture
+
+Preserve original V705 fit128, tune64 and evaluation128 sources, full UTF-8
+source and answer bytes, source roles and baseline outputs. Conservative sentence
+partitioning SHALL reconstruct every byte. Requests retain full source and answer,
+index at most four complete sentences, use at most two calls,6000 input tokens
+and256 output tokens. Missing, incomplete or over-limit text escalates the whole
+source. Parsing separately checks probabilities, indices, relations and verbatim
+quote byte offsets; quote validity is not entailment. Diagnostics inherit no target.
+Freeze16 features, one16-center Gibbs radial head and equivalent logistic readout.
+Select H1 control from scalar_span/linear12/radial16 using tune cost only, retaining
+missing sources at escalation cost. Fit geometry/weights on fit; calibration and
+thresholds on tune. Keep H2 exact V705 bytes, Bonferroni .025 per hypothesis,
+10000 source bootstrap draws/9500 valid,96 reserved sources/12 per class,
+lower97.5 bound>.02, five improved sources, no extra false accepts, Brier<=.01.
+
+### SCENARIO-VERIFY-8166-PARSER
+
+Private UTF-8, qualifiers, abbreviations, missing sentences, oversized requests,
+invalid probabilities/indices/quotes, role overlap and altered-source fixtures
+SHALL qualify coverage and parsing before future model capture. No model loads.
+
+### SCENARIO-VERIFY-8166-REPLAY
+
+Cold replay independently reconstructs sentence/request accounting and rejects
+source, protocol, baseline, row, headline, code and receipt tampering. Missing
+external inputs terminate blocked with exact expected/observed operands.
+
+REQ-VERIFY-8166 implementation: `carnot.verify.sentence_evidence_8166` preserves
+UTF-8 sentence partitions and full request text. `sentence_methods_8166` binds
+original128/64/128 roles, baseline bytes and exact V705 H2. All275 added code
+statements have100 percent coverage. Eleven private tests cover parser, source
+mutation, role custody, blocked inputs, rehashed forgery and cold replay. Forty-five
+qualified E2E/consumer checks pass. Local semantic capture and head fitting remain
+future measured work; the present receipt freezes their methods only.
