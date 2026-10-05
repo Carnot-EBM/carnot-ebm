@@ -93577,3 +93577,28 @@ failure terminates disqualified with readiness0. Preserve historical primaries.
 The thin CLI SHALL run outside the checkout without PYTHONPATH, with private
 success, external block, tamper and cold replay routes. Evidence SHALL bind
 source/code/config hashes, normal validation exits, logs and phase durations.
+
+# REQ-REPORT-8172: Publish a checked independent learning benefit audit
+
+Freeze owned validation argv before measurement. Require normal scoped pytest,
+100 percent new statement coverage, Ruff check/format, strict mypy and explicit
+file-path spec coverage. Run the full Python suite once as separate health.
+Unmodified adversarial verification and strict row lint precede primary_publication.
+Bind primitive rows and source/code/config hashes. Preserve historical primaries.
+Unchanged missing, retired or failed upstream operands terminate blocked with
+exact expected and observed values. Owned failure terminates disqualified.
+Separate audit readiness, future exposure, H2 benefit and retention readiness.
+The conductor owns ops/status, ops/changelog and traceability reconciliation.
+
+## SCENARIO-REPORT-8172-CLI
+
+Private direct CLI success, external block, tamper and cold replay SHALL run
+outside the checkout without PYTHONPATH. Exposed development confers no external
+generalization credit. No external publication or conductor edit occurs.
+
+REQ-REPORT-8172 implementation: the thin Exp8172 CLI uses
+`carnot.reporting.learning_benefit_execution_8172` and checked primary publication.
+Ten private tests cover source reductions, direct CLI success, external blocks,
+tamper rejection and cold replay. All177 new module and CLI statements have100
+percent coverage. Frozen commands retain separate full-suite health evidence.
+The conductor owns ops and traceability reconciliation.

@@ -49252,3 +49252,31 @@ Real learner checks SHALL include restart, crash before release, duplicate
 feedback, future-label mutation and pending overflow. Missing slots keep time.
 Independent scalar reconstruction SHALL reject rehashed primitive tampering.
 Fixtures and exposed development SHALL keep both generalization scores zero.
+
+# REQ-VERIFY-8172: Independently replay later benefit and retained labels
+
+Gate Exp8171.learning_trajectory_ready_score==1 and bind immutable V705 bytes.
+Replay saved events, released label roles, center choices and scalar predictions.
+Seal all final heads and retention predictions before opening retention labels.
+Average seeds within each original source. Keep slots65..256 and missing masks.
+Use10000 original-slot moving-block draws, primary16 and sensitivity8/32.
+Require9500 valid draws,128 paired sources,8/class and8 nonoverlapping blocks.
+H2 requires lower97.5 percent gain bound>.02, five improved sources, no extra
+false accepts, Brier increase<=.01 and cost within.02 of every other control.
+Retention requires48 sources,8/class and unchanged V705 safety tolerances.
+Report safety even if benefit fails. Count changed probabilities and decisions
+before gain. A qualified natural null ends this schedule and mechanism attempt.
+
+## SCENARIO-VERIFY-8172-E2E016
+
+Private tests SHALL reject future-label contamination, reused admission,
+compressed missing masks, duplicate seed identity and changed headlines.
+Seed repeats add zero independent sources. Detection controls remain circular.
+No current model loads or independent generalization credit are permitted.
+
+REQ-VERIFY-8172 implementation: `carnot.verify.learning_benefit_audit_8172`
+reuses the independent V705 scalar interpreter and qualified retention sealing.
+Private E2E-016 tests cover future labels, reused admission, missing slots,
+seed duplication, rejected heads and rehashed headline tampering. Original
+assertions and historical methods remain unchanged. New statements have100
+percent coverage. Natural exposure changes probabilities without decision gain.
