@@ -1,0 +1,147 @@
+{
+  "arm": "python_scalar",
+  "binary_energy_difference": 13.76156680494457,
+  "cache_events": [
+    {
+      "key": "sha256:e170b4c5e88bf1658a691b790602fde55616a7f53515bdd39a94e0a6628fac8e",
+      "status": "miss"
+    }
+  ],
+  "components": {
+    "arithmetic_and_boundary_ns": 351380,
+    "decision_serialization_ns": 18194,
+    "durable_commit_ns": 1491463,
+    "generation_ns": 1632812420,
+    "ingress_hash_lookup_ns": 14190871,
+    "parse_lexical_ns": 42416551
+  },
+  "condition": "fresh_cache_miss",
+  "decision": "accept",
+  "denominator": 1,
+  "ended_monotonic_ns": 825798237697954,
+  "exclusion_reason": null,
+  "full_latency_ns": 1693497251,
+  "generated_text": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+  "initial_state_hash": "sha256:75ff3b0fb833dcb0dc2c0edd9b1258394e207aba09fd4f94852822733bd2cd4c",
+  "input_tokens": 918,
+  "latency_score_ns": 1693497251,
+  "lexical": {
+    "abstention": null,
+    "family_id": "sha256:f589380a839d1481a3ed62768f13f028960d9526be04b0d8ab61fe76fef2383c",
+    "feature_hash": "sha256:64c8ca357d6cd4ee5789bae6cbc24928cef1827c9c51366b33f20786726e7389",
+    "source_normalized_hash": "643a155ecc8c1ab96bce7d9529c806ece2f71e2998d9c0921eedb2772aa20c51",
+    "values": [
+      0.32719335732493626,
+      0.624804318488529,
+      0.2666666666666667,
+      0.8,
+      0.7,
+      0.8,
+      0.6728066426750637,
+      0.9535121457489879
+    ],
+    "window_count": 36
+  },
+  "metric": "complete_latency_ns",
+  "numerator": 1693497251,
+  "output_tokens": 23,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 918,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 941
+    }
+  },
+  "probability": 1.055424122081806e-06,
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791164889,
+    "id": "chatcmpl-iWCDcj5QCkbPSg4UC8pG2kwjoNatqTzA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 537.743,
+      "predicted_n": 23,
+      "predicted_per_second": 42.77136104049704,
+      "predicted_per_token_ms": 23.38013043478261,
+      "prompt_ms": 914.762,
+      "prompt_n": 918,
+      "prompt_per_second": 1003.5397185278795,
+      "prompt_per_token_ms": 0.9964727668845316
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 918,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 941
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"(The Hollywood Reporter)\\\"Grace of Monaco,\\\" starring Nicole Kidman as star-turned-princess Grace Kelly, is heading straight to Lifetime. The critically-panned film, which opened last year's Cannes Film Festival, will premiere on Lifetime on Memorial Day, May 25. After the movie performed poorly in its international engagements, The Weinstein Co., which first purchased U.S. distribution rights at the 2013 Berlin Film Festival, decided to sell it directly to Lifetime rather than book it into U.S. theaters, a source confirmed to The Hollywood Reporter. THR: Grace of Monaco' Cannes review. The film, which was directed by Olivier Dahan and focuses on a period in the early '60s when Monaco was involved in a stand-off over taxes with France and Grace was contemplating a return to Hollywood, was originally scheduled for release in late 2013. Given the names involved, some handicappers had put it on their list of potential Oscar contenders. But when TWC pulled it out of awards contention and shifted its release to March 14, 2014, Dahan lashed out at TWC's Harvey Weinstein, over the movie's final cut, which the director was in the process of completing. \\\"There are two versions of the film for now, mine and his,\\\" Dahan complained, continuing, \\\"They want a commercial film smelling of daisies, taking out anything that exceeds that which is too abrupt, anything that makes it cinematic and breathe with life.\\\" That planned March release was then scrubbed, when Cannes expressed interest in debuting the director's version of the movie in May. Even before it screened, though, Grace's children blasted the picture as \\\"needlessly glamorized and historically inaccurate\\\" and boycotting the Cannes red carpet. THR: The Weinstein Co. nearing deal to keep 'Grace of Monaco' Weinstein didn't attend the movie's premiere either -- explaining that he had been visiting Syrian refugee camps in Jordan as part of a long-scheduled U.N.-sponsored trip. But TWC did strike a new distribution deal for the film in Cannes, agreeing to show Dahan's cut in the U.S., but acquiring rights for just $3 million upfront, a $2 million discount from its earlier contract. But TWC then did not slot \\\"Grace of Monaco\\\" into its fall, 2015 release schedule. Tim Roth costars as Kelly's husband Prince Rainier III, Frank Langella as Kelly's priest and confidante, Parker Posey as Grace's aid, and Paz Vega (\\\"Spanglish,\\\" \\\"Sex and Lucia\\\") as opera singer Maria Callas. See the original story at The Hollywood Reporter. \u00a92015 The Hollywood Reporter. All rights reserved.\\n\", \"original_answer\": \"\\\"Grace of Monaco,\\\" starring Nicole Kidman, is set to premiere on Lifetime on May 25 after performing poorly in its international engagements. The film, directed by Olivier Dahan, was originally scheduled for release in late 2013 and was intended for the Academy Awards. However, The Weinstein Company (TWC) pulled it out of awards contention and delayed its release. Dahan criticized TWC for tampering with his final cut of the film, while Grace's children called the movie \\\"glamorized and inaccurate.\\\" Despite this, TWC struck a new distribution deal for the film at the 2015 Cannes Film Festival and showed Dahan's cut in the US. However, the movie was not included in TWC's fall 2015 release schedule.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "request_bytes": "{\"cache_prompt\":false,\"chat_template_kwargs\":{\"enable_thinking\":false},\"grammar\":\"root ::= \\\"{\\\" ws \\\"\\\\\\\"unsupported_probability\\\\\\\"\\\" ws \\\":\\\" ws probability ws \\\",\\\" ws \\\"\\\\\\\"source_sentence_id\\\\\\\"\\\" ws \\\":\\\" ws citation ws \\\"}\\\"\\nprobability ::= \\\"0\\\" (\\\".\\\" [0-9]+)? | \\\"1\\\" (\\\".\\\" \\\"0\\\"+)?\\ncitation ::= \\\"null\\\" | \\\"0\\\" | [1-9] [0-9]*\\nws ::= [ \\\\t\\\\n\\\\r]*\",\"max_tokens\":128,\"messages\":[{\"content\":\"Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.\",\"role\":\"system\"},{\"content\":\"{\\\"complete_source\\\": \\\"(The Hollywood Reporter)\\\\\\\"Grace of Monaco,\\\\\\\" starring Nicole Kidman as star-turned-princess Grace Kelly, is heading straight to Lifetime. The critically-panned film, which opened last year's Cannes Film Festival, will premiere on Lifetime on Memorial Day, May 25. After the movie performed poorly in its international engagements, The Weinstein Co., which first purchased U.S. distribution rights at the 2013 Berlin Film Festival, decided to sell it directly to Lifetime rather than book it into U.S. theaters, a source confirmed to The Hollywood Reporter. THR: Grace of Monaco' Cannes review. The film, which was directed by Olivier Dahan and focuses on a period in the early '60s when Monaco was involved in a stand-off over taxes with France and Grace was contemplating a return to Hollywood, was originally scheduled for release in late 2013. Given the names involved, some handicappers had put it on their list of potential Oscar contenders. But when TWC pulled it out of awards contention and shifted its release to March 14, 2014, Dahan lashed out at TWC's Harvey Weinstein, over the movie's final cut, which the director was in the process of completing. \\\\\\\"There are two versions of the film for now, mine and his,\\\\\\\" Dahan complained, continuing, \\\\\\\"They want a commercial film smelling of daisies, taking out anything that exceeds that which is too abrupt, anything that makes it cinematic and breathe with life.\\\\\\\" That planned March release was then scrubbed, when Cannes expressed interest in debuting the director's version of the movie in May. Even before it screened, though, Grace's children blasted the picture as \\\\\\\"needlessly glamorized and historically inaccurate\\\\\\\" and boycotting the Cannes red carpet. THR: The Weinstein Co. nearing deal to keep 'Grace of Monaco' Weinstein didn't attend the movie's premiere either -- explaining that he had been visiting Syrian refugee camps in Jordan as part of a long-scheduled U.N.-sponsored trip. But TWC did strike a new distribution deal for the film in Cannes, agreeing to show Dahan's cut in the U.S., but acquiring rights for just $3 million upfront, a $2 million discount from its earlier contract. But TWC then did not slot \\\\\\\"Grace of Monaco\\\\\\\" into its fall, 2015 release schedule. Tim Roth costars as Kelly's husband Prince Rainier III, Frank Langella as Kelly's priest and confidante, Parker Posey as Grace's aid, and Paz Vega (\\\\\\\"Spanglish,\\\\\\\" \\\\\\\"Sex and Lucia\\\\\\\") as opera singer Maria Callas. See the original story at The Hollywood Reporter. \\u00a92015 The Hollywood Reporter. All rights reserved.\\\\n\\\", \\\"original_answer\\\": \\\"\\\\\\\"Grace of Monaco,\\\\\\\" starring Nicole Kidman, is set to premiere on Lifetime on May 25 after performing poorly in its international engagements. The film, directed by Olivier Dahan, was originally scheduled for release in late 2013 and was intended for the Academy Awards. However, The Weinstein Company (TWC) pulled it out of awards contention and delayed its release. Dahan criticized TWC for tampering with his final cut of the film, while Grace's children called the movie \\\\\\\"glamorized and inaccurate.\\\\\\\" Despite this, TWC struck a new distribution deal for the film at the 2015 Cannes Film Festival and showed Dahan's cut in the US. However, the movie was not included in TWC's fall 2015 release schedule.\\\", \\\"target\\\": \\\"any_unsupported_span_in_original_response\\\", \\\"visible_source_sentence_ids\\\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \\\"source_evidence_erased\\\": false}\",\"role\":\"user\"}],\"model\":\"unsloth/Qwen3.8-27B-GGUF\",\"seed\":69058,\"temperature\":0,\"top_p\":1}",
+  "response_bytes": "{\"decision\":\"accept\",\"generated_text\":\"{\\n  \\\"unsupported_probability\\\": 0.0,\\n  \\\"source_sentence_id\\\": null\\n}\",\"probability\":1.0554e-06}",
+  "response_commit": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8146_v704_live_service_cost/invocations/1791164497330123254/measured-17-python_scalar/response.json",
+    "sha256": "sha256:244fb431b1fff55c0bf2a9b5786d4ea2df3bac1d63003055b88fc0adc893f1b2"
+  },
+  "source_cluster_id": "sha256:d07b636e10fb8aa66fcbf76aabe4f98bf4e415d1b1437383b790445968ac7f7a",
+  "started": true,
+  "started_monotonic_ns": 825796544200703,
+  "status": "completed",
+  "unit_id": "measured-17-python_scalar",
+  "values": [
+    -13.815509557963773,
+    0.32719335732493626,
+    0.624804318488529,
+    0.2666666666666667,
+    0.8,
+    0.7,
+    0.8,
+    0.6728066426750637,
+    0.9535121457489879
+  ]
+}

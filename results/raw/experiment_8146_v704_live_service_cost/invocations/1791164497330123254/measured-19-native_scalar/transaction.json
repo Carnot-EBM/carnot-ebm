@@ -1,0 +1,147 @@
+{
+  "arm": "native_scalar",
+  "binary_energy_difference": 13.739992028158746,
+  "cache_events": [
+    {
+      "key": "sha256:897c7c1673b325cd74391bf9f5ac69ff76b18aeeb7b72b23e7aa3ad12ab0da20",
+      "status": "miss"
+    }
+  ],
+  "components": {
+    "arithmetic_and_boundary_ns": 480663,
+    "decision_serialization_ns": 18375,
+    "durable_commit_ns": 2151813,
+    "generation_ns": 1282724117,
+    "ingress_hash_lookup_ns": 12926305,
+    "parse_lexical_ns": 24923916
+  },
+  "condition": "fresh_cache_miss",
+  "decision": "accept",
+  "denominator": 1,
+  "ended_monotonic_ns": 825805438330744,
+  "exclusion_reason": null,
+  "full_latency_ns": 1327145354,
+  "generated_text": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+  "initial_state_hash": "sha256:75ff3b0fb833dcb0dc2c0edd9b1258394e207aba09fd4f94852822733bd2cd4c",
+  "input_tokens": 724,
+  "latency_score_ns": 1327145354,
+  "lexical": {
+    "abstention": null,
+    "family_id": "sha256:3e48afeae8efd0a329d6ae5e44750bd605703212d3ef0e8ee7f13e15440b0466",
+    "feature_hash": "sha256:e701df976a123184ddc59cc50f1adc00f4b33b39f842aff385ca2ef68bd23881",
+    "source_normalized_hash": "cbd80eb5cd0f421fc8c838b7de48bf7e7aa39bc3e6df81a532e800196c1f3fd7",
+    "values": [
+      0.31933589204254526,
+      0.5712671065493646,
+      0.14285714285714285,
+      1.0,
+      0.25,
+      0.25,
+      0.6806641079574547,
+      0.8708506435320951
+    ],
+    "window_count": 28
+  },
+  "metric": "complete_latency_ns",
+  "numerator": 1327145354,
+  "output_tokens": 23,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 724,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 747
+    }
+  },
+  "probability": 1.0784420478373752e-06,
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791164897,
+    "id": "chatcmpl-oGkj39qKWWxjJWr45h61DtLAbBqZCzKl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 538.062,
+      "predicted_n": 23,
+      "predicted_per_second": 42.74600324869625,
+      "predicted_per_token_ms": 23.394000000000002,
+      "prompt_ms": 731.458,
+      "prompt_n": 724,
+      "prompt_per_second": 989.8039258576706,
+      "prompt_per_token_ms": 1.0103011049723756
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 724,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 747
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Epic Victory: How Cooper Smith a Texas Teenager Clinched $1M and Won Over 60k New Fans\\nROUND ROCK, Texas \u2014 Local teen, Cooper Smith, alongside his gaming partner, emerged triumphant at the 2023 Fortnite Champion Series Global Championship held in Denmark, bagging a whopping $1 million grand prize. The three-day esports extravaganza, which ran from Oct. 13-15, showcased some of the world's best \\\"Fortnite\\\" players, battling it out in intense duos matchups.\\nThe competition wasn't for the casual gamer; it's a prestigious event that requires players to earn their spot. Cooper explained, \\\"Only those who placed in the top three in one of the three major tournaments this year could qualify for this Denmark championship.\\\" A feat Cooper had already achieved earlier in the year by securing second place in a major, earning him a hefty $95,000.\\nThis global showdown attracted top-tier players from regions worldwide, including Europe, Middle East, Asia, and Oceana. And in this grand coliseum of virtual warfare, Cooper's skills not only earned him the monumental prize money but also a massive surge in online followers. Post-victory, his streaming platforms witnessed a spike of around 60,000 followers.\\nWith his eyes set on a full-time esports career, Cooper decided to pivot from traditional public school to online classes, ensuring he dedicates his full attention to his newfound professional gaming and streaming ventures. \\\"Balancing rigorous gaming training with regular school and sports simply wasn't feasible,\\\" Cooper elaborated.\\nSupport has been a crucial element in Cooper's journey, with his parents playing a pivotal role. Reflecting on his father's influence, Cooper mentioned, \\\"My dad introduced me to the gaming world. He even accompanied me to Denmark for the championship. Witnessing the win was a surreal experience for both of us.\\\"\\nFor this Round Rock champion, the journey has only just begun. Cooper's ambitions are crystal clear: continue his reign in the gaming world, rake in victories, and do what he loves most for as long as he can.\", \"original_answer\": \"Cooper Smith, a teenager from Texas, won the 2023 Fortnite Champion Series Global Championship in Denmark, resulting in a $1 million prize and an additional 60,000 followers on his streaming platforms. The competition attracted top-tier players worldwide. Smith, who had already earned a spot by placing second in a major tournament earlier in the year, is shifting from traditional school to online classes to focus on his esports career. His parents have been pivotal in his journey, particularly his father who introduced him to gaming.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "request_bytes": "{\"cache_prompt\":false,\"chat_template_kwargs\":{\"enable_thinking\":false},\"grammar\":\"root ::= \\\"{\\\" ws \\\"\\\\\\\"unsupported_probability\\\\\\\"\\\" ws \\\":\\\" ws probability ws \\\",\\\" ws \\\"\\\\\\\"source_sentence_id\\\\\\\"\\\" ws \\\":\\\" ws citation ws \\\"}\\\"\\nprobability ::= \\\"0\\\" (\\\".\\\" [0-9]+)? | \\\"1\\\" (\\\".\\\" \\\"0\\\"+)?\\ncitation ::= \\\"null\\\" | \\\"0\\\" | [1-9] [0-9]*\\nws ::= [ \\\\t\\\\n\\\\r]*\",\"max_tokens\":128,\"messages\":[{\"content\":\"Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.\",\"role\":\"system\"},{\"content\":\"{\\\"complete_source\\\": \\\"Epic Victory: How Cooper Smith a Texas Teenager Clinched $1M and Won Over 60k New Fans\\\\nROUND ROCK, Texas \\u2014 Local teen, Cooper Smith, alongside his gaming partner, emerged triumphant at the 2023 Fortnite Champion Series Global Championship held in Denmark, bagging a whopping $1 million grand prize. The three-day esports extravaganza, which ran from Oct. 13-15, showcased some of the world's best \\\\\\\"Fortnite\\\\\\\" players, battling it out in intense duos matchups.\\\\nThe competition wasn't for the casual gamer; it's a prestigious event that requires players to earn their spot. Cooper explained, \\\\\\\"Only those who placed in the top three in one of the three major tournaments this year could qualify for this Denmark championship.\\\\\\\" A feat Cooper had already achieved earlier in the year by securing second place in a major, earning him a hefty $95,000.\\\\nThis global showdown attracted top-tier players from regions worldwide, including Europe, Middle East, Asia, and Oceana. And in this grand coliseum of virtual warfare, Cooper's skills not only earned him the monumental prize money but also a massive surge in online followers. Post-victory, his streaming platforms witnessed a spike of around 60,000 followers.\\\\nWith his eyes set on a full-time esports career, Cooper decided to pivot from traditional public school to online classes, ensuring he dedicates his full attention to his newfound professional gaming and streaming ventures. \\\\\\\"Balancing rigorous gaming training with regular school and sports simply wasn't feasible,\\\\\\\" Cooper elaborated.\\\\nSupport has been a crucial element in Cooper's journey, with his parents playing a pivotal role. Reflecting on his father's influence, Cooper mentioned, \\\\\\\"My dad introduced me to the gaming world. He even accompanied me to Denmark for the championship. Witnessing the win was a surreal experience for both of us.\\\\\\\"\\\\nFor this Round Rock champion, the journey has only just begun. Cooper's ambitions are crystal clear: continue his reign in the gaming world, rake in victories, and do what he loves most for as long as he can.\\\", \\\"original_answer\\\": \\\"Cooper Smith, a teenager from Texas, won the 2023 Fortnite Champion Series Global Championship in Denmark, resulting in a $1 million prize and an additional 60,000 followers on his streaming platforms. The competition attracted top-tier players worldwide. Smith, who had already earned a spot by placing second in a major tournament earlier in the year, is shifting from traditional school to online classes to focus on his esports career. His parents have been pivotal in his journey, particularly his father who introduced him to gaming.\\\", \\\"target\\\": \\\"any_unsupported_span_in_original_response\\\", \\\"visible_source_sentence_ids\\\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \\\"source_evidence_erased\\\": false}\",\"role\":\"user\"}],\"model\":\"unsloth/Qwen3.8-27B-GGUF\",\"seed\":69058,\"temperature\":0,\"top_p\":1}",
+  "response_bytes": "{\"decision\":\"accept\",\"generated_text\":\"{\\n  \\\"unsupported_probability\\\": 0.0,\\n  \\\"source_sentence_id\\\": null\\n}\",\"probability\":1.0784e-06}",
+  "response_commit": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8146_v704_live_service_cost/invocations/1791164497330123254/measured-19-native_scalar/response.json",
+    "sha256": "sha256:2b9e94b87aacaa9d185fb19842d9a9dda4eefb8eff018d812beef8de7f1e700f"
+  },
+  "source_cluster_id": "sha256:580e7108b73a799c3e2893c275f9e19ba8aaa62e2fb44e76cab6e69476409158",
+  "started": true,
+  "started_monotonic_ns": 825804111185390,
+  "status": "completed",
+  "unit_id": "measured-19-native_scalar",
+  "values": [
+    -13.815509557963773,
+    0.31933589204254526,
+    0.5712671065493646,
+    0.14285714285714285,
+    1.0,
+    0.25,
+    0.25,
+    0.6806641079574547,
+    0.8708506435320951
+  ]
+}

@@ -2,6 +2,36 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8146: Measure bounded fresh natural miss requests
+
+Freeze the first24 original public retention keys in order, preserving absent
+slots and keeping labels inaccessible. Reuse the historical stream prompt/parser
+and sealed final nine-feature error-center head. Authenticate Qwen revision,
+GGUF, runtime binary and embedded template independently from Exp8118 before
+one CUDA load (300s). Require current offload and GPU receipts. Budget48 measured
+calls plus8 excluded warmups, max128 output tokens per call,7168 total;120s per
+call,2200s new-call stop and2400s closure. Never pad durations or substitute
+historical acquisition. Identical durable initial state and greedy requests
+cross Python and native arms in source-hash alternating order, with owned cache
+reset and fresh invocations. Time ingress, generation, fresh lexical extraction,
+energy, decision, serialization and durable response commit together; report
+startup separately and totals with/without it. Retain failures and mismatches.
+
+### SCENARIO-VERIFY-8146: Complete parity, bootstrap and provenance
+
+Require24 complete pairs, identical generated and request/response bytes and
+scalar/native probability parity1e-10 for complete_service_ready_score=1,
+independently of speed. E2E-003/004 cross and restore the loaded binding.
+Use10000 paired source-cluster log-ratio resamples: lower95>1 permits speed;
+lower95>=10 meets NFR-01. Remove only measured arithmetic for the zero-arithmetic
+ceiling, retaining every host cost. Smaller panels are descriptive. Record real
+calls/tokens/outputs, GPU deltas, monotonic spans and authenticated transcripts.
+
+REQ-VERIFY-8146 implementation: the live service runner reuses the historical
+stream parser, lexical extractor and natural Python/native Gaussian head.
+Tests cross the real extension, restore its checkpoint and independently reduce
+paired source latencies. Original ineligible retention slots remain unfilled.
+
 ## REQ-VERIFY-8145: Measure natural cached learner transactions
 
 Select original natural stream vectors and authenticated Exp8143 heads/events

@@ -1,0 +1,147 @@
+{
+  "arm": "python_scalar",
+  "binary_energy_difference": -3.007386337792924,
+  "cache_events": [
+    {
+      "key": "sha256:ff6db3f2cfa68aa1117721a36bee02b0d780d0f873c44c16dc7e80cd1729378d",
+      "status": "miss"
+    }
+  ],
+  "components": {
+    "arithmetic_and_boundary_ns": 526659,
+    "decision_serialization_ns": 25528,
+    "durable_commit_ns": 172393976,
+    "generation_ns": 1843900677,
+    "ingress_hash_lookup_ns": 27619983,
+    "parse_lexical_ns": 128874852
+  },
+  "condition": "fresh_cache_miss",
+  "decision": "reject",
+  "denominator": 1,
+  "ended_monotonic_ns": 825744768710949,
+  "exclusion_reason": null,
+  "full_latency_ns": 2178167623,
+  "generated_text": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 19\n}",
+  "initial_state_hash": "sha256:75ff3b0fb833dcb0dc2c0edd9b1258394e207aba09fd4f94852822733bd2cd4c",
+  "input_tokens": 1211,
+  "latency_score_ns": 2178167623,
+  "lexical": {
+    "abstention": null,
+    "family_id": "sha256:c00c92e20ce1d1c3685d8280306568cd34f92d3d90d05de2f06ba25dab7d4371",
+    "feature_hash": "sha256:ebe037b62f7b71b588a3fde4d0356503e09c6dbec4c4a8a476fc17b8e1998d06",
+    "source_normalized_hash": "3c54ef299a59f85ad60a08d53699ca892d096d3ec58433b4f246dcb0cb8e6f22",
+    "values": [
+      0.2910665825784505,
+      0.5046418128654971,
+      0.07407407407407407,
+      1.0,
+      0.32098765432098764,
+      0.3333333333333333,
+      0.7089334174215495,
+      0.9251332989336086
+    ],
+    "window_count": 54
+  },
+  "metric": "complete_latency_ns",
+  "numerator": 2178167623,
+  "output_tokens": 26,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 19,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1211,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1237
+    }
+  },
+  "probability": 0.9529067036200412,
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 19\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791164836,
+    "id": "chatcmpl-b5geHypie7gqFKMCuGG6Q1gzZAxU0RMn",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 606.217,
+      "predicted_n": 26,
+      "predicted_per_second": 42.888932510965546,
+      "predicted_per_token_ms": 23.31603846153846,
+      "prompt_ms": 1104.911,
+      "prompt_n": 1211,
+      "prompt_per_second": 1096.0158782019546,
+      "prompt_per_token_ms": 0.9123955408753097
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1211,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1237
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Melamchi, Nepal (CNN)Even from high above, flying in an Indian Air Force helicopter, it is easy to see that the people of Melamchi, central Nepal, are happy to see us. Residents in this remote village, about a 44km drive from Nepal's capital, Kathmandu, stand on the distinctive steeply terraced hillsides and wave furiously as the relief flight passes overhead. The mission, a joint effort between Indian air crew and a Nepalese army medical team, is only the third operation of its kind to reach the village since Saturday's massive 7.8-magnitude quake, which left more than 5,000 people dead. The aircraft is stuffed to capacity with tents, medicines and packages of tinned tuna, instant noodles and rice, all bundled haphazardly aboard the Mi-17 by soldiers at the air base in Kathmandu barely 15 minutes earlier. Local official Upendra Tamang is there to greet the helicopter as it touches down on a field in front of the village medical clinic, and waiting soldiers swing into action to unload the delivery. He says people have been desperately awaiting the supplies. The situation in Melamchi and the surrounding villages is \\\"dire,\\\" he tells CNN through a translator. According to Nepal's National Emergency Operation Center, 1,376 people were killed in Sindhupalchok District, where Melamchi is located, when the earthquake hit. Some 18,000 houses were destroyed and 100,000 people have been displaced in the surrounding area, says Tamang. \\\"Everyone is sleeping outside,\\\" he says. He has serious concerns about food supplies in the region, saying the piled boxes of rice and noodles aren't nearly enough to meet the needs of local people. \\\"Aid agencies need to do something very quickly,\\\" he says. In the days since the quake, injured people from the region have been told to find their way to Melamchi so they can be picked up by the relief flights, he says. They've sent about 500 of the most seriously injured people for treatment in Kathmandu already -- the majority by road -- but many more are stuck in a local clinic waiting for help. Seven of them, five women and two men, are suddenly driven onto the airfield in a truck and on the back of a pickup. Their injuries are not life-threatening, but they look to be in a bad state: bloodied, exhausted and traumatized. An elderly woman's face is covered in bandages that look like they haven't been changed in days. Another cries in pain as she is loaded on to a stretcher from the back of the pickup, then awkwardly hoisted on to the helicopter. Among the injured brought on board the flight is Forshani Tamang, accompanied by her son. He tells CNN their family lives in a village called Bachunde, where nearly all the houses were destroyed. He and other family members carried Forshani for four hours to reach Melamchi. With their home destroyed and their stores of grain lost, the family are in crisis. As the helicopter takes off for the capital, flying over a landscape dotted with collapsed buildings and bright orange tents, Nepalese army doctor Naveen Tiwari offers perhaps the only positive for those on board. The patients' injuries are mostly lacerations of varying degrees, he says. Their vital signs are all stable, and with antibiotics and intravenous drips, they should recover. When the helicopter touches down at Kathmandu airbase, the patients are swiftly unloaded and unceremoniously laid out on the tarmac in the emergency triage area in front of an aircraft hangar, and paramedics scramble to administer IV drips to those in need. As Forshani's son feeds her a cracker softened with water, the relief team turn to prepare for another mission. How you can help victims of the Nepal earthquakeNepal earthquake's victims overwhelm hospitals.\\n\", \"original_answer\": \"Here is a summary of the article in 155 words:\\n\\nA helicopter carrying aid supplies and a Nepalese army medical team landed in the remote village of Melamchi, Nepal, which was hit hard by the recent earthquake. The villagers were overjoyed to see the relief efforts and waved enthusiastically as the helicopter passed overhead. The team delivered tents, medicines, and food supplies, including tinned tuna, instant noodles, and rice. Local officials expressed concern about the dire situation in the village, with many homes destroyed and people sleeping outside. The team airlifted 500 injured people, including Forshani Tamang and her son, to Kathmandu for medical treatment. The patients were stabilized during the flight with antibiotics and intravenous drips.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "request_bytes": "{\"cache_prompt\":false,\"chat_template_kwargs\":{\"enable_thinking\":false},\"grammar\":\"root ::= \\\"{\\\" ws \\\"\\\\\\\"unsupported_probability\\\\\\\"\\\" ws \\\":\\\" ws probability ws \\\",\\\" ws \\\"\\\\\\\"source_sentence_id\\\\\\\"\\\" ws \\\":\\\" ws citation ws \\\"}\\\"\\nprobability ::= \\\"0\\\" (\\\".\\\" [0-9]+)? | \\\"1\\\" (\\\".\\\" \\\"0\\\"+)?\\ncitation ::= \\\"null\\\" | \\\"0\\\" | [1-9] [0-9]*\\nws ::= [ \\\\t\\\\n\\\\r]*\",\"max_tokens\":128,\"messages\":[{\"content\":\"Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.\",\"role\":\"system\"},{\"content\":\"{\\\"complete_source\\\": \\\"Melamchi, Nepal (CNN)Even from high above, flying in an Indian Air Force helicopter, it is easy to see that the people of Melamchi, central Nepal, are happy to see us. Residents in this remote village, about a 44km drive from Nepal's capital, Kathmandu, stand on the distinctive steeply terraced hillsides and wave furiously as the relief flight passes overhead. The mission, a joint effort between Indian air crew and a Nepalese army medical team, is only the third operation of its kind to reach the village since Saturday's massive 7.8-magnitude quake, which left more than 5,000 people dead. The aircraft is stuffed to capacity with tents, medicines and packages of tinned tuna, instant noodles and rice, all bundled haphazardly aboard the Mi-17 by soldiers at the air base in Kathmandu barely 15 minutes earlier. Local official Upendra Tamang is there to greet the helicopter as it touches down on a field in front of the village medical clinic, and waiting soldiers swing into action to unload the delivery. He says people have been desperately awaiting the supplies. The situation in Melamchi and the surrounding villages is \\\\\\\"dire,\\\\\\\" he tells CNN through a translator. According to Nepal's National Emergency Operation Center, 1,376 people were killed in Sindhupalchok District, where Melamchi is located, when the earthquake hit. Some 18,000 houses were destroyed and 100,000 people have been displaced in the surrounding area, says Tamang. \\\\\\\"Everyone is sleeping outside,\\\\\\\" he says. He has serious concerns about food supplies in the region, saying the piled boxes of rice and noodles aren't nearly enough to meet the needs of local people. \\\\\\\"Aid agencies need to do something very quickly,\\\\\\\" he says. In the days since the quake, injured people from the region have been told to find their way to Melamchi so they can be picked up by the relief flights, he says. They've sent about 500 of the most seriously injured people for treatment in Kathmandu already -- the majority by road -- but many more are stuck in a local clinic waiting for help. Seven of them, five women and two men, are suddenly driven onto the airfield in a truck and on the back of a pickup. Their injuries are not life-threatening, but they look to be in a bad state: bloodied, exhausted and traumatized. An elderly woman's face is covered in bandages that look like they haven't been changed in days. Another cries in pain as she is loaded on to a stretcher from the back of the pickup, then awkwardly hoisted on to the helicopter. Among the injured brought on board the flight is Forshani Tamang, accompanied by her son. He tells CNN their family lives in a village called Bachunde, where nearly all the houses were destroyed. He and other family members carried Forshani for four hours to reach Melamchi. With their home destroyed and their stores of grain lost, the family are in crisis. As the helicopter takes off for the capital, flying over a landscape dotted with collapsed buildings and bright orange tents, Nepalese army doctor Naveen Tiwari offers perhaps the only positive for those on board. The patients' injuries are mostly lacerations of varying degrees, he says. Their vital signs are all stable, and with antibiotics and intravenous drips, they should recover. When the helicopter touches down at Kathmandu airbase, the patients are swiftly unloaded and unceremoniously laid out on the tarmac in the emergency triage area in front of an aircraft hangar, and paramedics scramble to administer IV drips to those in need. As Forshani's son feeds her a cracker softened with water, the relief team turn to prepare for another mission. How you can help victims of the Nepal earthquakeNepal earthquake's victims overwhelm hospitals.\\\\n\\\", \\\"original_answer\\\": \\\"Here is a summary of the article in 155 words:\\\\n\\\\nA helicopter carrying aid supplies and a Nepalese army medical team landed in the remote village of Melamchi, Nepal, which was hit hard by the recent earthquake. The villagers were overjoyed to see the relief efforts and waved enthusiastically as the helicopter passed overhead. The team delivered tents, medicines, and food supplies, including tinned tuna, instant noodles, and rice. Local officials expressed concern about the dire situation in the village, with many homes destroyed and people sleeping outside. The team airlifted 500 injured people, including Forshani Tamang and her son, to Kathmandu for medical treatment. The patients were stabilized during the flight with antibiotics and intravenous drips.\\\", \\\"target\\\": \\\"any_unsupported_span_in_original_response\\\", \\\"visible_source_sentence_ids\\\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \\\"source_evidence_erased\\\": false}\",\"role\":\"user\"}],\"model\":\"unsloth/Qwen3.8-27B-GGUF\",\"seed\":69058,\"temperature\":0,\"top_p\":1}",
+  "response_bytes": "{\"decision\":\"reject\",\"generated_text\":\"{\\n  \\\"unsupported_probability\\\": 0.95,\\n  \\\"source_sentence_id\\\": 19\\n}\",\"probability\":0.9529067036}",
+  "response_commit": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8146_v704_live_service_cost/invocations/1791164497330123254/warmup-3-python_scalar/response.json",
+    "sha256": "sha256:1bb85ce4f8d8828c91dc4adbaabd20794da9cee32f29faf695d529e52eb717f7"
+  },
+  "source_cluster_id": "sha256:0442d76fd72aff95add5d1df45938d09d095375d54797b6c239b4bd3d4b440fc",
+  "started": true,
+  "started_monotonic_ns": 825742590543326,
+  "status": "completed",
+  "unit_id": "warmup-3-python_scalar",
+  "values": [
+    2.9444389791664394,
+    0.2910665825784505,
+    0.5046418128654971,
+    0.07407407407407407,
+    1.0,
+    0.32098765432098764,
+    0.3333333333333333,
+    0.7089334174215495,
+    0.9251332989336086
+  ]
+}

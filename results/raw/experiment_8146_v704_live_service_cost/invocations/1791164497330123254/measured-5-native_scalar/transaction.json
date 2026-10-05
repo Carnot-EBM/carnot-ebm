@@ -1,0 +1,147 @@
+{
+  "arm": "native_scalar",
+  "binary_energy_difference": 13.74717901605288,
+  "cache_events": [
+    {
+      "key": "sha256:ce5371ef3d5040a35120ee3181f134b6074716c8fe1af5bdbb255cb01e6bbb9c",
+      "status": "miss"
+    }
+  ],
+  "components": {
+    "arithmetic_and_boundary_ns": 485432,
+    "decision_serialization_ns": 19065,
+    "durable_commit_ns": 2442829,
+    "generation_ns": 1854199642,
+    "ingress_hash_lookup_ns": 13856754,
+    "parse_lexical_ns": 149864064
+  },
+  "condition": "fresh_cache_miss",
+  "decision": "accept",
+  "denominator": 1,
+  "ended_monotonic_ns": 825764804351005,
+  "exclusion_reason": null,
+  "full_latency_ns": 2023645615,
+  "generated_text": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+  "initial_state_hash": "sha256:75ff3b0fb833dcb0dc2c0edd9b1258394e207aba09fd4f94852822733bd2cd4c",
+  "input_tokens": 1468,
+  "latency_score_ns": 2023645615,
+  "lexical": {
+    "abstention": null,
+    "family_id": "sha256:d8a988ff1c49de0987db9551aa8f78ea2ede6819ecd09ca2c01b537efbb061d5",
+    "feature_hash": "sha256:d6b9f471fdf1346b6572ff54fdd832904bc489ff961743d7ce9043904f4c0597",
+    "source_normalized_hash": "73f67489f64f018bb986125a3775bb37f5f8a336e6384aab5872bae653d8c378",
+    "values": [
+      0.21111206724187492,
+      0.42378234301311224,
+      0.2355769230769231,
+      0.9230769230769231,
+      0.23076923076923078,
+      0.23076923076923078,
+      0.7888879327581251,
+      0.9811669811669812
+    ],
+    "window_count": 64
+  },
+  "metric": "complete_latency_ns",
+  "numerator": 2023645615,
+  "output_tokens": 23,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1468,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1491
+    }
+  },
+  "probability": 1.0707190918322354e-06,
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791164856,
+    "id": "chatcmpl-NVm208YFYP0DiRcVaDugKZ4QX4T9xmLV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 536.536,
+      "predicted_n": 23,
+      "predicted_per_second": 42.86758018101302,
+      "predicted_per_token_ms": 23.32765217391304,
+      "prompt_ms": 1304.026,
+      "prompt_n": 1468,
+      "prompt_per_second": 1125.7444253412125,
+      "prompt_per_token_ms": 0.8883010899182562
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1468,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1491
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"14 E Cota St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":true,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Bars, Mediterranean, Burgers, Restaurants, Gastropubs, Nightlife, Whiskey Bars, Cocktail Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-0:0\\\",\\\"Monday\\\":\\\"12:0-17:0\\\",\\\"Saturday\\\":\\\"12:0-0:0\\\",\\\"Sunday\\\":\\\"12:0-0:0\\\",\\\"Thursday\\\":\\\"16:0-0:0\\\",\\\"Tuesday\\\":\\\"16:0-23:0\\\",\\\"Wednesday\\\":\\\"17:0-23:0\\\"},\\\"name\\\":\\\"Foxtail Kitchen & Bar\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-29 04:04:46\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"i honestly came here wanting to love it. it's a great location, a nice atmosphere, and a unique menu! and i will say that the food was good. that's what the star is for. apart from that, we ordered from the happy hour menu (which said it went until 7pm) at 6:30, but the host didnt honor the menu price, since she said happy hour actually ended at 6. so the expected price went up from ~$30 to over $55. we asked if she would honor the menu price and she said no, but she did end up giving us 10% off. that was nice. so we go out to the nice patio, and the food comes out pretty quickly! but we hadn't gotten our drinks, and after eating half of our meal, i decided to go in and check on the drinks. turns out she totally forgot what we had ordered. i waited another 15 minutes watching her tend to maybe two other customers at the bar before she got to our two drinks. she then gave us a cocktail that wasn't what we ordered, and when we asked about it, she claimed that it was right. so we drank it. we went in to get one more cocktail, and she seriously tried to charge us again for the whole. meal. saying we hadn't paid. needless to say, the service was horrendous. the restauarant has a lot of potential, but they have to get more competent waitstaff.\\\"},{\\\"review_date\\\":\\\"2021-12-29 03:21:19\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Food was good, but worst bar service ever! We received our food and then the bar tender forgot about our drinks. She then proceeded to make multiple others before making hours. This also happened to me last time I came! I never write reviews but honestly it was very unpleasant. Also, there happy hour time is wrong on the menus...extra frustrating!\\\"},{\\\"review_date\\\":\\\"2021-12-05 18:52:59\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"For the weekend evening, they were not busy, but after getting seated our drinks order was taken after 10 min. There were only 2 people managing the bar and service. Our food arrived 40+ minutes after placing it. We ordered more drinks which they forgot about so I had to go in and add the request again. Both me and my husband had to personally go in several times to get what we needed. My husband also got 2nd mule which didn't taste like a mule. Bar tender said she accidentally gave the wrong drink so he got a new glass which was filled with ice and the drink was little bit over half full. Food wise, it was good except for chicken shawarma. Chickpea patty from chickpea burger was definitely very good. I cant imagine hoe their service will be when they're actually busy, so we will not be taking chance in the future.\\\\nFor the good food and set up they have, the can go long way with good service.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Foxtail Kitchen & Bar is a local business located at 14 E Cota St in Santa Barbara, CA. It is a restaurant and bar that offers a Mediterranean-inspired menu and a variety of drinks, including whiskey and cocktails. The establishment is known for its unique menu and nice atmosphere.\\n\\nThe business operates from Monday to Sunday, with varying hours each day. They open at 12:00 PM and close at different times, ranging from 5:00 PM to midnight, depending on the day. The restaurant accepts reservations and offers takeout options for customers. It is also suitable for groups and provides free WiFi.\\n\\nCustomers have mentioned mixed experiences with the service at Foxtail Kitchen & Bar. Some reviews highlight issues with the waitstaff, including long wait times for drinks and forgotten orders. One customer mentioned an incident where the happy hour menu was not honored correctly, resulting in a higher bill. However, the food received positive feedback for its taste and quality.\\n\\nOverall, Foxtail Kitchen & Bar has received a rating of 4.0 stars. While the establishment has potential with its good food and pleasant ambiance, improvements in service and attentiveness from the waitstaff are necessary to enhance the overall customer experience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "request_bytes": "{\"cache_prompt\":false,\"chat_template_kwargs\":{\"enable_thinking\":false},\"grammar\":\"root ::= \\\"{\\\" ws \\\"\\\\\\\"unsupported_probability\\\\\\\"\\\" ws \\\":\\\" ws probability ws \\\",\\\" ws \\\"\\\\\\\"source_sentence_id\\\\\\\"\\\" ws \\\":\\\" ws citation ws \\\"}\\\"\\nprobability ::= \\\"0\\\" (\\\".\\\" [0-9]+)? | \\\"1\\\" (\\\".\\\" \\\"0\\\"+)?\\ncitation ::= \\\"null\\\" | \\\"0\\\" | [1-9] [0-9]*\\nws ::= [ \\\\t\\\\n\\\\r]*\",\"max_tokens\":128,\"messages\":[{\"content\":\"Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.\",\"role\":\"system\"},{\"content\":\"{\\\"complete_source\\\": \\\"{\\\\\\\"address\\\\\\\":\\\\\\\"14 E Cota St\\\\\\\",\\\\\\\"attributes\\\\\\\":{\\\\\\\"Ambience\\\\\\\":{\\\\\\\"casual\\\\\\\":true,\\\\\\\"classy\\\\\\\":true,\\\\\\\"divey\\\\\\\":false,\\\\\\\"hipster\\\\\\\":true,\\\\\\\"intimate\\\\\\\":true,\\\\\\\"romantic\\\\\\\":null,\\\\\\\"touristy\\\\\\\":false,\\\\\\\"trendy\\\\\\\":true,\\\\\\\"upscale\\\\\\\":false},\\\\\\\"BusinessParking\\\\\\\":{\\\\\\\"garage\\\\\\\":false,\\\\\\\"lot\\\\\\\":false,\\\\\\\"street\\\\\\\":true,\\\\\\\"valet\\\\\\\":false,\\\\\\\"validated\\\\\\\":false},\\\\\\\"Music\\\\\\\":false,\\\\\\\"OutdoorSeating\\\\\\\":false,\\\\\\\"RestaurantsGoodForGroups\\\\\\\":true,\\\\\\\"RestaurantsReservations\\\\\\\":true,\\\\\\\"RestaurantsTakeOut\\\\\\\":true,\\\\\\\"WiFi\\\\\\\":\\\\\\\"free\\\\\\\"},\\\\\\\"business_stars\\\\\\\":4.0,\\\\\\\"categories\\\\\\\":\\\\\\\"Bars, Mediterranean, Burgers, Restaurants, Gastropubs, Nightlife, Whiskey Bars, Cocktail Bars\\\\\\\",\\\\\\\"city\\\\\\\":\\\\\\\"Santa Barbara\\\\\\\",\\\\\\\"hours\\\\\\\":{\\\\\\\"Friday\\\\\\\":\\\\\\\"12:0-0:0\\\\\\\",\\\\\\\"Monday\\\\\\\":\\\\\\\"12:0-17:0\\\\\\\",\\\\\\\"Saturday\\\\\\\":\\\\\\\"12:0-0:0\\\\\\\",\\\\\\\"Sunday\\\\\\\":\\\\\\\"12:0-0:0\\\\\\\",\\\\\\\"Thursday\\\\\\\":\\\\\\\"16:0-0:0\\\\\\\",\\\\\\\"Tuesday\\\\\\\":\\\\\\\"16:0-23:0\\\\\\\",\\\\\\\"Wednesday\\\\\\\":\\\\\\\"17:0-23:0\\\\\\\"},\\\\\\\"name\\\\\\\":\\\\\\\"Foxtail Kitchen & Bar\\\\\\\",\\\\\\\"review_info\\\\\\\":[{\\\\\\\"review_date\\\\\\\":\\\\\\\"2021-12-29 04:04:46\\\\\\\",\\\\\\\"review_stars\\\\\\\":1.0,\\\\\\\"review_text\\\\\\\":\\\\\\\"i honestly came here wanting to love it. it's a great location, a nice atmosphere, and a unique menu! and i will say that the food was good. that's what the star is for. apart from that, we ordered from the happy hour menu (which said it went until 7pm) at 6:30, but the host didnt honor the menu price, since she said happy hour actually ended at 6. so the expected price went up from ~$30 to over $55. we asked if she would honor the menu price and she said no, but she did end up giving us 10% off. that was nice. so we go out to the nice patio, and the food comes out pretty quickly! but we hadn't gotten our drinks, and after eating half of our meal, i decided to go in and check on the drinks. turns out she totally forgot what we had ordered. i waited another 15 minutes watching her tend to maybe two other customers at the bar before she got to our two drinks. she then gave us a cocktail that wasn't what we ordered, and when we asked about it, she claimed that it was right. so we drank it. we went in to get one more cocktail, and she seriously tried to charge us again for the whole. meal. saying we hadn't paid. needless to say, the service was horrendous. the restauarant has a lot of potential, but they have to get more competent waitstaff.\\\\\\\"},{\\\\\\\"review_date\\\\\\\":\\\\\\\"2021-12-29 03:21:19\\\\\\\",\\\\\\\"review_stars\\\\\\\":2.0,\\\\\\\"review_text\\\\\\\":\\\\\\\"Food was good, but worst bar service ever! We received our food and then the bar tender forgot about our drinks. She then proceeded to make multiple others before making hours. This also happened to me last time I came! I never write reviews but honestly it was very unpleasant. Also, there happy hour time is wrong on the menus...extra frustrating!\\\\\\\"},{\\\\\\\"review_date\\\\\\\":\\\\\\\"2021-12-05 18:52:59\\\\\\\",\\\\\\\"review_stars\\\\\\\":3.0,\\\\\\\"review_text\\\\\\\":\\\\\\\"For the weekend evening, they were not busy, but after getting seated our drinks order was taken after 10 min. There were only 2 people managing the bar and service. Our food arrived 40+ minutes after placing it. We ordered more drinks which they forgot about so I had to go in and add the request again. Both me and my husband had to personally go in several times to get what we needed. My husband also got 2nd mule which didn't taste like a mule. Bar tender said she accidentally gave the wrong drink so he got a new glass which was filled with ice and the drink was little bit over half full. Food wise, it was good except for chicken shawarma. Chickpea patty from chickpea burger was definitely very good. I cant imagine hoe their service will be when they're actually busy, so we will not be taking chance in the future.\\\\\\\\nFor the good food and set up they have, the can go long way with good service.\\\\\\\"}],\\\\\\\"state\\\\\\\":\\\\\\\"CA\\\\\\\"}\\\", \\\"original_answer\\\": \\\"Foxtail Kitchen & Bar is a local business located at 14 E Cota St in Santa Barbara, CA. It is a restaurant and bar that offers a Mediterranean-inspired menu and a variety of drinks, including whiskey and cocktails. The establishment is known for its unique menu and nice atmosphere.\\\\n\\\\nThe business operates from Monday to Sunday, with varying hours each day. They open at 12:00 PM and close at different times, ranging from 5:00 PM to midnight, depending on the day. The restaurant accepts reservations and offers takeout options for customers. It is also suitable for groups and provides free WiFi.\\\\n\\\\nCustomers have mentioned mixed experiences with the service at Foxtail Kitchen & Bar. Some reviews highlight issues with the waitstaff, including long wait times for drinks and forgotten orders. One customer mentioned an incident where the happy hour menu was not honored correctly, resulting in a higher bill. However, the food received positive feedback for its taste and quality.\\\\n\\\\nOverall, Foxtail Kitchen & Bar has received a rating of 4.0 stars. While the establishment has potential with its good food and pleasant ambiance, improvements in service and attentiveness from the waitstaff are necessary to enhance the overall customer experience.\\\", \\\"target\\\": \\\"any_unsupported_span_in_original_response\\\", \\\"visible_source_sentence_ids\\\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32], \\\"source_evidence_erased\\\": false}\",\"role\":\"user\"}],\"model\":\"unsloth/Qwen3.8-27B-GGUF\",\"seed\":69058,\"temperature\":0,\"top_p\":1}",
+  "response_bytes": "{\"decision\":\"accept\",\"generated_text\":\"{\\n  \\\"unsupported_probability\\\": 0.0,\\n  \\\"source_sentence_id\\\": null\\n}\",\"probability\":1.0707e-06}",
+  "response_commit": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8146_v704_live_service_cost/invocations/1791164497330123254/measured-5-native_scalar/response.json",
+    "sha256": "sha256:0a052e1fd6929ffc29b278b65b065a7b562838765b0311ea88fb9558fa45c54f"
+  },
+  "source_cluster_id": "sha256:99c099138bdd650b562d242b3fd15015dd8bb7c7205681647709d2e2794a1d9a",
+  "started": true,
+  "started_monotonic_ns": 825762780705390,
+  "status": "completed",
+  "unit_id": "measured-5-native_scalar",
+  "values": [
+    -13.815509557963773,
+    0.21111206724187492,
+    0.42378234301311224,
+    0.2355769230769231,
+    0.9230769230769231,
+    0.23076923076923078,
+    0.23076923076923078,
+    0.7888879327581251,
+    0.9811669811669812
+  ]
+}

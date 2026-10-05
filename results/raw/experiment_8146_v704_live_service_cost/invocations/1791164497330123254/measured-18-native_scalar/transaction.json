@@ -1,0 +1,147 @@
+{
+  "arm": "native_scalar",
+  "binary_energy_difference": 13.748993364627285,
+  "cache_events": [
+    {
+      "key": "sha256:8f6625ba019db2724ec8de5398a2f0b6bb96a38c92268c373d2e5b36c2e9990a",
+      "status": "miss"
+    }
+  ],
+  "components": {
+    "arithmetic_and_boundary_ns": 501181,
+    "decision_serialization_ns": 21300,
+    "durable_commit_ns": 3302855,
+    "generation_ns": 1387746184,
+    "ingress_hash_lookup_ns": 12829223,
+    "parse_lexical_ns": 28561329
+  },
+  "condition": "fresh_cache_miss",
+  "decision": "accept",
+  "denominator": 1,
+  "ended_monotonic_ns": 825801208379687,
+  "exclusion_reason": null,
+  "full_latency_ns": 1435865498,
+  "generated_text": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+  "initial_state_hash": "sha256:75ff3b0fb833dcb0dc2c0edd9b1258394e207aba09fd4f94852822733bd2cd4c",
+  "input_tokens": 687,
+  "latency_score_ns": 1435865498,
+  "lexical": {
+    "abstention": null,
+    "family_id": "sha256:60ec3816db1036bf66763f8e08b01a32c2087743f4cfd87fcf84033bc1293894",
+    "feature_hash": "sha256:7e29956e269895b5140ecbd8dd50fc587432f186cdef12465a5794909a0bebee",
+    "source_normalized_hash": "9eeae1a9d1d11d79715caa2efdd61ae5a74ff0d8c501738796d10b84ce130ff0",
+    "values": [
+      0.23405343333914763,
+      0.47449871557014417,
+      0.4444444444444444,
+      1.0,
+      0.14285714285714285,
+      0.14285714285714285,
+      0.7659465666608525,
+      1.0
+    ],
+    "window_count": 18
+  },
+  "metric": "complete_latency_ns",
+  "numerator": 1435865498,
+  "output_tokens": 23,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 687,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 710
+    }
+  },
+  "probability": 1.0687781975125024e-06,
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791164892,
+    "id": "chatcmpl-Dn2hrc6uv9SjlJvRmg6xe8lNG6kKgy0A",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 537.256,
+      "predicted_n": 23,
+      "predicted_per_second": 42.81013148294296,
+      "predicted_per_token_ms": 23.358956521739128,
+      "prompt_ms": 687.541,
+      "prompt_n": 687,
+      "prompt_per_second": 999.2131378346891,
+      "prompt_per_token_ms": 1.0007874818049491
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 687,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 710
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"413 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"American (Traditional), Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Lettuce B. Frank\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2010-05-31 10:53:37\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I'm so sad to hear this place has closed.  I liked the menu and my hotdog very much.  I remember chatting with the owner late one night as I waited for my group to take care of the birthday boy after a night of drinking, and it seemed like things were going well.\\\"},{\\\"review_date\\\":\\\"2010-01-28 01:34:07\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I almost cried today when I went to LBF to have lunch with some friends and realized they're no longer in business.  I'm so sad.  It was the only place I've ever found that had vegetarian sliders.  Soooooooo amazing!  They're veggie hot dogs were awesome too!  I'm going to miss you LBF!\\\"},{\\\"review_date\\\":\\\"2009-10-19 17:21:00\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Staying true to my words - I will never come back here again.  Trying to give this place another shot on my recent SB visit, I was disappointed at the annoying staff that could not fulfill my order correctly.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Lettuce B. Frank is a now-closed American traditional restaurant located in Santa Barbara, CA. According to customer reviews, the restaurant was known for its unique menu options, including vegetarian sliders and veggie hot dogs. Many customers appreciated the restaurant's casual atmosphere and friendly service, with one reviewer mentioning that they had a pleasant conversation with the owner during their visit. However, there were also complaints about the staff's ability to fulfill orders correctly, with one reviewer expressing frustration at their experience. Overall, Lettuce B. Frank received an average rating of 3.5 stars from its customers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "request_bytes": "{\"cache_prompt\":false,\"chat_template_kwargs\":{\"enable_thinking\":false},\"grammar\":\"root ::= \\\"{\\\" ws \\\"\\\\\\\"unsupported_probability\\\\\\\"\\\" ws \\\":\\\" ws probability ws \\\",\\\" ws \\\"\\\\\\\"source_sentence_id\\\\\\\"\\\" ws \\\":\\\" ws citation ws \\\"}\\\"\\nprobability ::= \\\"0\\\" (\\\".\\\" [0-9]+)? | \\\"1\\\" (\\\".\\\" \\\"0\\\"+)?\\ncitation ::= \\\"null\\\" | \\\"0\\\" | [1-9] [0-9]*\\nws ::= [ \\\\t\\\\n\\\\r]*\",\"max_tokens\":128,\"messages\":[{\"content\":\"Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.\",\"role\":\"system\"},{\"content\":\"{\\\"complete_source\\\": \\\"{\\\\\\\"address\\\\\\\":\\\\\\\"413 State St\\\\\\\",\\\\\\\"attributes\\\\\\\":{\\\\\\\"Ambience\\\\\\\":null,\\\\\\\"BusinessParking\\\\\\\":{\\\\\\\"garage\\\\\\\":false,\\\\\\\"lot\\\\\\\":false,\\\\\\\"street\\\\\\\":true,\\\\\\\"valet\\\\\\\":false,\\\\\\\"validated\\\\\\\":false},\\\\\\\"Music\\\\\\\":null,\\\\\\\"OutdoorSeating\\\\\\\":false,\\\\\\\"RestaurantsGoodForGroups\\\\\\\":true,\\\\\\\"RestaurantsReservations\\\\\\\":false,\\\\\\\"RestaurantsTakeOut\\\\\\\":true,\\\\\\\"WiFi\\\\\\\":null},\\\\\\\"business_stars\\\\\\\":3.5,\\\\\\\"categories\\\\\\\":\\\\\\\"American (Traditional), Restaurants\\\\\\\",\\\\\\\"city\\\\\\\":\\\\\\\"Santa Barbara\\\\\\\",\\\\\\\"hours\\\\\\\":null,\\\\\\\"name\\\\\\\":\\\\\\\"Lettuce B. Frank\\\\\\\",\\\\\\\"review_info\\\\\\\":[{\\\\\\\"review_date\\\\\\\":\\\\\\\"2010-05-31 10:53:37\\\\\\\",\\\\\\\"review_stars\\\\\\\":4.0,\\\\\\\"review_text\\\\\\\":\\\\\\\"I'm so sad to hear this place has closed.  I liked the menu and my hotdog very much.  I remember chatting with the owner late one night as I waited for my group to take care of the birthday boy after a night of drinking, and it seemed like things were going well.\\\\\\\"},{\\\\\\\"review_date\\\\\\\":\\\\\\\"2010-01-28 01:34:07\\\\\\\",\\\\\\\"review_stars\\\\\\\":4.0,\\\\\\\"review_text\\\\\\\":\\\\\\\"I almost cried today when I went to LBF to have lunch with some friends and realized they're no longer in business.  I'm so sad.  It was the only place I've ever found that had vegetarian sliders.  Soooooooo amazing!  They're veggie hot dogs were awesome too!  I'm going to miss you LBF!\\\\\\\"},{\\\\\\\"review_date\\\\\\\":\\\\\\\"2009-10-19 17:21:00\\\\\\\",\\\\\\\"review_stars\\\\\\\":1.0,\\\\\\\"review_text\\\\\\\":\\\\\\\"Staying true to my words - I will never come back here again.  Trying to give this place another shot on my recent SB visit, I was disappointed at the annoying staff that could not fulfill my order correctly.\\\\\\\"}],\\\\\\\"state\\\\\\\":\\\\\\\"CA\\\\\\\"}\\\", \\\"original_answer\\\": \\\"Lettuce B. Frank is a now-closed American traditional restaurant located in Santa Barbara, CA. According to customer reviews, the restaurant was known for its unique menu options, including vegetarian sliders and veggie hot dogs. Many customers appreciated the restaurant's casual atmosphere and friendly service, with one reviewer mentioning that they had a pleasant conversation with the owner during their visit. However, there were also complaints about the staff's ability to fulfill orders correctly, with one reviewer expressing frustration at their experience. Overall, Lettuce B. Frank received an average rating of 3.5 stars from its customers.\\\", \\\"target\\\": \\\"any_unsupported_span_in_original_response\\\", \\\"visible_source_sentence_ids\\\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \\\"source_evidence_erased\\\": false}\",\"role\":\"user\"}],\"model\":\"unsloth/Qwen3.8-27B-GGUF\",\"seed\":69058,\"temperature\":0,\"top_p\":1}",
+  "response_bytes": "{\"decision\":\"accept\",\"generated_text\":\"{\\n  \\\"unsupported_probability\\\": 0.0,\\n  \\\"source_sentence_id\\\": null\\n}\",\"probability\":1.0688e-06}",
+  "response_commit": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8146_v704_live_service_cost/invocations/1791164497330123254/measured-18-native_scalar/response.json",
+    "sha256": "sha256:ed6e3f4a94dfa3ed5c6b94cfa27893d8d6da70359b01b9e8a01c9a273beb15f4"
+  },
+  "source_cluster_id": "sha256:cc7392789df23cfec3451ede637c6d02838bf56fcace421b00f9cdfcd240ebd5",
+  "started": true,
+  "started_monotonic_ns": 825799772514189,
+  "status": "completed",
+  "unit_id": "measured-18-native_scalar",
+  "values": [
+    -13.815509557963773,
+    0.23405343333914763,
+    0.47449871557014417,
+    0.4444444444444444,
+    1.0,
+    0.14285714285714285,
+    0.14285714285714285,
+    0.7659465666608525,
+    1.0
+  ]
+}

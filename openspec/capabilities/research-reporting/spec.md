@@ -2,6 +2,33 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8146: Publish current complete service transactions
+
+Require authenticated Exp8145.natural_service_ready_score=1 independently of
+source-head fitting. Freeze owned validation argv before measurement; publish
+only after scoped unit/consumer, E2E-015/019, Ruff, strict mypy, scoped spec and
+100 percent new statement coverage checks, independent replay and unchanged
+adversarial/strict-row validators exit normally. Run full Python health once
+separately. External absence terminates complete_blocked with exact operands;
+owned failure disqualifies and zeros readiness. Preserve prior primaries and
+all primitive rows. Current calls alone determine substrate and counters.
+Both generalization scores remain zero. The conductor owns ops and traceability.
+
+### SCENARIO-REPORT-8146: Private CLI custody and failures
+
+Script execution outside checkout without PYTHONPATH exercises fixture success,
+external block, owned failure, source/model identity mutation and cold replay.
+Fixture traffic has no current model credit. Replay rehashes code, sources,
+logs and primitives and rebuilds counters, complete pairs and readiness.
+
+REQ-REPORT-8146 implementation: the thin script and
+`carnot.experiment_8146_v704_live_service_cost` freeze scoped validation and reuse
+the qualified CUDA lease and checked-primary publication service. Private tests
+exercise success, external absence, owned failure, byte mutations and cold replay.
+The producer exports the recorded gate operands as `preconditions_checked` for
+the unchanged live-compute auditor. A metadata repair preserves failed candidates,
+original executed code and primitive bytes without repeating acquisition.
+
 ## REQ-REPORT-8145: Publish authenticated natural host costs
 
 Require Exp8143.learning_trajectory_ready_score == 1 and byte-bound terminal

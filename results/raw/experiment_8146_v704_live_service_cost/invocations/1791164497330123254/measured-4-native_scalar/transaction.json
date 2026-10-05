@@ -1,0 +1,147 @@
+{
+  "arm": "native_scalar",
+  "binary_energy_difference": 13.758192062885488,
+  "cache_events": [
+    {
+      "key": "sha256:789870acbf15627c82239805d4a6654b9569417b0d6952a430e389d3c15cffb3",
+      "status": "miss"
+    }
+  ],
+  "components": {
+    "arithmetic_and_boundary_ns": 764816,
+    "decision_serialization_ns": 30728,
+    "durable_commit_ns": 1912683,
+    "generation_ns": 1310042948,
+    "ingress_hash_lookup_ns": 13842638,
+    "parse_lexical_ns": 22508158
+  },
+  "condition": "fresh_cache_miss",
+  "decision": "accept",
+  "denominator": 1,
+  "ended_monotonic_ns": 825759502267248,
+  "exclusion_reason": null,
+  "full_latency_ns": 1352732463,
+  "generated_text": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 4\n}",
+  "initial_state_hash": "sha256:75ff3b0fb833dcb0dc2c0edd9b1258394e207aba09fd4f94852822733bd2cd4c",
+  "input_tokens": 517,
+  "latency_score_ns": 1352732463,
+  "lexical": {
+    "abstention": null,
+    "family_id": "sha256:2901a41a82b55778e239739d7757c5d36639edf5a8d124abe449e67fb65a9de7",
+    "feature_hash": "sha256:be222a2f7b798f8dfaf49399b6bd70efa5c2a16f41c54a4ebaf65f008fc90ab4",
+    "source_normalized_hash": "8b82baf05a548c6076b0195adc3bbc04cb2daa1f32489d8be286460b8c5d4ee2",
+    "values": [
+      0.4913863141216082,
+      0.7197821350762528,
+      0.2,
+      0.2,
+      0.375,
+      0.4,
+      0.5086136858783917,
+      0.6966036838978015
+    ],
+    "window_count": 8
+  },
+  "metric": "complete_latency_ns",
+  "numerator": 1352732463,
+  "output_tokens": 22,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 4,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 517,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 539
+    }
+  },
+  "probability": 1.0589919192964217e-06,
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 4\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791164851,
+    "id": "chatcmpl-vmKzf2H1NeFzVsMfko4m7yV6EyUPDYKQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 511.212,
+      "predicted_n": 22,
+      "predicted_per_second": 43.03498352933812,
+      "predicted_per_token_ms": 23.23690909090909,
+      "prompt_ms": 579.978,
+      "prompt_n": 517,
+      "prompt_per_second": 891.4131225667181,
+      "prompt_per_token_ms": 1.1218143133462282
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 517,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 539
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Like other transition metals gold's valence electrons, or the electrons it uses to combine with other elements, are present in more than one shell. Unusually for a metal, gold can also form compounds (aurides) in which its oxidation number is negative (-1).\\\\n\\\\npassage 2:Gold is a heavy metal (density 19.3 g cm -3) and one gram of gold can be hammered out into a thin sheet of gold a metre in area, and just 230 atoms or so thick. Gold leaf is translucent and the transmitted light is greenish blue (gold metal reflects yellow and red, leaving the greenish blue colour.\\\\n\\\\npassage 3:Gold is metallic, with a yellow colour when in a mass, but when finely divided it may be black, ruby, or purple. It is the most malleable and ductile metal; 1 ounce (28 g) of gold can be beaten out to 300 square feet. It is a soft metal and is usually alloyed to give it more strength.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are properties of gold\\\"}\", \"original_answer\": \"Properties of gold:\\n\\n* Gold has more than one shell of valence electrons, allowing it to form compounds with an oxidation number of -1.\\n* Gold is a heavy metal with a density of 19.3 g/cm\u00b3.\\n* One gram of gold can be hammered out into a thin sheet of gold covering a meter in area, and is translucent with a greenish-blue color.\\n* Gold is malleable and ductile, meaning it can be easily beaten into thin sheets and drawn out into wires without breaking.\\n* Gold is a soft metal and is typically alloyed with other metals to increase its strength.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "request_bytes": "{\"cache_prompt\":false,\"chat_template_kwargs\":{\"enable_thinking\":false},\"grammar\":\"root ::= \\\"{\\\" ws \\\"\\\\\\\"unsupported_probability\\\\\\\"\\\" ws \\\":\\\" ws probability ws \\\",\\\" ws \\\"\\\\\\\"source_sentence_id\\\\\\\"\\\" ws \\\":\\\" ws citation ws \\\"}\\\"\\nprobability ::= \\\"0\\\" (\\\".\\\" [0-9]+)? | \\\"1\\\" (\\\".\\\" \\\"0\\\"+)?\\ncitation ::= \\\"null\\\" | \\\"0\\\" | [1-9] [0-9]*\\nws ::= [ \\\\t\\\\n\\\\r]*\",\"max_tokens\":128,\"messages\":[{\"content\":\"Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.\",\"role\":\"system\"},{\"content\":\"{\\\"complete_source\\\": \\\"{\\\\\\\"passages\\\\\\\":\\\\\\\"passage 1:Like other transition metals gold's valence electrons, or the electrons it uses to combine with other elements, are present in more than one shell. Unusually for a metal, gold can also form compounds (aurides) in which its oxidation number is negative (-1).\\\\\\\\n\\\\\\\\npassage 2:Gold is a heavy metal (density 19.3 g cm -3) and one gram of gold can be hammered out into a thin sheet of gold a metre in area, and just 230 atoms or so thick. Gold leaf is translucent and the transmitted light is greenish blue (gold metal reflects yellow and red, leaving the greenish blue colour.\\\\\\\\n\\\\\\\\npassage 3:Gold is metallic, with a yellow colour when in a mass, but when finely divided it may be black, ruby, or purple. It is the most malleable and ductile metal; 1 ounce (28 g) of gold can be beaten out to 300 square feet. It is a soft metal and is usually alloyed to give it more strength.\\\\\\\\n\\\\\\\\n\\\\\\\",\\\\\\\"question\\\\\\\":\\\\\\\"what are properties of gold\\\\\\\"}\\\", \\\"original_answer\\\": \\\"Properties of gold:\\\\n\\\\n* Gold has more than one shell of valence electrons, allowing it to form compounds with an oxidation number of -1.\\\\n* Gold is a heavy metal with a density of 19.3 g/cm\\u00b3.\\\\n* One gram of gold can be hammered out into a thin sheet of gold covering a meter in area, and is translucent with a greenish-blue color.\\\\n* Gold is malleable and ductile, meaning it can be easily beaten into thin sheets and drawn out into wires without breaking.\\\\n* Gold is a soft metal and is typically alloyed with other metals to increase its strength.\\\", \\\"target\\\": \\\"any_unsupported_span_in_original_response\\\", \\\"visible_source_sentence_ids\\\": [0, 1, 2, 3, 4], \\\"source_evidence_erased\\\": false}\",\"role\":\"user\"}],\"model\":\"unsloth/Qwen3.8-27B-GGUF\",\"seed\":69058,\"temperature\":0,\"top_p\":1}",
+  "response_bytes": "{\"decision\":\"accept\",\"generated_text\":\"{\\n\\\"unsupported_probability\\\": 0.0,\\n\\\"source_sentence_id\\\": 4\\n}\",\"probability\":1.059e-06}",
+  "response_commit": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8146_v704_live_service_cost/invocations/1791164497330123254/measured-4-native_scalar/response.json",
+    "sha256": "sha256:c1b2487bec1fb85762405267c8b31c9e794e6aeaed022cad37a30e38b6164d86"
+  },
+  "source_cluster_id": "sha256:5207f2bd327b1e8e28c6db36c85525186e44cff0ca0136d231ca711de05b7363",
+  "started": true,
+  "started_monotonic_ns": 825758149534785,
+  "status": "completed",
+  "unit_id": "measured-4-native_scalar",
+  "values": [
+    -13.815509557963773,
+    0.4913863141216082,
+    0.7197821350762528,
+    0.2,
+    0.2,
+    0.375,
+    0.4,
+    0.5086136858783917,
+    0.6966036838978015
+  ]
+}

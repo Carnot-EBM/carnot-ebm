@@ -1,0 +1,147 @@
+{
+  "arm": "native_scalar",
+  "binary_energy_difference": 13.747600267492711,
+  "cache_events": [
+    {
+      "key": "sha256:270041a1b6c1dafe37d591f92bcfc1874a0ccda006be0dff7ef3a27f74c65bf2",
+      "status": "miss"
+    }
+  ],
+  "components": {
+    "arithmetic_and_boundary_ns": 489550,
+    "decision_serialization_ns": 21130,
+    "durable_commit_ns": 3138347,
+    "generation_ns": 1466449747,
+    "ingress_hash_lookup_ns": 13824082,
+    "parse_lexical_ns": 49382568
+  },
+  "condition": "fresh_cache_miss",
+  "decision": "accept",
+  "denominator": 1,
+  "ended_monotonic_ns": 825817824170324,
+  "exclusion_reason": null,
+  "full_latency_ns": 1538009880,
+  "generated_text": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+  "initial_state_hash": "sha256:75ff3b0fb833dcb0dc2c0edd9b1258394e207aba09fd4f94852822733bd2cd4c",
+  "input_tokens": 902,
+  "latency_score_ns": 1538009880,
+  "lexical": {
+    "abstention": null,
+    "family_id": "sha256:e4012e55c089c27dc10eb3444ffe4069b817c72dfeede176b8d7b038a6f75d47",
+    "feature_hash": "sha256:ce53c82a16a7fe51f2ece1fba74ef1676877120fb7e304d0c0ab1594044e7531",
+    "source_normalized_hash": "f1aa695c01352f63f618f8e1a7a8dc33044ce6aee9dd908a48932a8c75028721",
+    "values": [
+      0.26135605757454494,
+      0.3894420906321061,
+      0.41964285714285715,
+      0.875,
+      0.25,
+      0.25,
+      0.738643942425455,
+      0.8729636940501878
+    ],
+    "window_count": 28
+  },
+  "metric": "complete_latency_ns",
+  "numerator": 1538009880,
+  "output_tokens": 23,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 902,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 925
+    }
+  },
+  "probability": 1.0702681453434807e-06,
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791164909,
+    "id": "chatcmpl-VHQ3hBhKlKLOxeJTEd1wEg672X7dkDA8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 538.997,
+      "predicted_n": 23,
+      "predicted_per_second": 42.6718516058531,
+      "predicted_per_token_ms": 23.43465217391304,
+      "prompt_ms": 913.91,
+      "prompt_n": 902,
+      "prompt_per_second": 986.9680821962775,
+      "prompt_per_token_ms": 1.0132039911308204
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 902,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 925
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5746 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Del Valle Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-07-29 02:22:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Recently tried this place twice. Both times the food was excellent. Great super fresh and authentic choices at a reasonable price. My new favorite Mexican take-out!\\\"},{\\\"review_date\\\":\\\"2020-10-03 07:37:20\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This hole in the wall in the middle of Old Town Goleta has a great carnitas burrito. The carnitas is as good as the carnitas Rubio's used to have. At this point in my food journey, that's worth 5 stars. And it's not one of those half beans burritos. It does have some high quality beans, but also a small medley of well-seasoned veggie type ingredients. \\\\n\\\\nThere is also no need to even consider the jumbo unless you brought a wagon to wheel that thing home - and you probably want to eat it at home or Goleta Beach because there isn't any seating thanks to Covid. Even when the dining room was open, it never seemed like there were that many people in there. That said, the couple who runs the place is very nice, the prices are downright cheap, and if you haven't heard, they have a great carnitas burrito.\\\"},{\\\"review_date\\\":\\\"2020-06-22 21:19:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I got the giant meat quesadilla and it was great! You can choose a kind of meat out of a big list with all the same price. Good combination of guac, sour cream and just a right amount of cheese. I will definitely come back and try other menu but I really liked the quesadilla that I would order it again with another choice of meat. Nice family restaurant with friendly people.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Del Valle Grill, located at 5746 Hollister Ave in Goleta, CA, is a local restaurant that specializes in Mexican cuisine. The establishment has been highly praised by customers for its authentic food, reasonable prices, and accommodating take-out service. The establishment has a 4-star rating. According to customer reviews, popular items include their carnitas burrito and giant meat quesadilla. Customers have also mentioned the freshness of the ingredients used and the generous portion sizes. The restaurant does not offer Wi-Fi or outdoor seating, and reservations are not accepted. Street parking is available and the restaurant is suitable for groups. Despite its lack of certain amenities, Del Valle Grill is celebrated for its quality food and friendly service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "request_bytes": "{\"cache_prompt\":false,\"chat_template_kwargs\":{\"enable_thinking\":false},\"grammar\":\"root ::= \\\"{\\\" ws \\\"\\\\\\\"unsupported_probability\\\\\\\"\\\" ws \\\":\\\" ws probability ws \\\",\\\" ws \\\"\\\\\\\"source_sentence_id\\\\\\\"\\\" ws \\\":\\\" ws citation ws \\\"}\\\"\\nprobability ::= \\\"0\\\" (\\\".\\\" [0-9]+)? | \\\"1\\\" (\\\".\\\" \\\"0\\\"+)?\\ncitation ::= \\\"null\\\" | \\\"0\\\" | [1-9] [0-9]*\\nws ::= [ \\\\t\\\\n\\\\r]*\",\"max_tokens\":128,\"messages\":[{\"content\":\"Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.\",\"role\":\"system\"},{\"content\":\"{\\\"complete_source\\\": \\\"{\\\\\\\"address\\\\\\\":\\\\\\\"5746 Hollister Ave\\\\\\\",\\\\\\\"attributes\\\\\\\":{\\\\\\\"Ambience\\\\\\\":{\\\\\\\"casual\\\\\\\":false,\\\\\\\"classy\\\\\\\":false,\\\\\\\"divey\\\\\\\":false,\\\\\\\"hipster\\\\\\\":false,\\\\\\\"intimate\\\\\\\":false,\\\\\\\"romantic\\\\\\\":false,\\\\\\\"touristy\\\\\\\":false,\\\\\\\"trendy\\\\\\\":false,\\\\\\\"upscale\\\\\\\":false},\\\\\\\"BusinessParking\\\\\\\":{\\\\\\\"garage\\\\\\\":false,\\\\\\\"lot\\\\\\\":false,\\\\\\\"street\\\\\\\":true,\\\\\\\"valet\\\\\\\":false,\\\\\\\"validated\\\\\\\":false},\\\\\\\"Music\\\\\\\":null,\\\\\\\"OutdoorSeating\\\\\\\":false,\\\\\\\"RestaurantsGoodForGroups\\\\\\\":true,\\\\\\\"RestaurantsReservations\\\\\\\":false,\\\\\\\"RestaurantsTakeOut\\\\\\\":true,\\\\\\\"WiFi\\\\\\\":\\\\\\\"no\\\\\\\"},\\\\\\\"business_stars\\\\\\\":4.0,\\\\\\\"categories\\\\\\\":\\\\\\\"Restaurants, Mexican\\\\\\\",\\\\\\\"city\\\\\\\":\\\\\\\"Goleta\\\\\\\",\\\\\\\"hours\\\\\\\":null,\\\\\\\"name\\\\\\\":\\\\\\\"Del Valle Grill\\\\\\\",\\\\\\\"review_info\\\\\\\":[{\\\\\\\"review_date\\\\\\\":\\\\\\\"2021-07-29 02:22:41\\\\\\\",\\\\\\\"review_stars\\\\\\\":5.0,\\\\\\\"review_text\\\\\\\":\\\\\\\"Recently tried this place twice. Both times the food was excellent. Great super fresh and authentic choices at a reasonable price. My new favorite Mexican take-out!\\\\\\\"},{\\\\\\\"review_date\\\\\\\":\\\\\\\"2020-10-03 07:37:20\\\\\\\",\\\\\\\"review_stars\\\\\\\":5.0,\\\\\\\"review_text\\\\\\\":\\\\\\\"This hole in the wall in the middle of Old Town Goleta has a great carnitas burrito. The carnitas is as good as the carnitas Rubio's used to have. At this point in my food journey, that's worth 5 stars. And it's not one of those half beans burritos. It does have some high quality beans, but also a small medley of well-seasoned veggie type ingredients. \\\\\\\\n\\\\\\\\nThere is also no need to even consider the jumbo unless you brought a wagon to wheel that thing home - and you probably want to eat it at home or Goleta Beach because there isn't any seating thanks to Covid. Even when the dining room was open, it never seemed like there were that many people in there. That said, the couple who runs the place is very nice, the prices are downright cheap, and if you haven't heard, they have a great carnitas burrito.\\\\\\\"},{\\\\\\\"review_date\\\\\\\":\\\\\\\"2020-06-22 21:19:23\\\\\\\",\\\\\\\"review_stars\\\\\\\":5.0,\\\\\\\"review_text\\\\\\\":\\\\\\\"I got the giant meat quesadilla and it was great! You can choose a kind of meat out of a big list with all the same price. Good combination of guac, sour cream and just a right amount of cheese. I will definitely come back and try other menu but I really liked the quesadilla that I would order it again with another choice of meat. Nice family restaurant with friendly people.\\\\\\\"}],\\\\\\\"state\\\\\\\":\\\\\\\"CA\\\\\\\"}\\\", \\\"original_answer\\\": \\\"Del Valle Grill, located at 5746 Hollister Ave in Goleta, CA, is a local restaurant that specializes in Mexican cuisine. The establishment has been highly praised by customers for its authentic food, reasonable prices, and accommodating take-out service. The establishment has a 4-star rating. According to customer reviews, popular items include their carnitas burrito and giant meat quesadilla. Customers have also mentioned the freshness of the ingredients used and the generous portion sizes. The restaurant does not offer Wi-Fi or outdoor seating, and reservations are not accepted. Street parking is available and the restaurant is suitable for groups. Despite its lack of certain amenities, Del Valle Grill is celebrated for its quality food and friendly service.\\\", \\\"target\\\": \\\"any_unsupported_span_in_original_response\\\", \\\"visible_source_sentence_ids\\\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \\\"source_evidence_erased\\\": false}\",\"role\":\"user\"}],\"model\":\"unsloth/Qwen3.8-27B-GGUF\",\"seed\":69058,\"temperature\":0,\"top_p\":1}",
+  "response_bytes": "{\"decision\":\"accept\",\"generated_text\":\"{\\n  \\\"unsupported_probability\\\": 0.0,\\n  \\\"source_sentence_id\\\": null\\n}\",\"probability\":1.0703e-06}",
+  "response_commit": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8146_v704_live_service_cost/invocations/1791164497330123254/measured-23-native_scalar/response.json",
+    "sha256": "sha256:7d70dcdfc3ab8ad88d87008aec2abb08bd5481a3eafcf1e37192b9fa24ddcd3d"
+  },
+  "source_cluster_id": "sha256:e7314b9ae0ea00df1324277fc32628932b9df783303b2ac51aad80ffabc59bde",
+  "started": true,
+  "started_monotonic_ns": 825816286160444,
+  "status": "completed",
+  "unit_id": "measured-23-native_scalar",
+  "values": [
+    -13.815509557963773,
+    0.26135605757454494,
+    0.3894420906321061,
+    0.41964285714285715,
+    0.875,
+    0.25,
+    0.25,
+    0.738643942425455,
+    0.8729636940501878
+  ]
+}

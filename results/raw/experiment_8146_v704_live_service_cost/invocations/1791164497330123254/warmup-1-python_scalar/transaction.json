@@ -1,0 +1,147 @@
+{
+  "arm": "python_scalar",
+  "binary_energy_difference": 13.75399621503915,
+  "cache_events": [
+    {
+      "key": "sha256:dcd611a1dad5588d4339134fe7c696ed0060dc5c46ca8f3becabd049ce239951",
+      "status": "miss"
+    }
+  ],
+  "components": {
+    "arithmetic_and_boundary_ns": 378622,
+    "decision_serialization_ns": 20228,
+    "durable_commit_ns": 1452679,
+    "generation_ns": 1407349617,
+    "ingress_hash_lookup_ns": 15895445,
+    "parse_lexical_ns": 11288349
+  },
+  "condition": "fresh_cache_miss",
+  "decision": "accept",
+  "denominator": 1,
+  "ended_monotonic_ns": 825738705018643,
+  "exclusion_reason": null,
+  "full_latency_ns": 1439449026,
+  "generated_text": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+  "initial_state_hash": "sha256:75ff3b0fb833dcb0dc2c0edd9b1258394e207aba09fd4f94852822733bd2cd4c",
+  "input_tokens": 479,
+  "latency_score_ns": 1439449026,
+  "lexical": {
+    "abstention": null,
+    "family_id": "sha256:eec943af8c003a9e2b3bc734fd4ec670318a28c32aa01723ba55d5305ff40c27",
+    "feature_hash": "sha256:16ab5a6f9bef546126f8f349fdbed7bb53b038a13d77fb0cf47e18ad1bdeebc2",
+    "source_normalized_hash": "7c4ae0c59d87005cdfed9fde2aaad6b16a1be91e975485862c9e84fddca5674d",
+    "values": [
+      0.38782051282051283,
+      0.5673076923076923,
+      0.0,
+      0.0,
+      0.46875,
+      0.5,
+      0.6121794871794872,
+      0.8413461538461539
+    ],
+    "window_count": 16
+  },
+  "metric": "complete_latency_ns",
+  "numerator": 1439449026,
+  "output_tokens": 23,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 479,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 502
+    }
+  },
+  "probability": 1.0634446184265117e-06,
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791164830,
+    "id": "chatcmpl-AGWu2FRXQszGxD6wbNB0MgWoEB2cXW3v",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 536.26,
+      "predicted_n": 23,
+      "predicted_per_second": 42.88964308357886,
+      "predicted_per_token_ms": 23.315652173913044,
+      "prompt_ms": 854.921,
+      "prompt_n": 479,
+      "prompt_per_second": 560.2856872155439,
+      "prompt_per_token_ms": 1.78480375782881
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 479,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 502
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The first daughter to be married from the hit reality show \\\"19 Kids and Counting\\\" has also become the first mother. People magazine reports that Jill (Duggar) Dillard gave birth Monday to a 9-pound, 10-ounce son she and husband Derick have named Israel David. Jill's parents, Jim Bob and Michelle Duggar, posted a video of the new family on their official Facebook page. The baby was a bit tardy, going past his due date by more than a week. Dillard, who is a student midwife, said she gave herself two due dates and was prepared for the wait. \\\"I have told myself, 'First-time moms often go a week and a half over, so don't get discouraged,' \\\" she told People. \\\"When everyone else is asking you, 'When are you going to have that baby?' The baby will come when the baby comes.\\\" Dillard has a ways to go to catch up with her mother. Her super-sized family and their lives have been well-documented on their TLC series, including Jill and Derick's wedding on June 21. Eldest Duggar son Josh is already the father of three children, and his wife, Anna, is expecting their fourth in July.\\n\", \"original_answer\": \"Jill Duggar Dillard, from the reality show \\\"19 Kids and Counting,\\\" has given birth to her first child, a son named Israel David. Jill, who is a student midwife, was prepared for the baby to go over his due date, which he did by over a week.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "request_bytes": "{\"cache_prompt\":false,\"chat_template_kwargs\":{\"enable_thinking\":false},\"grammar\":\"root ::= \\\"{\\\" ws \\\"\\\\\\\"unsupported_probability\\\\\\\"\\\" ws \\\":\\\" ws probability ws \\\",\\\" ws \\\"\\\\\\\"source_sentence_id\\\\\\\"\\\" ws \\\":\\\" ws citation ws \\\"}\\\"\\nprobability ::= \\\"0\\\" (\\\".\\\" [0-9]+)? | \\\"1\\\" (\\\".\\\" \\\"0\\\"+)?\\ncitation ::= \\\"null\\\" | \\\"0\\\" | [1-9] [0-9]*\\nws ::= [ \\\\t\\\\n\\\\r]*\",\"max_tokens\":128,\"messages\":[{\"content\":\"Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.\",\"role\":\"system\"},{\"content\":\"{\\\"complete_source\\\": \\\"The first daughter to be married from the hit reality show \\\\\\\"19 Kids and Counting\\\\\\\" has also become the first mother. People magazine reports that Jill (Duggar) Dillard gave birth Monday to a 9-pound, 10-ounce son she and husband Derick have named Israel David. Jill's parents, Jim Bob and Michelle Duggar, posted a video of the new family on their official Facebook page. The baby was a bit tardy, going past his due date by more than a week. Dillard, who is a student midwife, said she gave herself two due dates and was prepared for the wait. \\\\\\\"I have told myself, 'First-time moms often go a week and a half over, so don't get discouraged,' \\\\\\\" she told People. \\\\\\\"When everyone else is asking you, 'When are you going to have that baby?' The baby will come when the baby comes.\\\\\\\" Dillard has a ways to go to catch up with her mother. Her super-sized family and their lives have been well-documented on their TLC series, including Jill and Derick's wedding on June 21. Eldest Duggar son Josh is already the father of three children, and his wife, Anna, is expecting their fourth in July.\\\\n\\\", \\\"original_answer\\\": \\\"Jill Duggar Dillard, from the reality show \\\\\\\"19 Kids and Counting,\\\\\\\" has given birth to her first child, a son named Israel David. Jill, who is a student midwife, was prepared for the baby to go over his due date, which he did by over a week.\\\", \\\"target\\\": \\\"any_unsupported_span_in_original_response\\\", \\\"visible_source_sentence_ids\\\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \\\"source_evidence_erased\\\": false}\",\"role\":\"user\"}],\"model\":\"unsloth/Qwen3.8-27B-GGUF\",\"seed\":69058,\"temperature\":0,\"top_p\":1}",
+  "response_bytes": "{\"decision\":\"accept\",\"generated_text\":\"{\\n  \\\"unsupported_probability\\\": 0.0,\\n  \\\"source_sentence_id\\\": null\\n}\",\"probability\":1.0634e-06}",
+  "response_commit": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8146_v704_live_service_cost/invocations/1791164497330123254/warmup-1-python_scalar/response.json",
+    "sha256": "sha256:ad77f08ea84ec52d627a60de55bbb19275d73b57966b96a5768a134dd234708c"
+  },
+  "source_cluster_id": "sha256:4d4178fd2e8e373f84a624b42a1eb790186d674ce105cc5ab4d52996f8fe54e2",
+  "started": true,
+  "started_monotonic_ns": 825737265569617,
+  "status": "completed",
+  "unit_id": "warmup-1-python_scalar",
+  "values": [
+    -13.815509557963773,
+    0.38782051282051283,
+    0.5673076923076923,
+    0.0,
+    0.0,
+    0.46875,
+    0.5,
+    0.6121794871794872,
+    0.8413461538461539
+  ]
+}

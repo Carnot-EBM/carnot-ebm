@@ -1,0 +1,147 @@
+{
+  "arm": "python_scalar",
+  "binary_energy_difference": 13.74101973335954,
+  "cache_events": [
+    {
+      "key": "sha256:4ca7545f4687cabfc4198fa96ee607d225e0628d5b1c7861cdea93801544174b",
+      "status": "miss"
+    }
+  ],
+  "components": {
+    "arithmetic_and_boundary_ns": 279075,
+    "decision_serialization_ns": 13806,
+    "durable_commit_ns": 1056294,
+    "generation_ns": 1327744612,
+    "ingress_hash_lookup_ns": 12447426,
+    "parse_lexical_ns": 15816185
+  },
+  "condition": "fresh_cache_miss",
+  "decision": "accept",
+  "denominator": 1,
+  "ended_monotonic_ns": 825779140259457,
+  "exclusion_reason": null,
+  "full_latency_ns": 1359294637,
+  "generated_text": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+  "initial_state_hash": "sha256:75ff3b0fb833dcb0dc2c0edd9b1258394e207aba09fd4f94852822733bd2cd4c",
+  "input_tokens": 576,
+  "latency_score_ns": 1359294637,
+  "lexical": {
+    "abstention": null,
+    "family_id": "sha256:90a2b91a5b29313eafda13954551785fe93199e4acc520a13e7ae4f093878819",
+    "feature_hash": "sha256:d93b3010b7386c2bd99ddc72974e4ddae59c5d4bb08d6b26e9bcfe185db7ff93",
+    "source_normalized_hash": "39da1b26c95d5d7ce00c52baa8cc2bf3bbc9ab6407c18305d11adb98b4d8ffdb",
+    "values": [
+      0.3177293509705074,
+      0.5326216298216113,
+      0.20000000000000004,
+      0.2,
+      0.0,
+      0.0,
+      0.6822706490294926,
+      0.8894554062555173
+    ],
+    "window_count": 12
+  },
+  "metric": "complete_latency_ns",
+  "numerator": 1359294637,
+  "output_tokens": 24,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 576,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 600
+    }
+  },
+  "probability": 1.0773342978478002e-06,
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791164870,
+    "id": "chatcmpl-X1XM6VRtz44tgHG1z9CWl4oFLVlOfkYp",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 560.656,
+      "predicted_n": 24,
+      "predicted_per_second": 42.80699751719415,
+      "predicted_per_token_ms": 23.360666666666663,
+      "prompt_ms": 625.749,
+      "prompt_n": 576,
+      "prompt_per_second": 920.4968765431506,
+      "prompt_per_token_ms": 1.0863697916666668
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 576,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 600
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Fuel Pump. The fuel pump has three functions: to deliver enough fuel to supply the requirements of an engine under all operating conditions, to maintain enough pressure in the line between the carburetor and the pump to keep the fuel from boiling, and to prevent vapor lock.\\\\n\\\\npassage 2:The fuel sending unit assembly may be a combination of the electric fuel pump, the filter, the strainer, and the electronic device used to measure the amount of fuel in the tank via a float attached to a sensor which sends data to the dash-mounted fuel gauge. The fuel pump by itself is a relatively inexpensive part.\\\\n\\\\npassage 3:With the whole unit you will get a new pressure regulator. Its alot easier to change out, Plus its all new, And if you have a problem you dont have to dissemble it to figure it out. Sometimes the valve in the regulator/pump lets the fuel drain back to the tank which is the reason for the long starting. In the long run its worth the extra $$ for the whole unit. Good luck.\\\\n\\\\n\\\",\\\"question\\\":\\\"what's the difference between fuel sending unit and fuel pump\\\"}\", \"original_answer\": \"Based on the given passages, the main differences between a fuel sending unit and a fuel pump are:\\n\\n* Functionality: A fuel pump delivers fuel to the engine, while a fuel sending unit assembly includes the fuel pump, filter, strainer, and electronic device to measure the amount of fuel in the tank and send data to the dash-mounted fuel gauge.\\n* Cost: A fuel pump is a relatively inexpensive part compared to the entire fuel sending unit assembly.\\n* Ease of replacement: Replacing the fuel pump alone can be more difficult than replacing the entire fuel sending unit assembly, as the latter comes as a complete unit and is easier to install.\\n\\nHowever, it's important to note that the passages don't provide a clear distinction between the two components, and they seem to be discussed interchangeably. Therefore, without more information, it's difficult to give a definitive answer to the question.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "request_bytes": "{\"cache_prompt\":false,\"chat_template_kwargs\":{\"enable_thinking\":false},\"grammar\":\"root ::= \\\"{\\\" ws \\\"\\\\\\\"unsupported_probability\\\\\\\"\\\" ws \\\":\\\" ws probability ws \\\",\\\" ws \\\"\\\\\\\"source_sentence_id\\\\\\\"\\\" ws \\\":\\\" ws citation ws \\\"}\\\"\\nprobability ::= \\\"0\\\" (\\\".\\\" [0-9]+)? | \\\"1\\\" (\\\".\\\" \\\"0\\\"+)?\\ncitation ::= \\\"null\\\" | \\\"0\\\" | [1-9] [0-9]*\\nws ::= [ \\\\t\\\\n\\\\r]*\",\"max_tokens\":128,\"messages\":[{\"content\":\"Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.\",\"role\":\"system\"},{\"content\":\"{\\\"complete_source\\\": \\\"{\\\\\\\"passages\\\\\\\":\\\\\\\"passage 1:Fuel Pump. The fuel pump has three functions: to deliver enough fuel to supply the requirements of an engine under all operating conditions, to maintain enough pressure in the line between the carburetor and the pump to keep the fuel from boiling, and to prevent vapor lock.\\\\\\\\n\\\\\\\\npassage 2:The fuel sending unit assembly may be a combination of the electric fuel pump, the filter, the strainer, and the electronic device used to measure the amount of fuel in the tank via a float attached to a sensor which sends data to the dash-mounted fuel gauge. The fuel pump by itself is a relatively inexpensive part.\\\\\\\\n\\\\\\\\npassage 3:With the whole unit you will get a new pressure regulator. Its alot easier to change out, Plus its all new, And if you have a problem you dont have to dissemble it to figure it out. Sometimes the valve in the regulator/pump lets the fuel drain back to the tank which is the reason for the long starting. In the long run its worth the extra $$ for the whole unit. Good luck.\\\\\\\\n\\\\\\\\n\\\\\\\",\\\\\\\"question\\\\\\\":\\\\\\\"what's the difference between fuel sending unit and fuel pump\\\\\\\"}\\\", \\\"original_answer\\\": \\\"Based on the given passages, the main differences between a fuel sending unit and a fuel pump are:\\\\n\\\\n* Functionality: A fuel pump delivers fuel to the engine, while a fuel sending unit assembly includes the fuel pump, filter, strainer, and electronic device to measure the amount of fuel in the tank and send data to the dash-mounted fuel gauge.\\\\n* Cost: A fuel pump is a relatively inexpensive part compared to the entire fuel sending unit assembly.\\\\n* Ease of replacement: Replacing the fuel pump alone can be more difficult than replacing the entire fuel sending unit assembly, as the latter comes as a complete unit and is easier to install.\\\\n\\\\nHowever, it's important to note that the passages don't provide a clear distinction between the two components, and they seem to be discussed interchangeably. Therefore, without more information, it's difficult to give a definitive answer to the question.\\\", \\\"target\\\": \\\"any_unsupported_span_in_original_response\\\", \\\"visible_source_sentence_ids\\\": [0, 1, 2, 3, 4, 5, 6], \\\"source_evidence_erased\\\": false}\",\"role\":\"user\"}],\"model\":\"unsloth/Qwen3.8-27B-GGUF\",\"seed\":69058,\"temperature\":0,\"top_p\":1}",
+  "response_bytes": "{\"decision\":\"accept\",\"generated_text\":\"{\\n  \\\"unsupported_probability\\\": 0.0,\\n  \\\"source_sentence_id\\\": 1\\n}\",\"probability\":1.0773e-06}",
+  "response_commit": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8146_v704_live_service_cost/invocations/1791164497330123254/measured-11-python_scalar/response.json",
+    "sha256": "sha256:ff77b43893b8a6c1042d6b3a1f8d4b1c9fa4c7d3191384270406ebe7a67543d2"
+  },
+  "source_cluster_id": "sha256:473f815c0786414c56f3a2cc3a8074d068a276af6f200ae65e858b68259b2368",
+  "started": true,
+  "started_monotonic_ns": 825777780964820,
+  "status": "completed",
+  "unit_id": "measured-11-python_scalar",
+  "values": [
+    -13.815509557963773,
+    0.3177293509705074,
+    0.5326216298216113,
+    0.20000000000000004,
+    0.2,
+    0.0,
+    0.0,
+    0.6822706490294926,
+    0.8894554062555173
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "arm": "python_scalar",
+  "binary_energy_difference": -3.004741595605113,
+  "cache_events": [
+    {
+      "key": "sha256:073a5088e5c38dbf28676082ed2d05be6d1ae07f7f1fb7bb59aeda357e3c3ff1",
+      "status": "miss"
+    }
+  ],
+  "components": {
+    "arithmetic_and_boundary_ns": 349006,
+    "decision_serialization_ns": 16000,
+    "durable_commit_ns": 1286026,
+    "generation_ns": 1261279461,
+    "ingress_hash_lookup_ns": 13634777,
+    "parse_lexical_ns": 41690227
+  },
+  "condition": "fresh_cache_miss",
+  "decision": "reject",
+  "denominator": 1,
+  "ended_monotonic_ns": 825767580419863,
+  "exclusion_reason": null,
+  "full_latency_ns": 1320302343,
+  "generated_text": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+  "initial_state_hash": "sha256:75ff3b0fb833dcb0dc2c0edd9b1258394e207aba09fd4f94852822733bd2cd4c",
+  "input_tokens": 694,
+  "latency_score_ns": 1320302343,
+  "lexical": {
+    "abstention": null,
+    "family_id": "sha256:aa3c5ffeab825480b94d43b42d5ab4fe2d0e05451cfa7195d721dab4eb94a61e",
+    "feature_hash": "sha256:25b1d31401b269ad41faec8e40879c7f28b647779a266161c9c23662edbdd6ab",
+    "source_normalized_hash": "ca059d3fd15084ad09addcac4102a5d3a6584b5bc794b8500b06e4f3332b9ecd",
+    "values": [
+      0.4468052318052318,
+      0.6433877233877234,
+      0.19047619047619047,
+      1.0,
+      0.329004329004329,
+      0.36363636363636365,
+      0.5531947681947682,
+      0.8276314426314427
+    ],
+    "window_count": 21
+  },
+  "metric": "complete_latency_ns",
+  "numerator": 1320302343,
+  "output_tokens": 24,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 694,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 718
+    }
+  },
+  "probability": 0.9527878771812767,
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791164859,
+    "id": "chatcmpl-J4iTroKaiEv6RovBOlNfklfMAvoIfd7N",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 559.992,
+      "predicted_n": 24,
+      "predicted_per_second": 42.857755110787295,
+      "predicted_per_token_ms": 23.333,
+      "prompt_ms": 687.704,
+      "prompt_n": 694,
+      "prompt_per_second": 1009.1551016134849,
+      "prompt_per_token_ms": 0.9909279538904898
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 694,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 718
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Collagen supplements contain the amino acids that your skin is missing, which can help moisturize and diminish the appearance of imperfections. Along with helping to moisturize and hydrate dry skin for a more even skin tone, adding collagen supplements can also improve joint and tendon health. Firm and tone skin\\\\n\\\\npassage 2:Collagen is essential for the health and appearance of your skin, and this protein is also necessary to reduce the typical signs of aging. Collagen is an important building block for elasticity, and its ability to reduce the appearance of fine lines and wrinkles. This protein is also necessary to firm sagging skin, and can even help even out your skin tone. Along with helping to keep your skin flawless, collagen can also improve joint and tissue health. While the aging process cannot be avoided, you can improve your health and have flawless skin by adding collagen supplements to your routine.\\\\n\\\\npassage 3:COMMENTS ( 6 and counting 1  ) I know like 10 sure persons that are always paying up to get Their faces and body PAMPERED,, Reply. 2  Very educative. Reply. 3  Wt r the real products which really helps to boost the collagen (for sagging & droopy face) need harbal products or serum, cream or gel\u2026. Reply. 4  I like the information.\\\\n\\\\n\\\",\\\"question\\\":\\\"how does collagen help the skin\\\"}\", \"original_answer\": \"Based on the provided passages, collagen helps the skin in the following ways:\\n\\n1. Moisturizes and hydrates the skin: Collagen supplements contain amino acids that can help to moisturize and hydrate dry skin, resulting in a more even skin tone.\\n2. Reduces the appearance of imperfections: Collagen is important for reducing the appearance of fine lines and wrinkles, and can also help to firm and tone sagging skin.\\n3. Improves joint and tendon health: Collagen supplements can improve joint and tissue health, which can benefit the overall health and appearance of the skin.\\n4. Boosts collagen production: The passages suggest that collagen supplements can help to boost collagen production in the body, which can lead to improved skin health and appearance. However, it is unclear whether this effect is specific to the face or body.\\n\\nOverall, the passages suggest that collagen supplements can have a number of benefits for the skin, including improving hydration, reducing the appearance of imperfections, and improving joint and tendon health. However, further research may be needed to determine the effectiveness of collagen supplements for these purposes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "request_bytes": "{\"cache_prompt\":false,\"chat_template_kwargs\":{\"enable_thinking\":false},\"grammar\":\"root ::= \\\"{\\\" ws \\\"\\\\\\\"unsupported_probability\\\\\\\"\\\" ws \\\":\\\" ws probability ws \\\",\\\" ws \\\"\\\\\\\"source_sentence_id\\\\\\\"\\\" ws \\\":\\\" ws citation ws \\\"}\\\"\\nprobability ::= \\\"0\\\" (\\\".\\\" [0-9]+)? | \\\"1\\\" (\\\".\\\" \\\"0\\\"+)?\\ncitation ::= \\\"null\\\" | \\\"0\\\" | [1-9] [0-9]*\\nws ::= [ \\\\t\\\\n\\\\r]*\",\"max_tokens\":128,\"messages\":[{\"content\":\"Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.\",\"role\":\"system\"},{\"content\":\"{\\\"complete_source\\\": \\\"{\\\\\\\"passages\\\\\\\":\\\\\\\"passage 1:Collagen supplements contain the amino acids that your skin is missing, which can help moisturize and diminish the appearance of imperfections. Along with helping to moisturize and hydrate dry skin for a more even skin tone, adding collagen supplements can also improve joint and tendon health. Firm and tone skin\\\\\\\\n\\\\\\\\npassage 2:Collagen is essential for the health and appearance of your skin, and this protein is also necessary to reduce the typical signs of aging. Collagen is an important building block for elasticity, and its ability to reduce the appearance of fine lines and wrinkles. This protein is also necessary to firm sagging skin, and can even help even out your skin tone. Along with helping to keep your skin flawless, collagen can also improve joint and tissue health. While the aging process cannot be avoided, you can improve your health and have flawless skin by adding collagen supplements to your routine.\\\\\\\\n\\\\\\\\npassage 3:COMMENTS ( 6 and counting 1  ) I know like 10 sure persons that are always paying up to get Their faces and body PAMPERED,, Reply. 2  Very educative. Reply. 3  Wt r the real products which really helps to boost the collagen (for sagging & droopy face) need harbal products or serum, cream or gel\\u2026. Reply. 4  I like the information.\\\\\\\\n\\\\\\\\n\\\\\\\",\\\\\\\"question\\\\\\\":\\\\\\\"how does collagen help the skin\\\\\\\"}\\\", \\\"original_answer\\\": \\\"Based on the provided passages, collagen helps the skin in the following ways:\\\\n\\\\n1. Moisturizes and hydrates the skin: Collagen supplements contain amino acids that can help to moisturize and hydrate dry skin, resulting in a more even skin tone.\\\\n2. Reduces the appearance of imperfections: Collagen is important for reducing the appearance of fine lines and wrinkles, and can also help to firm and tone sagging skin.\\\\n3. Improves joint and tendon health: Collagen supplements can improve joint and tissue health, which can benefit the overall health and appearance of the skin.\\\\n4. Boosts collagen production: The passages suggest that collagen supplements can help to boost collagen production in the body, which can lead to improved skin health and appearance. However, it is unclear whether this effect is specific to the face or body.\\\\n\\\\nOverall, the passages suggest that collagen supplements can have a number of benefits for the skin, including improving hydration, reducing the appearance of imperfections, and improving joint and tendon health. However, further research may be needed to determine the effectiveness of collagen supplements for these purposes.\\\", \\\"target\\\": \\\"any_unsupported_span_in_original_response\\\", \\\"visible_source_sentence_ids\\\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \\\"source_evidence_erased\\\": false}\",\"role\":\"user\"}],\"model\":\"unsloth/Qwen3.8-27B-GGUF\",\"seed\":69058,\"temperature\":0,\"top_p\":1}",
+  "response_bytes": "{\"decision\":\"reject\",\"generated_text\":\"{\\n  \\\"unsupported_probability\\\": 0.95,\\n  \\\"source_sentence_id\\\": null\\n}\",\"probability\":0.9527878772}",
+  "response_commit": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8146_v704_live_service_cost/invocations/1791164497330123254/measured-6-python_scalar/response.json",
+    "sha256": "sha256:f77c38f69c9c911b7be3351c01003a6936ca836adb2f8baf598b22fbaf79d31a"
+  },
+  "source_cluster_id": "sha256:12b60b8c630794252c0b0bf8a363bd51886886e8663e9e944a6caac33d82219b",
+  "started": true,
+  "started_monotonic_ns": 825766260117520,
+  "status": "completed",
+  "unit_id": "measured-6-python_scalar",
+  "values": [
+    2.9444389791664394,
+    0.4468052318052318,
+    0.6433877233877234,
+    0.19047619047619047,
+    1.0,
+    0.329004329004329,
+    0.36363636363636365,
+    0.5531947681947682,
+    0.8276314426314427
+  ]
+}

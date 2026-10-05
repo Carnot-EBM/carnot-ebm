@@ -1,0 +1,147 @@
+{
+  "arm": "native_scalar",
+  "binary_energy_difference": -3.0027962611867314,
+  "cache_events": [
+    {
+      "key": "sha256:97d1ccedee9ed87a96506795a93509b730a72a275dfd4b31aa68cd409538eb50",
+      "status": "miss"
+    }
+  ],
+  "components": {
+    "arithmetic_and_boundary_ns": 409249,
+    "decision_serialization_ns": 17082,
+    "durable_commit_ns": 1418385,
+    "generation_ns": 1961318752,
+    "ingress_hash_lookup_ns": 13189741,
+    "parse_lexical_ns": 102798986
+  },
+  "condition": "fresh_cache_miss",
+  "decision": "reject",
+  "denominator": 1,
+  "ended_monotonic_ns": 825788828156726,
+  "exclusion_reason": null,
+  "full_latency_ns": 2081770263,
+  "generated_text": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+  "initial_state_hash": "sha256:75ff3b0fb833dcb0dc2c0edd9b1258394e207aba09fd4f94852822733bd2cd4c",
+  "input_tokens": 1330,
+  "latency_score_ns": 2081770263,
+  "lexical": {
+    "abstention": null,
+    "family_id": "sha256:b9636476b46519c1a3cfaccfd15ddcde67e5218bfe113f20ed8482cff07c7931",
+    "feature_hash": "sha256:11f8859e3a82fc44d33e15acfe412b85d51c14332779fb034fdd2801ad0329a0",
+    "source_normalized_hash": "aaa1f1e9801b62af307cd6cd6adc4664c540f0c6323ffc8b4f7994771331873c",
+    "values": [
+      0.26490333886578943,
+      0.41649691437240843,
+      0.5,
+      0.9090909090909091,
+      0.09090909090909091,
+      0.09090909090909091,
+      0.7350966611342106,
+      0.9514275305283211
+    ],
+    "window_count": 30
+  },
+  "metric": "complete_latency_ns",
+  "numerator": 2081770263,
+  "output_tokens": 24,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1330,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1354
+    }
+  },
+  "probability": 0.9527002928153613,
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791164880,
+    "id": "chatcmpl-yXgm4h4jmJs7cDmde6Hv2DluF9cNhTHZ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 561.673,
+      "predicted_n": 24,
+      "predicted_per_second": 42.72948851021857,
+      "predicted_per_token_ms": 23.403041666666667,
+      "prompt_ms": 1207.861,
+      "prompt_n": 1330,
+      "prompt_per_second": 1101.1200792144127,
+      "prompt_per_token_ms": 0.9081661654135339
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1330,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1354
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"10 El Paseo\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-21:0\\\",\\\"Saturday\\\":\\\"16:0-21:0\\\",\\\"Sunday\\\":\\\"10:30-20:0\\\",\\\"Thursday\\\":\\\"16:0-21:0\\\",\\\"Tuesday\\\":\\\"16:0-21:0\\\",\\\"Wednesday\\\":\\\"16:0-21:0\\\"},\\\"name\\\":\\\"El Paseo Mexican Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 02:05:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This restaurant was so great, from ambiance to food to staff and cleanliness are all excellent. We had brunch for my sons birthday with few of his friends and I was really impressed. I've been so many Mexican restaurants and this by far the best I always love ambiance and the food was really amazing so many choices on the buffet and all of them we're good. We also love our server Princess she made sure we're all comfortable and having a good time, definitely will come back here when we visit our son and his wife again.\\\"},{\\\"review_date\\\":\\\"2022-01-06 22:57:54\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The WORST customer service I have ever experienced in my ENTIRE life. I came here two separate occasions, both at 7:50 pm on two separate Tuesday evenings. El Paseo advertises that they are open until 9pm, however BOTH of these times they denied me from their restaurant during their \\\\\\\"open hours\\\\\\\". The first time because they had a \\\\\\\"special event\\\\\\\" going on, which they failed to disclose on their website, and the second time, because they decided to close at 8pm that day, without any notice.\\\\n\\\\nThe most recent time, I took a 45 minute Uber to the restaurant only to be greeted by the rudest hostess I have ever met in my entire life. She told me they decided to close early because they didn't have enough business that particular day, and after telling her I had just spent $70 ubering there and that they still had an hour and 15 minutes until closing, as mentioned on their website, she told me thats \\\\\\\"too bad\\\\\\\" and I should find somewhere else to eat, and then proceeded to slam the door in my face. I will never be returning to this restaurant EVER again, and I highly advise that you take your money and time and spend it at a small local restaurant in Downtown SB, where there is plenty of delicious food and small local businesss that actually WANT, and need, your customer service.\\\"},{\\\"review_date\\\":\\\"2022-01-05 04:25:36\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Terrible customer service. Especially the hostess. They advertise being open until 9, arrived an hour early (with respect of not wanting to stay past closing) and was told we could not be seated. I suggest advertising correct business hours and expecting costumer dissatisfaction when not seated during restaurant hours. In addition when we expressed confusion we were helped by one of the rudest hostesses I have come across (being a hostess myself) . Insanely unprofessional. Will not be returning and suggest to others to not check this place out. A much cheaper and friendlier taco restaurant down the street that actually deserves your business.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"El Paseo Mexican Restaurant is a popular dining spot in Santa Barbara, CA, known for its delicious Mexican cuisine and cozy atmosphere. The restaurant is located in the heart of the city and offers a variety of traditional Mexican dishes, including tacos, burritos, and enchiladas. The restaurant has a rating of 3.5 stars and is praised for its excellent ambiance, friendly staff, and high-quality food.\\n\\nAccording to customer reviews, the restaurant's strengths include its flavorful and diverse menu options, cleanliness, and welcoming atmosphere. One reviewer noted that the restaurant's brunch buffet was particularly impressive, with a wide selection of dishes that were all delicious. The server, Princess, was also praised for her exceptional service and attention to detail.\\n\\nHowever, some customers have reported issues with the restaurant's customer service. One reviewer had a negative experience with the hostess, who was described as rude and unhelpful. Another reviewer was denied entry to the restaurant due to a \\\"special event\\\" that was not disclosed on the restaurant's website, and was later told to find somewhere else to eat when they attempted to return.\\n\\nDespite these issues, El Paseo Mexican Restaurant remains a popular choice among locals and visitors alike. Its convenient location, tasty food, and welcoming atmosphere make it an attractive option for those looking for a satisfying meal in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "request_bytes": "{\"cache_prompt\":false,\"chat_template_kwargs\":{\"enable_thinking\":false},\"grammar\":\"root ::= \\\"{\\\" ws \\\"\\\\\\\"unsupported_probability\\\\\\\"\\\" ws \\\":\\\" ws probability ws \\\",\\\" ws \\\"\\\\\\\"source_sentence_id\\\\\\\"\\\" ws \\\":\\\" ws citation ws \\\"}\\\"\\nprobability ::= \\\"0\\\" (\\\".\\\" [0-9]+)? | \\\"1\\\" (\\\".\\\" \\\"0\\\"+)?\\ncitation ::= \\\"null\\\" | \\\"0\\\" | [1-9] [0-9]*\\nws ::= [ \\\\t\\\\n\\\\r]*\",\"max_tokens\":128,\"messages\":[{\"content\":\"Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.\",\"role\":\"system\"},{\"content\":\"{\\\"complete_source\\\": \\\"{\\\\\\\"address\\\\\\\":\\\\\\\"10 El Paseo\\\\\\\",\\\\\\\"attributes\\\\\\\":{\\\\\\\"Ambience\\\\\\\":{\\\\\\\"casual\\\\\\\":true,\\\\\\\"classy\\\\\\\":true,\\\\\\\"divey\\\\\\\":false,\\\\\\\"hipster\\\\\\\":false,\\\\\\\"intimate\\\\\\\":false,\\\\\\\"romantic\\\\\\\":false,\\\\\\\"touristy\\\\\\\":false,\\\\\\\"trendy\\\\\\\":false,\\\\\\\"upscale\\\\\\\":false},\\\\\\\"BusinessParking\\\\\\\":{\\\\\\\"garage\\\\\\\":false,\\\\\\\"lot\\\\\\\":false,\\\\\\\"street\\\\\\\":true,\\\\\\\"valet\\\\\\\":false,\\\\\\\"validated\\\\\\\":false},\\\\\\\"Music\\\\\\\":null,\\\\\\\"OutdoorSeating\\\\\\\":true,\\\\\\\"RestaurantsGoodForGroups\\\\\\\":true,\\\\\\\"RestaurantsReservations\\\\\\\":true,\\\\\\\"RestaurantsTakeOut\\\\\\\":true,\\\\\\\"WiFi\\\\\\\":\\\\\\\"free\\\\\\\"},\\\\\\\"business_stars\\\\\\\":3.5,\\\\\\\"categories\\\\\\\":\\\\\\\"Restaurants, Mexican\\\\\\\",\\\\\\\"city\\\\\\\":\\\\\\\"Santa Barbara\\\\\\\",\\\\\\\"hours\\\\\\\":{\\\\\\\"Friday\\\\\\\":\\\\\\\"16:0-21:0\\\\\\\",\\\\\\\"Saturday\\\\\\\":\\\\\\\"16:0-21:0\\\\\\\",\\\\\\\"Sunday\\\\\\\":\\\\\\\"10:30-20:0\\\\\\\",\\\\\\\"Thursday\\\\\\\":\\\\\\\"16:0-21:0\\\\\\\",\\\\\\\"Tuesday\\\\\\\":\\\\\\\"16:0-21:0\\\\\\\",\\\\\\\"Wednesday\\\\\\\":\\\\\\\"16:0-21:0\\\\\\\"},\\\\\\\"name\\\\\\\":\\\\\\\"El Paseo Mexican Restaurant\\\\\\\",\\\\\\\"review_info\\\\\\\":[{\\\\\\\"review_date\\\\\\\":\\\\\\\"2022-01-18 02:05:40\\\\\\\",\\\\\\\"review_stars\\\\\\\":5.0,\\\\\\\"review_text\\\\\\\":\\\\\\\"This restaurant was so great, from ambiance to food to staff and cleanliness are all excellent. We had brunch for my sons birthday with few of his friends and I was really impressed. I've been so many Mexican restaurants and this by far the best I always love ambiance and the food was really amazing so many choices on the buffet and all of them we're good. We also love our server Princess she made sure we're all comfortable and having a good time, definitely will come back here when we visit our son and his wife again.\\\\\\\"},{\\\\\\\"review_date\\\\\\\":\\\\\\\"2022-01-06 22:57:54\\\\\\\",\\\\\\\"review_stars\\\\\\\":1.0,\\\\\\\"review_text\\\\\\\":\\\\\\\"The WORST customer service I have ever experienced in my ENTIRE life. I came here two separate occasions, both at 7:50 pm on two separate Tuesday evenings. El Paseo advertises that they are open until 9pm, however BOTH of these times they denied me from their restaurant during their \\\\\\\\\\\\\\\"open hours\\\\\\\\\\\\\\\". The first time because they had a \\\\\\\\\\\\\\\"special event\\\\\\\\\\\\\\\" going on, which they failed to disclose on their website, and the second time, because they decided to close at 8pm that day, without any notice.\\\\\\\\n\\\\\\\\nThe most recent time, I took a 45 minute Uber to the restaurant only to be greeted by the rudest hostess I have ever met in my entire life. She told me they decided to close early because they didn't have enough business that particular day, and after telling her I had just spent $70 ubering there and that they still had an hour and 15 minutes until closing, as mentioned on their website, she told me thats \\\\\\\\\\\\\\\"too bad\\\\\\\\\\\\\\\" and I should find somewhere else to eat, and then proceeded to slam the door in my face. I will never be returning to this restaurant EVER again, and I highly advise that you take your money and time and spend it at a small local restaurant in Downtown SB, where there is plenty of delicious food and small local businesss that actually WANT, and need, your customer service.\\\\\\\"},{\\\\\\\"review_date\\\\\\\":\\\\\\\"2022-01-05 04:25:36\\\\\\\",\\\\\\\"review_stars\\\\\\\":1.0,\\\\\\\"review_text\\\\\\\":\\\\\\\"Terrible customer service. Especially the hostess. They advertise being open until 9, arrived an hour early (with respect of not wanting to stay past closing) and was told we could not be seated. I suggest advertising correct business hours and expecting costumer dissatisfaction when not seated during restaurant hours. In addition when we expressed confusion we were helped by one of the rudest hostesses I have come across (being a hostess myself) . Insanely unprofessional. Will not be returning and suggest to others to not check this place out. A much cheaper and friendlier taco restaurant down the street that actually deserves your business.\\\\\\\"}],\\\\\\\"state\\\\\\\":\\\\\\\"CA\\\\\\\"}\\\", \\\"original_answer\\\": \\\"El Paseo Mexican Restaurant is a popular dining spot in Santa Barbara, CA, known for its delicious Mexican cuisine and cozy atmosphere. The restaurant is located in the heart of the city and offers a variety of traditional Mexican dishes, including tacos, burritos, and enchiladas. The restaurant has a rating of 3.5 stars and is praised for its excellent ambiance, friendly staff, and high-quality food.\\\\n\\\\nAccording to customer reviews, the restaurant's strengths include its flavorful and diverse menu options, cleanliness, and welcoming atmosphere. One reviewer noted that the restaurant's brunch buffet was particularly impressive, with a wide selection of dishes that were all delicious. The server, Princess, was also praised for her exceptional service and attention to detail.\\\\n\\\\nHowever, some customers have reported issues with the restaurant's customer service. One reviewer had a negative experience with the hostess, who was described as rude and unhelpful. Another reviewer was denied entry to the restaurant due to a \\\\\\\"special event\\\\\\\" that was not disclosed on the restaurant's website, and was later told to find somewhere else to eat when they attempted to return.\\\\n\\\\nDespite these issues, El Paseo Mexican Restaurant remains a popular choice among locals and visitors alike. Its convenient location, tasty food, and welcoming atmosphere make it an attractive option for those looking for a satisfying meal in Santa Barbara.\\\", \\\"target\\\": \\\"any_unsupported_span_in_original_response\\\", \\\"visible_source_sentence_ids\\\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \\\"source_evidence_erased\\\": false}\",\"role\":\"user\"}],\"model\":\"unsloth/Qwen3.8-27B-GGUF\",\"seed\":69058,\"temperature\":0,\"top_p\":1}",
+  "response_bytes": "{\"decision\":\"reject\",\"generated_text\":\"{\\n  \\\"unsupported_probability\\\": 0.95,\\n  \\\"source_sentence_id\\\": null\\n}\",\"probability\":0.9527002928}",
+  "response_commit": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8146_v704_live_service_cost/invocations/1791164497330123254/measured-14-native_scalar/response.json",
+    "sha256": "sha256:3a34a374bf478c141ee8f9f7c04e4a4abf434dab9bbc04ce3d272cced2c21246"
+  },
+  "source_cluster_id": "sha256:89ede07afbbfa0d22d0f44a4fd719c349528cb9769fff61ccdb4a065f67a5b39",
+  "started": true,
+  "started_monotonic_ns": 825786746386463,
+  "status": "completed",
+  "unit_id": "measured-14-native_scalar",
+  "values": [
+    2.9444389791664394,
+    0.26490333886578943,
+    0.41649691437240843,
+    0.5,
+    0.9090909090909091,
+    0.09090909090909091,
+    0.09090909090909091,
+    0.7350966611342106,
+    0.9514275305283211
+  ]
+}

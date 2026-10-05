@@ -1,0 +1,147 @@
+{
+  "arm": "native_scalar",
+  "binary_energy_difference": 13.744842160744522,
+  "cache_events": [
+    {
+      "key": "sha256:ca695fc6dadbbf9af638cd0a0e2b4533c8bd0f00e96589d9950a58afc3d625f2",
+      "status": "miss"
+    }
+  ],
+  "components": {
+    "arithmetic_and_boundary_ns": 487176,
+    "decision_serialization_ns": 19267,
+    "durable_commit_ns": 165097588,
+    "generation_ns": 1211786838,
+    "ingress_hash_lookup_ns": 12109290,
+    "parse_lexical_ns": 9597021
+  },
+  "condition": "fresh_cache_miss",
+  "decision": "accept",
+  "denominator": 1,
+  "ended_monotonic_ns": 825810712663358,
+  "exclusion_reason": null,
+  "full_latency_ns": 1404026197,
+  "generated_text": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+  "initial_state_hash": "sha256:75ff3b0fb833dcb0dc2c0edd9b1258394e207aba09fd4f94852822733bd2cd4c",
+  "input_tokens": 454,
+  "latency_score_ns": 1404026197,
+  "lexical": {
+    "abstention": null,
+    "family_id": "sha256:28be4fa1430984a5b69cf4ecf2c86805e5782ba13a505399ca1057a5e453e5f5",
+    "feature_hash": "sha256:396ff73eedc7ccdb8797d4fcf7ebc0f47110efe363ff06206c5c447b72d93243",
+    "source_normalized_hash": "a69063078c3e26fa1737271f24379b899838f4929fcd36a094ef0b08a04df3ab",
+    "values": [
+      0.3189711065519872,
+      0.6055768168547305,
+      0.5,
+      0.5,
+      0.25,
+      0.25,
+      0.6810288934480129,
+      0.8771344590862464
+    ],
+    "window_count": 12
+  },
+  "metric": "complete_latency_ns",
+  "numerator": 1404026197,
+  "output_tokens": 24,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 454,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 478
+    }
+  },
+  "probability": 1.0732241305569557e-06,
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791164902,
+    "id": "chatcmpl-3TdRsBykXHV0BGC5Ek4ehsWcsIkdlEBT",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 561.943,
+      "predicted_n": 24,
+      "predicted_per_second": 42.70895802599196,
+      "predicted_per_token_ms": 23.414291666666667,
+      "prompt_ms": 513.208,
+      "prompt_n": 454,
+      "prompt_per_second": 884.6315723839068,
+      "prompt_per_token_ms": 1.1304140969162995
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 454,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 478
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Once you have elected to participate in the Penn State Alternate Retirement plan, a mandatory employee contribution of 5% of your gross salary is required and Penn State will contribute 9.29% of your gross salary.\\\\n\\\\npassage 2:If you have money in other employer's plans, you may be able to transfer or roll it over to the The Pennsylvania State University retirement plan to increase your maximum loan amount. This is only if the The Pennsylvania State University retirement plan accepts rollovers.\\\\n\\\\npassage 3:Quick Guide to Pennsylvania Retirement Income Taxes. 1  Pennsylvania is tax-friendly toward retirees. 2  Social security income is not taxed. 3  Withdrawals from retirement accounts are not taxed. 4  Wages are taxed at normal rates, your marginal state tax rate is 5.0%. 5  Public pension income is not taxed, private pension income is not taxed.\\\\n\\\\n\\\",\\\"question\\\":\\\"penn state retirement benefits\\\"}\", \"original_answer\": \"Penn State offers an Alternate Retirement plan, where employees are required to contribute 5% of their gross salary, while Penn State contributes 9.29% of the employee's gross salary. The plan may accept rollovers from other employer's plans, which can increase the maximum loan amount. In terms of taxes, Pennsylvania is tax-friendly towards retirees, does not tax social security income or withdrawals from retirement accounts. Both public and private pension income are not taxed.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "request_bytes": "{\"cache_prompt\":false,\"chat_template_kwargs\":{\"enable_thinking\":false},\"grammar\":\"root ::= \\\"{\\\" ws \\\"\\\\\\\"unsupported_probability\\\\\\\"\\\" ws \\\":\\\" ws probability ws \\\",\\\" ws \\\"\\\\\\\"source_sentence_id\\\\\\\"\\\" ws \\\":\\\" ws citation ws \\\"}\\\"\\nprobability ::= \\\"0\\\" (\\\".\\\" [0-9]+)? | \\\"1\\\" (\\\".\\\" \\\"0\\\"+)?\\ncitation ::= \\\"null\\\" | \\\"0\\\" | [1-9] [0-9]*\\nws ::= [ \\\\t\\\\n\\\\r]*\",\"max_tokens\":128,\"messages\":[{\"content\":\"Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.\",\"role\":\"system\"},{\"content\":\"{\\\"complete_source\\\": \\\"{\\\\\\\"passages\\\\\\\":\\\\\\\"passage 1:Once you have elected to participate in the Penn State Alternate Retirement plan, a mandatory employee contribution of 5% of your gross salary is required and Penn State will contribute 9.29% of your gross salary.\\\\\\\\n\\\\\\\\npassage 2:If you have money in other employer's plans, you may be able to transfer or roll it over to the The Pennsylvania State University retirement plan to increase your maximum loan amount. This is only if the The Pennsylvania State University retirement plan accepts rollovers.\\\\\\\\n\\\\\\\\npassage 3:Quick Guide to Pennsylvania Retirement Income Taxes. 1  Pennsylvania is tax-friendly toward retirees. 2  Social security income is not taxed. 3  Withdrawals from retirement accounts are not taxed. 4  Wages are taxed at normal rates, your marginal state tax rate is 5.0%. 5  Public pension income is not taxed, private pension income is not taxed.\\\\\\\\n\\\\\\\\n\\\\\\\",\\\\\\\"question\\\\\\\":\\\\\\\"penn state retirement benefits\\\\\\\"}\\\", \\\"original_answer\\\": \\\"Penn State offers an Alternate Retirement plan, where employees are required to contribute 5% of their gross salary, while Penn State contributes 9.29% of the employee's gross salary. The plan may accept rollovers from other employer's plans, which can increase the maximum loan amount. In terms of taxes, Pennsylvania is tax-friendly towards retirees, does not tax social security income or withdrawals from retirement accounts. Both public and private pension income are not taxed.\\\", \\\"target\\\": \\\"any_unsupported_span_in_original_response\\\", \\\"visible_source_sentence_ids\\\": [0, 1, 2, 3, 4, 5, 6], \\\"source_evidence_erased\\\": false}\",\"role\":\"user\"}],\"model\":\"unsloth/Qwen3.8-27B-GGUF\",\"seed\":69058,\"temperature\":0,\"top_p\":1}",
+  "response_bytes": "{\"decision\":\"accept\",\"generated_text\":\"{\\n  \\\"unsupported_probability\\\": 0.0,\\n  \\\"source_sentence_id\\\": 0\\n}\",\"probability\":1.0732e-06}",
+  "response_commit": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8146_v704_live_service_cost/invocations/1791164497330123254/measured-21-native_scalar/response.json",
+    "sha256": "sha256:4917cd5a8547d0cb9fdddf95db05eaf1a01e53b9d53966832a8e32457f0e72e4"
+  },
+  "source_cluster_id": "sha256:01cbc65abdc815abc070db3f2e4d4866f60277354204effaa5fb188e8554d037",
+  "started": true,
+  "started_monotonic_ns": 825809308637161,
+  "status": "completed",
+  "unit_id": "measured-21-native_scalar",
+  "values": [
+    -13.815509557963773,
+    0.3189711065519872,
+    0.6055768168547305,
+    0.5,
+    0.5,
+    0.25,
+    0.25,
+    0.6810288934480129,
+    0.8771344590862464
+  ]
+}
