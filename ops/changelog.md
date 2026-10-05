@@ -21447,3 +21447,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
   shared-acquisition costs separately from measured end-to-end latency.
 - Add planning specifications and traceability. No implementation, activation,
   generator training, push, external publication or conductor modification.
+- 2026-10-05: Bind fourteen tasks and preserve V704 terminal evidence (⚠️ Research Finding) — honest_verdict=complete_null_contract_custody; results/experiment_8150_v705_contract_custody.json
