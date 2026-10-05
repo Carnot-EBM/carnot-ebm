@@ -19588,3 +19588,4 @@ code |
 | 2026-10-05 18:12 UTC | Test sentence evidence benefit with source-level u | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8169-reserved-sentence-capture) |
 | 2026-10-05 19:01 UTC | Measure continuous energy learning while future de | OK | 89 passed, 1 warning in 245.29s (0:04:05) |
 | 2026-10-05 19:24 UTC | Audit later decision benefit and independent reten | OK | 91 passed, 1 warning in 38.50s |
+| 2026-10-05 20:29 UTC | Qualify service validation and replay preserved ac | OK | 87 passed, 1 warning in 78.01s (0:01:18) |
