@@ -21427,3 +21427,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-04: Qualify source evidence capture after the private fixture permission failure (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8137_v704_source_protocol.json
 - 2026-10-04: Qualify delayed learning independently of source capture (⚠️ Research Finding) — honest_verdict=complete_circular_positive_protocol_fixture_ready; results/experiment_8138_v704_learning_protocol.json
 - 2026-10-05: Learn persistent energy centers from correctly delayed feedback (⚠️ Research Finding) — honest_verdict=complete_null_trajectory_complete_audit_pending; results/experiment_8143_v704_delayed_energy_memory.json
+- 2026-10-05: Independently test later learning benefit retention and recovery (⚠️ Research Finding) — honest_verdict=complete_null_no_later_typed_cost_benefit; results/experiment_8144_v704_learning_audit.json
