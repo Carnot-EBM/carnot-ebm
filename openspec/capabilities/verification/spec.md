@@ -49122,3 +49122,25 @@ REQ-VERIFY-8163 implementation: cached decision, durable-batch and hardware
 primitives are independently reduced through their qualified modules. Eleven
 private tests retain mixed outcomes and reject aggregate, log and input tampering.
 Archived V704 nulls grant no current H2 execution or independent learning credit.
+
+## REQ-VERIFY-8164: Normal validation of zero-model custody
+
+Freeze owned argv before measurement. Pytest alone receives node selectors;
+Ruff, strict mypy and spec coverage receive real paths. Scoped tests retain all
+assertions and achieve100 percent added statement coverage. Run private E2E-018
+success, external block, tamper and cold replay. Record expected and actual exits,
+duration and log hashes. Unmodified adversarial verification and strict row lint
+SHALL pass before primary_publication. Record full Python suite health separately.
+Bind imported model provenance separately from empty MODEL_SPECS and zero calls.
+
+### SCENARIO-VERIFY-8164: Independent replay and producer field checks
+
+Replay reconstructs fourteen administrative rows and V705 dispositions from
+frozen operands. Validate each downstream readiness field against its producer
+prompt. Never use mutable vNEXT headings for historical methods. No LLM loads,
+training, roadmap activation, conductor modification or external publication occurs.
+
+REQ-VERIFY-8164 implementation: the thin Exp8164 CLI uses the qualified custody
+execution and publication modules. Current model calls remain zero. Historical
+hash dictionaries and reference lists retain their producer meanings, including
+explicit absent-input hashes. Scope and literature tampering fail cold replay.

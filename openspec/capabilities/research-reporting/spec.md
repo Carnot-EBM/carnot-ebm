@@ -93451,3 +93451,44 @@ REQ-REPORT-8163 cold replay correction: preserve the source audit's primitive ro
 inside saved input, alongside its reported statistics. The original assertions
 remain unchanged. A new assertion reopens the saved producer copy before publish.
 Failed candidates and their terminal logs remain below raw/ for inspection.
+
+## REQ-REPORT-8164: Bind V706 and preserve V705 terminal custody
+
+Exp8164 SHALL bind exactly fourteen tasks Exp8164 through Exp8177 to the visible
+Exact task contract table, full JSON, canonical digest and activated authority.
+It SHALL preserve immutable V705 design and input bytes using actual deliverables
+from that task list. Twelve primaries and two conductor GATE_BLOCK skips remain
+separate; absent producer verdicts stay absent. Every prior_failures entry SHALL
+retain its declared scope change and authentic prior outcome. Exp8152 coverage
+and Exp8160 static-check failures SHALL retain exact failed receipts and log bytes.
+Expired learning schedules, null science, skips and owned validation failures
+SHALL remain distinct. Freeze V706 literature mapping, H1/H2, source-cluster units,
+exposure limits and separate board obligations. Capstone SHALL have no branch gate.
+Current model calls and fitted heads stay zero. Administrative readiness grants
+zero generalization credit. Preserve historical and operator-curated pages.
+The conductor owns status, changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8164: Private custody and publication
+
+Private matching staged and activated files pass; task, gate, digest, order and
+count mutations fail. Missing historical inputs terminate blocked with exact
+operands. Owned failures disqualify and zero readiness. CLI execution outside the
+checkout needs no PYTHONPATH. Cold replay rejects changed primitives, scope,
+literature, receipt, source, code and aggregate bytes, including rehashed forgery.
+
+Implementation status: specification and tests precede implementation.
+
+REQ-REPORT-8164 implementation: `carnot.reporting.v706_contract_custody` and
+`v706_contract_context` retain full activated authority, authentic historical
+receipts and source bytes. Seven private tests cover CLI publication, external
+blocks, mutations and independently rebuilt custody. Added statements have
+100 percent coverage; Ruff, strict mypy and explicit-path spec coverage pass.
+
+SCENARIO-REPORT-8164 diagnostic drift: a changed historical health log SHALL
+retain expected and observed hashes and observed bytes. It SHALL block that
+custody operand while preserving every other primary, skip and prior scope.
+
+The diagnostic-drift regression brings Exp8164 to eight private tests. Expected
+and observed hashes remain separate, and changed log bytes enter immutable
+custody without removing authentic later dispositions. All287 added statements
+are covered. Historical primaries and active roadmap bytes remain preserved.
