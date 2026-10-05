@@ -1,0 +1,238 @@
+{
+  "protocol_id": "v705-admission-horizon-8152",
+  "frozen_date": "20261005",
+  "historical_protocol_path": "openspec/change-proposals/v702-methods-and-stream-protocol.md",
+  "historical_protocol_sha256": "sha256:3bfd25c6ab5b11ff18c6cd8cffa97a2200d3b77187669b80570f9e8864ee1f2a",
+  "delayed_memory": {
+    "prerequisites": [
+      "methods_ready_score",
+      "stream_input_ready_score"
+    ],
+    "fitted_head_required": false,
+    "fit_capture_required": false,
+    "start": "historical Qwen logit offset plus exactly zero residual",
+    "warmup_slots": [
+      1,
+      64
+    ],
+    "evaluation_slots": [
+      65,
+      256
+    ],
+    "arms": [
+      "error_center",
+      "fixed_public_center",
+      "random_past_center",
+      "frozen_qwen_offset"
+    ],
+    "geometry": "first64 original public stream slots only; available public values, no labels, no fit/tune data",
+    "minimum_warmup_public_sources": 28,
+    "initial_centers": 16,
+    "maximum_centers": 24,
+    "opportunities": [
+      64,
+      144
+    ],
+    "centers_per_opportunity": 4,
+    "width": "median positive scaled warmup pair distance, fallback1",
+    "fixed_centers": "next4 reserved public centers indexed by zero-based opportunity number",
+    "random_centers": "seeded label-blind released past update rows",
+    "error_centers": "released update rows with immutable frozen-offset issued errors",
+    "duplicate_centers": "report duplicates/effective rank, never substitute",
+    "shared_eligibility": "newest64 released update rows, at least16 and at least4 frozen-offset issued errors",
+    "sgd_steps_per_update": 4,
+    "learning_rate": 0.05,
+    "ridge": 0.01,
+    "intercept_penalized": false,
+    "compute_budget_seconds": 1200,
+    "feedback_delay_slots": 20,
+    "pending_capacity": 32,
+    "overflow": "oldest evicted, feedback permanently lost, lossless claim disqualified",
+    "roles": "SHA256(source_id) modulo4: bucket0 admission-only, all others update-only",
+    "admission": "commit candidate first, then next12 unused admission rows released strictly later; at least2/class",
+    "admission_deadline": "issue, release and admit before expiry at144 or224; no expiry at128",
+    "step_grid": [
+      1,
+      0.5,
+      0.25,
+      0.125
+    ],
+    "admission_guard": "largest passing step: no extra false accepts; cost/Brier no worse than incumbent; cost<=frozen offset+.02, Brier<=frozen offset+.01",
+    "rejected_update": "retain old coefficients, keep installed zero-weight centers",
+    "event_order": [
+      "issue_prediction",
+      "durable_commit",
+      "release_feedback",
+      "admit_once",
+      "durable_update",
+      "defer_candidate",
+      "commit_candidate",
+      "select_future_admission"
+    ],
+    "durable_state": [
+      "pending_events",
+      "issuing_state_hashes",
+      "centers",
+      "coefficients",
+      "optimizer_step",
+      "rng_state",
+      "consumed_update_ids",
+      "used_admission_ids",
+      "baseline_hashes",
+      "original_slot_mask"
+    ],
+    "retention": "commit all final heads and retention predictions before evaluator labels open",
+    "expiry_slots": [
+      144,
+      224
+    ]
+  },
+  "statistical_plan": {
+    "hypotheses": [
+      "H1 radial versus additive on128 reserved evaluation slots",
+      "H2 error-center versus fixed-public-center on192 later stream slots"
+    ],
+    "unit": "original source_cluster; seeds and duplicates add zero independent units",
+    "multiplicity": "Bonferroni family alpha=.05 across exactly2 hypotheses: one-sided alpha=.025 each",
+    "draws": 10000,
+    "valid_minimum": 9500,
+    "one_sided_confidence": 0.975,
+    "gain_lower_bound_minimum": 0.02,
+    "H1_support": {
+      "complete": 96,
+      "per_class": 12
+    },
+    "H2_support": {
+      "complete": 128,
+      "per_class": 8,
+      "nonoverlapping_blocks": 8
+    },
+    "beneficial_sources_minimum": 5,
+    "extra_false_accepts_maximum": 0,
+    "brier_increase_maximum": 0.01,
+    "other_control_cost_increase_maximum": 0.02,
+    "H1_resampling": "paired source bootstrap",
+    "H2_resampling": "average seeds per source, moving original-slot blocks with missing masks",
+    "primary_block": 16,
+    "sensitivity_blocks": [
+      8,
+      32
+    ],
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120
+    ],
+    "retention": {
+      "complete": 48,
+      "per_class": 8,
+      "cost_increase": 0.02,
+      "brier_increase": 0.01,
+      "extra_false_accepts": 0
+    },
+    "precision": "descriptive finite-source intervals; no rare-event or lifelong-safety claim"
+  },
+  "H2_analysis": {
+    "seed": 7048144,
+    "draws": 10000,
+    "valid_minimum": 9500,
+    "blocks": [
+      16,
+      8,
+      32
+    ],
+    "alpha": 0.025,
+    "comparison": "error_center versus fixed_public_center; seed means within source",
+    "natural_outcomes_opened_in_8152": false
+  },
+  "trained_head_specs": {
+    "kind": "small_Gaussian_residual",
+    "initial_centers": 16,
+    "maximum_centers": 24,
+    "centers_per_opportunity": 4,
+    "steps": 4,
+    "learning_rate": 0.05,
+    "ridge": 0.01,
+    "gradient_norm": 1,
+    "coefficient_bound": 4,
+    "arms": [
+      "error_center",
+      "fixed_public_center",
+      "random_past_center"
+    ],
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120
+    ]
+  },
+  "method_map": [
+    {
+      "arxiv": "2602.02634",
+      "url": "https://arxiv.org/html/2602.02634v1",
+      "methods_section": "3,5",
+      "use": "Order issue and delayed observation events; measure remaining horizon",
+      "limit": "Convex reduction and drift regret bounds do not apply to nonlinear radial SGD"
+    },
+    {
+      "arxiv": "2606.11711",
+      "url": "https://arxiv.org/html/2606.11711v1",
+      "methods_section": "4 Algorithm1",
+      "use": "Finite tracked pending capacity with explicit permanent feedback loss",
+      "limit": "Oldest eviction is not the randomized importance-weighted scheduler; no regret guarantee"
+    },
+    {
+      "arxiv": "2503.21076",
+      "url": "https://arxiv.org/html/2503.21076v1",
+      "methods_section": "3.3,3.4",
+      "use": "Gaussian local capacity with equal center budgets and independent retention",
+      "limit": "KAC channel-wise Gaussian classifier differs from multivariate Euclidean residual heads; no forgetting guarantee"
+    },
+    {
+      "arxiv": "2605.03534",
+      "url": "https://arxiv.org/html/2605.03534v1",
+      "methods_section": "III,IV",
+      "use": "Separate source evidence, confidence and selective decision risk",
+      "limit": "Binary historical labels are not three-way evidence sufficiency; no semantic verification claim"
+    }
+  ],
+  "fixture_gate": {
+    "install_by": 208,
+    "usable_changed_later_minimum": 32,
+    "credit": "circular_positive_only"
+  }
+}

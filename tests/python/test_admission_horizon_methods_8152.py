@@ -314,3 +314,13 @@ def test_bound_tamper(kind, measured, tmp_path):
     output = tmp_path / "candidate.json"
     atomic_json(output, value)
     assert not e.replay(output)
+
+
+def test_exact_checksum_rejection(measured, tmp_path):
+    """SCENARIO-VERIFY-8165-REPLAY: reject at847 before trusting any saved evidence."""
+    work, raw = measured
+    value = e.build(work, raw, [dict(passed=True, normal_exit=True)])
+    value["reproducibility_checksum"] = "malformed-checksum"
+    output = tmp_path / "bad_checksum.json"
+    atomic_json(output, value)
+    assert not e.replay(output)

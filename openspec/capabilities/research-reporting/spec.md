@@ -93492,3 +93492,25 @@ The diagnostic-drift regression brings Exp8164 to eight private tests. Expected
 and observed hashes remain separate, and changed log bytes enter immutable
 custody without removing authentic later dispositions. All287 added statements
 are covered. Historical primaries and active roadmap bytes remain preserved.
+
+## REQ-REPORT-8165: Publish learning qualification receipt
+
+Exp8165 SHALL freeze exact validation argv before measurement and publish a new
+primary through primary_publication. Require 100 percent owned statements,
+scoped pytest, Ruff check/format, strict mypy, explicit-path spec coverage and
+unmodified adversarial/strict row validators. Retain normal exits, duration,
+log hashes, primitive rows, original masks and source/code/config hashes.
+Full-suite health remains a separate diagnostic. No LLM loads or current calls.
+
+### SCENARIO-REPORT-8165-CLI
+
+Direct CLI execution outside checkout without PYTHONPATH SHALL support private
+success, external block, tamper rejection and cold replay. External failure is
+terminal complete_blocked_<actual_check> with observed operands. Owned validation
+failure sets readiness0 and disqualified. Passing private fixtures earn only
+circular_positive with oracle status. Preserve historical primary bytes.
+
+REQ-REPORT-8165 implementation: `carnot.reporting.learning_qualification_execution_8165`
+and the thin Exp8165 script reuse the qualified command supervisor and publication
+helper. Validation includes both original Exp8152 assertions and new private CLI
+routes; full-suite diagnostics remain separate from owned readiness.

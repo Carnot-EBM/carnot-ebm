@@ -49144,3 +49144,26 @@ REQ-VERIFY-8164 implementation: the thin Exp8164 CLI uses the qualified custody
 execution and publication modules. Current model calls remain zero. Historical
 hash dictionaries and reference lists retain their producer meanings, including
 explicit absent-input hashes. Scope and literature tampering fail cold replay.
+
+## REQ-VERIFY-8165: Qualify frozen release-aware learning
+
+Exp8165 SHALL reuse V705 protocol bytes and their immutable SHA256 without
+changing parameters. Original Exp8111 stream256/retention64 slots and missing
+masks remain authenticated. Exp8152 stays disqualified. Private scalar,
+admission-order, restart, overflow and old-expiry fixtures qualify methods only.
+Readiness requires installation by208, at least32 later changed predictions,
+and normal owned validation. Both generalization and natural benefit scores0.
+
+### SCENARIO-VERIFY-8165-REPLAY
+
+An additive regression SHALL reach Exp8152's checksum-rejection statement847.
+Malformed checksum, rehashed row tamper and protocol hash mutation fail replay;
+valid cold replay passes. Preserve original assertions and coverage threshold.
+Fixtures and mutations stay outside results. Frozen protocol bytes must match,
+not merely parsed JSON. Historical sources bind immutable versioned snapshots.
+
+REQ-VERIFY-8165 implementation: `carnot.verify.learning_qualification_8165`
+reuses the unchanged V705 numerical implementation and binds exact protocol
+bytes. `tests/python/test_admission_horizon_methods_8152.py` adds the statement847
+regression; `tests/python/test_learning_qualification_8165.py` covers the new
+receipt identity, negative replay and original historical custody.
