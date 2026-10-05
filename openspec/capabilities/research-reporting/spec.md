@@ -93316,3 +93316,26 @@ REQ-REPORT-8156 implementation: `python/carnot/verify/decision_audit_8156.py` an
 in `tests/python/test_decision_audit_8156.py` cover all315 added statements.
 The measured exposed panel retains original source masks and target-free source
 interventions. Operational reconciliation remains assigned to the conductor.
+## REQ-REPORT-8159: Durable batch service publication
+
+Exp8159 SHALL authenticate the qualified V704 natural head, original inputs and
+loaded extension bytes without requiring new learning. Freeze validation argv
+before timing. Publish complete batch throughput and request p50/p95 including
+actual enqueue wait. Readiness requires completeness, parity and crash recovery;
+speed is separate, with10000 paired log-ratio draws, lower95>1 and NFR-01>=10.
+Load no LLM; preserve imported provenance separately. Owned failures disqualify;
+external failures terminate blocked with exact operands. Publish checked bytes
+through primary_publication. The conductor owns ops and traceability updates.
+
+### SCENARIO-REPORT-8159: Private CLI and independent cold replay
+
+Outside checkout without PYTHONPATH, test success, missing inputs, tampered
+headlines and raw bytes, and cold replay. Cover all added statements. Run scoped
+pytest, Ruff, strict mypy, explicit-path spec coverage and unchanged terminal
+validators. Retain normal-exit, duration and log-hash receipts. Run full Python
+tests once as separate repository health; never change existing assertions.
+
+Implementation: `carnot.reporting.durable_batch_execution_8159` and the thin
+Exp8159 script freeze owned argv and publish checked bytes. Fourteen private
+tests cover all446 added statements, including the script. The conductor owns
+ops/status, changelog and traceability reconciliation.

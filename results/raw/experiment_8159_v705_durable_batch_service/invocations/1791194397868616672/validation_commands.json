@@ -1,0 +1,187 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.verify.durable_batch_8159",
+        "carnot.reporting.durable_batch_execution_8159"
+      ],
+      "name": "worktree_imports",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8159-validation-i9e0qin2/focused",
+        "tests/python/test_durable_batch_8159.py",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "explicit_tests",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8159-validation-i9e0qin2/.coverage",
+        "--include=*/verify/durable_batch_8159.py,*/reporting/durable_batch_execution_8159.py,*/scripts/experiments/experiment_8159_v705_durable_batch_service.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8159-validation-i9e0qin2/coverage",
+        "tests/python/test_durable_batch_8159.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "explicit_tests_and_changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8159-validation-i9e0qin2/.coverage",
+        "--include=*/verify/durable_batch_8159.py,*/reporting/durable_batch_execution_8159.py,*/scripts/experiments/experiment_8159_v705_durable_batch_service.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/durable_batch_8159.py",
+        "python/carnot/reporting/durable_batch_execution_8159.py",
+        "scripts/experiments/experiment_8159_v705_durable_batch_service.py",
+        "tests/python/test_durable_batch_8159.py"
+      ],
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/durable_batch_8159.py",
+        "python/carnot/reporting/durable_batch_execution_8159.py",
+        "scripts/experiments/experiment_8159_v705_durable_batch_service.py",
+        "tests/python/test_durable_batch_8159.py"
+      ],
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/verify/durable_batch_8159.py",
+        "python/carnot/reporting/durable_batch_execution_8159.py",
+        "--strict",
+        "--follow-imports=silent"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_durable_batch_8159.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 600
+    }
+  ],
+  "frozen_before_measurement": true,
+  "measurement_config": {
+    "arrivals": [
+      "all_at_once",
+      "cadence_4ms"
+    ],
+    "batches": [
+      1,
+      8,
+      32
+    ],
+    "bootstraps": 10000,
+    "cadence_ns": 4000000,
+    "conditions": [
+      "cold",
+      "warm",
+      "restart"
+    ],
+    "maximum_wait_ns": 32000000,
+    "repetitions": 30,
+    "seed": 7058159
+  },
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "name": "repository_health_once",
+    "scope": "repository_health_not_science_gate",
+    "timeout_s": 1800
+  },
+  "terminal": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8159_v705_durable_batch_service.py",
+        "--cold-replay",
+        "/tmp/carnot-8159-validation-i9e0qin2/experiment_8159_v705_durable_batch_service.json"
+      ],
+      "name": "cold_replay",
+      "scope": "terminal",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-8159-validation-i9e0qin2/experiment_8159_v705_durable_batch_service.json"
+      ],
+      "name": "adversarial",
+      "scope": "terminal",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-8159-validation-i9e0qin2/experiment_8159_v705_durable_batch_service.json"
+      ],
+      "name": "strict_rows",
+      "scope": "terminal",
+      "timeout_s": 300
+    }
+  ]
+}

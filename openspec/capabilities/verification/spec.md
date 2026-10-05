@@ -49014,3 +49014,29 @@ REQ-VERIFY-8156 implementation: `python/carnot/verify/decision_audit_8156.py` an
 in `tests/python/test_decision_audit_8156.py` cover all315 added statements.
 The measured exposed panel retains original source masks and target-free source
 interventions. Operational reconciliation remains assigned to the conductor.
+## REQ-VERIFY-8159: Complete frozen atomic batch transactions
+
+Compare Python scalar/serial commit, Python batch/serial commit, native
+batch/serial commit and native batch/atomic commit on identical preselected
+requests and a frozen natural head. Batches1/8/32 SHALL receive30 paired repeats
+under cold, warm and restart; alternate arm order. Use all-at-once and actual
+4ms arrivals with32ms maximum wait. Record monotonic enqueue, execution,
+serialization, fsync/commit and response boundaries. Preserve per-request
+provenance, stable IDs and input hashes. Return only committed decisions.
+The loaded Rust binding owns arithmetic; the existing host file store owns
+atomic durable commits. This bounded single-writer API does not grant a speed
+claim to independent single-request durability. No online updates are timed.
+
+### SCENARIO-VERIFY-8159: Crash, deduplication and causal state
+
+Inject child exits before commit and after durable commit before response.
+Reopen the store, verify each acknowledged ID exists exactly once and retry
+without duplicate state. Reject reuse of an ID with changed input hash. Retain
+ordered causal hashes and the unchanged head. Independent replay reconstructs
+probabilities, timing components, throughput, quantiles and paired intervals
+from primitive rows. Historical rejected-update cost remains null.
+
+Implementation: `carnot.verify.durable_batch_8159` retains per-request clocks,
+input hashes and causal records. A request group can span several atomic commits
+under cadence when the32ms queue deadline is reached. E2E-003/004 and private
+success, block, tamper, crash and cold replay are covered by the Exp8159 tests.
