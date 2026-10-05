@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "416c6469206973206f66666572696e67206d616a6f7220646973636f756e7473206f6e205468616e6b73676976696e6720676f6f64696573207374617274696e67204e6f76656d62657220312c20696e636c7564696e67206372616e626572726965732c20706563616e732c2070756d706b696e207069652c2067726176792c20616e64206f7468657220657373656e7469616c20696e6772656469656e74732e20546865736520646973636f756e74732061726520696e20726573706f6e736520746f2074686520726563656e742031312e342520696e63726561736520696e2067726f636572792070726963657320616e642077696c6c20636f6e74696e7565207468726f7567686f75742074686520686f6c6964617920736561736f6e2e20437573746f6d6572732063616e2065787065637420736176696e6773206f6620757020746f20353025206f6e206f766572203730206974656d732c20616e642063616e206576656e20656e6a6f79206120636c6173736963205468616e6b73676976696e67206465737365727420666f72206c657373207468616e2024342e205468657365207265647563656420686f6c69646179207072696365732077696c6c20626520617661696c61626c652066726f6d204e6f76656d6265722031207468726f75676820323032342e20416c6469277320636f6d6d69746d656e7420746f2070726f766964696e67206275646765742d667269656e646c79206f7074696f6e7320656e737572657320746861742065766572796f6e652063616e20656e6a6f7920612064656c6963696f7573205468616e6b73676976696e67206d65616c20776974686f757420627265616b696e67207468652062616e6b2e",
+  "arm": "holistic",
+  "call_id": "sha256:a78316117727fdd93ac57687a3f7580e6fe89c81a9cdd772b6c46d4f060536a5:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.139125669025816,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 748,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Save on Thanksgiving Feast: Aldi's Discounts\\nStarting on November 1, Aldi will be offering major discounts on a wide range of Thanksgiving goodies, including cranberries, pecans, pumpkin pie, and gravy. These discounts will continue throughout the holiday season, providing relief for shoppers who have been experiencing rising grocery prices. According to the U.S. Department of Agriculture, grocery prices have increased by 11.4% in 2022, making it more challenging for people to stick to their budgets. With Aldi's holiday promotion, customers can expect savings of up to 50% on over 70 items, including essential ingredients like gravy mix, rolls, French fried onions, salted Irish butter, vanilla extract, and pre-made pie crusts. Whether shoppers choose to bake from scratch or use Aldi's prepped options, they can enjoy a classic Thanksgiving dessert for less than $4. These reduced holiday prices will be available from November 1 through 2024, providing a budget-friendly option for households hosting gatherings or potluck events. With Aldi's discounts, shoppers can enjoy high-quality ingredients without the financial stress. Starting on November 1, Aldi's major discounts on Thanksgiving goodies will be a welcome relief for shoppers grappling with rising grocery prices. The U.S. Department of Agriculture reports an 11.4% increase in grocery prices in 2022, putting a strain on household budgets. However, Aldi's holiday promotion aims to alleviate some of this financial burden by offering savings of up to 50% on over 70 items essential for the Thanksgiving feast.\\nCustomers can expect discounts on items such as cranberries, pecans, pumpkin pie, gravy, gravy mix, rolls, French fried onions, salted Irish butter, vanilla extract, and pre-made pie crusts, among others. Whether they prefer to bake from scratch or opt for Aldi's prepped options, shoppers can enjoy a classic Thanksgiving dessert for less than $4. These reduced holiday prices will be available from November 1 through 2024, allowing households hosting gatherings or potluck events during the holiday season to enjoy high-quality ingredients without the added financial stress.\\nAldi's commitment to providing budget-friendly options for customers helps ensure that everyone can enjoy a delicious Thanksgiving meal without breaking the bank. By taking advantage of these discounts, shoppers can stock up on essential ingredients and create a memorable feast while staying within their budgets. From cranberry sauce to pie crusts, Aldi's holiday promotion offers savings that will surely leave customers feeling thankful.\\nSource:\\nhttps://www.eatthis.com/aldi-cutting-prices-holiday-items-2023/\", \"answer\": \"Aldi is offering major discounts on Thanksgiving goodies starting November 1, including cranberries, pecans, pumpkin pie, gravy, and other essential ingredients. These discounts are in response to the recent 11.4% increase in grocery prices and will continue throughout the holiday season. Customers can expect savings of up to 50% on over 70 items, and can even enjoy a classic Thanksgiving dessert for less than $4. These reduced holiday prices will be available from November 1 through 2024. Aldi's commitment to providing budget-friendly options ensures that everyone can enjoy a delicious Thanksgiving meal without breaking the bank.\"}",
+  "prompt_sha256": "sha256:af1fc8ee3e0b5c038c867dc954e9a9ecf74761a7a9e8354cb3c97500d73f1bb7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189629,
+    "id": "chatcmpl-oucDvo9wrtZyV2OSVKbaBYnbyp1O0jqr",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 318.086,
+      "predicted_n": 14,
+      "predicted_per_second": 44.01325427714517,
+      "predicted_per_token_ms": 22.720428571428574,
+      "prompt_ms": 698.601,
+      "prompt_n": 748,
+      "prompt_per_second": 1070.7113216270805,
+      "prompt_per_token_ms": 0.9339585561497327
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 748,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 762
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Save on Thanksgiving Feast: Aldi's Discounts\\nStarting on November 1, Aldi will be offering major discounts on a wide range of Thanksgiving goodies, including cranberries, pecans, pumpkin pie, and gravy. These discounts will continue throughout the holiday season, providing relief for shoppers who have been experiencing rising grocery prices. According to the U.S. Department of Agriculture, grocery prices have increased by 11.4% in 2022, making it more challenging for people to stick to their budgets. With Aldi's holiday promotion, customers can expect savings of up to 50% on over 70 items, including essential ingredients like gravy mix, rolls, French fried onions, salted Irish butter, vanilla extract, and pre-made pie crusts. Whether shoppers choose to bake from scratch or use Aldi's prepped options, they can enjoy a classic Thanksgiving dessert for less than $4. These reduced holiday prices will be available from November 1 through 2024, providing a budget-friendly option for households hosting gatherings or potluck events. With Aldi's discounts, shoppers can enjoy high-quality ingredients without the financial stress. Starting on November 1, Aldi's major discounts on Thanksgiving goodies will be a welcome relief for shoppers grappling with rising grocery prices. The U.S. Department of Agriculture reports an 11.4% increase in grocery prices in 2022, putting a strain on household budgets. However, Aldi's holiday promotion aims to alleviate some of this financial burden by offering savings of up to 50% on over 70 items essential for the Thanksgiving feast.\\nCustomers can expect discounts on items such as cranberries, pecans, pumpkin pie, gravy, gravy mix, rolls, French fried onions, salted Irish butter, vanilla extract, and pre-made pie crusts, among others. Whether they prefer to bake from scratch or opt for Aldi's prepped options, shoppers can enjoy a classic Thanksgiving dessert for less than $4. These reduced holiday prices will be available from November 1 through 2024, allowing households hosting gatherings or potluck events during the holiday season to enjoy high-quality ingredients without the added financial stress.\\nAldi's commitment to providing budget-friendly options for customers helps ensure that everyone can enjoy a delicious Thanksgiving meal without breaking the bank. By taking advantage of these discounts, shoppers can stock up on essential ingredients and create a memorable feast while staying within their budgets. From cranberry sauce to pie crusts, Aldi's holiday promotion offers savings that will surely leave customers feeling thankful.\\nSource:\\nhttps://www.eatthis.com/aldi-cutting-prices-holiday-items-2023/\", \"answer\": \"Aldi is offering major discounts on Thanksgiving goodies starting November 1, including cranberries, pecans, pumpkin pie, gravy, and other essential ingredients. These discounts are in response to the recent 11.4% increase in grocery prices and will continue throughout the holiday season. Customers can expect savings of up to 50% on over 70 items, and can even enjoy a classic Thanksgiving dessert for less than $4. These reduced holiday prices will be available from November 1 through 2024. Aldi's commitment to providing budget-friendly options ensures that everyone can enjoy a delicious Thanksgiving meal without breaking the bank.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 2,
+  "source_bytes": "53617665206f6e205468616e6b73676976696e672046656173743a20416c6469277320446973636f756e74730a5374617274696e67206f6e204e6f76656d62657220312c20416c64692077696c6c206265206f66666572696e67206d616a6f7220646973636f756e7473206f6e206120776964652072616e6765206f66205468616e6b73676976696e6720676f6f646965732c20696e636c7564696e67206372616e626572726965732c20706563616e732c2070756d706b696e207069652c20616e642067726176792e20546865736520646973636f756e74732077696c6c20636f6e74696e7565207468726f7567686f75742074686520686f6c6964617920736561736f6e2c2070726f766964696e672072656c69656620666f722073686f70706572732077686f2068617665206265656e20657870657269656e63696e6720726973696e672067726f63657279207072696365732e204163636f7264696e6720746f2074686520552e532e204465706172746d656e74206f66204167726963756c747572652c2067726f6365727920707269636573206861766520696e637265617365642062792031312e342520696e20323032322c206d616b696e67206974206d6f7265206368616c6c656e67696e6720666f722070656f706c6520746f20737469636b20746f20746865697220627564676574732e205769746820416c6469277320686f6c696461792070726f6d6f74696f6e2c20637573746f6d6572732063616e2065787065637420736176696e6773206f6620757020746f20353025206f6e206f766572203730206974656d732c20696e636c7564696e6720657373656e7469616c20696e6772656469656e7473206c696b65206772617679206d69782c20726f6c6c732c204672656e6368206672696564206f6e696f6e732c2073616c746564204972697368206275747465722c2076616e696c6c6120657874726163742c20616e64207072652d6d61646520706965206372757374732e20576865746865722073686f70706572732063686f6f736520746f2062616b652066726f6d2073637261746368206f722075736520416c646927732070726570706564206f7074696f6e732c20746865792063616e20656e6a6f79206120636c6173736963205468616e6b73676976696e67206465737365727420666f72206c657373207468616e2024342e205468657365207265647563656420686f6c69646179207072696365732077696c6c20626520617661696c61626c652066726f6d204e6f76656d6265722031207468726f75676820323032342c2070726f766964696e672061206275646765742d667269656e646c79206f7074696f6e20666f7220686f757365686f6c647320686f7374696e6720676174686572696e6773206f7220706f746c75636b206576656e74732e205769746820416c6469277320646973636f756e74732c2073686f70706572732063616e20656e6a6f7920686967682d7175616c69747920696e6772656469656e747320776974686f7574207468652066696e616e6369616c207374726573732e205374617274696e67206f6e204e6f76656d62657220312c20416c64692773206d616a6f7220646973636f756e7473206f6e205468616e6b73676976696e6720676f6f646965732077696c6c20626520612077656c636f6d652072656c69656620666f722073686f70706572732067726170706c696e67207769746820726973696e672067726f63657279207072696365732e2054686520552e532e204465706172746d656e74206f66204167726963756c74757265207265706f72747320616e2031312e342520696e63726561736520696e2067726f636572792070726963657320696e20323032322c2070757474696e6720612073747261696e206f6e20686f757365686f6c6420627564676574732e20486f77657665722c20416c6469277320686f6c696461792070726f6d6f74696f6e2061696d7320746f20616c6c65766961746520736f6d65206f6620746869732066696e616e6369616c2062757264656e206279206f66666572696e6720736176696e6773206f6620757020746f20353025206f6e206f766572203730206974656d7320657373656e7469616c20666f7220746865205468616e6b73676976696e672066656173742e0a437573746f6d6572732063616e2065787065637420646973636f756e7473206f6e206974656d732073756368206173206372616e626572726965732c20706563616e732c2070756d706b696e207069652c2067726176792c206772617679206d69782c20726f6c6c732c204672656e6368206672696564206f6e696f6e732c2073616c746564204972697368206275747465722c2076616e696c6c6120657874726163742c20616e64207072652d6d61646520706965206372757374732c20616d6f6e67206f74686572732e205768657468657220746865792070726566657220746f2062616b652066726f6d2073637261746368206f72206f707420666f7220416c646927732070726570706564206f7074696f6e732c2073686f70706572732063616e20656e6a6f79206120636c6173736963205468616e6b73676976696e67206465737365727420666f72206c657373207468616e2024342e205468657365207265647563656420686f6c69646179207072696365732077696c6c20626520617661696c61626c652066726f6d204e6f76656d6265722031207468726f75676820323032342c20616c6c6f77696e6720686f757365686f6c647320686f7374696e6720676174686572696e6773206f7220706f746c75636b206576656e747320647572696e672074686520686f6c6964617920736561736f6e20746f20656e6a6f7920686967682d7175616c69747920696e6772656469656e747320776974686f7574207468652061646465642066696e616e6369616c207374726573732e0a416c6469277320636f6d6d69746d656e7420746f2070726f766964696e67206275646765742d667269656e646c79206f7074696f6e7320666f7220637573746f6d6572732068656c707320656e7375726520746861742065766572796f6e652063616e20656e6a6f7920612064656c6963696f7573205468616e6b73676976696e67206d65616c20776974686f757420627265616b696e67207468652062616e6b2e2042792074616b696e6720616476616e74616765206f6620746865736520646973636f756e74732c2073686f70706572732063616e2073746f636b207570206f6e20657373656e7469616c20696e6772656469656e747320616e64206372656174652061206d656d6f7261626c65206665617374207768696c652073746179696e672077697468696e20746865697220627564676574732e2046726f6d206372616e626572727920736175636520746f20706965206372757374732c20416c6469277320686f6c696461792070726f6d6f74696f6e206f666665727320736176696e677320746861742077696c6c20737572656c79206c6561766520637573746f6d657273206665656c696e67207468616e6b66756c2e0a536f757263653a0a68747470733a2f2f7777772e656174746869732e636f6d2f616c64692d63757474696e672d7072696365732d686f6c696461792d6974656d732d323032332f",
+  "source_cluster_id": "sha256:5e8558387a6e21aaaf225ea0604ea62828f570ebf2941e4b1a9c2dd53509f97d",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:a78316117727fdd93ac57687a3f7580e6fe89c81a9cdd772b6c46d4f060536a5"
+}

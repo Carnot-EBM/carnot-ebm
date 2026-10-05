@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4865726520697320612073756d6d617279206f66207468652061727469636c652077697468696e20393520776f7264733a0a0a416c6578697320576172652c20612032392d796561722d6f6c64206d6f746865722c20646973617070656172656420696e20536f757468204361726f6c696e61206f6e20466562727561727920313874682061667465722064726f7070696e67206f666620686572206368696c6472656e2061742061206761732073746174696f6e2e204865722063617220776173206c6174657220666f756e6420696e20616e6f7468657220746f776e2077697468206e6f207369676e73206f6620666f756c20706c61792c20627574207368652072656d61696e73206d697373696e672e20457874656e7369766520736561726368657320616e6420696e7665737469676174696f6e732068617665207969656c646564206e6f20636f6e6372657465206c656164732c20616e64207468652066616d696c79206973206e6f77207365656b696e672046424920696e766f6c76656d656e742e204465737069746520746869732c20746865792072656d61696e20686f706566756c20666f7220416c65786973277320736166652072657475726e2e",
+  "arm": "source_span",
+  "call_id": "sha256:9176924f1fc42483a61e79ff7548cb12db1a1c999c93b49130eede6b13e5baca:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.500477632973343,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 707,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 71,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Mother of Two, Alexis Ware, Mysteriously Disappeared in South Carolina Since 2022\\nAlexis Ware, a 29-year-old mother, has vanished without a trace, leaving her family in distress. The young mother was last seen at a gas station in Anderson, South Carolina, and her vehicle was later discovered miles away in McCormick.\\nOver the past month, the disappearance of Alexis, who originates from a large family, has baffled and worried her loved ones. Alberta Gray-Simpkins, Alexis's mother, and Frank Simpkins Sr., her stepfather, are particularly troubled. Alexis had a close-knit relationship with her family, especially with her children. Her sudden and prolonged absence has raised alarm bells.\\nTravis Ware, Alexis's half-brother, recalls his sister's caring nature. As a hairstylist with aspirations to build a career in Instagram modeling, Alexis had a zest for life. Her disappearance, however, followed a weekend where her behavior appeared off-kilter. Alberta noted that Alexis seemed distressed about her upcoming 30th birthday, which was out of character for her.\\nThe day before her disappearance, Alexis expressed fears of being followed. The next day, after leaving her children with their father at a gas station, she was never seen or heard from again. The father later contacted Alberta, concerned about Alexis's unexpected behavior.\\nDespite security footage from the gas station showing nothing unusual, the sudden acceleration of Alexis's vehicle after handing over the kids was perplexing. Days later, her car was found in McCormick with all her belongings untouched inside. This discovery has been especially concerning, given that Alexis had no known connections to the McCormick area.\\nFollowing extensive search efforts involving multiple agencies and covering over 200 acres, Alexis remains missing. The Anderson County Sheriff, Chad McBride, has expressed his office's dedication to solving the case. However, despite their efforts, including extensive interviews, surveillance footage analysis, and more, there are still no concrete leads.\\nAlexis's family, hoping to leverage all possible resources, has called for FBI involvement. As of early March, the FBI has begun assisting in the investigation, with an agent specializing in missing persons slated to collaborate with local authorities.\\nAs days turn into weeks, Alexis's family remains hopeful for her safe return. While her whereabouts and the circumstances surrounding her disappearance remain a mystery, her loved ones are united in their efforts to bring her home.\", \"answer\": \"Here is a summary of the article within 95 words:\\n\\nAlexis Ware, a 29-year-old mother, disappeared in South Carolina on February 18th after dropping off her children at a gas station. Her car was later found in another town with no signs of foul play, but she remains missing. Extensive searches and investigations have yielded no concrete leads, and the family is now seeking FBI involvement. Despite this, they remain hopeful for Alexis's safe return.\"}",
+  "prompt_sha256": "sha256:ce247e0ca0855a862765c5e30131fab0050c86e38cec08663d4cd2ee4d632513",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"The young mother was last seen at a gas station in Anderson, South Carolina, and her vehicle was later discovered miles away in McCormick.\",\n  \"byte_start\": 137,\n  \"byte_end\": 253\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189680,
+    "id": "chatcmpl-Jx0LxnjmWYopJV8CpZLNxJFQoPNeoztz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1702.194,
+      "predicted_n": 71,
+      "predicted_per_second": 41.71087431867343,
+      "predicted_per_token_ms": 23.97456338028169,
+      "prompt_ms": 678.291,
+      "prompt_n": 707,
+      "prompt_per_second": 1042.325491566304,
+      "prompt_per_token_ms": 0.9593932107496465
+    },
+    "usage": {
+      "completion_tokens": 71,
+      "prompt_tokens": 707,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 778
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Mother of Two, Alexis Ware, Mysteriously Disappeared in South Carolina Since 2022\\nAlexis Ware, a 29-year-old mother, has vanished without a trace, leaving her family in distress. The young mother was last seen at a gas station in Anderson, South Carolina, and her vehicle was later discovered miles away in McCormick.\\nOver the past month, the disappearance of Alexis, who originates from a large family, has baffled and worried her loved ones. Alberta Gray-Simpkins, Alexis's mother, and Frank Simpkins Sr., her stepfather, are particularly troubled. Alexis had a close-knit relationship with her family, especially with her children. Her sudden and prolonged absence has raised alarm bells.\\nTravis Ware, Alexis's half-brother, recalls his sister's caring nature. As a hairstylist with aspirations to build a career in Instagram modeling, Alexis had a zest for life. Her disappearance, however, followed a weekend where her behavior appeared off-kilter. Alberta noted that Alexis seemed distressed about her upcoming 30th birthday, which was out of character for her.\\nThe day before her disappearance, Alexis expressed fears of being followed. The next day, after leaving her children with their father at a gas station, she was never seen or heard from again. The father later contacted Alberta, concerned about Alexis's unexpected behavior.\\nDespite security footage from the gas station showing nothing unusual, the sudden acceleration of Alexis's vehicle after handing over the kids was perplexing. Days later, her car was found in McCormick with all her belongings untouched inside. This discovery has been especially concerning, given that Alexis had no known connections to the McCormick area.\\nFollowing extensive search efforts involving multiple agencies and covering over 200 acres, Alexis remains missing. The Anderson County Sheriff, Chad McBride, has expressed his office's dedication to solving the case. However, despite their efforts, including extensive interviews, surveillance footage analysis, and more, there are still no concrete leads.\\nAlexis's family, hoping to leverage all possible resources, has called for FBI involvement. As of early March, the FBI has begun assisting in the investigation, with an agent specializing in missing persons slated to collaborate with local authorities.\\nAs days turn into weeks, Alexis's family remains hopeful for her safe return. While her whereabouts and the circumstances surrounding her disappearance remain a mystery, her loved ones are united in their efforts to bring her home.\", \"answer\": \"Here is a summary of the article within 95 words:\\n\\nAlexis Ware, a 29-year-old mother, disappeared in South Carolina on February 18th after dropping off her children at a gas station. Her car was later found in another town with no signs of foul play, but she remains missing. Extensive searches and investigations have yielded no concrete leads, and the family is now seeking FBI involvement. Despite this, they remain hopeful for Alexis's safe return.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 18,
+  "source_bytes": "4d6f74686572206f662054776f2c20416c6578697320576172652c204d7973746572696f75736c7920446973617070656172656420696e20536f757468204361726f6c696e612053696e636520323032320a416c6578697320576172652c20612032392d796561722d6f6c64206d6f746865722c206861732076616e697368656420776974686f757420612074726163652c206c656176696e67206865722066616d696c7920696e2064697374726573732e2054686520796f756e67206d6f7468657220776173206c617374207365656e2061742061206761732073746174696f6e20696e20416e646572736f6e2c20536f757468204361726f6c696e612c20616e64206865722076656869636c6520776173206c6174657220646973636f7665726564206d696c6573206177617920696e204d63436f726d69636b2e0a4f766572207468652070617374206d6f6e74682c2074686520646973617070656172616e6365206f6620416c657869732c2077686f206f726967696e617465732066726f6d2061206c617267652066616d696c792c2068617320626166666c656420616e6420776f727269656420686572206c6f766564206f6e65732e20416c626572746120477261792d53696d706b696e732c20416c657869732773206d6f746865722c20616e64204672616e6b2053696d706b696e732053722e2c2068657220737465706661746865722c2061726520706172746963756c61726c792074726f75626c65642e20416c6578697320686164206120636c6f73652d6b6e69742072656c6174696f6e736869702077697468206865722066616d696c792c20657370656369616c6c79207769746820686572206368696c6472656e2e204865722073756464656e20616e642070726f6c6f6e67656420616273656e6365206861732072616973656420616c61726d2062656c6c732e0a54726176697320576172652c20416c6578697327732068616c662d62726f746865722c20726563616c6c732068697320736973746572277320636172696e67206e61747572652e204173206120686169727374796c69737420776974682061737069726174696f6e7320746f206275696c6420612063617265657220696e20496e7374616772616d206d6f64656c696e672c20416c65786973206861642061207a65737420666f72206c6966652e2048657220646973617070656172616e63652c20686f77657665722c20666f6c6c6f7765642061207765656b656e6420776865726520686572206265686176696f72206170706561726564206f66662d6b696c7465722e20416c6265727461206e6f746564207468617420416c65786973207365656d656420646973747265737365642061626f757420686572207570636f6d696e6720333074682062697274686461792c20776869636820776173206f7574206f662063686172616374657220666f72206865722e0a54686520646179206265666f72652068657220646973617070656172616e63652c20416c6578697320657870726573736564206665617273206f66206265696e6720666f6c6c6f7765642e20546865206e657874206461792c206166746572206c656176696e6720686572206368696c6472656e2077697468207468656972206661746865722061742061206761732073746174696f6e2c2073686520776173206e65766572207365656e206f722068656172642066726f6d20616761696e2e2054686520666174686572206c6174657220636f6e74616374656420416c62657274612c20636f6e6365726e65642061626f757420416c65786973277320756e6578706563746564206265686176696f722e0a4465737069746520736563757269747920666f6f746167652066726f6d20746865206761732073746174696f6e2073686f77696e67206e6f7468696e6720756e757375616c2c207468652073756464656e20616363656c65726174696f6e206f6620416c6578697327732076656869636c652061667465722068616e64696e67206f76657220746865206b6964732077617320706572706c6578696e672e2044617973206c617465722c20686572206361722077617320666f756e6420696e204d63436f726d69636b207769746820616c6c206865722062656c6f6e67696e677320756e746f756368656420696e736964652e205468697320646973636f7665727920686173206265656e20657370656369616c6c7920636f6e6365726e696e672c20676976656e207468617420416c6578697320686164206e6f206b6e6f776e20636f6e6e656374696f6e7320746f20746865204d63436f726d69636b20617265612e0a466f6c6c6f77696e6720657874656e7369766520736561726368206566666f72747320696e766f6c76696e67206d756c7469706c65206167656e6369657320616e6420636f766572696e67206f766572203230302061637265732c20416c657869732072656d61696e73206d697373696e672e2054686520416e646572736f6e20436f756e747920536865726966662c2043686164204d6342726964652c206861732065787072657373656420686973206f666669636527732064656469636174696f6e20746f20736f6c76696e672074686520636173652e20486f77657665722c2064657370697465207468656972206566666f7274732c20696e636c7564696e6720657874656e7369766520696e74657276696577732c207375727665696c6c616e636520666f6f7461676520616e616c797369732c20616e64206d6f72652c20746865726520617265207374696c6c206e6f20636f6e6372657465206c656164732e0a416c6578697327732066616d696c792c20686f70696e6720746f206c6576657261676520616c6c20706f737369626c65207265736f75726365732c206861732063616c6c656420666f722046424920696e766f6c76656d656e742e204173206f66206561726c79204d617263682c20746865204642492068617320626567756e20617373697374696e6720696e2074686520696e7665737469676174696f6e2c207769746820616e206167656e74207370656369616c697a696e6720696e206d697373696e6720706572736f6e7320736c6174656420746f20636f6c6c61626f726174652077697468206c6f63616c20617574686f7269746965732e0a41732064617973207475726e20696e746f207765656b732c20416c6578697327732066616d696c792072656d61696e7320686f706566756c20666f722068657220736166652072657475726e2e205768696c652068657220776865726561626f75747320616e64207468652063697263756d7374616e63657320737572726f756e64696e672068657220646973617070656172616e63652072656d61696e2061206d7973746572792c20686572206c6f766564206f6e65732061726520756e6974656420696e207468656972206566666f72747320746f206272696e672068657220686f6d652e",
+  "source_cluster_id": "sha256:efbbdec55980b64b77a1fd9c0a065df418aafe4d7fca7b5eb073be27feb40ed2",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"The young mother was last seen at a gas station in Anderson, South Carolina, and her vehicle was later discovered miles away in McCormick.\",\n  \"byte_start\": 137,\n  \"byte_end\": 253\n}",
+  "unit_id": "sha256:9176924f1fc42483a61e79ff7548cb12db1a1c999c93b49130eede6b13e5baca"
+}

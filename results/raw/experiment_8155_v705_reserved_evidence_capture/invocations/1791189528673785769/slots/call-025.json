@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "5069636b6c656420656767732061726520612074797065206f66207072657365727665642065676720746861742068617665206265656e20637572656420696e2076696e65676172206f72206272696e652e2054686579206172652062656c696576656420746f2068617665206f726967696e6174656420696e20616e6369656e7420636976696c697a6174696f6e732077686572652070656f706c652075736564207069636b6c696e6720617320612077617920746f20707265736572766520766172696f757320666f6f64732c20696e636c7564696e6720656767732e204163636f7264696e6720746f206f6e6520736f757263652c207468652070726f63657373206f66207069636b6c696e67206567677320776173206c6f737420746f20686973746f727920756e74696c20697420776173207265646973636f766572656420696e20746865206561726c7920313930307320696e20456e676c616e642e205069636b6c656420656767732061726520706172746963756c61726c7920706f70756c617220696e204772656174204272697461696e20616e64204972656c616e642c207768657265207468657920617265206f6674656e20636f6e73756d6564206173206120736964652064697368206f7220736e61636b2e20496e206d6f6465726e2074696d65732c207069636b6c6564206567677320617265206120706f70756c617220696e6772656469656e7420696e206d616e792063756973696e65732061726f756e642074686520776f726c642e",
+  "arm": "holistic",
+  "call_id": "sha256:c30263e8c7d782a8ad33d90007436acd3f1e4348e7ece2e41179e7916d3dc8cb:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.8740851330803707,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 463,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 Make the beet pickled eggs. 2  1. Wash and scrub the beet, trim and discard the ends, and slice the beet into 1/2-inch-thick rounds. 3  Pour 3 cups cold water into a saucepan and add the beet, vinegar, sugar, peppercorns, chiles, cinnamon stick, coriander seeds, and salt. 4  Bring to a simmer and cook for 10 minutes.\\\\n\\\\npassage 2:However, at the time pickled cucumbers originated, ancient man used the process of pickling to preserve many types of food including fruits, vegetables, meat, eggs, and fish. The brine solution that imparts the sour taste to pickled cucumbers also works to inhibit the growth of bacteria.\\\\n\\\\npassage 3:Pickle History. Pickled cucumbers are a favorite food in many cultures, including America. The origin of the first pickle is lost in the sands of time, but archaeological evidence dates them back to 2400 in Mesopotamia. From these origins, pickles spread quickly through Asia, Egypt and Greece. These days the word pickle brings to mind spicy, sweet, or sour pickled cucumbers.\\\\n\\\\n\\\",\\\"question\\\":\\\"history of pickled eggs\\\"}\", \"answer\": \"Pickled eggs are a type of preserved egg that have been cured in vinegar or brine. They are believed to have originated in ancient civilizations where people used pickling as a way to preserve various foods, including eggs. According to one source, the process of pickling eggs was lost to history until it was rediscovered in the early 1900s in England. Pickled eggs are particularly popular in Great Britain and Ireland, where they are often consumed as a side dish or snack. In modern times, pickled eggs are a popular ingredient in many cuisines around the world.\"}",
+  "prompt_sha256": "sha256:59a093bf1e92e9bfaf49815cbad6e0bc9eccd337de07e6afc026e0981ebe0654",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189664,
+    "id": "chatcmpl-vIZ5qN0RQTCGCnTEGVmFAPs4KsSNW1bO",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 319.169,
+      "predicted_n": 14,
+      "predicted_per_second": 43.86390908891528,
+      "predicted_per_token_ms": 22.797785714285713,
+      "prompt_ms": 451.265,
+      "prompt_n": 463,
+      "prompt_per_second": 1026.0046757448506,
+      "prompt_per_token_ms": 0.9746544276457884
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 463,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 477
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 Make the beet pickled eggs. 2  1. Wash and scrub the beet, trim and discard the ends, and slice the beet into 1/2-inch-thick rounds. 3  Pour 3 cups cold water into a saucepan and add the beet, vinegar, sugar, peppercorns, chiles, cinnamon stick, coriander seeds, and salt. 4  Bring to a simmer and cook for 10 minutes.\\\\n\\\\npassage 2:However, at the time pickled cucumbers originated, ancient man used the process of pickling to preserve many types of food including fruits, vegetables, meat, eggs, and fish. The brine solution that imparts the sour taste to pickled cucumbers also works to inhibit the growth of bacteria.\\\\n\\\\npassage 3:Pickle History. Pickled cucumbers are a favorite food in many cultures, including America. The origin of the first pickle is lost in the sands of time, but archaeological evidence dates them back to 2400 in Mesopotamia. From these origins, pickles spread quickly through Asia, Egypt and Greece. These days the word pickle brings to mind spicy, sweet, or sour pickled cucumbers.\\\\n\\\\n\\\",\\\"question\\\":\\\"history of pickled eggs\\\"}\", \"answer\": \"Pickled eggs are a type of preserved egg that have been cured in vinegar or brine. They are believed to have originated in ancient civilizations where people used pickling as a way to preserve various foods, including eggs. According to one source, the process of pickling eggs was lost to history until it was rediscovered in the early 1900s in England. Pickled eggs are particularly popular in Great Britain and Ireland, where they are often consumed as a side dish or snack. In modern times, pickled eggs are a popular ingredient in many cuisines around the world.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 13,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a31204d616b65207468652062656574207069636b6c656420656767732e20322020312e205761736820616e642073637275622074686520626565742c207472696d20616e6420646973636172642074686520656e64732c20616e6420736c69636520746865206265657420696e746f20312f322d696e63682d746869636b20726f756e64732e20332020506f75722033206375707320636f6c6420776174657220696e746f206120736175636570616e20616e64206164642074686520626565742c2076696e656761722c2073756761722c20706570706572636f726e732c206368696c65732c2063696e6e616d6f6e20737469636b2c20636f7269616e6465722073656564732c20616e642073616c742e203420204272696e6720746f20612073696d6d657220616e6420636f6f6b20666f72203130206d696e757465732e5c6e5c6e7061737361676520323a486f77657665722c206174207468652074696d65207069636b6c656420637563756d62657273206f726967696e617465642c20616e6369656e74206d616e2075736564207468652070726f63657373206f66207069636b6c696e6720746f207072657365727665206d616e79207479706573206f6620666f6f6420696e636c7564696e67206672756974732c20766567657461626c65732c206d6561742c20656767732c20616e6420666973682e20546865206272696e6520736f6c7574696f6e207468617420696d70617274732074686520736f757220746173746520746f207069636b6c656420637563756d6265727320616c736f20776f726b7320746f20696e6869626974207468652067726f777468206f662062616374657269612e5c6e5c6e7061737361676520333a5069636b6c6520486973746f72792e205069636b6c656420637563756d62657273206172652061206661766f7269746520666f6f6420696e206d616e792063756c74757265732c20696e636c7564696e6720416d65726963612e20546865206f726967696e206f6620746865206669727374207069636b6c65206973206c6f737420696e207468652073616e6473206f662074696d652c20627574206172636861656f6c6f676963616c2065766964656e6365206461746573207468656d206261636b20746f203234303020696e204d65736f706f74616d69612e2046726f6d207468657365206f726967696e732c207069636b6c65732073707265616420717569636b6c79207468726f75676820417369612c20456779707420616e64204772656563652e20546865736520646179732074686520776f7264207069636b6c65206272696e677320746f206d696e642073706963792c2073776565742c206f7220736f7572207069636b6c656420637563756d626572732e5c6e5c6e222c227175657374696f6e223a22686973746f7279206f66207069636b6c65642065676773227d",
+  "source_cluster_id": "sha256:4688fcddd712ccb3c2bf65a1aa677ffc2d87429f9a39211897334537ccaf0127",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 1\n}",
+  "unit_id": "sha256:c30263e8c7d782a8ad33d90007436acd3f1e4348e7ece2e41179e7916d3dc8cb"
+}

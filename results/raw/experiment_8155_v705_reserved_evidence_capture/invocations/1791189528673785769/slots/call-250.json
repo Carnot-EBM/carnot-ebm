@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "496e204d616c6567616f6e2c20496e6469612c20706f6c6963652072657175697265206964656e7469747920636172647320666f7220636174746c6520616674657220612073746174652d776964652062616e206f6e20626565662073616c657320616e6420636f6e73756d7074696f6e2e204f776e657273206d7573742070726f766964652070686f746f7320616e642064657461696c73206f6620746865697220636f77732c20616e64207468652064617461626173652061696d7320746f2068656c7020736f6c766520636f7720736c617567687465722063617365732e204f76657220313030206f776e657273206861766520636f6d706c6965642c2062757420626565662074726164657273206861766520726573706f6e64656420776974682061206d6f6e74682d6c6f6e6720737472696b6520616e6420706c616e20746f206368616c6c656e676520746865206465636973696f6e20696e20636f7572742e20546865206d6f76652069732070617274206f6620612062726f61646572206566666f727420746f207469676874656e20636f7720736c61756768746572206c61777320696e20496e6469612c20776974682048617279616e6120696d706c656d656e74696e672074686520746f7567686573742070656e616c7469657320616e642074686520686f6d65206d696e69737465722070726f6d6973696e67206120636f756e7472792d77696465206c61772e",
+  "arm": "source_span",
+  "call_id": "sha256:7e6c0ed49ea30b36cfff3acafadbce563fa843cb78a74c6813beecffbaa687a5:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.5729284869739786,
+  "entailment_label": null,
+  "exclusion_reason": "invalid_probability_or_usage",
+  "human_target": null,
+  "input_tokens": 686,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 0,
+  "order": 0,
+  "output_tokens": 73,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": null,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "missing_probability",
+    "valid_quote": 0
+  },
+  "probability": null,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Police in the Indian city of Malegaon, in the western state of Maharashtra, are requiring identity cards for an unusual group of residents: Cattle. Following a recent state-wide ban on the sale and consumption of beef, authorities in the city have asked residents to take a 'mugshot' of their cattle and submit it to the police. Along with the photograph, the residents have to give information about their animal's 'unique features,' such as the coloring and age of the cow, along with the length of its tail and other distinctive characteristics. Police officials believe this is the only way to solve cow slaughter cases and enforce the law. Cows are considered holy and revered by that state's majority Hindu population. \\\"We are creating a database. If we get an information of a cow slaughter, we can quickly go to the resident's place and check whether it is there or not\\\", Mahesh Sawai, Deputy Superintendent of Malegaon Police told CNN. \\\"I believe this will be very effective\\\" So far over 100 owners have complied with the police order and more are lining up outside police stations across the city to get their livestock photographed. The ruling came in the wake of a recent case of cow slaughter in Malegaon, where two men have been charged for killing the animal and and selling its meat. The Maharashtra Animal Preservation Bill now includes bans on the killing of bulls and bullocks in its list of non-bailable offenses. Even the consumption or sale of beef could now land you in prison for five years. The slaughter of buffaloes, however, is still permissible. However, beef traders in the country strongly reacted to the decision and called a month-long strike, which ended Wednesday. The traders refused to even slaughter buffaloes and deprive the state of all bovine meat. They have now vowed to file a case in the state's high court. Red meat lovers weren't too delighted either, arguing the government doesn't have a right to interfere in an individual's personal preference. Maharashtra is not the only Indian state to tighten its laws on cow slaughter. Haryana state has implemented a maximum punishment of 10 years in prison, the toughest penalty in the country. Rajnath Singh, India's Home Minister has promised that he would do all to devise a country-wide law against cow slaughter.\\n\", \"answer\": \"In Malegaon, India, police require identity cards for cattle after a state-wide ban on beef sales and consumption. Owners must provide photos and details of their cows, and the database aims to help solve cow slaughter cases. Over 100 owners have complied, but beef traders have responded with a month-long strike and plan to challenge the decision in court. The move is part of a broader effort to tighten cow slaughter laws in India, with Haryana implementing the toughest penalties and the home minister promising a country-wide law.\"}",
+  "prompt_sha256": "sha256:198d758ee465b7b5c4f58ad2b3039e88a7c1af20dd34aaf86d0cef4f5df49ba4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```json\n{\n  \"p_hallucination\": 0,\n  \"quote\": \"Haryana state has implemented a maximum punishment of 10 years in prison, the toughest penalty in the country.\",\n  \"byte_start\": 1963,\n  \"byte_end\": 2053\n}\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791190058,
+    "id": "chatcmpl-pZzX3li0UUikli3s8c2faFr7rMztsJsD",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1754.836,
+      "predicted_n": 73,
+      "predicted_per_second": 41.599328940140275,
+      "predicted_per_token_ms": 24.038849315068493,
+      "prompt_ms": 685.814,
+      "prompt_n": 686,
+      "prompt_per_second": 1000.2712105614643,
+      "prompt_per_token_ms": 0.9997288629737608
+    },
+    "usage": {
+      "completion_tokens": 73,
+      "prompt_tokens": 686,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 759
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Police in the Indian city of Malegaon, in the western state of Maharashtra, are requiring identity cards for an unusual group of residents: Cattle. Following a recent state-wide ban on the sale and consumption of beef, authorities in the city have asked residents to take a 'mugshot' of their cattle and submit it to the police. Along with the photograph, the residents have to give information about their animal's 'unique features,' such as the coloring and age of the cow, along with the length of its tail and other distinctive characteristics. Police officials believe this is the only way to solve cow slaughter cases and enforce the law. Cows are considered holy and revered by that state's majority Hindu population. \\\"We are creating a database. If we get an information of a cow slaughter, we can quickly go to the resident's place and check whether it is there or not\\\", Mahesh Sawai, Deputy Superintendent of Malegaon Police told CNN. \\\"I believe this will be very effective\\\" So far over 100 owners have complied with the police order and more are lining up outside police stations across the city to get their livestock photographed. The ruling came in the wake of a recent case of cow slaughter in Malegaon, where two men have been charged for killing the animal and and selling its meat. The Maharashtra Animal Preservation Bill now includes bans on the killing of bulls and bullocks in its list of non-bailable offenses. Even the consumption or sale of beef could now land you in prison for five years. The slaughter of buffaloes, however, is still permissible. However, beef traders in the country strongly reacted to the decision and called a month-long strike, which ended Wednesday. The traders refused to even slaughter buffaloes and deprive the state of all bovine meat. They have now vowed to file a case in the state's high court. Red meat lovers weren't too delighted either, arguing the government doesn't have a right to interfere in an individual's personal preference. Maharashtra is not the only Indian state to tighten its laws on cow slaughter. Haryana state has implemented a maximum punishment of 10 years in prison, the toughest penalty in the country. Rajnath Singh, India's Home Minister has promised that he would do all to devise a country-wide law against cow slaughter.\\n\", \"answer\": \"In Malegaon, India, police require identity cards for cattle after a state-wide ban on beef sales and consumption. Owners must provide photos and details of their cows, and the database aims to help solve cow slaughter cases. Over 100 owners have complied, but beef traders have responded with a month-long strike and plan to challenge the decision in court. The move is part of a broader effort to tighten cow slaughter laws in India, with Haryana implementing the toughest penalties and the home minister promising a country-wide law.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 126,
+  "source_bytes": "506f6c69636520696e2074686520496e6469616e2063697479206f66204d616c6567616f6e2c20696e20746865207765737465726e207374617465206f66204d616861726173687472612c2061726520726571756972696e67206964656e7469747920636172647320666f7220616e20756e757375616c2067726f7570206f66207265736964656e74733a20436174746c652e20466f6c6c6f77696e67206120726563656e742073746174652d776964652062616e206f6e207468652073616c6520616e6420636f6e73756d7074696f6e206f6620626565662c20617574686f72697469657320696e20746865206369747920686176652061736b6564207265736964656e747320746f2074616b65206120276d756773686f7427206f6620746865697220636174746c6520616e64207375626d697420697420746f2074686520706f6c6963652e20416c6f6e672077697468207468652070686f746f67726170682c20746865207265736964656e7473206861766520746f206769766520696e666f726d6174696f6e2061626f757420746865697220616e696d616c27732027756e697175652066656174757265732c2720737563682061732074686520636f6c6f72696e6720616e6420616765206f662074686520636f772c20616c6f6e67207769746820746865206c656e677468206f6620697473207461696c20616e64206f746865722064697374696e6374697665206368617261637465726973746963732e20506f6c696365206f6666696369616c732062656c69657665207468697320697320746865206f6e6c792077617920746f20736f6c766520636f7720736c6175676874657220636173657320616e6420656e666f72636520746865206c61772e20436f77732061726520636f6e7369646572656420686f6c7920616e64207265766572656420627920746861742073746174652773206d616a6f726974792048696e647520706f70756c6174696f6e2e2022576520617265206372656174696e6720612064617461626173652e2049662077652067657420616e20696e666f726d6174696f6e206f66206120636f7720736c617567687465722c2077652063616e20717569636b6c7920676f20746f20746865207265736964656e74277320706c61636520616e6420636865636b2077686574686572206974206973207468657265206f72206e6f74222c204d61686573682053617761692c20446570757479205375706572696e74656e64656e74206f66204d616c6567616f6e20506f6c69636520746f6c6420434e4e2e2022492062656c6965766520746869732077696c6c2062652076657279206566666563746976652220536f20666172206f76657220313030206f776e657273206861766520636f6d706c69656420776974682074686520706f6c696365206f7264657220616e64206d6f726520617265206c696e696e67207570206f75747369646520706f6c6963652073746174696f6e73206163726f737320746865206369747920746f20676574207468656972206c69766573746f636b2070686f746f677261706865642e205468652072756c696e672063616d6520696e207468652077616b65206f66206120726563656e742063617365206f6620636f7720736c6175676874657220696e204d616c6567616f6e2c2077686572652074776f206d656e2068617665206265656e206368617267656420666f72206b696c6c696e672074686520616e696d616c20616e6420616e642073656c6c696e6720697473206d6561742e20546865204d6168617261736874726120416e696d616c20507265736572766174696f6e2042696c6c206e6f7720696e636c756465732062616e73206f6e20746865206b696c6c696e67206f662062756c6c7320616e642062756c6c6f636b7320696e20697473206c697374206f66206e6f6e2d6261696c61626c65206f6666656e7365732e204576656e2074686520636f6e73756d7074696f6e206f722073616c65206f66206265656620636f756c64206e6f77206c616e6420796f7520696e20707269736f6e20666f7220666976652079656172732e2054686520736c61756768746572206f662062756666616c6f65732c20686f77657665722c206973207374696c6c207065726d69737369626c652e20486f77657665722c2062656566207472616465727320696e2074686520636f756e747279207374726f6e676c79207265616374656420746f20746865206465636973696f6e20616e642063616c6c65642061206d6f6e74682d6c6f6e6720737472696b652c20776869636820656e646564205765646e65736461792e205468652074726164657273207265667573656420746f206576656e20736c617567687465722062756666616c6f657320616e64206465707269766520746865207374617465206f6620616c6c20626f76696e65206d6561742e20546865792068617665206e6f7720766f77656420746f2066696c652061206361736520696e207468652073746174652773206869676820636f7572742e20526564206d656174206c6f7665727320776572656e277420746f6f2064656c696768746564206569746865722c2061726775696e672074686520676f7665726e6d656e7420646f65736e27742068617665206120726967687420746f20696e7465726665726520696e20616e20696e646976696475616c277320706572736f6e616c20707265666572656e63652e204d61686172617368747261206973206e6f7420746865206f6e6c7920496e6469616e20737461746520746f207469676874656e20697473206c617773206f6e20636f7720736c617567687465722e2048617279616e612073746174652068617320696d706c656d656e7465642061206d6178696d756d2070756e6973686d656e74206f6620313020796561727320696e20707269736f6e2c2074686520746f7567686573742070656e616c747920696e2074686520636f756e7472792e2052616a6e6174682053696e67682c20496e646961277320486f6d65204d696e6973746572206861732070726f6d69736564207468617420686520776f756c6420646f20616c6c20746f20646576697365206120636f756e7472792d77696465206c617720616761696e737420636f7720736c617567687465722e0a",
+  "source_cluster_id": "sha256:9bf872f513bc63472e4f8d7fa30af7d6c639d4cfc21f69efb8953af5cffae60d",
+  "started": true,
+  "status": "failed",
+  "transcript": "```json\n{\n  \"p_hallucination\": 0,\n  \"quote\": \"Haryana state has implemented a maximum punishment of 10 years in prison, the toughest penalty in the country.\",\n  \"byte_start\": 1963,\n  \"byte_end\": 2053\n}\n```",
+  "unit_id": "sha256:7e6c0ed49ea30b36cfff3acafadbce563fa843cb78a74c6813beecffbaa687a5"
+}

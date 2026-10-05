@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20736d6f6b696e67206973206964656e74696669656420617320746865206e756d626572206f6e65206361757365206f66206c756e672063616e6365722e204163636f7264696e6720746f205061737361676520312c20736d6f6b696e672063617573657320746865206d616a6f72697479206f66206c756e672063616e636572732c20626f746820696e20736d6f6b65727320616e6420696e2070656f706c65206578706f73656420746f207365636f6e6468616e6420736d6f6b652e2050617373616765203220656d70686173697a65732074686174206c756e672063616e636572206973206120646973656173652074686174206f6363757273207768656e2061207072696d6172792063616e63657220646576656c6f707320696e2074686520746973737565206f6620746865206c756e67732c20616e6420736d6f6b696e6720697320746865206c656164696e67206361757365206f66206c756e672063616e6365722e2050617373616765203320616c736f20686967686c6967687473207468617420736d6f6b696e6720697320726573706f6e7369626c6520666f7220746865206d616a6f72697479206f66206c756e672063616e63657220636173657320696e2074686520556e69746564204b696e67646f6d2c20776974682061726f756e642034312c3430302070656f706c65206265696e6720646961676e6f736564206561636820796561722e204164646974696f6e616c6c792c206974206e6f746573207468617420736d6f6b696e672d72656c61746564206465617468732061726520686967686572207468616e2074686f73652066726f6d20414944532c20647275672061627573652c20636172206163636964656e74732c20616e6420686f6d696369646520636f6d62696e65642e205468657265666f72652c2069742063616e20626520636f6e636c75646564207468617420736d6f6b696e672069732061207369676e69666963616e74207269736b20666163746f7220666f7220646576656c6f70696e67206c756e672063616e6365722e",
+  "arm": "holistic",
+  "call_id": "sha256:294b9badbacc334c64633cd5abeea87e1eda8eccdc3e640fbf5b5f487f1dff21:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.1104446690296754,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 602,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Bronchioles and alveoli. Smoking causes the majority of lung cancers \u2014 both in smokers and in people exposed to secondhand smoke. But lung cancer also occurs in people who never smoked and in those who never had prolonged exposure to secondhand smoke.In these cases, there may be no clear cause of lung cancer.he two general types of lung cancer include: 1  Small cell lung cancer. 2  Small cell lung cancer occurs almost exclusively in heavy smokers and is less common than non-small cell lung cancer. 3  Non-small cell lung cancer.\\\\n\\\\npassage 2:There are all types of smokers. Some smokers are casual smokers, who only smoke ... SMOKING: THE NUMBER ONE CAUSE OF LUNG CANCER. Lung cancer is a disease in which a primary cancer (the original site where the cancer occurred) develops in the tissue of the lungs.Lung cancer was first described by doctors in the mid 1800's.MOKING: THE NUMBER ONE CAUSE OF LUNG CANCER. Lung cancer is a disease in which a primary cancer (the original site where the cancer occurred) develops in the tissue of the lungs.\\\\n\\\\npassage 3:Lung Cancer Causes and Effects. How common lung cancer is Lung cancer is the second most common cancer in the United Kingdom (excluding non melanoma skin cancer).Around 41,400 people are diagnosed in the UK each year.Smoking and lung cancer In most people, lung cancer is related to cigarette smoking.oes Smoking Cause Lung Cancer. die from lung cancer and other smoking related diseases than they die from aids, drug abuse, car accidents and homicide, combined. Cigarette smoking is a danger to our life and health.\\\\n\\\\n\\\",\\\"question\\\":\\\"cause and effect essay on smoking causes lung cancer\\\"}\", \"answer\": \"Based on the given passages, smoking is identified as the number one cause of lung cancer. According to Passage 1, smoking causes the majority of lung cancers, both in smokers and in people exposed to secondhand smoke. Passage 2 emphasizes that lung cancer is a disease that occurs when a primary cancer develops in the tissue of the lungs, and smoking is the leading cause of lung cancer. Passage 3 also highlights that smoking is responsible for the majority of lung cancer cases in the United Kingdom, with around 41,400 people being diagnosed each year. Additionally, it notes that smoking-related deaths are higher than those from AIDS, drug abuse, car accidents, and homicide combined. Therefore, it can be concluded that smoking is a significant risk factor for developing lung cancer.\"}",
+  "prompt_sha256": "sha256:e430d76b8c7a5e1d2aa3202579034294cf754802413a6657bd42fc8863b7a28d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189953,
+    "id": "chatcmpl-D3UQczDCHpq7IlIMtbDxCGSQ36cXseKk",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 370.881,
+      "predicted_n": 16,
+      "predicted_per_second": 43.140522162095124,
+      "predicted_per_token_ms": 23.1800625,
+      "prompt_ms": 616.726,
+      "prompt_n": 602,
+      "prompt_per_second": 976.122297422194,
+      "prompt_per_token_ms": 1.0244617940199336
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 602,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 618
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Bronchioles and alveoli. Smoking causes the majority of lung cancers \u2014 both in smokers and in people exposed to secondhand smoke. But lung cancer also occurs in people who never smoked and in those who never had prolonged exposure to secondhand smoke.In these cases, there may be no clear cause of lung cancer.he two general types of lung cancer include: 1  Small cell lung cancer. 2  Small cell lung cancer occurs almost exclusively in heavy smokers and is less common than non-small cell lung cancer. 3  Non-small cell lung cancer.\\\\n\\\\npassage 2:There are all types of smokers. Some smokers are casual smokers, who only smoke ... SMOKING: THE NUMBER ONE CAUSE OF LUNG CANCER. Lung cancer is a disease in which a primary cancer (the original site where the cancer occurred) develops in the tissue of the lungs.Lung cancer was first described by doctors in the mid 1800's.MOKING: THE NUMBER ONE CAUSE OF LUNG CANCER. Lung cancer is a disease in which a primary cancer (the original site where the cancer occurred) develops in the tissue of the lungs.\\\\n\\\\npassage 3:Lung Cancer Causes and Effects. How common lung cancer is Lung cancer is the second most common cancer in the United Kingdom (excluding non melanoma skin cancer).Around 41,400 people are diagnosed in the UK each year.Smoking and lung cancer In most people, lung cancer is related to cigarette smoking.oes Smoking Cause Lung Cancer. die from lung cancer and other smoking related diseases than they die from aids, drug abuse, car accidents and homicide, combined. Cigarette smoking is a danger to our life and health.\\\\n\\\\n\\\",\\\"question\\\":\\\"cause and effect essay on smoking causes lung cancer\\\"}\", \"answer\": \"Based on the given passages, smoking is identified as the number one cause of lung cancer. According to Passage 1, smoking causes the majority of lung cancers, both in smokers and in people exposed to secondhand smoke. Passage 2 emphasizes that lung cancer is a disease that occurs when a primary cancer develops in the tissue of the lungs, and smoking is the leading cause of lung cancer. Passage 3 also highlights that smoking is responsible for the majority of lung cancer cases in the United Kingdom, with around 41,400 people being diagnosed each year. Additionally, it notes that smoking-related deaths are higher than those from AIDS, drug abuse, car accidents, and homicide combined. Therefore, it can be concluded that smoking is a significant risk factor for developing lung cancer.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 94,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a42726f6e6368696f6c657320616e6420616c76656f6c692e20536d6f6b696e672063617573657320746865206d616a6f72697479206f66206c756e672063616e6365727320e2809420626f746820696e20736d6f6b65727320616e6420696e2070656f706c65206578706f73656420746f207365636f6e6468616e6420736d6f6b652e20427574206c756e672063616e63657220616c736f206f636375727320696e2070656f706c652077686f206e6576657220736d6f6b656420616e6420696e2074686f73652077686f206e65766572206861642070726f6c6f6e676564206578706f7375726520746f207365636f6e6468616e6420736d6f6b652e496e2074686573652063617365732c207468657265206d6179206265206e6f20636c656172206361757365206f66206c756e672063616e6365722e68652074776f2067656e6572616c207479706573206f66206c756e672063616e63657220696e636c7564653a20312020536d616c6c2063656c6c206c756e672063616e6365722e20322020536d616c6c2063656c6c206c756e672063616e636572206f636375727320616c6d6f7374206578636c75736976656c7920696e20686561767920736d6f6b65727320616e64206973206c65737320636f6d6d6f6e207468616e206e6f6e2d736d616c6c2063656c6c206c756e672063616e6365722e203320204e6f6e2d736d616c6c2063656c6c206c756e672063616e6365722e5c6e5c6e7061737361676520323a54686572652061726520616c6c207479706573206f6620736d6f6b6572732e20536f6d6520736d6f6b657273206172652063617375616c20736d6f6b6572732c2077686f206f6e6c7920736d6f6b65202e2e2e20534d4f4b494e473a20544845204e554d424552204f4e45204341555345204f46204c554e472043414e4345522e204c756e672063616e6365722069732061206469736561736520696e2077686963682061207072696d6172792063616e6365722028746865206f726967696e616c2073697465207768657265207468652063616e636572206f636375727265642920646576656c6f707320696e2074686520746973737565206f6620746865206c756e67732e4c756e672063616e636572207761732066697273742064657363726962656420627920646f63746f727320696e20746865206d6964203138303027732e4d4f4b494e473a20544845204e554d424552204f4e45204341555345204f46204c554e472043414e4345522e204c756e672063616e6365722069732061206469736561736520696e2077686963682061207072696d6172792063616e6365722028746865206f726967696e616c2073697465207768657265207468652063616e636572206f636375727265642920646576656c6f707320696e2074686520746973737565206f6620746865206c756e67732e5c6e5c6e7061737361676520333a4c756e672043616e6365722043617573657320616e6420456666656374732e20486f7720636f6d6d6f6e206c756e672063616e636572206973204c756e672063616e63657220697320746865207365636f6e64206d6f737420636f6d6d6f6e2063616e63657220696e2074686520556e69746564204b696e67646f6d20286578636c7564696e67206e6f6e206d656c616e6f6d6120736b696e2063616e636572292e41726f756e642034312c3430302070656f706c652061726520646961676e6f73656420696e2074686520554b206561636820796561722e536d6f6b696e6720616e64206c756e672063616e63657220496e206d6f73742070656f706c652c206c756e672063616e6365722069732072656c6174656420746f2063696761726574746520736d6f6b696e672e6f657320536d6f6b696e67204361757365204c756e672043616e6365722e206469652066726f6d206c756e672063616e63657220616e64206f7468657220736d6f6b696e672072656c61746564206469736561736573207468616e2074686579206469652066726f6d20616964732c20647275672061627573652c20636172206163636964656e747320616e6420686f6d69636964652c20636f6d62696e65642e2043696761726574746520736d6f6b696e6720697320612064616e67657220746f206f7572206c69666520616e64206865616c74682e5c6e5c6e222c227175657374696f6e223a22636175736520616e6420656666656374206573736179206f6e20736d6f6b696e6720636175736573206c756e672063616e636572227d",
+  "source_cluster_id": "sha256:dd93f6ab5a70435ab2acab635d4c7429b1b75eedb2292e8b1d03943971a069e8",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.0\n}",
+  "unit_id": "sha256:294b9badbacc334c64633cd5abeea87e1eda8eccdc3e640fbf5b5f487f1dff21"
+}

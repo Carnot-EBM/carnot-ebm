@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20746865206865616c696e672074696d6520666f722061206368656d6963616c207065656c2063616e2072616e67652066726f6d203120746f20313420646179732c20646570656e64696e67206f6e20746865206465707468206f6620746865207065656c2e20412064656570207065656c2063616e2074616b65206265747765656e20313020746f203134206461797320666f7220736b696e20726567726f7774682c20776974682074686520736b696e2072656d61696e696e672072656420666f7220757020746f2033207765656b73206f72206576656e2032206d6f6e74687320666f7220736f6d6520696e646976696475616c732e204d6f73742070656f706c652074616b652061626f75742032207765656b73206f66662066726f6d20776f726b2e",
+  "arm": "holistic",
+  "call_id": "sha256:1119b561e686a38eabfdcb20954bc29271e2ae631c2589924e7f1b0e26dcf66d:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.9824169200146571,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 554,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:In a chemical peel, a chemical solution is applied to the skin and allowed to soak in. Over the next 1 to 14 days, depending on how deeply the chemical penetrated the skin, the skin peels off.This procedure destroys parts of the skin in a controlled way so that new skin can grow in its place. deep peel causes a deeper second-degree burn of the skin. Skin regrowth takes between 10 to 14 days after a deep peel. The skin remains extremely red for 3 weeks, up to 2 months for some people. Most people take about 2 weeks off from work.\\\\n\\\\npassage 2:Chemical Peel Basics. Your doctor can apply a chemical peel to several areas of your body, including your face, legs, arms, hands or chest, according to the American Academy of Dermatology.onsiderations. If your doctor recommends a TCA chemical peel, you may need to undergo more than one procedure to achieve the desired results, Brigham and Women's Hospital explains. If you undergo a phenol peel, your new skin may not be able to create normal levels of pigmentation.\\\\n\\\\npassage 3:Posted by Samantha Cook in Chemical Peel. ANSWER: How long it takes a chemical peel to heal depends on the type of chemical peel. More Info: Chemical peels are categorized into three subgroups, which is used depends on the severity of the skin issue.The stronger the chemical used in the procedure, the deeper the peel, and subsequently the longer the healing time.richloroacetic Acid Peel (TCA). The TCA peel causes a second degree burn on the epidermis and upper portion of the dermis, which means it will take longer to heal than a superficial peel. Following the procedure the skin will begin to crust and peel in the first 2-3 days.\\\\n\\\\n\\\",\\\"question\\\":\\\"how long does it take to heal from a chemical peel\\\"}\", \"answer\": \"Based on the given passages, the healing time for a chemical peel can range from 1 to 14 days, depending on the depth of the peel. A deep peel can take between 10 to 14 days for skin regrowth, with the skin remaining red for up to 3 weeks or even 2 months for some individuals. Most people take about 2 weeks off from work.\"}",
+  "prompt_sha256": "sha256:1b321348055641a6ca10ce9b3290f427e3a14008f2b2817de3eda8c5f6077833",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189638,
+    "id": "chatcmpl-ezPWQfNxmD6hVJPrQsmJExxW1OcvQHEP",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 318.252,
+      "predicted_n": 14,
+      "predicted_per_second": 43.99029699734801,
+      "predicted_per_token_ms": 22.732285714285716,
+      "prompt_ms": 565.826,
+      "prompt_n": 554,
+      "prompt_per_second": 979.0995818502508,
+      "prompt_per_token_ms": 1.0213465703971119
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 554,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 568
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:In a chemical peel, a chemical solution is applied to the skin and allowed to soak in. Over the next 1 to 14 days, depending on how deeply the chemical penetrated the skin, the skin peels off.This procedure destroys parts of the skin in a controlled way so that new skin can grow in its place. deep peel causes a deeper second-degree burn of the skin. Skin regrowth takes between 10 to 14 days after a deep peel. The skin remains extremely red for 3 weeks, up to 2 months for some people. Most people take about 2 weeks off from work.\\\\n\\\\npassage 2:Chemical Peel Basics. Your doctor can apply a chemical peel to several areas of your body, including your face, legs, arms, hands or chest, according to the American Academy of Dermatology.onsiderations. If your doctor recommends a TCA chemical peel, you may need to undergo more than one procedure to achieve the desired results, Brigham and Women's Hospital explains. If you undergo a phenol peel, your new skin may not be able to create normal levels of pigmentation.\\\\n\\\\npassage 3:Posted by Samantha Cook in Chemical Peel. ANSWER: How long it takes a chemical peel to heal depends on the type of chemical peel. More Info: Chemical peels are categorized into three subgroups, which is used depends on the severity of the skin issue.The stronger the chemical used in the procedure, the deeper the peel, and subsequently the longer the healing time.richloroacetic Acid Peel (TCA). The TCA peel causes a second degree burn on the epidermis and upper portion of the dermis, which means it will take longer to heal than a superficial peel. Following the procedure the skin will begin to crust and peel in the first 2-3 days.\\\\n\\\\n\\\",\\\"question\\\":\\\"how long does it take to heal from a chemical peel\\\"}\", \"answer\": \"Based on the given passages, the healing time for a chemical peel can range from 1 to 14 days, depending on the depth of the peel. A deep peel can take between 10 to 14 days for skin regrowth, with the skin remaining red for up to 3 weeks or even 2 months for some individuals. Most people take about 2 weeks off from work.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 5,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a496e2061206368656d6963616c207065656c2c2061206368656d6963616c20736f6c7574696f6e206973206170706c69656420746f2074686520736b696e20616e6420616c6c6f77656420746f20736f616b20696e2e204f76657220746865206e657874203120746f20313420646179732c20646570656e64696e67206f6e20686f7720646565706c7920746865206368656d6963616c2070656e657472617465642074686520736b696e2c2074686520736b696e207065656c73206f66662e546869732070726f6365647572652064657374726f7973207061727473206f662074686520736b696e20696e206120636f6e74726f6c6c65642077617920736f2074686174206e657720736b696e2063616e2067726f7720696e2069747320706c6163652e2064656570207065656c20636175736573206120646565706572207365636f6e642d646567726565206275726e206f662074686520736b696e2e20536b696e20726567726f7774682074616b6573206265747765656e20313020746f203134206461797320616674657220612064656570207065656c2e2054686520736b696e2072656d61696e732065787472656d656c792072656420666f722033207765656b732c20757020746f2032206d6f6e74687320666f7220736f6d652070656f706c652e204d6f73742070656f706c652074616b652061626f75742032207765656b73206f66662066726f6d20776f726b2e5c6e5c6e7061737361676520323a4368656d6963616c205065656c204261736963732e20596f757220646f63746f722063616e206170706c792061206368656d6963616c207065656c20746f207365766572616c206172656173206f6620796f757220626f64792c20696e636c7564696e6720796f757220666163652c206c6567732c2061726d732c2068616e6473206f722063686573742c206163636f7264696e6720746f2074686520416d65726963616e2041636164656d79206f66204465726d61746f6c6f67792e6f6e73696465726174696f6e732e20496620796f757220646f63746f72207265636f6d6d656e6473206120544341206368656d6963616c207065656c2c20796f75206d6179206e65656420746f20756e646572676f206d6f7265207468616e206f6e652070726f63656475726520746f206163686965766520746865206465736972656420726573756c74732c204272696768616d20616e6420576f6d656e277320486f73706974616c206578706c61696e732e20496620796f7520756e646572676f2061207068656e6f6c207065656c2c20796f7572206e657720736b696e206d6179206e6f742062652061626c6520746f20637265617465206e6f726d616c206c6576656c73206f66207069676d656e746174696f6e2e5c6e5c6e7061737361676520333a506f737465642062792053616d616e74686120436f6f6b20696e204368656d6963616c205065656c2e20414e535745523a20486f77206c6f6e672069742074616b65732061206368656d6963616c207065656c20746f206865616c20646570656e6473206f6e207468652074797065206f66206368656d6963616c207065656c2e204d6f726520496e666f3a204368656d6963616c207065656c73206172652063617465676f72697a656420696e746f2074687265652073756267726f7570732c207768696368206973207573656420646570656e6473206f6e20746865207365766572697479206f662074686520736b696e2069737375652e546865207374726f6e67657220746865206368656d6963616c207573656420696e207468652070726f6365647572652c207468652064656570657220746865207065656c2c20616e642073756273657175656e746c7920746865206c6f6e67657220746865206865616c696e672074696d652e726963686c6f726f6163657469632041636964205065656c2028544341292e2054686520544341207065656c206361757365732061207365636f6e6420646567726565206275726e206f6e20746865206570696465726d697320616e6420757070657220706f7274696f6e206f6620746865206465726d69732c207768696368206d65616e732069742077696c6c2074616b65206c6f6e67657220746f206865616c207468616e206120737570657266696369616c207065656c2e20466f6c6c6f77696e67207468652070726f6365647572652074686520736b696e2077696c6c20626567696e20746f20637275737420616e64207065656c20696e2074686520666972737420322d3320646179732e5c6e5c6e222c227175657374696f6e223a22686f77206c6f6e6720646f65732069742074616b6520746f206865616c2066726f6d2061206368656d6963616c207065656c227d",
+  "source_cluster_id": "sha256:518f7ce9e62992ecee25ef7422ed39c616fffd2dd984abf93f45f7f4992322e8",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:1119b561e686a38eabfdcb20954bc29271e2ae631c2589924e7f1b0e26dcf66d"
+}

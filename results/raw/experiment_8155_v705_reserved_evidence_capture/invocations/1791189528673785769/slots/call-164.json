@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "54686520596f756e6720616e642074686520526573746c6573732073706f696c6572732073756767657374204e69636b204e65776d616e20284a6f73687561204d6f72726f77292077696c6c20627265616b20757020776974682053616c6c7920537065637472612028436f7572746e657920486f706529206f76657220686572206b6973732077697468204164616d204e65776d616e20284d61726b2047726f73736d616e292e204e69636b2062656c69657665732053616c6c79207374696c6c20686172626f757273206665656c696e677320666f72204164616d2c20646573706974652053616c6c792773206173737572616e6365732074686174207368652773206e6f7420696e206c6f766520776974682068696d207965742e20416674657220746865697220627265616b75702c204164616d20696e637265617365732068697320616476616e63657320746f77617264732053616c6c792c20736565696e672069742061732061207369676e20746865792073686f756c6420626520746f6765746865722e204e69636b20686f7065732053616c6c792077696c6c206576656e7475616c6c792066696e642068617070696e65737320616e6420636f6e74656e746d656e7420696e206865722063686f6963652e",
+  "arm": "source_span",
+  "call_id": "sha256:2990634033f1cccffc5a0dfe18682779577c6571fbffcdf3a7da26fde385dd71:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.314692275947891,
+  "entailment_label": null,
+  "exclusion_reason": "invalid_probability_or_usage",
+  "human_target": null,
+  "input_tokens": 598,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 0,
+  "order": 0,
+  "output_tokens": 65,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": null,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "missing_probability",
+    "valid_quote": 0
+  },
+  "probability": null,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"'Young and the Restless' Spoilers: Nick Breaks Up With Sally, Believes She's In love With Adam?\\nThe Young and the Restless (Y&R) spoilers for the week of October 9 tease that Nick Newman (Joshua Morrow) will dump Sally Spectra (Courtney Hope) over the kiss with Adam Newman (Mark Grossman). Soap Opera Digest reports that Nick urges Sally to figure out what she wants and let him know where they stand.\\nBefore Sally confessed that Adam kissed her to Nick, she told him she wasn't in love with him yet. Sally admitted that she loved him, but being \\\"totally in love with him\\\" wasn't there yet. But she was hopeful that she would get there eventually.\\nShe Knows Soaps reports that Sally admits her emotions are a mess, thanks to Adam and the kiss. The Young and the Restless spoilers say that Nick believes that Adam has this effect on Sally because she's still in love with his brother.\\nSally hates that she still has feelings for Adam. She loves the future she could have with Nick, but none of that matters if she cannot let go of Adam and get him to leave her alone.\\nY&R spoilers say that Nick thinks Sally needs space to determine what she wants. He's prepared for her to decide that Adam is the man for her. Ultimately, Nick just wants Sally to be happy and content with her decision.\\nAdam will learn of their breakup and turn up the pressure on Sally. He sees this as a sign that he and Sally are meant to be together. Sally struggles to say no to Adam without Nick to protect and shield her from Adam.\\nY&R fans, will Sally and Adam end up together? Keep watching The Young and the Restless, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"answer\": \"The Young and the Restless spoilers suggest Nick Newman (Joshua Morrow) will break up with Sally Spectra (Courtney Hope) over her kiss with Adam Newman (Mark Grossman). Nick believes Sally still harbours feelings for Adam, despite Sally's assurances that she's not in love with him yet. After their breakup, Adam increases his advances towards Sally, seeing it as a sign they should be together. Nick hopes Sally will eventually find happiness and contentment in her choice.\"}",
+  "prompt_sha256": "sha256:4808d13861492a4822670817c028926692c31f540de9ced872c2ff9297525579",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```json\n{\n  \"p_hallucination\": 0,\n  \"quote\": \"Nick urges Sally to figure out what she wants and let him know where they stand.\",\n  \"byte_start\": 246,\n  \"byte_end\": 318\n}\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189911,
+    "id": "chatcmpl-qlAW9fd794d9PgKbTQZYz1dPn5wWlOIm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1559.874,
+      "predicted_n": 65,
+      "predicted_per_second": 41.670032323123536,
+      "predicted_per_token_ms": 23.99806153846154,
+      "prompt_ms": 614.931,
+      "prompt_n": 598,
+      "prompt_per_second": 972.4668296117775,
+      "prompt_per_token_ms": 1.0283127090301003
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 598,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 663
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"'Young and the Restless' Spoilers: Nick Breaks Up With Sally, Believes She's In love With Adam?\\nThe Young and the Restless (Y&R) spoilers for the week of October 9 tease that Nick Newman (Joshua Morrow) will dump Sally Spectra (Courtney Hope) over the kiss with Adam Newman (Mark Grossman). Soap Opera Digest reports that Nick urges Sally to figure out what she wants and let him know where they stand.\\nBefore Sally confessed that Adam kissed her to Nick, she told him she wasn't in love with him yet. Sally admitted that she loved him, but being \\\"totally in love with him\\\" wasn't there yet. But she was hopeful that she would get there eventually.\\nShe Knows Soaps reports that Sally admits her emotions are a mess, thanks to Adam and the kiss. The Young and the Restless spoilers say that Nick believes that Adam has this effect on Sally because she's still in love with his brother.\\nSally hates that she still has feelings for Adam. She loves the future she could have with Nick, but none of that matters if she cannot let go of Adam and get him to leave her alone.\\nY&R spoilers say that Nick thinks Sally needs space to determine what she wants. He's prepared for her to decide that Adam is the man for her. Ultimately, Nick just wants Sally to be happy and content with her decision.\\nAdam will learn of their breakup and turn up the pressure on Sally. He sees this as a sign that he and Sally are meant to be together. Sally struggles to say no to Adam without Nick to protect and shield her from Adam.\\nY&R fans, will Sally and Adam end up together? Keep watching The Young and the Restless, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"answer\": \"The Young and the Restless spoilers suggest Nick Newman (Joshua Morrow) will break up with Sally Spectra (Courtney Hope) over her kiss with Adam Newman (Mark Grossman). Nick believes Sally still harbours feelings for Adam, despite Sally's assurances that she's not in love with him yet. After their breakup, Adam increases his advances towards Sally, seeing it as a sign they should be together. Nick hopes Sally will eventually find happiness and contentment in her choice.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 83,
+  "source_bytes": "27596f756e6720616e642074686520526573746c657373272053706f696c6572733a204e69636b20427265616b7320557020576974682053616c6c792c2042656c696576657320536865277320496e206c6f76652057697468204164616d3f0a54686520596f756e6720616e642074686520526573746c6573732028592652292073706f696c65727320666f7220746865207765656b206f66204f63746f62657220392074656173652074686174204e69636b204e65776d616e20284a6f73687561204d6f72726f77292077696c6c2064756d702053616c6c7920537065637472612028436f7572746e657920486f706529206f76657220746865206b6973732077697468204164616d204e65776d616e20284d61726b2047726f73736d616e292e20536f6170204f7065726120446967657374207265706f7274732074686174204e69636b2075726765732053616c6c7920746f20666967757265206f75742077686174207368652077616e747320616e64206c65742068696d206b6e6f772077686572652074686579207374616e642e0a4265666f72652053616c6c7920636f6e6665737365642074686174204164616d206b69737365642068657220746f204e69636b2c2073686520746f6c642068696d20736865207761736e277420696e206c6f766520776974682068696d207965742e2053616c6c792061646d6974746564207468617420736865206c6f7665642068696d2c20627574206265696e672022746f74616c6c7920696e206c6f766520776974682068696d22207761736e2774207468657265207965742e20427574207368652077617320686f706566756c20746861742073686520776f756c6420676574207468657265206576656e7475616c6c792e0a536865204b6e6f777320536f617073207265706f72747320746861742053616c6c792061646d6974732068657220656d6f74696f6e73206172652061206d6573732c207468616e6b7320746f204164616d20616e6420746865206b6973732e2054686520596f756e6720616e642074686520526573746c6573732073706f696c657273207361792074686174204e69636b2062656c69657665732074686174204164616d20686173207468697320656666656374206f6e2053616c6c792062656361757365207368652773207374696c6c20696e206c6f76652077697468206869732062726f746865722e0a53616c6c79206861746573207468617420736865207374696c6c20686173206665656c696e677320666f72204164616d2e20536865206c6f76657320746865206675747572652073686520636f756c6420686176652077697468204e69636b2c20627574206e6f6e65206f662074686174206d617474657273206966207368652063616e6e6f74206c657420676f206f66204164616d20616e64206765742068696d20746f206c656176652068657220616c6f6e652e0a5926522073706f696c657273207361792074686174204e69636b207468696e6b732053616c6c79206e6565647320737061636520746f2064657465726d696e652077686174207368652077616e74732e204865277320707265706172656420666f722068657220746f206465636964652074686174204164616d20697320746865206d616e20666f72206865722e20556c74696d6174656c792c204e69636b206a7573742077616e74732053616c6c7920746f20626520686170707920616e6420636f6e74656e74207769746820686572206465636973696f6e2e0a4164616d2077696c6c206c6561726e206f6620746865697220627265616b757020616e64207475726e20757020746865207072657373757265206f6e2053616c6c792e204865207365657320746869732061732061207369676e207468617420686520616e642053616c6c7920617265206d65616e7420746f20626520746f6765746865722e2053616c6c79207374727567676c657320746f20736179206e6f20746f204164616d20776974686f7574204e69636b20746f2070726f7465637420616e6420736869656c64206865722066726f6d204164616d2e0a5926522066616e732c2077696c6c2053616c6c7920616e64204164616d20656e6420757020746f6765746865723f204b656570207761746368696e672054686520596f756e6720616e642074686520526573746c6573732c20616972696e67207765656b64617973206f6e2043425320616e642073747265616d696e67206f6e20506172616d6f756e7420506c75732e20506c6561736520736861726520796f75722074686f75676874732077697468206d6520696e2074686520636f6d6d656e74732073656374696f6e2062656c6f772e2052656d656d62657220746f20666f6c6c6f77206d6520746f2072656164206d6f7265206f66206d7920636f6e74656e742e",
+  "source_cluster_id": "sha256:628788e8e47fabbba8c2b1ad29cfa26cb174735b32e5c1719c8d4768f4b16d0d",
+  "started": true,
+  "status": "failed",
+  "transcript": "```json\n{\n  \"p_hallucination\": 0,\n  \"quote\": \"Nick urges Sally to figure out what she wants and let him know where they stand.\",\n  \"byte_start\": 246,\n  \"byte_end\": 318\n}\n```",
+  "unit_id": "sha256:2990634033f1cccffc5a0dfe18682779577c6571fbffcdf3a7da26fde385dd71"
+}

@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "416e20656d706c6f79656520617420612047616d6553746f702073746f726520696e2056697267696e696120686173206265656e206368617267656420776974682061676772617661746564206d616c6963696f757320776f756e64696e6720616674657220616c6c656765646c79207374616262696e67206120637573746f6d657220647572696e6720616e20617267756d656e742e205468652076696374696d2073756666657265642061206e6f6e2d6c6966652d746872656174656e696e6720696e6a75727920616e64207761732074616b656e20746f2074686520686f73706974616c2e205468652061636375736564207761732070726f6d70746c7920617272657374656420616e64206973206177616974696e672066757274686572206c6567616c2070726f63656564696e67732e205468697320696e636964656e7420686967686c69676874732074686520696d706f7274616e6365206f66206d61696e7461696e696e672061207361666520616e64207265737065637466756c20656e7669726f6e6d656e7420696e2072657461696c2073746f72657320616e6420746865206e65656420666f72206e6f6e2d76696f6c656e7420636f6e666c696374207265736f6c7574696f6e2e2054686520636f6d6d756e69747920697320636c6f73656c7920666f6c6c6f77696e672074686520636173652c20686f70696e6720666f72206a75737469636520616e6420696e6372656173656420736166657479206d656173757265732e",
+  "arm": "source_span",
+  "call_id": "sha256:1af365eb99620e958ed7aff83570a5876b5a386080f3bd50ce1217cbe7ccf583:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.6058084520045668,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 563,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 38,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"GameStop Horror: Employee Faces Charges for Stabbing Customer During Argument\\nA seemingly routine visit to a GameStop store in Potomac Mills, Virginia, took a shocking turn when an employee allegedly stabbed a customer during an argument. The incident left both the victim and the accused facing dire consequences, shaking the community and raising questions about in-store safety.\\nThe incident unfolded when an argument between a GameStop employee and a customer escalated to a horrifying level. The employee, identified as a D.C. resident, Courtney, reportedly stabbed the customer during the dispute. The victim suffered a non-life-threatening injury and was promptly provided with first aid by officers before being transported to an area hospital for further treatment.\\nLaw enforcement swiftly arrived on the scene and took Courtney into custody without further incident. Thankfully, there were no additional injuries reported during the incident.\\nThe seriousness of the alleged crime led to police charging Courtney with aggravated malicious wounding. The specifics of any bond arrangements were not immediately available at the time of reporting, leaving questions about Courtney's legal status unanswered.\\nThis incident underscores the importance of maintaining a safe and respectful environment for both employees and customers in public spaces, such as retail stores. The GameStop incident serves as a reminder that disagreements can sometimes escalate to levels of violence, and the importance of maintaining composure and finding non-violent ways to resolve conflicts. It also highlights the essential role of law enforcement in promptly responding to such incidents to protect the safety of the public.\\nAs the legal process unfolds, the Potomac Mills community will be closely following this case, hoping for justice and measures to ensure the safety of all individuals in public spaces. This incident reminds us that maintaining respectful and safe interactions is crucial in our day-to-day lives, and violence should never be an option for dispute resolution.\", \"answer\": \"An employee at a GameStop store in Virginia has been charged with aggravated malicious wounding after allegedly stabbing a customer during an argument. The victim suffered a non-life-threatening injury and was taken to the hospital. The accused was promptly arrested and is awaiting further legal proceedings. This incident highlights the importance of maintaining a safe and respectful environment in retail stores and the need for non-violent conflict resolution. The community is closely following the case, hoping for justice and increased safety measures.\"}",
+  "prompt_sha256": "sha256:0d7c1e2104ef36c72753c7dfda3ae69db0d7c08feb49ab96df54ec7c06b0eec6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791190039,
+    "id": "chatcmpl-UB56MdZG4ntrVB9mKGRJqm4gBkxINA9O",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 905.082,
+      "predicted_n": 38,
+      "predicted_per_second": 41.985146097259694,
+      "predicted_per_token_ms": 23.817947368421052,
+      "prompt_ms": 587.373,
+      "prompt_n": 563,
+      "prompt_per_second": 958.5050725859036,
+      "prompt_per_token_ms": 1.0432912966252221
+    },
+    "usage": {
+      "completion_tokens": 38,
+      "prompt_tokens": 563,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 601
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"GameStop Horror: Employee Faces Charges for Stabbing Customer During Argument\\nA seemingly routine visit to a GameStop store in Potomac Mills, Virginia, took a shocking turn when an employee allegedly stabbed a customer during an argument. The incident left both the victim and the accused facing dire consequences, shaking the community and raising questions about in-store safety.\\nThe incident unfolded when an argument between a GameStop employee and a customer escalated to a horrifying level. The employee, identified as a D.C. resident, Courtney, reportedly stabbed the customer during the dispute. The victim suffered a non-life-threatening injury and was promptly provided with first aid by officers before being transported to an area hospital for further treatment.\\nLaw enforcement swiftly arrived on the scene and took Courtney into custody without further incident. Thankfully, there were no additional injuries reported during the incident.\\nThe seriousness of the alleged crime led to police charging Courtney with aggravated malicious wounding. The specifics of any bond arrangements were not immediately available at the time of reporting, leaving questions about Courtney's legal status unanswered.\\nThis incident underscores the importance of maintaining a safe and respectful environment for both employees and customers in public spaces, such as retail stores. The GameStop incident serves as a reminder that disagreements can sometimes escalate to levels of violence, and the importance of maintaining composure and finding non-violent ways to resolve conflicts. It also highlights the essential role of law enforcement in promptly responding to such incidents to protect the safety of the public.\\nAs the legal process unfolds, the Potomac Mills community will be closely following this case, hoping for justice and measures to ensure the safety of all individuals in public spaces. This incident reminds us that maintaining respectful and safe interactions is crucial in our day-to-day lives, and violence should never be an option for dispute resolution.\", \"answer\": \"An employee at a GameStop store in Virginia has been charged with aggravated malicious wounding after allegedly stabbing a customer during an argument. The victim suffered a non-life-threatening injury and was taken to the hospital. The accused was promptly arrested and is awaiting further legal proceedings. This incident highlights the importance of maintaining a safe and respectful environment in retail stores and the need for non-violent conflict resolution. The community is closely following the case, hoping for justice and increased safety measures.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 120,
+  "source_bytes": "47616d6553746f7020486f72726f723a20456d706c6f796565204661636573204368617267657320666f72205374616262696e6720437573746f6d657220447572696e6720417267756d656e740a41207365656d696e676c7920726f7574696e6520766973697420746f20612047616d6553746f702073746f726520696e20506f746f6d6163204d696c6c732c2056697267696e69612c20746f6f6b20612073686f636b696e67207475726e207768656e20616e20656d706c6f79656520616c6c656765646c792073746162626564206120637573746f6d657220647572696e6720616e20617267756d656e742e2054686520696e636964656e74206c65667420626f7468207468652076696374696d20616e6420746865206163637573656420666163696e67206469726520636f6e73657175656e6365732c207368616b696e672074686520636f6d6d756e69747920616e642072616973696e67207175657374696f6e732061626f757420696e2d73746f7265207361666574792e0a54686520696e636964656e7420756e666f6c646564207768656e20616e20617267756d656e74206265747765656e20612047616d6553746f7020656d706c6f79656520616e64206120637573746f6d657220657363616c6174656420746f206120686f7272696679696e67206c6576656c2e2054686520656d706c6f7965652c206964656e746966696564206173206120442e432e207265736964656e742c20436f7572746e65792c207265706f727465646c7920737461626265642074686520637573746f6d657220647572696e672074686520646973707574652e205468652076696374696d2073756666657265642061206e6f6e2d6c6966652d746872656174656e696e6720696e6a75727920616e64207761732070726f6d70746c792070726f7669646564207769746820666972737420616964206279206f66666963657273206265666f7265206265696e67207472616e73706f7274656420746f20616e206172656120686f73706974616c20666f7220667572746865722074726561746d656e742e0a4c617720656e666f7263656d656e742073776966746c792061727269766564206f6e20746865207363656e6520616e6420746f6f6b20436f7572746e657920696e746f20637573746f647920776974686f7574206675727468657220696e636964656e742e205468616e6b66756c6c792c2074686572652077657265206e6f206164646974696f6e616c20696e6a7572696573207265706f7274656420647572696e672074686520696e636964656e742e0a54686520736572696f75736e657373206f662074686520616c6c65676564206372696d65206c656420746f20706f6c696365206368617267696e6720436f7572746e657920776974682061676772617661746564206d616c6963696f757320776f756e64696e672e2054686520737065636966696373206f6620616e7920626f6e6420617272616e67656d656e74732077657265206e6f7420696d6d6564696174656c7920617661696c61626c65206174207468652074696d65206f66207265706f7274696e672c206c656176696e67207175657374696f6e732061626f757420436f7572746e65792773206c6567616c2073746174757320756e616e7377657265642e0a5468697320696e636964656e7420756e64657273636f7265732074686520696d706f7274616e6365206f66206d61696e7461696e696e672061207361666520616e64207265737065637466756c20656e7669726f6e6d656e7420666f7220626f746820656d706c6f7965657320616e6420637573746f6d65727320696e207075626c6963207370616365732c20737563682061732072657461696c2073746f7265732e205468652047616d6553746f7020696e636964656e742073657276657320617320612072656d696e64657220746861742064697361677265656d656e74732063616e20736f6d6574696d657320657363616c61746520746f206c6576656c73206f662076696f6c656e63652c20616e642074686520696d706f7274616e6365206f66206d61696e7461696e696e6720636f6d706f7375726520616e642066696e64696e67206e6f6e2d76696f6c656e74207761797320746f207265736f6c766520636f6e666c696374732e20497420616c736f20686967686c69676874732074686520657373656e7469616c20726f6c65206f66206c617720656e666f7263656d656e7420696e2070726f6d70746c7920726573706f6e64696e6720746f207375636820696e636964656e747320746f2070726f746563742074686520736166657479206f6620746865207075626c69632e0a417320746865206c6567616c2070726f6365737320756e666f6c64732c2074686520506f746f6d6163204d696c6c7320636f6d6d756e6974792077696c6c20626520636c6f73656c7920666f6c6c6f77696e67207468697320636173652c20686f70696e6720666f72206a75737469636520616e64206d6561737572657320746f20656e737572652074686520736166657479206f6620616c6c20696e646976696475616c7320696e207075626c6963207370616365732e205468697320696e636964656e742072656d696e64732075732074686174206d61696e7461696e696e67207265737065637466756c20616e64207361666520696e746572616374696f6e73206973206372756369616c20696e206f7572206461792d746f2d646179206c697665732c20616e642076696f6c656e63652073686f756c64206e6576657220626520616e206f7074696f6e20666f722064697370757465207265736f6c7574696f6e2e",
+  "source_cluster_id": "sha256:0109fe635e472cdf1414e9043e840b4a4909774ba52ccfc4c3001160f87e04dc",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+  "unit_id": "sha256:1af365eb99620e958ed7aff83570a5876b5a386080f3bd50ce1217cbe7ccf583"
+}

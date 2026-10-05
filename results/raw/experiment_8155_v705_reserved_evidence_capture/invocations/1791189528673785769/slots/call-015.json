@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4a656e6e6966657220417964696e2c20612073746172206f6e20546865205265616c20486f7573657769766573206f66204e6577204a65727365792c2072657475726e656420746f20736f6369616c206d656469612061667465722074616b696e67206120627265616b20666f6c6c6f77696e6720616e20616c746572636174696f6e20776974682044616e69656c6c652043616272616c2e205468652074776f20776f6d656e2068616420676f7474656e20696e746f20616e20617267756d656e7420647572696e6720616e206576656e74207468617420726573756c74656420696e207468652064726177696e67206f6620626c6f6f642e204e6f206f6e65206b6e6f77732065786163746c792077686174206361757365642074686520617267756d656e742c2062757420697420697320736169642074686174204a656e6e69666572207075736865642044616e69656c6c6520616e642044616e69656c6c65207468726577206120637570206f66207761746572206174204a656e6e696665722e20426f746820776f6d656e20776572652073757370656e6465642066726f6d2066696c6d696e672c206275742077657265206c6174657220636c656172656420746f2072657475726e2e20446573706974652074686520696e636964656e742c204a656e6e69666572206d616465207375726520746f20696e636c75646520546572657361204769756469636520696e2068657220736f6369616c206d6564696120706f737420746f2073686f7720746865697220667269656e64736869702072656d61696e73207374726f6e672e",
+  "arm": "source_span",
+  "call_id": "sha256:e44f9030d8c5e2662dd7f4c44002b5cf3034db08fd039d2cb1ed440311269c3d:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.138457071967423,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 777,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 54,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Jennifer Aydin returns to social media after RHONJ incident with Danielle Cabral\\nThe Real Housewives of New Jersey star Jennifer Aydin returned to social media after a week-long hiatus.\\nSeason 14 of the hit Bravo show is currently filming, and things got dicey when an altercation between Jennifer and Danielle Cabral happened.\\nIt was reminiscent of the old RHONJ days of flipping tables and pulling hair, but blood was reportedly drawn this time.\\nJennifer stopped posting on social media around the time of the altercation at the event but returned to show she and Teresa Giudice were still thick as thieves.\\nShe and Teresa have been BFFs since she joined the show, and it seems that both are ride-or-die for one another because Tre stuck by her amid the drama surrounding her and Danielle.\\nInterestingly enough, Danielle was attempting to befriend Teresa and Jennifer when she joined the show last season.\\nJennifer Aydin returns to social media\\nJennifer Aydin took a week-long social media hiatus following the altercation with Danielle Cabral.\\nThe Real Housewives of New Jersey star made sure Teresa Giudice was in her social media post, showing they are still living their best lives despite what transpired.\\nShe captioned her share, \u201cOh, Hi! @teresagiudice\u201d\\nHer tongue-in-cheek return likely responded to Melissa Gorga and Danielle sharing photos of them hanging out recently. Their friendship has seemingly grown while filming Season 14, starkly contrasting with how Season 13 ended.\\nWhat happened between Jennifer Aydin and Danielle Cabral?\\nWhile there are various reports about what transpired, no one knows for sure. However, the allegations are that Jennifer Aydin and Danielle Cabral began arguing over a charity donation the latter reportedly failed to make.\\nListen, in the Housewives world, not fulfilling a charity donation is a big deal.\\nThere was also chatter about the same hairdresser they use being brought up, which could have started it all.\\nAllegedly, Jennifer pushed Danielle, and she crumbled up a plastic cup and then threw it at Jennifer, drawing blood.\\nBoth women were suspended from filming The Real Housewives of New Jersey but were cleared to return shortly after.\\nNow, both Danielle and Jennifer will have an interesting time at the reunion and as the season plays out. There are several weeks left for filming, which means anything could happen.\\nMoving forward, it will be interesting to see where the loyalties lie, especially with this altercation still fresh in everyone\u2019s mind. It\u2019s clear Teresa Giudice rolls with Jennifer, and Melissa Gorga rides with Danielle.\\nThe Real Housewives of New Jersey is currently on hiatus.\", \"answer\": \"Jennifer Aydin, a star on The Real Housewives of New Jersey, returned to social media after taking a break following an altercation with Danielle Cabral. The two women had gotten into an argument during an event that resulted in the drawing of blood. No one knows exactly what caused the argument, but it is said that Jennifer pushed Danielle and Danielle threw a cup of water at Jennifer. Both women were suspended from filming, but were later cleared to return. Despite the incident, Jennifer made sure to include Teresa Giudice in her social media post to show their friendship remains strong.\"}",
+  "prompt_sha256": "sha256:a22a62e53788471062979474435897fbe9f3c5fb05be7a44d66252595b128bac",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"p_hallucination\": 0.0, \"quote\": \"she crumbled up a plastic cup and then threw it at Jennifer, drawing blood.\", \"byte_start\": 1563, \"byte_end\": 1623}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189648,
+    "id": "chatcmpl-8PSMLZuS1dzm3fHXR4xrxrpnlNdtlm82",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1280.735,
+      "predicted_n": 54,
+      "predicted_per_second": 42.163289048866474,
+      "predicted_per_token_ms": 23.717314814814813,
+      "prompt_ms": 738.727,
+      "prompt_n": 777,
+      "prompt_per_second": 1051.8093964346776,
+      "prompt_per_token_ms": 0.9507425997425997
+    },
+    "usage": {
+      "completion_tokens": 54,
+      "prompt_tokens": 777,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 831
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Jennifer Aydin returns to social media after RHONJ incident with Danielle Cabral\\nThe Real Housewives of New Jersey star Jennifer Aydin returned to social media after a week-long hiatus.\\nSeason 14 of the hit Bravo show is currently filming, and things got dicey when an altercation between Jennifer and Danielle Cabral happened.\\nIt was reminiscent of the old RHONJ days of flipping tables and pulling hair, but blood was reportedly drawn this time.\\nJennifer stopped posting on social media around the time of the altercation at the event but returned to show she and Teresa Giudice were still thick as thieves.\\nShe and Teresa have been BFFs since she joined the show, and it seems that both are ride-or-die for one another because Tre stuck by her amid the drama surrounding her and Danielle.\\nInterestingly enough, Danielle was attempting to befriend Teresa and Jennifer when she joined the show last season.\\nJennifer Aydin returns to social media\\nJennifer Aydin took a week-long social media hiatus following the altercation with Danielle Cabral.\\nThe Real Housewives of New Jersey star made sure Teresa Giudice was in her social media post, showing they are still living their best lives despite what transpired.\\nShe captioned her share, \u201cOh, Hi! @teresagiudice\u201d\\nHer tongue-in-cheek return likely responded to Melissa Gorga and Danielle sharing photos of them hanging out recently. Their friendship has seemingly grown while filming Season 14, starkly contrasting with how Season 13 ended.\\nWhat happened between Jennifer Aydin and Danielle Cabral?\\nWhile there are various reports about what transpired, no one knows for sure. However, the allegations are that Jennifer Aydin and Danielle Cabral began arguing over a charity donation the latter reportedly failed to make.\\nListen, in the Housewives world, not fulfilling a charity donation is a big deal.\\nThere was also chatter about the same hairdresser they use being brought up, which could have started it all.\\nAllegedly, Jennifer pushed Danielle, and she crumbled up a plastic cup and then threw it at Jennifer, drawing blood.\\nBoth women were suspended from filming The Real Housewives of New Jersey but were cleared to return shortly after.\\nNow, both Danielle and Jennifer will have an interesting time at the reunion and as the season plays out. There are several weeks left for filming, which means anything could happen.\\nMoving forward, it will be interesting to see where the loyalties lie, especially with this altercation still fresh in everyone\u2019s mind. It\u2019s clear Teresa Giudice rolls with Jennifer, and Melissa Gorga rides with Danielle.\\nThe Real Housewives of New Jersey is currently on hiatus.\", \"answer\": \"Jennifer Aydin, a star on The Real Housewives of New Jersey, returned to social media after taking a break following an altercation with Danielle Cabral. The two women had gotten into an argument during an event that resulted in the drawing of blood. No one knows exactly what caused the argument, but it is said that Jennifer pushed Danielle and Danielle threw a cup of water at Jennifer. Both women were suspended from filming, but were later cleared to return. Despite the incident, Jennifer made sure to include Teresa Giudice in her social media post to show their friendship remains strong.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 8,
+  "source_bytes": "4a656e6e6966657220417964696e2072657475726e7320746f20736f6369616c206d656469612061667465722052484f4e4a20696e636964656e7420776974682044616e69656c6c652043616272616c0a546865205265616c20486f7573657769766573206f66204e6577204a65727365792073746172204a656e6e6966657220417964696e2072657475726e656420746f20736f6369616c206d656469612061667465722061207765656b2d6c6f6e67206869617475732e0a536561736f6e203134206f66207468652068697420427261766f2073686f772069732063757272656e746c792066696c6d696e672c20616e64207468696e677320676f74206469636579207768656e20616e20616c746572636174696f6e206265747765656e204a656e6e6966657220616e642044616e69656c6c652043616272616c2068617070656e65642e0a4974207761732072656d696e697363656e74206f6620746865206f6c642052484f4e4a2064617973206f6620666c697070696e67207461626c657320616e642070756c6c696e6720686169722c2062757420626c6f6f6420776173207265706f727465646c7920647261776e20746869732074696d652e0a4a656e6e696665722073746f7070656420706f7374696e67206f6e20736f6369616c206d656469612061726f756e64207468652074696d65206f662074686520616c746572636174696f6e20617420746865206576656e74206275742072657475726e656420746f2073686f772073686520616e642054657265736120476975646963652077657265207374696c6c20746869636b20617320746869657665732e0a53686520616e64205465726573612068617665206265656e20424646732073696e636520736865206a6f696e6564207468652073686f772c20616e64206974207365656d73207468617420626f74682061726520726964652d6f722d64696520666f72206f6e6520616e6f7468657220626563617573652054726520737475636b2062792068657220616d696420746865206472616d6120737572726f756e64696e672068657220616e642044616e69656c6c652e0a496e746572657374696e676c7920656e6f7567682c2044616e69656c6c652077617320617474656d7074696e6720746f206265667269656e642054657265736120616e64204a656e6e69666572207768656e20736865206a6f696e6564207468652073686f77206c61737420736561736f6e2e0a4a656e6e6966657220417964696e2072657475726e7320746f20736f6369616c206d656469610a4a656e6e6966657220417964696e20746f6f6b2061207765656b2d6c6f6e6720736f6369616c206d656469612068696174757320666f6c6c6f77696e672074686520616c746572636174696f6e20776974682044616e69656c6c652043616272616c2e0a546865205265616c20486f7573657769766573206f66204e6577204a65727365792073746172206d61646520737572652054657265736120476975646963652077617320696e2068657220736f6369616c206d6564696120706f73742c2073686f77696e67207468657920617265207374696c6c206c6976696e672074686569722062657374206c6976657320646573706974652077686174207472616e7370697265642e0a5368652063617074696f6e6564206865722073686172652c20e2809c4f682c20486921204074657265736167697564696365e2809d0a48657220746f6e6775652d696e2d636865656b2072657475726e206c696b656c7920726573706f6e64656420746f204d656c6973736120476f72676120616e642044616e69656c6c652073686172696e672070686f746f73206f66207468656d2068616e67696e67206f757420726563656e746c792e20546865697220667269656e647368697020686173207365656d696e676c792067726f776e207768696c652066696c6d696e6720536561736f6e2031342c20737461726b6c7920636f6e7472617374696e67207769746820686f7720536561736f6e20313320656e6465642e0a576861742068617070656e6564206265747765656e204a656e6e6966657220417964696e20616e642044616e69656c6c652043616272616c3f0a5768696c652074686572652061726520766172696f7573207265706f7274732061626f75742077686174207472616e7370697265642c206e6f206f6e65206b6e6f777320666f7220737572652e20486f77657665722c2074686520616c6c65676174696f6e73206172652074686174204a656e6e6966657220417964696e20616e642044616e69656c6c652043616272616c20626567616e2061726775696e67206f7665722061206368617269747920646f6e6174696f6e20746865206c6174746572207265706f727465646c79206661696c656420746f206d616b652e0a4c697374656e2c20696e2074686520486f757365776976657320776f726c642c206e6f742066756c66696c6c696e672061206368617269747920646f6e6174696f6e206973206120626967206465616c2e0a54686572652077617320616c736f20636861747465722061626f7574207468652073616d65206861697264726573736572207468657920757365206265696e672062726f756768742075702c20776869636820636f756c642068617665207374617274656420697420616c6c2e0a416c6c656765646c792c204a656e6e69666572207075736865642044616e69656c6c652c20616e6420736865206372756d626c6564207570206120706c61737469632063757020616e64207468656e207468726577206974206174204a656e6e696665722c2064726177696e6720626c6f6f642e0a426f746820776f6d656e20776572652073757370656e6465642066726f6d2066696c6d696e6720546865205265616c20486f7573657769766573206f66204e6577204a657273657920627574207765726520636c656172656420746f2072657475726e2073686f72746c792061667465722e0a4e6f772c20626f74682044616e69656c6c6520616e64204a656e6e696665722077696c6c206861766520616e20696e746572657374696e672074696d6520617420746865207265756e696f6e20616e642061732074686520736561736f6e20706c617973206f75742e20546865726520617265207365766572616c207765656b73206c65667420666f722066696c6d696e672c207768696368206d65616e7320616e797468696e6720636f756c642068617070656e2e0a4d6f76696e6720666f72776172642c2069742077696c6c20626520696e746572657374696e6720746f2073656520776865726520746865206c6f79616c74696573206c69652c20657370656369616c6c792077697468207468697320616c746572636174696f6e207374696c6c20667265736820696e2065766572796f6e65e2809973206d696e642e204974e280997320636c65617220546572657361204769756469636520726f6c6c732077697468204a656e6e696665722c20616e64204d656c6973736120476f72676120726964657320776974682044616e69656c6c652e0a546865205265616c20486f7573657769766573206f66204e6577204a65727365792069732063757272656e746c79206f6e206869617475732e",
+  "source_cluster_id": "sha256:a7a6561a90c68f7637e1b56d2ea5ba042beeef13b3e562d2380c918123348d16",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\"p_hallucination\": 0.0, \"quote\": \"she crumbled up a plastic cup and then threw it at Jennifer, drawing blood.\", \"byte_start\": 1563, \"byte_end\": 1623}",
+  "unit_id": "sha256:e44f9030d8c5e2662dd7f4c44002b5cf3034db08fd039d2cb1ed440311269c3d"
+}

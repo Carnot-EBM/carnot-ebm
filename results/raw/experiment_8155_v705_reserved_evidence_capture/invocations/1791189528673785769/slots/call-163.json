@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "53686f72656c696e65204265616368204361666520697320612072657374617572616e74206c6f6361746564206174203830312053686f72656c696e6520447220696e2053616e746120426172626172612c2043616c69666f726e69612e2054686520627573696e657373206f666665727320612076617269657479206f662063756973696e6573207375636820617320627572676572732c20416d65726963616e20747261646974696f6e616c2c207461636f732c20736561666f6f642c20616e64204d65786963616e20666f6f642e20546865206361666520686173206f7574646f6f722073656174696e6720616e6420616c6c6f777320637573746f6d65727320746f20656e6a6f79207468656972206d65616c73207768696c652073697474696e6720696e207468652073616e642e205468652072657374617572616e7420616c736f2070726f76696465732074616b656f757420736572766963657320616e64206973207375697461626c6520666f722067726f7570732e204163636f7264696e6720746f2074686520726576696577732c2074686520666f6f64207175616c69747920697320676f6f642c20746865207365727669636520697320657863656c6c656e742c20616e64207468652061746d6f7370686572652069732067726561742e20486f77657665722c20736f6d6520637573746f6d6572732068617665206e6f74656420746861742074686520616d6269616e636520636f756c6420626520696d70726f76656420616e6420746865207061726b696e6720736974756174696f6e206973206e6f7420696465616c2e204465737069746520746865736520636f6e6365726e732c206d616e7920637573746f6d6572732061726520736174697366696564207769746820746865697220657870657269656e63652061742053686f72656c696e65204265616368204361666520616e6420706c616e20746f2072657475726e20666f7220616e6f746865722076697369742e",
+  "arm": "holistic",
+  "call_id": "sha256:7dd16d1abb67296195217421a83a4bcb2c7f996cebc51e790e3aa623de37ba6b:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.1742205229820684,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 701,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.6,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.6,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"801 Shoreline Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Cafes, Burgers, American (Traditional), Tacos, Seafood, Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-17:30\\\",\\\"Monday\\\":\\\"9:0-17:30\\\",\\\"Saturday\\\":\\\"8:0-17:30\\\",\\\"Sunday\\\":\\\"8:0-17:30\\\",\\\"Thursday\\\":\\\"9:0-17:30\\\",\\\"Tuesday\\\":\\\"9:0-17:30\\\",\\\"Wednesday\\\":\\\"9:0-17:30\\\"},\\\"name\\\":\\\"Shoreline Beach Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-09 00:26:18\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Great view!  Excellent choice for families with children.  I love that you can sit and eat with your feet in the sand.  Food was average\\\"},{\\\"review_date\\\":\\\"2022-01-03 02:23:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Good service, wonderful food along with great atmosphere.  Would \u0111efinitely would go there again.\\\"},{\\\"review_date\\\":\\\"2021-12-26 00:44:48\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very popular casual dining right on the beach. \\\\nHad the fish tacos, ceviche, quesadillas, enchilada. Everything fresh and tasty. We got a couple of beers to go with and it was just a picture perfect day meal out. \\\\nLove this place and the great service but the view is worth getting here\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Shoreline Beach Cafe is a restaurant located at 801 Shoreline Dr in Santa Barbara, California. The business offers a variety of cuisines such as burgers, American traditional, tacos, seafood, and Mexican food. The cafe has outdoor seating and allows customers to enjoy their meals while sitting in the sand. The restaurant also provides takeout services and is suitable for groups. According to the reviews, the food quality is good, the service is excellent, and the atmosphere is great. However, some customers have noted that the ambiance could be improved and the parking situation is not ideal. Despite these concerns, many customers are satisfied with their experience at Shoreline Beach Cafe and plan to return for another visit.\"}",
+  "prompt_sha256": "sha256:1cadcf784ba2d1a23e07b91ee2f5df34f72b0d37f567ebf571a167e88baf1239",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.6\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189908,
+    "id": "chatcmpl-fptjXZggRvu6invU2IfOS8wqvSxwqy1L",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 370.501,
+      "predicted_n": 16,
+      "predicted_per_second": 43.1847687320682,
+      "predicted_per_token_ms": 23.1563125,
+      "prompt_ms": 686.662,
+      "prompt_n": 701,
+      "prompt_per_second": 1020.8807244321077,
+      "prompt_per_token_ms": 0.979546362339515
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 701,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 717
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"801 Shoreline Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Cafes, Burgers, American (Traditional), Tacos, Seafood, Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-17:30\\\",\\\"Monday\\\":\\\"9:0-17:30\\\",\\\"Saturday\\\":\\\"8:0-17:30\\\",\\\"Sunday\\\":\\\"8:0-17:30\\\",\\\"Thursday\\\":\\\"9:0-17:30\\\",\\\"Tuesday\\\":\\\"9:0-17:30\\\",\\\"Wednesday\\\":\\\"9:0-17:30\\\"},\\\"name\\\":\\\"Shoreline Beach Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-09 00:26:18\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Great view!  Excellent choice for families with children.  I love that you can sit and eat with your feet in the sand.  Food was average\\\"},{\\\"review_date\\\":\\\"2022-01-03 02:23:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Good service, wonderful food along with great atmosphere.  Would \u0111efinitely would go there again.\\\"},{\\\"review_date\\\":\\\"2021-12-26 00:44:48\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very popular casual dining right on the beach. \\\\nHad the fish tacos, ceviche, quesadillas, enchilada. Everything fresh and tasty. We got a couple of beers to go with and it was just a picture perfect day meal out. \\\\nLove this place and the great service but the view is worth getting here\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Shoreline Beach Cafe is a restaurant located at 801 Shoreline Dr in Santa Barbara, California. The business offers a variety of cuisines such as burgers, American traditional, tacos, seafood, and Mexican food. The cafe has outdoor seating and allows customers to enjoy their meals while sitting in the sand. The restaurant also provides takeout services and is suitable for groups. According to the reviews, the food quality is good, the service is excellent, and the atmosphere is great. However, some customers have noted that the ambiance could be improved and the parking situation is not ideal. Despite these concerns, many customers are satisfied with their experience at Shoreline Beach Cafe and plan to return for another visit.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 82,
+  "source_bytes": "7b2261646472657373223a223830312053686f72656c696e65204472222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a747275652c22636c61737379223a747275652c226469766579223a66616c73652c2268697073746572223a66616c73652c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a66616c73652c227472656e6479223a66616c73652c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a747275652c22737472656574223a747275652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a747275652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a226e6f227d2c22627573696e6573735f7374617273223a342e302c2263617465676f72696573223a2243616665732c20427572676572732c20416d65726963616e2028547261646974696f6e616c292c205461636f732c20536561666f6f642c2052657374617572616e74732c204d65786963616e222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a22383a302d31373a3330222c224d6f6e646179223a22393a302d31373a3330222c225361747572646179223a22383a302d31373a3330222c2253756e646179223a22383a302d31373a3330222c225468757273646179223a22393a302d31373a3330222c2254756573646179223a22393a302d31373a3330222c225765646e6573646179223a22393a302d31373a3330227d2c226e616d65223a2253686f72656c696e652042656163682043616665222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323032322d30312d30392030303a32363a3138222c227265766965775f7374617273223a342e302c227265766965775f74657874223a2247726561742076696577212020457863656c6c656e742063686f69636520666f722066616d696c6965732077697468206368696c6472656e2e202049206c6f7665207468617420796f752063616e2073697420616e6420656174207769746820796f7572206665657420696e207468652073616e642e2020466f6f64207761732061766572616765227d2c7b227265766965775f64617465223a22323032322d30312d30332030323a32333a3139222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22476f6f6420736572766963652c20776f6e64657266756c20666f6f6420616c6f6e6720776974682067726561742061746d6f7370686572652e2020576f756c6420c4916566696e6974656c7920776f756c6420676f20746865726520616761696e2e227d2c7b227265766965775f64617465223a22323032312d31322d32362030303a34343a3438222c227265766965775f7374617273223a352e302c227265766965775f74657874223a225665727920706f70756c61722063617375616c2064696e696e67207269676874206f6e207468652062656163682e205c6e486164207468652066697368207461636f732c20636576696368652c20717565736164696c6c61732c20656e6368696c6164612e2045766572797468696e6720667265736820616e642074617374792e20576520676f74206120636f75706c65206f6620626565727320746f20676f207769746820616e6420697420776173206a75737420612070696374757265207065726665637420646179206d65616c206f75742e205c6e4c6f7665207468697320706c61636520616e642074686520677265617420736572766963652062757420746865207669657720697320776f7274682067657474696e672068657265227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:220ffe6db5d650fdefbdd3cebf9f5ebba9ddaafa6162329a2017ca24ed0fa98b",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.6\n}",
+  "unit_id": "sha256:7dd16d1abb67296195217421a83a4bcb2c7f996cebc51e790e3aa623de37ba6b"
+}

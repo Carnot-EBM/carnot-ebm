@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4865726520697320612073756d6d617279206f66207468652061727469636c652077697468696e20393220776f7264733a0a0a41206d6f7468657220616e642068657220746f64646c65722064617567687465722077656e74206d697373696e6720696e204d6973736f75726920696e20313938362e20546865206d6f7468657220776173206c6174657220666f756e6420646561642c20627574207468652064617567687465722c20436865726965204261726e65732c206973207374696c6c206d697373696e672e2054686520737465706661746865722c204c61727279205661737365722c2077617320746865206c61737420706572736f6e20746f207365652043686572696520616e6420686173206265656e2061636375736564206f6620737472616e676c696e6720746865206d6f746865722e2043686572696520776f756c64206e6f77206265203338207965617273206f6c642c20616e642068657220776865726561626f7574732072656d61696e20756e6b6e6f776e2e205468652066616d696c7920697320757267696e6720616e796f6e65207769746820696e666f726d6174696f6e20746f20636f6d6520666f72776172642e",
+  "arm": "source_span",
+  "call_id": "sha256:980fb39c4788cf73663f9b4b70d17a97dd91dda1584202e9cccb5d2db2510c18:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.465420487918891,
+  "entailment_label": null,
+  "exclusion_reason": "invalid_probability_or_usage",
+  "human_target": null,
+  "input_tokens": 741,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 0,
+  "order": 0,
+  "output_tokens": 68,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": null,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "missing_probability",
+    "valid_quote": 0
+  },
+  "probability": null,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Missing Since 1986: A Mother Gone, A Child Lost, and a Stepfather with Secrets in Missouri\\nIn a chilling case from 1986 that remains unsolved, Elizabeth Turek Vasser and her toddler daughter, Cherie Barnes, experienced an ill-fated move from Nashville, Tennessee, to St. Louis, Missouri. Elizabeth began a life of p rostitution soon after relocating, with her husband, Larry Vasser, acting as her pimp.\\nThe mystery began on December 1 when Elizabeth was reported missing. While a woman's remains were found in the Mississippi River two weeks later, they would not be identified as Elizabeth's for another seven years. Throughout this period, concern grew for two-year-old Cherie's safety. The last reported sighting of the child was with stepfather Larry Vasser on January 7, 1987, in Kansas City, Missouri. Cherie's fate remains unknown to this day.\\nWhen questioned, Vasser told police that Cherie was with relatives and had been given a new identity in Kansas City Missouri. Offering to provide recent photos of Cherie as evidence, he demanded $500 from an elderly woman in exchange.\\nIn a disturbing revelation, Vasser allegedly confessed to his probation officer in 1988 about strangling his wife in 1986. There were also whispers of an accusation against Vasser in 1987 for attempting a kidnapping, although the outcomes of these investigations remain cloaked in uncertainty.\\nGiven the circumstances, if Cherie is still alive, it's likely she remains oblivious to her traumatic past and may not realize she's a missing individual. The case is classified as a non-family abduction, since Cherie was supposed to be in the custody of Elizabeth's mother. However, authorities have not dismissed the possibility of a more sinister outcome.\\nAt the time of her disappearance, Cherie was 4 feet tall, weighed 80 pounds, with brown hair and eyes. She is biracial, with a white mother and Black father. Cherie Nicole Barnes would now be 38 years old.\\nAny leads or information related to this case should be directed to the St. Louis Metropolitan Police Department at (314) 231-1212. Reference agency case number 94-060619.\\nHelp spread the word and renew interest in Cherie Barnes's case. As the plea from her family emphasizes, \\\"She is our baby sister and her life matters.\\\"\\nSource\\nSource\\nSource\", \"answer\": \"Here is a summary of the article within 92 words:\\n\\nA mother and her toddler daughter went missing in Missouri in 1986. The mother was later found dead, but the daughter, Cherie Barnes, is still missing. The stepfather, Larry Vasser, was the last person to see Cherie and has been accused of strangling the mother. Cherie would now be 38 years old, and her whereabouts remain unknown. The family is urging anyone with information to come forward.\"}",
+  "prompt_sha256": "sha256:23712c224bddb040932357654b35d5c4746b1f5a074e4fd3404f5ef4881eb65c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```json\n{\n  \"p_hallucination\": 0,\n  \"quote\": \"Vasser allegedly confessed to his probation officer in 1988 about strangling his wife in 1986.\",\n  \"byte_start\": null,\n  \"byte_end\": null\n}\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189999,
+    "id": "chatcmpl-YJAoR7OJX9IdU15OxK9acOQV4teFyV0w",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1641.302,
+      "predicted_n": 68,
+      "predicted_per_second": 41.4305228410128,
+      "predicted_per_token_ms": 24.136794117647057,
+      "prompt_ms": 721.094,
+      "prompt_n": 741,
+      "prompt_per_second": 1027.6052775366318,
+      "prompt_per_token_ms": 0.9731363022941971
+    },
+    "usage": {
+      "completion_tokens": 68,
+      "prompt_tokens": 741,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 809
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Missing Since 1986: A Mother Gone, A Child Lost, and a Stepfather with Secrets in Missouri\\nIn a chilling case from 1986 that remains unsolved, Elizabeth Turek Vasser and her toddler daughter, Cherie Barnes, experienced an ill-fated move from Nashville, Tennessee, to St. Louis, Missouri. Elizabeth began a life of p rostitution soon after relocating, with her husband, Larry Vasser, acting as her pimp.\\nThe mystery began on December 1 when Elizabeth was reported missing. While a woman's remains were found in the Mississippi River two weeks later, they would not be identified as Elizabeth's for another seven years. Throughout this period, concern grew for two-year-old Cherie's safety. The last reported sighting of the child was with stepfather Larry Vasser on January 7, 1987, in Kansas City, Missouri. Cherie's fate remains unknown to this day.\\nWhen questioned, Vasser told police that Cherie was with relatives and had been given a new identity in Kansas City Missouri. Offering to provide recent photos of Cherie as evidence, he demanded $500 from an elderly woman in exchange.\\nIn a disturbing revelation, Vasser allegedly confessed to his probation officer in 1988 about strangling his wife in 1986. There were also whispers of an accusation against Vasser in 1987 for attempting a kidnapping, although the outcomes of these investigations remain cloaked in uncertainty.\\nGiven the circumstances, if Cherie is still alive, it's likely she remains oblivious to her traumatic past and may not realize she's a missing individual. The case is classified as a non-family abduction, since Cherie was supposed to be in the custody of Elizabeth's mother. However, authorities have not dismissed the possibility of a more sinister outcome.\\nAt the time of her disappearance, Cherie was 4 feet tall, weighed 80 pounds, with brown hair and eyes. She is biracial, with a white mother and Black father. Cherie Nicole Barnes would now be 38 years old.\\nAny leads or information related to this case should be directed to the St. Louis Metropolitan Police Department at (314) 231-1212. Reference agency case number 94-060619.\\nHelp spread the word and renew interest in Cherie Barnes's case. As the plea from her family emphasizes, \\\"She is our baby sister and her life matters.\\\"\\nSource\\nSource\\nSource\", \"answer\": \"Here is a summary of the article within 92 words:\\n\\nA mother and her toddler daughter went missing in Missouri in 1986. The mother was later found dead, but the daughter, Cherie Barnes, is still missing. The stepfather, Larry Vasser, was the last person to see Cherie and has been accused of strangling the mother. Cherie would now be 38 years old, and her whereabouts remain unknown. The family is urging anyone with information to come forward.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 108,
+  "source_bytes": "4d697373696e672053696e636520313938363a2041204d6f7468657220476f6e652c2041204368696c64204c6f73742c20616e64206120537465706661746865722077697468205365637265747320696e204d6973736f7572690a496e2061206368696c6c696e6720636173652066726f6d203139383620746861742072656d61696e7320756e736f6c7665642c20456c697a616265746820547572656b2056617373657220616e642068657220746f64646c65722064617567687465722c20436865726965204261726e65732c20657870657269656e63656420616e20696c6c2d6661746564206d6f76652066726f6d204e61736876696c6c652c2054656e6e65737365652c20746f2053742e204c6f7569732c204d6973736f7572692e20456c697a616265746820626567616e2061206c696665206f66207020726f737469747574696f6e20736f6f6e2061667465722072656c6f636174696e672c2077697468206865722068757362616e642c204c61727279205661737365722c20616374696e67206173206865722070696d702e0a546865206d79737465727920626567616e206f6e20446563656d6265722031207768656e20456c697a616265746820776173207265706f72746564206d697373696e672e205768696c65206120776f6d616e27732072656d61696e73207765726520666f756e6420696e20746865204d697373697373697070692052697665722074776f207765656b73206c617465722c207468657920776f756c64206e6f74206265206964656e74696669656420617320456c697a6162657468277320666f7220616e6f7468657220736576656e2079656172732e205468726f7567686f7574207468697320706572696f642c20636f6e6365726e206772657720666f722074776f2d796561722d6f6c64204368657269652773207361666574792e20546865206c617374207265706f72746564207369676874696e67206f6620746865206368696c642077617320776974682073746570666174686572204c6172727920566173736572206f6e204a616e7561727920372c20313938372c20696e204b616e73617320436974792c204d6973736f7572692e20436865726965277320666174652072656d61696e7320756e6b6e6f776e20746f2074686973206461792e0a5768656e207175657374696f6e65642c2056617373657220746f6c6420706f6c6963652074686174204368657269652077617320776974682072656c61746976657320616e6420686164206265656e20676976656e2061206e6577206964656e7469747920696e204b616e7361732043697479204d6973736f7572692e204f66666572696e6720746f2070726f7669646520726563656e742070686f746f73206f66204368657269652061732065766964656e63652c2068652064656d616e64656420243530302066726f6d20616e20656c6465726c7920776f6d616e20696e2065786368616e67652e0a496e20612064697374757262696e6720726576656c6174696f6e2c2056617373657220616c6c656765646c7920636f6e66657373656420746f206869732070726f626174696f6e206f66666963657220696e20313938382061626f757420737472616e676c696e6720686973207769666520696e20313938362e205468657265207765726520616c736f207768697370657273206f6620616e2061636375736174696f6e20616761696e73742056617373657220696e203139383720666f7220617474656d7074696e672061206b69646e617070696e672c20616c74686f75676820746865206f7574636f6d6573206f6620746865736520696e7665737469676174696f6e732072656d61696e20636c6f616b656420696e20756e6365727461696e74792e0a476976656e207468652063697263756d7374616e6365732c20696620436865726965206973207374696c6c20616c6976652c2069742773206c696b656c79207368652072656d61696e73206f626c6976696f757320746f2068657220747261756d61746963207061737420616e64206d6179206e6f74207265616c697a652073686527732061206d697373696e6720696e646976696475616c2e20546865206361736520697320636c61737369666965642061732061206e6f6e2d66616d696c7920616264756374696f6e2c2073696e6365204368657269652077617320737570706f73656420746f20626520696e2074686520637573746f6479206f6620456c697a61626574682773206d6f746865722e20486f77657665722c20617574686f7269746965732068617665206e6f74206469736d69737365642074686520706f73736962696c697479206f662061206d6f72652073696e6973746572206f7574636f6d652e0a4174207468652074696d65206f662068657220646973617070656172616e63652c2043686572696520776173203420666565742074616c6c2c207765696768656420383020706f756e64732c20776974682062726f776e206861697220616e6420657965732e2053686520697320626972616369616c2c20776974682061207768697465206d6f7468657220616e6420426c61636b206661746865722e20436865726965204e69636f6c65204261726e657320776f756c64206e6f77206265203338207965617273206f6c642e0a416e79206c65616473206f7220696e666f726d6174696f6e2072656c6174656420746f207468697320636173652073686f756c6420626520646972656374656420746f207468652053742e204c6f756973204d6574726f706f6c6974616e20506f6c696365204465706172746d656e74206174202833313429203233312d313231322e205265666572656e6365206167656e63792063617365206e756d6265722039342d3036303631392e0a48656c70207370726561642074686520776f726420616e642072656e657720696e74657265737420696e20436865726965204261726e6573277320636173652e2041732074686520706c65612066726f6d206865722066616d696c7920656d70686173697a65732c2022536865206973206f757220626162792073697374657220616e6420686572206c696665206d6174746572732e220a536f757263650a536f757263650a536f75726365",
+  "source_cluster_id": "sha256:26ccc2083be6395c82a5cf720d29a54d60eb5e76bc25456191617cc1c417bbc1",
+  "started": true,
+  "status": "failed",
+  "transcript": "```json\n{\n  \"p_hallucination\": 0,\n  \"quote\": \"Vasser allegedly confessed to his probation officer in 1988 about strangling his wife in 1986.\",\n  \"byte_start\": null,\n  \"byte_end\": null\n}\n```",
+  "unit_id": "sha256:980fb39c4788cf73663f9b4b70d17a97dd91dda1584202e9cccb5d2db2510c18"
+}

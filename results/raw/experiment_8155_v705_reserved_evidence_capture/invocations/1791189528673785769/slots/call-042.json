@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "546f206d616b652070697a7a6120726f6c6c732c207072656865617420746865206f76656e20746f20333530c2b0462028313737c2b0432920616e64206c696e652074776f206c617267652062616b696e672073686565747320776974682073696c69636f6e652062616b696e67206d617473206f722070617263686d656e742070617065722e204f6e63652074686520646f7567682069732070726570617265642c20726f6c6c206974206f7574206f6e746f2061206c696768746c7920666c6f757265642073757266616365206f72206469726563746c79206f6e207468652073696c69636f6e652062616b696e67206d6174732e204469702074686520626f74746f6d206f66206561636820726f6c6c20696e746f20636f726e6d65616c20616e6420706c616365207468656d206f6e207468652062616b696e67207368656574732c20636f726e6d65616c207369646520646f776e2e20537072696e6b6c652077697468207061726d6573616e2063686565736520616e642062616b6520666f72203230206d696e75746573206f7220756e74696c206c696768746c792062726f776e65642e2042727573682074686520746f7073206c696768746c792077697468206f6c697665206f696c2c20707573682064656e747320696e746f207468652073757266616365206f662074686520646f7567682072656374616e676c65732c20616e642073707265616420312f33206375702070697a7a61207361756365206f6e20746f702e20536572766520776974682065787472612070697a7a6120736175636520666f722064697070696e672e",
+  "arm": "holistic",
+  "call_id": "sha256:3ae28c64ce0a457f97f133b434f86c8115dee1233eac9633430b053924040b6b:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.919540629023686,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 450,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 Preheat oven to 350\u00b0F (177\u00b0C). Line two large baking sheets2 with silicone baking mats (preferred for ease) or parchment paper.  Prepare pizza dough through step 7, including letting the two balls of dough rest for 15 minutes. Roll out both dough balls onto a lightly floured surface or directly on silicone baking mats.\\\\n\\\\npassage 2:1 Dip the bottom of each roll into cornmeal and place 12 on each baking sheet, cornmeal side down. Sprinkle the tops of the rolls with parmesan cheese.  Bake each batch for 20 minutes or until the sides are lightly browned. Allow to cool for 5 minutes and serve with extra pizza sauce for dipping.\\\\n\\\\npassage 3:To prevent the filling from making your pizza rolls soggy, brush the tops lightly with 1 teaspoon olive oil each. Using your fingers, push dents into the surface of the dough rectangles to prevent bubbling. See photo above for visual. Spread 1/3 cup pizza sauce on top of each dough rectangle.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to bake pizza rolls\\\"}\", \"answer\": \"To make pizza rolls, preheat the oven to 350\u00b0F (177\u00b0C) and line two large baking sheets with silicone baking mats or parchment paper. Once the dough is prepared, roll it out onto a lightly floured surface or directly on the silicone baking mats. Dip the bottom of each roll into cornmeal and place them on the baking sheets, cornmeal side down. Sprinkle with parmesan cheese and bake for 20 minutes or until lightly browned. Brush the tops lightly with olive oil, push dents into the surface of the dough rectangles, and spread 1/3 cup pizza sauce on top. Serve with extra pizza sauce for dipping.\"}",
+  "prompt_sha256": "sha256:525e7218c5d40ae2d137cb21bed5b61faddde963bccb0cf21b2b1b1b60744b65",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189693,
+    "id": "chatcmpl-8TzpKIbtp4XiBsVWhAAKm4eRpa4gWWsg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 368.455,
+      "predicted_n": 16,
+      "predicted_per_second": 43.424570164606266,
+      "predicted_per_token_ms": 23.0284375,
+      "prompt_ms": 433.087,
+      "prompt_n": 450,
+      "prompt_per_second": 1039.0521996735067,
+      "prompt_per_token_ms": 0.9624155555555556
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 450,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 466
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 Preheat oven to 350\u00b0F (177\u00b0C). Line two large baking sheets2 with silicone baking mats (preferred for ease) or parchment paper.  Prepare pizza dough through step 7, including letting the two balls of dough rest for 15 minutes. Roll out both dough balls onto a lightly floured surface or directly on silicone baking mats.\\\\n\\\\npassage 2:1 Dip the bottom of each roll into cornmeal and place 12 on each baking sheet, cornmeal side down. Sprinkle the tops of the rolls with parmesan cheese.  Bake each batch for 20 minutes or until the sides are lightly browned. Allow to cool for 5 minutes and serve with extra pizza sauce for dipping.\\\\n\\\\npassage 3:To prevent the filling from making your pizza rolls soggy, brush the tops lightly with 1 teaspoon olive oil each. Using your fingers, push dents into the surface of the dough rectangles to prevent bubbling. See photo above for visual. Spread 1/3 cup pizza sauce on top of each dough rectangle.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to bake pizza rolls\\\"}\", \"answer\": \"To make pizza rolls, preheat the oven to 350\u00b0F (177\u00b0C) and line two large baking sheets with silicone baking mats or parchment paper. Once the dough is prepared, roll it out onto a lightly floured surface or directly on the silicone baking mats. Dip the bottom of each roll into cornmeal and place them on the baking sheets, cornmeal side down. Sprinkle with parmesan cheese and bake for 20 minutes or until lightly browned. Brush the tops lightly with olive oil, push dents into the surface of the dough rectangles, and spread 1/3 cup pizza sauce on top. Serve with extra pizza sauce for dipping.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 22,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a312050726568656174206f76656e20746f20333530c2b0462028313737c2b043292e204c696e652074776f206c617267652062616b696e67207368656574733220776974682073696c69636f6e652062616b696e67206d617473202870726566657272656420666f72206561736529206f722070617263686d656e742070617065722e2020507265706172652070697a7a6120646f756768207468726f756768207374657020372c20696e636c7564696e67206c657474696e67207468652074776f2062616c6c73206f6620646f756768207265737420666f72203135206d696e757465732e20526f6c6c206f757420626f746820646f7567682062616c6c73206f6e746f2061206c696768746c7920666c6f757265642073757266616365206f72206469726563746c79206f6e2073696c69636f6e652062616b696e67206d6174732e5c6e5c6e7061737361676520323a31204469702074686520626f74746f6d206f66206561636820726f6c6c20696e746f20636f726e6d65616c20616e6420706c616365203132206f6e20656163682062616b696e672073686565742c20636f726e6d65616c207369646520646f776e2e20537072696e6b6c652074686520746f7073206f662074686520726f6c6c732077697468207061726d6573616e206368656573652e202042616b65206561636820626174636820666f72203230206d696e75746573206f7220756e74696c2074686520736964657320617265206c696768746c792062726f776e65642e20416c6c6f7720746f20636f6f6c20666f722035206d696e7574657320616e6420736572766520776974682065787472612070697a7a6120736175636520666f722064697070696e672e5c6e5c6e7061737361676520333a546f2070726576656e74207468652066696c6c696e672066726f6d206d616b696e6720796f75722070697a7a6120726f6c6c7320736f6767792c2062727573682074686520746f7073206c696768746c79207769746820312074656173706f6f6e206f6c697665206f696c20656163682e205573696e6720796f75722066696e676572732c20707573682064656e747320696e746f207468652073757266616365206f662074686520646f7567682072656374616e676c657320746f2070726576656e7420627562626c696e672e205365652070686f746f2061626f766520666f722076697375616c2e2053707265616420312f33206375702070697a7a61207361756365206f6e20746f70206f66206561636820646f7567682072656374616e676c652e5c6e5c6e222c227175657374696f6e223a22686f7720746f2062616b652070697a7a6120726f6c6c73227d",
+  "source_cluster_id": "sha256:f31ec30f27d4c636e4899ab51ca29ef24986de292109b07d72133807c7b12714",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.0\n}",
+  "unit_id": "sha256:3ae28c64ce0a457f97f133b434f86c8115dee1233eac9633430b053924040b6b"
+}

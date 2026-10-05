@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "50656e656c6f7065277320536e6f2042616c6c7320617420746865204265616368206973206120666f6f6420747275636b206c6f636174656420617420323030204c696e64656e2041766520696e2043617270696e74657269612c2043616c69666f726e69612e2054686520747275636b2073657276657320617320612072657374617572616e7420616e64206f666665727320736861766564206963652c2064657373657274732c20686f7420646f67732c20616e6420666f6f642e2054686520627573696e65737320686173206120352e3020726174696e67206261736564206f6e207265766965777320616e6420706f73697469766520666565646261636b2066726f6d20637573746f6d6572732e2054686520747275636b206f6666657273206f7574646f6f722073656174696e6720616e6420646f6573206e6f7420686176652057694669206f72207061726b696e6720617661696c61626c652e20536f6d6520637573746f6d6572732068617665207072616973656420746865207175616c697479206f6620746865207368617665642069636520616e6420686f7420646f67732c207768696c65206f74686572732068617665206e6f7465642074686520657863656c6c656e74206c6f636174696f6e206f6e207468652062656163682e205072696365732061726520726561736f6e61626c652c2077697468206c6172676520706f7274696f6e7320617661696c61626c6520666f722073686172696e672e",
+  "arm": "source_span",
+  "call_id": "sha256:31e1a94bdffbee097bb92552d85cd8f152189fcfe764ae17edee9b78ccf6b3fd:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.793102886993438,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 746,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 39,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"200 Linden Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Restaurants, Food, Hot Dogs, Shaved Ice, Desserts\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-17:0\\\",\\\"Monday\\\":\\\"11:0-18:0\\\",\\\"Saturday\\\":\\\"11:0-18:0\\\",\\\"Sunday\\\":\\\"11:0-18:0\\\",\\\"Thursday\\\":\\\"11:0-18:0\\\",\\\"Tuesday\\\":\\\"11:0-18:0\\\",\\\"Wednesday\\\":\\\"11:0-18:0\\\"},\\\"name\\\":\\\"Penelope's Sno Balls at the Beach\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-13 04:44:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Penelope's makes our family beach trips that much better.  We look forward to the shave ice with ice cream and the hotdogs.\\\"},{\\\"review_date\\\":\\\"2021-08-22 01:10:07\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Great location on Carpinteria Beach at the end of Linden Avenue.  Penelope is so nice. \\\\n\\\\nI had the tropical shave ice flavored with Pi\u00f1a colada and blood orange. Yummy.  Perfect on warm days.\\\\n \\\\nThere's several benches to sit and people watch.  $3 for a shave ice- great deal.  Large portion you might want to share. For another $1 you can get vanilla ice cream at the bottom.  Enjoy.\\\"},{\\\"review_date\\\":\\\"2020-08-20 01:09:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the Rainbow, which had pineapple and blue raspberry flavor, and it was delicious. I even added ice cream at the bottom which enlightened the whole treat! Very clean and sanitary with a lovely lady running the booth. Also the fact that an International Harvester Scout 2 was pulling the trailer made me enjoy my cold treat by tenfold\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Penelope's Sno Balls at the Beach is a food truck located at 200 Linden Ave in Carpinteria, California. The truck serves as a restaurant and offers shaved ice, desserts, hot dogs, and food. The business has a 5.0 rating based on reviews and positive feedback from customers. The truck offers outdoor seating and does not have WiFi or parking available. Some customers have praised the quality of the shaved ice and hot dogs, while others have noted the excellent location on the beach. Prices are reasonable, with large portions available for sharing.\"}",
+  "prompt_sha256": "sha256:1fc6aeefab867d75cdfff3782014b4d095e659a8bf37662f3082ea4cb7999416",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"p_hallucination\": 1, \"quote\": \"OutdoorSeating\\\":null\", \"byte_start\": 214, \"byte_end\": 231}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791190052,
+    "id": "chatcmpl-AeYtVqgY4X4lifPehUW6cFr9kJmzF3uz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 936.758,
+      "predicted_n": 39,
+      "predicted_per_second": 41.632951093025085,
+      "predicted_per_token_ms": 24.019435897435898,
+      "prompt_ms": 722.919,
+      "prompt_n": 746,
+      "prompt_per_second": 1031.9275050178512,
+      "prompt_per_token_ms": 0.9690603217158177
+    },
+    "usage": {
+      "completion_tokens": 39,
+      "prompt_tokens": 746,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 785
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"200 Linden Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Restaurants, Food, Hot Dogs, Shaved Ice, Desserts\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-17:0\\\",\\\"Monday\\\":\\\"11:0-18:0\\\",\\\"Saturday\\\":\\\"11:0-18:0\\\",\\\"Sunday\\\":\\\"11:0-18:0\\\",\\\"Thursday\\\":\\\"11:0-18:0\\\",\\\"Tuesday\\\":\\\"11:0-18:0\\\",\\\"Wednesday\\\":\\\"11:0-18:0\\\"},\\\"name\\\":\\\"Penelope's Sno Balls at the Beach\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-13 04:44:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Penelope's makes our family beach trips that much better.  We look forward to the shave ice with ice cream and the hotdogs.\\\"},{\\\"review_date\\\":\\\"2021-08-22 01:10:07\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Great location on Carpinteria Beach at the end of Linden Avenue.  Penelope is so nice. \\\\n\\\\nI had the tropical shave ice flavored with Pi\u00f1a colada and blood orange. Yummy.  Perfect on warm days.\\\\n \\\\nThere's several benches to sit and people watch.  $3 for a shave ice- great deal.  Large portion you might want to share. For another $1 you can get vanilla ice cream at the bottom.  Enjoy.\\\"},{\\\"review_date\\\":\\\"2020-08-20 01:09:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the Rainbow, which had pineapple and blue raspberry flavor, and it was delicious. I even added ice cream at the bottom which enlightened the whole treat! Very clean and sanitary with a lovely lady running the booth. Also the fact that an International Harvester Scout 2 was pulling the trailer made me enjoy my cold treat by tenfold\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Penelope's Sno Balls at the Beach is a food truck located at 200 Linden Ave in Carpinteria, California. The truck serves as a restaurant and offers shaved ice, desserts, hot dogs, and food. The business has a 5.0 rating based on reviews and positive feedback from customers. The truck offers outdoor seating and does not have WiFi or parking available. Some customers have praised the quality of the shaved ice and hot dogs, while others have noted the excellent location on the beach. Prices are reasonable, with large portions available for sharing.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 124,
+  "source_bytes": "7b2261646472657373223a22323030204c696e64656e20417665222c2261747472696275746573223a7b22416d6269656e6365223a6e756c6c2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a66616c73652c22737472656574223a66616c73652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a6e756c6c2c2252657374617572616e7473476f6f64466f7247726f757073223a6e756c6c2c2252657374617572616e74735265736572766174696f6e73223a6e756c6c2c2252657374617572616e747354616b654f7574223a6e756c6c2c2257694669223a6e756c6c7d2c22627573696e6573735f7374617273223a352e302c2263617465676f72696573223a2252657374617572616e74732c20466f6f642c20486f7420446f67732c20536861766564204963652c204465737365727473222c2263697479223a2243617270696e7465726961222c22686f757273223a7b22467269646179223a2231313a302d31373a30222c224d6f6e646179223a2231313a302d31383a30222c225361747572646179223a2231313a302d31383a30222c2253756e646179223a2231313a302d31383a30222c225468757273646179223a2231313a302d31383a30222c2254756573646179223a2231313a302d31383a30222c225765646e6573646179223a2231313a302d31383a30227d2c226e616d65223a2250656e656c6f7065277320536e6f2042616c6c7320617420746865204265616368222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323032312d31312d31332030343a34343a3033222c227265766965775f7374617273223a352e302c227265766965775f74657874223a2250656e656c6f70652773206d616b6573206f75722066616d696c792062656163682074726970732074686174206d756368206265747465722e20205765206c6f6f6b20666f727761726420746f207468652073686176652069636520776974682069636520637265616d20616e642074686520686f74646f67732e227d2c7b227265766965775f64617465223a22323032312d30382d32322030313a31303a3037222c227265766965775f7374617273223a342e302c227265766965775f74657874223a224772656174206c6f636174696f6e206f6e2043617270696e74657269612042656163682061742074686520656e64206f66204c696e64656e204176656e75652e202050656e656c6f706520697320736f206e6963652e205c6e5c6e4920686164207468652074726f706963616c2073686176652069636520666c61766f7265642077697468205069c3b16120636f6c61646120616e6420626c6f6f64206f72616e67652e2059756d6d792e202050657266656374206f6e207761726d20646179732e5c6e205c6e54686572652773207365766572616c2062656e6368657320746f2073697420616e642070656f706c652077617463682e2020243320666f722061207368617665206963652d206772656174206465616c2e20204c6172676520706f7274696f6e20796f75206d696768742077616e7420746f2073686172652e20466f7220616e6f7468657220243120796f752063616e206765742076616e696c6c612069636520637265616d2061742074686520626f74746f6d2e2020456e6a6f792e227d2c7b227265766965775f64617465223a22323032302d30382d32302030313a30393a3431222c227265766965775f7374617273223a352e302c227265766965775f74657874223a2249206f72646572656420746865205261696e626f772c207768696368206861642070696e656170706c6520616e6420626c75652072617370626572727920666c61766f722c20616e64206974207761732064656c6963696f75732e2049206576656e2061646465642069636520637265616d2061742074686520626f74746f6d20776869636820656e6c69676874656e6564207468652077686f6c6520747265617421205665727920636c65616e20616e642073616e697461727920776974682061206c6f76656c79206c6164792072756e6e696e672074686520626f6f74682e20416c736f207468652066616374207468617420616e20496e7465726e6174696f6e616c204861727665737465722053636f75742032207761732070756c6c696e672074686520747261696c6572206d616465206d6520656e6a6f79206d7920636f6c642074726561742062792074656e666f6c64227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:4454e2bf5178be86b62b0380a1b4fd2c00c7268774b3d53ab31c7c233c044bbe",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\"p_hallucination\": 1, \"quote\": \"OutdoorSeating\\\":null\", \"byte_start\": 214, \"byte_end\": 231}",
+  "unit_id": "sha256:31e1a94bdffbee097bb92552d85cd8f152189fcfe764ae17edee9b78ccf6b3fd"
+}

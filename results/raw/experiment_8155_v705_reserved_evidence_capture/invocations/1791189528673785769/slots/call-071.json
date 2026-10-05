@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "546f207072657061726520626162792062726f63636f6c692c20796f752063616e206569746865722073617574c3a9206f7220737465616d2069742e20466f722073617574c3a9696e672c206164642061626f75742031207461626c6573706f6f6e206f66206f696c20746f20612073617574c3a92070616e20616e642068656174206974206f766572206d656469756d2d68696768206865617420756e74696c2069742073697a7a6c65732e205468656e2c206164642074686520626162792062726f63636f6c6920746f207468652070616e20616e6420636f6f6b20666f72203220746f2033206d696e757465732c206f7220756e74696c206974206265636f6d65732074656e64657220616e642062726967687420677265656e2e2053746972206f7220746f7373207468652062726f63636f6c6920636f6e7374616e746c7920736f20616c6c20736964657320636f6f6b206576656e6c7920776974686f7574206f766572636f6f6b696e672e20536561736f6e2077697468206120746f756368206f66206275747465722c2073616c742c20616e64207065707065722c20616e64207365727665207761726d2e200a0a466f7220737465616d696e672c2066696c6c206120706f742077697468203220746f203320696e63686573206f6620776174657220616e6420736574206120737465616d6572206261736b6574206f6e20746f7020736f207468617420697420736974732061626f7665207468652077617465722e204272696e672074686520776174657220746f206120626f696c206f766572206869676820686561742e204c61792074686520626162792062726f63636f6c6920696e2074686520737465616d6572206261736b657420616e6420706c61636520746865206c6964206f6e20746f702e20537465616d207468652062726f63636f6c6920666f72203220746f2033206d696e757465732c206f7220756e74696c20746865207374616c6b7320616e6420666c6f7265747320627269676874656e20696e20636f6c6f7220616e64206265636f6d652074656e6465722e204d616b65207375726520746f207761736820616e64207472696d20746865207374616c6b73206265666f726520636f6f6b696e672e205365727665207761726d2e",
+  "arm": "holistic",
+  "call_id": "sha256:25a1c5e25e85ad09d8c99a6e2f67034caa944236637bfb087ee1dcfd21ad55b6:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.0254977480508387,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 550,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Add about 1 tablespoon of oil to a saut\u00e9 pan. Heat the oil over medium-high heat until it sizzles. Add the baby broccoli to the pan and cook for 2 to 3 minutes, or until it becomes tender and bright green. Stir or toss the broccoli constantly so all sides cook evenly without overcooking. Serve warm. Season sweet baby broccoli simply with a touch of butter and salt and pepper for taste.\\\\n\\\\npassage 2:The Goodness of Broccoli for Babies. Broccoli is very high in Vitamin C and is a great source of soluble fiber. This makes broccoli wonderful to add to baby food recipes. Soluble fiber is the fiber that helps loosen up the bowels as it changes its form as it passes through the digestive tract.\\\\n\\\\npassage 3:Fill a pot with 2 to 3 inches of water. Set a steamer basket on top so the basket sits above the water inside. Bring the water to a boil over high heat. Lay the baby broccoli in the steamer basket and place the lid on top. Steam the baby broccoli for 2 to 3 minutes, or until the stalks and florets brighten in color and become tender. Serve warm. Wash and trim the stalks.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to prepare baby broccoli\\\"}\", \"answer\": \"To prepare baby broccoli, you can either saut\u00e9 or steam it. For saut\u00e9ing, add about 1 tablespoon of oil to a saut\u00e9 pan and heat it over medium-high heat until it sizzles. Then, add the baby broccoli to the pan and cook for 2 to 3 minutes, or until it becomes tender and bright green. Stir or toss the broccoli constantly so all sides cook evenly without overcooking. Season with a touch of butter, salt, and pepper, and serve warm. \\n\\nFor steaming, fill a pot with 2 to 3 inches of water and set a steamer basket on top so that it sits above the water. Bring the water to a boil over high heat. Lay the baby broccoli in the steamer basket and place the lid on top. Steam the broccoli for 2 to 3 minutes, or until the stalks and florets brighten in color and become tender. Make sure to wash and trim the stalks before cooking. Serve warm.\"}",
+  "prompt_sha256": "sha256:ad5ce6d0133f08f56d0d54f2c407ad7aada2445144bbeb2c6e732a81a7fa43fb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189744,
+    "id": "chatcmpl-UDzQCUmeRAgkvLo3o1nNf8GDMUkQU47j",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 322.106,
+      "predicted_n": 14,
+      "predicted_per_second": 43.46395286023856,
+      "predicted_per_token_ms": 23.007571428571428,
+      "prompt_ms": 580.052,
+      "prompt_n": 550,
+      "prompt_per_second": 948.1908518546612,
+      "prompt_per_token_ms": 1.05464
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 550,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 564
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Add about 1 tablespoon of oil to a saut\u00e9 pan. Heat the oil over medium-high heat until it sizzles. Add the baby broccoli to the pan and cook for 2 to 3 minutes, or until it becomes tender and bright green. Stir or toss the broccoli constantly so all sides cook evenly without overcooking. Serve warm. Season sweet baby broccoli simply with a touch of butter and salt and pepper for taste.\\\\n\\\\npassage 2:The Goodness of Broccoli for Babies. Broccoli is very high in Vitamin C and is a great source of soluble fiber. This makes broccoli wonderful to add to baby food recipes. Soluble fiber is the fiber that helps loosen up the bowels as it changes its form as it passes through the digestive tract.\\\\n\\\\npassage 3:Fill a pot with 2 to 3 inches of water. Set a steamer basket on top so the basket sits above the water inside. Bring the water to a boil over high heat. Lay the baby broccoli in the steamer basket and place the lid on top. Steam the baby broccoli for 2 to 3 minutes, or until the stalks and florets brighten in color and become tender. Serve warm. Wash and trim the stalks.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to prepare baby broccoli\\\"}\", \"answer\": \"To prepare baby broccoli, you can either saut\u00e9 or steam it. For saut\u00e9ing, add about 1 tablespoon of oil to a saut\u00e9 pan and heat it over medium-high heat until it sizzles. Then, add the baby broccoli to the pan and cook for 2 to 3 minutes, or until it becomes tender and bright green. Stir or toss the broccoli constantly so all sides cook evenly without overcooking. Season with a touch of butter, salt, and pepper, and serve warm. \\n\\nFor steaming, fill a pot with 2 to 3 inches of water and set a steamer basket on top so that it sits above the water. Bring the water to a boil over high heat. Lay the baby broccoli in the steamer basket and place the lid on top. Steam the broccoli for 2 to 3 minutes, or until the stalks and florets brighten in color and become tender. Make sure to wash and trim the stalks before cooking. Serve warm.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 36,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4164642061626f75742031207461626c6573706f6f6e206f66206f696c20746f20612073617574c3a92070616e2e204865617420746865206f696c206f766572206d656469756d2d68696768206865617420756e74696c2069742073697a7a6c65732e204164642074686520626162792062726f63636f6c6920746f207468652070616e20616e6420636f6f6b20666f72203220746f2033206d696e757465732c206f7220756e74696c206974206265636f6d65732074656e64657220616e642062726967687420677265656e2e2053746972206f7220746f7373207468652062726f63636f6c6920636f6e7374616e746c7920736f20616c6c20736964657320636f6f6b206576656e6c7920776974686f7574206f766572636f6f6b696e672e205365727665207761726d2e20536561736f6e20737765657420626162792062726f63636f6c692073696d706c792077697468206120746f756368206f662062757474657220616e642073616c7420616e642070657070657220666f722074617374652e5c6e5c6e7061737361676520323a54686520476f6f646e657373206f662042726f63636f6c6920666f72204261626965732e2042726f63636f6c692069732076657279206869676820696e20566974616d696e204320616e64206973206120677265617420736f75726365206f6620736f6c75626c652066696265722e2054686973206d616b65732062726f63636f6c6920776f6e64657266756c20746f2061646420746f206261627920666f6f6420726563697065732e20536f6c75626c652066696265722069732074686520666962657220746861742068656c7073206c6f6f73656e2075702074686520626f77656c73206173206974206368616e6765732069747320666f726d20617320697420706173736573207468726f75676820746865206469676573746976652074726163742e5c6e5c6e7061737361676520333a46696c6c206120706f742077697468203220746f203320696e63686573206f662077617465722e20536574206120737465616d6572206261736b6574206f6e20746f7020736f20746865206261736b657420736974732061626f76652074686520776174657220696e736964652e204272696e672074686520776174657220746f206120626f696c206f766572206869676820686561742e204c61792074686520626162792062726f63636f6c6920696e2074686520737465616d6572206261736b657420616e6420706c61636520746865206c6964206f6e20746f702e20537465616d2074686520626162792062726f63636f6c6920666f72203220746f2033206d696e757465732c206f7220756e74696c20746865207374616c6b7320616e6420666c6f7265747320627269676874656e20696e20636f6c6f7220616e64206265636f6d652074656e6465722e205365727665207761726d2e205761736820616e64207472696d20746865207374616c6b732e5c6e5c6e222c227175657374696f6e223a22686f7720746f207072657061726520626162792062726f63636f6c69227d",
+  "source_cluster_id": "sha256:c28a9899af70a16c087243e0e5e484538b7279d231a3b9e48f62977d36766b51",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:25a1c5e25e85ad09d8c99a6e2f67034caa944236637bfb087ee1dcfd21ad55b6"
+}

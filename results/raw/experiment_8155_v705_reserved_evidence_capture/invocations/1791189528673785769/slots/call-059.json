@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c206865726520697320686f7720746f207472656174206d656e696e67697469733a0a0a312e20466f72206d696c642c20766972616c206d656e696e67697469732c20686f6d652074726561746d656e7473206d617920626520616476697365642c20696e636c7564696e67206d656469636174696f6e7320666f72206865616461636865732c207061696e6b696c6c6572732c20616e6420616e74692d7369636b6e65737320647275677320746f2070726576656e7420766f6d6974696e672e204974206973206e6f74206e656365737361727920746f20636f6e74696e75652074616b696e6720616e746962696f74696373206f6e636520766972616c206d656e696e676974697320697320636f6e6669726d65642e2028506173736167652031290a322e2041766f6964206c697175696420666f6f6420616e6420696e7374656164206472696e6b20746865206a75696365206f66204f525320286f72616c207265687964726174696f6e2073616c747329206d697865642077697468206c756b657761726d2077617465722e2054686973206973207265636f6d6d656e64656420666f7220746865206669727374206665772064617973206f662074726561746d656e742e2028506173736167652032290a332e2047657420706c656e7479206f66207265737420616e6420736c65657020666f72206174206c65617374203820686f75727320612064617920746f2068656c702072656c696576652073796d70746f6d732073756368206173206865616461636865732e2028506173736167652033290a0a5468657265666f72652c207468652074726561746d656e7420666f72206d656e696e676974697320696e766f6c766573206120636f6d62696e6174696f6e206f6620687964726174696f6e20746865726170792c207061696e206d616e6167656d656e742c20616e6420726573742e20416e746962696f74696373206d6179206e6f74206265206e656365737361727920666f72206d696c642c20766972616c2063617365732c206275742073686f756c642062652074616b656e2061732070726573637269626564206279206120646f63746f722069662074686520696e66656374696f6e20697320736576657265206f722062616374657269616c20696e206e61747572652e",
+  "arm": "holistic",
+  "call_id": "sha256:04c71dad98982892e4ec604bcb7a9c945c98fd9862fc834285298e51512515ac:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.9506187019869685,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 496,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Home treatments may be advised for mild, viral meningitis. Medications for headaches, pain killers, and anti-sickness drugs to prevent vomiting are enough for the patient to recover within 14 days. There s no need to continue taking antibiotics once viral meningitis is confirmed.\\\\n\\\\npassage 2:Avoid Liquid Food: When you get diagnosed with meningitis, the patients should avoid liquid food. Instead of that food, they should drink the juice of ORS (oral re-hydration salts). The better way on how to treat meningitis naturally is to mix the juice of ORS with the lukewarm water. This is the treatment for the first days.\\\\n\\\\npassage 3:1. Take A Good Sleep: As the way on how to treat meningitis, the doctors have suggested that the patients with meningitis need to take a good sleep for at least 8 hours a day. By putting the patients into the comfortable bed rest, this treatment will help them relieve the symptoms of meningitis such as headache.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to treat meningitis\\\"}\", \"answer\": \"Based on the given passages, here is how to treat meningitis:\\n\\n1. For mild, viral meningitis, home treatments may be advised, including medications for headaches, painkillers, and anti-sickness drugs to prevent vomiting. It is not necessary to continue taking antibiotics once viral meningitis is confirmed. (Passage 1)\\n2. Avoid liquid food and instead drink the juice of ORS (oral rehydration salts) mixed with lukewarm water. This is recommended for the first few days of treatment. (Passage 2)\\n3. Get plenty of rest and sleep for at least 8 hours a day to help relieve symptoms such as headaches. (Passage 3)\\n\\nTherefore, the treatment for meningitis involves a combination of hydration therapy, pain management, and rest. Antibiotics may not be necessary for mild, viral cases, but should be taken as prescribed by a doctor if the infection is severe or bacterial in nature.\"}",
+  "prompt_sha256": "sha256:d49d560a5a4deaf461ef1e52f3f48dc681ad3ab709ea1ed9b5b2ef2c772c11d2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189723,
+    "id": "chatcmpl-bshGhPBXUQt61KfOVJshghidbqsvMybP",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 369.103,
+      "predicted_n": 16,
+      "predicted_per_second": 43.34833366296129,
+      "predicted_per_token_ms": 23.0689375,
+      "prompt_ms": 467.665,
+      "prompt_n": 496,
+      "prompt_per_second": 1060.5882415831845,
+      "prompt_per_token_ms": 0.9428729838709677
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 496,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 512
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Home treatments may be advised for mild, viral meningitis. Medications for headaches, pain killers, and anti-sickness drugs to prevent vomiting are enough for the patient to recover within 14 days. There s no need to continue taking antibiotics once viral meningitis is confirmed.\\\\n\\\\npassage 2:Avoid Liquid Food: When you get diagnosed with meningitis, the patients should avoid liquid food. Instead of that food, they should drink the juice of ORS (oral re-hydration salts). The better way on how to treat meningitis naturally is to mix the juice of ORS with the lukewarm water. This is the treatment for the first days.\\\\n\\\\npassage 3:1. Take A Good Sleep: As the way on how to treat meningitis, the doctors have suggested that the patients with meningitis need to take a good sleep for at least 8 hours a day. By putting the patients into the comfortable bed rest, this treatment will help them relieve the symptoms of meningitis such as headache.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to treat meningitis\\\"}\", \"answer\": \"Based on the given passages, here is how to treat meningitis:\\n\\n1. For mild, viral meningitis, home treatments may be advised, including medications for headaches, painkillers, and anti-sickness drugs to prevent vomiting. It is not necessary to continue taking antibiotics once viral meningitis is confirmed. (Passage 1)\\n2. Avoid liquid food and instead drink the juice of ORS (oral rehydration salts) mixed with lukewarm water. This is recommended for the first few days of treatment. (Passage 2)\\n3. Get plenty of rest and sleep for at least 8 hours a day to help relieve symptoms such as headaches. (Passage 3)\\n\\nTherefore, the treatment for meningitis involves a combination of hydration therapy, pain management, and rest. Antibiotics may not be necessary for mild, viral cases, but should be taken as prescribed by a doctor if the infection is severe or bacterial in nature.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 30,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a486f6d652074726561746d656e7473206d6179206265206164766973656420666f72206d696c642c20766972616c206d656e696e67697469732e204d656469636174696f6e7320666f72206865616461636865732c207061696e206b696c6c6572732c20616e6420616e74692d7369636b6e65737320647275677320746f2070726576656e7420766f6d6974696e672061726520656e6f75676820666f72207468652070617469656e7420746f207265636f7665722077697468696e20313420646179732e2054686572652073206e6f206e65656420746f20636f6e74696e75652074616b696e6720616e746962696f74696373206f6e636520766972616c206d656e696e676974697320697320636f6e6669726d65642e5c6e5c6e7061737361676520323a41766f6964204c697175696420466f6f643a205768656e20796f752067657420646961676e6f7365642077697468206d656e696e67697469732c207468652070617469656e74732073686f756c642061766f6964206c697175696420666f6f642e20496e7374656164206f66207468617420666f6f642c20746865792073686f756c64206472696e6b20746865206a75696365206f66204f525320286f72616c2072652d687964726174696f6e2073616c7473292e205468652062657474657220776179206f6e20686f7720746f207472656174206d656e696e6769746973206e61747572616c6c7920697320746f206d697820746865206a75696365206f66204f5253207769746820746865206c756b657761726d2077617465722e2054686973206973207468652074726561746d656e7420666f722074686520666972737420646179732e5c6e5c6e7061737361676520333a312e2054616b65204120476f6f6420536c6565703a2041732074686520776179206f6e20686f7720746f207472656174206d656e696e67697469732c2074686520646f63746f72732068617665207375676765737465642074686174207468652070617469656e74732077697468206d656e696e6769746973206e65656420746f2074616b65206120676f6f6420736c65657020666f72206174206c65617374203820686f7572732061206461792e2042792070757474696e67207468652070617469656e747320696e746f2074686520636f6d666f727461626c652062656420726573742c20746869732074726561746d656e742077696c6c2068656c70207468656d2072656c69657665207468652073796d70746f6d73206f66206d656e696e676974697320737563682061732068656164616368652e5c6e5c6e222c227175657374696f6e223a22686f7720746f207472656174206d656e696e6769746973227d",
+  "source_cluster_id": "sha256:1021f293aab85d8a88464d6c4ec89eccef2978770b69d4302a472bda37437623",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.1\n}",
+  "unit_id": "sha256:04c71dad98982892e4ec604bcb7a9c945c98fd9862fc834285298e51512515ac"
+}

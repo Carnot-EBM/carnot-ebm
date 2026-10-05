@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "496e6469616e6120476f762e204d696b652050656e63652068617320657874656e6465642061207075626c6963206865616c746820656d657267656e637920696e20726573706f6e736520746f20612072616d70616e7420484956206f7574627265616b20696e207468652073746174652e2054686572652068617665206265656e20313335206361736573206f66204849562c207072696d6172696c79206c696e6b656420746f20696e6a656374696f6e206472756720757365206f662074686520707265736372697074696f6e206f70696f6964206f70616e612e2050656e63652069737375656420616e206f7264657220696e204d6172636820666f722053636f747420436f756e74792c2077686963682068616420373920636f6e6669726d6564206361736573206174207468652074696d652e2054686520656d657267656e6379206f7264657220686173206265656e20657874656e64656420756e74696c204d617920323420616e6420696e636c756465732061206e6565646c652065786368616e67652070726f6772616d20616e64206164646974696f6e616c207265736f757263657320746f20636f6d62617420746865206f7574627265616b2e2050656e636520737461746564207468617420746865207075626c6963206865616c746820656d657267656e637920636f6e74696e75657320616e64206566666f72747320746f206669676874206974206d75737420636f6e74696e75652e",
+  "arm": "holistic",
+  "call_id": "sha256:a5dd7ae4352b488e6a40d5646d8bea1e97bf4ca8b6d4cae0592b8b43473d0d9e:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.9967749220086262,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 529,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Indiana Gov. Mike Pence issued an executive order Monday to extend a public health emergency in his state in response to a rampant HIV outbreak that first began in mid-December. As of Tuesday, there were 135 cases -- 129 confirmed, and six preliminary --  of HIV. The increase has been linked to injection drug use, primarily of the prescription opioid opana. Pence issued an order in March for Scott County, which then had 79 confirmed cases of HIV since mid-December. The county normally averages about five new cases a year. \\\"Scott County is facing an epidemic of HIV. But this is not a Scott County problem -- this is an Indiana problem,\\\" Pence said in March. Officials expect more cases as more individuals are tested, particularly because it can take up to three months for HIV to appear in a person's system after initial infection. The emergency order was first issued last month and set to expire Friday, but now will be in place until May 24. It calls on multiple state agencies to coordinate a response to the unprecedented outbreak and provides additional resources. Law enforcement, emergency agencies and health officials are working together. Most notably, a temporary needle exchange program that began April 4. As of Tuesday, more than 4,300 clean syringes had been distributed and more than 3,100 used needles had been turned in, according to the Indiana Department of Health. A team from the CDC Division of HIV/AIDS Prevention was working on site with state and local officials. In extending the public health emergency declaration, the governor said: \\\"While we've made progress in identifying and treating those affected by this heartbreaking epidemic, the public health emergency continues and so must our efforts to fight it.\\\"\\n\", \"answer\": \"Indiana Gov. Mike Pence has extended a public health emergency in response to a rampant HIV outbreak in the state. There have been 135 cases of HIV, primarily linked to injection drug use of the prescription opioid opana. Pence issued an order in March for Scott County, which had 79 confirmed cases at the time. The emergency order has been extended until May 24 and includes a needle exchange program and additional resources to combat the outbreak. Pence stated that the public health emergency continues and efforts to fight it must continue.\"}",
+  "prompt_sha256": "sha256:df24e99d2bff43ee046949e564b285381c2052ebd8524f50135e159c5ae371a1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189643,
+    "id": "chatcmpl-BlPAgpWWNmLyy2cmvYZdcaCD4tBZj7jA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 318.619,
+      "predicted_n": 14,
+      "predicted_per_second": 43.93962695256717,
+      "predicted_per_token_ms": 22.7585,
+      "prompt_ms": 558.909,
+      "prompt_n": 529,
+      "prompt_per_second": 946.4868162795733,
+      "prompt_per_token_ms": 1.056538752362949
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 529,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 543
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Indiana Gov. Mike Pence issued an executive order Monday to extend a public health emergency in his state in response to a rampant HIV outbreak that first began in mid-December. As of Tuesday, there were 135 cases -- 129 confirmed, and six preliminary --  of HIV. The increase has been linked to injection drug use, primarily of the prescription opioid opana. Pence issued an order in March for Scott County, which then had 79 confirmed cases of HIV since mid-December. The county normally averages about five new cases a year. \\\"Scott County is facing an epidemic of HIV. But this is not a Scott County problem -- this is an Indiana problem,\\\" Pence said in March. Officials expect more cases as more individuals are tested, particularly because it can take up to three months for HIV to appear in a person's system after initial infection. The emergency order was first issued last month and set to expire Friday, but now will be in place until May 24. It calls on multiple state agencies to coordinate a response to the unprecedented outbreak and provides additional resources. Law enforcement, emergency agencies and health officials are working together. Most notably, a temporary needle exchange program that began April 4. As of Tuesday, more than 4,300 clean syringes had been distributed and more than 3,100 used needles had been turned in, according to the Indiana Department of Health. A team from the CDC Division of HIV/AIDS Prevention was working on site with state and local officials. In extending the public health emergency declaration, the governor said: \\\"While we've made progress in identifying and treating those affected by this heartbreaking epidemic, the public health emergency continues and so must our efforts to fight it.\\\"\\n\", \"answer\": \"Indiana Gov. Mike Pence has extended a public health emergency in response to a rampant HIV outbreak in the state. There have been 135 cases of HIV, primarily linked to injection drug use of the prescription opioid opana. Pence issued an order in March for Scott County, which had 79 confirmed cases at the time. The emergency order has been extended until May 24 and includes a needle exchange program and additional resources to combat the outbreak. Pence stated that the public health emergency continues and efforts to fight it must continue.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 7,
+  "source_bytes": "496e6469616e6120476f762e204d696b652050656e63652069737375656420616e20657865637574697665206f72646572204d6f6e64617920746f20657874656e642061207075626c6963206865616c746820656d657267656e637920696e2068697320737461746520696e20726573706f6e736520746f20612072616d70616e7420484956206f7574627265616b207468617420666972737420626567616e20696e206d69642d446563656d6265722e204173206f6620547565736461792c207468657265207765726520313335206361736573202d2d2031323920636f6e6669726d65642c20616e6420736978207072656c696d696e617279202d2d20206f66204849562e2054686520696e63726561736520686173206265656e206c696e6b656420746f20696e6a656374696f6e2064727567207573652c207072696d6172696c79206f662074686520707265736372697074696f6e206f70696f6964206f70616e612e2050656e63652069737375656420616e206f7264657220696e204d6172636820666f722053636f747420436f756e74792c207768696368207468656e2068616420373920636f6e6669726d6564206361736573206f66204849562073696e6365206d69642d446563656d6265722e2054686520636f756e7479206e6f726d616c6c792061766572616765732061626f75742066697665206e6577206361736573206120796561722e202253636f747420436f756e747920697320666163696e6720616e2065706964656d6963206f66204849562e204275742074686973206973206e6f7420612053636f747420436f756e74792070726f626c656d202d2d207468697320697320616e20496e6469616e612070726f626c656d2c222050656e6365207361696420696e204d617263682e204f6666696369616c7320657870656374206d6f7265206361736573206173206d6f726520696e646976696475616c7320617265207465737465642c20706172746963756c61726c7920626563617573652069742063616e2074616b6520757020746f207468726565206d6f6e74687320666f722048495620746f2061707065617220696e206120706572736f6e27732073797374656d20616674657220696e697469616c20696e66656374696f6e2e2054686520656d657267656e6379206f726465722077617320666972737420697373756564206c617374206d6f6e746820616e642073657420746f20657870697265204672696461792c20627574206e6f772077696c6c20626520696e20706c61636520756e74696c204d61792032342e2049742063616c6c73206f6e206d756c7469706c65207374617465206167656e6369657320746f20636f6f7264696e617465206120726573706f6e736520746f2074686520756e707265636564656e746564206f7574627265616b20616e642070726f7669646573206164646974696f6e616c207265736f75726365732e204c617720656e666f7263656d656e742c20656d657267656e6379206167656e6369657320616e64206865616c7468206f6666696369616c732061726520776f726b696e6720746f6765746865722e204d6f7374206e6f7461626c792c20612074656d706f72617279206e6565646c652065786368616e67652070726f6772616d207468617420626567616e20417072696c20342e204173206f6620547565736461792c206d6f7265207468616e20342c33303020636c65616e20737972696e67657320686164206265656e20646973747269627574656420616e64206d6f7265207468616e20332c3130302075736564206e6565646c657320686164206265656e207475726e656420696e2c206163636f7264696e6720746f2074686520496e6469616e61204465706172746d656e74206f66204865616c74682e2041207465616d2066726f6d2074686520434443204469766973696f6e206f66204849562f414944532050726576656e74696f6e2077617320776f726b696e67206f6e2073697465207769746820737461746520616e64206c6f63616c206f6666696369616c732e20496e20657874656e64696e6720746865207075626c6963206865616c746820656d657267656e6379206465636c61726174696f6e2c2074686520676f7665726e6f7220736169643a20225768696c65207765277665206d6164652070726f677265737320696e206964656e74696679696e6720616e64207472656174696e672074686f73652061666665637465642062792074686973206865617274627265616b696e672065706964656d69632c20746865207075626c6963206865616c746820656d657267656e637920636f6e74696e75657320616e6420736f206d757374206f7572206566666f72747320746f2066696768742069742e220a",
+  "source_cluster_id": "sha256:36685a6ed955447b1dcdb4251b41a12e66f77834002964636eb8afb93192cdf0",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:a5dd7ae4352b488e6a40d5646d8bea1e97bf4ca8b6d4cae0592b8b43473d0d9e"
+}

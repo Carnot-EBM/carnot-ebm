@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e207468652070726f76696465642070617373616765732c2068657265206172652074686520737465707320746f20636f6f6b2061207065726665637420737465616b20696e20746865206f76656e3a0a0a312e205072656865617420746865206f76656e20746f20323530c2b046202850617373616765203129206f7220343030c2b0462028506173736167652032292e0a322e20536561736f6e2074686520737465616b20776974682073616c7420616e6420706570706572202850617373616765203120616e6420506173736167652033292e0a332e20506c6163652074686520737465616b206f6e2061207261636b206f76657220612062616b696e67207368656574202850617373616765203129206f72206469726563746c7920696e2074686520736b696c6c65742028506173736167652032292e0a342e205275622074686520737465616b2077697468206f696c202850617373616765203120616e6420506173736167652032292e0a352e20526f6173742074686520737465616b20696e20746865206f76656e20666f722061626f7574203230206d696e7574657320666f72206d656469756d2d72617265202850617373616765203129206f72206c6574206974207365617220666f722061626f757420332d34206d696e75746573206f6e2065616368207369646520756e74696c2061206461726b20637275737420666f726d732028506173736167652032292e0a362e205472616e736665722074686520736b696c6c657420746f20746865206f76656e20616e64206c65742074686520737465616b20636f6f6b20666f72206174206c656173742036206d696e757465732028506173736167652032292e0a372e20436865636b207468652074656d7065726174757265206f662074686520737465616b20776974682061206d65617420746865726d6f6d6574657220746f20656e73757265206974207265616368657320796f75722064657369726564206c6576656c206f6620646f6e656e65737320286d656469756d2d726172652c206d656469756d2c206f722077656c6c2d646f6e65292e0a0a556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e2054686520706173736167657320646f206e6f742070726f7669646520696e666f726d6174696f6e206f6e20686f7720746f2064657465726d696e652074686520696465616c2074656d706572617475726520666f722074686520737465616b206f7220686f77206c6f6e6720746f20636f6f6b206974206265796f6e642074686520696e697469616c20726f617374696e67206f722073656172696e672074696d652e",
+  "arm": "source_span",
+  "call_id": "sha256:3d505fe8b206d2f636f11c5838f4ba5db237201ee6f908267260203c01026f7e:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.651365846977569,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 940,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 69,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 PREHEAT oven to 250F. Place steaks on a rack over a baking sheet. 2  Rub with 1 tbsp oil and season with salt and pepper. 3  Roast steaks in the centre of the oven for about 20 minutes for medium-rare. 4  Remove from oven.HEAT oil in a medium skillet over high heat. Add steaks and sear until deep brown and crisp, about 3 minutes a side. Hold the steak on their sides and cook the edges for 1 min per side.Remove to rack and let rest for 10 min.nstructions. 1  PREHEAT oven to 250F. Place steaks on a rack over a baking sheet. 2  Rub with 1 tbsp oil and season with salt and pepper. 3  Roast steaks in the centre of the oven for about 20 minutes for medium-rare.\\\\n\\\\npassage 2:1 Preheat oven to 400 degrees. 2  In a large, heavy, cast iron skillet, melt the butter and olive oil over high heat. 3  When the butter and oil is melted and shimmering, add the steaks. 4  You should hear a loud sizzle. 5  Let sear on each side for about 3-4 minutes, until a dark crust forms on each side. About 15 minutes before cooking, liberally season with salt and pepper, but especially with salt--about 1/2 a teaspoon of salt on each side of each steak. 2  Preheat oven to 400 degrees. 3  In a large, heavy, cast iron skillet, melt the butter and olive oil over high heat.\\\\n\\\\npassage 3:1 When the butter and oil is melted and shimmering, add the steaks. 2  You should hear a loud sizzle. 3  Let sear on each side for about 3-4 minutes, until a dark crust forms on each side. 4  Top each steak with about a tablespoon of butter and transfer the whole skillet to the oven.5  Let cook in the oven for at least 6 minutes. About 15 minutes before cooking, liberally season with salt and pepper, but especially with salt--about 1/2 a teaspoon of salt on each side of each steak. 2  Preheat oven to 400 degrees. 3  In a large, heavy, cast iron skillet, melt the butter and olive oil over high heat.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook perfect steak in the oven\\\"}\", \"answer\": \"Based on the provided passages, here are the steps to cook a perfect steak in the oven:\\n\\n1. Preheat the oven to 250\u00b0F (Passage 1) or 400\u00b0F (Passage 2).\\n2. Season the steak with salt and pepper (Passage 1 and Passage 3).\\n3. Place the steak on a rack over a baking sheet (Passage 1) or directly in the skillet (Passage 2).\\n4. Rub the steak with oil (Passage 1 and Passage 2).\\n5. Roast the steak in the oven for about 20 minutes for medium-rare (Passage 1) or let it sear for about 3-4 minutes on each side until a dark crust forms (Passage 2).\\n6. Transfer the skillet to the oven and let the steak cook for at least 6 minutes (Passage 2).\\n7. Check the temperature of the steak with a meat thermometer to ensure it reaches your desired level of doneness (medium-rare, medium, or well-done).\\n\\nUnable to answer based on given passages. The passages do not provide information on how to determine the ideal temperature for the steak or how long to cook it beyond the initial roasting or searing time.\"}",
+  "prompt_sha256": "sha256:ef4d1d6257336ac8115478178336d325543c17620a1511bba1cc450af92225dc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"Check the temperature of the steak with a meat thermometer to ensure it reaches your desired level of doneness (medium-rare, medium, or well-done).\",\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189832,
+    "id": "chatcmpl-z4v6UmTMwOujfSAGtqet5paQLq0ZluP2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1657.715,
+      "predicted_n": 69,
+      "predicted_per_second": 41.62356014152011,
+      "predicted_per_token_ms": 24.024855072463765,
+      "prompt_ms": 867.266,
+      "prompt_n": 940,
+      "prompt_per_second": 1083.8658496931737,
+      "prompt_per_token_ms": 0.9226234042553191
+    },
+    "usage": {
+      "completion_tokens": 69,
+      "prompt_tokens": 940,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1009
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 PREHEAT oven to 250F. Place steaks on a rack over a baking sheet. 2  Rub with 1 tbsp oil and season with salt and pepper. 3  Roast steaks in the centre of the oven for about 20 minutes for medium-rare. 4  Remove from oven.HEAT oil in a medium skillet over high heat. Add steaks and sear until deep brown and crisp, about 3 minutes a side. Hold the steak on their sides and cook the edges for 1 min per side.Remove to rack and let rest for 10 min.nstructions. 1  PREHEAT oven to 250F. Place steaks on a rack over a baking sheet. 2  Rub with 1 tbsp oil and season with salt and pepper. 3  Roast steaks in the centre of the oven for about 20 minutes for medium-rare.\\\\n\\\\npassage 2:1 Preheat oven to 400 degrees. 2  In a large, heavy, cast iron skillet, melt the butter and olive oil over high heat. 3  When the butter and oil is melted and shimmering, add the steaks. 4  You should hear a loud sizzle. 5  Let sear on each side for about 3-4 minutes, until a dark crust forms on each side. About 15 minutes before cooking, liberally season with salt and pepper, but especially with salt--about 1/2 a teaspoon of salt on each side of each steak. 2  Preheat oven to 400 degrees. 3  In a large, heavy, cast iron skillet, melt the butter and olive oil over high heat.\\\\n\\\\npassage 3:1 When the butter and oil is melted and shimmering, add the steaks. 2  You should hear a loud sizzle. 3  Let sear on each side for about 3-4 minutes, until a dark crust forms on each side. 4  Top each steak with about a tablespoon of butter and transfer the whole skillet to the oven.5  Let cook in the oven for at least 6 minutes. About 15 minutes before cooking, liberally season with salt and pepper, but especially with salt--about 1/2 a teaspoon of salt on each side of each steak. 2  Preheat oven to 400 degrees. 3  In a large, heavy, cast iron skillet, melt the butter and olive oil over high heat.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook perfect steak in the oven\\\"}\", \"answer\": \"Based on the provided passages, here are the steps to cook a perfect steak in the oven:\\n\\n1. Preheat the oven to 250\u00b0F (Passage 1) or 400\u00b0F (Passage 2).\\n2. Season the steak with salt and pepper (Passage 1 and Passage 3).\\n3. Place the steak on a rack over a baking sheet (Passage 1) or directly in the skillet (Passage 2).\\n4. Rub the steak with oil (Passage 1 and Passage 2).\\n5. Roast the steak in the oven for about 20 minutes for medium-rare (Passage 1) or let it sear for about 3-4 minutes on each side until a dark crust forms (Passage 2).\\n6. Transfer the skillet to the oven and let the steak cook for at least 6 minutes (Passage 2).\\n7. Check the temperature of the steak with a meat thermometer to ensure it reaches your desired level of doneness (medium-rare, medium, or well-done).\\n\\nUnable to answer based on given passages. The passages do not provide information on how to determine the ideal temperature for the steak or how long to cook it beyond the initial roasting or searing time.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 61,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a312050524548454154206f76656e20746f20323530462e20506c61636520737465616b73206f6e2061207261636b206f76657220612062616b696e672073686565742e20322020527562207769746820312074627370206f696c20616e6420736561736f6e20776974682073616c7420616e64207065707065722e20332020526f61737420737465616b7320696e207468652063656e747265206f6620746865206f76656e20666f722061626f7574203230206d696e7574657320666f72206d656469756d2d726172652e2034202052656d6f76652066726f6d206f76656e2e48454154206f696c20696e2061206d656469756d20736b696c6c6574206f766572206869676820686561742e2041646420737465616b7320616e64207365617220756e74696c20646565702062726f776e20616e642063726973702c2061626f75742033206d696e75746573206120736964652e20486f6c642074686520737465616b206f6e20746865697220736964657320616e6420636f6f6b2074686520656467657320666f722031206d696e2070657220736964652e52656d6f766520746f207261636b20616e64206c6574207265737420666f72203130206d696e2e6e737472756374696f6e732e2031202050524548454154206f76656e20746f20323530462e20506c61636520737465616b73206f6e2061207261636b206f76657220612062616b696e672073686565742e20322020527562207769746820312074627370206f696c20616e6420736561736f6e20776974682073616c7420616e64207065707065722e20332020526f61737420737465616b7320696e207468652063656e747265206f6620746865206f76656e20666f722061626f7574203230206d696e7574657320666f72206d656469756d2d726172652e5c6e5c6e7061737361676520323a312050726568656174206f76656e20746f2034303020646567726565732e20322020496e2061206c617267652c2068656176792c20636173742069726f6e20736b696c6c65742c206d656c74207468652062757474657220616e64206f6c697665206f696c206f766572206869676820686561742e203320205768656e207468652062757474657220616e64206f696c206973206d656c74656420616e64207368696d6d6572696e672c206164642074686520737465616b732e20342020596f752073686f756c6420686561722061206c6f75642073697a7a6c652e203520204c65742073656172206f6e2065616368207369646520666f722061626f757420332d34206d696e757465732c20756e74696c2061206461726b20637275737420666f726d73206f6e206561636820736964652e2041626f7574203135206d696e75746573206265666f726520636f6f6b696e672c206c69626572616c6c7920736561736f6e20776974682073616c7420616e64207065707065722c2062757420657370656369616c6c7920776974682073616c742d2d61626f757420312f3220612074656173706f6f6e206f662073616c74206f6e20656163682073696465206f66206561636820737465616b2e2032202050726568656174206f76656e20746f2034303020646567726565732e20332020496e2061206c617267652c2068656176792c20636173742069726f6e20736b696c6c65742c206d656c74207468652062757474657220616e64206f6c697665206f696c206f766572206869676820686561742e5c6e5c6e7061737361676520333a31205768656e207468652062757474657220616e64206f696c206973206d656c74656420616e64207368696d6d6572696e672c206164642074686520737465616b732e20322020596f752073686f756c6420686561722061206c6f75642073697a7a6c652e203320204c65742073656172206f6e2065616368207369646520666f722061626f757420332d34206d696e757465732c20756e74696c2061206461726b20637275737420666f726d73206f6e206561636820736964652e20342020546f70206561636820737465616b20776974682061626f75742061207461626c6573706f6f6e206f662062757474657220616e64207472616e73666572207468652077686f6c6520736b696c6c657420746f20746865206f76656e2e3520204c657420636f6f6b20696e20746865206f76656e20666f72206174206c656173742036206d696e757465732e2041626f7574203135206d696e75746573206265666f726520636f6f6b696e672c206c69626572616c6c7920736561736f6e20776974682073616c7420616e64207065707065722c2062757420657370656369616c6c7920776974682073616c742d2d61626f757420312f3220612074656173706f6f6e206f662073616c74206f6e20656163682073696465206f66206561636820737465616b2e2032202050726568656174206f76656e20746f2034303020646567726565732e20332020496e2061206c617267652c2068656176792c20636173742069726f6e20736b696c6c65742c206d656c74207468652062757474657220616e64206f6c697665206f696c206f766572206869676820686561742e5c6e5c6e222c227175657374696f6e223a22686f7720746f20636f6f6b207065726665637420737465616b20696e20746865206f76656e227d",
+  "source_cluster_id": "sha256:7cb2fe63a052fc7a7dd7d4f63aafd75be5981beade505c118a3ebe63f6816f9f",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"Check the temperature of the steak with a meat thermometer to ensure it reaches your desired level of doneness (medium-rare, medium, or well-done).\",\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+  "unit_id": "sha256:3d505fe8b206d2f636f11c5838f4ba5db237201ee6f908267260203c01026f7e"
+}

@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "486572652061726520736f6d65206f6620746865206269676765737420726563656e74206272656163686573206f66207365637572697479206d656e74696f6e656420696e207468652070617373616765733a0a0a2a205961686f6f206861636b2061747461636b3a20353030206d696c6c696f6e2075736572206163636f756e74732073746f6c656e2028506173736167652032290a2a2057616c6d6172743a204861636b6572732062726f6b6520696e746f2074686520636f6d70757465722073797374656d20757365642062792074686520636f6d70616e79277320646576656c6f706d656e74207465616d20746f20737465616c20696e666f726d6174696f6e2066726f6d2063617368207265676973746572732028506173736167652031290a0a556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e2054686520706173736167657320646f206e6f742070726f7669646520656e6f75676820696e666f726d6174696f6e20746f206c69737420746865206269676765737420726563656e74206272656163686573206f662073656375726974792e",
+  "arm": "holistic",
+  "call_id": "sha256:891c519d910cf3b9d3df821e9796e45c7f51e2d1de1a9351df63d5008860703a:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.8778310979250818,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 406,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Even Walmart, the top company in this year's Fortune 500 list, hasn't been immune to cybersecurity breaches. According to an investigation by Wired in 2009, hackers broke into the computer system used by the company's (wmt) development team to steal information from cash registers.\\\\n\\\\npassage 2:Yahoo hack attack: Biggest data breach ever Friday, 23 Sep 2016 | 1:51 PM ET | 01:10. At least 500 million user accounts have been stolen from Yahoo, the company confirmed on Thursday. The data breach is the largest from a single site in history, according to a database of other hacking incidents. In August, hackers were discovered trying to sell 200 million Yahoo accounts, which would have been the second-largest single breach.\\\\n\\\\npassage 3:5 huge cybersecurity breaches at companies you know. Let's face it, it's been a scary year in data security for companies and their customers alike. Hackers have been slipping through corporate computer defenses like they're Swiss cheese.\\\\n\\\\n\\\",\\\"question\\\":\\\"biggest recent breaches of security\\\"}\", \"answer\": \"Here are some of the biggest recent breaches of security mentioned in the passages:\\n\\n* Yahoo hack attack: 500 million user accounts stolen (Passage 2)\\n* Walmart: Hackers broke into the computer system used by the company's development team to steal information from cash registers (Passage 1)\\n\\nUnable to answer based on given passages. The passages do not provide enough information to list the biggest recent breaches of security.\"}",
+  "prompt_sha256": "sha256:ed708b573a5741fa480f53bda2528e7d74583f5b6f9c38056f40a72e488ac5a1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189838,
+    "id": "chatcmpl-RhsCKrQQi79QVP9xQbtmHgrxv3R49pqh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.621,
+      "predicted_n": 14,
+      "predicted_per_second": 43.529495897345015,
+      "predicted_per_token_ms": 22.97292857142857,
+      "prompt_ms": 427.012,
+      "prompt_n": 406,
+      "prompt_per_second": 950.7929519545118,
+      "prompt_per_token_ms": 1.0517536945812809
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 406,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 420
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Even Walmart, the top company in this year's Fortune 500 list, hasn't been immune to cybersecurity breaches. According to an investigation by Wired in 2009, hackers broke into the computer system used by the company's (wmt) development team to steal information from cash registers.\\\\n\\\\npassage 2:Yahoo hack attack: Biggest data breach ever Friday, 23 Sep 2016 | 1:51 PM ET | 01:10. At least 500 million user accounts have been stolen from Yahoo, the company confirmed on Thursday. The data breach is the largest from a single site in history, according to a database of other hacking incidents. In August, hackers were discovered trying to sell 200 million Yahoo accounts, which would have been the second-largest single breach.\\\\n\\\\npassage 3:5 huge cybersecurity breaches at companies you know. Let's face it, it's been a scary year in data security for companies and their customers alike. Hackers have been slipping through corporate computer defenses like they're Swiss cheese.\\\\n\\\\n\\\",\\\"question\\\":\\\"biggest recent breaches of security\\\"}\", \"answer\": \"Here are some of the biggest recent breaches of security mentioned in the passages:\\n\\n* Yahoo hack attack: 500 million user accounts stolen (Passage 2)\\n* Walmart: Hackers broke into the computer system used by the company's development team to steal information from cash registers (Passage 1)\\n\\nUnable to answer based on given passages. The passages do not provide enough information to list the biggest recent breaches of security.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 63,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4576656e2057616c6d6172742c2074686520746f7020636f6d70616e7920696e20746869732079656172277320466f7274756e6520353030206c6973742c206861736e2774206265656e20696d6d756e6520746f20637962657273656375726974792062726561636865732e204163636f7264696e6720746f20616e20696e7665737469676174696f6e20627920576972656420696e20323030392c206861636b6572732062726f6b6520696e746f2074686520636f6d70757465722073797374656d20757365642062792074686520636f6d70616e7927732028776d742920646576656c6f706d656e74207465616d20746f20737465616c20696e666f726d6174696f6e2066726f6d2063617368207265676973746572732e5c6e5c6e7061737361676520323a5961686f6f206861636b2061747461636b3a20426967676573742064617461206272656163682065766572204672696461792c203233205365702032303136207c20313a353120504d204554207c2030313a31302e204174206c6561737420353030206d696c6c696f6e2075736572206163636f756e74732068617665206265656e2073746f6c656e2066726f6d205961686f6f2c2074686520636f6d70616e7920636f6e6669726d6564206f6e2054687572736461792e2054686520646174612062726561636820697320746865206c6172676573742066726f6d20612073696e676c65207369746520696e20686973746f72792c206163636f7264696e6720746f2061206461746162617365206f66206f74686572206861636b696e6720696e636964656e74732e20496e204175677573742c206861636b657273207765726520646973636f766572656420747279696e6720746f2073656c6c20323030206d696c6c696f6e205961686f6f206163636f756e74732c20776869636820776f756c642068617665206265656e20746865207365636f6e642d6c6172676573742073696e676c65206272656163682e5c6e5c6e7061737361676520333a352068756765206379626572736563757269747920627265616368657320617420636f6d70616e69657320796f75206b6e6f772e204c6574277320666163652069742c2069742773206265656e2061207363617279207965617220696e206461746120736563757269747920666f7220636f6d70616e69657320616e6420746865697220637573746f6d65727320616c696b652e204861636b6572732068617665206265656e20736c697070696e67207468726f75676820636f72706f7261746520636f6d707574657220646566656e736573206c696b652074686579277265205377697373206368656573652e5c6e5c6e222c227175657374696f6e223a226269676765737420726563656e74206272656163686573206f66207365637572697479227d",
+  "source_cluster_id": "sha256:5949ee56d00e982e10b434e55bf2bae0af8f0f4ad0e07ec352a74db4f28b3658",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:891c519d910cf3b9d3df821e9796e45c7f51e2d1de1a9351df63d5008860703a"
+}

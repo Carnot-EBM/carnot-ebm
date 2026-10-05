@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c206769616e7420736571756f6961732063616e2067726f7720617420612072617465206f66203320746f203520666565742070657220796561722e",
+  "arm": "holistic",
+  "call_id": "sha256:1a092cb3f158d4b9dbbd2d41cef50898d7f1eda4eb77576714bdb861038098b0:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.0281002590199932,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 589,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 13,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:There are three different Redwoods trees (true species)-. Coast Redwood, Giant Sequoia. Dawn Redwood. The Coast Redwood is found mostly along the California coast and a few along the southern Oregon coast. These giant Coast Redwoods can reach over 300 feet tall and over 20 feet across, and be over 4,000 years old.he growth rates will vary, but the Coastal and Dawn Redwoods can grow fairly fast, so a good-sized tree is possible in just a few years. The Giant Sequoia is fairly slow growing, but still can become a reasonable size with not too long a wait. The Sequoia is also a popular bonsai tree.\\\\n\\\\npassage 2:The giant sequoia is the fastest growing conifer on earth given the right conditions. We expect 4 feet of upward growth in the third year for trees in large pots and one-inch plus growth rings. They have the potential to grow faster every year.Giant sequoias grow rapidly tall and less dense when the rising and setting sun is blocked.ailure to keep the soil moist results in a dead tree. Sequoias require moist, rich, balanced ph, and well-drained soil. Permanently swampy or muddy soil will not work. Our website gallery at http://www.giant-sequoia.com/gallery/ shows giant sequoias growing in many different places around the US and the world.\\\\n\\\\npassage 3:Answers. Best Answer: Growth of seedlings is very fast, with young trees known to reach 65 feet tall in 20 years. Growing to heights of 120 feet or more at maturity, most sequoia trees will grow at a rate of 3 to 5 feet per year.Seed production begins at 10\u201315 years of age. Source(s): http://www.ehow.com/how_6207859_care-pot...rowing to heights of 120 feet or more at maturity, most sequoia trees will grow at a rate of 3 to 5 feet per year. Seed production begins at 10\u201315 years of age. Source(s): http://www.ehow.com/how_6207859_care-pot...\\\\n\\\\n\\\",\\\"question\\\":\\\"how fast do giant sequoias grow\\\"}\", \"answer\": \"Based on the given passages, giant sequoias can grow at a rate of 3 to 5 feet per year.\"}",
+  "prompt_sha256": "sha256:ecdae958979aac81143dc099120fbec514a90857cd1c15fdd4b514c6a2129f1a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"p_hallucination\": 0.0}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189654,
+    "id": "chatcmpl-ndRoo2zhgMIF36suwja0RfDCC8QZwjPp",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 295.087,
+      "predicted_n": 13,
+      "predicted_per_second": 44.054804176395436,
+      "predicted_per_token_ms": 22.698999999999998,
+      "prompt_ms": 593.603,
+      "prompt_n": 589,
+      "prompt_per_second": 992.2456591358198,
+      "prompt_per_token_ms": 1.0078149405772494
+    },
+    "usage": {
+      "completion_tokens": 13,
+      "prompt_tokens": 589,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 602
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:There are three different Redwoods trees (true species)-. Coast Redwood, Giant Sequoia. Dawn Redwood. The Coast Redwood is found mostly along the California coast and a few along the southern Oregon coast. These giant Coast Redwoods can reach over 300 feet tall and over 20 feet across, and be over 4,000 years old.he growth rates will vary, but the Coastal and Dawn Redwoods can grow fairly fast, so a good-sized tree is possible in just a few years. The Giant Sequoia is fairly slow growing, but still can become a reasonable size with not too long a wait. The Sequoia is also a popular bonsai tree.\\\\n\\\\npassage 2:The giant sequoia is the fastest growing conifer on earth given the right conditions. We expect 4 feet of upward growth in the third year for trees in large pots and one-inch plus growth rings. They have the potential to grow faster every year.Giant sequoias grow rapidly tall and less dense when the rising and setting sun is blocked.ailure to keep the soil moist results in a dead tree. Sequoias require moist, rich, balanced ph, and well-drained soil. Permanently swampy or muddy soil will not work. Our website gallery at http://www.giant-sequoia.com/gallery/ shows giant sequoias growing in many different places around the US and the world.\\\\n\\\\npassage 3:Answers. Best Answer: Growth of seedlings is very fast, with young trees known to reach 65 feet tall in 20 years. Growing to heights of 120 feet or more at maturity, most sequoia trees will grow at a rate of 3 to 5 feet per year.Seed production begins at 10\u201315 years of age. Source(s): http://www.ehow.com/how_6207859_care-pot...rowing to heights of 120 feet or more at maturity, most sequoia trees will grow at a rate of 3 to 5 feet per year. Seed production begins at 10\u201315 years of age. Source(s): http://www.ehow.com/how_6207859_care-pot...\\\\n\\\\n\\\",\\\"question\\\":\\\"how fast do giant sequoias grow\\\"}\", \"answer\": \"Based on the given passages, giant sequoias can grow at a rate of 3 to 5 feet per year.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 10,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a54686572652061726520746872656520646966666572656e7420526564776f6f64732074726565732028747275652073706563696573292d2e20436f61737420526564776f6f642c204769616e7420536571756f69612e204461776e20526564776f6f642e2054686520436f61737420526564776f6f6420697320666f756e64206d6f73746c7920616c6f6e67207468652043616c69666f726e696120636f61737420616e6420612066657720616c6f6e672074686520736f75746865726e204f7265676f6e20636f6173742e205468657365206769616e7420436f61737420526564776f6f64732063616e207265616368206f7665722033303020666565742074616c6c20616e64206f7665722032302066656574206163726f73732c20616e64206265206f76657220342c303030207965617273206f6c642e68652067726f7774682072617465732077696c6c20766172792c206275742074686520436f617374616c20616e64204461776e20526564776f6f64732063616e2067726f7720666169726c7920666173742c20736f206120676f6f642d73697a6564207472656520697320706f737369626c6520696e206a7573742061206665772079656172732e20546865204769616e7420536571756f696120697320666169726c7920736c6f772067726f77696e672c20627574207374696c6c2063616e206265636f6d65206120726561736f6e61626c652073697a652077697468206e6f7420746f6f206c6f6e67206120776169742e2054686520536571756f696120697320616c736f206120706f70756c617220626f6e73616920747265652e5c6e5c6e7061737361676520323a546865206769616e7420736571756f69612069732074686520666173746573742067726f77696e6720636f6e69666572206f6e20656172746820676976656e2074686520726967687420636f6e646974696f6e732e2057652065787065637420342066656574206f66207570776172642067726f77746820696e20746865207468697264207965617220666f7220747265657320696e206c6172676520706f747320616e64206f6e652d696e636820706c75732067726f7774682072696e67732e205468657920686176652074686520706f74656e7469616c20746f2067726f772066617374657220657665727920796561722e4769616e7420736571756f6961732067726f772072617069646c792074616c6c20616e64206c6573732064656e7365207768656e2074686520726973696e6720616e642073657474696e672073756e20697320626c6f636b65642e61696c75726520746f206b6565702074686520736f696c206d6f69737420726573756c747320696e2061206465616420747265652e20536571756f6961732072657175697265206d6f6973742c20726963682c2062616c616e6365642070682c20616e642077656c6c2d647261696e656420736f696c2e205065726d616e656e746c79207377616d7079206f72206d7564647920736f696c2077696c6c206e6f7420776f726b2e204f757220776562736974652067616c6c65727920617420687474703a2f2f7777772e6769616e742d736571756f69612e636f6d2f67616c6c6572792f2073686f7773206769616e7420736571756f6961732067726f77696e6720696e206d616e7920646966666572656e7420706c616365732061726f756e642074686520555320616e642074686520776f726c642e5c6e5c6e7061737361676520333a416e73776572732e204265737420416e737765723a2047726f777468206f6620736565646c696e6773206973207665727920666173742c207769746820796f756e67207472656573206b6e6f776e20746f20726561636820363520666565742074616c6c20696e2032302079656172732e2047726f77696e6720746f2068656967687473206f66203132302066656574206f72206d6f7265206174206d617475726974792c206d6f737420736571756f69612074726565732077696c6c2067726f7720617420612072617465206f66203320746f203520666565742070657220796561722e536565642070726f64756374696f6e20626567696e73206174203130e280933135207965617273206f66206167652e20536f757263652873293a20687474703a2f2f7777772e65686f772e636f6d2f686f775f363230373835395f636172652d706f742e2e2e726f77696e6720746f2068656967687473206f66203132302066656574206f72206d6f7265206174206d617475726974792c206d6f737420736571756f69612074726565732077696c6c2067726f7720617420612072617465206f66203320746f203520666565742070657220796561722e20536565642070726f64756374696f6e20626567696e73206174203130e280933135207965617273206f66206167652e20536f757263652873293a20687474703a2f2f7777772e65686f772e636f6d2f686f775f363230373835395f636172652d706f742e2e2e5c6e5c6e222c227175657374696f6e223a22686f77206661737420646f206769616e7420736571756f6961732067726f77227d",
+  "source_cluster_id": "sha256:1bf9e7d337e952b5d934a4422e12e9e21b309d0845057d0e562edf2a294b8d37",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\"p_hallucination\": 0.0}",
+  "unit_id": "sha256:1a092cb3f158d4b9dbbd2d41cef50898d7f1eda4eb77576714bdb861038098b0"
+}

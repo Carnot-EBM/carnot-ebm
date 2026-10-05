@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e207468652070726f76696465642070617373616765732c2074686520616476616e7461676573206f66207573696e67206e75636c65617220656e65726779206172653a0a0a312e2050726f647563657320656c6563747269636974793a204e75636c65617220656e65726779206973207573656420746f2070726f6475636520656c6563747269636974792062792067656e65726174696e6720686561742066726f6d207468652073706c697474696e67206f66207572616e69756d2061746f6d7320696e20612070726f636573732063616c6c65642066697373696f6e2e0a322e20506f77657266756c20616e6420656666696369656e743a204e75636c65617220656e65726779206973206d6f726520706f77657266756c20616e6420656666696369656e74207468616e206f7468657220616c7465726e617469766520656e6572677920736f75726365732c206d616b696e67206974206120766961626c65206f7074696f6e20666f72206d616e7920636f756e74726965732e0a332e2052656c6961626c653a20556e6c696b6520747261646974696f6e616c20736f7572636573206f6620656e657267792c206e75636c65617220656e657267792063616e2062652070726f6475636564206576656e20696e20726f756768207765617468657220636f6e646974696f6e732c2070726f766964696e6720612072656c6961626c6520736f75726365206f6620656c6563747269636974792e0a342e205265647563657320677265656e686f7573652067617320656d697373696f6e733a205468652067656e65726174696f6e206f6620656c656374726963697479207468726f756768206e75636c65617220656e6572677920726564756365732074686520616d6f756e74206f6620656e657267792067656e6572617465642066726f6d20666f7373696c206675656c732c20726573756c74696e6720696e206c6f77657220677265656e686f7573652067617320656d697373696f6e732e",
+  "arm": "source_span",
+  "call_id": "sha256:7301082210c7ab827d728d43d0cdef34331a67860644767abacdcfc933275ed9:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.7215903130127117,
+  "entailment_label": null,
+  "exclusion_reason": "invalid_probability_or_usage",
+  "human_target": null,
+  "input_tokens": 531,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 0,
+  "order": 0,
+  "output_tokens": 43,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": null,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "missing_probability",
+    "valid_quote": 0
+  },
+  "probability": null,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Nuclear energy is used to produce electricity. Heat generated from the splitting of uranium atoms in a process known as fission is used to produce steam.This steam in turn powers turbines, which are used to produce the electricity that supplies the surrounding community.uclear energy is used to produce electricity. Heat generated from the splitting of uranium atoms in a process known as fission is used to produce steam.\\\\n\\\\npassage 2:2. Powerful and Efficient: The other main advantage of using nuclear energy is that it is very powerful and efficient than other alternative energy sources. Advancement in technologies has made it more viable option than others.This is one the reason that many countries are putting huge investments in nuclear power.. Reliable: Unlike traditional sources of energy like solar and wind which require sun or wind to produce electricity, nuclear energy can be produced from nuclear power plants even in the cases of rough weather conditions.\\\\n\\\\npassage 3:Advantages and disadvantages of nuclear power. In this section we analyze the advantages and disadvantages of nuclear power. Nevertheless, most organizations related to nuclear energy are already positioned for or against the use of nuclear power.he generation of electricity through nuclear energy reduces the amount of energy generated from fossil fuels (coal and oil). Less use of fossil fuels means lowering greenhouse gas emissions (CO 2 and others).\\\\n\\\\n\\\",\\\"question\\\":\\\"advantages of using nuclear energy\\\"}\", \"answer\": \"Based on the provided passages, the advantages of using nuclear energy are:\\n\\n1. Produces electricity: Nuclear energy is used to produce electricity by generating heat from the splitting of uranium atoms in a process called fission.\\n2. Powerful and efficient: Nuclear energy is more powerful and efficient than other alternative energy sources, making it a viable option for many countries.\\n3. Reliable: Unlike traditional sources of energy, nuclear energy can be produced even in rough weather conditions, providing a reliable source of electricity.\\n4. Reduces greenhouse gas emissions: The generation of electricity through nuclear energy reduces the amount of energy generated from fossil fuels, resulting in lower greenhouse gas emissions.\"}",
+  "prompt_sha256": "sha256:e62dbde796e3f845d837626ee13267665618672c070bb20aa69a433b3960e848",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```json\n{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189765,
+    "id": "chatcmpl-KWyev3rhRBMu13rqgFUWQhvNfLWpkE06",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1026.755,
+      "predicted_n": 43,
+      "predicted_per_second": 41.87951361327678,
+      "predicted_per_token_ms": 23.878023255813957,
+      "prompt_ms": 573.144,
+      "prompt_n": 531,
+      "prompt_per_second": 926.4687408399983,
+      "prompt_per_token_ms": 1.0793672316384182
+    },
+    "usage": {
+      "completion_tokens": 43,
+      "prompt_tokens": 531,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 574
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Nuclear energy is used to produce electricity. Heat generated from the splitting of uranium atoms in a process known as fission is used to produce steam.This steam in turn powers turbines, which are used to produce the electricity that supplies the surrounding community.uclear energy is used to produce electricity. Heat generated from the splitting of uranium atoms in a process known as fission is used to produce steam.\\\\n\\\\npassage 2:2. Powerful and Efficient: The other main advantage of using nuclear energy is that it is very powerful and efficient than other alternative energy sources. Advancement in technologies has made it more viable option than others.This is one the reason that many countries are putting huge investments in nuclear power.. Reliable: Unlike traditional sources of energy like solar and wind which require sun or wind to produce electricity, nuclear energy can be produced from nuclear power plants even in the cases of rough weather conditions.\\\\n\\\\npassage 3:Advantages and disadvantages of nuclear power. In this section we analyze the advantages and disadvantages of nuclear power. Nevertheless, most organizations related to nuclear energy are already positioned for or against the use of nuclear power.he generation of electricity through nuclear energy reduces the amount of energy generated from fossil fuels (coal and oil). Less use of fossil fuels means lowering greenhouse gas emissions (CO 2 and others).\\\\n\\\\n\\\",\\\"question\\\":\\\"advantages of using nuclear energy\\\"}\", \"answer\": \"Based on the provided passages, the advantages of using nuclear energy are:\\n\\n1. Produces electricity: Nuclear energy is used to produce electricity by generating heat from the splitting of uranium atoms in a process called fission.\\n2. Powerful and efficient: Nuclear energy is more powerful and efficient than other alternative energy sources, making it a viable option for many countries.\\n3. Reliable: Unlike traditional sources of energy, nuclear energy can be produced even in rough weather conditions, providing a reliable source of electricity.\\n4. Reduces greenhouse gas emissions: The generation of electricity through nuclear energy reduces the amount of energy generated from fossil fuels, resulting in lower greenhouse gas emissions.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 43,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4e75636c65617220656e65726779206973207573656420746f2070726f6475636520656c6563747269636974792e20486561742067656e6572617465642066726f6d207468652073706c697474696e67206f66207572616e69756d2061746f6d7320696e20612070726f63657373206b6e6f776e2061732066697373696f6e206973207573656420746f2070726f6475636520737465616d2e5468697320737465616d20696e207475726e20706f776572732074757262696e65732c20776869636820617265207573656420746f2070726f647563652074686520656c656374726963697479207468617420737570706c6965732074686520737572726f756e64696e6720636f6d6d756e6974792e75636c65617220656e65726779206973207573656420746f2070726f6475636520656c6563747269636974792e20486561742067656e6572617465642066726f6d207468652073706c697474696e67206f66207572616e69756d2061746f6d7320696e20612070726f63657373206b6e6f776e2061732066697373696f6e206973207573656420746f2070726f6475636520737465616d2e5c6e5c6e7061737361676520323a322e20506f77657266756c20616e6420456666696369656e743a20546865206f74686572206d61696e20616476616e74616765206f66207573696e67206e75636c65617220656e657267792069732074686174206974206973207665727920706f77657266756c20616e6420656666696369656e74207468616e206f7468657220616c7465726e617469766520656e6572677920736f75726365732e20416476616e63656d656e7420696e20746563686e6f6c6f6769657320686173206d616465206974206d6f726520766961626c65206f7074696f6e207468616e206f74686572732e54686973206973206f6e652074686520726561736f6e2074686174206d616e7920636f756e7472696573206172652070757474696e67206875676520696e766573746d656e747320696e206e75636c65617220706f7765722e2e2052656c6961626c653a20556e6c696b6520747261646974696f6e616c20736f7572636573206f6620656e65726779206c696b6520736f6c617220616e642077696e6420776869636820726571756972652073756e206f722077696e6420746f2070726f6475636520656c6563747269636974792c206e75636c65617220656e657267792063616e2062652070726f64756365642066726f6d206e75636c65617220706f77657220706c616e7473206576656e20696e20746865206361736573206f6620726f756768207765617468657220636f6e646974696f6e732e5c6e5c6e7061737361676520333a416476616e746167657320616e6420646973616476616e7461676573206f66206e75636c65617220706f7765722e20496e20746869732073656374696f6e20776520616e616c797a652074686520616476616e746167657320616e6420646973616476616e7461676573206f66206e75636c65617220706f7765722e204e657665727468656c6573732c206d6f7374206f7267616e697a6174696f6e732072656c6174656420746f206e75636c65617220656e657267792061726520616c726561647920706f736974696f6e656420666f72206f7220616761696e73742074686520757365206f66206e75636c65617220706f7765722e68652067656e65726174696f6e206f6620656c656374726963697479207468726f756768206e75636c65617220656e6572677920726564756365732074686520616d6f756e74206f6620656e657267792067656e6572617465642066726f6d20666f7373696c206675656c732028636f616c20616e64206f696c292e204c65737320757365206f6620666f7373696c206675656c73206d65616e73206c6f776572696e6720677265656e686f7573652067617320656d697373696f6e732028434f203220616e64206f7468657273292e5c6e5c6e222c227175657374696f6e223a22616476616e7461676573206f66207573696e67206e75636c65617220656e65726779227d",
+  "source_cluster_id": "sha256:9b79f0ded9d33b03e552db316a6f18ff8121c51bb15622b8225589b3f12b1979",
+  "started": true,
+  "status": "failed",
+  "transcript": "```json\n{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}\n```",
+  "unit_id": "sha256:7301082210c7ab827d728d43d0cdef34331a67860644767abacdcfc933275ed9"
+}

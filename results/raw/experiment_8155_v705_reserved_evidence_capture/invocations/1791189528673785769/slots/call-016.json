@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4272617a696c69616e20706f6c6963652061727265737465642074686520747265617375726572206f66207468652072756c696e6720576f726b6572732720506172747920696e20636f6e6e656374696f6e20776974682061206272696265727920696e7665737469676174696f6e2061742073746174652d6f776e6564206f696c20636f6d70616e7920506574726f627261732e2054686520706f6c6974696369616e2c204a6f616f2056616363617269204e65746f2c2066616365732063686172676573206f6620636f7272757074696f6e20616e64206d6f6e6579206c61756e646572696e672e2048652069732074686520636c6f7365737420706f6c69746963616c2066696775726520746f20507265736964656e742044696c6d6120526f75737365666620746f20626520696d706c69636174656420696e2074686520696e7665737469676174696f6e2e2050726f746573747320616761696e73742074686520676f7665726e6d656e742c206675656c656420627920616e676572206f7665722074686520636f7272757074696f6e207363616e64616c2c20686176652065726f64656420526f757373656666277320617070726f76616c20726174696e67206275742069742072656d61696e7320756e6365727461696e20686f77206c6f6e6720746865792077696c6c20636f6e74696e75652e",
+  "arm": "source_span",
+  "call_id": "sha256:a6b8c3964041b4ded9b3360cb91b6cd768111a7de42f283acfae9fccf5e95326:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.482375622028485,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 514,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 38,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Sao Paulo, Brazil (CNN)Brazilian police have arrested the treasurer of the ruling Workers' Party, bringing the bribery investigation at the state-run oil company Petrobras a step closer to President Dilma Rousseff. Federal police arrested Joao Vaccari Neto at his home in Sao Paulo on Wednesday morning. Vaccari faces charges of corruption and money laundering as part of the broader probe into corruption at Petrobras. Former executives who have turned state's evidence claim that construction companies paid large sums under the table to Petrobras officials and politicians in order to secure lucrative contracts with the oil giant. Vaccari has denied any wrongdoing and recently told a congressional commission that all donations to his party were legal and were reviewed by electoral authorities. Vaccari is the closest political figure to Rousseff so far implicated in the investigation. Rousseff herself has not been implicated, although she was the chairwoman of Petrobras when much of the alleged corruption took place. Rousseff has insisted she supports the probe and has not in any way interfered with the investigation. Sources quoted in Brazilian media have said investigators are looking at whether some of the bribes went toward Rousseff's election campaigns. Anger over what has ballooned into a multi-million dollar corruption scandal has eroded Rousseff's approval rating and prompted hundreds of thousands of Brazilians to take to the streets in protest. On Sunday, about half a million people participated in demonstrations across the country. But turnout was smaller than a month earlier, when roughly one million people marched in protest, raising questions about how long the demonstrations can last.\\n\", \"answer\": \"Brazilian police arrested the treasurer of the ruling Workers' Party in connection with a bribery investigation at state-owned oil company Petrobras. The politician, Joao Vaccari Neto, faces charges of corruption and money laundering. He is the closest political figure to President Dilma Rousseff to be implicated in the investigation. Protests against the government, fueled by anger over the corruption scandal, have eroded Rousseff's approval rating but it remains uncertain how long they will continue.\"}",
+  "prompt_sha256": "sha256:bc7b55c2d475d4eed962806f33ed9a9352b382b03cb2e0b215db4b4d0ad2bbf0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189650,
+    "id": "chatcmpl-8RRq3UdP9mYMueG2xEWthoDMAziqwsNP",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 894.795,
+      "predicted_n": 38,
+      "predicted_per_second": 42.4678278264854,
+      "predicted_per_token_ms": 23.547236842105264,
+      "prompt_ms": 461.099,
+      "prompt_n": 514,
+      "prompt_per_second": 1114.7280735807276,
+      "prompt_per_token_ms": 0.897079766536965
+    },
+    "usage": {
+      "completion_tokens": 38,
+      "prompt_tokens": 514,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 552
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Sao Paulo, Brazil (CNN)Brazilian police have arrested the treasurer of the ruling Workers' Party, bringing the bribery investigation at the state-run oil company Petrobras a step closer to President Dilma Rousseff. Federal police arrested Joao Vaccari Neto at his home in Sao Paulo on Wednesday morning. Vaccari faces charges of corruption and money laundering as part of the broader probe into corruption at Petrobras. Former executives who have turned state's evidence claim that construction companies paid large sums under the table to Petrobras officials and politicians in order to secure lucrative contracts with the oil giant. Vaccari has denied any wrongdoing and recently told a congressional commission that all donations to his party were legal and were reviewed by electoral authorities. Vaccari is the closest political figure to Rousseff so far implicated in the investigation. Rousseff herself has not been implicated, although she was the chairwoman of Petrobras when much of the alleged corruption took place. Rousseff has insisted she supports the probe and has not in any way interfered with the investigation. Sources quoted in Brazilian media have said investigators are looking at whether some of the bribes went toward Rousseff's election campaigns. Anger over what has ballooned into a multi-million dollar corruption scandal has eroded Rousseff's approval rating and prompted hundreds of thousands of Brazilians to take to the streets in protest. On Sunday, about half a million people participated in demonstrations across the country. But turnout was smaller than a month earlier, when roughly one million people marched in protest, raising questions about how long the demonstrations can last.\\n\", \"answer\": \"Brazilian police arrested the treasurer of the ruling Workers' Party in connection with a bribery investigation at state-owned oil company Petrobras. The politician, Joao Vaccari Neto, faces charges of corruption and money laundering. He is the closest political figure to President Dilma Rousseff to be implicated in the investigation. Protests against the government, fueled by anger over the corruption scandal, have eroded Rousseff's approval rating but it remains uncertain how long they will continue.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 9,
+  "source_bytes": "53616f205061756c6f2c204272617a696c2028434e4e294272617a696c69616e20706f6c69636520686176652061727265737465642074686520747265617375726572206f66207468652072756c696e6720576f726b657273272050617274792c206272696e67696e6720746865206272696265727920696e7665737469676174696f6e206174207468652073746174652d72756e206f696c20636f6d70616e7920506574726f627261732061207374657020636c6f73657220746f20507265736964656e742044696c6d6120526f7573736566662e204665646572616c20706f6c696365206172726573746564204a6f616f2056616363617269204e65746f2061742068697320686f6d6520696e2053616f205061756c6f206f6e205765646e6573646179206d6f726e696e672e20566163636172692066616365732063686172676573206f6620636f7272757074696f6e20616e64206d6f6e6579206c61756e646572696e672061732070617274206f66207468652062726f616465722070726f626520696e746f20636f7272757074696f6e20617420506574726f627261732e20466f726d657220657865637574697665732077686f2068617665207475726e656420737461746527732065766964656e636520636c61696d207468617420636f6e737472756374696f6e20636f6d70616e6965732070616964206c617267652073756d7320756e64657220746865207461626c6520746f20506574726f62726173206f6666696369616c7320616e6420706f6c6974696369616e7320696e206f7264657220746f20736563757265206c756372617469766520636f6e747261637473207769746820746865206f696c206769616e742e2056616363617269206861732064656e69656420616e792077726f6e67646f696e6720616e6420726563656e746c7920746f6c64206120636f6e6772657373696f6e616c20636f6d6d697373696f6e207468617420616c6c20646f6e6174696f6e7320746f206869732070617274792077657265206c6567616c20616e64207765726520726576696577656420627920656c6563746f72616c20617574686f7269746965732e20566163636172692069732074686520636c6f7365737420706f6c69746963616c2066696775726520746f20526f75737365666620736f2066617220696d706c69636174656420696e2074686520696e7665737469676174696f6e2e20526f7573736566662068657273656c6620686173206e6f74206265656e20696d706c6963617465642c20616c74686f756768207368652077617320746865206368616972776f6d616e206f6620506574726f62726173207768656e206d756368206f662074686520616c6c6567656420636f7272757074696f6e20746f6f6b20706c6163652e20526f7573736566662068617320696e7369737465642073686520737570706f727473207468652070726f626520616e6420686173206e6f7420696e20616e792077617920696e746572666572656420776974682074686520696e7665737469676174696f6e2e20536f75726365732071756f74656420696e204272617a696c69616e206d656469612068617665207361696420696e76657374696761746f727320617265206c6f6f6b696e67206174207768657468657220736f6d65206f6620746865206272696265732077656e7420746f7761726420526f757373656666277320656c656374696f6e2063616d706169676e732e20416e676572206f7665722077686174206861732062616c6c6f6f6e656420696e746f2061206d756c74692d6d696c6c696f6e20646f6c6c617220636f7272757074696f6e207363616e64616c206861732065726f64656420526f757373656666277320617070726f76616c20726174696e6720616e642070726f6d707465642068756e6472656473206f662074686f7573616e6473206f66204272617a696c69616e7320746f2074616b6520746f20746865207374726565747320696e2070726f746573742e204f6e2053756e6461792c2061626f75742068616c662061206d696c6c696f6e2070656f706c652070617274696369706174656420696e2064656d6f6e7374726174696f6e73206163726f73732074686520636f756e7472792e20427574207475726e6f75742077617320736d616c6c6572207468616e2061206d6f6e7468206561726c6965722c207768656e20726f7567686c79206f6e65206d696c6c696f6e2070656f706c65206d61726368656420696e2070726f746573742c2072616973696e67207175657374696f6e732061626f757420686f77206c6f6e67207468652064656d6f6e7374726174696f6e732063616e206c6173742e0a",
+  "source_cluster_id": "sha256:2874c3d07367cbaa139ab9d13607b391e66f773526b960f35e909c7826d9e951",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+  "unit_id": "sha256:a6b8c3964041b4ded9b3360cb91b6cd768111a7de42f283acfae9fccf5e95326"
+}

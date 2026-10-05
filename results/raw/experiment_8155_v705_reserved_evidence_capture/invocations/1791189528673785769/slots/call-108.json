@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "546f2067726f77206865616c74687920746f6d61746f657320696e206120636f6e7461696e65722c20666f6c6c6f7720746865736520746970733a0a0a2a2043686f6f7365206120636f6e7461696e65722074686174206973206174206c6561737420352067616c6c6f6e7320696e2073697a652c2073756368206173206120636c617920706f74206f72206120706c617374696320636f6e7461696e65722c20627574206d616b6520737572652069742069732077656c6c2d647261696e696e6720746f2070726576656e74206f7665727761746572696e672e0a2a2041646420322d3320696e63686573206f662067726176656c20746f2074686520626f74746f6d206f662074686520636f6e7461696e657220666f7220647261696e6167652e0a2a2046696c6c2074686520636f6e7461696e65722061626f757420332f342066756c6c20776974682062616767656420706f7474696e6720736f696c20746f2073746172742e0a2a20506c616e7420332d34206d617269676f6c6420736565646c696e67732077697468206561636820746f6d61746f20736565646c696e6720746f206b65657020706573747320617761792e0a2a20506c616e7420746f6d61746f20736565646c696e677320736f20746861742074686520736f696c206973206a7573742062656c6f772074686520666972737420736574206f662074727565206c65617665732e0a2a2057617465722074686f726f7567686c7920616674657220706c616e74696e672e0a2a204b65657020636f6e7461696e657220746f6d61746f657320696e2066756c6c2073756e202861626f7574203820686f757273206120646179292e0a2a20436865636b20636f6e7461696e65727320726567756c61726c7920666f7220776174657220616e642070657374732c20616e6420757365206d756c636820746f20636f6e736572766520736f696c206d6f6973747572652e0a0a4974277320696d706f7274616e7420746f206e6f746520746861742067726f77696e6720746f6d61746f657320696e20636f6e7461696e6572732063616e206265206368616c6c656e67696e672064756520746f20746865206c696d6974656420737061636520616e6420706f74656e7469616c206f7665727761746572696e672e204265207375726520746f206d6f6e69746f7220746865206d6f697374757265206c6576656c7320616e642074616b6520737465707320746f2061766f696420726f6f7420726f742e204164646974696f6e616c6c792c20636f6e7369646572207573696e67206120636f6e7461696e65722074686174206973207370656369666963616c6c792064657369676e656420666f7220746f6d61746f20706c616e74732c207375636820617320612067726f772d7468726f75676820706f74206f7220612068616e67696e67206261736b65742c20746f20676976652074686520706c616e7473206d6f726520726f6f6d20746f2067726f7720616e6420626574746572206169722063697263756c6174696f6e2e",
+  "arm": "source_span",
+  "call_id": "sha256:1fab0422f19e7a85e3db54cb62107761261dc19754b761db3d88bc5c1414fe4e:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.2450589750660583,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 687,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 60,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Transplanting Tips for Container Tomatoes. * A 5-gallon container is perfect for the tomato and easy to move if needed. * Clay pots tend to dry out quickly unless they are glazed or painted. * Drill multiple 1/4 inch holes in the bottom of the tomato container. Don\u2019t try to get by with just one drainage hole. * Place 2 to 3 inches of gravel in the bottom for drainage. * Fill the container about 3/4 full with bagged potting soil to start. As the container tomato baby grows bigger, add fresh soil to the top to support the growing stem. * Plant 3 or 4 marigolds with each tomato to help keep bugs away. * Container tomatoes should receive full sun (about 8 hours a day).\\\\n\\\\npassage 2:The hotter the temperature and the smaller the container, the more watering you will have to do. Mulch can help conserve soil moisture. While you are checking your containers for water, keep an eye out for insects and diseases. The same pests bother tomatoes whether you grow the plants in the ground or in containers.\\\\n\\\\npassage 3:To avoid damaging the plants put the supports in the containers before you plant the seedlings. Fill each container three-quarters full. Plant each seedling so the soil is just below the first set of true leaves, which are the leaves that look like tomato leaves. Firm the soil around each plant, then water thoroughly.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to grow healthy tomatoes in a container\\\"}\", \"answer\": \"To grow healthy tomatoes in a container, follow these tips:\\n\\n* Choose a container that is at least 5 gallons in size, such as a clay pot or a plastic container, but make sure it is well-draining to prevent overwatering.\\n* Add 2-3 inches of gravel to the bottom of the container for drainage.\\n* Fill the container about 3/4 full with bagged potting soil to start.\\n* Plant 3-4 marigold seedlings with each tomato seedling to keep pests away.\\n* Plant tomato seedlings so that the soil is just below the first set of true leaves.\\n* Water thoroughly after planting.\\n* Keep container tomatoes in full sun (about 8 hours a day).\\n* Check containers regularly for water and pests, and use mulch to conserve soil moisture.\\n\\nIt's important to note that growing tomatoes in containers can be challenging due to the limited space and potential overwatering. Be sure to monitor the moisture levels and take steps to avoid root rot. Additionally, consider using a container that is specifically designed for tomato plants, such as a grow-through pot or a hanging basket, to give the plants more room to grow and better air circulation.\"}",
+  "prompt_sha256": "sha256:f39322160f274abeb6fd07281c4c9b75af6861b31a1bcf27a20664e5fc2790be",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"A 5-gallon container is perfect for the tomato and easy to move if needed.\",\n  \"byte_start\": 47,\n  \"byte_end\": 113\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189809,
+    "id": "chatcmpl-aiyIJ6MsrUf4tNhlcCSyp1YLwT1weSiW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1440.024,
+      "predicted_n": 60,
+      "predicted_per_second": 41.665972233796104,
+      "predicted_per_token_ms": 24.0004,
+      "prompt_ms": 684.4,
+      "prompt_n": 687,
+      "prompt_per_second": 1003.7989479836352,
+      "prompt_per_token_ms": 0.9962154294032023
+    },
+    "usage": {
+      "completion_tokens": 60,
+      "prompt_tokens": 687,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 747
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Transplanting Tips for Container Tomatoes. * A 5-gallon container is perfect for the tomato and easy to move if needed. * Clay pots tend to dry out quickly unless they are glazed or painted. * Drill multiple 1/4 inch holes in the bottom of the tomato container. Don\u2019t try to get by with just one drainage hole. * Place 2 to 3 inches of gravel in the bottom for drainage. * Fill the container about 3/4 full with bagged potting soil to start. As the container tomato baby grows bigger, add fresh soil to the top to support the growing stem. * Plant 3 or 4 marigolds with each tomato to help keep bugs away. * Container tomatoes should receive full sun (about 8 hours a day).\\\\n\\\\npassage 2:The hotter the temperature and the smaller the container, the more watering you will have to do. Mulch can help conserve soil moisture. While you are checking your containers for water, keep an eye out for insects and diseases. The same pests bother tomatoes whether you grow the plants in the ground or in containers.\\\\n\\\\npassage 3:To avoid damaging the plants put the supports in the containers before you plant the seedlings. Fill each container three-quarters full. Plant each seedling so the soil is just below the first set of true leaves, which are the leaves that look like tomato leaves. Firm the soil around each plant, then water thoroughly.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to grow healthy tomatoes in a container\\\"}\", \"answer\": \"To grow healthy tomatoes in a container, follow these tips:\\n\\n* Choose a container that is at least 5 gallons in size, such as a clay pot or a plastic container, but make sure it is well-draining to prevent overwatering.\\n* Add 2-3 inches of gravel to the bottom of the container for drainage.\\n* Fill the container about 3/4 full with bagged potting soil to start.\\n* Plant 3-4 marigold seedlings with each tomato seedling to keep pests away.\\n* Plant tomato seedlings so that the soil is just below the first set of true leaves.\\n* Water thoroughly after planting.\\n* Keep container tomatoes in full sun (about 8 hours a day).\\n* Check containers regularly for water and pests, and use mulch to conserve soil moisture.\\n\\nIt's important to note that growing tomatoes in containers can be challenging due to the limited space and potential overwatering. Be sure to monitor the moisture levels and take steps to avoid root rot. Additionally, consider using a container that is specifically designed for tomato plants, such as a grow-through pot or a hanging basket, to give the plants more room to grow and better air circulation.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 55,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a5472616e73706c616e74696e67205469707320666f7220436f6e7461696e657220546f6d61746f65732e202a204120352d67616c6c6f6e20636f6e7461696e6572206973207065726665637420666f722074686520746f6d61746f20616e64206561737920746f206d6f7665206966206e65656465642e202a20436c617920706f74732074656e6420746f20647279206f757420717569636b6c7920756e6c65737320746865792061726520676c617a6564206f72207061696e7465642e202a204472696c6c206d756c7469706c6520312f3420696e636820686f6c657320696e2074686520626f74746f6d206f662074686520746f6d61746f20636f6e7461696e65722e20446f6ee28099742074727920746f206765742062792077697468206a757374206f6e6520647261696e61676520686f6c652e202a20506c616365203220746f203320696e63686573206f662067726176656c20696e2074686520626f74746f6d20666f7220647261696e6167652e202a2046696c6c2074686520636f6e7461696e65722061626f757420332f342066756c6c20776974682062616767656420706f7474696e6720736f696c20746f2073746172742e2041732074686520636f6e7461696e657220746f6d61746f20626162792067726f7773206269676765722c2061646420667265736820736f696c20746f2074686520746f7020746f20737570706f7274207468652067726f77696e67207374656d2e202a20506c616e742033206f722034206d617269676f6c64732077697468206561636820746f6d61746f20746f2068656c70206b656570206275677320617761792e202a20436f6e7461696e657220746f6d61746f65732073686f756c6420726563656976652066756c6c2073756e202861626f7574203820686f757273206120646179292e5c6e5c6e7061737361676520323a54686520686f74746572207468652074656d706572617475726520616e642074686520736d616c6c65722074686520636f6e7461696e65722c20746865206d6f7265207761746572696e6720796f752077696c6c206861766520746f20646f2e204d756c63682063616e2068656c7020636f6e736572766520736f696c206d6f6973747572652e205768696c6520796f752061726520636865636b696e6720796f757220636f6e7461696e65727320666f722077617465722c206b65657020616e20657965206f757420666f7220696e736563747320616e642064697365617365732e205468652073616d6520706573747320626f7468657220746f6d61746f6573207768657468657220796f752067726f772074686520706c616e747320696e207468652067726f756e64206f7220696e20636f6e7461696e6572732e5c6e5c6e7061737361676520333a546f2061766f69642064616d6167696e672074686520706c616e7473207075742074686520737570706f72747320696e2074686520636f6e7461696e657273206265666f726520796f7520706c616e742074686520736565646c696e67732e2046696c6c206561636820636f6e7461696e65722074687265652d71756172746572732066756c6c2e20506c616e74206561636820736565646c696e6720736f2074686520736f696c206973206a7573742062656c6f772074686520666972737420736574206f662074727565206c65617665732c2077686963682061726520746865206c65617665732074686174206c6f6f6b206c696b6520746f6d61746f206c65617665732e204669726d2074686520736f696c2061726f756e64206561636820706c616e742c207468656e2077617465722074686f726f7567686c792e5c6e5c6e222c227175657374696f6e223a22686f7720746f2067726f77206865616c74687920746f6d61746f657320696e206120636f6e7461696e6572227d",
+  "source_cluster_id": "sha256:d0a652817fdb9e4f5d1ff79614d343ae4b3b13d9e02ed85b99d130c630d41b6f",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"A 5-gallon container is perfect for the tomato and easy to move if needed.\",\n  \"byte_start\": 47,\n  \"byte_end\": 113\n}",
+  "unit_id": "sha256:1fab0422f19e7a85e3db54cb62107761261dc19754b761db3d88bc5c1414fe4e"
+}

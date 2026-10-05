@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261636b7961726420426f776c7320697320612072657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043616c69666f726e69612e2054686579206f6666657220612076617269657479206f6620666f6f64206f7074696f6e7320696e636c7564696e6720627265616b666173742c206272756e63682c206a7569636520626172732c20736d6f6f74686965732c20616e6420626f776c732e20546865697220686f75727320617265204d6f6e646179207468726f7567682053756e6461792066726f6d2037616d20746f2037706d2e20496e207465726d73206f6620617474726962757465732c207468657920646f206e6f74206f66666572207061726b696e672076616c69646174696f6e206f72207265736572766174696f6e732c20627574207468657920646f2068617665206f7574646f6f722073656174696e6720616e6420617265206b6e6f776e20666f7220746865697220676f6f6420736572766963652e20546865697220627573696e6573732073746172732061726520726174656420617420342e30206f7574206f6620352e302e205468652072657669657773206d656e74696f6e20746861742074686520626f776c732074617374652067726561742c206275742074686520736572766963652063616e20626520736c6f772c207769746820736f6d6520637573746f6d6572732077616974696e67206f766572203330206d696e7574657320666f72207468656972206f72646572732e20486f77657665722c206f7468657220637573746f6d6572732068617665207072616973656420746865207175616c69747920696e6772656469656e7473207573656420696e20746865697220626f776c7320616e6420736d6f6f74686965732e204f766572616c6c2c204261636b7961726420426f776c73206170706561727320746f206265206120706f70756c61722073706f7420666f72206163616920626f776c7320616e6420736d6f6f746869657320696e2053616e746120426172626172612e",
+  "arm": "source_span",
+  "call_id": "sha256:088b355fba18ace7d889b160ded20eabf864bd5b3c486425615b418269d27faa:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.8079895400442183,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 785,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 39,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"3849 State St, Ste I157\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Food, Juice Bars & Smoothies, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-17:0\\\",\\\"Monday\\\":\\\"7:0-17:0\\\",\\\"Saturday\\\":\\\"7:0-17:0\\\",\\\"Sunday\\\":\\\"7:0-17:0\\\",\\\"Thursday\\\":\\\"7:0-17:0\\\",\\\"Tuesday\\\":\\\"7:0-17:0\\\",\\\"Wednesday\\\":\\\"7:0-17:0\\\"},\\\"name\\\":\\\"Backyard Bowls\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-10 00:15:45\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Always so good bowls and great service though it can take some time to get your order and they are pretty good at messing up orders though always very helpful when you are pointing it out\\\"},{\\\"review_date\\\":\\\"2021-12-31 19:07:11\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The bowls taste great, but the service was painfully slow. It took over 30 minutes for me to get my order: 1 a\u00e7a\u00ed bowl. Even worse was people who ordered significantly after me got theirs first! It was a frustrating experience for an otherwise great location.\\\"},{\\\"review_date\\\":\\\"2021-12-18 12:27:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Legendary BYB opened a location at La Cumbre plaza and that makes me happy! Best a\u00e7a\u00ed bowls & smoothies ever; some have tried to recreate but couldn't get close. Think quality ingredients and no bullshit; it tastes straight out of heaven!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Backyard Bowls is a restaurant located in Santa Barbara, California. They offer a variety of food options including breakfast, brunch, juice bars, smoothies, and bowls. Their hours are Monday through Sunday from 7am to 7pm. In terms of attributes, they do not offer parking validation or reservations, but they do have outdoor seating and are known for their good service. Their business stars are rated at 4.0 out of 5.0. The reviews mention that the bowls taste great, but the service can be slow, with some customers waiting over 30 minutes for their orders. However, other customers have praised the quality ingredients used in their bowls and smoothies. Overall, Backyard Bowls appears to be a popular spot for acai bowls and smoothies in Santa Barbara.\"}",
+  "prompt_sha256": "sha256:cb7ea9dd0ee800e918855ac7d1918a06cc56d2f347f1fb2b3b018ba334ea16f1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"p_hallucination\": 1, \"quote\": \"\\\"OutdoorSeating\\\":null\", \"byte_start\": 263, \"byte_end\": 281}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189966,
+    "id": "chatcmpl-90iYkTa4IsbuAtuHKAGEBYeEXEbm6pIu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 930.971,
+      "predicted_n": 39,
+      "predicted_per_second": 41.8917452852989,
+      "predicted_per_token_ms": 23.871051282051283,
+      "prompt_ms": 760.226,
+      "prompt_n": 785,
+      "prompt_per_second": 1032.5876778747372,
+      "prompt_per_token_ms": 0.9684407643312102
+    },
+    "usage": {
+      "completion_tokens": 39,
+      "prompt_tokens": 785,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 824
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"3849 State St, Ste I157\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Food, Juice Bars & Smoothies, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-17:0\\\",\\\"Monday\\\":\\\"7:0-17:0\\\",\\\"Saturday\\\":\\\"7:0-17:0\\\",\\\"Sunday\\\":\\\"7:0-17:0\\\",\\\"Thursday\\\":\\\"7:0-17:0\\\",\\\"Tuesday\\\":\\\"7:0-17:0\\\",\\\"Wednesday\\\":\\\"7:0-17:0\\\"},\\\"name\\\":\\\"Backyard Bowls\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-10 00:15:45\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Always so good bowls and great service though it can take some time to get your order and they are pretty good at messing up orders though always very helpful when you are pointing it out\\\"},{\\\"review_date\\\":\\\"2021-12-31 19:07:11\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The bowls taste great, but the service was painfully slow. It took over 30 minutes for me to get my order: 1 a\u00e7a\u00ed bowl. Even worse was people who ordered significantly after me got theirs first! It was a frustrating experience for an otherwise great location.\\\"},{\\\"review_date\\\":\\\"2021-12-18 12:27:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Legendary BYB opened a location at La Cumbre plaza and that makes me happy! Best a\u00e7a\u00ed bowls & smoothies ever; some have tried to recreate but couldn't get close. Think quality ingredients and no bullshit; it tastes straight out of heaven!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Backyard Bowls is a restaurant located in Santa Barbara, California. They offer a variety of food options including breakfast, brunch, juice bars, smoothies, and bowls. Their hours are Monday through Sunday from 7am to 7pm. In terms of attributes, they do not offer parking validation or reservations, but they do have outdoor seating and are known for their good service. Their business stars are rated at 4.0 out of 5.0. The reviews mention that the bowls taste great, but the service can be slow, with some customers waiting over 30 minutes for their orders. However, other customers have praised the quality ingredients used in their bowls and smoothies. Overall, Backyard Bowls appears to be a popular spot for acai bowls and smoothies in Santa Barbara.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 98,
+  "source_bytes": "7b2261646472657373223a22333834392053746174652053742c205374652049313537222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a747275652c22636c61737379223a66616c73652c226469766579223a66616c73652c2268697073746572223a66616c73652c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a66616c73652c227472656e6479223a66616c73652c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a747275652c22737472656574223a66616c73652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a6e756c6c2c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a226e6f227d2c22627573696e6573735f7374617273223a342e302c2263617465676f72696573223a2252657374617572616e74732c20466f6f642c204a756963652042617273202620536d6f6f74686965732c20427265616b666173742026204272756e6368222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a22373a302d31373a30222c224d6f6e646179223a22373a302d31373a30222c225361747572646179223a22373a302d31373a30222c2253756e646179223a22373a302d31373a30222c225468757273646179223a22373a302d31373a30222c2254756573646179223a22373a302d31373a30222c225765646e6573646179223a22373a302d31373a30227d2c226e616d65223a224261636b7961726420426f776c73222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323032322d30312d31302030303a31353a3435222c227265766965775f7374617273223a342e302c227265766965775f74657874223a22416c7761797320736f20676f6f6420626f776c7320616e6420677265617420736572766963652074686f7567682069742063616e2074616b6520736f6d652074696d6520746f2067657420796f7572206f7264657220616e642074686579206172652070726574747920676f6f64206174206d657373696e67207570206f72646572732074686f75676820616c7761797320766572792068656c7066756c207768656e20796f752061726520706f696e74696e67206974206f7574227d2c7b227265766965775f64617465223a22323032312d31322d33312031393a30373a3131222c227265766965775f7374617273223a312e302c227265766965775f74657874223a2254686520626f776c732074617374652067726561742c2062757420746865207365727669636520776173207061696e66756c6c7920736c6f772e20497420746f6f6b206f766572203330206d696e7574657320666f72206d6520746f20676574206d79206f726465723a20312061c3a761c3ad20626f776c2e204576656e20776f727365207761732070656f706c652077686f206f726465726564207369676e69666963616e746c79206166746572206d6520676f742074686569727320666972737421204974207761732061206672757374726174696e6720657870657269656e636520666f7220616e206f7468657277697365206772656174206c6f636174696f6e2e227d2c7b227265766965775f64617465223a22323032312d31322d31382031323a32373a3439222c227265766965775f7374617273223a352e302c227265766965775f74657874223a224c6567656e6461727920425942206f70656e65642061206c6f636174696f6e206174204c612043756d62726520706c617a6120616e642074686174206d616b6573206d652068617070792120426573742061c3a761c3ad20626f776c73202620736d6f6f746869657320657665723b20736f6d65206861766520747269656420746f2072656372656174652062757420636f756c646e27742067657420636c6f73652e205468696e6b207175616c69747920696e6772656469656e747320616e64206e6f2062756c6c736869743b20697420746173746573207374726169676874206f7574206f662068656176656e21227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:fb76a45ab797c5598b00dacbbc8ee63adb8590c4027e17d508aa7bdfee18442d",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\"p_hallucination\": 1, \"quote\": \"\\\"OutdoorSeating\\\":null\", \"byte_start\": 263, \"byte_end\": 281}",
+  "unit_id": "sha256:088b355fba18ace7d889b160ded20eabf864bd5b3c486425615b418269d27faa"
+}

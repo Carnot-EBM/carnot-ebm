@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e207468652070726f76696465642070617373616765732c207468657265206973206e6f20646972656374206d656e74696f6e206f6620686f772068656172696e67206c6f7373206166666563747320736c656570696e6720616e6420656174696e672e205468657265666f72652c204920616d20756e61626c6520746f20616e737765722074686973207175657374696f6e206261736564206f6e2074686520676976656e2070617373616765732e",
+  "arm": "holistic",
+  "call_id": "sha256:d792586a62e87059e081f571a4eabc27128a5267b42b8a75503d27717f64990a:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.6741556820925325,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 276,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 11,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Poor quality sleep can affect many areas of your life and health, and your doctor may be able to help you if you have insomnia or another sleep disorder or conditions affecting your sleep. Learn more about the health consequences of sleep loss.\\\\n\\\\npassage 2:Poor quality sleep can affect many areas of your life and health, and your doctor may be able to help you if you have difficulty sleeping, have insomnia, or have other sleep disorders. Learn more about the health consequences of sleep loss.\\\\n\\\\npassage 3:A. If you take your ears for granted, listen up: hearing loss is the third most common health problem in the U.S. It's also on the rise with nearly 36 million Americans now reporting lost hearing.\\\\n\\\\n\\\",\\\"question\\\":\\\"how does hearing loss affect sleeping and eating\\\"}\", \"answer\": \"Based on the provided passages, there is no direct mention of how hearing loss affects sleeping and eating. Therefore, I am unable to answer this question based on the given passages.\"}",
+  "prompt_sha256": "sha256:c75b81393ab373dba6357b05988c9d48118614cd01d0d5ab098e92c4650be740",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"p_hallucination\": 0}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189760,
+    "id": "chatcmpl-GFuzaibqqzuAmtAyr6vsRE95kOgj7qKl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 249.184,
+      "predicted_n": 11,
+      "predicted_per_second": 44.144086297675614,
+      "predicted_per_token_ms": 22.65309090909091,
+      "prompt_ms": 325.043,
+      "prompt_n": 276,
+      "prompt_per_second": 849.1184243315499,
+      "prompt_per_token_ms": 1.1776920289855073
+    },
+    "usage": {
+      "completion_tokens": 11,
+      "prompt_tokens": 276,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 287
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Poor quality sleep can affect many areas of your life and health, and your doctor may be able to help you if you have insomnia or another sleep disorder or conditions affecting your sleep. Learn more about the health consequences of sleep loss.\\\\n\\\\npassage 2:Poor quality sleep can affect many areas of your life and health, and your doctor may be able to help you if you have difficulty sleeping, have insomnia, or have other sleep disorders. Learn more about the health consequences of sleep loss.\\\\n\\\\npassage 3:A. If you take your ears for granted, listen up: hearing loss is the third most common health problem in the U.S. It's also on the rise with nearly 36 million Americans now reporting lost hearing.\\\\n\\\\n\\\",\\\"question\\\":\\\"how does hearing loss affect sleeping and eating\\\"}\", \"answer\": \"Based on the provided passages, there is no direct mention of how hearing loss affects sleeping and eating. Therefore, I am unable to answer this question based on the given passages.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 41,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a506f6f72207175616c69747920736c6565702063616e20616666656374206d616e79206172656173206f6620796f7572206c69666520616e64206865616c74682c20616e6420796f757220646f63746f72206d61792062652061626c6520746f2068656c7020796f7520696620796f75206861766520696e736f6d6e6961206f7220616e6f7468657220736c656570206469736f72646572206f7220636f6e646974696f6e7320616666656374696e6720796f757220736c6565702e204c6561726e206d6f72652061626f757420746865206865616c746820636f6e73657175656e636573206f6620736c656570206c6f73732e5c6e5c6e7061737361676520323a506f6f72207175616c69747920736c6565702063616e20616666656374206d616e79206172656173206f6620796f7572206c69666520616e64206865616c74682c20616e6420796f757220646f63746f72206d61792062652061626c6520746f2068656c7020796f7520696620796f75206861766520646966666963756c747920736c656570696e672c206861766520696e736f6d6e69612c206f722068617665206f7468657220736c656570206469736f72646572732e204c6561726e206d6f72652061626f757420746865206865616c746820636f6e73657175656e636573206f6620736c656570206c6f73732e5c6e5c6e7061737361676520333a412e20496620796f752074616b6520796f7572206561727320666f72206772616e7465642c206c697374656e2075703a2068656172696e67206c6f737320697320746865207468697264206d6f737420636f6d6d6f6e206865616c74682070726f626c656d20696e2074686520552e532e204974277320616c736f206f6e2074686520726973652077697468206e6561726c79203336206d696c6c696f6e20416d65726963616e73206e6f77207265706f7274696e67206c6f73742068656172696e672e5c6e5c6e222c227175657374696f6e223a22686f7720646f65732068656172696e67206c6f73732061666665637420736c656570696e6720616e6420656174696e67227d",
+  "source_cluster_id": "sha256:1400ffca8f6d7a90cf28fa76b2f9f7d4e2a13ae8d08562b67dd58c20279f9199",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\"p_hallucination\": 0}",
+  "unit_id": "sha256:d792586a62e87059e081f571a4eabc27128a5267b42b8a75503d27717f64990a"
+}

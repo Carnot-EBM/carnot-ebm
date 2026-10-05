@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20746f2073746f70206120706572736f6e2066726f6d20636f6d6d697474696e6720737569636964652c206f6e652073686f756c643a0a0a312e2042652077696c6c696e6720746f2074616c6b2061626f7574207375696369646520776974682074686520706572736f6e20696e2064616e6765722e0a322e2041736b207175657374696f6e7320696e2061206e6f6e2d746872656174656e696e67207761792e0a332e2049662074686520706572736f6e20697320696e20696d6d6564696174652064616e6765722c20746865792073686f756c64207365652061206d656e74616c206865616c74682070726f66657373696f6e616c206f7220646f63746f7220696d6d6564696174656c792e0a342e2043616c6c20393131206f722074616b65207468656d20746f2074686520656d657267656e637920726f6f6d206966206e65636573736172792e0a352e20456e636f75726167652074686520706572736f6e20746f20737065616b20746f20612066616d696c79206d656d6265722c20636f756e73656c6f722c206f72207375696369646520637269736973206c696e652e0a362e205365656b2068656c702066726f6d206120667269656e64206f7220636f6e746163742074686520706f6c6963652069662074686520706572736f6e206861732069646561732c206120706c616e2c20616e6420746865206d65616e7320746f20636f6d6d697420737569636964652e0a372e204576656e2069662074686520706572736f6e2061736b7320796f7520746f206b6565702069742061207365637265742c2069742069732062657474657220746f206765742068656c7020696d6d6564696174656c792e0a0a4e6f74653a2054686520676976656e2070617373616765732070726f7669646520766172696f75732073756767657374696f6e7320616e642070726563617574696f6e7320746f206164647265737320706f74656e7469616c207375696369646520736974756174696f6e732e20486f77657665722c20697420697320696d706f7274616e7420746f207365656b2070726f66657373696f6e616c2061647669636520616e6420737570706f727420696e20737563682063617365732e",
+  "arm": "holistic",
+  "call_id": "sha256:8dc768b3d3e3e099714930f2ea765f59b486110326efc8e5e0f8de39b89bb9f0:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.1034830589778721,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 629,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:If you see these signs, be willing to talk about suicide with the person in danger. Ask questions in a non-threatening way. If you feel this person is in immediate danger they should see a mental health professional or doctor immediately. Call 911 or take them to the emergency room.ventually, the situation has gotten better. Suicide may end your pain, but it will cause others to hurt. With the technology we have today, it is very difficult to make a suicide look like an accident, so people who love you would always question what they could have done for you.\\\\n\\\\npassage 2:Then you should speak to a family member, a counsellor or a suicide crisis line. Thinking like that means you are depressed and depression is a treatable illness and the recovery times are often less than 3 months.ventually, the situation has gotten better. Suicide may end your pain, but it will cause others to hurt. With the technology we have today, it is very difficult to make a suicide look like an accident, so people who love you would always question what they could have done for you.\\\\n\\\\npassage 3:6. Get a friend to help you. Having ideas (especially ones they have been entertaining awhile), a plan, and the means to commit suicide constitute a very serious, immediate danger, and you should contact police immediately. If you're on the phone, it's best not to let this person know that's what you're doing though. If your friend tells you that she/he is going to commit suicide, get help immediately, even if they tell you to keep it secret. 2  It is better to anger a friend than lose the actual human being.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to stop a person from commiting suicide\\\"}\", \"answer\": \"Based on the given passages, to stop a person from committing suicide, one should:\\n\\n1. Be willing to talk about suicide with the person in danger.\\n2. Ask questions in a non-threatening way.\\n3. If the person is in immediate danger, they should see a mental health professional or doctor immediately.\\n4. Call 911 or take them to the emergency room if necessary.\\n5. Encourage the person to speak to a family member, counselor, or suicide crisis line.\\n6. Seek help from a friend or contact the police if the person has ideas, a plan, and the means to commit suicide.\\n7. Even if the person asks you to keep it a secret, it is better to get help immediately.\\n\\nNote: The given passages provide various suggestions and precautions to address potential suicide situations. However, it is important to seek professional advice and support in such cases.\"}",
+  "prompt_sha256": "sha256:39d2da2ed221b581af11f8be58dc6c3ce10f794fb1f0f959d48768890bb041a0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189960,
+    "id": "chatcmpl-UoYJg2tU0tsAx4JuI8tRCsiusud4NKGV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 322.281,
+      "predicted_n": 14,
+      "predicted_per_second": 43.440351742733824,
+      "predicted_per_token_ms": 23.02007142857143,
+      "prompt_ms": 636.558,
+      "prompt_n": 629,
+      "prompt_per_second": 988.1267692810396,
+      "prompt_per_token_ms": 1.0120158982511924
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 629,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 643
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:If you see these signs, be willing to talk about suicide with the person in danger. Ask questions in a non-threatening way. If you feel this person is in immediate danger they should see a mental health professional or doctor immediately. Call 911 or take them to the emergency room.ventually, the situation has gotten better. Suicide may end your pain, but it will cause others to hurt. With the technology we have today, it is very difficult to make a suicide look like an accident, so people who love you would always question what they could have done for you.\\\\n\\\\npassage 2:Then you should speak to a family member, a counsellor or a suicide crisis line. Thinking like that means you are depressed and depression is a treatable illness and the recovery times are often less than 3 months.ventually, the situation has gotten better. Suicide may end your pain, but it will cause others to hurt. With the technology we have today, it is very difficult to make a suicide look like an accident, so people who love you would always question what they could have done for you.\\\\n\\\\npassage 3:6. Get a friend to help you. Having ideas (especially ones they have been entertaining awhile), a plan, and the means to commit suicide constitute a very serious, immediate danger, and you should contact police immediately. If you're on the phone, it's best not to let this person know that's what you're doing though. If your friend tells you that she/he is going to commit suicide, get help immediately, even if they tell you to keep it secret. 2  It is better to anger a friend than lose the actual human being.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to stop a person from commiting suicide\\\"}\", \"answer\": \"Based on the given passages, to stop a person from committing suicide, one should:\\n\\n1. Be willing to talk about suicide with the person in danger.\\n2. Ask questions in a non-threatening way.\\n3. If the person is in immediate danger, they should see a mental health professional or doctor immediately.\\n4. Call 911 or take them to the emergency room if necessary.\\n5. Encourage the person to speak to a family member, counselor, or suicide crisis line.\\n6. Seek help from a friend or contact the police if the person has ideas, a plan, and the means to commit suicide.\\n7. Even if the person asks you to keep it a secret, it is better to get help immediately.\\n\\nNote: The given passages provide various suggestions and precautions to address potential suicide situations. However, it is important to seek professional advice and support in such cases.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 96,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a496620796f7520736565207468657365207369676e732c2062652077696c6c696e6720746f2074616c6b2061626f7574207375696369646520776974682074686520706572736f6e20696e2064616e6765722e2041736b207175657374696f6e7320696e2061206e6f6e2d746872656174656e696e67207761792e20496620796f75206665656c207468697320706572736f6e20697320696e20696d6d6564696174652064616e67657220746865792073686f756c64207365652061206d656e74616c206865616c74682070726f66657373696f6e616c206f7220646f63746f7220696d6d6564696174656c792e2043616c6c20393131206f722074616b65207468656d20746f2074686520656d657267656e637920726f6f6d2e76656e7475616c6c792c2074686520736974756174696f6e2068617320676f7474656e206265747465722e2053756963696465206d617920656e6420796f7572207061696e2c206275742069742077696c6c206361757365206f746865727320746f20687572742e20576974682074686520746563686e6f6c6f6779207765206861766520746f6461792c206974206973207665727920646966666963756c7420746f206d616b6520612073756963696465206c6f6f6b206c696b6520616e206163636964656e742c20736f2070656f706c652077686f206c6f766520796f7520776f756c6420616c77617973207175657374696f6e2077686174207468657920636f756c64206861766520646f6e6520666f7220796f752e5c6e5c6e7061737361676520323a5468656e20796f752073686f756c6420737065616b20746f20612066616d696c79206d656d6265722c206120636f756e73656c6c6f72206f722061207375696369646520637269736973206c696e652e205468696e6b696e67206c696b652074686174206d65616e7320796f75206172652064657072657373656420616e642064657072657373696f6e206973206120747265617461626c6520696c6c6e65737320616e6420746865207265636f766572792074696d657320617265206f6674656e206c657373207468616e2033206d6f6e7468732e76656e7475616c6c792c2074686520736974756174696f6e2068617320676f7474656e206265747465722e2053756963696465206d617920656e6420796f7572207061696e2c206275742069742077696c6c206361757365206f746865727320746f20687572742e20576974682074686520746563686e6f6c6f6779207765206861766520746f6461792c206974206973207665727920646966666963756c7420746f206d616b6520612073756963696465206c6f6f6b206c696b6520616e206163636964656e742c20736f2070656f706c652077686f206c6f766520796f7520776f756c6420616c77617973207175657374696f6e2077686174207468657920636f756c64206861766520646f6e6520666f7220796f752e5c6e5c6e7061737361676520333a362e20476574206120667269656e6420746f2068656c7020796f752e20486176696e672069646561732028657370656369616c6c79206f6e657320746865792068617665206265656e20656e7465727461696e696e6720617768696c65292c206120706c616e2c20616e6420746865206d65616e7320746f20636f6d6d6974207375696369646520636f6e737469747574652061207665727920736572696f75732c20696d6d6564696174652064616e6765722c20616e6420796f752073686f756c6420636f6e7461637420706f6c69636520696d6d6564696174656c792e20496620796f75277265206f6e207468652070686f6e652c20697427732062657374206e6f7420746f206c6574207468697320706572736f6e206b6e6f7720746861742773207768617420796f7527726520646f696e672074686f7567682e20496620796f757220667269656e642074656c6c7320796f752074686174207368652f686520697320676f696e6720746f20636f6d6d697420737569636964652c206765742068656c7020696d6d6564696174656c792c206576656e20696620746865792074656c6c20796f7520746f206b656570206974207365637265742e2032202049742069732062657474657220746f20616e676572206120667269656e64207468616e206c6f7365207468652061637475616c2068756d616e206265696e672e5c6e5c6e222c227175657374696f6e223a22686f7720746f2073746f70206120706572736f6e2066726f6d20636f6d6d6974696e672073756963696465227d",
+  "source_cluster_id": "sha256:ed24a1bdbf284ae5a2311a7abfcf2d2dfbbed16765f53132fd340fb58d66383c",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:8dc768b3d3e3e099714930f2ea765f59b486110326efc8e5e0f8de39b89bb9f0"
+}

@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c2068657265277320686f7720746f2064657465726d696e652061646d696e6973747261746f7273206f6e2057696e646f77732031303a0a0a312e20456e61626c6520746865206275696c742d696e2061646d696e6973747261746f72206163636f756e743a0a092a204f70656e20656c65766174656420436f6d6d616e642050726f6d7074202850726573732057696e646f7773206b6579202b20522c20747970652022636d64222c20616e64207072657373204374726c202b205368696674202b20456e746572292e0a092a205479706520226e657420757365722061646d696e6973747261746f72202f656e61626c652220616e6420707265737320456e7465722e0a092a20556e636865636b20746865206f7074696f6e206c6162656c656420224163636f756e742069732064697361626c65642220696e207468652050726f70657274696573206469616c6f672e0a092a20436c69636b204170706c7920616e6420636c6f736520746865204c6f63616c20557365727320616e642047726f7570732077696e646f772e0a322e2055736520616e6f746865722061646d696e206163636f756e743a0a092a204966207468657265277320616e6f746865722061646d696e206163636f756e74206f6e2074686520636f6d70757465722c2075736520697420746f206c6f6720696e2e0a092a2049662074686572652773206e6f206f746865722061646d696e206163636f756e742c20736b697020746f207573696e6720612057696e646f77732031302070617373776f72642066696e6465722e0a0a536f2c20746f2064657465726d696e652061646d696e6973747261746f7273206f6e2057696e646f77732031302c20796f752063616e2065697468657220656e61626c6520746865206275696c742d696e2061646d696e6973747261746f72206163636f756e74206f722075736520616e6f74686572206578697374696e672061646d696e206163636f756e742e",
+  "arm": "holistic",
+  "call_id": "sha256:9a06af630e61c068a3106dd90d9a8f97475b923d02cefb2b7acd4e24d89f11be:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.1133208189858124,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 670,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Enable the built-in administrator account in Windows 10. Step 1: Open elevated Command Prompt (Command Prompt with admin rights). To open Command Prompt as administrator, you need to type CMD in Start search box and then simultaneously press Ctrl + Shift + Enter keys.Be sure to simultaneously press all three keys.When you see the UAC prompt, click Yes button.tep 4: Now, double-click on the Administrator entry in the middle pane to open its properties dialog. Step 5: Under the General tab, uncheck the option labelled Account is disabled, and then click Apply button to enable the built-in admin account. That\u2019s it! Close the Local Users and Groups window.\\\\n\\\\npassage 2:Just walk through the following steps: 1  Step 1. Get access to the locked Windows 10 operating system with this admin account. 2  Step 2. 3  Step 3. Once Command screen opens, type in net user, username, new password, and then press Enter.ust walk through the following steps: 1  Step 1. Get access to the locked Windows 10 operating system with this admin account. 2  Step 2. 3  Step 3. Once Command screen opens, type in net user, username, new password, and then press Enter.\\\\n\\\\npassage 3:If you have another admin account in Windows 10, you can use this account to log on to your PC. You are allowed to recover Windows 10 password free from command prompt. But if you are the only user of your computer, skip to get Windows 10 password finder.f you have another admin account in Windows 10, you can use this account to log on to your PC. You are allowed to recover Windows 10 password free from command prompt. But if you are the only user of your computer, skip to get Windows 10 password finder.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to determine administrators on windows 10\\\"}\", \"answer\": \"Based on the given passages, here's how to determine administrators on Windows 10:\\n\\n1. Enable the built-in administrator account:\\n\\t* Open elevated Command Prompt (Press Windows key + R, type \\\"cmd\\\", and press Ctrl + Shift + Enter).\\n\\t* Type \\\"net user administrator /enable\\\" and press Enter.\\n\\t* Uncheck the option labeled \\\"Account is disabled\\\" in the Properties dialog.\\n\\t* Click Apply and close the Local Users and Groups window.\\n2. Use another admin account:\\n\\t* If there's another admin account on the computer, use it to log in.\\n\\t* If there's no other admin account, skip to using a Windows 10 password finder.\\n\\nSo, to determine administrators on Windows 10, you can either enable the built-in administrator account or use another existing admin account.\"}",
+  "prompt_sha256": "sha256:b27c7e38bc4ff9f7ac5955b9b389aa1ce24ae563217deb2cab7df18b2e81d9f5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189964,
+    "id": "chatcmpl-4eEVauEgJj9Rq7uMGNEqbzisjqTm2bEx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 322.467,
+      "predicted_n": 14,
+      "predicted_per_second": 43.41529520850196,
+      "predicted_per_token_ms": 23.03335714285714,
+      "prompt_ms": 668.218,
+      "prompt_n": 670,
+      "prompt_per_second": 1002.6667943695023,
+      "prompt_per_token_ms": 0.9973402985074626
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 670,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 684
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Enable the built-in administrator account in Windows 10. Step 1: Open elevated Command Prompt (Command Prompt with admin rights). To open Command Prompt as administrator, you need to type CMD in Start search box and then simultaneously press Ctrl + Shift + Enter keys.Be sure to simultaneously press all three keys.When you see the UAC prompt, click Yes button.tep 4: Now, double-click on the Administrator entry in the middle pane to open its properties dialog. Step 5: Under the General tab, uncheck the option labelled Account is disabled, and then click Apply button to enable the built-in admin account. That\u2019s it! Close the Local Users and Groups window.\\\\n\\\\npassage 2:Just walk through the following steps: 1  Step 1. Get access to the locked Windows 10 operating system with this admin account. 2  Step 2. 3  Step 3. Once Command screen opens, type in net user, username, new password, and then press Enter.ust walk through the following steps: 1  Step 1. Get access to the locked Windows 10 operating system with this admin account. 2  Step 2. 3  Step 3. Once Command screen opens, type in net user, username, new password, and then press Enter.\\\\n\\\\npassage 3:If you have another admin account in Windows 10, you can use this account to log on to your PC. You are allowed to recover Windows 10 password free from command prompt. But if you are the only user of your computer, skip to get Windows 10 password finder.f you have another admin account in Windows 10, you can use this account to log on to your PC. You are allowed to recover Windows 10 password free from command prompt. But if you are the only user of your computer, skip to get Windows 10 password finder.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to determine administrators on windows 10\\\"}\", \"answer\": \"Based on the given passages, here's how to determine administrators on Windows 10:\\n\\n1. Enable the built-in administrator account:\\n\\t* Open elevated Command Prompt (Press Windows key + R, type \\\"cmd\\\", and press Ctrl + Shift + Enter).\\n\\t* Type \\\"net user administrator /enable\\\" and press Enter.\\n\\t* Uncheck the option labeled \\\"Account is disabled\\\" in the Properties dialog.\\n\\t* Click Apply and close the Local Users and Groups window.\\n2. Use another admin account:\\n\\t* If there's another admin account on the computer, use it to log in.\\n\\t* If there's no other admin account, skip to using a Windows 10 password finder.\\n\\nSo, to determine administrators on Windows 10, you can either enable the built-in administrator account or use another existing admin account.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 97,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a456e61626c6520746865206275696c742d696e2061646d696e6973747261746f72206163636f756e7420696e2057696e646f77732031302e205374657020313a204f70656e20656c65766174656420436f6d6d616e642050726f6d70742028436f6d6d616e642050726f6d707420776974682061646d696e20726967687473292e20546f206f70656e20436f6d6d616e642050726f6d70742061732061646d696e6973747261746f722c20796f75206e65656420746f207479706520434d4420696e2053746172742073656172636820626f7820616e64207468656e2073696d756c74616e656f75736c79207072657373204374726c202b205368696674202b20456e746572206b6579732e4265207375726520746f2073696d756c74616e656f75736c7920707265737320616c6c207468726565206b6579732e5768656e20796f752073656520746865205541432070726f6d70742c20636c69636b2059657320627574746f6e2e74657020343a204e6f772c20646f75626c652d636c69636b206f6e207468652041646d696e6973747261746f7220656e74727920696e20746865206d6964646c652070616e6520746f206f70656e206974732070726f70657274696573206469616c6f672e205374657020353a20556e646572207468652047656e6572616c207461622c20756e636865636b20746865206f7074696f6e206c6162656c6c6564204163636f756e742069732064697361626c65642c20616e64207468656e20636c69636b204170706c7920627574746f6e20746f20656e61626c6520746865206275696c742d696e2061646d696e206163636f756e742e2054686174e28099732069742120436c6f736520746865204c6f63616c20557365727320616e642047726f7570732077696e646f772e5c6e5c6e7061737361676520323a4a7573742077616c6b207468726f7567682074686520666f6c6c6f77696e672073746570733a203120205374657020312e204765742061636365737320746f20746865206c6f636b65642057696e646f7773203130206f7065726174696e672073797374656d207769746820746869732061646d696e206163636f756e742e203220205374657020322e203320205374657020332e204f6e636520436f6d6d616e642073637265656e206f70656e732c207479706520696e206e657420757365722c20757365726e616d652c206e65772070617373776f72642c20616e64207468656e20707265737320456e7465722e7573742077616c6b207468726f7567682074686520666f6c6c6f77696e672073746570733a203120205374657020312e204765742061636365737320746f20746865206c6f636b65642057696e646f7773203130206f7065726174696e672073797374656d207769746820746869732061646d696e206163636f756e742e203220205374657020322e203320205374657020332e204f6e636520436f6d6d616e642073637265656e206f70656e732c207479706520696e206e657420757365722c20757365726e616d652c206e65772070617373776f72642c20616e64207468656e20707265737320456e7465722e5c6e5c6e7061737361676520333a496620796f75206861766520616e6f746865722061646d696e206163636f756e7420696e2057696e646f77732031302c20796f752063616e207573652074686973206163636f756e7420746f206c6f67206f6e20746f20796f75722050432e20596f752061726520616c6c6f77656420746f207265636f7665722057696e646f77732031302070617373776f726420667265652066726f6d20636f6d6d616e642070726f6d70742e2042757420696620796f752061726520746865206f6e6c792075736572206f6620796f757220636f6d70757465722c20736b697020746f206765742057696e646f77732031302070617373776f72642066696e6465722e6620796f75206861766520616e6f746865722061646d696e206163636f756e7420696e2057696e646f77732031302c20796f752063616e207573652074686973206163636f756e7420746f206c6f67206f6e20746f20796f75722050432e20596f752061726520616c6c6f77656420746f207265636f7665722057696e646f77732031302070617373776f726420667265652066726f6d20636f6d6d616e642070726f6d70742e2042757420696620796f752061726520746865206f6e6c792075736572206f6620796f757220636f6d70757465722c20736b697020746f206765742057696e646f77732031302070617373776f72642066696e6465722e5c6e5c6e222c227175657374696f6e223a22686f7720746f2064657465726d696e652061646d696e6973747261746f7273206f6e2077696e646f7773203130227d",
+  "source_cluster_id": "sha256:8e80e1f8c166edaf01d2cb7b9d25f613b9fd07d75c62a21fb448dd5ee5e99069",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 1\n}",
+  "unit_id": "sha256:9a06af630e61c068a3106dd90d9a8f97475b923d02cefb2b7acd4e24d89f11be"
+}

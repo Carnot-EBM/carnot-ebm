@@ -93271,3 +93271,25 @@ Implementation: `scripts/experiments/experiment_8154_v705_evidence_energy_fit.py
 uses the qualified publication and subprocess supervisor modules. Eleven owned
 tests and45 qualified component/E2E tests passed on20261005. Primitive inputs,
 heads, decisions, validation logs and coverage remain below the Exp8154 raw path.
+
+## REQ-REPORT-8155: Reserved predictions sealed before evaluator access
+
+Exp8155 SHALL authenticate Exp8154 heads and Exp8151 source custody before
+loading Qwen. Publish through primary_publication after frozen scoped commands,
+100 percent added statement coverage, Ruff, strict mypy, explicit spec checks,
+private E2E-016 and terminal validators exit normally. Run the full Python suite
+once as separate repository health. External blocks name exact failed operands;
+owned failures disqualify and zero evaluation_capture_ready_score. Preserve
+history. The conductor owns ops/status, changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8155: Private CLI and cold replay
+
+Execute script paths outside checkout without PYTHONPATH. Private success,
+block, tamper and replay SHALL reject changed prompts, head bytes, role overlap,
+opened evaluator targets, primitives, code, logs and headline reductions.
+Fixtures are circular_positive; exposed development earns zero generalization.
+
+Implementation: `python/carnot/verify/reserved_evidence_capture_8155.py` and its
+thin script-path CLI bind original role masks, frozen heads, primitive calls,
+sealed probabilities/actions and normal validation receipts. Private tests use
+temporary paths. Operational reconciliation remains assigned to the conductor.

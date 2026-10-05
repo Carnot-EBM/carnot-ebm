@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c2074686520646966666572656e6365206265747765656e2064616e647275666620616e64206c69636520697320746861742064616e6472756666206973206120636f6e646974696f6e206f6620746865207363616c70206361757365642062792074686520657863657373697665207368656464696e67206f66206465616420736b696e2063656c6c732c20726573756c74696e6720696e20666c616b696e6720616e64206120736c696768746c79206974636879207363616c702e204f6e20746865206f746865722068616e642c206c6963652061726520696e66656374696f757320706172617369746573207468617420696e6665737420746865206861697220616e64207363616c702c2063617573696e6720616e206974636879207363616c7020616e64206f63636173696f6e616c6c7920616e20616c6c6572676963207265616374696f6e2e204c6963652061726520736d616c6c2c2062726f776e20706172617369746573207769746820736978206c6567732c207768696c652064616e647275666620697320612073656c662d636f6e7461696e6564207363616c7020636f6e646974696f6e2e",
+  "arm": "holistic",
+  "call_id": "sha256:17fb4a38fa7c65b08a3388aa5b3ab33ee5d00c2d7c07bb100f07de577f7864e6:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.9184395370539278,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 491,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:What is the difference between Dandruff and Nits? \u2022 Nits are eggs of lice laid by female lice while dandruff is a condition of the scalp. \u2022 Nits are found on the shafts of hair and are a result of sharing of head accessories and garments. They are also caught with head to head contact.\\\\n\\\\npassage 2:Knowing the difference between lice and dandruff can help heal your scalp condition properly. Lice are infectious parasites and dandruff is a self-contained scalp condition. Dandruff comes from the head, and flakes off. Dandruff is due to the excessive shedding of dead skin cells from the scalp, and lice are wingless insects (small bugs) that infest the hair and scalp. The methods of prevention and treatment also vary between lice and dandruff.\\\\n\\\\npassage 3:Head Lice vs. Dandruff: How to Tell the Difference. Head lice and dandruff are two completely different things, yet people often mistake one for the other. Head lice are parasites that feed on human blood, and are spread through contact with others. Their bites cause an itchy scalp and occasionally an allergic reaction. Dandruff is a skin condition on the scalp that causes flaking of the skin and a slightly itchy scalp. Here's how to tell the difference between the two. Head lice are small, brown parasites with six legs about the size of a sesame seed. They have elongated bodies, with small, oval shaped heads.\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between dandruff and lice\\\"}\", \"answer\": \"Based on the given passages, the difference between dandruff and lice is that dandruff is a condition of the scalp caused by the excessive shedding of dead skin cells, resulting in flaking and a slightly itchy scalp. On the other hand, lice are infectious parasites that infest the hair and scalp, causing an itchy scalp and occasionally an allergic reaction. Lice are small, brown parasites with six legs, while dandruff is a self-contained scalp condition.\"}",
+  "prompt_sha256": "sha256:3b582523ff64c5db104d85d56bc181b2777997e51ad3a8495019ec74f820ccd2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189777,
+    "id": "chatcmpl-p6Ma1zlMlQPqtoosueT2aMxMsS6B0H0F",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.481,
+      "predicted_n": 14,
+      "predicted_per_second": 43.548452319110616,
+      "predicted_per_token_ms": 22.96292857142857,
+      "prompt_ms": 469.502,
+      "prompt_n": 491,
+      "prompt_per_second": 1045.7889423261242,
+      "prompt_per_token_ms": 0.9562158859470469
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 491,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 505
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:What is the difference between Dandruff and Nits? \u2022 Nits are eggs of lice laid by female lice while dandruff is a condition of the scalp. \u2022 Nits are found on the shafts of hair and are a result of sharing of head accessories and garments. They are also caught with head to head contact.\\\\n\\\\npassage 2:Knowing the difference between lice and dandruff can help heal your scalp condition properly. Lice are infectious parasites and dandruff is a self-contained scalp condition. Dandruff comes from the head, and flakes off. Dandruff is due to the excessive shedding of dead skin cells from the scalp, and lice are wingless insects (small bugs) that infest the hair and scalp. The methods of prevention and treatment also vary between lice and dandruff.\\\\n\\\\npassage 3:Head Lice vs. Dandruff: How to Tell the Difference. Head lice and dandruff are two completely different things, yet people often mistake one for the other. Head lice are parasites that feed on human blood, and are spread through contact with others. Their bites cause an itchy scalp and occasionally an allergic reaction. Dandruff is a skin condition on the scalp that causes flaking of the skin and a slightly itchy scalp. Here's how to tell the difference between the two. Head lice are small, brown parasites with six legs about the size of a sesame seed. They have elongated bodies, with small, oval shaped heads.\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between dandruff and lice\\\"}\", \"answer\": \"Based on the given passages, the difference between dandruff and lice is that dandruff is a condition of the scalp caused by the excessive shedding of dead skin cells, resulting in flaking and a slightly itchy scalp. On the other hand, lice are infectious parasites that infest the hair and scalp, causing an itchy scalp and occasionally an allergic reaction. Lice are small, brown parasites with six legs, while dandruff is a self-contained scalp condition.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 46,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a576861742069732074686520646966666572656e6365206265747765656e2044616e647275666620616e64204e6974733f20e280a2204e697473206172652065676773206f66206c696365206c6169642062792066656d616c65206c696365207768696c652064616e6472756666206973206120636f6e646974696f6e206f6620746865207363616c702e20e280a2204e6974732061726520666f756e64206f6e2074686520736861667473206f66206861697220616e6420617265206120726573756c74206f662073686172696e67206f662068656164206163636573736f7269657320616e64206761726d656e74732e20546865792061726520616c736f206361756768742077697468206865616420746f206865616420636f6e746163742e5c6e5c6e7061737361676520323a4b6e6f77696e672074686520646966666572656e6365206265747765656e206c69636520616e642064616e64727566662063616e2068656c70206865616c20796f7572207363616c7020636f6e646974696f6e2070726f7065726c792e204c6963652061726520696e66656374696f75732070617261736974657320616e642064616e647275666620697320612073656c662d636f6e7461696e6564207363616c7020636f6e646974696f6e2e2044616e647275666620636f6d65732066726f6d2074686520686561642c20616e6420666c616b6573206f66662e2044616e64727566662069732064756520746f2074686520657863657373697665207368656464696e67206f66206465616420736b696e2063656c6c732066726f6d20746865207363616c702c20616e64206c696365206172652077696e676c65737320696e73656374732028736d616c6c206275677329207468617420696e6665737420746865206861697220616e64207363616c702e20546865206d6574686f6473206f662070726576656e74696f6e20616e642074726561746d656e7420616c736f2076617279206265747765656e206c69636520616e642064616e64727566662e5c6e5c6e7061737361676520333a48656164204c6963652076732e2044616e64727566663a20486f7720746f2054656c6c2074686520446966666572656e63652e2048656164206c69636520616e642064616e6472756666206172652074776f20636f6d706c6574656c7920646966666572656e74207468696e67732c207965742070656f706c65206f6674656e206d697374616b65206f6e6520666f7220746865206f746865722e2048656164206c696365206172652070617261736974657320746861742066656564206f6e2068756d616e20626c6f6f642c20616e642061726520737072656164207468726f75676820636f6e746163742077697468206f74686572732e20546865697220626974657320636175736520616e206974636879207363616c7020616e64206f63636173696f6e616c6c7920616e20616c6c6572676963207265616374696f6e2e2044616e6472756666206973206120736b696e20636f6e646974696f6e206f6e20746865207363616c7020746861742063617573657320666c616b696e67206f662074686520736b696e20616e64206120736c696768746c79206974636879207363616c702e2048657265277320686f7720746f2074656c6c2074686520646966666572656e6365206265747765656e207468652074776f2e2048656164206c6963652061726520736d616c6c2c2062726f776e20706172617369746573207769746820736978206c6567732061626f7574207468652073697a65206f66206120736573616d6520736565642e2054686579206861766520656c6f6e676174656420626f646965732c207769746820736d616c6c2c206f76616c207368617065642068656164732e5c6e5c6e222c227175657374696f6e223a22646966666572656e6365206265747765656e2064616e647275666620616e64206c696365227d",
+  "source_cluster_id": "sha256:f0e327282eb83d369c5939768f61a1c601886a69e79ef27c8d9eb03b5d37468f",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:17fb4a38fa7c65b08a3388aa5b3ab33ee5d00c2d7c07bb100f07de577f7864e6"
+}

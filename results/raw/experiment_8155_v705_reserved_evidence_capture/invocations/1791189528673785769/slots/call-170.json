@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c206865726520617265207468652065666665637473206f6620747970686f69642066657665723a0a0a312e20486967682066657665722028757020746f2031303420646567726565732046290a322e205765616b6e6573730a332e2048656164616368650a342e20536f7265207468726f61740a352e2053746f6d616368207061696e0a362e204469617272686561206f7220636f6e737469706174696f6e0a372e205261736820286f6e20746865207472756e6b2074686174207479706963616c6c79207265736f6c7665732077697468696e20352064617973290a382e204c6f7373206f662061707065746974650a392e204d7573636c652061636865730a31302e205365766572652068656164616368650a31312e20436f6e667573696f6e206f7220616769746174696f6e0a0a4e6f7465207468617420747970686f69642066657665722063616e20626520666174616c206966206c65667420756e747265617465642c20616e6420697420697320696d706f7274616e7420746f207365656b20656d657267656e6379206d65646963616c2068656c7020696620796f7520657870657269656e636520616e79206f6620746865207369676e73206f6620616e20616c6c6572676963207265616374696f6e2c20737563682061732068697665732c20646966666963756c747920627265617468696e672c206f72207377656c6c696e67206f662074686520666163652c206c6970732c20746f6e6775652c206f72207468726f61742e",
+  "arm": "holistic",
+  "call_id": "sha256:2c56a105869d833ee0a136187d822aafc80ff9819d6559c527dacfcebb07d8d6:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.1369001789717004,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 641,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Typhoid can be fatal if left untreated. Typhoid can cause high fever, muscle aches, severe headache, weakness, confusion or agitation, loss of appetite, stomach pain, diarrhea or constipation, and rose-colored spots on the skin.et emergency medical help if you have any of these signs of an allergic reaction: hives; difficulty breathing; swelling of your face, lips, tongue, or throat. Less serious side effects include: 1  low fever; 2  headache; 3  nausea, vomiting, diarrhea, stomach pain; or. 4  mild skin rash.\\\\n\\\\npassage 2:Save. Typhoid fever is caused by a resistant bacterium called Salmonella typhi. Because the bacteria is primarily passed through fecal matter, typhoid fever is more common in developing nations with poor water treatment and open sewage.ome of the earliest indications that you may have typhoid fever are if you experience a high fever (up to 104 degrees F) along with weakness, headache, sore throat, stomach pain and diarrhea or constipation. A rash may appear on the trunk that typically resolves within 5 days. Creatas Images/Creatas/Getty Images.\\\\n\\\\npassage 3:Typhoid fever (also known as Enteric fever) is caused by a strain of Salmonella bacteria (Salmonellae typhi) when they are spread through the body by the white blood cells t \u2026 hat attempted to destroy them.   Salmonella are ingested from contaminated food or water and enter the body through the intestinal tract.elative bradycardia (less tachycardia than expected for the degree of fever) may occur in up to 50% of patients but is not a reliable diagnostic indicator. Faintly erythematous maculopapules or rose spots occur on the trunk and may become hemorrhagic.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are the effects of typhoid fever\\\"}\", \"answer\": \"Based on the given passages, here are the effects of typhoid fever:\\n\\n1. High fever (up to 104 degrees F)\\n2. Weakness\\n3. Headache\\n4. Sore throat\\n5. Stomach pain\\n6. Diarrhea or constipation\\n7. Rash (on the trunk that typically resolves within 5 days)\\n8. Loss of appetite\\n9. Muscle aches\\n10. Severe headache\\n11. Confusion or agitation\\n\\nNote that typhoid fever can be fatal if left untreated, and it is important to seek emergency medical help if you experience any of the signs of an allergic reaction, such as hives, difficulty breathing, or swelling of the face, lips, tongue, or throat.\"}",
+  "prompt_sha256": "sha256:79bc8b2e47fdd02396456eda303be12fdc03cf77abb7d94eed0544b995196084",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189920,
+    "id": "chatcmpl-PxPVJUVGTsi61GQAU9StWjUvl8zcUrpt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 370.759,
+      "predicted_n": 16,
+      "predicted_per_second": 43.154717754660034,
+      "predicted_per_token_ms": 23.1724375,
+      "prompt_ms": 638.348,
+      "prompt_n": 641,
+      "prompt_per_second": 1004.1544737353294,
+      "prompt_per_token_ms": 0.9958627145085803
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 641,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 657
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Typhoid can be fatal if left untreated. Typhoid can cause high fever, muscle aches, severe headache, weakness, confusion or agitation, loss of appetite, stomach pain, diarrhea or constipation, and rose-colored spots on the skin.et emergency medical help if you have any of these signs of an allergic reaction: hives; difficulty breathing; swelling of your face, lips, tongue, or throat. Less serious side effects include: 1  low fever; 2  headache; 3  nausea, vomiting, diarrhea, stomach pain; or. 4  mild skin rash.\\\\n\\\\npassage 2:Save. Typhoid fever is caused by a resistant bacterium called Salmonella typhi. Because the bacteria is primarily passed through fecal matter, typhoid fever is more common in developing nations with poor water treatment and open sewage.ome of the earliest indications that you may have typhoid fever are if you experience a high fever (up to 104 degrees F) along with weakness, headache, sore throat, stomach pain and diarrhea or constipation. A rash may appear on the trunk that typically resolves within 5 days. Creatas Images/Creatas/Getty Images.\\\\n\\\\npassage 3:Typhoid fever (also known as Enteric fever) is caused by a strain of Salmonella bacteria (Salmonellae typhi) when they are spread through the body by the white blood cells t \u2026 hat attempted to destroy them.   Salmonella are ingested from contaminated food or water and enter the body through the intestinal tract.elative bradycardia (less tachycardia than expected for the degree of fever) may occur in up to 50% of patients but is not a reliable diagnostic indicator. Faintly erythematous maculopapules or rose spots occur on the trunk and may become hemorrhagic.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are the effects of typhoid fever\\\"}\", \"answer\": \"Based on the given passages, here are the effects of typhoid fever:\\n\\n1. High fever (up to 104 degrees F)\\n2. Weakness\\n3. Headache\\n4. Sore throat\\n5. Stomach pain\\n6. Diarrhea or constipation\\n7. Rash (on the trunk that typically resolves within 5 days)\\n8. Loss of appetite\\n9. Muscle aches\\n10. Severe headache\\n11. Confusion or agitation\\n\\nNote that typhoid fever can be fatal if left untreated, and it is important to seek emergency medical help if you experience any of the signs of an allergic reaction, such as hives, difficulty breathing, or swelling of the face, lips, tongue, or throat.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 86,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a547970686f69642063616e20626520666174616c206966206c65667420756e747265617465642e20547970686f69642063616e20636175736520686967682066657665722c206d7573636c652061636865732c207365766572652068656164616368652c207765616b6e6573732c20636f6e667573696f6e206f7220616769746174696f6e2c206c6f7373206f662061707065746974652c2073746f6d616368207061696e2c206469617272686561206f7220636f6e737469706174696f6e2c20616e6420726f73652d636f6c6f7265642073706f7473206f6e2074686520736b696e2e657420656d657267656e6379206d65646963616c2068656c7020696620796f75206861766520616e79206f66207468657365207369676e73206f6620616e20616c6c6572676963207265616374696f6e3a2068697665733b20646966666963756c747920627265617468696e673b207377656c6c696e67206f6620796f757220666163652c206c6970732c20746f6e6775652c206f72207468726f61742e204c65737320736572696f75732073696465206566666563747320696e636c7564653a203120206c6f772066657665723b2032202068656164616368653b203320206e61757365612c20766f6d6974696e672c2064696172726865612c2073746f6d616368207061696e3b206f722e203420206d696c6420736b696e20726173682e5c6e5c6e7061737361676520323a536176652e20547970686f696420666576657220697320636175736564206279206120726573697374616e742062616374657269756d2063616c6c65642053616c6d6f6e656c6c612074797068692e204265636175736520746865206261637465726961206973207072696d6172696c7920706173736564207468726f75676820666563616c206d61747465722c20747970686f6964206665766572206973206d6f726520636f6d6d6f6e20696e20646576656c6f70696e67206e6174696f6e73207769746820706f6f722077617465722074726561746d656e7420616e64206f70656e207365776167652e6f6d65206f6620746865206561726c6965737420696e6469636174696f6e73207468617420796f75206d6179206861766520747970686f69642066657665722061726520696620796f7520657870657269656e6365206120686967682066657665722028757020746f20313034206465677265657320462920616c6f6e672077697468207765616b6e6573732c2068656164616368652c20736f7265207468726f61742c2073746f6d616368207061696e20616e64206469617272686561206f7220636f6e737469706174696f6e2e20412072617368206d617920617070656172206f6e20746865207472756e6b2074686174207479706963616c6c79207265736f6c7665732077697468696e203520646179732e204372656174617320496d616765732f437265617461732f476574747920496d616765732e5c6e5c6e7061737361676520333a547970686f69642066657665722028616c736f206b6e6f776e20617320456e7465726963206665766572292069732063617573656420627920612073747261696e206f662053616c6d6f6e656c6c61206261637465726961202853616c6d6f6e656c6c616520747970686929207768656e20746865792061726520737072656164207468726f7567682074686520626f64792062792074686520776869746520626c6f6f642063656c6c73207420e280a62068617420617474656d7074656420746f2064657374726f79207468656d2e20202053616c6d6f6e656c6c612061726520696e6765737465642066726f6d20636f6e74616d696e6174656420666f6f64206f7220776174657220616e6420656e7465722074686520626f6479207468726f7567682074686520696e74657374696e616c2074726163742e656c617469766520627261647963617264696120286c657373207461636879636172646961207468616e20657870656374656420666f722074686520646567726565206f6620666576657229206d6179206f6363757220696e20757020746f20353025206f662070617469656e747320627574206973206e6f7420612072656c6961626c6520646961676e6f7374696320696e64696361746f722e204661696e746c79206572797468656d61746f7573206d6163756c6f706170756c6573206f7220726f73652073706f7473206f63637572206f6e20746865207472756e6b20616e64206d6179206265636f6d652068656d6f727268616769632e5c6e5c6e222c227175657374696f6e223a227768617420617265207468652065666665637473206f6620747970686f6964206665766572227d",
+  "source_cluster_id": "sha256:e36bfa87bde3e25ccdd765727208aab43d573296eb8bb8d4fca24b629489c3b6",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.0\n}",
+  "unit_id": "sha256:2c56a105869d833ee0a136187d822aafc80ff9819d6559c527dacfcebb07d8d6"
+}

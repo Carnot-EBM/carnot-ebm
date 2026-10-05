@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4172697a6f6e612052657075626c6963616e20426c616b65204d6173746572732068617320616e6e6f756e636564206869732063616d706169676e20666f7220436f6e677265737320696e20323032342e2048652077696c6c2062652072756e6e696e6720666f72204172697a6f6e6127732038746820436f6e6772657373696f6e616c2044697374726963742c207768696368206973206265696e67206c656674206f70656e2062792066656c6c6f772052657075626c6963616e20446562626965204c65736b6f2e204d6173746572732c2077686f206c6f737420696e207468652032303232207261636520666f7220552e532e2053656e6174652c2073746174656420746861742068652077616e747320746f20666967687420666f72204172697a6f6e6127732066616d696c69657320616e64206164647265737320697373756573207375636820617320696e666c6174696f6e2c20626f726465722073656375726974792c20616e64207761746572207265736f75726365732e2048652077696c6c206661636520636f6d7065746974696f6e2066726f6d2066656c6c6f772063616e646964617465204162652048616d6164656820696e20746865207072696d61727920726163652c206275742074686520646973747269637420697320657870656374656420746f2072656d61696e2052657075626c6963616e2e",
+  "arm": "holistic",
+  "call_id": "sha256:f8da1af4fc706cb3cc93c9e47040400b85615ce7d8a35368e2150a985f543b05:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.0581464250572026,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 593,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Arizona Republican Announces 2024 Campaign\\nArizona Republican Blake Masters has announced that he will again be running for office in 2024, following up his 2022 campaign for U.S. Senate in which he lost to Democrat Mark Kelly.\\nMasters announced this week that he would be running for Arizona's 8th Congressional District, a seat being left open by fellow Republican Debbie Lesko, who says she will not be seeking reelection at the end of her current term.\\nBlake Masters Launches New Campaign\\nRepublican Blake Masters has announced this week that he is launching his campaign for Congress in 2024, looking to take over the seat being vacated by fellow Republican Debbie Lesko, who stated earlier this month that she would not be seeking reelection.\\n\u201cI\u2019m running for Congress, to fight for Arizona\u2019s 8th,\u201d Masters said on X, the platform formerly known as Twitter. \u201cBiden has failed. We need Trump back. We need to stop inflation, Build the Wall, avoid WW3, and secure Arizona\u2019s water future. We need to fight for our families.\u201d\\nMasters, who lost to Democrat Mark Kelly in the 2022 midterm race for U.S. Senate, had also been rumored to be running for Senator Kyrsten Sinema's Senate seat in 2024, but those rumors quickly dissipated after popular Republican Kari Lake announced her candidacy.\\nFor Lesko's seat, Masters will be faced with overcoming fellow 2022 candidate Abe Hamadeh, who also recently announced his campaign for the position. The two will likely have a close primary race, but the seat is expected to go to the Republican nominee in a district that has remained staunchly red in recent years.\\nAt DailyNewsNow we bring you the latest news from the West Coast and around the country, covering a wide range of topics from politics and campaign news to entertainment and local interest stories. Please feel free to share the story with friends and join the conversation in the comments below!\", \"answer\": \"Arizona Republican Blake Masters has announced his campaign for Congress in 2024. He will be running for Arizona's 8th Congressional District, which is being left open by fellow Republican Debbie Lesko. Masters, who lost in the 2022 race for U.S. Senate, stated that he wants to fight for Arizona's families and address issues such as inflation, border security, and water resources. He will face competition from fellow candidate Abe Hamadeh in the primary race, but the district is expected to remain Republican.\"}",
+  "prompt_sha256": "sha256:eb3c9d9f1f0f34abc99a8a2f172d1596aeebf1f0b2f02f134b70e2390fe81538",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189699,
+    "id": "chatcmpl-1FzqMsO6Napqd9fhndprz3dmGMekuzVy",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.056,
+      "predicted_n": 14,
+      "predicted_per_second": 43.60609987042759,
+      "predicted_per_token_ms": 22.93257142857143,
+      "prompt_ms": 600.835,
+      "prompt_n": 593,
+      "prompt_per_second": 986.9598142584902,
+      "prompt_per_token_ms": 1.013212478920742
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 593,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 607
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Arizona Republican Announces 2024 Campaign\\nArizona Republican Blake Masters has announced that he will again be running for office in 2024, following up his 2022 campaign for U.S. Senate in which he lost to Democrat Mark Kelly.\\nMasters announced this week that he would be running for Arizona's 8th Congressional District, a seat being left open by fellow Republican Debbie Lesko, who says she will not be seeking reelection at the end of her current term.\\nBlake Masters Launches New Campaign\\nRepublican Blake Masters has announced this week that he is launching his campaign for Congress in 2024, looking to take over the seat being vacated by fellow Republican Debbie Lesko, who stated earlier this month that she would not be seeking reelection.\\n\u201cI\u2019m running for Congress, to fight for Arizona\u2019s 8th,\u201d Masters said on X, the platform formerly known as Twitter. \u201cBiden has failed. We need Trump back. We need to stop inflation, Build the Wall, avoid WW3, and secure Arizona\u2019s water future. We need to fight for our families.\u201d\\nMasters, who lost to Democrat Mark Kelly in the 2022 midterm race for U.S. Senate, had also been rumored to be running for Senator Kyrsten Sinema's Senate seat in 2024, but those rumors quickly dissipated after popular Republican Kari Lake announced her candidacy.\\nFor Lesko's seat, Masters will be faced with overcoming fellow 2022 candidate Abe Hamadeh, who also recently announced his campaign for the position. The two will likely have a close primary race, but the seat is expected to go to the Republican nominee in a district that has remained staunchly red in recent years.\\nAt DailyNewsNow we bring you the latest news from the West Coast and around the country, covering a wide range of topics from politics and campaign news to entertainment and local interest stories. Please feel free to share the story with friends and join the conversation in the comments below!\", \"answer\": \"Arizona Republican Blake Masters has announced his campaign for Congress in 2024. He will be running for Arizona's 8th Congressional District, which is being left open by fellow Republican Debbie Lesko. Masters, who lost in the 2022 race for U.S. Senate, stated that he wants to fight for Arizona's families and address issues such as inflation, border security, and water resources. He will face competition from fellow candidate Abe Hamadeh in the primary race, but the district is expected to remain Republican.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 24,
+  "source_bytes": "4172697a6f6e612052657075626c6963616e20416e6e6f756e63657320323032342043616d706169676e0a4172697a6f6e612052657075626c6963616e20426c616b65204d6173746572732068617320616e6e6f756e63656420746861742068652077696c6c20616761696e2062652072756e6e696e6720666f72206f666669636520696e20323032342c20666f6c6c6f77696e672075702068697320323032322063616d706169676e20666f7220552e532e2053656e61746520696e207768696368206865206c6f737420746f2044656d6f63726174204d61726b204b656c6c792e0a4d61737465727320616e6e6f756e6365642074686973207765656b207468617420686520776f756c642062652072756e6e696e6720666f72204172697a6f6e6127732038746820436f6e6772657373696f6e616c2044697374726963742c20612073656174206265696e67206c656674206f70656e2062792066656c6c6f772052657075626c6963616e20446562626965204c65736b6f2c2077686f2073617973207368652077696c6c206e6f74206265207365656b696e67207265656c656374696f6e2061742074686520656e64206f66206865722063757272656e74207465726d2e0a426c616b65204d617374657273204c61756e63686573204e65772043616d706169676e0a52657075626c6963616e20426c616b65204d6173746572732068617320616e6e6f756e6365642074686973207765656b2074686174206865206973206c61756e6368696e67206869732063616d706169676e20666f7220436f6e677265737320696e20323032342c206c6f6f6b696e6720746f2074616b65206f766572207468652073656174206265696e6720766163617465642062792066656c6c6f772052657075626c6963616e20446562626965204c65736b6f2c2077686f20737461746564206561726c6965722074686973206d6f6e746820746861742073686520776f756c64206e6f74206265207365656b696e67207265656c656374696f6e2e0ae2809c49e280996d2072756e6e696e6720666f7220436f6e67726573732c20746f20666967687420666f72204172697a6f6e61e2809973203874682ce2809d204d6173746572732073616964206f6e20582c2074686520706c6174666f726d20666f726d65726c79206b6e6f776e20617320547769747465722e20e2809c426964656e20686173206661696c65642e205765206e656564205472756d70206261636b2e205765206e65656420746f2073746f7020696e666c6174696f6e2c204275696c64207468652057616c6c2c2061766f6964205757332c20616e6420736563757265204172697a6f6e61e2809973207761746572206675747572652e205765206e65656420746f20666967687420666f72206f75722066616d696c6965732ee2809d0a4d6173746572732c2077686f206c6f737420746f2044656d6f63726174204d61726b204b656c6c7920696e207468652032303232206d69647465726d207261636520666f7220552e532e2053656e6174652c2068616420616c736f206265656e2072756d6f72656420746f2062652072756e6e696e6720666f722053656e61746f72204b79727374656e2053696e656d6127732053656e617465207365617420696e20323032342c206275742074686f73652072756d6f727320717569636b6c79206469737369706174656420616674657220706f70756c61722052657075626c6963616e204b617269204c616b6520616e6e6f756e636564206865722063616e6469646163792e0a466f72204c65736b6f277320736561742c204d6173746572732077696c6c2062652066616365642077697468206f766572636f6d696e672066656c6c6f7720323032322063616e646964617465204162652048616d616465682c2077686f20616c736f20726563656e746c7920616e6e6f756e636564206869732063616d706169676e20666f722074686520706f736974696f6e2e205468652074776f2077696c6c206c696b656c792068617665206120636c6f7365207072696d61727920726163652c2062757420746865207365617420697320657870656374656420746f20676f20746f207468652052657075626c6963616e206e6f6d696e656520696e20612064697374726963742074686174206861732072656d61696e656420737461756e63686c792072656420696e20726563656e742079656172732e0a4174204461696c794e6577734e6f77207765206272696e6720796f7520746865206c6174657374206e6577732066726f6d20746865205765737420436f61737420616e642061726f756e642074686520636f756e7472792c20636f766572696e67206120776964652072616e6765206f6620746f706963732066726f6d20706f6c697469637320616e642063616d706169676e206e65777320746f20656e7465727461696e6d656e7420616e64206c6f63616c20696e7465726573742073746f726965732e20506c65617365206665656c206672656520746f207368617265207468652073746f7279207769746820667269656e647320616e64206a6f696e2074686520636f6e766572736174696f6e20696e2074686520636f6d6d656e74732062656c6f7721",
+  "source_cluster_id": "sha256:f987110171f0b4f54a8c1f6f79b438fefd33c02f37453625f5b16cc10cdd8786",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:f8da1af4fc706cb3cc93c9e47040400b85615ce7d8a35368e2150a985f543b05"
+}

@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "22546865204c6174652053686f772077697468204461766964204c65747465726d616e222068617320616e6e6f756e63656420736f6d65206f66207468652067756573747320666f72206869732066696e616c206d6f6e7468206f662062726f616463617374732e204e6f7461626c652067756573747320696e636c756465204f707261682057696e667265792c2047656f72676520436c6f6f6e65792c20486f7761726420537465726e2c20616e642042696c6c204d75727261792e20546865206c61737420657069736f64652077696c6c20616972206f6e204d617920323074682c20616e64205374657068656e20436f6c626572742077696c6c2074616b65206f76657220617320686f7374206f6e2053657074656d626572203874682e",
+  "arm": "holistic",
+  "call_id": "sha256:c4f0bff0df0b1a8127d10831482022adc2dc88f9f1c96ef7892ab38577e83c83:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.8642837930237874,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 404,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Oprah's in there. So's Bill Murray, George Clooney, Scarlett Johansson, Jerry Seinfeld, Howard Stern, Tina Fey, Michael Keaton and Ray Romano. On Tuesday, \\\"The Late Show with David Letterman\\\" announced some of the guests for the talk show host's final month of broadcasts. The last \\\"Late Show\\\" will air Wednesday, May 20. Among the notables are Oprah Winfrey, with whom Letterman has had an on-and-off faux feud for years; Clooney, who's starring in \\\"Tomorrowland,\\\" which will be released on May 22; and Stern, who's always an engaging Letterman guest. But longtime fans may be even more intrigued by the appearances of Keaton, an old acquaintance who once shared a stage with Letterman as players on Mary Tyler Moore's short-lived 1978 variety show, and Murray, who was the very first guest on Letterman's old NBC show, \\\"Late Night with David Letterman.\\\" Steve Martin, who's taken part in some of the \\\"Late Show's\\\" best bits, will also be dropping by. Letterman has been a late-night host for 33 years, close to 22 of them on CBS' \\\"Late Show.\\\" Stephen Colbert will take over the \\\"Late Show\\\" on September 8.\\n\", \"answer\": \"\\\"The Late Show with David Letterman\\\" has announced some of the guests for his final month of broadcasts. Notable guests include Oprah Winfrey, George Clooney, Howard Stern, and Bill Murray. The last episode will air on May 20th, and Stephen Colbert will take over as host on September 8th.\"}",
+  "prompt_sha256": "sha256:0675251500ea0fe00adf9079ff9314c3e7dfca59b7854914347fa48b5eaaa18c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189854,
+    "id": "chatcmpl-im5WhbPfatVoKVfhovLwaXKIEC2fC5lF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.435,
+      "predicted_n": 14,
+      "predicted_per_second": 43.554684461866316,
+      "predicted_per_token_ms": 22.959642857142857,
+      "prompt_ms": 425.639,
+      "prompt_n": 404,
+      "prompt_per_second": 949.1611435982135,
+      "prompt_per_token_ms": 1.0535618811881189
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 404,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 418
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Oprah's in there. So's Bill Murray, George Clooney, Scarlett Johansson, Jerry Seinfeld, Howard Stern, Tina Fey, Michael Keaton and Ray Romano. On Tuesday, \\\"The Late Show with David Letterman\\\" announced some of the guests for the talk show host's final month of broadcasts. The last \\\"Late Show\\\" will air Wednesday, May 20. Among the notables are Oprah Winfrey, with whom Letterman has had an on-and-off faux feud for years; Clooney, who's starring in \\\"Tomorrowland,\\\" which will be released on May 22; and Stern, who's always an engaging Letterman guest. But longtime fans may be even more intrigued by the appearances of Keaton, an old acquaintance who once shared a stage with Letterman as players on Mary Tyler Moore's short-lived 1978 variety show, and Murray, who was the very first guest on Letterman's old NBC show, \\\"Late Night with David Letterman.\\\" Steve Martin, who's taken part in some of the \\\"Late Show's\\\" best bits, will also be dropping by. Letterman has been a late-night host for 33 years, close to 22 of them on CBS' \\\"Late Show.\\\" Stephen Colbert will take over the \\\"Late Show\\\" on September 8.\\n\", \"answer\": \"\\\"The Late Show with David Letterman\\\" has announced some of the guests for his final month of broadcasts. Notable guests include Oprah Winfrey, George Clooney, Howard Stern, and Bill Murray. The last episode will air on May 20th, and Stephen Colbert will take over as host on September 8th.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 68,
+  "source_bytes": "4f70726168277320696e2074686572652e20536f27732042696c6c204d75727261792c2047656f72676520436c6f6f6e65792c20536361726c657474204a6f68616e73736f6e2c204a65727279205365696e66656c642c20486f7761726420537465726e2c2054696e61204665792c204d69636861656c204b6561746f6e20616e642052617920526f6d616e6f2e204f6e20547565736461792c2022546865204c6174652053686f772077697468204461766964204c65747465726d616e2220616e6e6f756e63656420736f6d65206f66207468652067756573747320666f72207468652074616c6b2073686f7720686f737427732066696e616c206d6f6e7468206f662062726f616463617374732e20546865206c61737420224c6174652053686f77222077696c6c20616972205765646e65736461792c204d61792032302e20416d6f6e6720746865206e6f7461626c657320617265204f707261682057696e667265792c20776974682077686f6d204c65747465726d616e206861732068616420616e206f6e2d616e642d6f66662066617578206665756420666f722079656172733b20436c6f6f6e65792c2077686f2773207374617272696e6720696e2022546f6d6f72726f776c616e642c222077686963682077696c6c2062652072656c6561736564206f6e204d61792032323b20616e6420537465726e2c2077686f277320616c7761797320616e20656e676167696e67204c65747465726d616e2067756573742e20427574206c6f6e6774696d652066616e73206d6179206265206576656e206d6f726520696e747269677565642062792074686520617070656172616e636573206f66204b6561746f6e2c20616e206f6c64206163717561696e74616e63652077686f206f6e63652073686172656420612073746167652077697468204c65747465726d616e20617320706c6179657273206f6e204d6172792054796c6572204d6f6f726527732073686f72742d6c69766564203139373820766172696574792073686f772c20616e64204d75727261792c2077686f20776173207468652076657279206669727374206775657374206f6e204c65747465726d616e2773206f6c64204e42432073686f772c20224c617465204e696768742077697468204461766964204c65747465726d616e2e22205374657665204d617274696e2c2077686f27732074616b656e207061727420696e20736f6d65206f662074686520224c6174652053686f77277322206265737420626974732c2077696c6c20616c736f2062652064726f7070696e672062792e204c65747465726d616e20686173206265656e2061206c6174652d6e6967687420686f737420666f722033332079656172732c20636c6f736520746f203232206f66207468656d206f6e204342532720224c6174652053686f772e22205374657068656e20436f6c626572742077696c6c2074616b65206f7665722074686520224c6174652053686f7722206f6e2053657074656d62657220382e0a",
+  "source_cluster_id": "sha256:2ea1620a4f2b67b9ed29f23505dae7a3f21e684f961fc4452913d33c8ca79fec",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:c4f0bff0df0b1a8127d10831482022adc2dc88f9f1c96ef7892ab38577e83c83"
+}

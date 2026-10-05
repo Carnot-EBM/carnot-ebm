@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "5468652073796d70746f6d73206f66205061726b696e736f6e277320646973656173652063616e20766172792066726f6d20706572736f6e20746f20706572736f6e2e205468657920616666656374206d6f76656d656e7420616e6420617265206f6674656e2063616c6c6564206d6f746f722073796d70746f6d732e20536f6d65206f6620746865736520696e636c756465207472656d6f7273206f72207368616b696e6720776869636820757375616c6c7920626567696e7320696e2061206c696d622c206f6674656e207468652068616e64206f722066696e676572732e205269676964697479206f72207374696666206d7573636c657320697320616e6f7468657220636f6d6d6f6e2073796d70746f6d2c2077686963682063616e206c65616420746f206120726564756365642061726d207377696e67206f6e206f6e652073696465207768656e2077616c6b696e672e20546869732072696769646974792063616e20616c736f2061666665637420746865206d7573636c6573206f6620746865206c6567732c20666163652c206e65636b2c206f72206f74686572207061727473206f662074686520626f64792e2041706172742066726f6d207468657365206d6f746f722073796d70746f6d732c206e6f6e2d6d6f746f722073796d70746f6d732073756368206173207061696e20616e642064657072657373696f6e2063616e20616c736f20626520657870657269656e6365642e204974277320696d706f7274616e7420746f206e6f74652074686174206e6f742065766572796f6e652077697468205061726b696e736f6e27732077696c6c20657870657269656e636520616c6c206f662074686573652073796d70746f6d732e",
+  "arm": "source_span",
+  "call_id": "sha256:fd785cc7b70539ed42d7c33d345dd31632149c543ce69414c992462c8e975a83:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.72418394300621,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 691,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 38,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:The symptoms most often associated with Parkinson's affect movement. These are often called motor symptoms. Parkinson's is a very individual condition, with each person experiencing different symptoms.However, there are other symptoms that aren't related to movement, such as pain and depression.These are known as non-motor symptoms. The symptoms that people with Parkinson's may get are listed below.It's important to remember that everyone's experience of Parkinson's is different. Not everyone will experience all of these symptoms.hese are known as non-motor symptoms. The symptoms that people with Parkinson's may get are listed below. It's important to remember that everyone's experience of Parkinson's is different. Not everyone will experience all of these symptoms.\\\\n\\\\npassage 2:Other common symptoms. Besides tremor, the most common symptoms include: 1  Stiff muscles (rigidity) and aching muscles. 2  One of the most common early signs of Parkinson's is a reduced arm swing on one side when you walk.3  This is caused by rigid muscles. 4  Rigidity can also affect the muscles of the legs, face, neck, or other parts of the body.he most common cause of non-Parkinson's tremor is essential tremor. It's a treatable condition that is often wrongly diagnosed as Parkinson's. Besides tremor, the most common symptoms include: 1  Stiff muscles (rigidity) and aching muscles.\\\\n\\\\npassage 3:Parkinson's disease symptoms and signs may vary from person to person. Early signs may be mild and may go unnoticed. Symptoms often begin on one side of your body and usually remain worse on that side, even after symptoms begin to affect both sides.Parkinson's signs and symptoms may include: 1  Tremor. 2  A tremor, or shaking, usually begins in a limb, often your hand or fingers.ymptoms often begin on one side of your body and usually remain worse on that side, even after symptoms begin to affect both sides. Parkinson's signs and symptoms may include: 1  Tremor.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are the symptoms of parkinson's\\\"}\", \"answer\": \"The symptoms of Parkinson's disease can vary from person to person. They affect movement and are often called motor symptoms. Some of these include tremors or shaking which usually begins in a limb, often the hand or fingers. Rigidity or stiff muscles is another common symptom, which can lead to a reduced arm swing on one side when walking. This rigidity can also affect the muscles of the legs, face, neck, or other parts of the body. Apart from these motor symptoms, non-motor symptoms such as pain and depression can also be experienced. It's important to note that not everyone with Parkinson's will experience all of these symptoms.\"}",
+  "prompt_sha256": "sha256:88a117962de99e56c9af51e212ba341425cec078f76e4a469ff3ac30e633b936",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189754,
+    "id": "chatcmpl-YPPjGUzL7sT4Rrki2e1pdcwIqwyZJlQd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 904.75,
+      "predicted_n": 38,
+      "predicted_per_second": 42.00055263885051,
+      "predicted_per_token_ms": 23.80921052631579,
+      "prompt_ms": 684.637,
+      "prompt_n": 691,
+      "prompt_per_second": 1009.293976223897,
+      "prompt_per_token_ms": 0.9907916063675831
+    },
+    "usage": {
+      "completion_tokens": 38,
+      "prompt_tokens": 691,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 729
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:The symptoms most often associated with Parkinson's affect movement. These are often called motor symptoms. Parkinson's is a very individual condition, with each person experiencing different symptoms.However, there are other symptoms that aren't related to movement, such as pain and depression.These are known as non-motor symptoms. The symptoms that people with Parkinson's may get are listed below.It's important to remember that everyone's experience of Parkinson's is different. Not everyone will experience all of these symptoms.hese are known as non-motor symptoms. The symptoms that people with Parkinson's may get are listed below. It's important to remember that everyone's experience of Parkinson's is different. Not everyone will experience all of these symptoms.\\\\n\\\\npassage 2:Other common symptoms. Besides tremor, the most common symptoms include: 1  Stiff muscles (rigidity) and aching muscles. 2  One of the most common early signs of Parkinson's is a reduced arm swing on one side when you walk.3  This is caused by rigid muscles. 4  Rigidity can also affect the muscles of the legs, face, neck, or other parts of the body.he most common cause of non-Parkinson's tremor is essential tremor. It's a treatable condition that is often wrongly diagnosed as Parkinson's. Besides tremor, the most common symptoms include: 1  Stiff muscles (rigidity) and aching muscles.\\\\n\\\\npassage 3:Parkinson's disease symptoms and signs may vary from person to person. Early signs may be mild and may go unnoticed. Symptoms often begin on one side of your body and usually remain worse on that side, even after symptoms begin to affect both sides.Parkinson's signs and symptoms may include: 1  Tremor. 2  A tremor, or shaking, usually begins in a limb, often your hand or fingers.ymptoms often begin on one side of your body and usually remain worse on that side, even after symptoms begin to affect both sides. Parkinson's signs and symptoms may include: 1  Tremor.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are the symptoms of parkinson's\\\"}\", \"answer\": \"The symptoms of Parkinson's disease can vary from person to person. They affect movement and are often called motor symptoms. Some of these include tremors or shaking which usually begins in a limb, often the hand or fingers. Rigidity or stiff muscles is another common symptom, which can lead to a reduced arm swing on one side when walking. This rigidity can also affect the muscles of the legs, face, neck, or other parts of the body. Apart from these motor symptoms, non-motor symptoms such as pain and depression can also be experienced. It's important to note that not everyone with Parkinson's will experience all of these symptoms.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 39,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a5468652073796d70746f6d73206d6f7374206f6674656e206173736f6369617465642077697468205061726b696e736f6e277320616666656374206d6f76656d656e742e20546865736520617265206f6674656e2063616c6c6564206d6f746f722073796d70746f6d732e205061726b696e736f6e27732069732061207665727920696e646976696475616c20636f6e646974696f6e2c2077697468206561636820706572736f6e20657870657269656e63696e6720646966666572656e742073796d70746f6d732e486f77657665722c20746865726520617265206f746865722073796d70746f6d732074686174206172656e27742072656c6174656420746f206d6f76656d656e742c2073756368206173207061696e20616e642064657072657373696f6e2e546865736520617265206b6e6f776e206173206e6f6e2d6d6f746f722073796d70746f6d732e205468652073796d70746f6d7320746861742070656f706c652077697468205061726b696e736f6e2773206d61792067657420617265206c69737465642062656c6f772e4974277320696d706f7274616e7420746f2072656d656d62657220746861742065766572796f6e65277320657870657269656e6365206f66205061726b696e736f6e277320697320646966666572656e742e204e6f742065766572796f6e652077696c6c20657870657269656e636520616c6c206f662074686573652073796d70746f6d732e6865736520617265206b6e6f776e206173206e6f6e2d6d6f746f722073796d70746f6d732e205468652073796d70746f6d7320746861742070656f706c652077697468205061726b696e736f6e2773206d61792067657420617265206c69737465642062656c6f772e204974277320696d706f7274616e7420746f2072656d656d62657220746861742065766572796f6e65277320657870657269656e6365206f66205061726b696e736f6e277320697320646966666572656e742e204e6f742065766572796f6e652077696c6c20657870657269656e636520616c6c206f662074686573652073796d70746f6d732e5c6e5c6e7061737361676520323a4f7468657220636f6d6d6f6e2073796d70746f6d732e2042657369646573207472656d6f722c20746865206d6f737420636f6d6d6f6e2073796d70746f6d7320696e636c7564653a203120205374696666206d7573636c6573202872696769646974792920616e6420616368696e67206d7573636c65732e203220204f6e65206f6620746865206d6f737420636f6d6d6f6e206561726c79207369676e73206f66205061726b696e736f6e2773206973206120726564756365642061726d207377696e67206f6e206f6e652073696465207768656e20796f752077616c6b2e3320205468697320697320636175736564206279207269676964206d7573636c65732e2034202052696769646974792063616e20616c736f2061666665637420746865206d7573636c6573206f6620746865206c6567732c20666163652c206e65636b2c206f72206f74686572207061727473206f662074686520626f64792e6865206d6f737420636f6d6d6f6e206361757365206f66206e6f6e2d5061726b696e736f6e2773207472656d6f7220697320657373656e7469616c207472656d6f722e2049742773206120747265617461626c6520636f6e646974696f6e2074686174206973206f6674656e2077726f6e676c7920646961676e6f736564206173205061726b696e736f6e27732e2042657369646573207472656d6f722c20746865206d6f737420636f6d6d6f6e2073796d70746f6d7320696e636c7564653a203120205374696666206d7573636c6573202872696769646974792920616e6420616368696e67206d7573636c65732e5c6e5c6e7061737361676520333a5061726b696e736f6e277320646973656173652073796d70746f6d7320616e64207369676e73206d617920766172792066726f6d20706572736f6e20746f20706572736f6e2e204561726c79207369676e73206d6179206265206d696c6420616e64206d617920676f20756e6e6f74696365642e2053796d70746f6d73206f6674656e20626567696e206f6e206f6e652073696465206f6620796f757220626f647920616e6420757375616c6c792072656d61696e20776f727365206f6e207468617420736964652c206576656e2061667465722073796d70746f6d7320626567696e20746f2061666665637420626f74682073696465732e5061726b696e736f6e2773207369676e7320616e642073796d70746f6d73206d617920696e636c7564653a203120205472656d6f722e2032202041207472656d6f722c206f72207368616b696e672c20757375616c6c7920626567696e7320696e2061206c696d622c206f6674656e20796f75722068616e64206f722066696e676572732e796d70746f6d73206f6674656e20626567696e206f6e206f6e652073696465206f6620796f757220626f647920616e6420757375616c6c792072656d61696e20776f727365206f6e207468617420736964652c206576656e2061667465722073796d70746f6d7320626567696e20746f2061666665637420626f74682073696465732e205061726b696e736f6e2773207369676e7320616e642073796d70746f6d73206d617920696e636c7564653a203120205472656d6f722e5c6e5c6e222c227175657374696f6e223a227768617420617265207468652073796d70746f6d73206f66207061726b696e736f6e2773227d",
+  "source_cluster_id": "sha256:d6c9e6f58d3f0877eb6a8fd031d0b50b554027db5892b2b5e2fe30c0072a6b24",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+  "unit_id": "sha256:fd785cc7b70539ed42d7c33d345dd31632149c543ce69414c992462c8e975a83"
+}

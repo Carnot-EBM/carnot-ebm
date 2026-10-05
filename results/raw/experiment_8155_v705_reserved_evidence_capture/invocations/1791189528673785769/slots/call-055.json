@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "546f2061747461636820737475647320746f206120736561742c207075736820746865207374756427732072697665747320636f6d706c6574656c79207468726f75676820746865207365617420636f76657220756e74696c207468652070726f6e67732070726f7472756465206f75742066726f6d2074686520696e736964652e205573696e67206e6565646c652d6e6f736520706c696572732c2062656e64207468652070726f6e677320746f776172642065616368206f7468657220746f2073656375726520746865207374756420696e20706c6163652e2050757368207468652070726f6e6773206f6620746865206e657874207374756420696e746f20746865207365617420636f766572206e656172207468652070726576696f757320737475642c2072656d6f76652074686520737475642c20616e642063757420686f6c657320666f72207468652070726f6e67732e205075736820746865207374756420696e746f20706c61636520616e642062656e64206974732070726f6e677320696e20776974682074686520706c696572732e2052657065617420746869732070726f6365737320756e74696c20796f752068617665207374756464656420746865207365617420746f20796f7572206c696b696e672e20456e73757265207468617420616c6c207468652070726f6e67732068617665206265656e2062656e7420636f6d706c6574656c7920616e64207468617420746865207374756473206172652068656c64206669726d6c7920696e20706c6163652e2046696e616c6c792c206c617920746865207365617420636f766572206f76657220796f7572206d6f746f726379636c65277320736561742070616e20616e6420666c69702074686520656e7469726520736561742075707369646520646f776e2e",
+  "arm": "holistic",
+  "call_id": "sha256:d24151bf3ae11fc6ad8375b96669e0a3084b79d52d11db98021242bfe64a30ac:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.0641069950070232,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 544,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Guaranteed to last the life of your seat. This size is the most typical size found on harley-davidson seats and cycle saddle-bags. Dome Studs Category. Shaped like a dome, these dome studs are one of the most classic \u2013 a design to last the ages.\\\\n\\\\npassage 2:Push the stud's rivets completely through the seat cover until the prongs protrude out from the inside of the seat cover. Bend the prongs toward each other with a pair of needle-nose pliers to secure the stub in place. Push the prongs of the next stud into the seat cover near the previous stud. Remove the stud and cut holes for the prongs. Push the stud into place and bend its prongs in with a pair of needle-nose pliers. Repeat until you have studded to the seat to your liking. Double check the stud prongs on the inside of the seat cover. Make sure that all of the prongs have been bent completely and that the studs are held firmly in place. Lay the seat cover over your motorcycle's seat pan, then flip the entire seat upside down.\\\\n\\\\npassage 3:Flip the seat over. Pry up the staples attaching the seat cover to the seat pan, using a staple remover or a small pry bar. Drill the cover rivets out carefully with an electric drill and a 1/8-inch bit, if your seat cover is attached by rivets. Pull the cover off of the seat pan.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to attach studs to seat\\\"}\", \"answer\": \"To attach studs to a seat, push the stud's rivets completely through the seat cover until the prongs protrude out from the inside. Using needle-nose pliers, bend the prongs toward each other to secure the stud in place. Push the prongs of the next stud into the seat cover near the previous stud, remove the stud, and cut holes for the prongs. Push the stud into place and bend its prongs in with the pliers. Repeat this process until you have studded the seat to your liking. Ensure that all the prongs have been bent completely and that the studs are held firmly in place. Finally, lay the seat cover over your motorcycle's seat pan and flip the entire seat upside down.\"}",
+  "prompt_sha256": "sha256:b3139422a15071d56a0fab71cc962623c614c4a88c4dd040089900621a0b0068",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189717,
+    "id": "chatcmpl-F6mGTbsczlInECXTnsn7e3ezklAhKmH9",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.488,
+      "predicted_n": 14,
+      "predicted_per_second": 43.54750410590753,
+      "predicted_per_token_ms": 22.963428571428572,
+      "prompt_ms": 574.094,
+      "prompt_n": 544,
+      "prompt_per_second": 947.5800130292251,
+      "prompt_per_token_ms": 1.0553198529411765
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 544,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 558
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Guaranteed to last the life of your seat. This size is the most typical size found on harley-davidson seats and cycle saddle-bags. Dome Studs Category. Shaped like a dome, these dome studs are one of the most classic \u2013 a design to last the ages.\\\\n\\\\npassage 2:Push the stud's rivets completely through the seat cover until the prongs protrude out from the inside of the seat cover. Bend the prongs toward each other with a pair of needle-nose pliers to secure the stub in place. Push the prongs of the next stud into the seat cover near the previous stud. Remove the stud and cut holes for the prongs. Push the stud into place and bend its prongs in with a pair of needle-nose pliers. Repeat until you have studded to the seat to your liking. Double check the stud prongs on the inside of the seat cover. Make sure that all of the prongs have been bent completely and that the studs are held firmly in place. Lay the seat cover over your motorcycle's seat pan, then flip the entire seat upside down.\\\\n\\\\npassage 3:Flip the seat over. Pry up the staples attaching the seat cover to the seat pan, using a staple remover or a small pry bar. Drill the cover rivets out carefully with an electric drill and a 1/8-inch bit, if your seat cover is attached by rivets. Pull the cover off of the seat pan.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to attach studs to seat\\\"}\", \"answer\": \"To attach studs to a seat, push the stud's rivets completely through the seat cover until the prongs protrude out from the inside. Using needle-nose pliers, bend the prongs toward each other to secure the stud in place. Push the prongs of the next stud into the seat cover near the previous stud, remove the stud, and cut holes for the prongs. Push the stud into place and bend its prongs in with the pliers. Repeat this process until you have studded the seat to your liking. Ensure that all the prongs have been bent completely and that the studs are held firmly in place. Finally, lay the seat cover over your motorcycle's seat pan and flip the entire seat upside down.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 28,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a47756172616e7465656420746f206c61737420746865206c696665206f6620796f757220736561742e20546869732073697a6520697320746865206d6f7374207479706963616c2073697a6520666f756e64206f6e206861726c65792d6461766964736f6e20736561747320616e64206379636c6520736164646c652d626167732e20446f6d652053747564732043617465676f72792e20536861706564206c696b65206120646f6d652c20746865736520646f6d6520737475647320617265206f6e65206f6620746865206d6f737420636c617373696320e2809320612064657369676e20746f206c6173742074686520616765732e5c6e5c6e7061737361676520323a5075736820746865207374756427732072697665747320636f6d706c6574656c79207468726f75676820746865207365617420636f76657220756e74696c207468652070726f6e67732070726f7472756465206f75742066726f6d2074686520696e73696465206f6620746865207365617420636f7665722e2042656e64207468652070726f6e677320746f776172642065616368206f74686572207769746820612070616972206f66206e6565646c652d6e6f736520706c6965727320746f2073656375726520746865207374756220696e20706c6163652e2050757368207468652070726f6e6773206f6620746865206e657874207374756420696e746f20746865207365617420636f766572206e656172207468652070726576696f757320737475642e2052656d6f766520746865207374756420616e642063757420686f6c657320666f72207468652070726f6e67732e205075736820746865207374756420696e746f20706c61636520616e642062656e64206974732070726f6e677320696e207769746820612070616972206f66206e6565646c652d6e6f736520706c696572732e2052657065617420756e74696c20796f752068617665207374756464656420746f20746865207365617420746f20796f7572206c696b696e672e20446f75626c6520636865636b2074686520737475642070726f6e6773206f6e2074686520696e73696465206f6620746865207365617420636f7665722e204d616b652073757265207468617420616c6c206f66207468652070726f6e67732068617665206265656e2062656e7420636f6d706c6574656c7920616e64207468617420746865207374756473206172652068656c64206669726d6c7920696e20706c6163652e204c617920746865207365617420636f766572206f76657220796f7572206d6f746f726379636c65277320736561742070616e2c207468656e20666c69702074686520656e7469726520736561742075707369646520646f776e2e5c6e5c6e7061737361676520333a466c6970207468652073656174206f7665722e205072792075702074686520737461706c657320617474616368696e6720746865207365617420636f76657220746f2074686520736561742070616e2c207573696e67206120737461706c652072656d6f766572206f72206120736d616c6c20707279206261722e204472696c6c2074686520636f76657220726976657473206f7574206361726566756c6c79207769746820616e20656c656374726963206472696c6c20616e64206120312f382d696e6368206269742c20696620796f7572207365617420636f766572206973206174746163686564206279207269766574732e2050756c6c2074686520636f766572206f6666206f662074686520736561742070616e2e5c6e5c6e222c227175657374696f6e223a22686f7720746f2061747461636820737475647320746f2073656174227d",
+  "source_cluster_id": "sha256:cbb9342ff7dba0718b6822de109c094fb163801bf62de78efea41b8e5ddb9ad7",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:d24151bf3ae11fc6ad8375b96669e0a3084b79d52d11db98021242bfe64a30ac"
+}

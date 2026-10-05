@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "537572652120486572652773206d7920616e73776572206261736564206f6e207468652074687265652070726f76696465642070617373616765733a0a0a546f207365742061636869657661626c6520676f616c732c20666f6c6c6f772074686573652073746570733a0a0a312e2044657465726d696e6520796f7572206c69666520676f616c732062792061736b696e6720796f757273656c6620696d706f7274616e74207175657374696f6e732061626f7574207768617420796f752077616e7420666f7220796f7572206c6966652028506173736167652031292e0a322e20427265616b20646f776e2074686520626967207069637475726520696e746f20736d616c6c65722c206d6f726520737065636966696320676f616c732028506173736167652031292e0a332e20577269746520676f616c7320666f72207468652073686f72742d7465726d2028506173736167652032292e0a342e204d616b6520796f757220676f616c7320736d616c6c65722073746570732074686174206d6f766520796f7520746f7761726473206c6172676572206c69666520676f616c732028506173736167652032292e0a352e2041646a75737420796f757220676f616c7320706572696f646963616c6c792028506173736167652032292e0a0a4164646974696f6e616c6c792c206b65657020696e206d696e64207468652038302f32302072756c652c20776869636820737461746573207468617420323025206f6620796f757220616374697669746965732077696c6c206163636f756e7420666f7220383025206f6620796f757220726573756c74732028506173736167652033292e2054686973206d65616e73207468617420666f637573696e67206f6e20746865206d6f737420696d706f7274616e74207461736b7320616e6420616374697669746965732077696c6c206c65616420746f2074686520677265617465737420737563636573732e0a0a556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e",
+  "arm": "holistic",
+  "call_id": "sha256:be60461176517ae50734132c2cec66e9dcee83f387a19ba6c312f4bc2871357f:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.9573974520899355,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 513,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Setting Achievable Goals. 1  1. Determine your life goals. Ask yourself some important questions about what you want for your life. 2  2. Break the big picture down into smaller and more specific goals. Consider areas of your life that you either want to change or that you feel you would like to develop with time. 3  3. Write goals for the short term.\\\\n\\\\npassage 2:Setting Achievable Goals. 1  1. Determine your life goals. 2  2. Break the big picture down into smaller and more specific goals. 3  3. Write goals for the short term.  4. Make your goals smaller steps that move you towards larger life 1  goals. 5. Adjust your goals periodically.\\\\n\\\\npassage 3:Personal Success 80/20 Rule. The 80/20 rule is one of the most helpful concepts for life and time management. According to this principle: 20 percent of your activities will account for 80 percent of your results. It can change the way you set goals forever.\\\\n\\\\n\\\",\\\"question\\\":\\\"everything about how to set goals\\\"}\", \"answer\": \"Sure! Here's my answer based on the three provided passages:\\n\\nTo set achievable goals, follow these steps:\\n\\n1. Determine your life goals by asking yourself important questions about what you want for your life (Passage 1).\\n2. Break down the big picture into smaller, more specific goals (Passage 1).\\n3. Write goals for the short-term (Passage 2).\\n4. Make your goals smaller steps that move you towards larger life goals (Passage 2).\\n5. Adjust your goals periodically (Passage 2).\\n\\nAdditionally, keep in mind the 80/20 rule, which states that 20% of your activities will account for 80% of your results (Passage 3). This means that focusing on the most important tasks and activities will lead to the greatest success.\\n\\nUnable to answer based on given passages.\"}",
+  "prompt_sha256": "sha256:adaa614cd36d1e3bab708020bf0dfa99a30fb43cb07557c42f20c51928da32f5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189913,
+    "id": "chatcmpl-Qu7184nth9SAIt1Bm5l3L43Yi5HOGu0H",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 370.17,
+      "predicted_n": 16,
+      "predicted_per_second": 43.223383850663204,
+      "predicted_per_token_ms": 23.135625,
+      "prompt_ms": 474.302,
+      "prompt_n": 513,
+      "prompt_per_second": 1081.5893671120932,
+      "prompt_per_token_ms": 0.9245653021442496
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 513,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 529
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Setting Achievable Goals. 1  1. Determine your life goals. Ask yourself some important questions about what you want for your life. 2  2. Break the big picture down into smaller and more specific goals. Consider areas of your life that you either want to change or that you feel you would like to develop with time. 3  3. Write goals for the short term.\\\\n\\\\npassage 2:Setting Achievable Goals. 1  1. Determine your life goals. 2  2. Break the big picture down into smaller and more specific goals. 3  3. Write goals for the short term.  4. Make your goals smaller steps that move you towards larger life 1  goals. 5. Adjust your goals periodically.\\\\n\\\\npassage 3:Personal Success 80/20 Rule. The 80/20 rule is one of the most helpful concepts for life and time management. According to this principle: 20 percent of your activities will account for 80 percent of your results. It can change the way you set goals forever.\\\\n\\\\n\\\",\\\"question\\\":\\\"everything about how to set goals\\\"}\", \"answer\": \"Sure! Here's my answer based on the three provided passages:\\n\\nTo set achievable goals, follow these steps:\\n\\n1. Determine your life goals by asking yourself important questions about what you want for your life (Passage 1).\\n2. Break down the big picture into smaller, more specific goals (Passage 1).\\n3. Write goals for the short-term (Passage 2).\\n4. Make your goals smaller steps that move you towards larger life goals (Passage 2).\\n5. Adjust your goals periodically (Passage 2).\\n\\nAdditionally, keep in mind the 80/20 rule, which states that 20% of your activities will account for 80% of your results (Passage 3). This means that focusing on the most important tasks and activities will lead to the greatest success.\\n\\nUnable to answer based on given passages.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 84,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a53657474696e672041636869657661626c6520476f616c732e20312020312e2044657465726d696e6520796f7572206c69666520676f616c732e2041736b20796f757273656c6620736f6d6520696d706f7274616e74207175657374696f6e732061626f7574207768617420796f752077616e7420666f7220796f7572206c6966652e20322020322e20427265616b2074686520626967207069637475726520646f776e20696e746f20736d616c6c657220616e64206d6f726520737065636966696320676f616c732e20436f6e7369646572206172656173206f6620796f7572206c696665207468617420796f75206569746865722077616e7420746f206368616e6765206f72207468617420796f75206665656c20796f7520776f756c64206c696b6520746f20646576656c6f7020776974682074696d652e20332020332e20577269746520676f616c7320666f72207468652073686f7274207465726d2e5c6e5c6e7061737361676520323a53657474696e672041636869657661626c6520476f616c732e20312020312e2044657465726d696e6520796f7572206c69666520676f616c732e20322020322e20427265616b2074686520626967207069637475726520646f776e20696e746f20736d616c6c657220616e64206d6f726520737065636966696320676f616c732e20332020332e20577269746520676f616c7320666f72207468652073686f7274207465726d2e2020342e204d616b6520796f757220676f616c7320736d616c6c65722073746570732074686174206d6f766520796f7520746f7761726473206c6172676572206c69666520312020676f616c732e20352e2041646a75737420796f757220676f616c7320706572696f646963616c6c792e5c6e5c6e7061737361676520333a506572736f6e616c20537563636573732038302f32302052756c652e205468652038302f32302072756c65206973206f6e65206f6620746865206d6f73742068656c7066756c20636f6e636570747320666f72206c69666520616e642074696d65206d616e6167656d656e742e204163636f7264696e6720746f2074686973207072696e6369706c653a2032302070657263656e74206f6620796f757220616374697669746965732077696c6c206163636f756e7420666f722038302070657263656e74206f6620796f757220726573756c74732e2049742063616e206368616e6765207468652077617920796f752073657420676f616c7320666f72657665722e5c6e5c6e222c227175657374696f6e223a2265766572797468696e672061626f757420686f7720746f2073657420676f616c73227d",
+  "source_cluster_id": "sha256:30334c61f2a2a627b88ac0f048c4fe72ce34e1a693489e7357fb809576ccf9ea",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.0\n}",
+  "unit_id": "sha256:be60461176517ae50734132c2cec66e9dcee83f387a19ba6c312f4bc2871357f"
+}

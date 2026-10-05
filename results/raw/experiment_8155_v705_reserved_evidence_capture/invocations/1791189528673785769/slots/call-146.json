@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e207468652070726f76696465642070617373616765732c2074686520616e7377657220746f20746865207175657374696f6e20226172656120636f646520757361222069733a0a0a4172656120636f64657320696e2074686520556e69746564205374617465732061726520322d33206469676974206e756d626572732061737369676e656420746f2073706563696669632067656f677261706869632061726561732e205468657265206172652063757272656e746c7920353636206172656120636f64657320696e2075736520696e207468652055532c20696e636c7564696e67203435362c203530302c203533332c203534342c203536362c203537372c203730302c203731302c203830302c203834342c203835352c203836362c203837372c203838382c20616e64203930302e205468657365206172656120636f64657320617265207573656420746f20726f7574652070686f6e652063616c6c7320746f20746865697220696e74656e6465642064657374696e6174696f6e2077697468696e206120706172746963756c617220726567696f6e206f722073746174652e20536f6d65206172656173206d61792068617665206d756c7469706c65206172656120636f6465732064756520746f2074686520686967682064656d616e6420666f722070686f6e65206e756d62657273206f7220746865206e65656420746f2073706c69742061206c617267652067656f67726170686963206172656120696e746f20736d616c6c65722073656374696f6e732e",
+  "arm": "holistic",
+  "call_id": "sha256:238c63e15cc1dbc6edf493f77edb94c185ad345109c93c7b087f159a4225a283:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.1586812130408362,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 700,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Although area codes are not assigned based upon population the locations with greater populations have an increased demand for area codes. The non-geographic area codes utilized in the United States are 456, 500, 533, 544, 566, 577, 700, 710, 800, 844, 855, 866, 877, 888 and 900. While many United States locations are assigned a single area code others are within geographic overlays.\\\\n\\\\npassage 2:Click Here! There are two ways to use our printable area code list service... Just above just type in the area code needed into our database to get an instant response or we have 3 links on the left that have the printable area codes sorted either by area code number, alphabetically by state or alphabetically by time zone.\\\\n\\\\npassage 3:Alabama Area Codes: 205 - 251 - 256 - 334. Alaska Area Codes: 907. Arizona Area Codes: 480 - 520 - 602 - 623 - 928. Arkansas Area Codes: 501 - 870. California Area Codes: 209 - 213 - 310 - 323 - 408 - 415 - 510 - 530 - 559 - 562 - 619 - 626 - 650 - 661 - 707 - 714 - 760 - 805 - 818 - 831 - 858 - 909 - 916 - 925 - 949. Colorado Area Codes: 303 - 719 - 720 - 970.\\\\n\\\\n\\\",\\\"question\\\":\\\"area code usa\\\"}\", \"answer\": \"Based on the provided passages, the answer to the question \\\"area code usa\\\" is:\\n\\nArea codes in the United States are 2-3 digit numbers assigned to specific geographic areas. There are currently 566 area codes in use in the US, including 456, 500, 533, 544, 566, 577, 700, 710, 800, 844, 855, 866, 877, 888, and 900. These area codes are used to route phone calls to their intended destination within a particular region or state. Some areas may have multiple area codes due to the high demand for phone numbers or the need to split a large geographic area into smaller sections.\"}",
+  "prompt_sha256": "sha256:56ab1af8b37c00adacd34b26ac08d24e5d2a1523437306d54b60a4f082e66ddb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189876,
+    "id": "chatcmpl-s1IlLvAgesuTp96kKeoAWFBg2G6bUdSY",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.781,
+      "predicted_n": 14,
+      "predicted_per_second": 43.507851613364366,
+      "predicted_per_token_ms": 22.984357142857142,
+      "prompt_ms": 686.416,
+      "prompt_n": 700,
+      "prompt_per_second": 1019.7897484907111,
+      "prompt_per_token_ms": 0.9805942857142858
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 700,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 714
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Although area codes are not assigned based upon population the locations with greater populations have an increased demand for area codes. The non-geographic area codes utilized in the United States are 456, 500, 533, 544, 566, 577, 700, 710, 800, 844, 855, 866, 877, 888 and 900. While many United States locations are assigned a single area code others are within geographic overlays.\\\\n\\\\npassage 2:Click Here! There are two ways to use our printable area code list service... Just above just type in the area code needed into our database to get an instant response or we have 3 links on the left that have the printable area codes sorted either by area code number, alphabetically by state or alphabetically by time zone.\\\\n\\\\npassage 3:Alabama Area Codes: 205 - 251 - 256 - 334. Alaska Area Codes: 907. Arizona Area Codes: 480 - 520 - 602 - 623 - 928. Arkansas Area Codes: 501 - 870. California Area Codes: 209 - 213 - 310 - 323 - 408 - 415 - 510 - 530 - 559 - 562 - 619 - 626 - 650 - 661 - 707 - 714 - 760 - 805 - 818 - 831 - 858 - 909 - 916 - 925 - 949. Colorado Area Codes: 303 - 719 - 720 - 970.\\\\n\\\\n\\\",\\\"question\\\":\\\"area code usa\\\"}\", \"answer\": \"Based on the provided passages, the answer to the question \\\"area code usa\\\" is:\\n\\nArea codes in the United States are 2-3 digit numbers assigned to specific geographic areas. There are currently 566 area codes in use in the US, including 456, 500, 533, 544, 566, 577, 700, 710, 800, 844, 855, 866, 877, 888, and 900. These area codes are used to route phone calls to their intended destination within a particular region or state. Some areas may have multiple area codes due to the high demand for phone numbers or the need to split a large geographic area into smaller sections.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 74,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a416c74686f756768206172656120636f64657320617265206e6f742061737369676e65642062617365642075706f6e20706f70756c6174696f6e20746865206c6f636174696f6e732077697468206772656174657220706f70756c6174696f6e73206861766520616e20696e637265617365642064656d616e6420666f72206172656120636f6465732e20546865206e6f6e2d67656f67726170686963206172656120636f646573207574696c697a656420696e2074686520556e697465642053746174657320617265203435362c203530302c203533332c203534342c203536362c203537372c203730302c203731302c203830302c203834342c203835352c203836362c203837372c2038383820616e64203930302e205768696c65206d616e7920556e6974656420537461746573206c6f636174696f6e73206172652061737369676e656420612073696e676c65206172656120636f6465206f7468657273206172652077697468696e2067656f67726170686963206f7665726c6179732e5c6e5c6e7061737361676520323a436c69636b204865726521205468657265206172652074776f207761797320746f20757365206f7572207072696e7461626c65206172656120636f6465206c69737420736572766963652e2e2e204a7573742061626f7665206a757374207479706520696e20746865206172656120636f6465206e656564656420696e746f206f757220646174616261736520746f2067657420616e20696e7374616e7420726573706f6e7365206f7220776520686176652033206c696e6b73206f6e20746865206c6566742074686174206861766520746865207072696e7461626c65206172656120636f64657320736f7274656420656974686572206279206172656120636f6465206e756d6265722c20616c7068616265746963616c6c79206279207374617465206f7220616c7068616265746963616c6c792062792074696d65207a6f6e652e5c6e5c6e7061737361676520333a416c6162616d61204172656120436f6465733a20323035202d20323531202d20323536202d203333342e20416c61736b61204172656120436f6465733a203930372e204172697a6f6e61204172656120436f6465733a20343830202d20353230202d20363032202d20363233202d203932382e2041726b616e736173204172656120436f6465733a20353031202d203837302e2043616c69666f726e6961204172656120436f6465733a20323039202d20323133202d20333130202d20333233202d20343038202d20343135202d20353130202d20353330202d20353539202d20353632202d20363139202d20363236202d20363530202d20363631202d20373037202d20373134202d20373630202d20383035202d20383138202d20383331202d20383538202d20393039202d20393136202d20393235202d203934392e20436f6c6f7261646f204172656120436f6465733a20333033202d20373139202d20373230202d203937302e5c6e5c6e222c227175657374696f6e223a226172656120636f646520757361227d",
+  "source_cluster_id": "sha256:c4e0aa4e507de0b24fcd07ba46adb4fba0f9c84d5ae214d05a1b1017656ce714",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 1\n}",
+  "unit_id": "sha256:238c63e15cc1dbc6edf493f77edb94c185ad345109c93c7b087f159a4225a283"
+}

@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "54686520426964656e2061646d696e697374726174696f6e20726573756d65642064697265637420726570617472696174696f6e20666c696768747320746f2056656e657a75656c612c2073656e64696e67206f76657220313030206d696772616e7473206261636b20746f20746865697220686f6d6520636f756e7472792e20546865206d696772616e74732068616420656e74657265642074686520555320696c6c6567616c6c7920616e642077657265207072696f726974697a6564206261736564206f6e20726563656e74206172726976616c7320616e64206372696d696e616c20686973746f72792e2053696e636520507265736964656e7420426964656e20746f6f6b206f66666963652c206e6561726c792068616c662061206d696c6c696f6e2056656e657a75656c616e73206861766520696c6c6567616c6c792063726f737365642074686520736f7574687765737420626f726465722e20426964656e20657874656e6465642074656d706f726172792070726f7465637465642073746174757320746f2061726f756e64203437322c3030302056656e657a75656c616e206d696772616e74732c206275742074686f73652077686f20686176656e2774206170706c69656420666f722054505320616e642068617665206465706f72746174696f6e206f7264657273206d6179207374696c6c20666163652072656d6f76616c2e",
+  "arm": "holistic",
+  "call_id": "sha256:06fa491f54e9d2467ed6abb02d743f05602c660f013c98f4ababf7232aac782b:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.107638714951463,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 667,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"US deports 100+ Migrants to Venezuela\\nThe Biden administration conducted its first deportation flight to Venezuela in years, sending over 100 Venezuelans back to their home country. The Department of Homeland Security made the decision to resume direct repatriations in an effort to discourage illegal border crossings, following an agreement with Venezuelan authorities to accept the return of their nationals. Corey Price, an acting executive associate director for Immigration and Customs Enforcement, stated that there would be several more flights in the coming days and weeks.\\nThe migrants on the flight had illegally entered the US between ports of entry and were prioritized based on recent arrivals and criminal history. Since President Biden took office, nearly half a million Venezuelans have illegally crossed the southwest border, with a peak of over 34,000 arrests in April. To address this, Biden extended temporary protected status to around 472,000 Venezuelan migrants, allowing them to live and work legally in the US. However, those who have not applied for TPS and have deportation orders could still face removal. Immigration attorneys are advising eligible Venezuelans to apply for TPS promptly to avoid deportation.\\nThe Biden administration's decision to conduct its first deportation flight to Venezuela in years is aimed at discouraging illegal border crossings and addressing the influx of Venezuelan migrants entering the US. With an agreement in place with Venezuelan authorities to accept repatriations, the Department of Homeland Security made the move to resume direct deportations. Corey Price, acting executive associate director for Immigration and Customs Enforcement, revealed that several more flights would be scheduled in the coming days and weeks.\\nThe individuals on the deportation flight had entered the US illegally between ports of entry, and were chosen based on factors such as recent arrival and criminal history. The number of Venezuelans crossing the southwest border illegally has reached a staggering half a million since President Biden took office. Meanwhile, in an effort to provide relief to Venezuelan migrants, Biden extended temporary protected status to approximately 472,000 individuals, granting them legal rights to live and work in the US. However, those who haven't applied for TPS and have deportation orders may still face removal. Immigration attorneys are strongly advising eligible Venezuelans to promptly apply for TPS to avoid deportation and secure legal status in the country.\\nSource:\\nhttps://nypost.com/2023/10/18/over-100-migrants-deported-to-venezuela-as-repatriation-flights-resume/\", \"answer\": \"The Biden administration resumed direct repatriation flights to Venezuela, sending over 100 migrants back to their home country. The migrants had entered the US illegally and were prioritized based on recent arrivals and criminal history. Since President Biden took office, nearly half a million Venezuelans have illegally crossed the southwest border. Biden extended temporary protected status to around 472,000 Venezuelan migrants, but those who haven't applied for TPS and have deportation orders may still face removal.\"}",
+  "prompt_sha256": "sha256:24d6af423f0216e28bd8774b2f2722446f107f91ddbe0130b9f4894111aec63b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189899,
+    "id": "chatcmpl-tO3b36izwZjlp8W4KE0G6wVcmR9t5Byx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 321.75,
+      "predicted_n": 14,
+      "predicted_per_second": 43.51204351204351,
+      "predicted_per_token_ms": 22.982142857142858,
+      "prompt_ms": 667.034,
+      "prompt_n": 667,
+      "prompt_per_second": 999.9490280855249,
+      "prompt_per_token_ms": 1.0000509745127437
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 667,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 681
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"US deports 100+ Migrants to Venezuela\\nThe Biden administration conducted its first deportation flight to Venezuela in years, sending over 100 Venezuelans back to their home country. The Department of Homeland Security made the decision to resume direct repatriations in an effort to discourage illegal border crossings, following an agreement with Venezuelan authorities to accept the return of their nationals. Corey Price, an acting executive associate director for Immigration and Customs Enforcement, stated that there would be several more flights in the coming days and weeks.\\nThe migrants on the flight had illegally entered the US between ports of entry and were prioritized based on recent arrivals and criminal history. Since President Biden took office, nearly half a million Venezuelans have illegally crossed the southwest border, with a peak of over 34,000 arrests in April. To address this, Biden extended temporary protected status to around 472,000 Venezuelan migrants, allowing them to live and work legally in the US. However, those who have not applied for TPS and have deportation orders could still face removal. Immigration attorneys are advising eligible Venezuelans to apply for TPS promptly to avoid deportation.\\nThe Biden administration's decision to conduct its first deportation flight to Venezuela in years is aimed at discouraging illegal border crossings and addressing the influx of Venezuelan migrants entering the US. With an agreement in place with Venezuelan authorities to accept repatriations, the Department of Homeland Security made the move to resume direct deportations. Corey Price, acting executive associate director for Immigration and Customs Enforcement, revealed that several more flights would be scheduled in the coming days and weeks.\\nThe individuals on the deportation flight had entered the US illegally between ports of entry, and were chosen based on factors such as recent arrival and criminal history. The number of Venezuelans crossing the southwest border illegally has reached a staggering half a million since President Biden took office. Meanwhile, in an effort to provide relief to Venezuelan migrants, Biden extended temporary protected status to approximately 472,000 individuals, granting them legal rights to live and work in the US. However, those who haven't applied for TPS and have deportation orders may still face removal. Immigration attorneys are strongly advising eligible Venezuelans to promptly apply for TPS to avoid deportation and secure legal status in the country.\\nSource:\\nhttps://nypost.com/2023/10/18/over-100-migrants-deported-to-venezuela-as-repatriation-flights-resume/\", \"answer\": \"The Biden administration resumed direct repatriation flights to Venezuela, sending over 100 migrants back to their home country. The migrants had entered the US illegally and were prioritized based on recent arrivals and criminal history. Since President Biden took office, nearly half a million Venezuelans have illegally crossed the southwest border. Biden extended temporary protected status to around 472,000 Venezuelan migrants, but those who haven't applied for TPS and have deportation orders may still face removal.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 79,
+  "source_bytes": "5553206465706f727473203130302b204d696772616e747320746f2056656e657a75656c610a54686520426964656e2061646d696e697374726174696f6e20636f6e64756374656420697473206669727374206465706f72746174696f6e20666c6967687420746f2056656e657a75656c6120696e2079656172732c2073656e64696e67206f766572203130302056656e657a75656c616e73206261636b20746f20746865697220686f6d6520636f756e7472792e20546865204465706172746d656e74206f6620486f6d656c616e64205365637572697479206d61646520746865206465636973696f6e20746f20726573756d652064697265637420726570617472696174696f6e7320696e20616e206566666f727420746f20646973636f757261676520696c6c6567616c20626f726465722063726f7373696e67732c20666f6c6c6f77696e6720616e2061677265656d656e7420776974682056656e657a75656c616e20617574686f72697469657320746f20616363657074207468652072657475726e206f66207468656972206e6174696f6e616c732e20436f7265792050726963652c20616e20616374696e6720657865637574697665206173736f6369617465206469726563746f7220666f7220496d6d6967726174696f6e20616e6420437573746f6d7320456e666f7263656d656e742c20737461746564207468617420746865726520776f756c64206265207365766572616c206d6f726520666c696768747320696e2074686520636f6d696e67206461797320616e64207765656b732e0a546865206d696772616e7473206f6e2074686520666c696768742068616420696c6c6567616c6c7920656e746572656420746865205553206265747765656e20706f727473206f6620656e74727920616e642077657265207072696f726974697a6564206261736564206f6e20726563656e74206172726976616c7320616e64206372696d696e616c20686973746f72792e2053696e636520507265736964656e7420426964656e20746f6f6b206f66666963652c206e6561726c792068616c662061206d696c6c696f6e2056656e657a75656c616e73206861766520696c6c6567616c6c792063726f737365642074686520736f7574687765737420626f726465722c20776974682061207065616b206f66206f7665722033342c303030206172726573747320696e20417072696c2e20546f206164647265737320746869732c20426964656e20657874656e6465642074656d706f726172792070726f7465637465642073746174757320746f2061726f756e64203437322c3030302056656e657a75656c616e206d696772616e74732c20616c6c6f77696e67207468656d20746f206c69766520616e6420776f726b206c6567616c6c7920696e207468652055532e20486f77657665722c2074686f73652077686f2068617665206e6f74206170706c69656420666f722054505320616e642068617665206465706f72746174696f6e206f726465727320636f756c64207374696c6c20666163652072656d6f76616c2e20496d6d6967726174696f6e206174746f726e65797320617265206164766973696e6720656c696769626c652056656e657a75656c616e7320746f206170706c7920666f72205450532070726f6d70746c7920746f2061766f6964206465706f72746174696f6e2e0a54686520426964656e2061646d696e697374726174696f6e2773206465636973696f6e20746f20636f6e6475637420697473206669727374206465706f72746174696f6e20666c6967687420746f2056656e657a75656c6120696e2079656172732069732061696d656420617420646973636f75726167696e6720696c6c6567616c20626f726465722063726f7373696e677320616e642061646472657373696e672074686520696e666c7578206f662056656e657a75656c616e206d696772616e747320656e746572696e67207468652055532e205769746820616e2061677265656d656e7420696e20706c61636520776974682056656e657a75656c616e20617574686f72697469657320746f2061636365707420726570617472696174696f6e732c20746865204465706172746d656e74206f6620486f6d656c616e64205365637572697479206d61646520746865206d6f766520746f20726573756d6520646972656374206465706f72746174696f6e732e20436f7265792050726963652c20616374696e6720657865637574697665206173736f6369617465206469726563746f7220666f7220496d6d6967726174696f6e20616e6420437573746f6d7320456e666f7263656d656e742c2072657665616c65642074686174207365766572616c206d6f726520666c696768747320776f756c64206265207363686564756c656420696e2074686520636f6d696e67206461797320616e64207765656b732e0a54686520696e646976696475616c73206f6e20746865206465706f72746174696f6e20666c696768742068616420656e74657265642074686520555320696c6c6567616c6c79206265747765656e20706f727473206f6620656e7472792c20616e6420776572652063686f73656e206261736564206f6e20666163746f7273207375636820617320726563656e74206172726976616c20616e64206372696d696e616c20686973746f72792e20546865206e756d626572206f662056656e657a75656c616e732063726f7373696e672074686520736f7574687765737420626f7264657220696c6c6567616c6c7920686173207265616368656420612073746167676572696e672068616c662061206d696c6c696f6e2073696e636520507265736964656e7420426964656e20746f6f6b206f66666963652e204d65616e7768696c652c20696e20616e206566666f727420746f2070726f766964652072656c69656620746f2056656e657a75656c616e206d696772616e74732c20426964656e20657874656e6465642074656d706f726172792070726f7465637465642073746174757320746f20617070726f78696d6174656c79203437322c30303020696e646976696475616c732c206772616e74696e67207468656d206c6567616c2072696768747320746f206c69766520616e6420776f726b20696e207468652055532e20486f77657665722c2074686f73652077686f20686176656e2774206170706c69656420666f722054505320616e642068617665206465706f72746174696f6e206f7264657273206d6179207374696c6c20666163652072656d6f76616c2e20496d6d6967726174696f6e206174746f726e65797320617265207374726f6e676c79206164766973696e6720656c696769626c652056656e657a75656c616e7320746f2070726f6d70746c79206170706c7920666f722054505320746f2061766f6964206465706f72746174696f6e20616e6420736563757265206c6567616c2073746174757320696e2074686520636f756e7472792e0a536f757263653a0a68747470733a2f2f6e79706f73742e636f6d2f323032332f31302f31382f6f7665722d3130302d6d696772616e74732d6465706f727465642d746f2d76656e657a75656c612d61732d726570617472696174696f6e2d666c69676874732d726573756d652f",
+  "source_cluster_id": "sha256:7366d82e8abfdade3f44069f065eaa6f386511ae3345dd34c316a3c2d54ac7d5",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:06fa491f54e9d2467ed6abb02d743f05602c660f013c98f4ababf7232aac782b"
+}

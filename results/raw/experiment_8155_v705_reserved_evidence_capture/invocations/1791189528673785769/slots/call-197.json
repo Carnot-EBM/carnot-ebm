@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e207468652070726f7669646564207374727563747572656420646174612c206865726520697320616e206f626a656374697665206f76657276696577206f66204a61636b20696e2074686520426f783a0a0a4a61636b20696e2074686520426f7820697320612072657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043616c69666f726e69612c206f66666572696e6720612076617269657479206f662064697368657320696e636c7564696e6720627572676572732c207461636f732c20627265616b66617374206974656d732c20616e64206d6f72652e2054686520627573696e65737320686173207265636569766564206d6978656420726576696577732066726f6d20637573746f6d6572732c207769746820736f6d652065787072657373696e6720646973736174697366616374696f6e207769746820746865207365727669636520616e6420636c65616e6c696e657373206f66207468652065737461626c6973686d656e742e204f6e65207265766965776572207265706f7274656420736565696e672061207265642073616e69746174696f6e206275636b6574206265696e67207573656420746f2073746f72652069636520637265616d2c2077686963682072616973656420636f6e6365726e732061626f75742068796769656e6520616e6420666f6f64207361666574792e20486f77657665722c20616e6f746865722072657669657765722070726169736564207468652072657374617572616e74277320666f6f64207175616c6974792c2073746174696e672074686174206974207761732064656c6963696f75732e204f766572616c6c2c204a61636b20696e2074686520426f78206170706561727320746f20686176652061206d6564696f63726520726174696e672c207769746820736f6d6520617265617320666f7220696d70726f76656d656e74206964656e74696669656420627920637573746f6d6572732e",
+  "arm": "source_span",
+  "call_id": "sha256:2cdfcc3df1748056b7f353b10b3e4548944ccf92139d02ea2ffe54d8aca7d0dc:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.6996051480527967,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 875,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 73,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"501 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":1.5,\\\"categories\\\":\\\"Restaurants, Fast Food, Mexican, Burgers, Tacos, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"0:0-0:0\\\",\\\"Monday\\\":\\\"6:0-2:0\\\",\\\"Saturday\\\":\\\"0:0-0:0\\\",\\\"Sunday\\\":\\\"6:0-2:0\\\",\\\"Thursday\\\":\\\"6:0-2:0\\\",\\\"Tuesday\\\":\\\"6:0-2:0\\\",\\\"Wednesday\\\":\\\"6:0-2:0\\\"},\\\"name\\\":\\\"Jack in the Box\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-25 09:55:47\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This place sucks, every time you come here they have different people and they simply don't care \\\\nIt takes forever to get your order \\\\nSpecially on weekends \\\\nPlease put people that you thrust and have confidence who ever the owner is !!!!!!!!!!\\\"},{\\\"review_date\\\":\\\"2021-07-01 15:27:52\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Waiting for my order in the drive thru and I saw a red sanitation bucket under the ice cream dispenser. I assume they're cleaning it out, so okay, they're not gonna serve it. But what I saw next was the woman scoop out ice cream FROM the same red sanitation bucket. Into two cups, and prep them and serve them with whipped cream and a cherry on top for the guy behind me.\\\\n\\\\nI don't believe that red sanitation bucket is, um...SANITARY. That bucket isn't food grade safe, I assume! I've worked in a couple kitchens before and let me tell you I've never seen food, let alone ice cream, get cleaned out into the red sanitation bucket and then get SERVED. Normally, This bucket is filled with kitchen sanitation liquid, to be changed every four hours with a new towel. I'm very sure I'm never coming back to this place to see this unsanitary practice.\\\"},{\\\"review_date\\\":\\\"2020-12-21 02:58:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Hahahahaha wtf is up with all the reviews!? It's Jack in the box!! Get over it!! Yelp = Karen Culture\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Based on the provided structured data, here is an objective overview of Jack in the Box:\\n\\nJack in the Box is a restaurant located in Santa Barbara, California, offering a variety of dishes including burgers, tacos, breakfast items, and more. The business has received mixed reviews from customers, with some expressing dissatisfaction with the service and cleanliness of the establishment. One reviewer reported seeing a red sanitation bucket being used to store ice cream, which raised concerns about hygiene and food safety. However, another reviewer praised the restaurant's food quality, stating that it was delicious. Overall, Jack in the Box appears to have a mediocre rating, with some areas for improvement identified by customers.\"}",
+  "prompt_sha256": "sha256:053aa156db6663dd8b1dc3be92af22ab80a1095563575afb412f5aa72865fdaf",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"Hahahahaha wtf is up with all the reviews!? It's Jack in the box!! Get over it!! Yelp = Karen Culture\",\n  \"byte_start\": 1063,\n  \"byte_end\": 1143\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189972,
+    "id": "chatcmpl-md7zAcqON3PXjDZGcOlWsUrQLSCtwcNf",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1756.321,
+      "predicted_n": 73,
+      "predicted_per_second": 41.56415598287557,
+      "predicted_per_token_ms": 24.059191780821916,
+      "prompt_ms": 816.815,
+      "prompt_n": 875,
+      "prompt_per_second": 1071.2340003550376,
+      "prompt_per_token_ms": 0.9335028571428572
+    },
+    "usage": {
+      "completion_tokens": 73,
+      "prompt_tokens": 875,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 948
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"501 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":1.5,\\\"categories\\\":\\\"Restaurants, Fast Food, Mexican, Burgers, Tacos, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"0:0-0:0\\\",\\\"Monday\\\":\\\"6:0-2:0\\\",\\\"Saturday\\\":\\\"0:0-0:0\\\",\\\"Sunday\\\":\\\"6:0-2:0\\\",\\\"Thursday\\\":\\\"6:0-2:0\\\",\\\"Tuesday\\\":\\\"6:0-2:0\\\",\\\"Wednesday\\\":\\\"6:0-2:0\\\"},\\\"name\\\":\\\"Jack in the Box\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-25 09:55:47\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This place sucks, every time you come here they have different people and they simply don't care \\\\nIt takes forever to get your order \\\\nSpecially on weekends \\\\nPlease put people that you thrust and have confidence who ever the owner is !!!!!!!!!!\\\"},{\\\"review_date\\\":\\\"2021-07-01 15:27:52\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Waiting for my order in the drive thru and I saw a red sanitation bucket under the ice cream dispenser. I assume they're cleaning it out, so okay, they're not gonna serve it. But what I saw next was the woman scoop out ice cream FROM the same red sanitation bucket. Into two cups, and prep them and serve them with whipped cream and a cherry on top for the guy behind me.\\\\n\\\\nI don't believe that red sanitation bucket is, um...SANITARY. That bucket isn't food grade safe, I assume! I've worked in a couple kitchens before and let me tell you I've never seen food, let alone ice cream, get cleaned out into the red sanitation bucket and then get SERVED. Normally, This bucket is filled with kitchen sanitation liquid, to be changed every four hours with a new towel. I'm very sure I'm never coming back to this place to see this unsanitary practice.\\\"},{\\\"review_date\\\":\\\"2020-12-21 02:58:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Hahahahaha wtf is up with all the reviews!? It's Jack in the box!! Get over it!! Yelp = Karen Culture\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Based on the provided structured data, here is an objective overview of Jack in the Box:\\n\\nJack in the Box is a restaurant located in Santa Barbara, California, offering a variety of dishes including burgers, tacos, breakfast items, and more. The business has received mixed reviews from customers, with some expressing dissatisfaction with the service and cleanliness of the establishment. One reviewer reported seeing a red sanitation bucket being used to store ice cream, which raised concerns about hygiene and food safety. However, another reviewer praised the restaurant's food quality, stating that it was delicious. Overall, Jack in the Box appears to have a mediocre rating, with some areas for improvement identified by customers.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 99,
+  "source_bytes": "7b2261646472657373223a22353031204e204d696c706173205374222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a66616c73652c22636c61737379223a66616c73652c226469766579223a66616c73652c2268697073746572223a66616c73652c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a66616c73652c227472656e6479223a66616c73652c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a747275652c22737472656574223a66616c73652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a66616c73652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a66616c73652c2257694669223a226e6f227d2c22627573696e6573735f7374617273223a312e352c2263617465676f72696573223a2252657374617572616e74732c204661737420466f6f642c204d65786963616e2c20427572676572732c205461636f732c20427265616b666173742026204272756e6368222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a22303a302d303a30222c224d6f6e646179223a22363a302d323a30222c225361747572646179223a22303a302d303a30222c2253756e646179223a22363a302d323a30222c225468757273646179223a22363a302d323a30222c2254756573646179223a22363a302d323a30222c225765646e6573646179223a22363a302d323a30227d2c226e616d65223a224a61636b20696e2074686520426f78222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323032312d31312d32352030393a35353a3437222c227265766965775f7374617273223a312e302c227265766965775f74657874223a225468697320706c616365207375636b732c2065766572792074696d6520796f7520636f6d6520686572652074686579206861766520646966666572656e742070656f706c6520616e6420746865792073696d706c7920646f6e27742063617265205c6e49742074616b657320666f726576657220746f2067657420796f7572206f72646572205c6e5370656369616c6c79206f6e207765656b656e6473205c6e506c65617365207075742070656f706c65207468617420796f752074687275737420616e64206861766520636f6e666964656e63652077686f206576657220746865206f776e65722069732021212121212121212121227d2c7b227265766965775f64617465223a22323032312d30372d30312031353a32373a3532222c227265766965775f7374617273223a312e302c227265766965775f74657874223a2257616974696e6720666f72206d79206f7264657220696e20746865206472697665207468727520616e642049207361772061207265642073616e69746174696f6e206275636b657420756e646572207468652069636520637265616d2064697370656e7365722e204920617373756d65207468657927726520636c65616e696e67206974206f75742c20736f206f6b61792c2074686579277265206e6f7420676f6e6e612073657276652069742e204275742077686174204920736177206e657874207761732074686520776f6d616e2073636f6f70206f75742069636520637265616d2046524f4d207468652073616d65207265642073616e69746174696f6e206275636b65742e20496e746f2074776f20637570732c20616e642070726570207468656d20616e64207365727665207468656d2077697468207768697070656420637265616d20616e64206120636865727279206f6e20746f7020666f72207468652067757920626568696e64206d652e5c6e5c6e4920646f6e27742062656c696576652074686174207265642073616e69746174696f6e206275636b65742069732c20756d2e2e2e53414e49544152592e2054686174206275636b65742069736e277420666f6f6420677261646520736166652c204920617373756d6521204927766520776f726b656420696e206120636f75706c65206b69746368656e73206265666f726520616e64206c6574206d652074656c6c20796f752049277665206e65766572207365656e20666f6f642c206c657420616c6f6e652069636520637265616d2c2067657420636c65616e6564206f757420696e746f20746865207265642073616e69746174696f6e206275636b657420616e64207468656e20676574205345525645442e204e6f726d616c6c792c2054686973206275636b65742069732066696c6c65642077697468206b69746368656e2073616e69746174696f6e206c69717569642c20746f206265206368616e67656420657665727920666f757220686f75727320776974682061206e657720746f77656c2e2049276d207665727920737572652049276d206e6576657220636f6d696e67206261636b20746f207468697320706c61636520746f20736565207468697320756e73616e69746172792070726163746963652e227d2c7b227265766965775f64617465223a22323032302d31322d32312030323a35383a3332222c227265766965775f7374617273223a352e302c227265766965775f74657874223a224861686168616861686120777466206973207570207769746820616c6c207468652072657669657773213f2049742773204a61636b20696e2074686520626f78212120476574206f76657220697421212059656c70203d204b6172656e2043756c74757265227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:6c1a34c870b21a95d6d9b41839f130398157730cecbe42569a011e8280959850",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"Hahahahaha wtf is up with all the reviews!? It's Jack in the box!! Get over it!! Yelp = Karen Culture\",\n  \"byte_start\": 1063,\n  \"byte_end\": 1143\n}",
+  "unit_id": "sha256:2cdfcc3df1748056b7f353b10b3e4548944ccf92139d02ea2ffe54d8aca7d0dc"
+}

@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e207468652070726f7669646564207374727563747572656420646174612c206865726520697320616e206f626a656374697665206f76657276696577206f6620526f73652043616665204e6f20323a0a0a526f73652043616665204e6f2032206973206120706f70756c6172204d65786963616e2072657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043616c69666f726e69612c2077697468206120726174696e67206f6620332e352073746172732e205468652072657374617572616e74206f6666657273206120636f7a7920616e6420696e74696d6174652061746d6f7370686572652c2077697468206f7574646f6f722073656174696e6720617661696c61626c652e205768696c652057694669206973206e6f7420617661696c61626c652c207468652072657374617572616e7420646f6573206f666665722074616b656f75742073657276696365732e204163636f7264696e6720746f20637573746f6d657220726576696577732c2074686520666f6f6420616e64207365727669636520617420526f73652043616665204e6f20322061726520636f6e73697374656e746c7920657863656c6c656e742c207769746820706172746963756c617220686967686c696768747320696e636c7564696e672074686520736872696d7020717565736164696c6c612c20656e6368696c6164612076657264652c20616e64206368696c617175696c65732e20437573746f6d65727320616c736f20617070726563696174652074686520667269656e646c7920737461666620616e6420726f6d616e7469632061746d6f7370686572652e20536f6d65207265766965776572732068617665206e6f7465642074686174207468652072657374617572616e742063616e20676574206275737920616e64206e6f6973792c20627574206f766572616c6c2c20526f73652043616665204e6f203220697320612067726561742063686f69636520666f722074686f7365206c6f6f6b696e6720666f722064656c6963696f7573204d65786963616e2063756973696e6520696e20612072656c617865642073657474696e672e",
+  "arm": "source_span",
+  "call_id": "sha256:5b86fc4947dbb168ec8f9f041abfd2a11db526687423eda89b094e67c8e4bc5c:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.155540855950676,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 804,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 53,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"1816 Cliff Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-20:30\\\",\\\"Saturday\\\":\\\"8:0-20:30\\\",\\\"Sunday\\\":\\\"8:0-14:0\\\",\\\"Thursday\\\":\\\"9:0-20:0\\\",\\\"Tuesday\\\":\\\"9:0-20:0\\\",\\\"Wednesday\\\":\\\"9:0-20:0\\\"},\\\"name\\\":\\\"Rose Cafe No 2\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-07 21:48:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Our favorite Mexican restaurant.  Great food,  service and atmosphere.  Favorite dishes are shrimp quesadilla and enchilada verde, but everything is delicious!\\\"},{\\\"review_date\\\":\\\"2021-10-07 01:36:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Hands down the best Mexican food the Santa Barbara. Food and service are always on point!\\\\n\\\\nMy husband would eat here every day if we lived there. The enchiladas are amazing, make sure to ask for extra sauce as it's good to dip the chips in.\\\\n\\\\nNice to enjoy there outdoor seating and people watching. \\\\n\\\\nHave a margarita and enchilada and you will be thankful.\\\"},{\\\"review_date\\\":\\\"2021-10-03 17:19:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Rose caf\u00e9 is one of my favorite spots in town. They have the best chilaquiles I've ever had and enchiladas and everything on the menu is good   You can't go wrong with anything you order on the menu. The margaritas are really good and the staff is super friendly and I love the outdoor dining area.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Based on the provided structured data, here is an objective overview of Rose Cafe No 2:\\n\\nRose Cafe No 2 is a popular Mexican restaurant located in Santa Barbara, California, with a rating of 3.5 stars. The restaurant offers a cozy and intimate atmosphere, with outdoor seating available. While WiFi is not available, the restaurant does offer takeout services. According to customer reviews, the food and service at Rose Cafe No 2 are consistently excellent, with particular highlights including the shrimp quesadilla, enchilada verde, and chilaquiles. Customers also appreciate the friendly staff and romantic atmosphere. Some reviewers have noted that the restaurant can get busy and noisy, but overall, Rose Cafe No 2 is a great choice for those looking for delicious Mexican cuisine in a relaxed setting.\"}",
+  "prompt_sha256": "sha256:0ae5d9a25e283744e4f6bb15b5a69bd3c053c38ec20ce3e6103ffa183f62bfdb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"\\\"intimate\\\":false,\\\"romantic\\\":false\",\n  \"byte_start\": 155,\n  \"byte_end\": 183\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791190020,
+    "id": "chatcmpl-ddH5BAFvcUycqq782OyKjtxM0NqIJZvV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1270.787,
+      "predicted_n": 53,
+      "predicted_per_second": 41.706438608515825,
+      "predicted_per_token_ms": 23.97711320754717,
+      "prompt_ms": 764.369,
+      "prompt_n": 804,
+      "prompt_per_second": 1051.8479948820532,
+      "prompt_per_token_ms": 0.9507077114427861
+    },
+    "usage": {
+      "completion_tokens": 53,
+      "prompt_tokens": 804,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 857
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"1816 Cliff Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-20:30\\\",\\\"Saturday\\\":\\\"8:0-20:30\\\",\\\"Sunday\\\":\\\"8:0-14:0\\\",\\\"Thursday\\\":\\\"9:0-20:0\\\",\\\"Tuesday\\\":\\\"9:0-20:0\\\",\\\"Wednesday\\\":\\\"9:0-20:0\\\"},\\\"name\\\":\\\"Rose Cafe No 2\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-07 21:48:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Our favorite Mexican restaurant.  Great food,  service and atmosphere.  Favorite dishes are shrimp quesadilla and enchilada verde, but everything is delicious!\\\"},{\\\"review_date\\\":\\\"2021-10-07 01:36:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Hands down the best Mexican food the Santa Barbara. Food and service are always on point!\\\\n\\\\nMy husband would eat here every day if we lived there. The enchiladas are amazing, make sure to ask for extra sauce as it's good to dip the chips in.\\\\n\\\\nNice to enjoy there outdoor seating and people watching. \\\\n\\\\nHave a margarita and enchilada and you will be thankful.\\\"},{\\\"review_date\\\":\\\"2021-10-03 17:19:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Rose caf\u00e9 is one of my favorite spots in town. They have the best chilaquiles I've ever had and enchiladas and everything on the menu is good   You can't go wrong with anything you order on the menu. The margaritas are really good and the staff is super friendly and I love the outdoor dining area.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Based on the provided structured data, here is an objective overview of Rose Cafe No 2:\\n\\nRose Cafe No 2 is a popular Mexican restaurant located in Santa Barbara, California, with a rating of 3.5 stars. The restaurant offers a cozy and intimate atmosphere, with outdoor seating available. While WiFi is not available, the restaurant does offer takeout services. According to customer reviews, the food and service at Rose Cafe No 2 are consistently excellent, with particular highlights including the shrimp quesadilla, enchilada verde, and chilaquiles. Customers also appreciate the friendly staff and romantic atmosphere. Some reviewers have noted that the restaurant can get busy and noisy, but overall, Rose Cafe No 2 is a great choice for those looking for delicious Mexican cuisine in a relaxed setting.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 114,
+  "source_bytes": "7b2261646472657373223a223138313620436c696666204472222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a747275652c22636c61737379223a66616c73652c226469766579223a66616c73652c2268697073746572223a66616c73652c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a66616c73652c227472656e6479223a66616c73652c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a66616c73652c22737472656574223a747275652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a747275652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a226e6f227d2c22627573696e6573735f7374617273223a332e352c2263617465676f72696573223a2252657374617572616e74732c204d65786963616e222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a22393a302d32303a3330222c225361747572646179223a22383a302d32303a3330222c2253756e646179223a22383a302d31343a30222c225468757273646179223a22393a302d32303a30222c2254756573646179223a22393a302d32303a30222c225765646e6573646179223a22393a302d32303a30227d2c226e616d65223a22526f73652043616665204e6f2032222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323032312d31302d30372032313a34383a3338222c227265766965775f7374617273223a352e302c227265766965775f74657874223a224f7572206661766f72697465204d65786963616e2072657374617572616e742e2020477265617420666f6f642c20207365727669636520616e642061746d6f7370686572652e20204661766f72697465206469736865732061726520736872696d7020717565736164696c6c6120616e6420656e6368696c6164612076657264652c206275742065766572797468696e672069732064656c6963696f757321227d2c7b227265766965775f64617465223a22323032312d31302d30372030313a33363a3532222c227265766965775f7374617273223a352e302c227265766965775f74657874223a2248616e647320646f776e207468652062657374204d65786963616e20666f6f64207468652053616e746120426172626172612e20466f6f6420616e6420736572766963652061726520616c77617973206f6e20706f696e74215c6e5c6e4d792068757362616e6420776f756c6420656174206865726520657665727920646179206966207765206c697665642074686572652e2054686520656e6368696c616461732061726520616d617a696e672c206d616b65207375726520746f2061736b20666f72206578747261207361756365206173206974277320676f6f6420746f206469702074686520636869707320696e2e5c6e5c6e4e69636520746f20656e6a6f79207468657265206f7574646f6f722073656174696e6720616e642070656f706c65207761746368696e672e205c6e5c6e486176652061206d617267617269746120616e6420656e6368696c61646120616e6420796f752077696c6c206265207468616e6b66756c2e227d2c7b227265766965775f64617465223a22323032312d31302d30332031373a31393a3538222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22526f736520636166c3a9206973206f6e65206f66206d79206661766f726974652073706f747320696e20746f776e2e20546865792068617665207468652062657374206368696c617175696c6573204927766520657665722068616420616e6420656e6368696c6164617320616e642065766572797468696e67206f6e20746865206d656e7520697320676f6f64202020596f752063616e277420676f2077726f6e67207769746820616e797468696e6720796f75206f72646572206f6e20746865206d656e752e20546865206d61726761726974617320617265207265616c6c7920676f6f6420616e642074686520737461666620697320737570657220667269656e646c7920616e642049206c6f766520746865206f7574646f6f722064696e696e6720617265612e227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:fb03137003e483f43849afe1c9216b8a8097955dbd04d1e3366c3707c50855ac",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"\\\"intimate\\\":false,\\\"romantic\\\":false\",\n  \"byte_start\": 155,\n  \"byte_end\": 183\n}",
+  "unit_id": "sha256:5b86fc4947dbb168ec8f9f041abfd2a11db526687423eda89b094e67c8e4bc5c"
+}

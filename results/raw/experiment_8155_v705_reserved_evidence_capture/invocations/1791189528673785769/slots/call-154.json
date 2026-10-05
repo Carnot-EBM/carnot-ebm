@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4a65776973682067726f75707320696e204d6963686967616e20617265206f6e206869676820616c65727420666f6c6c6f77696e6720612063616c6c20666f72204d75736c696d2070726f7465737473206279206120666f726d657220686967682d72616e6b696e672048616d6173206d656d6265722c204b68616c6964204d65736861616c2c20696e20737570706f7274206f662050616c657374696e69616e7320696e207468652047617a612053747269702e2049737261656c20686173206c6f636b656420646f776e207468652047617a6120537472697020666f6c6c6f77696e67206120726563656e742061747461636b2062792048616d61732e20546865204a65776973682046656465726174696f6e206f66204d6574726f706f6c6974616e20446574726f6974206861732073746174656420746865726520617265206e6f207370656369666963206f72206372656469626c65207468726561747320617420746869732074696d652e204661726d696e67746f6e2048696c6c7320506f6c696365204465706172746d656e742077696c6c20696e6372656173652073656375726974792061726f756e6420706c61636573206f6620776f727368697020616e64207363686f6f6c732064657370697465207468657265206265696e67206e6f206372656469626c65207468726561742e",
+  "arm": "holistic",
+  "call_id": "sha256:ccb149be598ae61ab0a90f40f709f8846692619889f833b8f7bed17309206246:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.095224765012972,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 535,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Michigan Jewish Groups Prepare for Palestinian Protests\\nJewish groups and communities across Michigan are on high alert after a former high ranking Hamas member called for Muslims to protest in support of Palestine.\\nRecently, Hamas attacked Israel leaving more than a thousand people dead, including American citizens. Dozens were also taken hostage.\\nIsrael has since locked down the Gaza Strip and began retaliatory strikes.\\nIn response, former Hamas chief Khalid Meshaal has called for protests to support the Palestinians trapped in the Gaza Strip.\\nIsrael has occupied the area for 17 years and has shut off all food, water, and electricity. Currently, 2.3 million Palestinians live in the Gaza Strip. The Gaza Strip is ruled by Hamas, a Islamic terrorist organization.\\nThe Oakland Press reports that the Jewish Federal of Metropolitan Detroit has said that so far there are no credible threats.\\nThe federation released a statement yesterday, \u201cOur security partner, Jewish Community Security, Inc. (JCSI) is in close contact with law enforcement agencies including the FBI, the Oakland County Sheriff, local police departments and the national Secure Community Network (SCN.\u201d\\n\u201cBased on our ongoing communication with our security and law enforcement partners, we want to assure the community that there is no specific or credible threat in metro Detroit at this time,\u201d the federation said.\\nFarmington Hills has said that the city\u2019s police will be increasing security around places of worship, \u201cThe Farmington Hills Police Department has been fielding numerous calls from community members expressing concern for their personal safety and the safety of others as the conflict in the Middle East continues to grow,\u201d the city said in a statement.\\nFarmington Hills Police Chief Jeff King has said that after speaking with state and federal intelligence partners there does not seem to be a credible threat at this time.\\nThat said, police will make a visible presence at places of worship and schools.\", \"answer\": \"Jewish groups in Michigan are on high alert following a call for Muslim protests by a former high-ranking Hamas member, Khalid Meshaal, in support of Palestinians in the Gaza Strip. Israel has locked down the Gaza Strip following a recent attack by Hamas. The Jewish Federation of Metropolitan Detroit has stated there are no specific or credible threats at this time. Farmington Hills Police Department will increase security around places of worship and schools despite there being no credible threat.\"}",
+  "prompt_sha256": "sha256:49c91618cb552c3742f530b874952b7612b7c322e9d6375be4d97ca81e2b42e0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189893,
+    "id": "chatcmpl-fxQOyelciiLQ1VVQ5qEJD529ztpqcMxU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 370.43,
+      "predicted_n": 16,
+      "predicted_per_second": 43.193045919606945,
+      "predicted_per_token_ms": 23.151875,
+      "prompt_ms": 571.92,
+      "prompt_n": 535,
+      "prompt_per_second": 935.4455168555043,
+      "prompt_per_token_ms": 1.0690093457943926
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 535,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 551
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Michigan Jewish Groups Prepare for Palestinian Protests\\nJewish groups and communities across Michigan are on high alert after a former high ranking Hamas member called for Muslims to protest in support of Palestine.\\nRecently, Hamas attacked Israel leaving more than a thousand people dead, including American citizens. Dozens were also taken hostage.\\nIsrael has since locked down the Gaza Strip and began retaliatory strikes.\\nIn response, former Hamas chief Khalid Meshaal has called for protests to support the Palestinians trapped in the Gaza Strip.\\nIsrael has occupied the area for 17 years and has shut off all food, water, and electricity. Currently, 2.3 million Palestinians live in the Gaza Strip. The Gaza Strip is ruled by Hamas, a Islamic terrorist organization.\\nThe Oakland Press reports that the Jewish Federal of Metropolitan Detroit has said that so far there are no credible threats.\\nThe federation released a statement yesterday, \u201cOur security partner, Jewish Community Security, Inc. (JCSI) is in close contact with law enforcement agencies including the FBI, the Oakland County Sheriff, local police departments and the national Secure Community Network (SCN.\u201d\\n\u201cBased on our ongoing communication with our security and law enforcement partners, we want to assure the community that there is no specific or credible threat in metro Detroit at this time,\u201d the federation said.\\nFarmington Hills has said that the city\u2019s police will be increasing security around places of worship, \u201cThe Farmington Hills Police Department has been fielding numerous calls from community members expressing concern for their personal safety and the safety of others as the conflict in the Middle East continues to grow,\u201d the city said in a statement.\\nFarmington Hills Police Chief Jeff King has said that after speaking with state and federal intelligence partners there does not seem to be a credible threat at this time.\\nThat said, police will make a visible presence at places of worship and schools.\", \"answer\": \"Jewish groups in Michigan are on high alert following a call for Muslim protests by a former high-ranking Hamas member, Khalid Meshaal, in support of Palestinians in the Gaza Strip. Israel has locked down the Gaza Strip following a recent attack by Hamas. The Jewish Federation of Metropolitan Detroit has stated there are no specific or credible threats at this time. Farmington Hills Police Department will increase security around places of worship and schools despite there being no credible threat.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 78,
+  "source_bytes": "4d6963686967616e204a65776973682047726f757073205072657061726520666f722050616c657374696e69616e2050726f74657374730a4a65776973682067726f75707320616e6420636f6d6d756e6974696573206163726f7373204d6963686967616e20617265206f6e206869676820616c657274206166746572206120666f726d657220686967682072616e6b696e672048616d6173206d656d6265722063616c6c656420666f72204d75736c696d7320746f2070726f7465737420696e20737570706f7274206f662050616c657374696e652e0a526563656e746c792c2048616d61732061747461636b65642049737261656c206c656176696e67206d6f7265207468616e20612074686f7573616e642070656f706c6520646561642c20696e636c7564696e6720416d65726963616e20636974697a656e732e20446f7a656e73207765726520616c736f2074616b656e20686f73746167652e0a49737261656c206861732073696e6365206c6f636b656420646f776e207468652047617a6120537472697020616e6420626567616e20726574616c6961746f727920737472696b65732e0a496e20726573706f6e73652c20666f726d65722048616d6173206368696566204b68616c6964204d65736861616c206861732063616c6c656420666f722070726f746573747320746f20737570706f7274207468652050616c657374696e69616e73207472617070656420696e207468652047617a612053747269702e0a49737261656c20686173206f6363757069656420746865206172656120666f7220313720796561727320616e64206861732073687574206f666620616c6c20666f6f642c2077617465722c20616e6420656c6563747269636974792e2043757272656e746c792c20322e33206d696c6c696f6e2050616c657374696e69616e73206c69766520696e207468652047617a612053747269702e205468652047617a612053747269702069732072756c65642062792048616d61732c20612049736c616d696320746572726f72697374206f7267616e697a6174696f6e2e0a546865204f616b6c616e64205072657373207265706f727473207468617420746865204a6577697368204665646572616c206f66204d6574726f706f6c6974616e20446574726f6974206861732073616964207468617420736f2066617220746865726520617265206e6f206372656469626c6520746872656174732e0a5468652066656465726174696f6e2072656c656173656420612073746174656d656e74207965737465726461792c20e2809c4f757220736563757269747920706172746e65722c204a657769736820436f6d6d756e6974792053656375726974792c20496e632e20284a4353492920697320696e20636c6f736520636f6e746163742077697468206c617720656e666f7263656d656e74206167656e6369657320696e636c7564696e6720746865204642492c20746865204f616b6c616e6420436f756e747920536865726966662c206c6f63616c20706f6c696365206465706172746d656e747320616e6420746865206e6174696f6e616c2053656375726520436f6d6d756e697479204e6574776f726b202853434e2ee2809d0ae2809c4261736564206f6e206f7572206f6e676f696e6720636f6d6d756e69636174696f6e2077697468206f757220736563757269747920616e64206c617720656e666f7263656d656e7420706172746e6572732c2077652077616e7420746f206173737572652074686520636f6d6d756e6974792074686174207468657265206973206e6f207370656369666963206f72206372656469626c652074687265617420696e206d6574726f20446574726f697420617420746869732074696d652ce2809d207468652066656465726174696f6e20736169642e0a4661726d696e67746f6e2048696c6c732068617320736169642074686174207468652063697479e280997320706f6c6963652077696c6c20626520696e6372656173696e672073656375726974792061726f756e6420706c61636573206f6620776f72736869702c20e2809c546865204661726d696e67746f6e2048696c6c7320506f6c696365204465706172746d656e7420686173206265656e206669656c64696e67206e756d65726f75732063616c6c732066726f6d20636f6d6d756e697479206d656d626572732065787072657373696e6720636f6e6365726e20666f7220746865697220706572736f6e616c2073616665747920616e642074686520736166657479206f66206f74686572732061732074686520636f6e666c69637420696e20746865204d6964646c65204561737420636f6e74696e75657320746f2067726f772ce2809d207468652063697479207361696420696e20612073746174656d656e742e0a4661726d696e67746f6e2048696c6c7320506f6c696365204368696566204a656666204b696e67206861732073616964207468617420616674657220737065616b696e67207769746820737461746520616e64206665646572616c20696e74656c6c6967656e636520706172746e65727320746865726520646f6573206e6f74207365656d20746f2062652061206372656469626c652074687265617420617420746869732074696d652e0a5468617420736169642c20706f6c6963652077696c6c206d616b6520612076697369626c652070726573656e636520617420706c61636573206f6620776f727368697020616e64207363686f6f6c732e",
+  "source_cluster_id": "sha256:06deef38ca432adc9ae3a22a22e34de3b9d6fe2a88fac7c4952fdcb79f2c782e",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.0\n}",
+  "unit_id": "sha256:ccb149be598ae61ab0a90f40f709f8846692619889f833b8f7bed17309206246"
+}

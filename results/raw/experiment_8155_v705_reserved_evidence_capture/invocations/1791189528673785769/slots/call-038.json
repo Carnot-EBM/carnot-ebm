@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c2068657265277320686f7720796f752063616e20636f6f6b2074756e6120737465616b3a0a0a312e2048656174206120736b696c6c6574206f766572206d656469756d2d68696768206865617420756e74696c206974277320686f742e0a322e20416464207468652074756e6120737465616b732c206d616b696e67207375726520746865792073697a7a6c65207768656e2061646465642e0a332e20436f6f6b2074686520737465616b7320756e636f766572656420666f72203620746f2039206d696e75746573206f7220756e74696c207468657920626567696e20746f20666c616b652077697468206120666f726b206275742072656d61696e2070696e6b20696e207468652063656e7465722e0a342e205475726e2074686520737465616b73206f6e636520647572696e6720636f6f6b696e6720616e642061646a757374207468652068656174206173206e65656465642069662074686520736b696c6c6574206265636f6d657320746f6f20686f742e0a0a4e6f74653a204974206973207265636f6d6d656e64656420746f2075736520332f342d696e63682d746869636b2074756e6120737465616b7320616e6420746f2063686f6f7365206120686561767920736b696c6c65742074686174206669747320746865206e756d626572206f6620737465616b7320796f752061726520636f6f6b696e672e204164646974696f6e616c6c792c206c696768746c7920636f6174696e672074686520736b696c6c6574207769746820636f6f6b696e67206f696c206f72206f6c697665206f696c206265666f726520616464696e672074686520737465616b732077696c6c2068656c7020746f20636172616d656c697a6520746865207375726661636573206f6620746865206669736820616e64206c6f636b20696e20746865206d6f6973747572652e",
+  "arm": "holistic",
+  "call_id": "sha256:363d704b93e1300a08985087e0b305ab9fbf545c883bb74e445ebd2878d4e131:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.9369246510323137,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 492,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 Add the tuna steaks. 2  The steaks should sizzle when added. 3  Cook, uncovered, for 6 to 9 minutes or until fish begins to flake when tested with a fork but is still pink in the center, turning once during cooking. 4  Adjust the heat as needed if the skillet gets too hot.\\\\n\\\\npassage 2:1 Heat the skillet over medium-high heat until hot. 2  Add the tuna steaks. 3  The steaks should sizzle when added. 4  Cook, uncovered, for 6 to 9 minutes or until fish begins to flake when tested with a fork but is still pink in the center, turning once during cooking.\\\\n\\\\npassage 3:Searing tuna steaks in a hot skillet caramelizes the surfaces of the fish and locks in the moisture. Start with 3/4-inch-thick steaks. 1  Choose a heavy skillet that best fits the number of tuna steaks you are cooking. 2  Add 1 to 3 teaspoons cooking oil or olive oil to lightly coat the skillet.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you cook tuna steak\\\"}\", \"answer\": \"Based on the given passages, here's how you can cook tuna steak:\\n\\n1. Heat a skillet over medium-high heat until it's hot.\\n2. Add the tuna steaks, making sure they sizzle when added.\\n3. Cook the steaks uncovered for 6 to 9 minutes or until they begin to flake with a fork but remain pink in the center.\\n4. Turn the steaks once during cooking and adjust the heat as needed if the skillet becomes too hot.\\n\\nNote: It is recommended to use 3/4-inch-thick tuna steaks and to choose a heavy skillet that fits the number of steaks you are cooking. Additionally, lightly coating the skillet with cooking oil or olive oil before adding the steaks will help to caramelize the surfaces of the fish and lock in the moisture.\"}",
+  "prompt_sha256": "sha256:33151ad713a7462c7af5ea92948cb05286788cdce5dc9f44c5cc1d3d8d0da0f2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189686,
+    "id": "chatcmpl-qOg7q4ZF4vwQZMskckoIboek0Eoph8XU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 320.795,
+      "predicted_n": 14,
+      "predicted_per_second": 43.64157795476862,
+      "predicted_per_token_ms": 22.913928571428574,
+      "prompt_ms": 460.708,
+      "prompt_n": 492,
+      "prompt_per_second": 1067.9215468366078,
+      "prompt_per_token_ms": 0.9363983739837399
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 492,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 506
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 Add the tuna steaks. 2  The steaks should sizzle when added. 3  Cook, uncovered, for 6 to 9 minutes or until fish begins to flake when tested with a fork but is still pink in the center, turning once during cooking. 4  Adjust the heat as needed if the skillet gets too hot.\\\\n\\\\npassage 2:1 Heat the skillet over medium-high heat until hot. 2  Add the tuna steaks. 3  The steaks should sizzle when added. 4  Cook, uncovered, for 6 to 9 minutes or until fish begins to flake when tested with a fork but is still pink in the center, turning once during cooking.\\\\n\\\\npassage 3:Searing tuna steaks in a hot skillet caramelizes the surfaces of the fish and locks in the moisture. Start with 3/4-inch-thick steaks. 1  Choose a heavy skillet that best fits the number of tuna steaks you are cooking. 2  Add 1 to 3 teaspoons cooking oil or olive oil to lightly coat the skillet.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you cook tuna steak\\\"}\", \"answer\": \"Based on the given passages, here's how you can cook tuna steak:\\n\\n1. Heat a skillet over medium-high heat until it's hot.\\n2. Add the tuna steaks, making sure they sizzle when added.\\n3. Cook the steaks uncovered for 6 to 9 minutes or until they begin to flake with a fork but remain pink in the center.\\n4. Turn the steaks once during cooking and adjust the heat as needed if the skillet becomes too hot.\\n\\nNote: It is recommended to use 3/4-inch-thick tuna steaks and to choose a heavy skillet that fits the number of steaks you are cooking. Additionally, lightly coating the skillet with cooking oil or olive oil before adding the steaks will help to caramelize the surfaces of the fish and lock in the moisture.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 20,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a3120416464207468652074756e6120737465616b732e2032202054686520737465616b732073686f756c642073697a7a6c65207768656e2061646465642e20332020436f6f6b2c20756e636f76657265642c20666f72203620746f2039206d696e75746573206f7220756e74696c206669736820626567696e7320746f20666c616b65207768656e207465737465642077697468206120666f726b20627574206973207374696c6c2070696e6b20696e207468652063656e7465722c207475726e696e67206f6e636520647572696e6720636f6f6b696e672e2034202041646a757374207468652068656174206173206e65656465642069662074686520736b696c6c6574206765747320746f6f20686f742e5c6e5c6e7061737361676520323a3120486561742074686520736b696c6c6574206f766572206d656469756d2d68696768206865617420756e74696c20686f742e20322020416464207468652074756e6120737465616b732e2033202054686520737465616b732073686f756c642073697a7a6c65207768656e2061646465642e20342020436f6f6b2c20756e636f76657265642c20666f72203620746f2039206d696e75746573206f7220756e74696c206669736820626567696e7320746f20666c616b65207768656e207465737465642077697468206120666f726b20627574206973207374696c6c2070696e6b20696e207468652063656e7465722c207475726e696e67206f6e636520647572696e6720636f6f6b696e672e5c6e5c6e7061737361676520333a53656172696e672074756e6120737465616b7320696e206120686f7420736b696c6c657420636172616d656c697a657320746865207375726661636573206f6620746865206669736820616e64206c6f636b7320696e20746865206d6f6973747572652e205374617274207769746820332f342d696e63682d746869636b20737465616b732e2031202043686f6f7365206120686561767920736b696c6c657420746861742062657374206669747320746865206e756d626572206f662074756e6120737465616b7320796f752061726520636f6f6b696e672e20322020416464203120746f20332074656173706f6f6e7320636f6f6b696e67206f696c206f72206f6c697665206f696c20746f206c696768746c7920636f61742074686520736b696c6c65742e5c6e5c6e222c227175657374696f6e223a22686f7720646f20796f7520636f6f6b2074756e6120737465616b227d",
+  "source_cluster_id": "sha256:d2685f19a72e6eecc1065150c746c1e912af2316d293d32df4e2a23bd4a29ad8",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:363d704b93e1300a08985087e0b305ab9fbf545c883bb74e445ebd2878d4e131"
+}

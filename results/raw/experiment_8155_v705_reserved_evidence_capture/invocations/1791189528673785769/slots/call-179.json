@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "54686520656e74697265205374617220576172732073616761206973206e6f7720617661696c61626c65206f6e206469676974616c2048442c20616e642061637472657373204d696e6479204b616c696e6727732062726f746865722061646d697474656420746f2066616b696e6720686973207261636520746f2067657420696e746f206d65646963616c207363686f6f6c2c2063617573696e6720636f6e74726f76657273792061626f75742061666669726d617469766520616374696f6e2e204d65616e7768696c652c20746865206661737420666f6f6420636861696e20427572676572204b696e672069732073706f6e736f72696e67207468652077656464696e67206f66204a6f656c2042757267657220616e64204173686c6579204b696e672c2077686f2068617665206761696e656420696e7465726e65742066616d6520666f72207468656972206170746c79206e616d656420756e696f6e2e20496e20656e7465727461696e6d656e74206e6577732c2066616e73206f66207468652043572073657269657320225468652056616d7069726520446961726965732220617265206d6f75726e696e672074686520646570617274757265206f662073746172204e696e6120446f627265762c20616e64207468652063617374206f6620746865207570636f6d696e67206d6f7669652022537569636964652053717561642220617373656d626c656420666f72207468652066697273742074696d6520696e20612070686f746f206f6e20547769747465722e",
+  "arm": "source_span",
+  "call_id": "sha256:6114f23322da94461651db4ad1a0bd7c250cc5cfa0e3f3a20a1d11f80b52a613:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.5740455120103434,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 838,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 69,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\\\"Star Wars\\\" is once again back in our lives, the Burger-King couple helped us believe love can be found in fast food, and Mindy Kaling's brother had a shocking announcement. Those are just a few of the stories that trended this week. 1. 'Star Wars' streaming. The Force is with the streaming device of your choice, thanks to this week's surprise announcement that the entire \\\"Star Wars\\\" saga (so far, anyway) would be released on digital HD at the end of the week. Between this and the release of \\\"Daredevil,\\\"  we imagine lots of nerds called in sick on Friday. 2. Mindy Kaling's brother: I faked being black to get into medical school. Actress Mindy Kaling's brother says that he posed as a black man years ago to get into medical school and that the experience opened his eyes to what he calls the hypocrisy of affirmative action. Among those who disapprove of the book he's planning to write about the whole thing: his sister. 3. Farewell, Rosco. \\\"Dukes of Hazzard\\\" fans mourned the loss of actor James Best, best known as Hazzard County's hapless sheriff Rosco P. Coltrane, this week. Others who passed on: \\\"L.A. Law\\\" actor Richard Dysart and frequent Clint Eastwood co-star Geoffrey Lewis. 4. When Burger met King, it was love. Joel Burger is set to marry Ashley King in July, and when fast food giant Burger King got wind of the nuptials, the couple scored a free wedding. 5. Michelle Obama broke it down (again) The first lady's Let's Move campaign has featured her dancing on more than one occasion, but she brought the (White) House down on Monday with the \\\"So You Think You Can Dance\\\" all-stars during the Easter egg roll. 6. \\\"The Vampire Diaries\\\" crisis. Not since Zayn Malik announced that he was quitting One Direction has Twitter had such a meltdown: \\\"Vampire Diaries\\\" star Nina Dobrev is leaving the CW series. \\\"Nothing will be the same again,\\\" one fan tweeted. Other things we loved:. More than 10 million people have seen Anne Hathaway's take on Miley Cyrus' \\\"Wrecking Ball,\\\" complete with props, from Spike's hit show \\\"Lip Sync Battle.\\\" Go, greased lightning! \\\"Late Late Show\\\" host and Tony winner James Corden put on \\\"Grease\\\" for Los Angeles drivers waiting in traffic. The cast of the movie \\\"Suicide Squad,\\\" including Will Smith and Margot Robbie, assembled for the first time this week in a Twitter photo from director David Ayer. And no worries, future Joker Jared Leto was taking the photo (in an image inspired by classic comic book \\\"The Killing Joke\\\"). The comments are the whole reason to read this \\\"Humans of New York\\\" post on a woman named Beyonce.\\n\", \"answer\": \"The entire Star Wars saga is now available on digital HD, and actress Mindy Kaling's brother admitted to faking his race to get into medical school, causing controversy about affirmative action. Meanwhile, the fast food chain Burger King is sponsoring the wedding of Joel Burger and Ashley King, who have gained internet fame for their aptly named union. In entertainment news, fans of the CW series \\\"The Vampire Diaries\\\" are mourning the departure of star Nina Dobrev, and the cast of the upcoming movie \\\"Suicide Squad\\\" assembled for the first time in a photo on Twitter.\"}",
+  "prompt_sha256": "sha256:ff9684362ac4828d6ce14858d55e53b84049aa791c8b19c4343bc50bb23d5203",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"the entire \\\"Star Wars\\\" saga (so far, anyway) would be released on digital HD at the end of the week\",\n  \"byte_start\": 258,\n  \"byte_end\": 346\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189940,
+    "id": "chatcmpl-8VkPbbjluS3IdvElPOR5acyk0ll2yO4P",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1658.739,
+      "predicted_n": 69,
+      "predicted_per_second": 41.597864401813666,
+      "predicted_per_token_ms": 24.039695652173915,
+      "prompt_ms": 789.907,
+      "prompt_n": 838,
+      "prompt_per_second": 1060.8843825918746,
+      "prompt_per_token_ms": 0.942609785202864
+    },
+    "usage": {
+      "completion_tokens": 69,
+      "prompt_tokens": 838,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 907
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"\\\"Star Wars\\\" is once again back in our lives, the Burger-King couple helped us believe love can be found in fast food, and Mindy Kaling's brother had a shocking announcement. Those are just a few of the stories that trended this week. 1. 'Star Wars' streaming. The Force is with the streaming device of your choice, thanks to this week's surprise announcement that the entire \\\"Star Wars\\\" saga (so far, anyway) would be released on digital HD at the end of the week. Between this and the release of \\\"Daredevil,\\\"  we imagine lots of nerds called in sick on Friday. 2. Mindy Kaling's brother: I faked being black to get into medical school. Actress Mindy Kaling's brother says that he posed as a black man years ago to get into medical school and that the experience opened his eyes to what he calls the hypocrisy of affirmative action. Among those who disapprove of the book he's planning to write about the whole thing: his sister. 3. Farewell, Rosco. \\\"Dukes of Hazzard\\\" fans mourned the loss of actor James Best, best known as Hazzard County's hapless sheriff Rosco P. Coltrane, this week. Others who passed on: \\\"L.A. Law\\\" actor Richard Dysart and frequent Clint Eastwood co-star Geoffrey Lewis. 4. When Burger met King, it was love. Joel Burger is set to marry Ashley King in July, and when fast food giant Burger King got wind of the nuptials, the couple scored a free wedding. 5. Michelle Obama broke it down (again) The first lady's Let's Move campaign has featured her dancing on more than one occasion, but she brought the (White) House down on Monday with the \\\"So You Think You Can Dance\\\" all-stars during the Easter egg roll. 6. \\\"The Vampire Diaries\\\" crisis. Not since Zayn Malik announced that he was quitting One Direction has Twitter had such a meltdown: \\\"Vampire Diaries\\\" star Nina Dobrev is leaving the CW series. \\\"Nothing will be the same again,\\\" one fan tweeted. Other things we loved:. More than 10 million people have seen Anne Hathaway's take on Miley Cyrus' \\\"Wrecking Ball,\\\" complete with props, from Spike's hit show \\\"Lip Sync Battle.\\\" Go, greased lightning! \\\"Late Late Show\\\" host and Tony winner James Corden put on \\\"Grease\\\" for Los Angeles drivers waiting in traffic. The cast of the movie \\\"Suicide Squad,\\\" including Will Smith and Margot Robbie, assembled for the first time this week in a Twitter photo from director David Ayer. And no worries, future Joker Jared Leto was taking the photo (in an image inspired by classic comic book \\\"The Killing Joke\\\"). The comments are the whole reason to read this \\\"Humans of New York\\\" post on a woman named Beyonce.\\n\", \"answer\": \"The entire Star Wars saga is now available on digital HD, and actress Mindy Kaling's brother admitted to faking his race to get into medical school, causing controversy about affirmative action. Meanwhile, the fast food chain Burger King is sponsoring the wedding of Joel Burger and Ashley King, who have gained internet fame for their aptly named union. In entertainment news, fans of the CW series \\\"The Vampire Diaries\\\" are mourning the departure of star Nina Dobrev, and the cast of the upcoming movie \\\"Suicide Squad\\\" assembled for the first time in a photo on Twitter.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 90,
+  "source_bytes": "2253746172205761727322206973206f6e636520616761696e206261636b20696e206f7572206c697665732c20746865204275726765722d4b696e6720636f75706c652068656c7065642075732062656c69657665206c6f76652063616e20626520666f756e6420696e206661737420666f6f642c20616e64204d696e6479204b616c696e6727732062726f746865722068616420612073686f636b696e6720616e6e6f756e63656d656e742e2054686f736520617265206a757374206120666577206f66207468652073746f726965732074686174207472656e6465642074686973207765656b2e20312e2027537461722057617273272073747265616d696e672e2054686520466f7263652069732077697468207468652073747265616d696e6720646576696365206f6620796f75722063686f6963652c207468616e6b7320746f2074686973207765656b277320737572707269736520616e6e6f756e63656d656e7420746861742074686520656e7469726520225374617220576172732220736167612028736f206661722c20616e797761792920776f756c642062652072656c6561736564206f6e206469676974616c2048442061742074686520656e64206f6620746865207765656b2e204265747765656e207468697320616e64207468652072656c65617365206f66202244617265646576696c2c222020776520696d6167696e65206c6f7473206f66206e657264732063616c6c656420696e207369636b206f6e204672696461792e20322e204d696e6479204b616c696e6727732062726f746865723a20492066616b6564206265696e6720626c61636b20746f2067657420696e746f206d65646963616c207363686f6f6c2e2041637472657373204d696e6479204b616c696e6727732062726f746865722073617973207468617420686520706f736564206173206120626c61636b206d616e2079656172732061676f20746f2067657420696e746f206d65646963616c207363686f6f6c20616e6420746861742074686520657870657269656e6365206f70656e656420686973206579657320746f20776861742068652063616c6c7320746865206879706f6372697379206f662061666669726d617469766520616374696f6e2e20416d6f6e672074686f73652077686f20646973617070726f7665206f662074686520626f6f6b206865277320706c616e6e696e6720746f2077726974652061626f7574207468652077686f6c65207468696e673a20686973207369737465722e20332e204661726577656c6c2c20526f73636f2e202244756b6573206f662048617a7a617264222066616e73206d6f75726e656420746865206c6f7373206f66206163746f72204a616d657320426573742c2062657374206b6e6f776e2061732048617a7a61726420436f756e74792773206861706c657373207368657269666620526f73636f20502e20436f6c7472616e652c2074686973207765656b2e204f74686572732077686f20706173736564206f6e3a20224c2e412e204c617722206163746f7220526963686172642044797361727420616e64206672657175656e7420436c696e742045617374776f6f6420636f2d737461722047656f6666726579204c657769732e20342e205768656e20427572676572206d6574204b696e672c20697420776173206c6f76652e204a6f656c204275726765722069732073657420746f206d61727279204173686c6579204b696e6720696e204a756c792c20616e64207768656e206661737420666f6f64206769616e7420427572676572204b696e6720676f742077696e64206f6620746865206e75707469616c732c2074686520636f75706c652073636f726564206120667265652077656464696e672e20352e204d696368656c6c65204f62616d612062726f6b6520697420646f776e2028616761696e2920546865206669727374206c6164792773204c65742773204d6f76652063616d706169676e20686173206665617475726564206865722064616e63696e67206f6e206d6f7265207468616e206f6e65206f63636173696f6e2c20627574207368652062726f7567687420746865202857686974652920486f75736520646f776e206f6e204d6f6e6461792077697468207468652022536f20596f75205468696e6b20596f752043616e2044616e63652220616c6c2d737461727320647572696e6720746865204561737465722065676720726f6c6c2e20362e20225468652056616d70697265204469617269657322206372697369732e204e6f742073696e6365205a61796e204d616c696b20616e6e6f756e636564207468617420686520776173207175697474696e67204f6e6520446972656374696f6e2068617320547769747465722068616420737563682061206d656c74646f776e3a202256616d706972652044696172696573222073746172204e696e6120446f62726576206973206c656176696e6720746865204357207365726965732e20224e6f7468696e672077696c6c206265207468652073616d6520616761696e2c22206f6e652066616e20747765657465642e204f74686572207468696e6773207765206c6f7665643a2e204d6f7265207468616e203130206d696c6c696f6e2070656f706c652068617665207365656e20416e6e6520486174686177617927732074616b65206f6e204d696c6579204379727573272022577265636b696e672042616c6c2c2220636f6d706c65746520776974682070726f70732c2066726f6d205370696b652773206869742073686f7720224c69702053796e6320426174746c652e2220476f2c2067726561736564206c696768746e696e672120224c617465204c6174652053686f772220686f737420616e6420546f6e792077696e6e6572204a616d657320436f7264656e20707574206f6e20224772656173652220666f72204c6f7320416e67656c657320647269766572732077616974696e6720696e20747261666669632e205468652063617374206f6620746865206d6f7669652022537569636964652053717561642c2220696e636c7564696e672057696c6c20536d69746820616e64204d6172676f7420526f626269652c20617373656d626c656420666f72207468652066697273742074696d652074686973207765656b20696e206120547769747465722070686f746f2066726f6d206469726563746f7220446176696420417965722e20416e64206e6f20776f72726965732c20667574757265204a6f6b6572204a61726564204c65746f207761732074616b696e67207468652070686f746f2028696e20616e20696d61676520696e73706972656420627920636c617373696320636f6d696320626f6f6b2022546865204b696c6c696e67204a6f6b6522292e2054686520636f6d6d656e747320617265207468652077686f6c6520726561736f6e20746f20726561642074686973202248756d616e73206f66204e657720596f726b2220706f7374206f6e206120776f6d616e206e616d6564204265796f6e63652e0a",
+  "source_cluster_id": "sha256:6280ecd429c30fffec07bbbdbee5a6076842cf52dd1902813011cf4668c2443c",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 1,\n  \"quote\": \"the entire \\\"Star Wars\\\" saga (so far, anyway) would be released on digital HD at the end of the week\",\n  \"byte_start\": 258,\n  \"byte_end\": 346\n}",
+  "unit_id": "sha256:6114f23322da94461651db4ad1a0bd7c250cc5cfa0e3f3a20a1d11f80b52a613"
+}

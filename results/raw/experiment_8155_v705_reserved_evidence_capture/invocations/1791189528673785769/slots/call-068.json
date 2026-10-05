@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "526f6d616e74692d457a65722069732061206c6f63616c6c79206f776e6564204d65786963616e2072657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043616c69666f726e69612e205468652065737461626c6973686d656e74206f666665727320612076617269657479206f6620747261646974696f6e616c204d65786963616e206469736865732c20696e636c7564696e67207461636f732c206275727269746f732c20616e64206d6f72652e20437573746f6d657273206861766520676976656e207468652072657374617572616e74206d6978656420726576696577732c207769746820736f6d65207072616973696e672069747320636f6e76656e69656e636520616e6420717569636b20736572766963652c207768696c65206f7468657273206861766520657870726573736564206469736170706f696e746d656e74207769746820746865207175616c697479206f66207468656972206d65616c732e204f6e65207265766965776572206e6f74656420746861742074686520706173746f72206275727269746f2074686579206f72646572656420776173207072652d6d61646520616e6420686561746564206f6e207468652067726964646c652c207768696368206d6179206166666563742074686520746173746520616e64207175616c6974792e20446573706974652074686573652063726974696369736d732c20526f6d616e74692d457a65722068617320612072656c61746976656c79206869676820726174696e67206f6620332e3520737461727320616e64206973206f70656e20736576656e20646179732061207765656b2066726f6d2039616d20746f203130706d2e",
+  "arm": "holistic",
+  "call_id": "sha256:f074cc8780e6b026c15a77f972df3c7a3f330c9a1ad1af35833c3da874b9879f:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.1806353559950367,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 694,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.3,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.3,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"701 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Food, Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-3:0\\\",\\\"Monday\\\":\\\"9:0-20:0\\\",\\\"Saturday\\\":\\\"9:0-3:0\\\",\\\"Sunday\\\":\\\"9:0-21:0\\\",\\\"Thursday\\\":\\\"9:0-3:0\\\",\\\"Tuesday\\\":\\\"9:0-20:0\\\",\\\"Wednesday\\\":\\\"9:0-20:0\\\"},\\\"name\\\":\\\"Romanti-Ezer\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-12-12 20:37:00\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"A good taco on the go. Pretty average but reliable for late night food run. Also good (when Covid is done) after a movie and shopping bc it's nearby :) it's has decent prices and the employees work quickly.\\\"},{\\\"review_date\\\":\\\"2020-08-30 19:07:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"From LA and I've had a lot of Mexican food, this place is better than most I've been to\\\"},{\\\"review_date\\\":\\\"2020-06-26 21:45:39\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Had the pastor burrito. The burrito came out less than 90 seconds after ordering which led me to believe I ate a $9 pre made burrito which was heated on the griddle to order. Not great quality, taste not the best, but I've had a couple worse in my day. Icing on the cake was I got very ill after eating this. Maybe don't get the pastor ?\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Romanti-Ezer is a locally owned Mexican restaurant located in Santa Barbara, California. The establishment offers a variety of traditional Mexican dishes, including tacos, burritos, and more. Customers have given the restaurant mixed reviews, with some praising its convenience and quick service, while others have expressed disappointment with the quality of their meals. One reviewer noted that the pastor burrito they ordered was pre-made and heated on the griddle, which may affect the taste and quality. Despite these criticisms, Romanti-Ezer has a relatively high rating of 3.5 stars and is open seven days a week from 9am to 10pm.\"}",
+  "prompt_sha256": "sha256:e03619500ff96b2e519ac74ad19e2147c658a44065ae9f170b200b42cfd68fb7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189739,
+    "id": "chatcmpl-W6tuGq2rFGBLDZD8ADkdPRrriLZAD9Cm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 370.332,
+      "predicted_n": 16,
+      "predicted_per_second": 43.204475983711916,
+      "predicted_per_token_ms": 23.14575,
+      "prompt_ms": 682.794,
+      "prompt_n": 694,
+      "prompt_per_second": 1016.4119778439764,
+      "prompt_per_token_ms": 0.9838530259365994
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 694,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 710
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"701 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Food, Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-3:0\\\",\\\"Monday\\\":\\\"9:0-20:0\\\",\\\"Saturday\\\":\\\"9:0-3:0\\\",\\\"Sunday\\\":\\\"9:0-21:0\\\",\\\"Thursday\\\":\\\"9:0-3:0\\\",\\\"Tuesday\\\":\\\"9:0-20:0\\\",\\\"Wednesday\\\":\\\"9:0-20:0\\\"},\\\"name\\\":\\\"Romanti-Ezer\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-12-12 20:37:00\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"A good taco on the go. Pretty average but reliable for late night food run. Also good (when Covid is done) after a movie and shopping bc it's nearby :) it's has decent prices and the employees work quickly.\\\"},{\\\"review_date\\\":\\\"2020-08-30 19:07:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"From LA and I've had a lot of Mexican food, this place is better than most I've been to\\\"},{\\\"review_date\\\":\\\"2020-06-26 21:45:39\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Had the pastor burrito. The burrito came out less than 90 seconds after ordering which led me to believe I ate a $9 pre made burrito which was heated on the griddle to order. Not great quality, taste not the best, but I've had a couple worse in my day. Icing on the cake was I got very ill after eating this. Maybe don't get the pastor ?\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Romanti-Ezer is a locally owned Mexican restaurant located in Santa Barbara, California. The establishment offers a variety of traditional Mexican dishes, including tacos, burritos, and more. Customers have given the restaurant mixed reviews, with some praising its convenience and quick service, while others have expressed disappointment with the quality of their meals. One reviewer noted that the pastor burrito they ordered was pre-made and heated on the griddle, which may affect the taste and quality. Despite these criticisms, Romanti-Ezer has a relatively high rating of 3.5 stars and is open seven days a week from 9am to 10pm.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 35,
+  "source_bytes": "7b2261646472657373223a223730312043686170616c61205374222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a747275652c22636c61737379223a66616c73652c226469766579223a6e756c6c2c2268697073746572223a66616c73652c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a66616c73652c227472656e6479223a66616c73652c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a747275652c22737472656574223a747275652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a747275652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a226e6f227d2c22627573696e6573735f7374617273223a332e352c2263617465676f72696573223a22466f6f642c2052657374617572616e74732c204d65786963616e222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a22393a302d333a30222c224d6f6e646179223a22393a302d32303a30222c225361747572646179223a22393a302d333a30222c2253756e646179223a22393a302d32313a30222c225468757273646179223a22393a302d333a30222c2254756573646179223a22393a302d32303a30222c225765646e6573646179223a22393a302d32303a30227d2c226e616d65223a22526f6d616e74692d457a6572222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323032302d31322d31322032303a33373a3030222c227265766965775f7374617273223a332e302c227265766965775f74657874223a224120676f6f64207461636f206f6e2074686520676f2e205072657474792061766572616765206275742072656c6961626c6520666f72206c617465206e6967687420666f6f642072756e2e20416c736f20676f6f6420287768656e20436f76696420697320646f6e65292061667465722061206d6f76696520616e642073686f7070696e672062632069742773206e6561726279203a2920697427732068617320646563656e742070726963657320616e642074686520656d706c6f7965657320776f726b20717569636b6c792e227d2c7b227265766965775f64617465223a22323032302d30382d33302031393a30373a3032222c227265766965775f7374617273223a352e302c227265766965775f74657874223a2246726f6d204c4120616e642049277665206861642061206c6f74206f66204d65786963616e20666f6f642c207468697320706c61636520697320626574746572207468616e206d6f73742049277665206265656e20746f227d2c7b227265766965775f64617465223a22323032302d30362d32362032313a34353a3339222c227265766965775f7374617273223a322e302c227265766965775f74657874223a224861642074686520706173746f72206275727269746f2e20546865206275727269746f2063616d65206f7574206c657373207468616e203930207365636f6e6473206166746572206f72646572696e67207768696368206c6564206d6520746f2062656c69657665204920617465206120243920707265206d616465206275727269746f2077686963682077617320686561746564206f6e207468652067726964646c6520746f206f726465722e204e6f74206772656174207175616c6974792c207461737465206e6f742074686520626573742c20627574204927766520686164206120636f75706c6520776f72736520696e206d79206461792e204963696e67206f6e207468652063616b6520776173204920676f74207665727920696c6c20616674657220656174696e6720746869732e204d6179626520646f6e2774206765742074686520706173746f72203f227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:3d9910599dc5aa7ad8ccde6b99c529346edd0bf2c74e5774d3399af98fffc1d8",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.3\n}",
+  "unit_id": "sha256:f074cc8780e6b026c15a77f972df3c7a3f330c9a1ad1af35833c3da874b9879f"
+}

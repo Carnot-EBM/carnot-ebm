@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20686572652061726520736f6d65207761797320746f20666163696c697461746520612062616279277320736c6565703a0a0a312e204d616b65207375726520746865206261627920736c6565707320696e206120636f74206e65787420746f20796f75722062656420696620746865792061726520736978206d6f6e746873206f7220796f756e6765722e0a322e2053686172652074686520726f6c65206f6620636f6d666f72746572207769746820796f757220706172746e65722c20736f20626f7468206f6620796f752063616e2068656c7020796f757220626162792066616c6c206261636b20746f20736c6565702e0a332e204d61737361676520796f757220626162792e0a342e2045737461626c69736820612062656474696d6520726f7574696e65207468617420696e636c75646573206120706c656173616e7420626564726f6f6d20656e7669726f6e6d656e7420616e642061207365637572697479206f626a6563742c20737563682061732061206261627920626c616e6b6574206f72207374756666656420616e696d616c2e0a352e204b656570207468652062656474696d6520726f7574696e652073686f72742c206e6f206c6f6e676572207468616e203435206d696e757465732e",
+  "arm": "holistic",
+  "call_id": "sha256:678613dca7913d9dfd82462d9d859e39e4d7ba161d01eaee2239fa7f03cb3683:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.85342363093514,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 437,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 But make sure you are aware of how to make co-sleeping safe. 2  If your baby is six months or younger, it's safest for her to sleep in a cot next to your bed. 3  Share the role of comforter with your partner, so both of you can help your baby fall back to sleep.\\\\n\\\\npassage 2:1 If your baby is six months or younger, it's safest for her to sleep in a cot next to your bed. 2  Share the role of comforter with your partner, so both of you can help your baby fall back to sleep. 3  Once your baby is old enough not to need a night-time feed, she can learn to be comforted by your partner.\\\\n\\\\npassage 3:1 You could also try massaging your baby. 2  Finish the bedtime ritual in your baby's bedroom and make sure that her room is a pleasant place to be. 3  This routine should last no longer than 45 minutes. 4  Give her a security object, such as a baby blanket or stuffed animal.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to facilitate baby's sleep\\\"}\", \"answer\": \"Based on the given passages, here are some ways to facilitate a baby's sleep:\\n\\n1. Make sure the baby sleeps in a cot next to your bed if they are six months or younger.\\n2. Share the role of comforter with your partner, so both of you can help your baby fall back to sleep.\\n3. Massage your baby.\\n4. Establish a bedtime routine that includes a pleasant bedroom environment and a security object, such as a baby blanket or stuffed animal.\\n5. Keep the bedtime routine short, no longer than 45 minutes.\"}",
+  "prompt_sha256": "sha256:e106eb52b9b3bd548bdc87744cc2d1742d4895c86277a6f03ebe1a67271a3e88",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189676,
+    "id": "chatcmpl-DU5VqYWinExD74XVg6FR2QsaBPOkU4Ml",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 319.331,
+      "predicted_n": 14,
+      "predicted_per_second": 43.841656463043044,
+      "predicted_per_token_ms": 22.809357142857145,
+      "prompt_ms": 428.696,
+      "prompt_n": 437,
+      "prompt_per_second": 1019.3703696792132,
+      "prompt_per_token_ms": 0.9809977116704806
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 437,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 451
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 But make sure you are aware of how to make co-sleeping safe. 2  If your baby is six months or younger, it's safest for her to sleep in a cot next to your bed. 3  Share the role of comforter with your partner, so both of you can help your baby fall back to sleep.\\\\n\\\\npassage 2:1 If your baby is six months or younger, it's safest for her to sleep in a cot next to your bed. 2  Share the role of comforter with your partner, so both of you can help your baby fall back to sleep. 3  Once your baby is old enough not to need a night-time feed, she can learn to be comforted by your partner.\\\\n\\\\npassage 3:1 You could also try massaging your baby. 2  Finish the bedtime ritual in your baby's bedroom and make sure that her room is a pleasant place to be. 3  This routine should last no longer than 45 minutes. 4  Give her a security object, such as a baby blanket or stuffed animal.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to facilitate baby's sleep\\\"}\", \"answer\": \"Based on the given passages, here are some ways to facilitate a baby's sleep:\\n\\n1. Make sure the baby sleeps in a cot next to your bed if they are six months or younger.\\n2. Share the role of comforter with your partner, so both of you can help your baby fall back to sleep.\\n3. Massage your baby.\\n4. Establish a bedtime routine that includes a pleasant bedroom environment and a security object, such as a baby blanket or stuffed animal.\\n5. Keep the bedtime routine short, no longer than 45 minutes.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 17,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a3120427574206d616b65207375726520796f7520617265206177617265206f6620686f7720746f206d616b6520636f2d736c656570696e6720736166652e20322020496620796f7572206261627920697320736978206d6f6e746873206f7220796f756e6765722c20697427732073616665737420666f722068657220746f20736c65657020696e206120636f74206e65787420746f20796f7572206265642e2033202053686172652074686520726f6c65206f6620636f6d666f72746572207769746820796f757220706172746e65722c20736f20626f7468206f6620796f752063616e2068656c7020796f757220626162792066616c6c206261636b20746f20736c6565702e5c6e5c6e7061737361676520323a3120496620796f7572206261627920697320736978206d6f6e746873206f7220796f756e6765722c20697427732073616665737420666f722068657220746f20736c65657020696e206120636f74206e65787420746f20796f7572206265642e2032202053686172652074686520726f6c65206f6620636f6d666f72746572207769746820796f757220706172746e65722c20736f20626f7468206f6620796f752063616e2068656c7020796f757220626162792066616c6c206261636b20746f20736c6565702e203320204f6e636520796f75722062616279206973206f6c6420656e6f756768206e6f7420746f206e6565642061206e696768742d74696d6520666565642c207368652063616e206c6561726e20746f20626520636f6d666f7274656420627920796f757220706172746e65722e5c6e5c6e7061737361676520333a3120596f7520636f756c6420616c736f20747279206d6173736167696e6720796f757220626162792e2032202046696e697368207468652062656474696d652072697475616c20696e20796f75722062616279277320626564726f6f6d20616e64206d616b65207375726520746861742068657220726f6f6d206973206120706c656173616e7420706c61636520746f2062652e203320205468697320726f7574696e652073686f756c64206c617374206e6f206c6f6e676572207468616e203435206d696e757465732e2034202047697665206865722061207365637572697479206f626a6563742c20737563682061732061206261627920626c616e6b6574206f72207374756666656420616e696d616c2e5c6e5c6e222c227175657374696f6e223a22686f7720746f20666163696c69746174652062616279277320736c656570227d",
+  "source_cluster_id": "sha256:cee71c55e32f87cc42fbaa9831fce2da88d7b46968d17284992aa494e89581fd",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:678613dca7913d9dfd82462d9d859e39e4d7ba161d01eaee2239fa7f03cb3683"
+}

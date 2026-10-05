@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "546f2061646a75737420736c6565702073657474696e67732c20636c69636b206f6e207468652064726f702d646f776e206d656e75206e65787420746f205075742074686520636f6d707574657220746f20736c65657020616e642073656c65637420612074696d652c2072616e67696e672066726f6d206f6e65206d696e75746520746f206669766520686f7572732e204966207573696e672061206c6170746f702c20796f752063616e2073656c65637420646966666572656e74206f7074696f6e7320666f72207768656e2074686520636f6d70757465722069732072756e6e696e67206f666620746865206261747465727920616e64207768656e20697420697320706c756767656420696e2e204164646974696f6e616c6c792c20796f752063616e2072652d74756e6520796f757220736c656570206379636c6520627920636c69636b696e6720746865205363686564756c6520627574746f6e206f6e2074686520456e657267792053617665722077696e646f7720616e642073657474696e6720757020612074696d6520666f722074686520636f6d707574657220746f206175746f6d61746963616c6c792077616b65207570206f7220676f20746f20736c6565702e205469636b2074686520626f78206e65787420746f205374617274207570206f722077616b6520616e642073656c656374207468652074696d6520696e20746865206669656c6420617420746865207269676874206f66207468652077696e646f7720746f20686176652074686520636f6d7075746572207475726e206f6e2061742061206365727461696e2074696d652065616368206461792e205469636b2074686520626f78206e65787420746f207468652064726f702d646f776e206d656e752062656c6f7720746865205374617274207570206f7074696f6e20616e642073656c65637420656974686572205368757420446f776e206f7220536c65657020746f2073657420616e206175746f6d6174696320736c6565702074696d652e",
+  "arm": "holistic",
+  "call_id": "sha256:cd8249a60b5b820c242027b0d650c33cbaf1fe788e73204bd2124455bed82fbe:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.961297178058885,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 459,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Click on the drop-down menu next to Put the computer to sleep: and select a time, ranging from one minute to five hours. If using a laptop, you can select different options for when the computer is running off the battery and when it is plugged in.\\\\n\\\\npassage 2:But you can re-tune your sleep cycle to get better rest and more of it. This is also called the circadian rhythm, and it tells your body when to sleep and wake up. Many of the important things going in your body rely on this sleep-wake cycle.\\\\n\\\\npassage 3:Click the Schedule button on the Energy Saver window to set up a time for the computer to automatically wake up or go to sleep. Tick the box next to Start up or wake and select the time in the field at the right of the window to have the computer turn on at a certain time each day. Tick the box next to the drop-down menu below the Start up option and select either Shut Down or Sleep to set an automatic sleep time.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you adjust sleep setting\\\"}\", \"answer\": \"To adjust sleep settings, click on the drop-down menu next to Put the computer to sleep and select a time, ranging from one minute to five hours. If using a laptop, you can select different options for when the computer is running off the battery and when it is plugged in. Additionally, you can re-tune your sleep cycle by clicking the Schedule button on the Energy Saver window and setting up a time for the computer to automatically wake up or go to sleep. Tick the box next to Start up or wake and select the time in the field at the right of the window to have the computer turn on at a certain time each day. Tick the box next to the drop-down menu below the Start up option and select either Shut Down or Sleep to set an automatic sleep time.\"}",
+  "prompt_sha256": "sha256:5ab0341a7eeef1aebbe9e9dd7ac3c85f765f0e6928f24911c9ca266b5fb55093",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189992,
+    "id": "chatcmpl-K3JHxTJnivDDGZtlsH1nT3D07yuI3zhy",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 370.41,
+      "predicted_n": 16,
+      "predicted_per_second": 43.195378094543884,
+      "predicted_per_token_ms": 23.150625,
+      "prompt_ms": 463.777,
+      "prompt_n": 459,
+      "prompt_per_second": 989.6997910633776,
+      "prompt_per_token_ms": 1.0104074074074074
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 459,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 475
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Click on the drop-down menu next to Put the computer to sleep: and select a time, ranging from one minute to five hours. If using a laptop, you can select different options for when the computer is running off the battery and when it is plugged in.\\\\n\\\\npassage 2:But you can re-tune your sleep cycle to get better rest and more of it. This is also called the circadian rhythm, and it tells your body when to sleep and wake up. Many of the important things going in your body rely on this sleep-wake cycle.\\\\n\\\\npassage 3:Click the Schedule button on the Energy Saver window to set up a time for the computer to automatically wake up or go to sleep. Tick the box next to Start up or wake and select the time in the field at the right of the window to have the computer turn on at a certain time each day. Tick the box next to the drop-down menu below the Start up option and select either Shut Down or Sleep to set an automatic sleep time.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you adjust sleep setting\\\"}\", \"answer\": \"To adjust sleep settings, click on the drop-down menu next to Put the computer to sleep and select a time, ranging from one minute to five hours. If using a laptop, you can select different options for when the computer is running off the battery and when it is plugged in. Additionally, you can re-tune your sleep cycle by clicking the Schedule button on the Energy Saver window and setting up a time for the computer to automatically wake up or go to sleep. Tick the box next to Start up or wake and select the time in the field at the right of the window to have the computer turn on at a certain time each day. Tick the box next to the drop-down menu below the Start up option and select either Shut Down or Sleep to set an automatic sleep time.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 106,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a436c69636b206f6e207468652064726f702d646f776e206d656e75206e65787420746f205075742074686520636f6d707574657220746f20736c6565703a20616e642073656c65637420612074696d652c2072616e67696e672066726f6d206f6e65206d696e75746520746f206669766520686f7572732e204966207573696e672061206c6170746f702c20796f752063616e2073656c65637420646966666572656e74206f7074696f6e7320666f72207768656e2074686520636f6d70757465722069732072756e6e696e67206f666620746865206261747465727920616e64207768656e20697420697320706c756767656420696e2e5c6e5c6e7061737361676520323a42757420796f752063616e2072652d74756e6520796f757220736c656570206379636c6520746f2067657420626574746572207265737420616e64206d6f7265206f662069742e205468697320697320616c736f2063616c6c6564207468652063697263616469616e2072687974686d2c20616e642069742074656c6c7320796f757220626f6479207768656e20746f20736c65657020616e642077616b652075702e204d616e79206f662074686520696d706f7274616e74207468696e677320676f696e6720696e20796f757220626f64792072656c79206f6e207468697320736c6565702d77616b65206379636c652e5c6e5c6e7061737361676520333a436c69636b20746865205363686564756c6520627574746f6e206f6e2074686520456e657267792053617665722077696e646f7720746f2073657420757020612074696d6520666f722074686520636f6d707574657220746f206175746f6d61746963616c6c792077616b65207570206f7220676f20746f20736c6565702e205469636b2074686520626f78206e65787420746f205374617274207570206f722077616b6520616e642073656c656374207468652074696d6520696e20746865206669656c6420617420746865207269676874206f66207468652077696e646f7720746f20686176652074686520636f6d7075746572207475726e206f6e2061742061206365727461696e2074696d652065616368206461792e205469636b2074686520626f78206e65787420746f207468652064726f702d646f776e206d656e752062656c6f7720746865205374617274207570206f7074696f6e20616e642073656c65637420656974686572205368757420446f776e206f7220536c65657020746f2073657420616e206175746f6d6174696320736c6565702074696d652e5c6e5c6e222c227175657374696f6e223a22686f7720646f20796f752061646a75737420736c6565702073657474696e67227d",
+  "source_cluster_id": "sha256:a72b3df2bf1950ee24bd0a6506c3cbbef81c674ebb5ce8bedb59fcaff43653a0",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.0\n}",
+  "unit_id": "sha256:cd8249a60b5b820c242027b0d650c33cbaf1fe788e73204bd2124455bed82fbe"
+}

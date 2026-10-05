@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e207468652070726f76696465642070617373616765732c20686572652061726520736f6d65207761797320746f2072656d6f7665206e61696c20706f6c69736820776974686f7574207573696e67206120706f6c6973682072656d6f7665723a0a0a312e20536f616b696e6720796f75722068616e647320696e207761726d20736f617020776174657220666f7220322d33206d696e7574657320746f2072656d6f7665207468652073707261792028506173736167652031290a322e2053637261746368696e6720746865206e61696c20706f6c697368206c696768746c7920616e642070756c6c696e67206974206f66662028506173736167652031290a332e205573696e6720512d7469707320617320616e20616c7465726e617469766520746f20636f74746f6e2073776162732028506173736167652031290a342e204170706c79696e67206c656d6f6e206a7569636520746f20746865206e61696c7320616e64206c657474696e672069742073697420666f72206120666577206d696e75746573206265666f72652072656d6f76696e672074686520706f6c6973682028506173736167652032290a352e205573696e6720616e20656d65727920626f61726420746f2067656e746c7920736372617065206f666620746865206e61696c20706f6c6973682028506173736167652032290a0a4974277320696d706f7274616e7420746f206e6f74652074686174207468657365206d6574686f6473206d6179206e6f7420626520617320656666656374697665206f7220656666696369656e74206173207573696e67206120747261646974696f6e616c206e61696c20706f6c6973682072656d6f7665722c20616e642074686579206d6179206e6f7420636f6d706c6574656c792072656d6f766520616c6c20747261636573206f662074686520706f6c6973682e",
+  "arm": "holistic",
+  "call_id": "sha256:164fea3d5fe626c0fb1782798617fcb5d1972201b53362d4449b969efb7d787b:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.18360509397462,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 684,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.8,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.8,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 If you use nail polish to remove it the cotton might stick to your nail. 2  Soak your hand in warm soap water for 2-3 minutes to remove the spray. 3  Instead of wasting a top coat to get the nail polish off you can use any nail polish. 4  Make sure it is one you don't use or don't like. Before you apply your nail polish be sure to coat your nails with glue first and let it dry for 2-3 minutes and apply your desired nail polish. 2  If you want to remove your nail polish, just scratch it a little, pull and it will come off. 3  Q-Tips are very good alternative for cotton swabs. 4  Use lemon juice.\\\\n\\\\npassage 2:Nail polish remover is no doubt the easiest way to remove the old nail paint before applying a new one. However, unknown to many of us nail polish removers contain flammable chemicals which may cause serious issues like lung congestion, eye irritation and shortness of breath upon inhalation of the vapors etc.rab an emery board and gently scrap off the nail polish from your nails. Note: Make sure to use water that is hot enough to be tolerated. Additionally, you can add a few drops of hand wash to the warm water. 1  Top coat method works Take a top coat nail polish and apply a thick coat of it over the old nail polish.\\\\n\\\\npassage 3:1. Choose a nail polish remover. Go to the drugstore or beauty store and buy a bottle of nail polish remover. It's usually in the cosmetic section near the selection of nail polish and other nail products. One bottle contains enough nail polish remover to remove plenty of manicures' worth of polish.. Saturate your applicator with nail polish remover. Unscrew the nail polish remover cap, place the applicator over the opening, and invert the bottle to soak it. Alternatively, you could pour the nail polish remover into a bowl and dip the cotton ball or paper towel into the solution.\\\\n\\\\n\\\",\\\"question\\\":\\\"remove nail polish without polish remover\\\"}\", \"answer\": \"Based on the provided passages, here are some ways to remove nail polish without using a polish remover:\\n\\n1. Soaking your hands in warm soap water for 2-3 minutes to remove the spray (Passage 1)\\n2. Scratching the nail polish lightly and pulling it off (Passage 1)\\n3. Using Q-tips as an alternative to cotton swabs (Passage 1)\\n4. Applying lemon juice to the nails and letting it sit for a few minutes before removing the polish (Passage 2)\\n5. Using an emery board to gently scrape off the nail polish (Passage 2)\\n\\nIt's important to note that these methods may not be as effective or efficient as using a traditional nail polish remover, and they may not completely remove all traces of the polish.\"}",
+  "prompt_sha256": "sha256:c29e7e3287d699047b8c083cdc27fb1f505739c9b0bb16e7db528bcf132de89e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.8\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189881,
+    "id": "chatcmpl-4CtRnSUd101Q7gqXP2qqOpkalrCI2eUF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 370.154,
+      "predicted_n": 16,
+      "predicted_per_second": 43.22525219233076,
+      "predicted_per_token_ms": 23.134625,
+      "prompt_ms": 684.303,
+      "prompt_n": 684,
+      "prompt_per_second": 999.5572136904266,
+      "prompt_per_token_ms": 1.0004429824561403
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 684,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 700
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:1 If you use nail polish to remove it the cotton might stick to your nail. 2  Soak your hand in warm soap water for 2-3 minutes to remove the spray. 3  Instead of wasting a top coat to get the nail polish off you can use any nail polish. 4  Make sure it is one you don't use or don't like. Before you apply your nail polish be sure to coat your nails with glue first and let it dry for 2-3 minutes and apply your desired nail polish. 2  If you want to remove your nail polish, just scratch it a little, pull and it will come off. 3  Q-Tips are very good alternative for cotton swabs. 4  Use lemon juice.\\\\n\\\\npassage 2:Nail polish remover is no doubt the easiest way to remove the old nail paint before applying a new one. However, unknown to many of us nail polish removers contain flammable chemicals which may cause serious issues like lung congestion, eye irritation and shortness of breath upon inhalation of the vapors etc.rab an emery board and gently scrap off the nail polish from your nails. Note: Make sure to use water that is hot enough to be tolerated. Additionally, you can add a few drops of hand wash to the warm water. 1  Top coat method works Take a top coat nail polish and apply a thick coat of it over the old nail polish.\\\\n\\\\npassage 3:1. Choose a nail polish remover. Go to the drugstore or beauty store and buy a bottle of nail polish remover. It's usually in the cosmetic section near the selection of nail polish and other nail products. One bottle contains enough nail polish remover to remove plenty of manicures' worth of polish.. Saturate your applicator with nail polish remover. Unscrew the nail polish remover cap, place the applicator over the opening, and invert the bottle to soak it. Alternatively, you could pour the nail polish remover into a bowl and dip the cotton ball or paper towel into the solution.\\\\n\\\\n\\\",\\\"question\\\":\\\"remove nail polish without polish remover\\\"}\", \"answer\": \"Based on the provided passages, here are some ways to remove nail polish without using a polish remover:\\n\\n1. Soaking your hands in warm soap water for 2-3 minutes to remove the spray (Passage 1)\\n2. Scratching the nail polish lightly and pulling it off (Passage 1)\\n3. Using Q-tips as an alternative to cotton swabs (Passage 1)\\n4. Applying lemon juice to the nails and letting it sit for a few minutes before removing the polish (Passage 2)\\n5. Using an emery board to gently scrape off the nail polish (Passage 2)\\n\\nIt's important to note that these methods may not be as effective or efficient as using a traditional nail polish remover, and they may not completely remove all traces of the polish.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 75,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a3120496620796f7520757365206e61696c20706f6c69736820746f2072656d6f76652069742074686520636f74746f6e206d6967687420737469636b20746f20796f7572206e61696c2e20322020536f616b20796f75722068616e6420696e207761726d20736f617020776174657220666f7220322d33206d696e7574657320746f2072656d6f7665207468652073707261792e20332020496e7374656164206f662077617374696e67206120746f7020636f617420746f2067657420746865206e61696c20706f6c697368206f666620796f752063616e2075736520616e79206e61696c20706f6c6973682e203420204d616b652073757265206974206973206f6e6520796f7520646f6e277420757365206f7220646f6e2774206c696b652e204265666f726520796f75206170706c7920796f7572206e61696c20706f6c697368206265207375726520746f20636f617420796f7572206e61696c73207769746820676c756520666972737420616e64206c65742069742064727920666f7220322d33206d696e7574657320616e64206170706c7920796f75722064657369726564206e61696c20706f6c6973682e20322020496620796f752077616e7420746f2072656d6f766520796f7572206e61696c20706f6c6973682c206a75737420736372617463682069742061206c6974746c652c2070756c6c20616e642069742077696c6c20636f6d65206f66662e20332020512d5469707320617265207665727920676f6f6420616c7465726e617469766520666f7220636f74746f6e2073776162732e20342020557365206c656d6f6e206a756963652e5c6e5c6e7061737361676520323a4e61696c20706f6c6973682072656d6f766572206973206e6f20646f7562742074686520656173696573742077617920746f2072656d6f766520746865206f6c64206e61696c207061696e74206265666f7265206170706c79696e672061206e6577206f6e652e20486f77657665722c20756e6b6e6f776e20746f206d616e79206f66207573206e61696c20706f6c6973682072656d6f7665727320636f6e7461696e20666c616d6d61626c65206368656d6963616c73207768696368206d617920636175736520736572696f757320697373756573206c696b65206c756e6720636f6e67657374696f6e2c206579652069727269746174696f6e20616e642073686f72746e657373206f66206272656174682075706f6e20696e68616c6174696f6e206f6620746865207661706f7273206574632e72616220616e20656d65727920626f61726420616e642067656e746c79207363726170206f666620746865206e61696c20706f6c6973682066726f6d20796f7572206e61696c732e204e6f74653a204d616b65207375726520746f20757365207761746572207468617420697320686f7420656e6f75676820746f20626520746f6c6572617465642e204164646974696f6e616c6c792c20796f752063616e206164642061206665772064726f7073206f662068616e64207761736820746f20746865207761726d2077617465722e20312020546f7020636f6174206d6574686f6420776f726b732054616b65206120746f7020636f6174206e61696c20706f6c69736820616e64206170706c79206120746869636b20636f6174206f66206974206f76657220746865206f6c64206e61696c20706f6c6973682e5c6e5c6e7061737361676520333a312e2043686f6f73652061206e61696c20706f6c6973682072656d6f7665722e20476f20746f20746865206472756773746f7265206f72206265617574792073746f726520616e6420627579206120626f74746c65206f66206e61696c20706f6c6973682072656d6f7665722e204974277320757375616c6c7920696e2074686520636f736d657469632073656374696f6e206e656172207468652073656c656374696f6e206f66206e61696c20706f6c69736820616e64206f74686572206e61696c2070726f64756374732e204f6e6520626f74746c6520636f6e7461696e7320656e6f756768206e61696c20706f6c6973682072656d6f76657220746f2072656d6f766520706c656e7479206f66206d616e6963757265732720776f727468206f6620706f6c6973682e2e20536174757261746520796f7572206170706c696361746f722077697468206e61696c20706f6c6973682072656d6f7665722e20556e736372657720746865206e61696c20706f6c6973682072656d6f766572206361702c20706c61636520746865206170706c696361746f72206f76657220746865206f70656e696e672c20616e6420696e766572742074686520626f74746c6520746f20736f616b2069742e20416c7465726e61746976656c792c20796f7520636f756c6420706f757220746865206e61696c20706f6c6973682072656d6f76657220696e746f206120626f776c20616e64206469702074686520636f74746f6e2062616c6c206f7220706170657220746f77656c20696e746f2074686520736f6c7574696f6e2e5c6e5c6e222c227175657374696f6e223a2272656d6f7665206e61696c20706f6c69736820776974686f757420706f6c6973682072656d6f766572227d",
+  "source_cluster_id": "sha256:982f5b7b3f1f1c51ac375ef900833f3c9f9c382946c9030d049bb8a870e1dab4",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.8\n}",
+  "unit_id": "sha256:164fea3d5fe626c0fb1782798617fcb5d1972201b53362d4449b969efb7d787b"
+}

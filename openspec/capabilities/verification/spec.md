@@ -48966,3 +48966,24 @@ A reparameterization SHALL earn no novel correctness or generalization credit.
 Implementation: `python/carnot/verify/evidence_energy_8154.py` and the custody
 adapter `python/carnot/verify/evidence_energy_fit_8154.py`. The two Exp8154 test
 files cover all425 added statements, including private failure controls.
+
+## REQ-VERIFY-8155: Original reserved Qwen evidence and frozen heads
+
+Freeze original128 evaluation roles and exactly two unchanged complete-source
+prompts before loading. Never open evaluator targets or refit heads. Require
+CARNOT_FORCE_LIVE=1, matching fit runtime identity, owned CUDA lease, device and
+memory receipts. Use one300-second load,120-second calls,3000-second launch
+cutoff and3120-second closure; at most256 calls with6000 input/128 output tokens.
+Preserve every missing/censored slot and invalid quote; checkpoint each16 sources.
+Apply all frozen transforms, calibrators and typed cost rules without targets.
+Seal predictions and source/head hashes before evaluator access. Readiness
+requires96 paired sources, authentic live generation and normal owned validation.
+Class support belongs only to the independent evaluator. Load-only execution
+reports model_load_no_generation; duration is never padded.
+
+### SCENARIO-VERIFY-8155: Capture boundaries and prediction independence
+
+Private tests exercise parser/capture/replay, overlength pairs, invalid quotes,
+timeouts, cutoff, runtime drift, altered heads/prompts, overlapping roles and
+targets opened before prediction seal. Public source and frozen head changes
+fail custody. Predictions contain no human targets and preserve original order.

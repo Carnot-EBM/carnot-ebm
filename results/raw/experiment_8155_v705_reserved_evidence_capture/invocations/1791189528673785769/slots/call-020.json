@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "53757265212048657265277320616e206f626a656374697665206f76657276696577206f662053616d277320546f20476f206261736564206f6e207468652070726f7669646564207374727563747572656420646174613a0a0a53616d277320546f20476f20697320612072657374617572616e74206c6f636174656420696e20476f6c6574612c2043616c69666f726e69612074686174206f666665727320416d65726963616e20616e64205065727369616e2063756973696e652e20546865792068617665206120726174696e67206f6620332e35207374617273206261736564206f6e20746872656520726576696577732e205468652072657374617572616e7420686173206120766172696564206d656e75207468617420696e636c756465732073616e647769636865732c20736f7570732c2073616c6164732c20616e64205065727369616e20646973686573207375636820617320666563656e6a6f6e20616e64207368616d692e2054686520627573696e657373206861732066726565205769466920616e64206f7574646f6f722073656174696e672c20616e642074686579206f666665722074616b656f757420616e64207265736572766174696f6e732e204f6e6520726576696577657220707261697365642074686520776f6e64657266756c207365727669636520616e642064656c6963696f7573205065727369616e20666f6f642c207768696c6520616e6f746865722072657669657765722065787072657373656420636f6e6365726e2061626f75742074686520636c65616e6c696e657373206f66207468652065737461626c6973686d656e7420616674657220657870657269656e63696e672061206e6567617469766520656e636f756e7465722077697468206120636173686965722077686f2068616e646c656420726177206d65617420776974686f75742077617368696e67206865722068616e64732e204f766572616c6c2c207468652072657669657773207375676765737420746861742053616d277320546f20476f206f66666572732061206d6978206f6620746173747920616e64206865616c746879206f7074696f6e732c20627574207468657265206d617920626520736f6d6520696e636f6e73697374656e6369657320696e207365727669636520616e6420636c65616e6c696e6573732e",
+  "arm": "source_span",
+  "call_id": "sha256:133b8317142a2d8f7759450011f0ca9e9fefff2c62965920a0ac13e21ae80b5d:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.803300908068195,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 785,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 40,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"5979 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, American (New)\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-21:0\\\",\\\"Monday\\\":\\\"10:0-21:0\\\",\\\"Saturday\\\":\\\"10:0-20:30\\\",\\\"Sunday\\\":\\\"10:0-20:0\\\",\\\"Thursday\\\":\\\"10:0-21:0\\\",\\\"Tuesday\\\":\\\"10:0-21:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Sam's To Go\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2013-11-30 23:13:45\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I went here to get lunch, the cashier finished her transaction and then continued to make my sandwich. She had just handled cash, then put her contaminated hands into the meats and cheeses. That was enough for me...walked out and won't go back! Unfortunate because it smelled so good! Wash your hands!!!!! You are going to make people sick!!!!\\\"},{\\\"review_date\\\":\\\"2013-10-24 23:09:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Wonderful service here!  Hal and Azi do a great job running this shop.   I prefer the soups, salads, and great Persian food over the sandwiches, but these are a nice healthy option.\\\"},{\\\"review_date\\\":\\\"2013-08-14 22:16:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Wow - I just had the fecenjon and the shami this afternoon.  You cannot find delicious Persian food like this anywhere else in Santa Barbara.  Yes, it's normally a sandwich place (and the sandwiches are also good) but the Persian food is amazing. \\\\nThis Sams To Go is now Sams2U, so Yelp needs to update.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Sure! Here's an objective overview of Sam's To Go based on the provided structured data:\\n\\nSam's To Go is a restaurant located in Goleta, California that offers American and Persian cuisine. They have a rating of 3.5 stars based on three reviews. The restaurant has a varied menu that includes sandwiches, soups, salads, and Persian dishes such as fecenjon and shami. The business has free WiFi and outdoor seating, and they offer takeout and reservations. One reviewer praised the wonderful service and delicious Persian food, while another reviewer expressed concern about the cleanliness of the establishment after experiencing a negative encounter with a cashier who handled raw meat without washing her hands. Overall, the reviews suggest that Sam's To Go offers a mix of tasty and healthy options, but there may be some inconsistencies in service and cleanliness.\"}",
+  "prompt_sha256": "sha256:bf22fa79aeaa6801676b314f22f7a4da13033ad2338a62ed9c10dd18630ad008",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"p_hallucination\": 1, \"quote\": \"RestaurantsReservations\\\":false\", \"byte_start\": 214, \"byte_end\": 237}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189656,
+    "id": "chatcmpl-89WKERmiyzmmiANg1zq24Lq6E5bZwKnX",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 944.512,
+      "predicted_n": 40,
+      "predicted_per_second": 42.34991191218323,
+      "predicted_per_token_ms": 23.6128,
+      "prompt_ms": 741.994,
+      "prompt_n": 785,
+      "prompt_per_second": 1057.9600374127015,
+      "prompt_per_token_ms": 0.9452152866242038
+    },
+    "usage": {
+      "completion_tokens": 40,
+      "prompt_tokens": 785,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 825
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"5979 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, American (New)\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-21:0\\\",\\\"Monday\\\":\\\"10:0-21:0\\\",\\\"Saturday\\\":\\\"10:0-20:30\\\",\\\"Sunday\\\":\\\"10:0-20:0\\\",\\\"Thursday\\\":\\\"10:0-21:0\\\",\\\"Tuesday\\\":\\\"10:0-21:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Sam's To Go\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2013-11-30 23:13:45\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I went here to get lunch, the cashier finished her transaction and then continued to make my sandwich. She had just handled cash, then put her contaminated hands into the meats and cheeses. That was enough for me...walked out and won't go back! Unfortunate because it smelled so good! Wash your hands!!!!! You are going to make people sick!!!!\\\"},{\\\"review_date\\\":\\\"2013-10-24 23:09:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Wonderful service here!  Hal and Azi do a great job running this shop.   I prefer the soups, salads, and great Persian food over the sandwiches, but these are a nice healthy option.\\\"},{\\\"review_date\\\":\\\"2013-08-14 22:16:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Wow - I just had the fecenjon and the shami this afternoon.  You cannot find delicious Persian food like this anywhere else in Santa Barbara.  Yes, it's normally a sandwich place (and the sandwiches are also good) but the Persian food is amazing. \\\\nThis Sams To Go is now Sams2U, so Yelp needs to update.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Sure! Here's an objective overview of Sam's To Go based on the provided structured data:\\n\\nSam's To Go is a restaurant located in Goleta, California that offers American and Persian cuisine. They have a rating of 3.5 stars based on three reviews. The restaurant has a varied menu that includes sandwiches, soups, salads, and Persian dishes such as fecenjon and shami. The business has free WiFi and outdoor seating, and they offer takeout and reservations. One reviewer praised the wonderful service and delicious Persian food, while another reviewer expressed concern about the cleanliness of the establishment after experiencing a negative encounter with a cashier who handled raw meat without washing her hands. Overall, the reviews suggest that Sam's To Go offers a mix of tasty and healthy options, but there may be some inconsistencies in service and cleanliness.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 11,
+  "source_bytes": "7b2261646472657373223a223539373920486f6c6c697374657220417665222c2261747472696275746573223a7b22416d6269656e6365223a6e756c6c2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a747275652c22737472656574223a66616c73652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a747275652c2252657374617572616e7473476f6f64466f7247726f757073223a66616c73652c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a2266726565227d2c22627573696e6573735f7374617273223a332e352c2263617465676f72696573223a2252657374617572616e74732c20416d65726963616e20284e657729222c2263697479223a22476f6c657461222c22686f757273223a7b22467269646179223a2231303a302d32313a30222c224d6f6e646179223a2231303a302d32313a30222c225361747572646179223a2231303a302d32303a3330222c2253756e646179223a2231303a302d32303a30222c225468757273646179223a2231303a302d32313a30222c2254756573646179223a2231303a302d32313a30222c225765646e6573646179223a2231303a302d32313a30227d2c226e616d65223a2253616d277320546f20476f222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323031332d31312d33302032333a31333a3435222c227265766965775f7374617273223a312e302c227265766965775f74657874223a22492077656e74206865726520746f20676574206c756e63682c2074686520636173686965722066696e697368656420686572207472616e73616374696f6e20616e64207468656e20636f6e74696e75656420746f206d616b65206d792073616e64776963682e2053686520686164206a7573742068616e646c656420636173682c207468656e207075742068657220636f6e74616d696e617465642068616e647320696e746f20746865206d6561747320616e6420636865657365732e20546861742077617320656e6f75676820666f72206d652e2e2e77616c6b6564206f757420616e6420776f6e277420676f206261636b2120556e666f7274756e617465206265636175736520697420736d656c6c656420736f20676f6f6421205761736820796f75722068616e6473212121212120596f752061726520676f696e6720746f206d616b652070656f706c65207369636b21212121227d2c7b227265766965775f64617465223a22323031332d31302d32342032333a30393a3033222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22576f6e64657266756c2073657276696365206865726521202048616c20616e6420417a6920646f2061206772656174206a6f622072756e6e696e6720746869732073686f702e20202049207072656665722074686520736f7570732c2073616c6164732c20616e64206772656174205065727369616e20666f6f64206f766572207468652073616e647769636865732c20627574207468657365206172652061206e696365206865616c746879206f7074696f6e2e227d2c7b227265766965775f64617465223a22323031332d30382d31342032323a31363a3531222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22576f77202d2049206a757374206861642074686520666563656e6a6f6e20616e6420746865207368616d6920746869732061667465726e6f6f6e2e2020596f752063616e6e6f742066696e642064656c6963696f7573205065727369616e20666f6f64206c696b65207468697320616e79776865726520656c736520696e2053616e746120426172626172612e20205965732c2069742773206e6f726d616c6c7920612073616e647769636820706c6163652028616e64207468652073616e647769636865732061726520616c736f20676f6f64292062757420746865205065727369616e20666f6f6420697320616d617a696e672e205c6e546869732053616d7320546f20476f206973206e6f772053616d7332552c20736f2059656c70206e6565647320746f207570646174652e227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:e4718587fe9c02804c7c5ab87b4c87c8b8682e83f81d4e106d5d28a49436c9ef",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\"p_hallucination\": 1, \"quote\": \"RestaurantsReservations\\\":false\", \"byte_start\": 214, \"byte_end\": 237}",
+  "unit_id": "sha256:133b8317142a2d8f7759450011f0ca9e9fefff2c62965920a0ac13e21ae80b5d"
+}

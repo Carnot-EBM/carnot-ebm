@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "41204e6f72746820506163696669632067726179207768616c65206e616d65642056617276617261206861732073657420746865207265636f726420666f7220746865206c6f6e67657374206d6967726174696f6e206f662061206d616d6d616c2c207377696d6d696e672031342c303030206d696c65732066726f6d2052757373696127732053616b68616c696e2049736c616e6420746f2042616a612c204d657869636f2e20486572206a6f75726e657920737572706173736564207468652070726576696f7573207265636f72642068656c6420627920612068756d706261636b207768616c6520616e64206d617920696e646963617465207468617420736f6d65207765737465726e2067726179207768616c6573206172652061637475616c6c79206561737465726e2067726179732c2072616973696e67207175657374696f6e732061626f7574207468652073706563696573272067656e65746963206469766572736974792e",
+  "arm": "source_span",
+  "call_id": "sha256:d80bf9a978dd8754c205e97c295e44a20019db6fed51a61b2d2c50d051262b85:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.918758842977695,
+  "entailment_label": null,
+  "exclusion_reason": "invalid_probability_or_usage",
+  "human_target": null,
+  "input_tokens": 575,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 0,
+  "order": 0,
+  "output_tokens": 91,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": null,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "missing_probability",
+    "valid_quote": 0
+  },
+  "probability": null,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"A North Pacific gray whale has earned a spot in the record books after completing the longest migration of a mammal ever recorded. The whale, named Varvara, swam nearly 14,000 miles (22,500 kilometers), according to a release from Oregon State University, whose scientists helped conduct the whale-tracking study. Varvara, which is Russian for \\\"Barbara,\\\" left her primary feeding ground off Russia's Sakhalin Island to cross the  Pacific Ocean and down the West Coast of the United States to Baja, Mexico. Varvara's journey surpassed a record listed on the Guinness Worlds Records website. It said the previous record was set by a humpback whale that swam a mere 10,190-mile round trip between the \\\"warm breeding waters near the equator and the colder food-rich waters of the Arctic and Antarctic regions.\\\" Records are nice, but Bruce Mate, the lead author of the study, thinks the long trip might say more about the whale than just its ability to swim. During her 14,000-mile journey, Varvara visited \\\"three major breeding areas for eastern gray whales,\\\" which was a surprise to Mate, who is also the director of the Marine Mammal Institute at Oregon State University. \\\"For her to go to Mexico,\\\" Mate said, \\\"It's pretty strong evidence that it's where she's from.\\\" Varvara was thought to be an endangered western whale, but her ability to \\\"navigate across open water over tremendously long distances is impressive,\\\" he said in the release, which could mean that some western gray whales are actually eastern grays. With only 150 western gray whales believed to be in existence, that number might be even lower. \\\"Past studies have indicated genetic differentiation between the species, but this suggests we may need to take a closer look,\\\" Mate said. Fourth baby orca born this season.\\n\", \"answer\": \"A North Pacific gray whale named Varvara has set the record for the longest migration of a mammal, swimming 14,000 miles from Russia's Sakhalin Island to Baja, Mexico. Her journey surpassed the previous record held by a humpback whale and may indicate that some western gray whales are actually eastern grays, raising questions about the species' genetic diversity.\"}",
+  "prompt_sha256": "sha256:4021e31ccdf3d6a1883001d834491e3c32f710cd295002370909d966c12fb0e6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```json\n{\n  \"p_hallucination\": 0,\n  \"quote\": \"Varvara, which is Russian for \\\"Barbara,\\\" left her primary feeding ground off Russia's Sakhalin Island to cross the  Pacific Ocean and down the West Coast of the United States to Baja, Mexico.\",\n  \"byte_start\": 338,\n  \"byte_end\": 528\n}\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189806,
+    "id": "chatcmpl-IF2aAVKQzXTzjOhGJq9J2VxyAdcL6SfE",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2191.353,
+      "predicted_n": 91,
+      "predicted_per_second": 41.52685578270594,
+      "predicted_per_token_ms": 24.0808021978022,
+      "prompt_ms": 594.612,
+      "prompt_n": 575,
+      "prompt_per_second": 967.0171473162333,
+      "prompt_per_token_ms": 1.0341078260869565
+    },
+    "usage": {
+      "completion_tokens": 91,
+      "prompt_tokens": 575,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 666
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"A North Pacific gray whale has earned a spot in the record books after completing the longest migration of a mammal ever recorded. The whale, named Varvara, swam nearly 14,000 miles (22,500 kilometers), according to a release from Oregon State University, whose scientists helped conduct the whale-tracking study. Varvara, which is Russian for \\\"Barbara,\\\" left her primary feeding ground off Russia's Sakhalin Island to cross the  Pacific Ocean and down the West Coast of the United States to Baja, Mexico. Varvara's journey surpassed a record listed on the Guinness Worlds Records website. It said the previous record was set by a humpback whale that swam a mere 10,190-mile round trip between the \\\"warm breeding waters near the equator and the colder food-rich waters of the Arctic and Antarctic regions.\\\" Records are nice, but Bruce Mate, the lead author of the study, thinks the long trip might say more about the whale than just its ability to swim. During her 14,000-mile journey, Varvara visited \\\"three major breeding areas for eastern gray whales,\\\" which was a surprise to Mate, who is also the director of the Marine Mammal Institute at Oregon State University. \\\"For her to go to Mexico,\\\" Mate said, \\\"It's pretty strong evidence that it's where she's from.\\\" Varvara was thought to be an endangered western whale, but her ability to \\\"navigate across open water over tremendously long distances is impressive,\\\" he said in the release, which could mean that some western gray whales are actually eastern grays. With only 150 western gray whales believed to be in existence, that number might be even lower. \\\"Past studies have indicated genetic differentiation between the species, but this suggests we may need to take a closer look,\\\" Mate said. Fourth baby orca born this season.\\n\", \"answer\": \"A North Pacific gray whale named Varvara has set the record for the longest migration of a mammal, swimming 14,000 miles from Russia's Sakhalin Island to Baja, Mexico. Her journey surpassed the previous record held by a humpback whale and may indicate that some western gray whales are actually eastern grays, raising questions about the species' genetic diversity.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 54,
+  "source_bytes": "41204e6f72746820506163696669632067726179207768616c6520686173206561726e656420612073706f7420696e20746865207265636f726420626f6f6b7320616674657220636f6d706c6574696e6720746865206c6f6e67657374206d6967726174696f6e206f662061206d616d6d616c2065766572207265636f726465642e20546865207768616c652c206e616d656420566172766172612c207377616d206e6561726c792031342c303030206d696c6573202832322c353030206b696c6f6d6574657273292c206163636f7264696e6720746f20612072656c656173652066726f6d204f7265676f6e20537461746520556e69766572736974792c2077686f736520736369656e74697374732068656c70656420636f6e6475637420746865207768616c652d747261636b696e672073747564792e20566172766172612c207768696368206973205275737369616e20666f722022426172626172612c22206c65667420686572207072696d6172792066656564696e672067726f756e64206f66662052757373696127732053616b68616c696e2049736c616e6420746f2063726f737320746865202050616369666963204f6365616e20616e6420646f776e20746865205765737420436f617374206f662074686520556e697465642053746174657320746f2042616a612c204d657869636f2e20566172766172612773206a6f75726e6579207375727061737365642061207265636f7264206c6973746564206f6e20746865204775696e6e65737320576f726c6473205265636f72647320776562736974652e2049742073616964207468652070726576696f7573207265636f7264207761732073657420627920612068756d706261636b207768616c652074686174207377616d2061206d6572652031302c3139302d6d696c6520726f756e642074726970206265747765656e2074686520227761726d206272656564696e6720776174657273206e656172207468652065717561746f7220616e642074686520636f6c64657220666f6f642d7269636820776174657273206f66207468652041726374696320616e6420416e7461726374696320726567696f6e732e22205265636f72647320617265206e6963652c20627574204272756365204d6174652c20746865206c65616420617574686f72206f66207468652073747564792c207468696e6b7320746865206c6f6e672074726970206d6967687420736179206d6f72652061626f757420746865207768616c65207468616e206a75737420697473206162696c69747920746f207377696d2e20447572696e67206865722031342c3030302d6d696c65206a6f75726e65792c2056617276617261207669736974656420227468726565206d616a6f72206272656564696e6720617265617320666f72206561737465726e2067726179207768616c65732c2220776869636820776173206120737572707269736520746f204d6174652c2077686f20697320616c736f20746865206469726563746f72206f6620746865204d6172696e65204d616d6d616c20496e73746974757465206174204f7265676f6e20537461746520556e69766572736974792e2022466f722068657220746f20676f20746f204d657869636f2c22204d61746520736169642c20224974277320707265747479207374726f6e672065766964656e6365207468617420697427732077686572652073686527732066726f6d2e222056617276617261207761732074686f7567687420746f20626520616e20656e64616e6765726564207765737465726e207768616c652c2062757420686572206162696c69747920746f20226e61766967617465206163726f7373206f70656e207761746572206f766572207472656d656e646f75736c79206c6f6e672064697374616e63657320697320696d70726573736976652c22206865207361696420696e207468652072656c656173652c20776869636820636f756c64206d65616e207468617420736f6d65207765737465726e2067726179207768616c6573206172652061637475616c6c79206561737465726e2067726179732e2057697468206f6e6c7920313530207765737465726e2067726179207768616c65732062656c696576656420746f20626520696e206578697374656e63652c2074686174206e756d626572206d69676874206265206576656e206c6f7765722e2022506173742073747564696573206861766520696e646963617465642067656e6574696320646966666572656e74696174696f6e206265747765656e2074686520737065636965732c206275742074686973207375676765737473207765206d6179206e65656420746f2074616b65206120636c6f736572206c6f6f6b2c22204d61746520736169642e20466f757274682062616279206f72636120626f726e207468697320736561736f6e2e0a",
+  "source_cluster_id": "sha256:2084237061fe68a66c058944fa13278e9c290e3ffa17d33983a4458317c6d63f",
+  "started": true,
+  "status": "failed",
+  "transcript": "```json\n{\n  \"p_hallucination\": 0,\n  \"quote\": \"Varvara, which is Russian for \\\"Barbara,\\\" left her primary feeding ground off Russia's Sakhalin Island to cross the  Pacific Ocean and down the West Coast of the United States to Baja, Mexico.\",\n  \"byte_start\": 338,\n  \"byte_end\": 528\n}\n```",
+  "unit_id": "sha256:d80bf9a978dd8754c205e97c295e44a20019db6fed51a61b2d2c50d051262b85"
+}

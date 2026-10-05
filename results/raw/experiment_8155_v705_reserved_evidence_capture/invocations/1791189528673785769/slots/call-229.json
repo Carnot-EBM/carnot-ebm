@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "546f2074696520696e2061207469652c20666f6c6c6f772074686573652073746570733a0a0a312e2043726f737320746865207769646520656e64206f76657220746865206e6172726f7720656e642e0a322e20536c697020746865207769646520656e64207570206265747765656e207468652074696520616e642074686520636f6c6c61722e0a332e204272696e6720746865207769646520656e6420696e2066726f6e7420616e64206f76657220746865206c6f6f70206265747765656e2074686520636f6c6c617220616e64207469652e0a342e205772617020746865207769646520656e6420626568696e6420746865206e6172726f7720656e642066726f6d20726967687420746f206c6566742e0a352e205772617020746865207769646520656e642061726f756e6420746865206e6172726f772070617274206f6e65206d6f72652074696d652e0a362e20536c697020746865207769646520656e64207468726f75676820746865206c6f6f7020616761696e2e0a372e204c6f6f73656c792073746162696c697a6520746865206b6e6f742062792070756c6c696e67206f6e20626f74682073696465732e0a382e2041646a757374206173206e656564656420666f7220612073656375726520616e64206576656e206b6e6f742e",
+  "arm": "holistic",
+  "call_id": "sha256:7317a11e9c2771d637f3027395fea973d90bcbe8ed83e77d7fe39c157d7cdc15:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 0.9292953229742125,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 426,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 17,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.25,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.25,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:The Simple Knot. The simple knot is exactly that: simple. It's the way to go if you want a really small knot, sort of a 1940s style. And it's also the knot to use with a skinny tie. Just keep in mind, if you wear a skinny tie, make sure to wear a skinny suit.\\\\n\\\\npassage 2:Wrap the wide end behind the narrow end from right to left. Bring the wide end in front and over the loop between the collar and tie. Wrap the wide end around the narrow part one more time and slip up through the loop again. Loosely stabilizing the knot, slip the wide end through it.\\\\n\\\\npassage 3:Cross the wide end over the narrow, then slip the wide end up between the tie and the collar, then simply drop it back down. Step Two: Wrap the wide end behind the narrow end from right to left. Step Three: Bring the wide end in front and over the loop between the collar and tie.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to tie in a tie\\\"}\", \"answer\": \"To tie in a tie, follow these steps:\\n\\n1. Cross the wide end over the narrow end.\\n2. Slip the wide end up between the tie and the collar.\\n3. Bring the wide end in front and over the loop between the collar and tie.\\n4. Wrap the wide end behind the narrow end from right to left.\\n5. Wrap the wide end around the narrow part one more time.\\n6. Slip the wide end through the loop again.\\n7. Loosely stabilize the knot by pulling on both sides.\\n8. Adjust as needed for a secure and even knot.\"}",
+  "prompt_sha256": "sha256:ccff83bdb11d535858365e1d3529f75dc5216218f5ce9ff442433ddd8570cb28",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.25\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791190023,
+    "id": "chatcmpl-1mZrmWvtBJsdzKBcig08ZXlL9Sr0yEmB",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 394.702,
+      "predicted_n": 17,
+      "predicted_per_second": 43.07046835333999,
+      "predicted_per_token_ms": 23.217764705882352,
+      "prompt_ms": 432.224,
+      "prompt_n": 426,
+      "prompt_per_second": 985.6000592285482,
+      "prompt_per_token_ms": 1.0146103286384975
+    },
+    "usage": {
+      "completion_tokens": 17,
+      "prompt_tokens": 426,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 443
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:The Simple Knot. The simple knot is exactly that: simple. It's the way to go if you want a really small knot, sort of a 1940s style. And it's also the knot to use with a skinny tie. Just keep in mind, if you wear a skinny tie, make sure to wear a skinny suit.\\\\n\\\\npassage 2:Wrap the wide end behind the narrow end from right to left. Bring the wide end in front and over the loop between the collar and tie. Wrap the wide end around the narrow part one more time and slip up through the loop again. Loosely stabilizing the knot, slip the wide end through it.\\\\n\\\\npassage 3:Cross the wide end over the narrow, then slip the wide end up between the tie and the collar, then simply drop it back down. Step Two: Wrap the wide end behind the narrow end from right to left. Step Three: Bring the wide end in front and over the loop between the collar and tie.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to tie in a tie\\\"}\", \"answer\": \"To tie in a tie, follow these steps:\\n\\n1. Cross the wide end over the narrow end.\\n2. Slip the wide end up between the tie and the collar.\\n3. Bring the wide end in front and over the loop between the collar and tie.\\n4. Wrap the wide end behind the narrow end from right to left.\\n5. Wrap the wide end around the narrow part one more time.\\n6. Slip the wide end through the loop again.\\n7. Loosely stabilize the knot by pulling on both sides.\\n8. Adjust as needed for a secure and even knot.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 115,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a5468652053696d706c65204b6e6f742e205468652073696d706c65206b6e6f742069732065786163746c7920746861743a2073696d706c652e2049742773207468652077617920746f20676f20696620796f752077616e742061207265616c6c7920736d616c6c206b6e6f742c20736f7274206f662061203139343073207374796c652e20416e64206974277320616c736f20746865206b6e6f7420746f207573652077697468206120736b696e6e79207469652e204a757374206b65657020696e206d696e642c20696620796f752077656172206120736b696e6e79207469652c206d616b65207375726520746f2077656172206120736b696e6e7920737569742e5c6e5c6e7061737361676520323a5772617020746865207769646520656e6420626568696e6420746865206e6172726f7720656e642066726f6d20726967687420746f206c6566742e204272696e6720746865207769646520656e6420696e2066726f6e7420616e64206f76657220746865206c6f6f70206265747765656e2074686520636f6c6c617220616e64207469652e205772617020746865207769646520656e642061726f756e6420746865206e6172726f772070617274206f6e65206d6f72652074696d6520616e6420736c6970207570207468726f75676820746865206c6f6f7020616761696e2e204c6f6f73656c792073746162696c697a696e6720746865206b6e6f742c20736c697020746865207769646520656e64207468726f7567682069742e5c6e5c6e7061737361676520333a43726f737320746865207769646520656e64206f76657220746865206e6172726f772c207468656e20736c697020746865207769646520656e64207570206265747765656e207468652074696520616e642074686520636f6c6c61722c207468656e2073696d706c792064726f70206974206261636b20646f776e2e20537465702054776f3a205772617020746865207769646520656e6420626568696e6420746865206e6172726f7720656e642066726f6d20726967687420746f206c6566742e20537465702054687265653a204272696e6720746865207769646520656e6420696e2066726f6e7420616e64206f76657220746865206c6f6f70206265747765656e2074686520636f6c6c617220616e64207469652e5c6e5c6e222c227175657374696f6e223a22686f7720746f2074696520696e206120746965227d",
+  "source_cluster_id": "sha256:be75734c52d9219e52b8885522fda0920bfe6e873e2ed56da14cf1a75c566ba3",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.25\n}",
+  "unit_id": "sha256:7317a11e9c2771d637f3027395fea973d90bcbe8ed83e77d7fe39c157d7cdc15"
+}

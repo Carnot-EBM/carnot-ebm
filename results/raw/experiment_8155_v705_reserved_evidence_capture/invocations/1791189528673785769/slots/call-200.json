@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "546865206a757279207468617420636f6e76696374656420447a686f6b68617220547361726e61657620696e20746865203230313320426f73746f6e204d61726174686f6e20626f6d62696e677320686173206265656e20696e7374727563746564206279206665646572616c204a756467652047656f72676520412e204f27546f6f6c6520746f2061766f696420746865203230313520426f73746f6e206d61726174686f6e20616e6420616e79206576656e74732072656c6174656420746f2069742e20546865206a756467652073747265737365642074686520696d706f7274616e6365206f662061766f6964696e6720616e797468696e67207468617420636f756c64206265207072656a7564696369616c20696e2074686520747269616c27732073656e74656e63696e672070686173652c20776869636820626567696e7320417072696c2032312c206120646179206166746572207468697320796561722773206d61726174686f6e2e20547361726e6165762077617320636f6e766963746564206f6e20616c6c20333020636f756e74732068652066616365642c20696e636c7564696e67207573696e6720776561706f6e73206f66206d617373206465737472756374696f6e20616e6420626f6d62696e67206120706c616365206f66207075626c6963207573652e20546865206d6178696d756d2070656e616c747920666f72207365766572616c206f662074686520636861726765732069732064656174682e",
+  "arm": "holistic",
+  "call_id": "sha256:21d395c33c9e371e7de5aa116934ad524d71246a68c5494b9d7bf30348faf1de:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.177454396034591,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 756,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Boston (CNN)The Boston Marathon is traditionally an event in which people in and around the Massachusetts capital come together, celebrate and enjoy. But not in 2013, when three people died and over 200 were injured when a pair of bombs went off within 12 seconds of each other at the finish line. And not this year -- at least not if you're a member of the jury that convicted Dzhokhar Tsarnaev in the bombings. That's what federal Judge George A. O'Toole told jurors Tuesday, stressing the importance of avoiding anything that could be prejudicial in the trial's sentencing phase. That begins April 21, a day after this year's edition of the landmark race. \\\"Do not attend the Boston Marathon or any events or gatherings related to the anniversary or the current running of the Boston Marathon,\\\" O'Toole said in court. The judge spoke for less than 10 minutes, and stressed the seriousness of his warnings. The first phase of Tsarnaev's trial began March 4, after which federal prosecutors called 92 witnesses, and the defense just four. Timeline of the bombings, manhunt and aftermath. Tsarnaev's lawyers never disputed that their client was at the scene of the bombings and part of the days-long mayhem that followed. Tsarnaev lawyer Judy Clarke acknowledged in opening arguments that: \\\"It was him.\\\" But Clarke argued that Dzhokhar Tsarnaev only took part in the plot under the influence of his brother Tamerlan Tsarnaev, who died after the bombings, but before his brother was captured in a boat parked in a Watertown backyard,. That argument wasn't enough to sway the jury, though. Rather, they convicted Dzhokhar Tsarnaev on all 30 counts he faced -- including using weapons of mass destruction, bombing a place of public use, conspiracy and aiding and abetting. A look at all of the charges. The only question now, short of a successful appeal of that verdict, is what price he'll now pay. The maximum penalty for several of the charges is death. Talking to the jury on Tuesday, O'Toole predicted that the sentencing phase will last four weeks before cautioning that forecasting a specific timetable is less reliable than guessing the weather. The plan is for the court to be in session for four days a week, as long as the process takes. Until then, O'Toole told the jurors, \\\"Please put the case out of your minds. Enjoy the warm weather.\\\" What's next for Tsarnaev? CNN's Ann O'Neill reported from Boston. CNN's Catherine E. Shoichet, Alexandra Field, Aaron Cooper, Kevin Conlon, Jason Hanna and Steve Almasy contributed to this report.\\n\", \"answer\": \"The jury that convicted Dzhokhar Tsarnaev in the 2013 Boston Marathon bombings has been instructed by federal Judge George A. O'Toole to avoid the 2015 Boston marathon and any events related to it. The judge stressed the importance of avoiding anything that could be prejudicial in the trial's sentencing phase, which begins April 21, a day after this year's marathon. Tsarnaev was convicted on all 30 counts he faced, including using weapons of mass destruction and bombing a place of public use. The maximum penalty for several of the charges is death.\"}",
+  "prompt_sha256": "sha256:2e54981c7d70b8bd25330e8b15a8c60c1c088361be9a77f48e0898fddef304a5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189976,
+    "id": "chatcmpl-FqV7MkpVdmxMHgw7oFXeBE5wQOK4EwOz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 326.209,
+      "predicted_n": 14,
+      "predicted_per_second": 42.91727082943757,
+      "predicted_per_token_ms": 23.300642857142858,
+      "prompt_ms": 725.541,
+      "prompt_n": 756,
+      "prompt_per_second": 1041.981087216298,
+      "prompt_per_token_ms": 0.9597103174603175
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 756,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 770
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Boston (CNN)The Boston Marathon is traditionally an event in which people in and around the Massachusetts capital come together, celebrate and enjoy. But not in 2013, when three people died and over 200 were injured when a pair of bombs went off within 12 seconds of each other at the finish line. And not this year -- at least not if you're a member of the jury that convicted Dzhokhar Tsarnaev in the bombings. That's what federal Judge George A. O'Toole told jurors Tuesday, stressing the importance of avoiding anything that could be prejudicial in the trial's sentencing phase. That begins April 21, a day after this year's edition of the landmark race. \\\"Do not attend the Boston Marathon or any events or gatherings related to the anniversary or the current running of the Boston Marathon,\\\" O'Toole said in court. The judge spoke for less than 10 minutes, and stressed the seriousness of his warnings. The first phase of Tsarnaev's trial began March 4, after which federal prosecutors called 92 witnesses, and the defense just four. Timeline of the bombings, manhunt and aftermath. Tsarnaev's lawyers never disputed that their client was at the scene of the bombings and part of the days-long mayhem that followed. Tsarnaev lawyer Judy Clarke acknowledged in opening arguments that: \\\"It was him.\\\" But Clarke argued that Dzhokhar Tsarnaev only took part in the plot under the influence of his brother Tamerlan Tsarnaev, who died after the bombings, but before his brother was captured in a boat parked in a Watertown backyard,. That argument wasn't enough to sway the jury, though. Rather, they convicted Dzhokhar Tsarnaev on all 30 counts he faced -- including using weapons of mass destruction, bombing a place of public use, conspiracy and aiding and abetting. A look at all of the charges. The only question now, short of a successful appeal of that verdict, is what price he'll now pay. The maximum penalty for several of the charges is death. Talking to the jury on Tuesday, O'Toole predicted that the sentencing phase will last four weeks before cautioning that forecasting a specific timetable is less reliable than guessing the weather. The plan is for the court to be in session for four days a week, as long as the process takes. Until then, O'Toole told the jurors, \\\"Please put the case out of your minds. Enjoy the warm weather.\\\" What's next for Tsarnaev? CNN's Ann O'Neill reported from Boston. CNN's Catherine E. Shoichet, Alexandra Field, Aaron Cooper, Kevin Conlon, Jason Hanna and Steve Almasy contributed to this report.\\n\", \"answer\": \"The jury that convicted Dzhokhar Tsarnaev in the 2013 Boston Marathon bombings has been instructed by federal Judge George A. O'Toole to avoid the 2015 Boston marathon and any events related to it. The judge stressed the importance of avoiding anything that could be prejudicial in the trial's sentencing phase, which begins April 21, a day after this year's marathon. Tsarnaev was convicted on all 30 counts he faced, including using weapons of mass destruction and bombing a place of public use. The maximum penalty for several of the charges is death.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 101,
+  "source_bytes": "426f73746f6e2028434e4e2954686520426f73746f6e204d61726174686f6e20697320747261646974696f6e616c6c7920616e206576656e7420696e2077686963682070656f706c6520696e20616e642061726f756e6420746865204d617373616368757365747473206361706974616c20636f6d6520746f6765746865722c2063656c65627261746520616e6420656e6a6f792e20427574206e6f7420696e20323031332c207768656e2074687265652070656f706c65206469656420616e64206f76657220323030207765726520696e6a75726564207768656e20612070616972206f6620626f6d62732077656e74206f66662077697468696e203132207365636f6e6473206f662065616368206f74686572206174207468652066696e697368206c696e652e20416e64206e6f7420746869732079656172202d2d206174206c65617374206e6f7420696620796f752772652061206d656d626572206f6620746865206a757279207468617420636f6e76696374656420447a686f6b68617220547361726e61657620696e2074686520626f6d62696e67732e205468617427732077686174206665646572616c204a756467652047656f72676520412e204f27546f6f6c6520746f6c64206a75726f727320547565736461792c20737472657373696e672074686520696d706f7274616e6365206f662061766f6964696e6720616e797468696e67207468617420636f756c64206265207072656a7564696369616c20696e2074686520747269616c27732073656e74656e63696e672070686173652e205468617420626567696e7320417072696c2032312c2061206461792061667465722074686973207965617227732065646974696f6e206f6620746865206c616e646d61726b20726163652e2022446f206e6f7420617474656e642074686520426f73746f6e204d61726174686f6e206f7220616e79206576656e7473206f7220676174686572696e67732072656c6174656420746f2074686520616e6e6976657273617279206f72207468652063757272656e742072756e6e696e67206f662074686520426f73746f6e204d61726174686f6e2c22204f27546f6f6c65207361696420696e20636f7572742e20546865206a756467652073706f6b6520666f72206c657373207468616e203130206d696e757465732c20616e642073747265737365642074686520736572696f75736e657373206f6620686973207761726e696e67732e20546865206669727374207068617365206f6620547361726e616576277320747269616c20626567616e204d6172636820342c206166746572207768696368206665646572616c2070726f73656375746f72732063616c6c6564203932207769746e65737365732c20616e642074686520646566656e7365206a75737420666f75722e2054696d656c696e65206f662074686520626f6d62696e67732c206d616e68756e7420616e642061667465726d6174682e20547361726e6165762773206c617779657273206e65766572206469737075746564207468617420746865697220636c69656e742077617320617420746865207363656e65206f662074686520626f6d62696e677320616e642070617274206f662074686520646179732d6c6f6e67206d617968656d207468617420666f6c6c6f7765642e20547361726e616576206c6177796572204a75647920436c61726b652061636b6e6f776c656467656420696e206f70656e696e6720617267756d656e747320746861743a20224974207761732068696d2e222042757420436c61726b6520617267756564207468617420447a686f6b68617220547361726e616576206f6e6c7920746f6f6b207061727420696e2074686520706c6f7420756e6465722074686520696e666c75656e6365206f66206869732062726f746865722054616d65726c616e20547361726e6165762c2077686f20646965642061667465722074686520626f6d62696e67732c20627574206265666f7265206869732062726f746865722077617320636170747572656420696e206120626f6174207061726b656420696e2061205761746572746f776e206261636b796172642c2e205468617420617267756d656e74207761736e277420656e6f75676820746f207377617920746865206a7572792c2074686f7567682e205261746865722c207468657920636f6e76696374656420447a686f6b68617220547361726e616576206f6e20616c6c20333020636f756e7473206865206661636564202d2d20696e636c7564696e67207573696e6720776561706f6e73206f66206d617373206465737472756374696f6e2c20626f6d62696e67206120706c616365206f66207075626c6963207573652c20636f6e7370697261637920616e6420616964696e6720616e64206162657474696e672e2041206c6f6f6b20617420616c6c206f662074686520636861726765732e20546865206f6e6c79207175657374696f6e206e6f772c2073686f7274206f662061207375636365737366756c2061707065616c206f66207468617420766572646963742c2069732077686174207072696365206865276c6c206e6f77207061792e20546865206d6178696d756d2070656e616c747920666f72207365766572616c206f662074686520636861726765732069732064656174682e2054616c6b696e6720746f20746865206a757279206f6e20547565736461792c204f27546f6f6c65207072656469637465642074686174207468652073656e74656e63696e672070686173652077696c6c206c61737420666f7572207765656b73206265666f72652063617574696f6e696e67207468617420666f726563617374696e6720612073706563696669632074696d657461626c65206973206c6573732072656c6961626c65207468616e206775657373696e672074686520776561746865722e2054686520706c616e20697320666f722074686520636f75727420746f20626520696e2073657373696f6e20666f7220666f757220646179732061207765656b2c206173206c6f6e67206173207468652070726f636573732074616b65732e20556e74696c207468656e2c204f27546f6f6c6520746f6c6420746865206a75726f72732c2022506c6561736520707574207468652063617365206f7574206f6620796f7572206d696e64732e20456e6a6f7920746865207761726d20776561746865722e2220576861742773206e65787420666f7220547361726e6165763f20434e4e277320416e6e204f274e65696c6c207265706f727465642066726f6d20426f73746f6e2e20434e4e277320436174686572696e6520452e2053686f69636865742c20416c6578616e647261204669656c642c204161726f6e20436f6f7065722c204b6576696e20436f6e6c6f6e2c204a61736f6e2048616e6e6120616e6420537465766520416c6d61737920636f6e747269627574656420746f2074686973207265706f72742e0a",
+  "source_cluster_id": "sha256:477df9bc815a16f3025f04e580d8d3aeca8cd229a69a0cec4464f8e183c69fea",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:21d395c33c9e371e7de5aa116934ad524d71246a68c5494b9d7bf30348faf1de"
+}

@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20697420697320636c65617220746861742074686520636f7374206f662073616c657320697320616e20657870656e73652074686174206120627573696e657373206368617267657320616761696e7374206974732073616c657320746f2064657465726d696e65207468652067726f73732070726f666974206561726e65642e2054686520636f7374206f662073616c657320696e636c7564657320616c6c20636f73747320696e63757272656420696e206372656174696e67207468652070726f64756374206f72207365727669636520746861742077617320736f6c642c20696e636c7564696e6720646972656374206c61626f722c206d6174657269616c732c20616e64206f766572686561642e204974206973207479706963616c6c79207265706f727465642061732061207375627472616374696f6e2066726f6d206e65742073616c6573206f6e2074686520696e636f6d652073746174656d656e7420616e642069732063616c63756c617465642061732074686520646966666572656e6365206265747765656e2074686520636f7374206f6620676f6f647320736f6c6420616e642074686520626567696e6e696e6720696e76656e746f727920706c75732074686520636f7374206f6620676f6f647320736f6c642e",
+  "arm": "holistic",
+  "call_id": "sha256:13c7be5559390a6846616fb8bb796a1ec3d532cbe28374ade27341e506be40ac:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.0649026950122789,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 619,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 1,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 1,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:The cost of sales is the accumulated total of all costs used to create a product or service, which has been sold. The term is most commonly used by retailers. A manufacturer is more likely to use the term cost of goods sold.The cost of sales line item appears near the top of the income statement, as a subtraction from net sales. The result of this calculation is the gross margin earned by the reporting entity.he term is most commonly used by retailers. A manufacturer is more likely to use the term cost of goods sold. The cost of sales line item appears near the top of the income statement, as a subtraction from net sales. The result of this calculation is the gross margin earned by the reporting entity.\\\\n\\\\npassage 2:It is also known as cost of sales. Cost of goods sold is an expense charged against sales to work out a gross profit (see definition below). So, for example, we may have sold 100 units this year at $4 each, and these 100 units that we sold cost us $3 each originally.So our sales would be $400 and our cost of the goods we sold (cost of sales) would amount to $300. This would result in a gross profit of $100 (sales minus cost of sales).Cost of goods sold is not the same as purchases, as you will see from our examples below.ost of goods sold is an expense charged against sales to work out a gross profit (see definition below). So, for example, we may have sold 100 units this year at $4 each, and these 100 units that we sold cost us $3 each originally.\\\\n\\\\npassage 3:First, select a target for total cost of sales. For this example, we will use 35%. For every $100 in food sales, we would need to transfer $35 to COGS.irst, select a target for total cost of sales. For this example, we will use 35%. For every $100 in food sales, we would need to transfer $35 to COGS.\\\\n\\\\n\\\",\\\"question\\\":\\\"cost of sales example\\\"}\", \"answer\": \"Based on the given passages, it is clear that the cost of sales is an expense that a business charges against its sales to determine the gross profit earned. The cost of sales includes all costs incurred in creating the product or service that was sold, including direct labor, materials, and overhead. It is typically reported as a subtraction from net sales on the income statement and is calculated as the difference between the cost of goods sold and the beginning inventory plus the cost of goods sold.\"}",
+  "prompt_sha256": "sha256:314946ff9b289026d4c1e556fe6c620f38fe40e990079fb3b24a8a3235876033",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189775,
+    "id": "chatcmpl-xaHNYVauQkBZMtH4BR5y1o6zG31RLFpb",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 322.237,
+      "predicted_n": 14,
+      "predicted_per_second": 43.44628332562679,
+      "predicted_per_token_ms": 23.016928571428572,
+      "prompt_ms": 624.994,
+      "prompt_n": 619,
+      "prompt_per_second": 990.4095079312762,
+      "prompt_per_token_ms": 1.0096833602584814
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 619,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 633
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:The cost of sales is the accumulated total of all costs used to create a product or service, which has been sold. The term is most commonly used by retailers. A manufacturer is more likely to use the term cost of goods sold.The cost of sales line item appears near the top of the income statement, as a subtraction from net sales. The result of this calculation is the gross margin earned by the reporting entity.he term is most commonly used by retailers. A manufacturer is more likely to use the term cost of goods sold. The cost of sales line item appears near the top of the income statement, as a subtraction from net sales. The result of this calculation is the gross margin earned by the reporting entity.\\\\n\\\\npassage 2:It is also known as cost of sales. Cost of goods sold is an expense charged against sales to work out a gross profit (see definition below). So, for example, we may have sold 100 units this year at $4 each, and these 100 units that we sold cost us $3 each originally.So our sales would be $400 and our cost of the goods we sold (cost of sales) would amount to $300. This would result in a gross profit of $100 (sales minus cost of sales).Cost of goods sold is not the same as purchases, as you will see from our examples below.ost of goods sold is an expense charged against sales to work out a gross profit (see definition below). So, for example, we may have sold 100 units this year at $4 each, and these 100 units that we sold cost us $3 each originally.\\\\n\\\\npassage 3:First, select a target for total cost of sales. For this example, we will use 35%. For every $100 in food sales, we would need to transfer $35 to COGS.irst, select a target for total cost of sales. For this example, we will use 35%. For every $100 in food sales, we would need to transfer $35 to COGS.\\\\n\\\\n\\\",\\\"question\\\":\\\"cost of sales example\\\"}\", \"answer\": \"Based on the given passages, it is clear that the cost of sales is an expense that a business charges against its sales to determine the gross profit earned. The cost of sales includes all costs incurred in creating the product or service that was sold, including direct labor, materials, and overhead. It is typically reported as a subtraction from net sales on the income statement and is calculated as the difference between the cost of goods sold and the beginning inventory plus the cost of goods sold.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 45,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a54686520636f7374206f662073616c65732069732074686520616363756d756c6174656420746f74616c206f6620616c6c20636f737473207573656420746f2063726561746520612070726f64756374206f7220736572766963652c20776869636820686173206265656e20736f6c642e20546865207465726d206973206d6f737420636f6d6d6f6e6c7920757365642062792072657461696c6572732e2041206d616e756661637475726572206973206d6f7265206c696b656c7920746f2075736520746865207465726d20636f7374206f6620676f6f647320736f6c642e54686520636f7374206f662073616c6573206c696e65206974656d2061707065617273206e6561722074686520746f70206f662074686520696e636f6d652073746174656d656e742c2061732061207375627472616374696f6e2066726f6d206e65742073616c65732e2054686520726573756c74206f6620746869732063616c63756c6174696f6e206973207468652067726f7373206d617267696e206561726e656420627920746865207265706f7274696e6720656e746974792e6865207465726d206973206d6f737420636f6d6d6f6e6c7920757365642062792072657461696c6572732e2041206d616e756661637475726572206973206d6f7265206c696b656c7920746f2075736520746865207465726d20636f7374206f6620676f6f647320736f6c642e2054686520636f7374206f662073616c6573206c696e65206974656d2061707065617273206e6561722074686520746f70206f662074686520696e636f6d652073746174656d656e742c2061732061207375627472616374696f6e2066726f6d206e65742073616c65732e2054686520726573756c74206f6620746869732063616c63756c6174696f6e206973207468652067726f7373206d617267696e206561726e656420627920746865207265706f7274696e6720656e746974792e5c6e5c6e7061737361676520323a497420697320616c736f206b6e6f776e20617320636f7374206f662073616c65732e20436f7374206f6620676f6f647320736f6c6420697320616e20657870656e7365206368617267656420616761696e73742073616c657320746f20776f726b206f757420612067726f73732070726f666974202873656520646566696e6974696f6e2062656c6f77292e20536f2c20666f72206578616d706c652c207765206d6179206861766520736f6c642031303020756e6974732074686973207965617220617420243420656163682c20616e642074686573652031303020756e697473207468617420776520736f6c6420636f73742075732024332065616368206f726967696e616c6c792e536f206f75722073616c657320776f756c64206265202434303020616e64206f757220636f7374206f662074686520676f6f647320776520736f6c642028636f7374206f662073616c65732920776f756c6420616d6f756e7420746f20243330302e205468697320776f756c6420726573756c7420696e20612067726f73732070726f666974206f662024313030202873616c6573206d696e757320636f7374206f662073616c6573292e436f7374206f6620676f6f647320736f6c64206973206e6f74207468652073616d65206173207075726368617365732c20617320796f752077696c6c207365652066726f6d206f7572206578616d706c65732062656c6f772e6f7374206f6620676f6f647320736f6c6420697320616e20657870656e7365206368617267656420616761696e73742073616c657320746f20776f726b206f757420612067726f73732070726f666974202873656520646566696e6974696f6e2062656c6f77292e20536f2c20666f72206578616d706c652c207765206d6179206861766520736f6c642031303020756e6974732074686973207965617220617420243420656163682c20616e642074686573652031303020756e697473207468617420776520736f6c6420636f73742075732024332065616368206f726967696e616c6c792e5c6e5c6e7061737361676520333a46697273742c2073656c65637420612074617267657420666f7220746f74616c20636f7374206f662073616c65732e20466f722074686973206578616d706c652c2077652077696c6c20757365203335252e20466f72206576657279202431303020696e20666f6f642073616c65732c20776520776f756c64206e65656420746f207472616e736665722024333520746f20434f47532e697273742c2073656c65637420612074617267657420666f7220746f74616c20636f7374206f662073616c65732e20466f722074686973206578616d706c652c2077652077696c6c20757365203335252e20466f72206576657279202431303020696e20666f6f642073616c65732c20776520776f756c64206e65656420746f207472616e736665722024333520746f20434f47532e5c6e5c6e222c227175657374696f6e223a22636f7374206f662073616c6573206578616d706c65227d",
+  "source_cluster_id": "sha256:7f259a0c5425fe8b4cf8015f7bca217d13f71681856c4beef803a4efb28fb3c9",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 1\n}",
+  "unit_id": "sha256:13c7be5559390a6846616fb8bb796a1ec3d532cbe28374ade27341e506be40ac"
+}

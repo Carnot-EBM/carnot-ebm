@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "546578617320476f7665726e6f722047726567204162626f747420697320636f6d626174696e6720226d6973696e666f726d6174696f6e20616e64207072656a75646963652220737572726f756e64696e67207468652049737261656c2d48616d617320636f6e666c6963742062792070726f766964696e67206e657720737461746520637572726963756c756d207265736f757263657320666f72207363686f6f6c732e205468657365206d6174657269616c732061696d20746f20737570706c656d656e7420746865207465616368696e67206f6620776f726c64207374756469657320616e6420656c696d696e6174652069676e6f72616e63652074686174206675656c7320616e746973656d697469736d20616e64206269676f7472792e20546865207265736f757263657320696e636c756465206120677569646520746f20636f6e736369656e74696f757320636f6e766572736174696f6e73206f6e207468652049737261656c2d50616c657374696e6520636f6e666c6963742066726f6d2074686520416e74692d446566616d6174696f6e204c65616775652c2061732077656c6c206173206120677569646520666f7220706172656e7473206f6e2064697363757373696e672076696f6c656e63652077697468207468656972206368696c6472656e2e2054686520636f6e666c696374206265747765656e2049737261656c20616e642048616d617320696e2032303231206c656420746f2061207269736520696e20616e746973656d6974696320696e636964656e747320696e207468652055532c20616e6420476f7665726e6f72204162626f7474277320696e6974696174697665207365656b7320746f20737570706f727420746865204a657769736820636f6d6d756e69747920616e642070726f6d6f746520656475636174696f6e206f6e2074686520746f7069632e",
+  "arm": "holistic",
+  "call_id": "sha256:1e77f90d01a3883c9687df7f3105f2f1f4a0f122ac47c88bd6a5fa04c22be3cb:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.104446399025619,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 707,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Greg Abbott fighting 'misinformation and prejudice' with new Israel-Hamas materials for schools\\nTexas Gov. Greg Abbott is trying to hit back against \\\"misinformation and prejudice\\\" about the Israel-Hamas conflict with new state curriculum resources for schools.\\nAbbott said in a statement that the resources will \\\"supplement the current comprehensive approach to teaching world studies in Texas.\\\"\\nThe governor went on to say \\\"The future of Texas depends on the thorough education and guidance of our bright students. Working together, we can eliminate the ignorance that spurs antisemitism and bigotry through knowledge and truth.\u201d\\n\\\"The State of Texas stands strong with Israel and our Jewish neighbors during the heinous acts of war committed by the terrorist group Hamas, and we will not allow misinformation and prejudice to undermine the support the Jewish community needs during this time of conflict,\\\" Abbott said in the statement.\\nResources included in the material are a guide to \\\"conscientious conversations\\\" on the Israel-Palestine conflict via the Anti-Defamation League (ADL). The curriculum supplements target kids grade 6-12, and includes a guide for parents for talking with their kids about violence from Common Sense Media,\\nSome of the resources included in the material are a guide to \\\"conscientious conversations\\\" on the Israel-Palestine conflict from the Anti-Defamation League for kids grades six through twelve and a guide for parents about talking to kids about violence from Common Sense Media, a nonpartisan education nonprofit.\\nThe ADL told Business Insider in 2021 that conflicts between Israel and Hamas contributed to a 34% rise in antisemitic incidents in the U.S. 2021 marked an 11-day war between Israel and militants in Gaza, leading to a death toll of over 240 Palestinians and a dozen Israelis.\\nThe Jewish Federations of North America (JFNA), which represents some 400 Jewish groups in the US, previously told Insiderthere are \\\"no known credible threats to the US Jewish community,\\\" but it is still recommending Jewish facilities to enforce security protocols and coordinate with law enforcement for security.\\nThe conflict has also sparked anti-Islamic violence, including the murder of a 6-year-old boy at the hands of his own landlord, who admitted in court that his murder was due to his family being Muslim.\\nIn 2019, Governor Abbott signed Senate Bill 1828 to establish Holocaust Remembrance Week in Texas public schools to educate students about the Holocaust.\", \"answer\": \"Texas Governor Greg Abbott is combating \\\"misinformation and prejudice\\\" surrounding the Israel-Hamas conflict by providing new state curriculum resources for schools. These materials aim to supplement the teaching of world studies and eliminate ignorance that fuels antisemitism and bigotry. The resources include a guide to conscientious conversations on the Israel-Palestine conflict from the Anti-Defamation League, as well as a guide for parents on discussing violence with their children. The conflict between Israel and Hamas in 2021 led to a rise in antisemitic incidents in the US, and Governor Abbott's initiative seeks to support the Jewish community and promote education on the topic.\"}",
+  "prompt_sha256": "sha256:bdfd882af0772a916e043ba75b387bfd54920001f1692ae7218ec1a521c9c78e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189626,
+    "id": "chatcmpl-blVqb7aZFl5hje0YpG6OyKDbcusk3GTj",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 317.303,
+      "predicted_n": 14,
+      "predicted_per_second": 44.12186458999757,
+      "predicted_per_token_ms": 22.6645,
+      "prompt_ms": 668.691,
+      "prompt_n": 707,
+      "prompt_per_second": 1057.2895403108462,
+      "prompt_per_token_ms": 0.9458147100424329
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 707,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 721
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Greg Abbott fighting 'misinformation and prejudice' with new Israel-Hamas materials for schools\\nTexas Gov. Greg Abbott is trying to hit back against \\\"misinformation and prejudice\\\" about the Israel-Hamas conflict with new state curriculum resources for schools.\\nAbbott said in a statement that the resources will \\\"supplement the current comprehensive approach to teaching world studies in Texas.\\\"\\nThe governor went on to say \\\"The future of Texas depends on the thorough education and guidance of our bright students. Working together, we can eliminate the ignorance that spurs antisemitism and bigotry through knowledge and truth.\u201d\\n\\\"The State of Texas stands strong with Israel and our Jewish neighbors during the heinous acts of war committed by the terrorist group Hamas, and we will not allow misinformation and prejudice to undermine the support the Jewish community needs during this time of conflict,\\\" Abbott said in the statement.\\nResources included in the material are a guide to \\\"conscientious conversations\\\" on the Israel-Palestine conflict via the Anti-Defamation League (ADL). The curriculum supplements target kids grade 6-12, and includes a guide for parents for talking with their kids about violence from Common Sense Media,\\nSome of the resources included in the material are a guide to \\\"conscientious conversations\\\" on the Israel-Palestine conflict from the Anti-Defamation League for kids grades six through twelve and a guide for parents about talking to kids about violence from Common Sense Media, a nonpartisan education nonprofit.\\nThe ADL told Business Insider in 2021 that conflicts between Israel and Hamas contributed to a 34% rise in antisemitic incidents in the U.S. 2021 marked an 11-day war between Israel and militants in Gaza, leading to a death toll of over 240 Palestinians and a dozen Israelis.\\nThe Jewish Federations of North America (JFNA), which represents some 400 Jewish groups in the US, previously told Insiderthere are \\\"no known credible threats to the US Jewish community,\\\" but it is still recommending Jewish facilities to enforce security protocols and coordinate with law enforcement for security.\\nThe conflict has also sparked anti-Islamic violence, including the murder of a 6-year-old boy at the hands of his own landlord, who admitted in court that his murder was due to his family being Muslim.\\nIn 2019, Governor Abbott signed Senate Bill 1828 to establish Holocaust Remembrance Week in Texas public schools to educate students about the Holocaust.\", \"answer\": \"Texas Governor Greg Abbott is combating \\\"misinformation and prejudice\\\" surrounding the Israel-Hamas conflict by providing new state curriculum resources for schools. These materials aim to supplement the teaching of world studies and eliminate ignorance that fuels antisemitism and bigotry. The resources include a guide to conscientious conversations on the Israel-Palestine conflict from the Anti-Defamation League, as well as a guide for parents on discussing violence with their children. The conflict between Israel and Hamas in 2021 led to a rise in antisemitic incidents in the US, and Governor Abbott's initiative seeks to support the Jewish community and promote education on the topic.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 1,
+  "source_bytes": "47726567204162626f7474206669676874696e6720276d6973696e666f726d6174696f6e20616e64207072656a7564696365272077697468206e65772049737261656c2d48616d6173206d6174657269616c7320666f72207363686f6f6c730a546578617320476f762e2047726567204162626f747420697320747279696e6720746f20686974206261636b20616761696e737420226d6973696e666f726d6174696f6e20616e64207072656a7564696365222061626f7574207468652049737261656c2d48616d617320636f6e666c6963742077697468206e657720737461746520637572726963756c756d207265736f757263657320666f72207363686f6f6c732e0a4162626f7474207361696420696e20612073746174656d656e74207468617420746865207265736f75726365732077696c6c2022737570706c656d656e74207468652063757272656e7420636f6d70726568656e7369766520617070726f61636820746f207465616368696e6720776f726c64207374756469657320696e2054657861732e220a54686520676f7665726e6f722077656e74206f6e20746f20736179202254686520667574757265206f6620546578617320646570656e6473206f6e207468652074686f726f75676820656475636174696f6e20616e642067756964616e6365206f66206f7572206272696768742073747564656e74732e20576f726b696e6720746f6765746865722c2077652063616e20656c696d696e617465207468652069676e6f72616e6365207468617420737075727320616e746973656d697469736d20616e64206269676f747279207468726f756768206b6e6f776c6564676520616e642074727574682ee2809d0a22546865205374617465206f66205465786173207374616e6473207374726f6e6720776974682049737261656c20616e64206f7572204a6577697368206e65696768626f727320647572696e6720746865206865696e6f75732061637473206f662077617220636f6d6d69747465642062792074686520746572726f726973742067726f75702048616d61732c20616e642077652077696c6c206e6f7420616c6c6f77206d6973696e666f726d6174696f6e20616e64207072656a756469636520746f20756e6465726d696e652074686520737570706f727420746865204a657769736820636f6d6d756e697479206e6565647320647572696e6720746869732074696d65206f6620636f6e666c6963742c22204162626f7474207361696420696e207468652073746174656d656e742e0a5265736f757263657320696e636c7564656420696e20746865206d6174657269616c20617265206120677569646520746f2022636f6e736369656e74696f757320636f6e766572736174696f6e7322206f6e207468652049737261656c2d50616c657374696e6520636f6e666c696374207669612074686520416e74692d446566616d6174696f6e204c6561677565202841444c292e2054686520637572726963756c756d20737570706c656d656e747320746172676574206b69647320677261646520362d31322c20616e6420696e636c75646573206120677569646520666f7220706172656e747320666f722074616c6b696e672077697468207468656972206b6964732061626f75742076696f6c656e63652066726f6d20436f6d6d6f6e2053656e7365204d656469612c0a536f6d65206f6620746865207265736f757263657320696e636c7564656420696e20746865206d6174657269616c20617265206120677569646520746f2022636f6e736369656e74696f757320636f6e766572736174696f6e7322206f6e207468652049737261656c2d50616c657374696e6520636f6e666c6963742066726f6d2074686520416e74692d446566616d6174696f6e204c656167756520666f72206b6964732067726164657320736978207468726f756768207477656c766520616e64206120677569646520666f7220706172656e74732061626f75742074616c6b696e6720746f206b6964732061626f75742076696f6c656e63652066726f6d20436f6d6d6f6e2053656e7365204d656469612c2061206e6f6e706172746973616e20656475636174696f6e206e6f6e70726f6669742e0a5468652041444c20746f6c6420427573696e65737320496e736964657220696e2032303231207468617420636f6e666c69637473206265747765656e2049737261656c20616e642048616d617320636f6e747269627574656420746f206120333425207269736520696e20616e746973656d6974696320696e636964656e747320696e2074686520552e532e2032303231206d61726b656420616e2031312d64617920776172206265747765656e2049737261656c20616e64206d696c6974616e747320696e2047617a612c206c656164696e6720746f206120646561746820746f6c6c206f66206f766572203234302050616c657374696e69616e7320616e64206120646f7a656e2049737261656c69732e0a546865204a65776973682046656465726174696f6e73206f66204e6f72746820416d657269636120284a464e41292c20776869636820726570726573656e747320736f6d6520343030204a65776973682067726f75707320696e207468652055532c2070726576696f75736c7920746f6c6420496e736964657274686572652061726520226e6f206b6e6f776e206372656469626c65207468726561747320746f20746865205553204a657769736820636f6d6d756e6974792c2220627574206974206973207374696c6c207265636f6d6d656e64696e67204a657769736820666163696c697469657320746f20656e666f7263652073656375726974792070726f746f636f6c7320616e6420636f6f7264696e6174652077697468206c617720656e666f7263656d656e7420666f722073656375726974792e0a54686520636f6e666c6963742068617320616c736f20737061726b656420616e74692d49736c616d69632076696f6c656e63652c20696e636c7564696e6720746865206d7572646572206f66206120362d796561722d6f6c6420626f79206174207468652068616e6473206f6620686973206f776e206c616e646c6f72642c2077686f2061646d697474656420696e20636f757274207468617420686973206d7572646572207761732064756520746f206869732066616d696c79206265696e67204d75736c696d2e0a496e20323031392c20476f7665726e6f72204162626f7474207369676e65642053656e6174652042696c6c203138323820746f2065737461626c69736820486f6c6f63617573742052656d656d6272616e6365205765656b20696e205465786173207075626c6963207363686f6f6c7320746f20656475636174652073747564656e74732061626f75742074686520486f6c6f63617573742e",
+  "source_cluster_id": "sha256:8d253bc677333b98c6e8ab41f70732a086fa5ce6bb83084e8c3a7b93df788407",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:1e77f90d01a3883c9687df7f3105f2f1f4a0f122ac47c88bd6a5fa04c22be3cb"
+}

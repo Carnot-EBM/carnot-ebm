@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4865726520697320612073756d6d617279206f66207468652061727469636c652077697468696e20393020776f7264733a0a0a4f6e20446563656d626572203674682c20313939322c20666f757220667269656e6473202d204e616e6379204272616e63682c204b6576696e20436c61726b652c20416c616e20537465776172742c20616e6420416d7920486178746f6e2053746577617274202d206469736170706561726564207768696c652074726176656c696e6720696e206120736d616c6c20706c616e65206f7665722043616c69666f726e69612e204465737069746520657874656e736976652073656172636865732c206e6f207472616365206f662074686520706c616e65206f72207468652070617373656e676572732077617320666f756e642e2054686520636173652072656d61696e7320756e736f6c7665642c20616e6420696e76657374696761746f72732062656c69657665207468652067726f7570206d61792068617665206469656420696e20612063726173682c20627574206e6f2065766964656e636520686173206265656e20666f756e642e20546865206d697373696e6720696e646976696475616c7320617265207374696c6c20636f6e7369646572656420616c6976652c20616e642074686569722066616d696c69657320686f706520666f7220616e73776572732e",
+  "arm": "holistic",
+  "call_id": "sha256:4bf0ada136515f60f9cd0b1a7f1da1cdf646175d3d6f3f86ebfe9256d5a2904a:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.1732847150415182,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 651,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Nancy Branch & 3 Others Disappeared During Trip In 1992\\nA weekend in Santa Barbara, California, is the backdrop for a mystery that has haunted authorities for decades. It was on December 6, 1992, that 29-year-old Stanford University graduate Nancy Branch was making her way home back to Palo Alto, California, with her fianc\u00e9 Kevin Clarke (31) and newlyweds Alan Stewart (29) and Amy Haxton Stewart (31). Amy, a University of California, Los Angeles graduate, had reportedly married Alan only six weeks prior. The pair had plans of honeymooning in South Africa one month later.\\nThe Circumstances\\nThe foursome of friends made their way to the Santa Barbara Airport to return to Palo Alto so that one of the couples could purchase their Christmas tree. They boarded a single-engine Piper Archer airplane, and according to The Charley Project, the last time there was communication from the plane was eight minutes later.\\nThe pilot didn't alert anyone that there were problems with the aircraft, although the weather was described as \\\"treacherous.\\\" The plane never arrived in Palo Alto, and while there were searches conducted by professionals near and far, there was no indication that the plane had any sort of accident. \\\"Investigators received a tip that it had crashed somewhere near the Big Basin area of California, but no evidence was discovered,\\\" TCP writes. It's believed that everyone on board is deceased, but they've remained missing persons because this mystery hasn't uncovered remains of either the persons involved or the aircraft.\\nFor context, the drive from Santa Barbara to Palo Alto is about five and a half hours.\\nWhat To Know\\nAt the time of her disappearance, Nancy was 5 feet 3 inches tall and 120 pounds. She has brown hair and brown eyes. There wasn't much else included in the National Missing & Unidentified Persons System database.\\nAnyone with information about this case is urged to contact the Menlo Park Police Department at (650) 330-6343 or their local authorities. The agency case number is 92-4968.\\nPlease share this story about Nancy Branch to reignite the investigation into the disappearance of these four people. She is our sister, and her life matters.\", \"answer\": \"Here is a summary of the article within 90 words:\\n\\nOn December 6th, 1992, four friends - Nancy Branch, Kevin Clarke, Alan Stewart, and Amy Haxton Stewart - disappeared while traveling in a small plane over California. Despite extensive searches, no trace of the plane or the passengers was found. The case remains unsolved, and investigators believe the group may have died in a crash, but no evidence has been found. The missing individuals are still considered alive, and their families hope for answers.\"}",
+  "prompt_sha256": "sha256:a496ba83f493002eed75300593e97ad849be875da148888ac86bfae2555395bc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791190005,
+    "id": "chatcmpl-ki7ABJjbYqxkve3Dq0Rigm0x5fZgFXYK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 370.838,
+      "predicted_n": 16,
+      "predicted_per_second": 43.14552446081577,
+      "predicted_per_token_ms": 23.177375,
+      "prompt_ms": 664.583,
+      "prompt_n": 651,
+      "prompt_per_second": 979.5616198428187,
+      "prompt_per_token_ms": 1.0208648233486943
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 651,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 667
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"Nancy Branch & 3 Others Disappeared During Trip In 1992\\nA weekend in Santa Barbara, California, is the backdrop for a mystery that has haunted authorities for decades. It was on December 6, 1992, that 29-year-old Stanford University graduate Nancy Branch was making her way home back to Palo Alto, California, with her fianc\u00e9 Kevin Clarke (31) and newlyweds Alan Stewart (29) and Amy Haxton Stewart (31). Amy, a University of California, Los Angeles graduate, had reportedly married Alan only six weeks prior. The pair had plans of honeymooning in South Africa one month later.\\nThe Circumstances\\nThe foursome of friends made their way to the Santa Barbara Airport to return to Palo Alto so that one of the couples could purchase their Christmas tree. They boarded a single-engine Piper Archer airplane, and according to The Charley Project, the last time there was communication from the plane was eight minutes later.\\nThe pilot didn't alert anyone that there were problems with the aircraft, although the weather was described as \\\"treacherous.\\\" The plane never arrived in Palo Alto, and while there were searches conducted by professionals near and far, there was no indication that the plane had any sort of accident. \\\"Investigators received a tip that it had crashed somewhere near the Big Basin area of California, but no evidence was discovered,\\\" TCP writes. It's believed that everyone on board is deceased, but they've remained missing persons because this mystery hasn't uncovered remains of either the persons involved or the aircraft.\\nFor context, the drive from Santa Barbara to Palo Alto is about five and a half hours.\\nWhat To Know\\nAt the time of her disappearance, Nancy was 5 feet 3 inches tall and 120 pounds. She has brown hair and brown eyes. There wasn't much else included in the National Missing & Unidentified Persons System database.\\nAnyone with information about this case is urged to contact the Menlo Park Police Department at (650) 330-6343 or their local authorities. The agency case number is 92-4968.\\nPlease share this story about Nancy Branch to reignite the investigation into the disappearance of these four people. She is our sister, and her life matters.\", \"answer\": \"Here is a summary of the article within 90 words:\\n\\nOn December 6th, 1992, four friends - Nancy Branch, Kevin Clarke, Alan Stewart, and Amy Haxton Stewart - disappeared while traveling in a small plane over California. Despite extensive searches, no trace of the plane or the passengers was found. The case remains unsolved, and investigators believe the group may have died in a crash, but no evidence has been found. The missing individuals are still considered alive, and their families hope for answers.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 110,
+  "source_bytes": "4e616e6379204272616e636820262033204f746865727320446973617070656172656420447572696e67205472697020496e20313939320a41207765656b656e6420696e2053616e746120426172626172612c2043616c69666f726e69612c20697320746865206261636b64726f7020666f722061206d797374657279207468617420686173206861756e74656420617574686f72697469657320666f7220646563616465732e20497420776173206f6e20446563656d62657220362c20313939322c20746861742032392d796561722d6f6c64205374616e666f726420556e6976657273697479206772616475617465204e616e6379204272616e636820776173206d616b696e67206865722077617920686f6d65206261636b20746f2050616c6f20416c746f2c2043616c69666f726e69612c207769746820686572206669616e63c3a9204b6576696e20436c61726b65202833312920616e64206e65776c797765647320416c616e2053746577617274202832392920616e6420416d7920486178746f6e205374657761727420283331292e20416d792c206120556e6976657273697479206f662043616c69666f726e69612c204c6f7320416e67656c65732067726164756174652c20686164207265706f727465646c79206d61727269656420416c616e206f6e6c7920736978207765656b73207072696f722e2054686520706169722068616420706c616e73206f6620686f6e65796d6f6f6e696e6720696e20536f75746820416672696361206f6e65206d6f6e7468206c617465722e0a5468652043697263756d7374616e6365730a54686520666f7572736f6d65206f6620667269656e6473206d6164652074686569722077617920746f207468652053616e7461204261726261726120416972706f727420746f2072657475726e20746f2050616c6f20416c746f20736f2074686174206f6e65206f662074686520636f75706c657320636f756c64207075726368617365207468656972204368726973746d617320747265652e205468657920626f617264656420612073696e676c652d656e67696e652050697065722041726368657220616972706c616e652c20616e64206163636f7264696e6720746f2054686520436861726c65792050726f6a6563742c20746865206c6173742074696d652074686572652077617320636f6d6d756e69636174696f6e2066726f6d2074686520706c616e6520776173206569676874206d696e75746573206c617465722e0a5468652070696c6f74206469646e277420616c65727420616e796f6e65207468617420746865726520776572652070726f626c656d732077697468207468652061697263726166742c20616c74686f7567682074686520776561746865722077617320646573637269626564206173202274726561636865726f75732e222054686520706c616e65206e65766572206172726976656420696e2050616c6f20416c746f2c20616e64207768696c65207468657265207765726520736561726368657320636f6e6475637465642062792070726f66657373696f6e616c73206e65617220616e64206661722c20746865726520776173206e6f20696e6469636174696f6e20746861742074686520706c616e652068616420616e7920736f7274206f66206163636964656e742e2022496e76657374696761746f7273207265636569766564206120746970207468617420697420686164206372617368656420736f6d657768657265206e656172207468652042696720426173696e2061726561206f662043616c69666f726e69612c20627574206e6f2065766964656e63652077617320646973636f76657265642c2220544350207772697465732e20497427732062656c696576656420746861742065766572796f6e65206f6e20626f6172642069732064656365617365642c2062757420746865792776652072656d61696e6564206d697373696e6720706572736f6e7320626563617573652074686973206d797374657279206861736e277420756e636f76657265642072656d61696e73206f66206569746865722074686520706572736f6e7320696e766f6c766564206f72207468652061697263726166742e0a466f7220636f6e746578742c207468652064726976652066726f6d2053616e7461204261726261726120746f2050616c6f20416c746f2069732061626f7574206669766520616e6420612068616c6620686f7572732e0a5768617420546f204b6e6f770a4174207468652074696d65206f662068657220646973617070656172616e63652c204e616e63792077617320352066656574203320696e636865732074616c6c20616e642031323020706f756e64732e20536865206861732062726f776e206861697220616e642062726f776e20657965732e205468657265207761736e2774206d75636820656c736520696e636c7564656420696e20746865204e6174696f6e616c204d697373696e67202620556e6964656e74696669656420506572736f6e732053797374656d2064617461626173652e0a416e796f6e65207769746820696e666f726d6174696f6e2061626f75742074686973206361736520697320757267656420746f20636f6e7461637420746865204d656e6c6f205061726b20506f6c696365204465706172746d656e74206174202836353029203333302d36333433206f72207468656972206c6f63616c20617574686f7269746965732e20546865206167656e63792063617365206e756d6265722069732039322d343936382e0a506c6561736520736861726520746869732073746f72792061626f7574204e616e6379204272616e636820746f20726569676e6974652074686520696e7665737469676174696f6e20696e746f2074686520646973617070656172616e6365206f6620746865736520666f75722070656f706c652e20536865206973206f7572207369737465722c20616e6420686572206c696665206d6174746572732e",
+  "source_cluster_id": "sha256:f09b590f92457dfffd3ebc0827a796cb4a329a1b3c139c7d92142976a99dabc6",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.0\n}",
+  "unit_id": "sha256:4bf0ada136515f60f9cd0b1a7f1da1cdf646175d3d6f3f86ebfe9256d5a2904a"
+}

@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e207468652070726f76696465642070617373616765732c20746f206368616e67652061206e756d62657220746f204f322c20796f752077696c6c206e65656420746f20666f6c6c6f772074686573652073746570733a0a0a312e204f627461696e20612050414320636f64652066726f6d20796f75722063757272656e74206d6f62696c65206e6574776f726b2070726f76696465722028506173736167652032292e0a322e2050726f76696465207468652050414320636f646520746f20796f7572206e6577204f32206d6f62696c65206e6574776f726b206f70657261746f722028506173736167652032292e0a332e205472616e7366657220796f7572206d6f62696c652070686f6e65206e756d6265722066726f6d20796f75722063757272656e742070726f766964657220746f204f32207468726f756768206d6f62696c65206e756d62657220706f7274696e672028506173736167652033292e0a0a5468657265666f72652c2074686520616e7377657220746f20746865207175657374696f6e2069733a0a0a5965732c20796f752063616e206368616e67652061206e756d62657220746f204f32206279206f627461696e696e6720612050414320636f64652066726f6d20796f75722063757272656e74206d6f62696c65206e6574776f726b2070726f766964657220616e64207472616e7366657272696e6720796f7572206d6f62696c652070686f6e65206e756d62657220746f204f32207468726f756768206d6f62696c65206e756d62657220706f7274696e672e",
+  "arm": "holistic",
+  "call_id": "sha256:6ee89e8897430fc9e047a8ce621fa8f8ce78b0748f0b4a67b16a94d0db6e6989:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.107668295968324,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 655,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:If you\u2019re new to O2, you don\u2019t need to swap your sim-you\u2019ll already have the right one. Before we get started, you\u2019ll need: Your O2 mobile so we can text you a code. The sim serial number (SSN) of your new sim-it\u2019s printed on the back and is up to 19 digits. Sim swaps usually take less than an hour.But if we\u2019re really busy, it can take up to 24 hours.our O2 mobile so we can text you a code. The sim serial number (SSN) of your new sim-it\u2019s printed on the back and is up to 19 digits. Sim swaps usually take less than an hour. But if we\u2019re really busy, it can take up to 24 hours.\\\\n\\\\npassage 2:Finally, provide your PAC code to your new O2 mobile network operator who will then be able to port your existing phone number from Vodafone. They will tell you what day the transfer is due to take place (usually within 48 hours).he first step is to join O2. Once you have done that, ensure you have the following information ready: 1  Your original mobile number you want to keep. 2  The Port Authorization Code (PAC) from your previous Vodafone network. 3  The temporary mobile number from your new O2 sim card.\\\\n\\\\npassage 3:Switching to O2. If you would like to switch to O2 and you would like to keep your current mobile phone number, you will need a PAC code (porting authorisation code) from your current mobile phone network. This will allow you to transfer your mobile phone number from your current provider to O2.The process for transferring your mobile phone number from your current network to O2 is termed mobile number portability, or mobile number porting.his will allow you to transfer your mobile phone number from your current provider to O2. The process for transferring your mobile phone number from your current network to O2 is termed mobile number portability, or mobile number porting.\\\\n\\\\n\\\",\\\"question\\\":\\\"changing number to o2\\\"}\", \"answer\": \"Based on the provided passages, to change a number to O2, you will need to follow these steps:\\n\\n1. Obtain a PAC code from your current mobile network provider (Passage 2).\\n2. Provide the PAC code to your new O2 mobile network operator (Passage 2).\\n3. Transfer your mobile phone number from your current provider to O2 through mobile number porting (Passage 3).\\n\\nTherefore, the answer to the question is:\\n\\nYes, you can change a number to O2 by obtaining a PAC code from your current mobile network provider and transferring your mobile phone number to O2 through mobile number porting.\"}",
+  "prompt_sha256": "sha256:303e46c529c924c657e9c46717e6672f9a4f35d14d2798402a3453b49f8fb566",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791190012,
+    "id": "chatcmpl-OTM3UPeDWsSmqF5rLlAGoidQfn8YGFk8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 322.368,
+      "predicted_n": 14,
+      "predicted_per_second": 43.428628151677586,
+      "predicted_per_token_ms": 23.026285714285713,
+      "prompt_ms": 664.056,
+      "prompt_n": 655,
+      "prompt_per_second": 986.3625959256448,
+      "prompt_per_token_ms": 1.0138259541984733
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 655,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 669
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:If you\u2019re new to O2, you don\u2019t need to swap your sim-you\u2019ll already have the right one. Before we get started, you\u2019ll need: Your O2 mobile so we can text you a code. The sim serial number (SSN) of your new sim-it\u2019s printed on the back and is up to 19 digits. Sim swaps usually take less than an hour.But if we\u2019re really busy, it can take up to 24 hours.our O2 mobile so we can text you a code. The sim serial number (SSN) of your new sim-it\u2019s printed on the back and is up to 19 digits. Sim swaps usually take less than an hour. But if we\u2019re really busy, it can take up to 24 hours.\\\\n\\\\npassage 2:Finally, provide your PAC code to your new O2 mobile network operator who will then be able to port your existing phone number from Vodafone. They will tell you what day the transfer is due to take place (usually within 48 hours).he first step is to join O2. Once you have done that, ensure you have the following information ready: 1  Your original mobile number you want to keep. 2  The Port Authorization Code (PAC) from your previous Vodafone network. 3  The temporary mobile number from your new O2 sim card.\\\\n\\\\npassage 3:Switching to O2. If you would like to switch to O2 and you would like to keep your current mobile phone number, you will need a PAC code (porting authorisation code) from your current mobile phone network. This will allow you to transfer your mobile phone number from your current provider to O2.The process for transferring your mobile phone number from your current network to O2 is termed mobile number portability, or mobile number porting.his will allow you to transfer your mobile phone number from your current provider to O2. The process for transferring your mobile phone number from your current network to O2 is termed mobile number portability, or mobile number porting.\\\\n\\\\n\\\",\\\"question\\\":\\\"changing number to o2\\\"}\", \"answer\": \"Based on the provided passages, to change a number to O2, you will need to follow these steps:\\n\\n1. Obtain a PAC code from your current mobile network provider (Passage 2).\\n2. Provide the PAC code to your new O2 mobile network operator (Passage 2).\\n3. Transfer your mobile phone number from your current provider to O2 through mobile number porting (Passage 3).\\n\\nTherefore, the answer to the question is:\\n\\nYes, you can change a number to O2 by obtaining a PAC code from your current mobile network provider and transferring your mobile phone number to O2 through mobile number porting.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 112,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a496620796f75e280997265206e657720746f204f322c20796f7520646f6ee2809974206e65656420746f207377617020796f75722073696d2d796f75e280996c6c20616c7265616479206861766520746865207269676874206f6e652e204265666f72652077652067657420737461727465642c20796f75e280996c6c206e6565643a20596f7572204f32206d6f62696c6520736f2077652063616e207465787420796f75206120636f64652e205468652073696d2073657269616c206e756d626572202853534e29206f6620796f7572206e65772073696d2d6974e2809973207072696e746564206f6e20746865206261636b20616e6420697320757020746f203139206469676974732e2053696d20737761707320757375616c6c792074616b65206c657373207468616e20616e20686f75722e427574206966207765e280997265207265616c6c7920627573792c2069742063616e2074616b6520757020746f20323420686f7572732e6f7572204f32206d6f62696c6520736f2077652063616e207465787420796f75206120636f64652e205468652073696d2073657269616c206e756d626572202853534e29206f6620796f7572206e65772073696d2d6974e2809973207072696e746564206f6e20746865206261636b20616e6420697320757020746f203139206469676974732e2053696d20737761707320757375616c6c792074616b65206c657373207468616e20616e20686f75722e20427574206966207765e280997265207265616c6c7920627573792c2069742063616e2074616b6520757020746f20323420686f7572732e5c6e5c6e7061737361676520323a46696e616c6c792c2070726f7669646520796f75722050414320636f646520746f20796f7572206e6577204f32206d6f62696c65206e6574776f726b206f70657261746f722077686f2077696c6c207468656e2062652061626c6520746f20706f727420796f7572206578697374696e672070686f6e65206e756d6265722066726f6d20566f6461666f6e652e20546865792077696c6c2074656c6c20796f7520776861742064617920746865207472616e736665722069732064756520746f2074616b6520706c6163652028757375616c6c792077697468696e20343820686f757273292e6865206669727374207374657020697320746f206a6f696e204f322e204f6e636520796f75206861766520646f6e6520746861742c20656e7375726520796f7520686176652074686520666f6c6c6f77696e6720696e666f726d6174696f6e2072656164793a20312020596f7572206f726967696e616c206d6f62696c65206e756d62657220796f752077616e7420746f206b6565702e2032202054686520506f727420417574686f72697a6174696f6e20436f64652028504143292066726f6d20796f75722070726576696f757320566f6461666f6e65206e6574776f726b2e203320205468652074656d706f72617279206d6f62696c65206e756d6265722066726f6d20796f7572206e6577204f322073696d20636172642e5c6e5c6e7061737361676520333a537769746368696e6720746f204f322e20496620796f7520776f756c64206c696b6520746f2073776974636820746f204f3220616e6420796f7520776f756c64206c696b6520746f206b65657020796f75722063757272656e74206d6f62696c652070686f6e65206e756d6265722c20796f752077696c6c206e65656420612050414320636f64652028706f7274696e6720617574686f7269736174696f6e20636f6465292066726f6d20796f75722063757272656e74206d6f62696c652070686f6e65206e6574776f726b2e20546869732077696c6c20616c6c6f7720796f7520746f207472616e7366657220796f7572206d6f62696c652070686f6e65206e756d6265722066726f6d20796f75722063757272656e742070726f766964657220746f204f322e5468652070726f6365737320666f72207472616e7366657272696e6720796f7572206d6f62696c652070686f6e65206e756d6265722066726f6d20796f75722063757272656e74206e6574776f726b20746f204f32206973207465726d6564206d6f62696c65206e756d62657220706f72746162696c6974792c206f72206d6f62696c65206e756d62657220706f7274696e672e6869732077696c6c20616c6c6f7720796f7520746f207472616e7366657220796f7572206d6f62696c652070686f6e65206e756d6265722066726f6d20796f75722063757272656e742070726f766964657220746f204f322e205468652070726f6365737320666f72207472616e7366657272696e6720796f7572206d6f62696c652070686f6e65206e756d6265722066726f6d20796f75722063757272656e74206e6574776f726b20746f204f32206973207465726d6564206d6f62696c65206e756d62657220706f72746162696c6974792c206f72206d6f62696c65206e756d62657220706f7274696e672e5c6e5c6e222c227175657374696f6e223a226368616e67696e67206e756d62657220746f206f32227d",
+  "source_cluster_id": "sha256:e37db87a051319a122895cf4255a93085d9ab93faf25f6470ac72b2a2ea7bad6",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:6ee89e8897430fc9e047a8ce621fa8f8ce78b0748f0b4a67b16a94d0db6e6989"
+}

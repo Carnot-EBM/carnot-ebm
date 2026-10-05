@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "546f2066697820612067617261676520646f6f722c2066697273742064657465726d696e65207468652074797065206f6620646f6f7220616e642069747320737072696e672073797374656d2e205377696e672d75702067617261676520646f6f7273206d6f7665206f6e20686f72697a6f6e74616c20747261636b7320616e642068617665206120737072696e67206d6f756e746564206f6e2074686520646f6f72206672616d652e204966206120726f6c6c2d757020646f6f7220686173206f6e6c79206f6e6520746f7273696f6e20737072696e67206174207468652063656e7465722c20646f206e6f7420617474656d707420746f207265706169722069742064756520746f2074686520686967682074656e73696f6e3b20696e73746561642c2063616c6c20612070726f66657373696f6e616c2072657061697220736572766963652e20466f72206f74686572207479706573206f6620646f6f72732c20796f75206d6179206e65656420746f2077656967682074686520646f6f7220616e642070726f7669646520746865206472756d20696e666f726d6174696f6e2c20646f6f72206865696768742c20616e6420747261636b207261646975732e20546869732070726f636573732063616e20626520646f6e65207573696e672077696e64696e67206261727320616e6420746f7273696f6e20737072696e677320696620617661696c61626c652c206f7220666f6c6c6f77696e6720696e737472756374696f6e7320666f7220646f6f7273207769746820657874656e73696f6e20737072696e67732e2049662074686520706f77657220746f20796f757220676172616765206973206f757420776974682074686520646f6f7220736875742c2070756c6c20746865206d616e75616c206f7665727269646520636f72642c20757375616c6c7920776974682061207265642068616e646c652c2064616e676c696e6720646f776e2066726f6d2074686520677569646520747261636b2e",
+  "arm": "holistic",
+  "call_id": "sha256:a432cb9b1d2ff2c6c8bbab0dd3d668a3aa991aea3b203ec01e9d03e4322a4d00:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.1503651470411569,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 716,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 14,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Swing-up garage doors move on horizontal tracks. The power spring is mounted on the door frame and hooked to the door. Caution: If a roll-up door has only one torsion spring, at the center of the door, do not try to repair it. The tension is so great that the spring could injure you.For doors with this type of spring, call a professional repair service.wing-up garage doors move on horizontal tracks. The power spring is mounted on the door frame and hooked to the door. Caution: If a roll-up door has only one torsion spring, at the center of the door, do not try to repair it. The tension is so great that the spring could injure you.\\\\n\\\\npassage 2:We do this by weighing the door and providing the drum information, door height, and track radius. There are two ways to weigh a garage door. If you have winding bars and torsion springs on your garage door, you'll find this video helpful. Video on how to weigh a garage door with torsion springs.If you have extension springs on your door, or if you don't have winding rods for a torsion spring door, you'll find these instructions helpful.Video on how to weigh a garage door with extension springs or torsion springs.ideo on how to weigh a garage door with torsion springs. If you have extension springs on your door, or if you don't have winding rods for a torsion spring door, you'll find these instructions helpful. Video on how to weigh a garage door with extension springs or torsion springs.\\\\n\\\\npassage 3:Pin. E-mail. The power to your garage is out with the door shut, and you need to get your car out or you'll have to take a bus. THE QUICK FIX. You'll notice a cord--usually with a red handle--dangling down from the guide track that the opener uses to open and close the door.This is the manual override.in. E-mail. The power to your garage is out with the door shut, and you need to get your car out or you'll have to take a bus. THE QUICK FIX. You'll notice a cord--usually with a red handle--dangling down from the guide track that the opener uses to open and close the door. This is the manual override.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you fix a garage door\\\"}\", \"answer\": \"To fix a garage door, first determine the type of door and its spring system. Swing-up garage doors move on horizontal tracks and have a spring mounted on the door frame. If a roll-up door has only one torsion spring at the center, do not attempt to repair it due to the high tension; instead, call a professional repair service. For other types of doors, you may need to weigh the door and provide the drum information, door height, and track radius. This process can be done using winding bars and torsion springs if available, or following instructions for doors with extension springs. If the power to your garage is out with the door shut, pull the manual override cord, usually with a red handle, dangling down from the guide track.\"}",
+  "prompt_sha256": "sha256:8e5b308b007b32498003dc9cbc6354a55d988f2e5664f84d8f1216bec5e56696",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791190009,
+    "id": "chatcmpl-oL6anWwB2zPdDvGibnwIX1weFhOd0QgV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 322.389,
+      "predicted_n": 14,
+      "predicted_per_second": 43.42579926734473,
+      "predicted_per_token_ms": 23.027785714285717,
+      "prompt_ms": 703.959,
+      "prompt_n": 716,
+      "prompt_per_second": 1017.1046893356006,
+      "prompt_per_token_ms": 0.9831829608938547
+    },
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 716,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 730
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Swing-up garage doors move on horizontal tracks. The power spring is mounted on the door frame and hooked to the door. Caution: If a roll-up door has only one torsion spring, at the center of the door, do not try to repair it. The tension is so great that the spring could injure you.For doors with this type of spring, call a professional repair service.wing-up garage doors move on horizontal tracks. The power spring is mounted on the door frame and hooked to the door. Caution: If a roll-up door has only one torsion spring, at the center of the door, do not try to repair it. The tension is so great that the spring could injure you.\\\\n\\\\npassage 2:We do this by weighing the door and providing the drum information, door height, and track radius. There are two ways to weigh a garage door. If you have winding bars and torsion springs on your garage door, you'll find this video helpful. Video on how to weigh a garage door with torsion springs.If you have extension springs on your door, or if you don't have winding rods for a torsion spring door, you'll find these instructions helpful.Video on how to weigh a garage door with extension springs or torsion springs.ideo on how to weigh a garage door with torsion springs. If you have extension springs on your door, or if you don't have winding rods for a torsion spring door, you'll find these instructions helpful. Video on how to weigh a garage door with extension springs or torsion springs.\\\\n\\\\npassage 3:Pin. E-mail. The power to your garage is out with the door shut, and you need to get your car out or you'll have to take a bus. THE QUICK FIX. You'll notice a cord--usually with a red handle--dangling down from the guide track that the opener uses to open and close the door.This is the manual override.in. E-mail. The power to your garage is out with the door shut, and you need to get your car out or you'll have to take a bus. THE QUICK FIX. You'll notice a cord--usually with a red handle--dangling down from the guide track that the opener uses to open and close the door. This is the manual override.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you fix a garage door\\\"}\", \"answer\": \"To fix a garage door, first determine the type of door and its spring system. Swing-up garage doors move on horizontal tracks and have a spring mounted on the door frame. If a roll-up door has only one torsion spring at the center, do not attempt to repair it due to the high tension; instead, call a professional repair service. For other types of doors, you may need to weigh the door and provide the drum information, door height, and track radius. This process can be done using winding bars and torsion springs if available, or following instructions for doors with extension springs. If the power to your garage is out with the door shut, pull the manual override cord, usually with a red handle, dangling down from the guide track.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 111,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a5377696e672d75702067617261676520646f6f7273206d6f7665206f6e20686f72697a6f6e74616c20747261636b732e2054686520706f77657220737072696e67206973206d6f756e746564206f6e2074686520646f6f72206672616d6520616e6420686f6f6b656420746f2074686520646f6f722e2043617574696f6e3a204966206120726f6c6c2d757020646f6f7220686173206f6e6c79206f6e6520746f7273696f6e20737072696e672c206174207468652063656e746572206f662074686520646f6f722c20646f206e6f742074727920746f207265706169722069742e205468652074656e73696f6e20697320736f20677265617420746861742074686520737072696e6720636f756c6420696e6a75726520796f752e466f7220646f6f7273207769746820746869732074797065206f6620737072696e672c2063616c6c20612070726f66657373696f6e616c2072657061697220736572766963652e77696e672d75702067617261676520646f6f7273206d6f7665206f6e20686f72697a6f6e74616c20747261636b732e2054686520706f77657220737072696e67206973206d6f756e746564206f6e2074686520646f6f72206672616d6520616e6420686f6f6b656420746f2074686520646f6f722e2043617574696f6e3a204966206120726f6c6c2d757020646f6f7220686173206f6e6c79206f6e6520746f7273696f6e20737072696e672c206174207468652063656e746572206f662074686520646f6f722c20646f206e6f742074727920746f207265706169722069742e205468652074656e73696f6e20697320736f20677265617420746861742074686520737072696e6720636f756c6420696e6a75726520796f752e5c6e5c6e7061737361676520323a576520646f2074686973206279207765696768696e672074686520646f6f7220616e642070726f766964696e6720746865206472756d20696e666f726d6174696f6e2c20646f6f72206865696768742c20616e6420747261636b207261646975732e205468657265206172652074776f207761797320746f20776569676820612067617261676520646f6f722e20496620796f7520686176652077696e64696e67206261727320616e6420746f7273696f6e20737072696e6773206f6e20796f75722067617261676520646f6f722c20796f75276c6c2066696e64207468697320766964656f2068656c7066756c2e20566964656f206f6e20686f7720746f20776569676820612067617261676520646f6f72207769746820746f7273696f6e20737072696e67732e496620796f75206861766520657874656e73696f6e20737072696e6773206f6e20796f757220646f6f722c206f7220696620796f7520646f6e277420686176652077696e64696e6720726f647320666f72206120746f7273696f6e20737072696e6720646f6f722c20796f75276c6c2066696e6420746865736520696e737472756374696f6e732068656c7066756c2e566964656f206f6e20686f7720746f20776569676820612067617261676520646f6f72207769746820657874656e73696f6e20737072696e6773206f7220746f7273696f6e20737072696e67732e6964656f206f6e20686f7720746f20776569676820612067617261676520646f6f72207769746820746f7273696f6e20737072696e67732e20496620796f75206861766520657874656e73696f6e20737072696e6773206f6e20796f757220646f6f722c206f7220696620796f7520646f6e277420686176652077696e64696e6720726f647320666f72206120746f7273696f6e20737072696e6720646f6f722c20796f75276c6c2066696e6420746865736520696e737472756374696f6e732068656c7066756c2e20566964656f206f6e20686f7720746f20776569676820612067617261676520646f6f72207769746820657874656e73696f6e20737072696e6773206f7220746f7273696f6e20737072696e67732e5c6e5c6e7061737361676520333a50696e2e20452d6d61696c2e2054686520706f77657220746f20796f757220676172616765206973206f757420776974682074686520646f6f7220736875742c20616e6420796f75206e65656420746f2067657420796f757220636172206f7574206f7220796f75276c6c206861766520746f2074616b652061206275732e2054484520515549434b204649582e20596f75276c6c206e6f74696365206120636f72642d2d757375616c6c7920776974682061207265642068616e646c652d2d64616e676c696e6720646f776e2066726f6d2074686520677569646520747261636b207468617420746865206f70656e6572207573657320746f206f70656e20616e6420636c6f73652074686520646f6f722e5468697320697320746865206d616e75616c206f766572726964652e696e2e20452d6d61696c2e2054686520706f77657220746f20796f757220676172616765206973206f757420776974682074686520646f6f7220736875742c20616e6420796f75206e65656420746f2067657420796f757220636172206f7574206f7220796f75276c6c206861766520746f2074616b652061206275732e2054484520515549434b204649582e20596f75276c6c206e6f74696365206120636f72642d2d757375616c6c7920776974682061207265642068616e646c652d2d64616e676c696e6720646f776e2066726f6d2074686520677569646520747261636b207468617420746865206f70656e6572207573657320746f206f70656e20616e6420636c6f73652074686520646f6f722e205468697320697320746865206d616e75616c206f766572726964652e5c6e5c6e222c227175657374696f6e223a22686f7720646f20796f752066697820612067617261676520646f6f72227d",
+  "source_cluster_id": "sha256:175d7f1da34586eee968f0a0157f509d4c438a08c85f92b6a3f1f59a8687a9e8",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0\n}",
+  "unit_id": "sha256:a432cb9b1d2ff2c6c8bbab0dd3d668a3aa991aea3b203ec01e9d03e4322a4d00"
+}

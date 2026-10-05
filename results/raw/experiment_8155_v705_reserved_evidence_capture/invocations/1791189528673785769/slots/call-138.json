@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "43616665204275656e6f732041697265732069732061206e6f772d636c6f73656420417267656e74696e652072657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043412e205468652072657374617572616e74206f66666572656420612076617269657479206f6620747261646974696f6e616c20417267656e74696e65206469736865732c20696e636c7564696e6720656d70616e616461732c20726176696f6c692c20616e642062697274686461792063616b652e205468652061746d6f737068657265207761732064657363726962656420617320726f6d616e74696320616e6420696e74696d6174652c2077697468206f7574646f6f722073656174696e6720617661696c61626c652e205468652072657374617572616e74206163636570746564207265736572766174696f6e7320616e64206861642057692d466920617661696c61626c652e20536f6d6520726576696577657273206e6f7465642074686174207468652072657374617572616e7420776173206e6f74207665727920746f757269737479206f72207472656e64792c2062757420696e7374656164206f666665726564206120636f7a7920616e642061757468656e7469632064696e696e6720657870657269656e63652e205468652072657374617572616e7420686164206120332e352d7374617220726174696e6720616e6420776173207072616973656420666f72206974732064656c6963696f757320666f6f6420616e6420706c656173616e742061746d6f7370686572652e20486f77657665722c206974206861732073696e636520636c6f73656420646f776e2c206d75636820746f20746865206469736170706f696e746d656e74206f6620736f6d65206c6f79616c20637573746f6d6572732077686f20656e6a6f7965642064696e696e672074686572652e",
+  "arm": "holistic",
+  "call_id": "sha256:01a1fa6a941dd5771f7d494e138f635980fb8bf8de2ddd393e6ba9a3137a9b7e:holistic",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.1774273560149595,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 673,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 0,
+  "output_tokens": 16,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0.6,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0.6,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"1316 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Argentine\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-22:0\\\",\\\"Monday\\\":\\\"11:30-20:30\\\",\\\"Saturday\\\":\\\"11:30-22:0\\\",\\\"Sunday\\\":\\\"11:30-22:0\\\",\\\"Thursday\\\":\\\"11:30-21:0\\\",\\\"Tuesday\\\":\\\"11:30-20:30\\\",\\\"Wednesday\\\":\\\"11:30-22:0\\\"},\\\"name\\\":\\\"Cafe Buenos Aires\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2012-04-08 05:03:48\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This was an amazing restaurant, I took my beautiful and amazing Fiance there as well and was looking forward to going again.\\\"},{\\\"review_date\\\":\\\"2012-04-05 16:00:11\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Another decent restaurant that closed. That's sad... Typical Argentine fare with fairly tasty weekend specials. Was hoping to pop in for another weekend getaway to SB to try some more specials =(\\\"},{\\\"review_date\\\":\\\"2011-07-27 03:42:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I can't believe this place is closed. I had a lovely dinner here with my cousins last year. The decor and ambiance is amazing. \\\\n\\\\nI loved all my dishes - the empanadas, ravioli, and the birthday cake. I'll miss this place :(\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Cafe Buenos Aires is a now-closed Argentine restaurant located in Santa Barbara, CA. The restaurant offered a variety of traditional Argentine dishes, including empanadas, ravioli, and birthday cake. The atmosphere was described as romantic and intimate, with outdoor seating available. The restaurant accepted reservations and had Wi-Fi available. Some reviewers noted that the restaurant was not very touristy or trendy, but instead offered a cozy and authentic dining experience. The restaurant had a 3.5-star rating and was praised for its delicious food and pleasant atmosphere. However, it has since closed down, much to the disappointment of some loyal customers who enjoyed dining there.\"}",
+  "prompt_sha256": "sha256:8a831b88e2e7614e4f946fe426cf3a20a87b6b3e2271f9e7e7a5bcd2c0415775",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"p_hallucination\": 0.6\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189860,
+    "id": "chatcmpl-V1RGXytKScNy9JxYvh3ehgC3s2nFtYHl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 370.289,
+      "predicted_n": 16,
+      "predicted_per_second": 43.2094931256397,
+      "predicted_per_token_ms": 23.1430625,
+      "prompt_ms": 664.689,
+      "prompt_n": 673,
+      "prompt_per_second": 1012.5035919053875,
+      "prompt_per_token_ms": 0.9876508172362555
+    },
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 673,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 689
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination, a number from 0 to 1. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"address\\\":\\\"1316 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Argentine\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-22:0\\\",\\\"Monday\\\":\\\"11:30-20:30\\\",\\\"Saturday\\\":\\\"11:30-22:0\\\",\\\"Sunday\\\":\\\"11:30-22:0\\\",\\\"Thursday\\\":\\\"11:30-21:0\\\",\\\"Tuesday\\\":\\\"11:30-20:30\\\",\\\"Wednesday\\\":\\\"11:30-22:0\\\"},\\\"name\\\":\\\"Cafe Buenos Aires\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2012-04-08 05:03:48\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This was an amazing restaurant, I took my beautiful and amazing Fiance there as well and was looking forward to going again.\\\"},{\\\"review_date\\\":\\\"2012-04-05 16:00:11\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Another decent restaurant that closed. That's sad... Typical Argentine fare with fairly tasty weekend specials. Was hoping to pop in for another weekend getaway to SB to try some more specials =(\\\"},{\\\"review_date\\\":\\\"2011-07-27 03:42:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I can't believe this place is closed. I had a lovely dinner here with my cousins last year. The decor and ambiance is amazing. \\\\n\\\\nI loved all my dishes - the empanadas, ravioli, and the birthday cake. I'll miss this place :(\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Cafe Buenos Aires is a now-closed Argentine restaurant located in Santa Barbara, CA. The restaurant offered a variety of traditional Argentine dishes, including empanadas, ravioli, and birthday cake. The atmosphere was described as romantic and intimate, with outdoor seating available. The restaurant accepted reservations and had Wi-Fi available. Some reviewers noted that the restaurant was not very touristy or trendy, but instead offered a cozy and authentic dining experience. The restaurant had a 3.5-star rating and was praised for its delicious food and pleasant atmosphere. However, it has since closed down, much to the disappointment of some loyal customers who enjoyed dining there.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 70,
+  "source_bytes": "7b2261646472657373223a2231333136205374617465205374222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a66616c73652c22636c61737379223a66616c73652c226469766579223a66616c73652c2268697073746572223a66616c73652c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a66616c73652c227472656e6479223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a66616c73652c22737472656574223a747275652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a747275652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a747275652c2252657374617572616e747354616b654f7574223a66616c73652c2257694669223a6e756c6c7d2c22627573696e6573735f7374617273223a332e352c2263617465676f72696573223a2252657374617572616e74732c20417267656e74696e65222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a2231313a33302d32323a30222c224d6f6e646179223a2231313a33302d32303a3330222c225361747572646179223a2231313a33302d32323a30222c2253756e646179223a2231313a33302d32323a30222c225468757273646179223a2231313a33302d32313a30222c2254756573646179223a2231313a33302d32303a3330222c225765646e6573646179223a2231313a33302d32323a30227d2c226e616d65223a2243616665204275656e6f73204169726573222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323031322d30342d30382030353a30333a3438222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22546869732077617320616e20616d617a696e672072657374617572616e742c204920746f6f6b206d792062656175746966756c20616e6420616d617a696e67204669616e63652074686572652061732077656c6c20616e6420776173206c6f6f6b696e6720666f727761726420746f20676f696e6720616761696e2e227d2c7b227265766965775f64617465223a22323031322d30342d30352031363a30303a3131222c227265766965775f7374617273223a342e302c227265766965775f74657874223a22416e6f7468657220646563656e742072657374617572616e74207468617420636c6f7365642e20546861742773207361642e2e2e205479706963616c20417267656e74696e652066617265207769746820666169726c79207461737479207765656b656e64207370656369616c732e2057617320686f70696e6720746f20706f7020696e20666f7220616e6f74686572207765656b656e64206765746177617920746f20534220746f2074727920736f6d65206d6f7265207370656369616c73203d28227d2c7b227265766965775f64617465223a22323031312d30372d32372030333a34323a3533222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22492063616e27742062656c69657665207468697320706c61636520697320636c6f7365642e2049206861642061206c6f76656c792064696e6e657220686572652077697468206d7920636f7573696e73206c61737420796561722e20546865206465636f7220616e6420616d6269616e636520697320616d617a696e672e205c6e5c6e49206c6f76656420616c6c206d7920646973686573202d2074686520656d70616e616461732c20726176696f6c692c20616e64207468652062697274686461792063616b652e2049276c6c206d697373207468697320706c616365203a28227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:d6e36bf93f9b4bf6703d75aa1ec23333850206b3e400ba3448cb08dc8bd0f758",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n\"p_hallucination\": 0.6\n}",
+  "unit_id": "sha256:01a1fa6a941dd5771f7d494e138f635980fb8bf8de2ddd393e6ba9a3137a9b7e"
+}

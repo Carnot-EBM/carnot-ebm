@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "5375726521204865726527732074686520616e73776572206261736564206f6e2074686520676976656e2070617373616765733a0a0a546f207472616e736665722050617950616c206d6f6e657920746f20796f75722062616e6b206163636f756e742c20796f752073686f756c6420666f6c6c6f772074686573652073746570733a0a0a312e205369676e20696e20746f20796f75722050617950616c206163636f756e74207769746820796f757220656d61696c206164647265737320616e642050617950616c2070617373776f72642e0a322e204c6f636174652074686520616d6f756e74206f66206d6f6e657920796f75207769736820746f207472616e7366657220696e20746865204d792050617950616c2042616c616e636520626f7820756e64657220746865204d79204163636f756e74204f766572766965772073656374696f6e2e0a332e20436c69636b206f6e20746865205769746864726177206c696e6b206f6e20746865206772617920746f6f6c6261722062656c6f7720746865206e61767920626c756520746162732e0a342e2053656c65637420746865205472616e73666572206d6f6e657920746f20796f75722062616e6b206163636f756e74206f7074696f6e2066726f6d2074686520617661696c61626c65206f7074696f6e732063686172742e0a352e20456e7465722074686520616d6f756e74206f66206d6f6e657920746f207472616e7366657220746f20796f75722062616e6b206163636f756e742066726f6d20796f75722063757272656e742050617950616c206163636f756e742062616c616e636520696e2074686520616d6f756e7420626f782c207573696e6720626f746820646f6c6c61727320616e642063656e74732e0a362e20436c69636b2074686520436f6e74696e756520627574746f6e20616e64207265766965772074686520696e666f726d6174696f6e206f6e20746865206e657874207061676520746f20656e737572652065766572797468696e6720697320636f72726563742e0a372e20596f7572206d6f6e65792077696c6c206265207472616e7366657272656420746f20796f75722062616e6b206163636f756e742077697468696e20332d3520627573696e65737320646179732e0a0a506c65617365206e6f7465207468617420796f75206d757374206861766520612062616e6b206163636f756e74206c696e6b656420746f20796f75722050617950616c206163636f756e7420666f722074686973206f7074696f6e20746f20626520617661696c61626c652e204164646974696f6e616c6c792c20796f752063616e6e6f74207472616e73666572206d6f6e6579206469726563746c7920746f20616e6f7468657220706572736f6e27732062616e6b206163636f756e742e",
+  "arm": "source_span",
+  "call_id": "sha256:2a3806152aa4977a99acd60df8929a197df5c6351ee7d5b497b3600bc55658f1:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.3058489500544965,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 858,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 57,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "invalid",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Under the withdraw tab it should say 'transfer to bank account'. Click on that and you will see the bank info there. Fill in the amount of money you want transferred and it should arrive at your bank in 3-5 business days. If you don't have the option to transfer contact paypal and add your bank information.I withdraw money all the time and it goes to my checking account where I can access it with my debit card. You must be a registered user to add a comment. If you've already registered, sign in.f you don't have the option to transfer contact paypal and add your bank information. I withdraw money all the time and it goes to my checking account where I can access it with my debit card. You must be a registered user to add a comment. If you've already registered, sign in.\\\\n\\\\npassage 2:From the menu that pops up, click on \u201cTransfer to Bank Account.\u201d. 1  The \u201cWithdraw\u201d menu should be the third option from the left. 2  Note that this option will only work if you have a bank account currently linked to PayPal. 3  Also note that you cannot send money directly to another person's bank account. If you do online banking, you can follow the instructions to confirm your bank account instantly. 2  If you do not do online banking, PayPal will deposit two small amounts, each under $1.00 USD, into your bank account. 3  This will occur within two to three days.\\\\n\\\\npassage 3:Instructions. Sign in to your PayPal account with your email address and PayPal password. Take note of the amount of money that you have in your PayPal account by locating it in the My PayPal Balance box below the heading, My Account Overview.. Decide how much of that balance to transfer to your bank account.Click on the Withdraw link on the gray toolbar below the navy blue taps toward the top of the page. Select the Transfer money to your bank account option from the available options chart.Enter the amount of money to transfer to your bank account from your current PayPal account balance in the amount box, using both dollars and cents.Click the Continue button and review the information on the next page to make sure that everything is correct.ecide how much of that balance to transfer to your bank account. Click on the Withdraw link on the gray toolbar below the navy blue taps toward the top of the page. Select the Transfer money to your bank account option from the available options chart.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i transfer paypal money to my bank account\\\"}\", \"answer\": \"Sure! Here's the answer based on the given passages:\\n\\nTo transfer PayPal money to your bank account, you should follow these steps:\\n\\n1. Sign in to your PayPal account with your email address and PayPal password.\\n2. Locate the amount of money you wish to transfer in the My PayPal Balance box under the My Account Overview section.\\n3. Click on the Withdraw link on the gray toolbar below the navy blue tabs.\\n4. Select the Transfer money to your bank account option from the available options chart.\\n5. Enter the amount of money to transfer to your bank account from your current PayPal account balance in the amount box, using both dollars and cents.\\n6. Click the Continue button and review the information on the next page to ensure everything is correct.\\n7. Your money will be transferred to your bank account within 3-5 business days.\\n\\nPlease note that you must have a bank account linked to your PayPal account for this option to be available. Additionally, you cannot transfer money directly to another person's bank account.\"}",
+  "prompt_sha256": "sha256:7569c537ca3d46715eca78990e1ad57a70789d4b542e58d681f17748a7a061ce",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"it should arrive at your bank in 3-5 business days\",\n  \"byte_start\": 158,\n  \"byte_end\": 202\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189975,
+    "id": "chatcmpl-nnPVOpyBJTic1CWKkfpgyQjD0YqDdn9P",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1368.093,
+      "predicted_n": 57,
+      "predicted_per_second": 41.66383425688166,
+      "predicted_per_token_ms": 24.001631578947368,
+      "prompt_ms": 813.523,
+      "prompt_n": 858,
+      "prompt_per_second": 1054.6720867142046,
+      "prompt_per_token_ms": 0.9481620046620047
+    },
+    "usage": {
+      "completion_tokens": 57,
+      "prompt_tokens": 858,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 915
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Under the withdraw tab it should say 'transfer to bank account'. Click on that and you will see the bank info there. Fill in the amount of money you want transferred and it should arrive at your bank in 3-5 business days. If you don't have the option to transfer contact paypal and add your bank information.I withdraw money all the time and it goes to my checking account where I can access it with my debit card. You must be a registered user to add a comment. If you've already registered, sign in.f you don't have the option to transfer contact paypal and add your bank information. I withdraw money all the time and it goes to my checking account where I can access it with my debit card. You must be a registered user to add a comment. If you've already registered, sign in.\\\\n\\\\npassage 2:From the menu that pops up, click on \u201cTransfer to Bank Account.\u201d. 1  The \u201cWithdraw\u201d menu should be the third option from the left. 2  Note that this option will only work if you have a bank account currently linked to PayPal. 3  Also note that you cannot send money directly to another person's bank account. If you do online banking, you can follow the instructions to confirm your bank account instantly. 2  If you do not do online banking, PayPal will deposit two small amounts, each under $1.00 USD, into your bank account. 3  This will occur within two to three days.\\\\n\\\\npassage 3:Instructions. Sign in to your PayPal account with your email address and PayPal password. Take note of the amount of money that you have in your PayPal account by locating it in the My PayPal Balance box below the heading, My Account Overview.. Decide how much of that balance to transfer to your bank account.Click on the Withdraw link on the gray toolbar below the navy blue taps toward the top of the page. Select the Transfer money to your bank account option from the available options chart.Enter the amount of money to transfer to your bank account from your current PayPal account balance in the amount box, using both dollars and cents.Click the Continue button and review the information on the next page to make sure that everything is correct.ecide how much of that balance to transfer to your bank account. Click on the Withdraw link on the gray toolbar below the navy blue taps toward the top of the page. Select the Transfer money to your bank account option from the available options chart.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i transfer paypal money to my bank account\\\"}\", \"answer\": \"Sure! Here's the answer based on the given passages:\\n\\nTo transfer PayPal money to your bank account, you should follow these steps:\\n\\n1. Sign in to your PayPal account with your email address and PayPal password.\\n2. Locate the amount of money you wish to transfer in the My PayPal Balance box under the My Account Overview section.\\n3. Click on the Withdraw link on the gray toolbar below the navy blue tabs.\\n4. Select the Transfer money to your bank account option from the available options chart.\\n5. Enter the amount of money to transfer to your bank account from your current PayPal account balance in the amount box, using both dollars and cents.\\n6. Click the Continue button and review the information on the next page to ensure everything is correct.\\n7. Your money will be transferred to your bank account within 3-5 business days.\\n\\nPlease note that you must have a bank account linked to your PayPal account for this option to be available. Additionally, you cannot transfer money directly to another person's bank account.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 100,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a556e64657220746865207769746864726177207461622069742073686f756c642073617920277472616e7366657220746f2062616e6b206163636f756e74272e20436c69636b206f6e207468617420616e6420796f752077696c6c20736565207468652062616e6b20696e666f2074686572652e2046696c6c20696e2074686520616d6f756e74206f66206d6f6e657920796f752077616e74207472616e7366657272656420616e642069742073686f756c642061727269766520617420796f75722062616e6b20696e20332d3520627573696e65737320646179732e20496620796f7520646f6e2774206861766520746865206f7074696f6e20746f207472616e7366657220636f6e746163742070617970616c20616e642061646420796f75722062616e6b20696e666f726d6174696f6e2e49207769746864726177206d6f6e657920616c6c207468652074696d6520616e6420697420676f657320746f206d7920636865636b696e67206163636f756e7420776865726520492063616e206163636573732069742077697468206d7920646562697420636172642e20596f75206d75737420626520612072656769737465726564207573657220746f20616464206120636f6d6d656e742e20496620796f7527766520616c726561647920726567697374657265642c207369676e20696e2e6620796f7520646f6e2774206861766520746865206f7074696f6e20746f207472616e7366657220636f6e746163742070617970616c20616e642061646420796f75722062616e6b20696e666f726d6174696f6e2e2049207769746864726177206d6f6e657920616c6c207468652074696d6520616e6420697420676f657320746f206d7920636865636b696e67206163636f756e7420776865726520492063616e206163636573732069742077697468206d7920646562697420636172642e20596f75206d75737420626520612072656769737465726564207573657220746f20616464206120636f6d6d656e742e20496620796f7527766520616c726561647920726567697374657265642c207369676e20696e2e5c6e5c6e7061737361676520323a46726f6d20746865206d656e75207468617420706f70732075702c20636c69636b206f6e20e2809c5472616e7366657220746f2042616e6b204163636f756e742ee2809d2e2031202054686520e2809c5769746864726177e2809d206d656e752073686f756c6420626520746865207468697264206f7074696f6e2066726f6d20746865206c6566742e203220204e6f746520746861742074686973206f7074696f6e2077696c6c206f6e6c7920776f726b20696620796f75206861766520612062616e6b206163636f756e742063757272656e746c79206c696e6b656420746f2050617950616c2e20332020416c736f206e6f7465207468617420796f752063616e6e6f742073656e64206d6f6e6579206469726563746c7920746f20616e6f7468657220706572736f6e27732062616e6b206163636f756e742e20496620796f7520646f206f6e6c696e652062616e6b696e672c20796f752063616e20666f6c6c6f772074686520696e737472756374696f6e7320746f20636f6e6669726d20796f75722062616e6b206163636f756e7420696e7374616e746c792e20322020496620796f7520646f206e6f7420646f206f6e6c696e652062616e6b696e672c2050617950616c2077696c6c206465706f7369742074776f20736d616c6c20616d6f756e74732c206561636820756e6465722024312e3030205553442c20696e746f20796f75722062616e6b206163636f756e742e20332020546869732077696c6c206f636375722077697468696e2074776f20746f20746872656520646179732e5c6e5c6e7061737361676520333a496e737472756374696f6e732e205369676e20696e20746f20796f75722050617950616c206163636f756e74207769746820796f757220656d61696c206164647265737320616e642050617950616c2070617373776f72642e2054616b65206e6f7465206f662074686520616d6f756e74206f66206d6f6e6579207468617420796f75206861766520696e20796f75722050617950616c206163636f756e74206279206c6f636174696e6720697420696e20746865204d792050617950616c2042616c616e636520626f782062656c6f77207468652068656164696e672c204d79204163636f756e74204f766572766965772e2e2044656369646520686f77206d756368206f6620746861742062616c616e636520746f207472616e7366657220746f20796f75722062616e6b206163636f756e742e436c69636b206f6e20746865205769746864726177206c696e6b206f6e20746865206772617920746f6f6c6261722062656c6f7720746865206e61767920626c7565207461707320746f776172642074686520746f70206f662074686520706167652e2053656c65637420746865205472616e73666572206d6f6e657920746f20796f75722062616e6b206163636f756e74206f7074696f6e2066726f6d2074686520617661696c61626c65206f7074696f6e732063686172742e456e7465722074686520616d6f756e74206f66206d6f6e657920746f207472616e7366657220746f20796f75722062616e6b206163636f756e742066726f6d20796f75722063757272656e742050617950616c206163636f756e742062616c616e636520696e2074686520616d6f756e7420626f782c207573696e6720626f746820646f6c6c61727320616e642063656e74732e436c69636b2074686520436f6e74696e756520627574746f6e20616e64207265766965772074686520696e666f726d6174696f6e206f6e20746865206e657874207061676520746f206d616b65207375726520746861742065766572797468696e6720697320636f72726563742e656369646520686f77206d756368206f6620746861742062616c616e636520746f207472616e7366657220746f20796f75722062616e6b206163636f756e742e20436c69636b206f6e20746865205769746864726177206c696e6b206f6e20746865206772617920746f6f6c6261722062656c6f7720746865206e61767920626c7565207461707320746f776172642074686520746f70206f662074686520706167652e2053656c65637420746865205472616e73666572206d6f6e657920746f20796f75722062616e6b206163636f756e74206f7074696f6e2066726f6d2074686520617661696c61626c65206f7074696f6e732063686172742e5c6e5c6e222c227175657374696f6e223a22686f7720646f2069207472616e736665722070617970616c206d6f6e657920746f206d792062616e6b206163636f756e74227d",
+  "source_cluster_id": "sha256:d02166a601f3c5bdb62c71a42fa5766e1eed8f651efe3e19ba0f03fa68510458",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": \"it should arrive at your bank in 3-5 business days\",\n  \"byte_start\": 158,\n  \"byte_end\": 202\n}",
+  "unit_id": "sha256:2a3806152aa4977a99acd60df8929a197df5c6351ee7d5b497b3600bc55658f1"
+}

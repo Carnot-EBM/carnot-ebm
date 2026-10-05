@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261642062726561746820616e6420647279206d6f7574682063616e20626520636175736564206279207365766572616c20666163746f72732c20696e636c7564696e6720706f6f722064656e74616c2068796769656e652c206365727461696e206d656469636174696f6e732c20616e64206d65646963616c20636f6e646974696f6e732073756368206173205061726b696e736f6e2773206469736561736520616e642064696162657465732e204d616e6167656d656e74206f7074696f6e7320666f7220647279206d6f75746820696e636c7564652073616c69766120737562737469747574657320616e642073616c697661207374696d756c616e74732e",
+  "arm": "source_span",
+  "call_id": "sha256:33ffce99f2570f6fa928099abccb9586d4929087f8a6e311cf65ffb96bfaf106:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 2.098526246030815,
+  "entailment_label": null,
+  "exclusion_reason": "invalid_probability_or_usage",
+  "human_target": null,
+  "input_tokens": 380,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 0,
+  "order": 0,
+  "output_tokens": 68,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": null,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "missing_probability",
+    "valid_quote": 0
+  },
+  "probability": null,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:If these aren't removed, the cells decompose and can cause bad breath. While dry mouth, which is often a cause of bad breath, can be permanent or even progressive, there are management and relief options available to those who suffer. These options involve the use of either saliva substitutes and/or saliva stimulants.\\\\n\\\\npassage 2:Causes of Mouth Dryness. Ongoing dryness of your mouth can be a symptom of various medical conditions, including Parkinson's disease, as the Journal of Parkinson's Disease reports, or even diabetes. Mouth dryness (known as xerostomia) is also a side effect of some medication.\\\\n\\\\npassage 3:Bad breath (clinically termed halitosis) is most commonly the result of poor dental hygiene and can be worsened by certain habits (such as smoking or tobacco use) or through the consumption of odorous foods such as onions, garlic, coffee, alcohol, dairy products, orange juice, soda, and more.\\\\n\\\\n\\\",\\\"question\\\":\\\"causes of bad breath and dry mouth\\\"}\", \"answer\": \"Bad breath and dry mouth can be caused by several factors, including poor dental hygiene, certain medications, and medical conditions such as Parkinson's disease and diabetes. Management options for dry mouth include saliva substitutes and saliva stimulants.\"}",
+  "prompt_sha256": "sha256:f8fafe1f09ae30aa04a03d08a861da2b11dfc7604c9de563b44e79536e3ec8a3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "```json\n{\n  \"p_hallucination\": 0,\n  \"quote\": \"Bad breath (clinically termed halitosis) is most commonly the result of poor dental hygiene\",\n  \"byte_start\": 456,\n  \"byte_end\": 524\n}\n```",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189666,
+    "id": "chatcmpl-LFIJo11Tm3K8JpYVyPDTDRVB6HJGzMXK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1617.442,
+      "predicted_n": 68,
+      "predicted_per_second": 42.04169299424647,
+      "predicted_per_token_ms": 23.785911764705883,
+      "prompt_ms": 376.568,
+      "prompt_n": 380,
+      "prompt_per_second": 1009.1138917805018,
+      "prompt_per_token_ms": 0.9909684210526315
+    },
+    "usage": {
+      "completion_tokens": 68,
+      "prompt_tokens": 380,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 448
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:If these aren't removed, the cells decompose and can cause bad breath. While dry mouth, which is often a cause of bad breath, can be permanent or even progressive, there are management and relief options available to those who suffer. These options involve the use of either saliva substitutes and/or saliva stimulants.\\\\n\\\\npassage 2:Causes of Mouth Dryness. Ongoing dryness of your mouth can be a symptom of various medical conditions, including Parkinson's disease, as the Journal of Parkinson's Disease reports, or even diabetes. Mouth dryness (known as xerostomia) is also a side effect of some medication.\\\\n\\\\npassage 3:Bad breath (clinically termed halitosis) is most commonly the result of poor dental hygiene and can be worsened by certain habits (such as smoking or tobacco use) or through the consumption of odorous foods such as onions, garlic, coffee, alcohol, dairy products, orange juice, soda, and more.\\\\n\\\\n\\\",\\\"question\\\":\\\"causes of bad breath and dry mouth\\\"}\", \"answer\": \"Bad breath and dry mouth can be caused by several factors, including poor dental hygiene, certain medications, and medical conditions such as Parkinson's disease and diabetes. Management options for dry mouth include saliva substitutes and saliva stimulants.\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 14,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4966207468657365206172656e27742072656d6f7665642c207468652063656c6c73206465636f6d706f736520616e642063616e20636175736520626164206272656174682e205768696c6520647279206d6f7574682c207768696368206973206f6674656e2061206361757365206f6620626164206272656174682c2063616e206265207065726d616e656e74206f72206576656e2070726f67726573736976652c20746865726520617265206d616e6167656d656e7420616e642072656c696566206f7074696f6e7320617661696c61626c6520746f2074686f73652077686f207375666665722e205468657365206f7074696f6e7320696e766f6c76652074686520757365206f66206569746865722073616c69766120737562737469747574657320616e642f6f722073616c697661207374696d756c616e74732e5c6e5c6e7061737361676520323a436175736573206f66204d6f757468204472796e6573732e204f6e676f696e67206472796e657373206f6620796f7572206d6f7574682063616e20626520612073796d70746f6d206f6620766172696f7573206d65646963616c20636f6e646974696f6e732c20696e636c7564696e67205061726b696e736f6e277320646973656173652c20617320746865204a6f75726e616c206f66205061726b696e736f6e27732044697365617365207265706f7274732c206f72206576656e2064696162657465732e204d6f757468206472796e65737320286b6e6f776e206173207865726f73746f6d69612920697320616c736f2061207369646520656666656374206f6620736f6d65206d656469636174696f6e2e5c6e5c6e7061737361676520333a426164206272656174682028636c696e6963616c6c79207465726d65642068616c69746f73697329206973206d6f737420636f6d6d6f6e6c792074686520726573756c74206f6620706f6f722064656e74616c2068796769656e6520616e642063616e20626520776f7273656e6564206279206365727461696e2068616269747320287375636820617320736d6f6b696e67206f7220746f626163636f2075736529206f72207468726f7567682074686520636f6e73756d7074696f6e206f66206f646f726f757320666f6f64732073756368206173206f6e696f6e732c206761726c69632c20636f666665652c20616c636f686f6c2c2064616972792070726f64756374732c206f72616e6765206a756963652c20736f64612c20616e64206d6f72652e5c6e5c6e222c227175657374696f6e223a22636175736573206f66206261642062726561746820616e6420647279206d6f757468227d",
+  "source_cluster_id": "sha256:f0aef55a681799acc555facd99ddda79c00d61422986cae5b0b042779ccddf43",
+  "started": true,
+  "status": "failed",
+  "transcript": "```json\n{\n  \"p_hallucination\": 0,\n  \"quote\": \"Bad breath (clinically termed halitosis) is most commonly the result of poor dental hygiene\",\n  \"byte_start\": 456,\n  \"byte_end\": 524\n}\n```",
+  "unit_id": "sha256:33ffce99f2570f6fa928099abccb9586d4929087f8a6e311cf65ffb96bfaf106"
+}

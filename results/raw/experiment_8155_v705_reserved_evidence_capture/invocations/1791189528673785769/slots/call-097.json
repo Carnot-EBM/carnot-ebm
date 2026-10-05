@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c207468652073796d70746f6d73206f66207374726570207468726f617420696e66656374696f6e206172653a2066657665722c2073776f6c6c656e20616e642074656e646572206c796d7068206e6f646573206f6e20746865207369646573206f6620746865206e65636b2028636572766963616c206c796d70686164656e6f7061746879292c2077686974652070617463686573207365656e206f6e2074686520746f6e73696c7320616e64207468726f61742028746f6e73696c6c6172206578756461746573292c2073756464656e2066657665722c20736f7265207468726f61742028726564207468726f617420776974682077686974652070617463686573292c2068656164616368652c206368696c6c732c206c6f7373206f662061707065746974652c2073657665726520616e642073756464656e20736f7265207468726f617420776974686f757420636f756768696e672c20736e65657a696e672c206f72206f7468657220636f6c642073796d70746f6d732c207061696e206f7220646966666963756c74792077697468207377616c6c6f77696e672c206665766572206f76657220313031c2b046202833382e33c2b043292e",
+  "arm": "source_span",
+  "call_id": "sha256:bcb5ebef31dda45ff0e6e96a4130941cf6fd366172c2ef7cb728317711177d6e:source_span",
+  "capture_identity": "sha256:1c2d5ec9012f9c122d9b639a70b9117c4fe40c87f58c3625402dac90d5ab4c15",
+  "condition": "original",
+  "denominator": 1,
+  "duration_s": 1.477703084005043,
+  "entailment_label": null,
+  "exclusion_reason": null,
+  "human_target": null,
+  "input_tokens": 482,
+  "max_tokens": 128,
+  "metric": "finite_probability",
+  "numerator": 1,
+  "order": 1,
+  "output_tokens": 38,
+  "parsed": {
+    "entailment_label": null,
+    "p_hallucination": 0,
+    "quote_source_byte_ratio": 0.0,
+    "quote_status": "absent",
+    "status": "parsed",
+    "valid_quote": 0
+  },
+  "probability": 0,
+  "prompt": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Typical signs of strep throat infection are: 1  Fever. 2  Swollen, tender lymph nodes on the sides of the neck (cervical lymphadenopathy). 3  White patches seen on the tonsils and throat (tonsillar exudates).\\\\n\\\\npassage 2:Some people experience mild symptoms like a sore throat, whereas other people have more severe symptoms including fever and difficulty swallowing. Common symptoms of strep throat include: 1  sudden fever. 2  sore throat (red throat with white patches). 3  headache. 4  chills. 5  loss of appetite. 6  swollen lymph nodes in the neck.\\\\n\\\\npassage 3:Common symptoms of strep throat in children and adults include: 1  Severe and sudden sore throat without coughing, sneezing, or other cold symptoms. 2  Pain or difficulty with swallowing. 3  Fever over 101\u00b0F (38.3\u00b0C) . 4  Lower fevers may point to a viral infection and not strep. 5  Swollen lymph nodes in the neck.\\\\n\\\\n\\\",\\\"question\\\":\\\"what's the symptoms of strep throat\\\"}\", \"answer\": \"Based on the given passages, the symptoms of strep throat infection are: fever, swollen and tender lymph nodes on the sides of the neck (cervical lymphadenopathy), white patches seen on the tonsils and throat (tonsillar exudates), sudden fever, sore throat (red throat with white patches), headache, chills, loss of appetite, severe and sudden sore throat without coughing, sneezing, or other cold symptoms, pain or difficulty with swallowing, fever over 101\u00b0F (38.3\u00b0C).\"}",
+  "prompt_sha256": "sha256:fc350289182980c6464722786e473405beab3d67cb4bff2b5cdefbc4a25df3ba",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791189788,
+    "id": "chatcmpl-dMOvdDDEMka6Ce5jTJqpL4v7ShBmoruZ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 910.979,
+      "predicted_n": 38,
+      "predicted_per_second": 41.71336551116985,
+      "predicted_per_token_ms": 23.97313157894737,
+      "prompt_ms": 466.235,
+      "prompt_n": 482,
+      "prompt_per_second": 1033.8134202708934,
+      "prompt_per_token_ms": 0.967292531120332
+    },
+    "usage": {
+      "completion_tokens": 38,
+      "prompt_tokens": 482,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 520
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Judge whether any answer claim is unsupported by the complete source. Return only JSON with p_hallucination (0 to 1), quote (one verbatim source string of at most 32 words, or null), byte_start and byte_end (half-open UTF-8 byte offsets, or null). A quote is evidence to inspect, not an entailment certificate. Do not use external knowledge. Input JSON follows:\n{\"source\": \"{\\\"passages\\\":\\\"passage 1:Typical signs of strep throat infection are: 1  Fever. 2  Swollen, tender lymph nodes on the sides of the neck (cervical lymphadenopathy). 3  White patches seen on the tonsils and throat (tonsillar exudates).\\\\n\\\\npassage 2:Some people experience mild symptoms like a sore throat, whereas other people have more severe symptoms including fever and difficulty swallowing. Common symptoms of strep throat include: 1  sudden fever. 2  sore throat (red throat with white patches). 3  headache. 4  chills. 5  loss of appetite. 6  swollen lymph nodes in the neck.\\\\n\\\\npassage 3:Common symptoms of strep throat in children and adults include: 1  Severe and sudden sore throat without coughing, sneezing, or other cold symptoms. 2  Pain or difficulty with swallowing. 3  Fever over 101\u00b0F (38.3\u00b0C) . 4  Lower fevers may point to a viral infection and not strep. 5  Swollen lymph nodes in the neck.\\\\n\\\\n\\\",\\\"question\\\":\\\"what's the symptoms of strep throat\\\"}\", \"answer\": \"Based on the given passages, the symptoms of strep throat infection are: fever, swollen and tender lymph nodes on the sides of the neck (cervical lymphadenopathy), white patches seen on the tonsils and throat (tonsillar exudates), sudden fever, sore throat (red throat with white patches), headache, chills, loss of appetite, severe and sudden sore throat without coughing, sneezing, or other cold symptoms, pain or difficulty with swallowing, fever over 101\u00b0F (38.3\u00b0C).\"}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70555,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "role": "evaluation",
+  "slot": 49,
+  "source_bytes": "7b227061737361676573223a227061737361676520313a5479706963616c207369676e73206f66207374726570207468726f617420696e66656374696f6e206172653a2031202046657665722e2032202053776f6c6c656e2c2074656e646572206c796d7068206e6f646573206f6e20746865207369646573206f6620746865206e65636b2028636572766963616c206c796d70686164656e6f7061746879292e2033202057686974652070617463686573207365656e206f6e2074686520746f6e73696c7320616e64207468726f61742028746f6e73696c6c6172206578756461746573292e5c6e5c6e7061737361676520323a536f6d652070656f706c6520657870657269656e6365206d696c642073796d70746f6d73206c696b65206120736f7265207468726f61742c2077686572656173206f746865722070656f706c652068617665206d6f7265207365766572652073796d70746f6d7320696e636c7564696e6720666576657220616e6420646966666963756c7479207377616c6c6f77696e672e20436f6d6d6f6e2073796d70746f6d73206f66207374726570207468726f617420696e636c7564653a2031202073756464656e2066657665722e20322020736f7265207468726f61742028726564207468726f617420776974682077686974652070617463686573292e2033202068656164616368652e203420206368696c6c732e203520206c6f7373206f662061707065746974652e2036202073776f6c6c656e206c796d7068206e6f64657320696e20746865206e65636b2e5c6e5c6e7061737361676520333a436f6d6d6f6e2073796d70746f6d73206f66207374726570207468726f617420696e206368696c6472656e20616e64206164756c747320696e636c7564653a2031202053657665726520616e642073756464656e20736f7265207468726f617420776974686f757420636f756768696e672c20736e65657a696e672c206f72206f7468657220636f6c642073796d70746f6d732e203220205061696e206f7220646966666963756c74792077697468207377616c6c6f77696e672e203320204665766572206f76657220313031c2b046202833382e33c2b04329202e203420204c6f77657220666576657273206d617920706f696e7420746f206120766972616c20696e66656374696f6e20616e64206e6f742073747265702e2035202053776f6c6c656e206c796d7068206e6f64657320696e20746865206e65636b2e5c6e5c6e222c227175657374696f6e223a22776861742773207468652073796d70746f6d73206f66207374726570207468726f6174227d",
+  "source_cluster_id": "sha256:e43ee9eaed51f4703c2db2acd3d588dcb7d851233bfa3fa68a7e0d5e7d94c494",
+  "started": true,
+  "status": "completed",
+  "transcript": "{\n  \"p_hallucination\": 0,\n  \"quote\": null,\n  \"byte_start\": null,\n  \"byte_end\": null\n}",
+  "unit_id": "sha256:bcb5ebef31dda45ff0e6e96a4130941cf6fd366172c2ef7cb728317711177d6e"
+}
