@@ -50364,3 +50364,101 @@ No new hardware purchase follows from this scan. Use the existing CUDA model
 runtime and CPU/Rust small heads. Preserve separate KV260 fabric, PolarFire
 Linux CPU and GateMate physical/JTAG evidence. Reopen other hardware only after
 measured complete-workload costs identify a useful acceleration target.
+
+## 2026-10-05 — V705 planning scan: evidence custody and usable learning time
+
+This scan precedes the V705 experiment design. Dates below are publication or
+revision dates, not claims that the method is new to Carnot. Prior entries stay
+intact. Paper results are hypotheses for local tests, not Carnot measurements.
+
+### Methods to carry into experiments
+
+- **A Reduction from Delayed to Immediate Feedback for Online Convex
+  Optimization with Improved Guarantees**, February 2, 2026.
+  [Paper](https://arxiv.org/abs/2602.02634),
+  [full method](https://arxiv.org/html/2602.02634v1).
+  The analysis separates learning from delay-induced drift. Use that distinction
+  to measure candidate commitment, feedback arrival, installation, and remaining
+  prediction opportunities separately. V704's first two candidates expired and
+  its only admission occurred at slot 248. Test a longer admission lifetime and
+  earlier commitments without shortening the actual feedback delay. This is a
+  scheduling adaptation; the nonlinear radial learner inherits no regret theorem.
+- **Capacity-Constrained Online Convex Optimization with Delayed Feedback**,
+  June 10, 2026. [Paper](https://arxiv.org/abs/2606.11711).
+  Finite tracking capacity can lose feedback permanently. Preserve pending-slot
+  limits, missing-source masks, and one-use admission labels in the new schedule.
+  Count future predictions made by installed states. More accepted updates alone
+  do not establish learning benefit.
+- **HART**, March 6, 2026, and **SURE-RAG**, 2026.
+  [HART](https://arxiv.org/abs/2603.05828),
+  [SURE-RAG](https://arxiv.org/abs/2605.03534).
+  Keep evidence location separate from semantic support and selective confidence.
+  Continue the unexecuted paired holistic/evidence-span study after repairing
+  immutable method-file custody. Exact quote bytes do not prove entailment.
+  Removed and mismatched sources test sensitivity without inheriting human labels.
+- **Do LLM Recommenders Know When They're Hallucinating?**, August 7, 2026.
+  [Paper](https://arxiv.org/abs/2608.10008). New lead from this scan.
+  The study distinguishes elicited recommendation confidence from catalog
+  membership. Transfer the measurement lesson: prompts must ask for the precise
+  target probability. Report Brier score, typed decision cost, false acceptance,
+  and coverage together. Catalog membership has an executable oracle; it is not
+  evidence that Carnot can verify arbitrary text.
+- **KAC**, March 27, 2025, and **Catastrophic Forgetting in KANs**,
+  November 16, 2025. [KAC](https://arxiv.org/abs/2503.21076),
+  [author code](https://github.com/Ethanhuhuhu/KAC),
+  [forgetting study](https://arxiv.org/abs/2511.12828).
+  Retain equal-capacity radial controls and independent retention tests. Local
+  support does not guarantee noninterference. Change the admission schedule
+  before adding a different neural architecture to the unresolved V704 test.
+- **High dimensional online calibration in polynomial time**, April 12, 2025.
+  [Paper](https://arxiv.org/abs/2504.09096). New lead from this scan.
+  Its recent-window forecasters motivate a future calibration control. Defer a
+  new expert mixture: Carnot has retired unchanged four-expert reweighting, and
+  asymptotic calibration does not imply lower decision cost on a short stream.
+
+### Coverage of all requested primary topics
+
+| Topic | Primary source checked | Decision |
+|---|---|---|
+| EBM verification/reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM, revised May 25, 2026](https://arxiv.org/abs/2512.15605) | Train small calibrated energy heads; retain an exactly equivalent logistic control. No generator training. |
+| Neural constraint satisfaction | [LagONN, May 2025](https://arxiv.org/abs/2505.07179); [T-SKM-Net, December 2025](https://arxiv.org/abs/2512.10461); [PAL, March 2025](https://arxiv.org/abs/2503.19466) | These solve encoded constraints. They do not qualify semantic extraction. Defer another solver branch. |
+| Ising applications in ML | [Learning-to-sample phase transition, May 2026](https://arxiv.org/abs/2605.24752) | Easy-instance sampling evidence does not prove learned-distribution mixing. |
+| Hallucination mitigation | HART, SURE-RAG and calibration study above; [HalluScoring, September 29, 2026](https://arxiv.org/abs/2609.38355) | Preserve development exposure; unseen-question and unseen-generator claims require separate data. |
+| KANs | KAC and forgetting study above | Compare installed capacity and retained performance. |
+| Energy-guided generation | [ETS, revised May 2026](https://arxiv.org/abs/2601.21484) | Extra inference and reward quality remain costs. Defer decoder changes until verifier utility is measured. |
+| Hardware sampling | [FPGA–ASIC co-design, February 2026](https://arxiv.org/abs/2602.15985); [Extropic Z1T](https://extropic.ai/writing/z1t) | Charge orchestration, readout, movement and durable storage. Kernel speed cannot stand in for service speed. |
+| Continual learning | Both delayed-feedback papers above | Test the amount of useful prediction time after admission, with fixed causal delay. |
+
+### Secondary channels checked on 2026-10-05
+
+- **OpenReview:** searched ICLR, ICML and NeurIPS EBM/verification work.
+  [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg) and its previously
+  indexed PDF both returned browser challenges. Venue pages were accessible.
+  Use the primary arXiv text. This scan does not establish new acceptance status.
+- **Semantic Scholar:** attempted citation endpoints for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,url&limit=10)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,url&limit=10).
+  Both requests failed. Targeted title searches supplied no verified citing-paper
+  list. Citation discovery remains incomplete; no citation count is claimed.
+- **Hugging Face papers:** checked
+  [SURE-RAG](https://huggingface.co/papers/2605.03534) and followed its primary
+  source. Community summaries are discovery aids, not independent replication.
+- **GitHub trending:** checked weekly
+  [Python](https://github.com/trending/python?since=weekly) and
+  [Rust](https://github.com/trending/rust?since=weekly). Both pages were cached
+  three weeks earlier. No current EBM/constraint/KAN ranking was established.
+  KAC author code is a concrete implementation reference. Targeted searches
+  also surfaced ATLAS constraint/repair repositories; their benchmark claims
+  were not independently qualified, so no experiment depends on them.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and Z1T above.
+  Z1T labels chip-energy figures as projections. Its main ratio excludes final
+  dense logits and inter-device movement. Keep these costs in local bounds.
+  No local TSU access or measured Carnot speedup follows from the page.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  It describes an energy-based constraint layer below language models. The page
+  offers no reproducible training recipe or independent benchmark for this plan.
+
+No hardware purchase follows. CPU state storage and Rust/PyO3 remain the small-head
+path. CUDA serves the frozen Qwen model. Existing KV260, PolarFire and GateMate
+obligations retain separate evidence boundaries. A 100x claim requires measured
+whole-workload redesign, not an imported vendor ratio.

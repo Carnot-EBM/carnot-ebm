@@ -17837,3 +17837,17 @@ The new plan addresses the malformed document contract, early revision check,
 learning protocol drift, validator timeouts and changed supervisor-reader hash.
 The literature scan is recorded in research-references.md. The V702 design is
 preserved. Active scheduling and scripts/research_conductor.py are unchanged.
+
+## 2026-10-05 — V705 research plan staged; execution pending
+
+Milestone2026.10.705 schedules fourteen tasks, Exp8150–Exp8163, in four phases.
+The source branch addresses Exp8137's mutable-vNEXT historical-method lookup.
+The independent learning branch changes candidate lifetimes after V704's first
+two proposals expired and its slot248 admission changed no later predictions.
+The service branch tests durable batching with queue costs and explicitly labels
+shared-acquisition estimates. ARC and each board retain separate evidence limits.
+
+The three PRD gaps remain verification utility, later learning benefit and complete
+service performance. Exposed development evidence cannot close generalization.
+The V704 design is preserved. No experiment is activated. The active roadmap and
+conductor source remain unchanged. Existing unrelated workspace changes remain.

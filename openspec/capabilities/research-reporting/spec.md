@@ -93140,3 +93140,23 @@ Private success, missing-input and disqualified-source routes exit normally.
 Prompt or table mutation prevents activation. Cold replay rejects changed saved
 rows, reduction claims, code, validation logs and source bytes. Prior unpublished
 honest_verdict remains explicitly missing alongside its exact conductor status.
+
+## REQ-REPORT-V705-PLAN: Exact staged V705 research authority
+
+The planning change SHALL stage milestone2026.10.705 with exactly fourteen tasks,
+Exp8150 through Exp8163, in execution order. The visible design table, complete
+machine JSON, canonical full-task digest and staged YAML SHALL agree. Every gate
+SHALL reference an earlier task and a declared producer field. Every prompt SHALL
+include context, existing code, task, numbered progress/chunking steps, artifact
+fields, a run command and the no-push/no-conductor-change instruction. The active
+roadmap and conductor source SHALL remain unchanged. The V704 design SHALL survive.
+
+### SCENARIO-REPORT-V705-PLAN-CONTRACT
+
+A private activated copy of the staged roadmap passes the existing authority
+reader. Changes to a task, prompt, gate, count, order or digest fail. Validation
+SHALL also check schema, prior-failure subfields, retirement scope and model class.
+The private E2E-018 lifecycle checks SHALL run without publishing a result.
+
+Implementation status: planning documents only. Experiment code and scientific
+claims remain pending. Each task extends its own specifications before code edits.

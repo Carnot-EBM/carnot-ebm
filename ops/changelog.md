@@ -21434,3 +21434,16 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-05: Bound acceleration from natural workloads and preserve board custody (⚠️ Blocked) — honest_verdict=complete_blocked_complete_service_ready_score; results/experiment_8148_v704_hardware_workload_boundary.json
 - 2026-10-05: Decide fourteen outcomes and the remaining PRD gaps independently (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8149_v704_capstone.json
 - 2026-10-05: Completed operational retrospective for milestone 2026.10.704. Executed 10 experiments (1 compute-bound, 9 synthesis-only), totaling 27.9 wall-time minutes (averaging 3 minutes per experiment) reconstructed from disk-mtime fallback data. The slowest experiments were compute-bound task 'Measure complete Qwen acquisition and natural scoring transactions' (13.12 minutes), synthesis task 'Measure natural learner transactions through the loaded Rust binding' (6.06 minutes), synthesis task 'Decide fourteen outcomes and the remaining PRD gaps independently' (4.22 minutes), synthesis task 'Learn persistent energy centers from correctly delayed feedback' (1.2 minutes), and synthesis task 'Qualify delayed learning independently of source capture' (1.16 minutes). The locked GPU-idle indicator on compute-bound tasks is false, while static monitor telemetry recorded 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs. Recommended operational improvements include adding granular intra-task sub-phase timing receipts to isolate model acquisition and scoring stages, emitting synchronous lifecycle timestamps directly into experiment receipts, profiling the Qwen acquisition and natural scoring transaction pipeline, streaming continuous execution-window GPU telemetry, and restricting DualGPURunner strictly to concurrent multi-model workloads. Estimated time savings are 0% pending empirical measurement of phase receipts. Artifact: results/operational_retro_2026_10_704.json.
+
+## 2026-10-05 — Plan milestone2026.10.705
+
+- Stage fourteen ordered tasks, Exp8150–Exp8163, with a matching full design,
+  visible contract, machine JSON and digest. Preserve the V704 design.
+- Record 2025–2026 primary research and secondary-source access limits before
+  design. Incorporate delayed-feedback scheduling and target-specific calibration.
+- Diagnose mutable historical-method lookup and admission at the stream tail.
+  Keep source qualification independent from continuous-learning inputs.
+- Test durable batches with acknowledgement recovery and queue costs. Label
+  shared-acquisition costs separately from measured end-to-end latency.
+- Add planning specifications and traceability. No implementation, activation,
+  generator training, push, external publication or conductor modification.

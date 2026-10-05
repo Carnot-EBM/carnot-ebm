@@ -48811,3 +48811,21 @@ A qualified supported null H2 is retained when H1 is unavailable. Disqualified
 or flagged primitive rows cannot enter benefit reductions. Original excluded
 slots and retention safety remain visible. Whole-service readiness zero blocks
 that service claim without invalidating measured natural host timings.
+
+## REQ-VERIFY-V705-PLAN: Useful delayed exposure and independent evidence decisions
+
+The V705 plan SHALL separate source decisions, continuous learning and service
+costs. Source consumers SHALL bind historical methods to immutable files. The new
+learning protocol SHALL keep feedback delay20 and admission12 while changing
+commitment to64/144 and expiry to144/224. Evaluation SHALL retain all original
+later slots. Future exposure, execution readiness and benefit SHALL be separate.
+Atomic-batch service costs SHALL preserve durable acknowledgements and queue time.
+Shared acquisition comparisons SHALL be labeled component-composed costs.
+
+### SCENARIO-VERIFY-V705-PLAN-BOUNDARIES
+
+A source validation failure cannot block the independently qualified learning
+input. Zero useful future exposure cannot establish learning benefit. A component
+cost estimate cannot establish independently measured deployment performance.
+All comparative tasks retain per-unit evidence and all external blocks name their
+failed gate operands. Experiment implementation and empirical results are pending.

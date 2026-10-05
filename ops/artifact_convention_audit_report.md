@@ -9,23 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 1 |
-| AGGREGATE_ONLY | 1 |
+| CHECKABLE | 2 |
 | CANNOT_DETERMINE | 6 |
 
-## experiment_8120_v702_arc_supervisor_delta.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8121_v702_hardware_batch_boundary.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8122_v702_capstone.json
+## experiment_8139_fit_evidence_capture.json
 
 **CHECKABLE**
 
@@ -33,7 +20,7 @@ reviewer call failed
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment is blocked due to failed precondition gates (verdict: "complete_blocked_design_exact_task_contract") and asserts no comparative scientific gain for hypotheses H1 or H2.
+The task was blocked at the conductor pre-gate because upstream dependency `exp8137-source-protocol` failed its readiness gate with `source_protocol_ready_score` observing 0 instead of the expected 1.
 
 ## WHAT IS MISSING
 nothing
@@ -41,41 +28,53 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8123_v703_contract_custody.json
+## experiment_8143_v704_delayed_energy_memory.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8132_v703_service_cost.json
+## experiment_8144_v704_learning_audit.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8133_v703_arc_reader_frontier.json
+## experiment_8145_v704_natural_service_cost.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8134_v703_hardware_service_boundary.json
+## experiment_8146_v704_live_service_cost.json
 
-**AGGREGATE_ONLY**
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8147_v704_arc_reader_renewal.json
+
+**CHECKABLE**
 
 ## VERDICT
-AGGREGATE_ONLY
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims that exact decision parity is satisfied across implementations and that a 100x speedup is ruled out by Amdahl outer bound ceilings across all tested arms and conditions.
+no claim
 
 ## WHAT IS MISSING
-Per-unit execution, parity, and timing rows for the 150 units per condition (`"units": 150`) or 11,070 completed runs (`"completed_count": 11070`). Present fields provide only aggregate totals in `"amdahl_bounds"` (`"retained_ns"`, `"total_ns"`, `"outer_ceiling"`), boolean gate summaries in `"acceptance_gates"` (`"exact_decision_parity": true`, `"host_component_rows": true`), and high-level board metadata in `"board_rows"`.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-A reader cannot verify whether exact decision parity held on every individual center/seed unit or whether the pooled Amdahl retained and total times were driven by outlier transactions versus a consistent profile across the 150 units.
+none
 
-## experiment_8135_v703_capstone.json
+## experiment_8148_v704_hardware_workload_boundary.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8149_v704_capstone.json
 
 **CANNOT_DETERMINE**
 

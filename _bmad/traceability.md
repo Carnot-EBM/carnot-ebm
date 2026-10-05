@@ -3677,3 +3677,18 @@ verification utility, retained continuous learning and complete-service speed.
 No implementation, generator training, activation or external publication occurs
 in this planning change. Future execution must extend task-specific requirements
 and run the applicable E2E scenarios before reporting results.
+
+## 2026-10-05 — V705 research planning, execution pending
+
+| Requirement | Planned tasks | Evidence boundary |
+|---|---|---|
+| REQ-REPORT-V705-PLAN; FR-09/10 | Exp8150, Exp8163 | Fourteen exact tasks, full prompts/table/JSON/digest; no activation |
+| REQ-VERIFY-V705-PLAN; FR-06/12 | Exp8151, Exp8153–Exp8156 | Immutable historical methods and calibrated source decisions |
+| FR-11 | Exp8152, Exp8157–Exp8158 | Delayed learning with useful future exposure, independent retention audit |
+| FR-05/08; NFR-01 | Exp8159–Exp8160 | Durable batching and explicitly composed acquisition costs |
+| ARC generalization floor | Exp8161 | New authenticated supervisor outcomes only; no new solve claim |
+| Hardware continuity | Exp8162 | Separate KV260, PolarFire and GateMate obligations and workload bounds |
+
+The dated research-references.md scan precedes experiment design. The V704 design
+is preserved. All data remain development evidence. No implementation, generator
+training, hardware run, experiment activation or external publication occurs here.

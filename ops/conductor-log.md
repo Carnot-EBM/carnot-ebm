@@ -19560,3 +19560,4 @@ code |
 | 2026-10-05 02:21 UTC | Qualify an independent ARC supervisor reader and i | OK | 91 passed, 1 warning in 20.14s |
 | 2026-10-05 02:45 UTC | Bound acceleration from natural workloads and pres | OK | 88 passed, 1 warning in 15.82s |
 | 2026-10-05 03:20 UTC | Decide fourteen outcomes and the remaining PRD gap | OK | 98 passed, 1 warning in 67.36s (0:01:07) |
+| 2026-10-05 03:59 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | timeout after 300s |
