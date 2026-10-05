@@ -48931,3 +48931,38 @@ Private scripted traffic SHALL exercise paired overlength exclusion, malformed
 probabilities, invalid quotes, call timeout/cancellation, launch cutoff and fixed
 interventions. These tests SHALL not claim model inference or independent
 science. All new statements SHALL receive100% measured test coverage.
+
+## REQ-VERIFY-8154: Matched source evidence energy fitting
+
+Exp8154 SHALL authenticate Exp8153 capture readiness and fit trainability before
+fitting. It SHALL reparse byte-bound primitive pairs and join only original
+fit/tune human targets. Quote validity SHALL remain an input, never a target.
+The twelve inputs SHALL follow the preserved V704 feature order. Probabilities
+SHALL clip at 1e-6. Fit-only normalization SHALL replace zero scales with one.
+
+Scalar holistic, scalar span, mean-probability, linear12, additive cubic and
+radial16 heads SHALL use four source folds with fresh geometry in each fold.
+The ridge grid SHALL be .0001/.001/.01/.1/1, with larger ridge winning ties.
+Cubic knots SHALL use fit quantiles .25/.5/.75, degree3, endpoint multiplicity4,
+padding1e-8 and clipping. Sixteen radial centers SHALL use public farthest-first
+selection with SHA256 source ties. Width SHALL be the median positive scaled
+fit distance, or one. Base intercepts SHALL remain unpenalized. Tune-only affine
+calibration SHALL use the inherited ridge .0001 and initial intercept0/slope1.
+Total fitting SHALL stop at600 seconds and each solve at256 iterations.
+
+Heads, geometry, calibrators and cost rules SHALL seal before reserved capture.
+Always-escalate and probability-equivalent logistic controls SHALL remain explicit.
+E0=0/E1=-z SHALL agree with logistic probabilities within1e-10 and identical
+minimum-cost typed actions. Costs SHALL be false accept5, false reject1,
+escalation.5 and correct0; escalation wins ties. Every failure SHALL remain
+recorded. Architecture selection SHALL use fit folds only.
+
+### SCENARIO-VERIFY-8154: Numerical controls and custody
+
+Private fixtures SHALL test degenerate labels, zero features, source leakage,
+permuted targets, fit-only geometry, ridge ties and energy/logistic parity.
+A reparameterization SHALL earn no novel correctness or generalization credit.
+
+Implementation: `python/carnot/verify/evidence_energy_8154.py` and the custody
+adapter `python/carnot/verify/evidence_energy_fit_8154.py`. The two Exp8154 test
+files cover all425 added statements, including private failure controls.

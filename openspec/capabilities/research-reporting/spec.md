@@ -93246,3 +93246,28 @@ success, upstream block and tamper checks SHALL run through the real CLI. Cold
 replay SHALL reject altered primitives, prompts, code, ledger and aggregates.
 E2E-016 fixture and replay SHALL pass. Unmodified adversarial verification and
 strict verdict row consistency SHALL validate the candidate before publication.
+
+## REQ-REPORT-8154: Validated calibrated decision head publication
+
+Exp8154 SHALL load no LLM and declare zero current model calls separately from
+historical capture provenance. It SHALL bind immutable V704 methods, primitive
+inputs, source/code/config hashes, frozen heads and per-unit reductions.
+Missing or failed upstream operands SHALL terminate complete_blocked_<check>.
+Owned validation failures SHALL disqualify with zero energy_fit_ready_score.
+Frozen scoped pytest,100% new statement coverage,Ruff,strict mypy and explicit
+spec coverage SHALL exit normally before primary_publication exposes bytes.
+The full Python suite SHALL run once as a separate repository health check.
+Unmodified adversarial verification and strict row lint SHALL check final bytes.
+
+### SCENARIO-REPORT-8154: Private CLI and independent cold replay
+
+The script SHALL execute outside the checkout without PYTHONPATH. Private
+success, block, tamper and cold replay SHALL exercise the real script.
+Replay SHALL reject changed primitives, weights, code or headline reductions.
+Fit/tune observations SHALL remain exposed development, with zero independent
+generalization and generalized learning benefit scores. No reserved labels open.
+
+Implementation: `scripts/experiments/experiment_8154_v705_evidence_energy_fit.py`
+uses the qualified publication and subprocess supervisor modules. Eleven owned
+tests and45 qualified component/E2E tests passed on20261005. Primitive inputs,
+heads, decisions, validation logs and coverage remain below the Exp8154 raw path.

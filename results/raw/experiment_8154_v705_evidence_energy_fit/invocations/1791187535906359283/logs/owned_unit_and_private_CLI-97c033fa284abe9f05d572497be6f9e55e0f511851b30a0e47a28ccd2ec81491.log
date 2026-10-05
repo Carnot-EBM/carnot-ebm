@@ -1,0 +1,20 @@
+.F.........                                                              [100%]
+=================================== FAILURES ===================================
+____________________ test_external_block_and_owned_failure _____________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261005T080548-3206859-6e4fcabd/test_external_block_and_owned_0')
+
+    def test_external_block_and_owned_failure(tmp_path):
+        """REQ-REPORT-8154: absent operands block; failed owned checks disqualify."""
+        work = e.measure(tmp_path, tmp_path / "raw")
+>       assert not work["plan"]["checks"][0]["passed"]
+E       assert not True
+
+tests/python/test_evidence_energy_fit_8154.py:61: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8154] phase=before_input_authentication completed=0 pending=0
+[exp8154] phase=after_input_authentication completed=0 pending=192
+[exp8154] phase=measurement_complete completed=0 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_evidence_energy_fit_8154.py::test_external_block_and_owned_failure
+1 failed, 10 passed in 54.27s
