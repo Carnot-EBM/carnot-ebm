@@ -2,6 +2,31 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8162: Bound durable arithmetic without importing hardware speed
+
+Compute S_max=1/(1-f) only for measured removable arithmetic. Mixed scoring
+timers supply an optimistic outer ceiling and leave exact arithmetic unknown.
+Retain acquisition, queue wait, transfer, persistence and readout. A 100x target
+needs f>=0.99; quantify the required retained-work reduction. Count centers,
+distance coordinate operations, numeric operand bytes and authenticated durable
+state bytes per batch; unmeasured traffic stays unknown. Reuse the qualified
+8/12/16-bit storage envelope on the same natural margins with float64 fallback.
+These are software bounds; fixed-point arithmetic and board execution remain
+unimplemented. Separate fixture evidence and report fallback costs without
+inventing an incremental duration. Z1T and arXiv:2602.15985 are cost-accounting
+references only. Reopen each board, NPU and TSU through its own prerequisite.
+
+### SCENARIO-VERIFY-8162: Independent branches and unknown components
+
+Missing composition readiness preserves host costs and board custody. Altering
+one receipt invalidates only that board. Unknown or inconsistent costs remain
+excluded with the exact missing operand. Independently reconstruct aggregate
+ceilings, per-unit parity, counts and hashes from primitive rows.
+
+REQ-VERIFY-8162 implementation: separate durable-batch and composed-request
+reducers reuse the qualified natural storage envelope and float64 shadow.
+Scoring-envelope ceilings retain their unknown pure-arithmetic fraction.
+
 ## REQ-VERIFY-8146: Measure bounded fresh natural miss requests
 
 Freeze the first24 original public retention keys in order, preserving absent

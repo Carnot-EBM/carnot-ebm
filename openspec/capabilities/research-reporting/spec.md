@@ -2,6 +2,31 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8162: Preserve V705 board and workload boundaries
+
+Authenticate each original board receipt and transcript independently. Preserve
+dates, hashes, KV260 fabric k_max<=5, PolarFire CPU dispatch and GateMate's
+0xffffffff physical block with separate unmet terminal conditions. Read exactly
+Exp8159.host_batch_ready_score and Exp8160.acquisition_composition_ready_score.
+Keep host batch and composed request costs separate. Missing or disqualified
+upstream work is complete_blocked with its exact operand; available host evidence
+survives. Load no model. Historical provenance does not increment current calls.
+Use immutable versioned methods, private fixtures, normal owned validation,
+100 percent added statement coverage and checked-primary publication. Preserve
+failed historical primaries. The conductor owns ops and traceability updates.
+
+### SCENARIO-REPORT-8162: Private publication and replay
+
+Outside-checkout CLI execution without PYTHONPATH must exercise success, missing
+cost, altered board receipt, owned failure and cold replay. Tampered primitives
+or headlines fail replay. Freeze exact argv before reduction; run the full
+Python suite once as separate repository health. Unmodified adversarial and
+strict row checks must pass before publication.
+
+REQ-REPORT-8162 implementation: the thin CLI uses the qualified scoped validator
+and checked-primary publisher. Private tests cover receipt authentication,
+retirement, missing costs, owned failure, publication, tampering and cold replay.
+
 ## REQ-REPORT-8146: Publish current complete service transactions
 
 Require authenticated Exp8145.natural_service_ready_score=1 independently of
