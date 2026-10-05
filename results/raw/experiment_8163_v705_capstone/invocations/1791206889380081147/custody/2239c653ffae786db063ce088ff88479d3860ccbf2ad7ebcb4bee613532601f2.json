@@ -1,0 +1,111 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8161_v705_arc_supervisor_frontier.json",
+  "primary_sha256": "sha256:42dbacd4018c0c7c6a3c6671b47c68a70561206209caf93d6a66f0810ec92796",
+  "report": {
+    "passed": true,
+    "replay_errors": [],
+    "reports": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8161_v705_arc_supervisor_frontier/terminal_candidate.json"
+        ],
+        "classification": "required",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8161_v705_arc_supervisor_frontier/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8161_v705_arc_supervisor_frontier/terminal_candidate.json"
+        ],
+        "deadline_s": 60,
+        "duration_s": 1.3761639900039881,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "expected_text": null,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8161_v705_arc_supervisor_frontier/logs/terminal_adversarial-6e9de2218284c65f801617ad972bfc9f12d85e96b4dbf180f8386ed55c11cd44.log",
+        "log_sha256": "sha256:6e9de2218284c65f801617ad972bfc9f12d85e96b4dbf180f8386ed55c11cd44",
+        "name": "terminal_adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8161_v705_arc_supervisor_frontier/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8161,\n      \"title\": \"V705 new live supervisor outcome frontier\",\n      \"honest_verdict\": \"complete_null_no_new_outcomes\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8161_v705_arc_supervisor_frontier/terminal_candidate.json"
+        ],
+        "classification": "required",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8161_v705_arc_supervisor_frontier/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8161_v705_arc_supervisor_frontier/terminal_candidate.json"
+        ],
+        "deadline_s": 60,
+        "duration_s": 0.030614268966019154,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "expected_text": null,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8161_v705_arc_supervisor_frontier/logs/terminal_rows-2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda.log",
+        "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+        "name": "terminal_rows",
+        "output_tail": "\nverdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.\n  NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "env",
+          "-u",
+          "PYTHONPATH",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import os,runpy,sys; os.chdir(sys.argv[1]); sys.argv=sys.argv[2:]; runpy.run_path(sys.argv[0],run_name='__main__')",
+          "/tmp/carnot-exp8161-s0s1yp6y",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8161_v705_arc_supervisor_frontier.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8161_v705_arc_supervisor_frontier/terminal_candidate.json"
+        ],
+        "classification": "required",
+        "command": "env -u PYTHONPATH /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import os,runpy,sys; os.chdir(sys.argv[1]); sys.argv=sys.argv[2:]; runpy.run_path(sys.argv[0],run_name='\"'\"'__main__'\"'\"')' /tmp/carnot-exp8161-s0s1yp6y /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8161_v705_arc_supervisor_frontier.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8161_v705_arc_supervisor_frontier/terminal_candidate.json",
+        "command_argv": [
+          "env",
+          "-u",
+          "PYTHONPATH",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import os,runpy,sys; os.chdir(sys.argv[1]); sys.argv=sys.argv[2:]; runpy.run_path(sys.argv[0],run_name='__main__')",
+          "/tmp/carnot-exp8161-s0s1yp6y",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8161_v705_arc_supervisor_frontier.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8161_v705_arc_supervisor_frontier/terminal_candidate.json"
+        ],
+        "deadline_s": 60,
+        "duration_s": 1.343317519989796,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "expected_text": null,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8161_v705_arc_supervisor_frontier/logs/cold_primary_replay-c2cfca3090c1f168b9e34e3a15a17330c51eb5677d53674771fa82b26f913fec.log",
+        "log_sha256": "sha256:c2cfca3090c1f168b9e34e3a15a17330c51eb5677d53674771fa82b26f913fec",
+        "name": "cold_primary_replay",
+        "output_tail": "[exp8161] phase=start completed_units=0 elapsed_s=0\n[exp7949] phase=scan completed_units=1 elapsed_s=0.000\n[exp7949] phase=authenticate_outcome completed_units=0 elapsed_s=0.001\n[exp7949] phase=scan completed_units=1 elapsed_s=0.000\n[exp7949] phase=authenticate_outcome completed_units=0 elapsed_s=0.000\n[exp7949] phase=scan completed_units=1 elapsed_s=0.000\n[exp7949] phase=authenticate_outcome completed_units=0 elapsed_s=0.000\n[exp7949] phase=scan completed_units=1 elapsed_s=0.000\n{\"cold_replay_errors\": []}\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      }
+    ]
+  }
+}

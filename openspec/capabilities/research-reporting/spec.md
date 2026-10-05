@@ -93408,3 +93408,46 @@ and its thin script reuse the Exp8147 reader, hash-bound primary and saved event
 inventory. V704 methods bind to the preserved versioned file. Private tests
 exercise original reader controls, duplicate/frontier exclusion, missing or
 changed operands, validation-log mutation and outside-checkout cold replay.
+
+## REQ-REPORT-8163: Independent fourteen-task V705 terminal accounting
+
+Bind immutable activated Exp8150–Exp8163 authority, visible table, full task JSON
+and canonical digest. Reconstruct each primary, conductor skip and missing input
+separately. A skip has no producer honest_verdict. External blocks are terminal
+blocked results with exact operands. Disqualified evidence grants no science credit.
+Load no model. Current calls and trained heads are empty; imported provenance is
+separate. Recompute H1 from cached decision primitives and retain original masks,
+source support and family alpha .05. Current H2 absence stays blocked; archived
+V704 learning and retention nulls stay archived. Execution, useful future exposure
+and later benefit are distinct. Host batch and acquisition components cannot close
+FR-05/08/NFR-01. Keep FR-06/12, FR-11, ARC and all board obligations separate.
+Authenticate prior failure verdicts before any same-scope retirement decision.
+Freeze validation argv before measurement. Require normal scoped tests,100 percent
+added statement coverage, Ruff, strict mypy, explicit spec checks, private E2E-018
+and cold replay. Owned failure disqualifies readiness. Run the full Python suite
+once and retain unrelated health failures separately. Publish only through
+primary_publication after unchanged terminal auditors. The conductor owns ops
+and traceability reconciliation. No activation or external publication is allowed.
+
+### SCENARIO-REPORT-8163: Mixed evidence and private terminal replay
+
+Private null, missing-primary, blocked and disqualified-source fixtures retain
+fourteen dispositions and zero generalization scores. External script execution
+works without PYTHONPATH. Cold replay rejects changed primitives, headlines,
+source/code bytes and validation logs. Immutable authority mutations fail.
+
+REQ-REPORT-8163 implementation: `python/carnot/reporting/v705_capstone.py`,
+`python/carnot/reporting/v705_capstone_evidence.py` and the script-path CLI.
+Eleven private tests exercise345 added statements with100 percent coverage.
+The primary binds actual scheduling dispositions and separately archived evidence.
+Owned receipts and unchanged terminal auditors are stored with the primary.
+Operational reconciliation remains assigned to the conductor.
+
+REQ-REPORT-8163 qualification correction: the frozen scoped pytest command needs
+its private basetemp parent before execution. The first failed owned invocation
+is preserved. A twelfth regression test checks this prerequisite before rerun.
+
+REQ-REPORT-8163 cold replay correction: preserve the source audit's primitive rows
+inside saved input, alongside its reported statistics. The original assertions
+remain unchanged. A new assertion reopens the saved producer copy before publish.
+Failed candidates and their terminal logs remain below raw/ for inspection.

@@ -49101,3 +49101,24 @@ outside-checkout script-path cold replay SHALL pass before primary publication.
 Private success, missing input, tamper and cold replay run without PYTHONPATH.
 Preserve original reader assertions. Mutated frontier, code, logs, primitive
 rows or headlines fail replay. Fixtures remain circular_positive mechanics.
+
+## REQ-VERIFY-8163: Separate source decisions, learning and service conclusions
+
+Reconstruct qualified cached source decision costs with the shipped V705 equations.
+Retain missing masks and per-source outcomes. Family H1/H2 alpha is .05; absent H2
+uses p=1 and grants no signal. Keep archived V704 null learning and retention
+separate from current missing learning execution. Fixture truth is circular and
+exposed development grants zero independent generalization. Exclude disqualified
+sources and retain exact failed gate operands. Complete administrative accounting
+cannot grant scientific readiness or independent deployment speed credit.
+
+### SCENARIO-VERIFY-8163: Exclusion and aggregate tampering
+
+A disqualified source audit cannot supply H1. A missing current learning audit
+cannot borrow an archived null. Cold reconstruction must detect changed rows and
+headline statistics. A normal blocked result retains qualified independent branches.
+
+REQ-VERIFY-8163 implementation: cached decision, durable-batch and hardware
+primitives are independently reduced through their qualified modules. Eleven
+private tests retain mixed outcomes and reject aggregate, log and input tampering.
+Archived V704 nulls grant no current H2 execution or independent learning credit.

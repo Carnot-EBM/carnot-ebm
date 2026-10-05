@@ -1,0 +1,67 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8160_v705_shared_acquisition_cost.json",
+  "primary_sha256": "sha256:bd76de9bf43c9032e6468fc0ed34710dd0e91a4909144091082bcf47d67ea249",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit": 0,
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8160_v705_shared_acquisition_cost.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8160_v705_shared_acquisition_cost/terminal_candidate.json"
+        ],
+        "duration_s": 2.4698136730585247,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8160_v705_shared_acquisition_cost/invocations/1791199942304912249/publication/validation_logs/cold_replay.log",
+        "log_sha256": "sha256:d3164e4c1c664edcf50fb0d0ca7617adf3cf2e3c8d0aca57c6bb133386e82a32",
+        "name": "cold_replay",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8160_v705_shared_acquisition_cost/terminal_candidate.json"
+        ],
+        "duration_s": 1.1178338489262387,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8160_v705_shared_acquisition_cost/invocations/1791199942304912249/publication/validation_logs/adversarial.log",
+        "log_sha256": "sha256:97182615f658f3c19794f4ef0c862a9dc017e8dbfdb7cc1d28c46a774668da00",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8160_v705_shared_acquisition_cost/terminal_candidate.json"
+        ],
+        "duration_s": 0.06482647894881666,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8160_v705_shared_acquisition_cost/invocations/1791199942304912249/publication/validation_logs/strict_rows.log",
+        "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+        "name": "strict_rows",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

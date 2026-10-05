@@ -400,3 +400,18 @@ As of September 27, Tufa Labs leads the provisional public leaderboard with **27
 
 - **New official event:** ARC Prize announced a **Research Summit on October 23, 2026, in Boston**, hosted with MIT. [Official event page](https://arcprize.org/events/research-summit-2026)
 
+## 2026-10-05 13:15 UTC -- NEW
+
+- **October 1 — Milestone #2 winners announced:** Daniel Franzen: **27.9%, $25,000**; Lord Han Solo: **23.8%, $7,500**; Lohit Siriki: **22.5%, $5,000**. All three released their solutions as open source. [Official announcement](https://x.com/arcprize/status/2105737436450201734)
+
+- **September 29 — Competition leaderboard shakeup:** Tufa Labs reclaimed first place with **45.33%**, improving its previous **27.29%** score. [Official announcement](https://x.com/arcprize/status/2104952919221289003)
+
+Additional official ARC-AGI-3 Semi-Private results absent from your supplied findings:
+
+| Model | Standard harness | Provider Adapter harness |
+|---|---:|---:|
+| [GPT-6.1 Sol](https://arcprize.org/results/openai-gpt-6-1-sol) | **52.7%** | **96.4%** |
+| [Gemini 3.8 Flash](https://arcprize.org/results/google-gemini-3-8-flash) | **10.4%** | **35.0%** |
+| [GPT-6 Sol](https://arcprize.org/results/openai-gpt-6-sol) | **4.6%** | **23.0%** |
+| [Claude Opus 5 — July 24 announcement](https://arcprize.org/results/anthropic-claude-opus-5) | **30.2%** | — |
+
