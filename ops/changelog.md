@@ -21476,3 +21476,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-05: Audit later decision benefit and independent retention labels (⚠️ Research Finding) — honest_verdict=complete_null_no_later_typed_cost_benefit; results/experiment_8172_v706_learning_benefit_audit.json
 - 2026-10-05: Qualify service validation and replay preserved acquisition evidence (✅ Complete) — honest_verdict=complete_positive_service_validation; results/experiment_8173_v706_service_validation.json
 - 2026-10-05: Measure independent Qwen requests through durable Python and Rust services (⚠️ Research Finding) — honest_verdict=complete_null_complete_request_cost; results/experiment_8174_v706_complete_request_cost.json
+- 2026-10-05: Inspect new live supervisor outcomes for transferable arm selection (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8175_v706_arc_supervisor_delta.json
