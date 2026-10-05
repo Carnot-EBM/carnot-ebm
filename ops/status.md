@@ -17851,3 +17851,7 @@ The three PRD gaps remain verification utility, later learning benefit and compl
 service performance. Exposed development evidence cannot close generalization.
 The V704 design is preserved. No experiment is activated. The active roadmap and
 conductor source remain unchanged. Existing unrelated workspace changes remain.
+
+| Experiment | Capability | Status | Evidence |
+|---|---|---|---|
+| Exp8153 | Bounded Qwen evidence capture on fixed fit/tune sources | ⚠️ Research Finding | honest_verdict=complete_null_fit_evidence_capture; 172/192 completed, 20 failed; capture readiness/trainability=1; learning benefit and independent generalization=0; [artifact](../results/experiment_8153_v705_fit_evidence_capture.json) |

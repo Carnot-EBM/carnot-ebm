@@ -3692,3 +3692,8 @@ and run the applicable E2E scenarios before reporting results.
 The dated research-references.md scan precedes experiment design. The V704 design
 is preserved. All data remain development evidence. No implementation, generator
 training, hardware run, experiment activation or external publication occurs here.
+
+| Requirement / Scenario | Status | Evidence |
+|---|---|---|
+| REQ-VERIFY-8153 / SCENARIO-VERIFY-8153 | Scaffolding | Exp8153: honest_verdict=complete_null_fit_evidence_capture; fixed capture transport, 172/192 completed; no measured learning or generalization benefit; [artifact](../results/experiment_8153_v705_fit_evidence_capture.json) |
+| REQ-REPORT-8153 / SCENARIO-REPORT-8153 | Scaffolding | Exp8153: honest_verdict=complete_null_fit_evidence_capture; byte-bound publication and cold replay; source transport claim only; [artifact](../results/experiment_8153_v705_fit_evidence_capture.json) |
