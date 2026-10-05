@@ -50462,3 +50462,97 @@ No hardware purchase follows. CPU state storage and Rust/PyO3 remain the small-h
 path. CUDA serves the frozen Qwen model. Existing KV260, PolarFire and GateMate
 obligations retain separate evidence boundaries. A 100x claim requires measured
 whole-workload redesign, not an imported vendor ratio.
+
+## 2026-10-05 — V706 planning scan: local evidence and qualified learning
+
+This entry precedes the V706 design. It records a new source check, including
+recent material absent from the V705 scan. Publication dates differ from retrieval
+dates. Published results are hypotheses for Carnot, not local measurements.
+
+### Findings selected for bounded follow-up
+
+- **RT4CHART: Retromorphic Testing with Hierarchical Verification for
+  Hallucination Detection in RAG**, March 29, 2026; revised July 20.
+  [Primary paper](https://arxiv.org/abs/2603.27752v2).
+  The method checks individual claims against source evidence. Its ablations
+  attribute much of the reported gain to local processing. Test complete answer
+  sentences with explicit evidence relations after V705's answer-level result
+  failed its decision-benefit gate. Preserve every sentence and qualifier.
+  A model's evidence relation remains a prediction, not a proof of entailment.
+- **Hallucination Span Detection with Input-Side Evidence Alignment**, 2026.
+  [Primary paper](https://arxiv.org/abs/2608.15804),
+  [discovery page](https://huggingface.co/papers/2608.15804).
+  Output localization and input alignment are separate measurable outputs.
+  Record sentence coverage and byte-valid evidence separately from correctness.
+  Defer its encoder training until a bounded local-evidence comparison is useful.
+- **GASP**, July 5, 2026.
+  [Primary paper](https://arxiv.org/abs/2607.04223).
+  It holds answers fixed and measures their sensitivity to context removal.
+  The paper reports transfer limits on short-answer QA. Use a small, fixed
+  source-removal diagnostic. Elicited probability changes are only inspired by
+  GASP; they do not reproduce its token-likelihood method or inherit its scores.
+- **Delayed online convex optimization**, February 2, 2026, and
+  **capacity-constrained delayed optimization**, June 10, 2026.
+  [Delay reduction](https://arxiv.org/abs/2602.02634),
+  [finite capacity](https://arxiv.org/abs/2606.11711).
+  Separate prediction, label release, admission and useful future exposure.
+  Keep the already frozen V705 schedule while qualifying its missing validation
+  branch. No theorem for convex optimization transfers to Carnot's radial head.
+- **KAC**, March 27, 2025, and **Catastrophic Forgetting in KANs**, November 16, 2025.
+  [KAC](https://arxiv.org/abs/2503.21076),
+  [author implementation](https://github.com/Ethanhuhuhu/KAC),
+  [forgetting study](https://arxiv.org/abs/2511.12828).
+  Local radial support motivates the existing memory experiment. It does not
+  guarantee retention. Compare error-selected centers with fixed and random
+  centers at equal capacity. Do not reopen retired importance anchoring.
+- **First Sparks of Thermodynamic Recursive Intelligence**, October 1, 2026.
+  [Extropic primary announcement](https://extropic.ai/writing/baby-thermo-rsi/).
+  Extropic describes research-agent training on classic reproduction tasks,
+  with separate execution and rubric scores. It states that real large-scale
+  chip feedback is planned for 2027. The useful local lesson is to distinguish
+  successful execution from scientific improvement. This does not authorize
+  generator training, establish local TSU access, or supply a Carnot speedup.
+
+### Primary-topic coverage and deferred directions
+
+| Requested topic | Primary source checked | Planning consequence |
+|---|---|---|
+| EBM verification and reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM, v4 May 25, 2026](https://arxiv.org/abs/2512.15605v4) | Train a small calibrated energy selector. Include its equivalent logistic representation. Do not infer an EBM advantage from a change of notation. |
+| Neural constraint satisfaction | [AS2, March 19, 2026](https://arxiv.org/abs/2603.18436); [HardNet++, April 21, 2026](https://arxiv.org/abs/2604.19669) | Encoded-constraint satisfaction does not certify natural-language extraction. No new solver lineage follows. |
+| Ising applications in ML | [EBT-Policy, October 31, 2025](https://arxiv.org/abs/2510.27545); [FPGA–Ising decomposition, February 17, 2026](https://arxiv.org/abs/2602.15985) | Keep learned energy decisions distinct from physical sampling. The FPGA paper motivates accounting for decomposition and communication. |
+| Hallucination mitigation | RT4CHART, evidence alignment and GASP above | Test complete sentence-level evidence with the frozen Qwen generator and original labels. |
+| KANs | KAC and forgetting study above | Measure later benefit and retention separately. |
+| Energy-guided decoding | [Object-hallucination decoding, July 10, 2025](https://arxiv.org/abs/2507.07731) | Its visual-domain layer selection does not establish text verifier utility. Defer decoder changes. |
+| Hardware sampling | [Extropic Z1T, September 4, 2026](https://extropic.ai/writing/z1t); FPGA–Ising paper above | Preserve transfer, storage, final readout and acquisition in workload bounds. Vendor projections remain projections. |
+| Continual learning | Both delayed-feedback papers above | Qualify the existing causal schedule before collecting another stream. |
+
+### Secondary-channel search record
+
+- **OpenReview:** searched 2026 EBM reasoning submissions. The
+  [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg) returned a browser
+  challenge. An indexed PDF was visible, but no new review or acceptance claim
+  is made here. The arXiv version supplies the method.
+- **Semantic Scholar:** attempted citation APIs for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both were inaccessible. Targeted title searches returned no verified citation
+  list. EBT-Policy is related primary work, not a verified Semantic Scholar edge.
+- **Hugging Face papers:** found RT4CHART, evidence alignment,
+  [SIRIN](https://huggingface.co/papers/2608.00033), and
+  [OpenHalDet](https://huggingface.co/papers/2606.06959). Followed primary papers
+  for the selected methods. Toolkits remain integration leads.
+- **GitHub trending:** checked monthly
+  [Python](https://github.com/trending/python?since=monthly) and
+  [Rust](https://github.com/trending/rust?since=monthly). Responses were three
+  weeks old and did not establish a current relevant ranking. KAC's author
+  repository was reachable. No unverified trending dependency is required.
+- **Extropic:** the [writing index](https://extropic.ai/writing) initially
+  returned a page shell. Search found the October 1 research-agent announcement;
+  its full primary page and Z1T were accessible.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  describes a constraint layer beneath language models. It supplies no
+  reproducible architecture update or training recipe for this plan.
+
+The scan found useful experimental ideas, not a reason to add hardware purchases.
+CUDA serves the mandated frozen Qwen model. CPU and Rust/PyO3 serve small heads.
+KV260, PolarFire and GateMate retain their separate operational obligations.
