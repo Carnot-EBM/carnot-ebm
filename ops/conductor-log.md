@@ -19586,3 +19586,4 @@ code |
 | 2026-10-05 18:10 UTC | Train a calibrated typed energy selector from loca | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8167-fit-sentence-capture.fit_trainable_score (actual=0 == expected=1) |
 | 2026-10-05 18:12 UTC | Seal reserved sentence evidence and frozen typed p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8168-sentence-energy-fit) |
 | 2026-10-05 18:12 UTC | Test sentence evidence benefit with source-level u | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8169-reserved-sentence-capture) |
+| 2026-10-05 19:01 UTC | Measure continuous energy learning while future de | OK | 89 passed, 1 warning in 245.29s (0:04:05) |
