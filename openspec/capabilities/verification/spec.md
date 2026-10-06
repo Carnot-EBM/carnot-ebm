@@ -49907,3 +49907,30 @@ and rehash evidence. Preserve failed checks and all historical primaries.
 Cold replay rejects headline, primitive-byte and log mutations. Direct execution
 uses absolute script paths. Missing external prerequisites block; owned validation
 failures disqualify. Neither outcome can retain execution readiness.
+
+### REQ-VERIFY-8203 — Frozen selective precision and service bounds
+
+Compare float64 scalar reference, float32 multiply/accumulate and signed fixed16
+multiply with int64 accumulation for every available selective frozen head.
+Freeze fixed16 scales from training-domain basis/weight bounds. Retain exact
+reference quantiles; include probability and threshold roundoff in membership
+intervals. Uncertain membership or features outside training minima/maxima use
+float64. Do not fit heads, temperatures or quantiles on evaluation labels.
+Declare that radial exponentials remain CPU operations and spline lookup ideas
+do not qualify Ising hardware. Require zero final set and typed mismatches.
+Reduce acquisition, orchestration, arithmetic, transfer/readout and durable
+storage separately. Only removable arithmetic gives 1/(1-f); mixed timers give
+optimistic ceilings. A100x target requires f>=0.99; deployment demand is required
+for deployment claims. Publish CPU update, durable memory, future batching and
+deferred structure-change decisions separately.
+
+#### SCENARIO-VERIFY-8203-1
+
+Scalar threshold ties and out-of-domain features fall back to float64 without
+any final membership or typed mismatch, with probability errors, operation
+counts and actual fallback timing recorded by original source.
+
+#### SCENARIO-VERIFY-8203-2
+
+A100ns request with10ns mixed arithmetic/transfer has only an optimistic100/90
+ceiling; missing pure arithmetic never establishes a100x delivered speedup.

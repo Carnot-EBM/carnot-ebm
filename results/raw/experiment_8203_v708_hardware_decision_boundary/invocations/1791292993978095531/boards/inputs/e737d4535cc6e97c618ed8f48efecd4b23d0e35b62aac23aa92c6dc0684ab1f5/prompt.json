@@ -1,0 +1,22 @@
+{
+  "cache_prompt": false,
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Once you have elected to participate in the Penn State Alternate Retirement plan, a mandatory employee contribution of 5% of your gross salary is required and Penn State will contribute 9.29% of your gross salary.\\\\n\\\\npassage 2:If you have money in other employer's plans, you may be able to transfer or roll it over to the The Pennsylvania State University retirement plan to increase your maximum loan amount. This is only if the The Pennsylvania State University retirement plan accepts rollovers.\\\\n\\\\npassage 3:Quick Guide to Pennsylvania Retirement Income Taxes. 1  Pennsylvania is tax-friendly toward retirees. 2  Social security income is not taxed. 3  Withdrawals from retirement accounts are not taxed. 4  Wages are taxed at normal rates, your marginal state tax rate is 5.0%. 5  Public pension income is not taxed, private pension income is not taxed.\\\\n\\\\n\\\",\\\"question\\\":\\\"penn state retirement benefits\\\"}\\n\", \"original_answer\": \"Penn State offers an Alternate Retirement plan, where employees are required to contribute 5% of their gross salary, while Penn State contributes 9.29% of the employee's gross salary. The plan may accept rollovers from other employer's plans, which can increase the maximum loan amount. In terms of taxes, Pennsylvania is tax-friendly towards retirees, does not tax social security income or withdrawals from retirement accounts. Both public and private pension income are not taxed.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "seed": 7078188,
+  "temperature": 0,
+  "top_p": 1
+}

@@ -1,0 +1,22 @@
+{
+  "cache_prompt": false,
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"address\\\":\\\"413 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"American (Traditional), Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Lettuce B. Frank\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2010-05-31 10:53:37\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I'm so sad to hear this place has closed.  I liked the menu and my hotdog very much.  I remember chatting with the owner late one night as I waited for my group to take care of the birthday boy after a night of drinking, and it seemed like things were going well.\\\"},{\\\"review_date\\\":\\\"2010-01-28 01:34:07\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I almost cried today when I went to LBF to have lunch with some friends and realized they're no longer in business.  I'm so sad.  It was the only place I've ever found that had vegetarian sliders.  Soooooooo amazing!  They're veggie hot dogs were awesome too!  I'm going to miss you LBF!\\\"},{\\\"review_date\\\":\\\"2009-10-19 17:21:00\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Staying true to my words - I will never come back here again.  Trying to give this place another shot on my recent SB visit, I was disappointed at the annoying staff that could not fulfill my order correctly.\\\"}],\\\"state\\\":\\\"CA\\\"}\\n\", \"original_answer\": \"Lettuce B. Frank is a now-closed American traditional restaurant located in Santa Barbara, CA. According to customer reviews, the restaurant was known for its unique menu options, including vegetarian sliders and veggie hot dogs. Many customers appreciated the restaurant's casual atmosphere and friendly service, with one reviewer mentioning that they had a pleasant conversation with the owner during their visit. However, there were also complaints about the staff's ability to fulfill orders correctly, with one reviewer expressing frustration at their experience. Overall, Lettuce B. Frank received an average rating of 3.5 stars from its customers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "seed": 7078188,
+  "temperature": 0,
+  "top_p": 1
+}

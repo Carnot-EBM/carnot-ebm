@@ -94243,3 +94243,26 @@ evidence completes as complete_null_no_new_outcomes when prerequisites pass.
 Implementation: `python/carnot/reporting/arc_supervisor_v708_frontier.py` and
 `scripts/experiments/experiment_8202_v708_arc_supervisor_frontier.py` reuse the
 qualified reader. Tests: `tests/python/test_arc_supervisor_frontier_8202.py`.
+
+### REQ-REPORT-8203 — V708 hardware decision boundary
+
+The Exp8203 producer shall use no model loads and resolve selective, learning,
+service and historical board evidence independently through byte-bound terminal
+readers. Missing external prerequisites produce complete_blocked_<check> with
+exact failed operands; available historical service and board scopes survive.
+Owned validation is frozen before measurement and logs enter immutable custody.
+Private CLI fixtures, missing inputs, tampering and cold reconstruction shall
+be tested outside the checkout without PYTHONPATH. Publication uses the checked
+primary writer. Current device calls, purchases and independent benefit are zero.
+
+#### SCENARIO-REPORT-8203-1
+
+A missing learning or service artifact leaves selective software precision and
+three separately authenticated board obligations visible, with readiness zero
+and a terminal blocked verdict. Source, code, configuration and primitive bytes
+are hashed. An owned check failure disqualifies the result.
+
+#### SCENARIO-REPORT-8203-2
+
+A private success fixture cold-replays from sealed inputs. Changing a primitive,
+configuration, receipt or headline is rejected; fixtures earn no natural credit.

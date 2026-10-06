@@ -1,0 +1,73 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8203_v708_hardware_decision_boundary.json",
+  "primary_sha256": "sha256:0cb69d97c6462e50e0f9a44cd4fb483d7c755c000f592cd2f5c62e7646f328f4",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit": 0,
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8203_v708_hardware_decision_boundary.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8203_v708_hardware_decision_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8203_v708_hardware_decision_boundary.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8203_v708_hardware_decision_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 1.507583742029965,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8203_v708_hardware_decision_boundary/invocations/1791292993978095531/terminal-1791293065694833846/custody/d2a1d3b87e927431ae37c9773e66a83af6d4ad1498f21896e00e86a22c6ca605.log",
+        "log_sha256": "sha256:d2a1d3b87e927431ae37c9773e66a83af6d4ad1498f21896e00e86a22c6ca605",
+        "name": "cold_replay",
+        "normal_exit": true,
+        "output_tail": "[exp8203] phase=start completed=0 pending=1 model_loads=0\n[exp8203] before_benchmark head=local_evidence_radial16 completed=0 pending=1\n[exp8203] precision completed=1 pending=157\n[exp8203] precision completed=33 pending=125\n[exp8203] precision completed=65 pending=93\n[exp8203] precision completed=97 pending=61\n[exp8203] precision completed=129 pending=29\n[exp8203] precision completed=158 pending=0\n[exp8203] after_benchmark head=local_evidence_radial16 completed=1 pending=0\n[exp8203] before_benchmark head=radial16 completed=0 pending=1\n[exp8203] precision completed=1 pending=157\n[exp8203] precision completed=33 pending=125\n[exp8203] precision completed=65 pending=93\n[exp8203] precision completed=97 pending=61\n[exp8203] precision completed=129 pending=29\n[exp8203] precision completed=158 pending=0\n[exp8203] after_benchmark head=radial16 completed=1 pending=0\n{\"passed\": true, \"rows_checksum\": \"sha256:1a9d9b515a7a78c09190bae2ffa7f6cfd39b6a3bc2092f6664695ebedb13e117\"}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8203_v708_hardware_decision_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8203_v708_hardware_decision_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 1.7950351110193878,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8203_v708_hardware_decision_boundary/invocations/1791292993978095531/terminal-1791293065694833846/custody/f67fdb3a2aa46806f9b24741bbace4b9cd0dcf2f2f6671494613f9692ec5d9eb.log",
+        "log_sha256": "sha256:f67fdb3a2aa46806f9b24741bbace4b9cd0dcf2f2f6671494613f9692ec5d9eb",
+        "name": "adversarial",
+        "normal_exit": true,
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8203_v708_hardware_decision_boundary/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8203,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_blocked_exists\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8203_v708_hardware_decision_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8203_v708_hardware_decision_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 0.09945807605981827,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8203_v708_hardware_decision_boundary/invocations/1791292993978095531/terminal-1791293065694833846/custody/ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "normal_exit": true,
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

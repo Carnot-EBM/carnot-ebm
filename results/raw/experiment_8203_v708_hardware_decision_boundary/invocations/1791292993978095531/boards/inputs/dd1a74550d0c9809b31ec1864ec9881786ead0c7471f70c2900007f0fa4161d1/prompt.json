@@ -1,0 +1,22 @@
+{
+  "cache_prompt": false,
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"'Bold and the Beautiful' Spoilers: Eric's Moment Of Truth, Ridge Learns Dad Is Dying\\nThe Bold and the Beautiful (B&B) spoilers for the week of October 30 tease that Eric Forrester's (John McCook) moment of truth has arrived. Soap Opera Digest reports that the fashion show proves to be a pivotal moment for the designer.\\nEric is ready to put the work he and RJ Forrester (Joshua Hoffman) created out there. He believes that their designs will win the showdown and prove that he's the better designer. While he considers this line his final act, he reconsiders retiring after his line is a complete success.\\nDuring the fashion show, RJ struggles to keep his emotions in check. The Bold and the Beautiful spoilers say that Eric delivered the bad news to RJ about his health. RJ pushed his granddad to cancel the show and focus on his health. Of course, Eric refused. He wanted to give Ridge Forrester (Thorsten Kaye) a run for his money.\\nAfter the fashion show, Carter Walton (Lawrence Saint-Victor) needed some time to tally the results of the competition. The order was not all in; Carter promised to deliver the winner's name as soon as all sales were finalized.\\nWhen the result comes in, Eric and Ridge have a tender moment as they congratulate each other. They adore each other and do not want this competition to destroy their relationship.\\nThe Bold and the Beautiful spoilers say that Eric explains to his son that he had to compete with him after feeling shoved out of Forrester Creations. Ridge says that he never meant to make him feel that way. Eric will always be an essential part of Forrester Creations' success.\\nEric finally tells Ridge about his health crisis. The news crushes Ridge; he's not ready to say goodbye to his dad. The Forresters and Logans grapple with the news of Eric's health decline, unable to accept he only has six months to live.\\nThe Bold and the Beautiful spoilers say that even though Eric's doctor told him he's dying, he's never felt better and more alive. He credits the newfound energy to getting back to designing with RJ.\\nB&B fans, who do you think wins the fashion showdown? Will Ridge confront RJ about keeping the secret from him? Keep watching The Bold and the Beautiful, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"original_answer\": \"In \\\"The Bold and the Beautiful\\\", Eric Forrester's moment of truth arrives as his fashion show becomes a pivotal point in his career. Despite ailing health, Eric refuses to cancel the show, believing his designs with RJ Forrester will prove victorious. After the show, Eric finally reveals his health crisis to his son Ridge, devastating him with the news that he has only six months to live. However, Eric remains positive, feeling energized by his return to designing. The outcome of the fashion showdown is yet to be announced and the characters grapple with Eric's health news.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "seed": 7078188,
+  "temperature": 0,
+  "top_p": 1
+}

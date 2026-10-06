@@ -415,3 +415,7 @@ Additional official ARC-AGI-3 Semi-Private results absent from your supplied fin
 | [GPT-6 Sol](https://arcprize.org/results/openai-gpt-6-sol) | **4.6%** | **23.0%** |
 | [Claude Opus 5 — July 24 announcement](https://arcprize.org/results/anthropic-claude-opus-5) | **30.2%** | — |
 
+## 2026-10-06 13:12 UTC -- NEW
+
+**September 3 — GPT-6 Astra results announced:** ARC-AGI-3 Semi-Private scores reached **62.7%** with the Standard harness (max reasoning) and **99.9%** with the Provider Adapter harness (high reasoning). [Official announcement](https://arcprize.org/blog/astra), [verified results](https://arcprize.org/results/openai-gpt-6-astra).
+
