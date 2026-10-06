@@ -93930,3 +93930,25 @@ Rehashed aggregate or prediction drift fails independent replay. Primitive rows
 retain all128 sources and every failed attempt. Implementation and tests are
 python/carnot/verify/reserved_sentence_capture_8184.py and
 tests/python/test_reserved_sentence_capture_8184.py.
+## REQ-REPORT-8185: Publish independent sentence decision custody
+
+Use a thin no-model CLI from any cwd without PYTHONPATH. Freeze validation argv
+before measurement; normal scoped tests,100 percent added statement coverage,
+Ruff check/format, strict mypy, explicit test-path spec coverage, private
+E2E-015/019, independent cold replay and unmodified adversarial and strict row
+validators precede primary_publication. Preserve primitive source rows, acceptance
+operands, input/code/config hashes, completed immutable logs and failed receipts.
+Run the full Python suite once and report unrelated health separately. Current
+model calls are zero; imported provenance and trained heads remain explicit.
+The conductor owns ops/changelog.md, ops/status.md and traceability reconciliation.
+
+### SCENARIO-REPORT-8185: Private script and custody replay
+
+Temporary private fixtures exercise success, missing input, tamper, all-null
+predictions, wrong labels and replay. Rehashed headline or primitive changes
+cannot pass independent reduction. Readiness and decision benefit stay separate.
+
+Implementation: `scripts/experiments/experiment_8185_v707_sentence_decision_audit.py`
+uses the qualified validation supervisor and primary publisher. Private success,
+missing input, rehashed tamper and external cold replay are covered by
+`tests/python/test_sentence_decision_audit_8185.py`.

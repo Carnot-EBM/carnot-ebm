@@ -49600,3 +49600,30 @@ Private tests cover target-field rejection, prompt mutation, mismatched source,
 incomplete transport, launch cutoff, missing historical pairs and exact head
 application. Hash-bound cold replay independently rebuilds every prediction and
 headline. Checkpoint every8 sources, stop calls at3000 seconds and close by4800.
+## REQ-VERIFY-8185: Independent sentence decision audit
+
+Authenticate Exp8184 readiness1 and frozen source predictions before evaluator
+labels. Join original human annotations by source and response identity. Keep
+all128 intended sources; missing predictions escalate at cost.5. Compare local
+radial16 to the tune-frozen radial16 comparator on complete paired sources.
+Primary costs and bootstrap retain all128 intended slots; complete-case costs
+remain secondary. Require96 pairs and12/class; insufficient support is terminal null. H1 requires
+10000 paired source bootstrap draws,9500 valid, seed7078185, one-sided97.5 percent
+lower cost gain>.02, five improved sources, no extra false accepts, Brier
+increase<=.01. Report all-slot costs, calibration, coverage, local_max, ablation,
+source dependence and independently computed equivalent logistic parity.
+No sentences or repeat arms add independent units. Invalid source indices are
+transport failures. September28 oracle-distinct corrigendum remains in force:
+prior exposure is distinct from verifier_is_oracle; development cannot close
+GAP-ORACLE-DISTINCT, authorize generator training or prove unseen transfer.
+
+### SCENARIO-VERIFY-8185: Original labels and terminal support
+
+Private mismatched source rows, changed labels, all-null predictions and forged
+headlines must preserve original assertions and reject drift. Synthetic wins
+qualify arithmetic only. Missing or gate-blocked external inputs terminate
+blocked with the exact operand. Owned validation failure disqualifies readiness.
+
+Implementation: `python/carnot/verify/sentence_decision_audit_8185.py`.
+Six tests in `tests/python/test_sentence_decision_audit_8185.py` qualify original
+labels, source identity, support floors, source bootstrap and independent equations.
