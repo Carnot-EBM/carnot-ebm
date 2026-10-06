@@ -94200,3 +94200,22 @@ Implementation: `scripts/experiments/experiment_8197_v708_selective_decision_aud
 is a thin no-model CLI. `tests/python/test_selective_decision_audit_8197.py`
 uses private temporary custody and real external subprocesses. The publisher
 records bounded validation and immutable log hashes before exposing one primary.
+## REQ-REPORT-8200: Validated no-model trace custody
+
+Load no LLM. Declare MODEL_SPECS=[], no_model_load, zero current invocations and
+no trained heads separately from imported Qwen provenance. Summarize upstream
+artifacts before primitive inspection. Freeze immutable versioned methods and
+validation argv before census reduction. Seal trace.json before any service cost
+measurement. Require scoped pytest,100 percent new statement coverage,Ruff
+check/format,strict mypy,explicit-path spec coverage and private E2E-015/019 cases.
+Record full Python health once separately. Preserve immutable validation logs.
+Missing external evidence yields complete_blocked_<operand> with actual gate
+operands; owned failure disqualifies and zeros readiness. Publish one primary
+through primary_publication after independent cold replay and unchanged auditors.
+The conductor owns ops/status/changelog/traceability reconciliation for this task.
+
+### SCENARIO-REPORT-8200: Direct private publication and cold replay
+
+Run the script outside checkout without PYTHONPATH. Private success, missing
+input, primitive tamper and aggregate tamper cases require normal expected exits.
+Cold replay recomputes selection, exclusions and both identities from sealed bytes.

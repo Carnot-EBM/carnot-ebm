@@ -49870,3 +49870,22 @@ Implementation: `python/carnot/verify/selective_decision_audit_8197.py` reuses
 the qualified sealed-prediction equations and independently reconstructs source
 annotations and typed costs. Private tests cover natural custody, original labels,
 missing evidence, null and positive controls, exact intervals and rehashed drift.
+## REQ-VERIFY-8200: Observed request census without constructed demand
+
+Freeze task-authorized V701 through V707 completed call ledgers as read-only bytes.
+Preserve original request bodies, identities, conditions and session boundaries.
+Select the last96 first-attempt original-source requests by authenticated issue
+time and call_id. Exclude warmups, retries, restart calls, designed duplicates,
+hit/invalidation arms and unavailable chronology or identity. Do not infer issue
+time from response creation, file mtimes or monotonic clocks without a clock anchor.
+Exact identity follows Exp8188 and binds source/answer bytes, prompt, template,
+grammar, tokenizer, GGUF, quantization, seed, sampling, runtime and schema.
+Report original hits, shape duplicates, reuse distance and pinned-runtime replay
+hits separately. Require96 reconstructable requests,24 sources and the qualified
+single schema; zero hits can pass. Missing support blocks the benchmark.
+
+### SCENARIO-VERIFY-8200: Chronology, identities and exclusions
+
+Private fixtures exercise chronological ties, last96 selection, session retention,
+different seeds/runtimes, replay mapping, zero hits, missing timestamps/bodies,
+designed arms and tampered frozen evidence. Production demand remains unavailable.

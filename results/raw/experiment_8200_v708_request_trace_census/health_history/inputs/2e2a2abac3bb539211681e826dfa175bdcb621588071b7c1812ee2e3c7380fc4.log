@@ -1,0 +1,120 @@
+bringing up nodes...
+bringing up nodes...
+
+/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py:67: PytestUnraisableExceptionWarning: Exception ignored in: <function _xla_gc_callback at 0x7fbd90759800>
+
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/jax/_src/lib/__init__.py", line 123, in _xla_gc_callback
+    xla_client._xla.collect_garbage()
+KeyboardInterrupt
+
+Enable tracemalloc to get traceback where the object was allocated.
+See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+  warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py:67: PytestUnraisableExceptionWarning: Exception ignored in: <function _xla_gc_callback at 0x7faaf2059800>
+
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/jax/_src/lib/__init__.py", line 123, in _xla_gc_callback
+    xla_client._xla.collect_garbage()
+KeyboardInterrupt
+
+Enable tracemalloc to get traceback where the object was allocated.
+See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+  warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py:67: PytestUnraisableExceptionWarning: Exception ignored in: <function _xla_gc_callback at 0x7ff396c49800>
+
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/jax/_src/lib/__init__.py", line 123, in _xla_gc_callback
+    xla_client._xla.collect_garbage()
+KeyboardInterrupt
+
+Enable tracemalloc to get traceback where the object was allocated.
+See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+  warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/unraisableexception.py:67: PytestUnraisableExceptionWarning: Exception ignored in: <function _xla_gc_callback at 0x7f0f80369800>
+
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/jax/_src/lib/__init__.py", line 123, in _xla_gc_callback
+    xla_client._xla.collect_garbage()
+KeyboardInterrupt
+
+Enable tracemalloc to get traceback where the object was allocated.
+See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+  warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+
+==================================== ERRORS ====================================
+_____________________________ ERROR collecting gw3 _____________________________
+Different tests were collected between gw0 and gw3. The difference is:
+--- gw0
+
++++ gw3
+
+@@ -72253,6 +72253,8 @@
+
+ tests/python/test_request_trace_8200.py::test_exclusions[change7]
+ tests/python/test_request_trace_8200.py::test_empty_invalid_time_schema_and_ties
+ tests/python/test_request_trace_8200.py::test_direct_private_cli_and_replay
++tests/python/test_request_trace_8200.py::test_custody_and_owned_failure
++tests/python/test_request_trace_8200.py::test_replay_mutations_and_inprocess_private
+ tests/python/test_research_complete_ledger_lint.py::test_duplicate_post_cutoff_id_fails
+ tests/python/test_research_complete_ledger_lint.py::test_ok_row_with_missing_deliverable_fails
+ tests/python/test_research_complete_ledger_lint.py::test_ok_row_with_present_deliverable_passes
+To see why this happens see 'Known limitations' in documentation for pytest-xdist
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+python/carnot/extraction/coace_extractor.py:122
+python/carnot/extraction/coace_extractor.py:122
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+python/carnot/autoresearch/transpile.py:58
+python/carnot/autoresearch/transpile.py:58
+python/carnot/autoresearch/transpile.py:58
+python/carnot/autoresearch/transpile.py:58
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:58: PytestCollectionWarning: cannot collect test class 'TestVector' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)
+    @dataclass
+
+python/carnot/autoresearch/transpile.py:75
+python/carnot/autoresearch/transpile.py:75
+python/carnot/autoresearch/transpile.py:75
+python/carnot/autoresearch/transpile.py:75
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:75: PytestCollectionWarning: cannot collect test class 'TestVectorSet' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)
+    @dataclass
+
+tests/python/test_energy_premise_v3_3437.py:26
+tests/python/test_energy_premise_v3_3437.py:26
+tests/python/test_energy_premise_v3_3437.py:26
+tests/python/test_energy_premise_v3_3437.py:26
+  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_energy_premise_v3_3437.py:26: PytestUnknownMarkWarning: Unknown pytest.mark.kona - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    pytestmark = pytest.mark.kona
+
+.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: 56 warnings
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+tests/python/test_respawn_queue.py:68
+tests/python/test_respawn_queue.py:68
+tests/python/test_respawn_queue.py:68
+tests/python/test_respawn_queue.py:68
+  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:68: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.no_cov
+
+tests/python/test_respawn_queue.py:97
+tests/python/test_respawn_queue.py:97
+tests/python/test_respawn_queue.py:97
+tests/python/test_respawn_queue.py:97
+  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:97: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.no_cov
+
+python/carnot/verify/python_types.py:305
+python/carnot/verify/python_types.py:305
+python/carnot/verify/python_types.py:305
+python/carnot/verify/python_types.py:305
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/python_types.py:305: PytestCollectionWarning: cannot collect test class 'TestPassConstraint' because it has a __init__ constructor (from: tests/python/test_verify_python_types.py)
+    class TestPassConstraint(BaseConstraint):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR gw3 - Different tests were collected between gw0 and gw3. The differenc...
+5 skipped, 84 warnings, 1 error in 55.63s
