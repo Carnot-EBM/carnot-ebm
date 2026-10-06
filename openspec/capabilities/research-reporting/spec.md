@@ -94402,3 +94402,28 @@ scoped Ruff/format/strict mypy, explicit-file spec coverage and E2E-015/019.
 Run the full Python suite once as separate repository health; preserve failures.
 Owned check failures disqualify. Validate a private candidate with unchanged
 primary, adversarial and strict-row validators before atomic publication.
+
+## REQ-REPORT-8208: Publish authenticated restricted-fit custody
+
+Freeze owned validation argv before measurement. Reuse qualified subprocess
+supervision and atomic primary publication. Preserve complete stdout/stderr,
+exit codes, clocks and code/config/input hashes. Missing required branch
+operands SHALL stop dependent fitting with exact blocked gate evidence;
+optional sibling absence SHALL be a disposition. Historical primaries SHALL
+remain immutable. Conductor owns ops/status/changelog/traceability reconciliation.
+
+### SCENARIO-REPORT-8208-CLI
+
+The real private CLI SHALL fit, seal and cold-replay outside checkout; invalid
+dates, missing inputs and aggregate/primitive tampering SHALL be tested. Require
+measured100% statement coverage of new Python including CLI children, scoped
+Ruff/format/strict mypy, explicit-file spec coverage, affected consumers and
+E2E-015/019. Run the full Python suite once and preserve unrelated health
+failures separately. Owned validation failure SHALL disqualify and readiness0.
+Validate a private candidate with unchanged terminal publication, adversarial
+and strict-row validators before publishing the exact checked primary bytes.
+
+Exp8208 implementation: the executable runner and
+`tests/python/test_restricted_energy_fit_8208.py` provide checked private
+publication, external blocking, source custody and fresh-process replay.
+Ops and traceability reconciliation remain owned by the conductor.

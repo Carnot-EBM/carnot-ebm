@@ -50072,3 +50072,37 @@ Require96 complete independent sources,12 per class,10000 draws and9500 valid.
 H2 retains alpha0.025; exactly two primary tests share family alpha0.05.
 Other contrasts and the four-accept error bounds are descriptive. Reused
 sources remain exposed development with both generalization scores zero.
+
+## REQ-VERIFY-8208: Fit and seal restricted energy heads
+
+Exp8208 SHALL authenticate Exp8207 readiness and its exact protocol hash, then
+resolve original fit/tune primitive shards through their manifest references.
+Reserved outcomes SHALL remain unopened. Reuse qualified fit-only Gaussian
+geometry, conditional binary NLL and ridge, the original five-value ridge grid,
+four deterministic fit-only folds and 256-iteration L-BFGS-B budget. This task's
+explicit grid requirement supersedes the methods fixture's single ridge0.01;
+record that distinction without changing Exp8207. Energy, additive tanh and
+linear logistic controls SHALL share sixteen inputs, seventeen coefficients,
+fit/temperature roles, optimization budget, costs and baseline permission mask.
+
+### SCENARIO-VERIFY-8208-FIT
+
+Store real loss trajectories and before/after parameter hashes for every solve.
+Select temperature only on temperature_fit and the simple control only on the
+original calibration/tune role. Fit-only normalizers and centers SHALL exclude
+held fold sources. Reject source overlap, reserved rows, malformed features,
+nonconvergence and exhausted budgets. Constant features and shuffled fit labels
+SHALL be separate diagnostics and never select the natural treatment.
+
+### SCENARIO-VERIFY-8208-PARITY
+
+Every trainable arm SHALL preserve the same permission and original costs.
+Equivalent energy/logistic probabilities SHALL agree within1e-10 with exact
+masked decision parity, including missing evidence; common shifts SHALL leave
+probabilities and decisions unchanged. Serialize all heads, geometry, costs,
+masks, roles and selected simple control before any reserved evaluation. A valid
+null fit SHALL have readiness1 after validation; both generalization scores0.
+
+Exp8208 implementation: `restricted_energy_8208.py` and
+`restricted_energy_fit_8208.py`; the owned tests cover all new Python statements
+and the real private CLI. Reserved evaluation remains deferred to Exp8209.

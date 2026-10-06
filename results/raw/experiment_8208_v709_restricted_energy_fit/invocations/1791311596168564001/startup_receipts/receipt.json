@@ -1,0 +1,28 @@
+{
+  "name": "named_inputs_and_environment",
+  "argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "-c",
+    "import pathlib,json,sys,tempfile,hashlib,os,numpy,scipy,yaml\nnames=['AGENTS.md','CLAUDE.md','CODEX.md','ops/e2e-test-plan.md','openspec/capabilities/research-reporting/spec.md','openspec/capabilities/verification/spec.md','scripts/experiment_template.py','python/carnot/reporting/primary_publication.py','ops/exclusion_manifest.yaml','openspec/change-proposals/research-roadmap-vNEXT.md','python/carnot/verify/sentence_energy_8183.py','python/carnot/verify/selective_energy_fit_8195.py','python/carnot/verify/selective_rule_8194.py','results/experiment_8182_v707_fit_sentence_capture.json','results/experiment_8195_v708_selective_energy_fit.json','results/experiment_8207_v709_restricted_action_methods.json']\nfor name in names:\n p=pathlib.Path(name); b=p.read_bytes();print(name,len(b),'sha256:'+hashlib.sha256(b).hexdigest(),flush=True)\n if p.suffix=='.json':\n  d=json.loads(b);assert isinstance(d,dict);print('schema',d['experiment_id'],d['task_id'],d['required_checks_passed'],flush=True)\nd=json.loads(pathlib.Path(names[-1]).read_bytes());assert d['action_protocol_ready_score']==1\np=pathlib.Path(d['protocol_path']);assert 'sha256:'+hashlib.sha256(p.read_bytes()).hexdigest()==d['protocol_sha256'];print('protocol authenticated',d['protocol_sha256'],flush=True)\nfor tool in ['python','pytest','coverage','ruff','mypy']:assert os.access('.venv/bin/'+tool,os.X_OK)\nwith tempfile.TemporaryDirectory(prefix='carnot8208-probe-') as t:\n p=pathlib.Path(t)/'probe';p.write_bytes(b'private');assert p.read_bytes()==b'private';print('private scratch writable',t,flush=True)\nprint(sys.version,'numpy',numpy.__version__,'scipy',scipy.__version__,flush=True)\n"
+  ],
+  "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import pathlib,json,sys,tempfile,hashlib,os,numpy,scipy,yaml\nnames=['\"'\"'AGENTS.md'\"'\"','\"'\"'CLAUDE.md'\"'\"','\"'\"'CODEX.md'\"'\"','\"'\"'ops/e2e-test-plan.md'\"'\"','\"'\"'openspec/capabilities/research-reporting/spec.md'\"'\"','\"'\"'openspec/capabilities/verification/spec.md'\"'\"','\"'\"'scripts/experiment_template.py'\"'\"','\"'\"'python/carnot/reporting/primary_publication.py'\"'\"','\"'\"'ops/exclusion_manifest.yaml'\"'\"','\"'\"'openspec/change-proposals/research-roadmap-vNEXT.md'\"'\"','\"'\"'python/carnot/verify/sentence_energy_8183.py'\"'\"','\"'\"'python/carnot/verify/selective_energy_fit_8195.py'\"'\"','\"'\"'python/carnot/verify/selective_rule_8194.py'\"'\"','\"'\"'results/experiment_8182_v707_fit_sentence_capture.json'\"'\"','\"'\"'results/experiment_8195_v708_selective_energy_fit.json'\"'\"','\"'\"'results/experiment_8207_v709_restricted_action_methods.json'\"'\"']\nfor name in names:\n p=pathlib.Path(name); b=p.read_bytes();print(name,len(b),'\"'\"'sha256:'\"'\"'+hashlib.sha256(b).hexdigest(),flush=True)\n if p.suffix=='\"'\"'.json'\"'\"':\n  d=json.loads(b);assert isinstance(d,dict);print('\"'\"'schema'\"'\"',d['\"'\"'experiment_id'\"'\"'],d['\"'\"'task_id'\"'\"'],d['\"'\"'required_checks_passed'\"'\"'],flush=True)\nd=json.loads(pathlib.Path(names[-1]).read_bytes());assert d['\"'\"'action_protocol_ready_score'\"'\"']==1\np=pathlib.Path(d['\"'\"'protocol_path'\"'\"']);assert '\"'\"'sha256:'\"'\"'+hashlib.sha256(p.read_bytes()).hexdigest()==d['\"'\"'protocol_sha256'\"'\"'];print('\"'\"'protocol authenticated'\"'\"',d['\"'\"'protocol_sha256'\"'\"'],flush=True)\nfor tool in ['\"'\"'python'\"'\"','\"'\"'pytest'\"'\"','\"'\"'coverage'\"'\"','\"'\"'ruff'\"'\"','\"'\"'mypy'\"'\"']:assert os.access('\"'\"'.venv/bin/'\"'\"'+tool,os.X_OK)\nwith tempfile.TemporaryDirectory(prefix='\"'\"'carnot8208-probe-'\"'\"') as t:\n p=pathlib.Path(t)/'\"'\"'probe'\"'\"';p.write_bytes(b'\"'\"'private'\"'\"');assert p.read_bytes()==b'\"'\"'private'\"'\"';print('\"'\"'private scratch writable'\"'\"',t,flush=True)\nprint(sys.version,'\"'\"'numpy'\"'\"',numpy.__version__,'\"'\"'scipy'\"'\"',scipy.__version__,flush=True)\n'",
+  "scope": "precondition",
+  "exit_code": 0,
+  "actual_exit": 0,
+  "expected_exit": 0,
+  "passed": true,
+  "normal_exit": true,
+  "timed_out": false,
+  "started_monotonic_ns": 971812987331099,
+  "ended_monotonic_ns": 971813203275371,
+  "started_wall_ns": 1791310904776501634,
+  "duration_s": 0.215944272,
+  "stdout_path": "/tmp/carnot8208-startup/named_inputs_and_environment.stdout",
+  "stderr_path": "/tmp/carnot8208-startup/named_inputs_and_environment.stderr",
+  "stdout_sha256": "sha256:d405986769fd69b8c6e435f39d489614b9819c1b75e1e08c8186a13f11561262",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "log_path": "/tmp/carnot8208-startup/named_inputs_and_environment.stdout",
+  "log_sha256": "sha256:d405986769fd69b8c6e435f39d489614b9819c1b75e1e08c8186a13f11561262",
+  "deadline_s": 45
+}
