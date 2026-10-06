@@ -94617,3 +94617,31 @@ Exp8215 runner and25 traced test cases exercise authority, resume, censoring,
 descriptive selection, private CLI and fresh-process tamper rejection. Current
 measured outcomes and validation status are recorded in the invocation artifact;
 no historical experiment, default arm priority or active roadmap is changed.
+
+## REQ-REPORT-8216: Preserve independent workload and board obligations
+
+Exp8216 SHALL authenticate Exp8208 action, Exp8211 learning and Exp8214 service
+separately. Missing or invalid optional operands block only their branch. A
+qualified reducer earns hardware_boundary_ready_score=1 without asserting all
+branches ran. Historical primary bytes remain immutable. Retain exactly named
+KV260, PolarFire and GateMate obligations, plus separate NPU and TSU access gaps.
+Declare no_model_load, MODEL_SPECS=[] and zero current board/model executions.
+
+### SCENARIO-REPORT-8216-CLI
+
+Real private CLI paths SHALL publish terminal candidates, reject protected fixture
+outputs and wrong dates, replay in a fresh process and reject hash or aggregate
+tampering. Freeze validation before measurement. Require100 percent owned Python
+statement coverage including child CLI, scoped Ruff/format/strict mypy, explicit
+spec coverage, affected consumers and E2E-015/019. Record the full Python suite
+once as separate repository health. Owned failures disqualify. Unchanged
+publication, adversarial and strict row checks precede atomic primary publication.
+Preserve literal argv, exits, complete stream hashes, clocks and code/config bytes.
+The conductor owns ops/status/changelog/traceability reconciliation for this task.
+
+REQ-REPORT-8216 implementation: `hardware_obligations_execution_8216.py` reuses
+bounded process-group supervision, owned validation commands and the unchanged
+primary publisher. The direct Exp8216 runner publishes one primary and retains
+source copies, primitive rows, terminal checks and stream receipts below raw/.
+Tests exercise independent producer receipts, private publication, cold replay,
+protected output rejection and owned-check disqualification.

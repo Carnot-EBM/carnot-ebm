@@ -50287,3 +50287,39 @@ chronology checks and process-group child deadlines. Unit and standalone CLI
 coverage is combined only for the two new modules and the executable runner.
 Owned checks and one repository health run have distinct receipts. Missing
 chronology is an explicit exclusion, not evidence of absent supervisor history.
+
+## REQ-VERIFY-8216: Measure the new head and retain complete-workload limits
+
+Compute float64, float32 and fixed16 deviations on every eligible Exp8208 row.
+Apply the original acceptance permission after conversion. Guard ambiguous margins
+with measured CPU fallback and exact fallback counts. Missing feature slots stay
+in the denominator. Old precision tables supply no new measurement credit.
+
+### SCENARIO-VERIFY-8216-PRECISION
+
+Private controls SHALL cover ties, outside-domain conversion, withheld acceptance,
+missing features and all precision variants. Final decisions match the reference;
+failed numeric parity disqualifies. Exposed rows supply zero generalization credit.
+
+### SCENARIO-VERIFY-8216-COSTS
+
+Use Exp8214 request clocks to reconstruct disjoint transfer/conversion, storage,
+fsync and readout costs. Charge model startup and all acquisition once per arm.
+Report serial fraction, Amdahl ceiling and the share that must change for100x.
+Learning trajectories remain usable even when their component timers are absent;
+unknown timers SHALL stay null with exact blocked operands. Current local storage
+probes SHALL be scoped separately from original learning or board work.
+Tier1 stays CPU counters; Tier2 CPU/Rust with possible future FPGA batching;
+Tier3 GPU/NPU requires access; Tier4 fabric reconfiguration stays future work.
+KV260 retains SSH-delivered quadratic fabric k_max<=5. PolarFire stays Linux CPU
+until real fabric dispatch. GateMate requires a dated physical/JTAG change resolving
+0xffffffff. Vendor and local access evidence remain distinct. No board operation,
+install, flash, purchase, conductor edit or active-roadmap change occurs.
+
+REQ-VERIFY-8216 implementation: `hardware_workload_obligations_8216.py` reuses
+the original restricted action rule and prospective service stage partition.
+It measures all three current head precisions, preserves missing feature slots,
+counts guarded CPU fallbacks and keeps failed service stages unknown. Amdahl
+ceilings retain all acquisition and model startup. Original learning component
+clocks remain an explicit blocked cost obligation. Historical board rows keep
+their original dates, substrate limits and reopen conditions.
