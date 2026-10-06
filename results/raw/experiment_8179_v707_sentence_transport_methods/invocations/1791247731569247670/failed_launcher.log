@@ -1,0 +1,355 @@
+[exp8179] phase=start completed=0 pending=0
+[exp8179] phase=before_measurement_subprocess completed=0 pending=0
+[exp7303-validation] before_subprocess measurement elapsed_s=0.000 unit=1/1
+[exp7303-validation:measurement] [exp8179] phase=start completed=0 pending=0
+[exp7303-validation:measurement] [exp8179] phase=before_input_authentication completed=0 pending=0
+[exp7303-validation:measurement] [exp8166] phase=before_input_authentication completed=0 pending=0
+[exp7303-validation:measurement] [exp8166] phase=after_input_authentication completed=320 pending=0
+[exp7303-validation:measurement] [exp8179] phase=before_tokenizer_vocabulary_read completed=0 pending=0
+[exp7303-validation:measurement] ggml_cuda_init: found 2 CUDA devices (Total VRAM: 48353 MiB):
+[exp7303-validation:measurement]   Device 0: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24176 MiB
+[exp7303-validation:measurement]   Device 1: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24176 MiB
+[exp7303-validation:measurement] llama_model_loader: loaded meta data with 51 key-value pairs and 866 tensors from /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf (version GGUF V3 (latest))
+[exp7303-validation:measurement] llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+[exp7303-validation:measurement] llama_model_loader: - kv   0:                       general.architecture str              = qwen35
+[exp7303-validation:measurement] llama_model_loader: - kv   1:                               general.type str              = model
+[exp7303-validation:measurement] llama_model_loader: - kv   2:                     general.sampling.top_k i32              = 20
+[exp7303-validation:measurement] llama_model_loader: - kv   3:                     general.sampling.top_p f32              = 0.950000
+[exp7303-validation:measurement] llama_model_loader: - kv   4:                      general.sampling.temp f32              = 1.000000
+[exp7303-validation:measurement] llama_model_loader: - kv   5:                               general.name str              = Qwen3.8-27B
+[exp7303-validation:measurement] llama_model_loader: - kv   6:                           general.basename str              = Qwen3.8-27B
+[exp7303-validation:measurement] llama_model_loader: - kv   7:                        general.description str              = Renewal of the beloved Qwen model, de...
+[exp7303-validation:measurement] llama_model_loader: - kv   8:                       general.quantized_by str              = Unsloth
+[exp7303-validation:measurement] llama_model_loader: - kv   9:                         general.size_label str              = 27B
+[exp7303-validation:measurement] llama_model_loader: - kv  10:                            general.license str              = apache-2.0
+[exp7303-validation:measurement] llama_model_loader: - kv  11:                           general.repo_url str              = https://huggingface.co/unsloth
+[exp7303-validation:measurement] llama_model_loader: - kv  12:                   general.base_model.count u32              = 1
+[exp7303-validation:measurement] llama_model_loader: - kv  13:                  general.base_model.0.name str              = Qwen3.8 27B
+[exp7303-validation:measurement] llama_model_loader: - kv  14:          general.base_model.0.organization str              = Qwen
+[exp7303-validation:measurement] llama_model_loader: - kv  15:              general.base_model.0.repo_url str              = https://huggingface.co/Qwen/Qwen3.8-27B
+[exp7303-validation:measurement] llama_model_loader: - kv  16:                               general.tags arr[str,1]       = ["unsloth"]
+[exp7303-validation:measurement] llama_model_loader: - kv  17:                         qwen35.block_count u32              = 65
+[exp7303-validation:measurement] llama_model_loader: - kv  18:                      qwen35.context_length u32              = 262144
+[exp7303-validation:measurement] llama_model_loader: - kv  19:                    qwen35.embedding_length u32              = 5120
+[exp7303-validation:measurement] llama_model_loader: - kv  20:                 qwen35.feed_forward_length u32              = 17408
+[exp7303-validation:measurement] llama_model_loader: - kv  21:                qwen35.attention.head_count u32              = 24
+[exp7303-validation:measurement] llama_model_loader: - kv  22:             qwen35.attention.head_count_kv u32              = 4
+[exp7303-validation:measurement] llama_model_loader: - kv  23:             qwen35.rope.dimension_sections arr[i32,4]       = [11, 11, 10, 0]
+[exp7303-validation:measurement] llama_model_loader: - kv  24:                      qwen35.rope.freq_base f32              = 10000000.000000
+[exp7303-validation:measurement] llama_model_loader: - kv  25:    qwen35.attention.layer_norm_rms_epsilon f32              = 0.000001
+[exp7303-validation:measurement] llama_model_loader: - kv  26:                qwen35.attention.key_length u32              = 256
+[exp7303-validation:measurement] llama_model_loader: - kv  27:              qwen35.attention.value_length u32              = 256
+[exp7303-validation:measurement] llama_model_loader: - kv  28:                qwen35.nextn_predict_layers u32              = 1
+[exp7303-validation:measurement] llama_model_loader: - kv  29:                     qwen35.ssm.conv_kernel u32              = 4
+[exp7303-validation:measurement] llama_model_loader: - kv  30:                      qwen35.ssm.state_size u32              = 128
+[exp7303-validation:measurement] llama_model_loader: - kv  31:                     qwen35.ssm.group_count u32              = 16
+[exp7303-validation:measurement] llama_model_loader: - kv  32:                  qwen35.ssm.time_step_rank u32              = 48
+[exp7303-validation:measurement] llama_model_loader: - kv  33:                      qwen35.ssm.inner_size u32              = 6144
+[exp7303-validation:measurement] llama_model_loader: - kv  34:             qwen35.full_attention_interval u32              = 4
+[exp7303-validation:measurement] llama_model_loader: - kv  35:                qwen35.rope.dimension_count u32              = 64
+[exp7303-validation:measurement] llama_model_loader: - kv  36:                       tokenizer.ggml.model str              = gpt2
+[exp7303-validation:measurement] llama_model_loader: - kv  37:                         tokenizer.ggml.pre str              = qwen35
+[exp7303-validation:measurement] llama_model_loader: - kv  38:                      tokenizer.ggml.tokens arr[str,248320]  = ["!", "\"", "#", "$", "%", "&", "'", ...
+[exp7303-validation:measurement] llama_model_loader: - kv  39:                  tokenizer.ggml.token_type arr[i32,248320]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+[exp7303-validation:measurement] llama_model_loader: - kv  40:                      tokenizer.ggml.merges arr[str,247587]  = ["Ġ Ġ", "ĠĠ ĠĠ", "i n", "Ġ t",...
+[exp7303-validation:measurement] llama_model_loader: - kv  41:                tokenizer.ggml.eos_token_id u32              = 248046
+[exp7303-validation:measurement] llama_model_loader: - kv  42:            tokenizer.ggml.padding_token_id u32              = 248055
+[exp7303-validation:measurement] llama_model_loader: - kv  43:                tokenizer.ggml.bos_token_id u32              = 248044
+[exp7303-validation:measurement] llama_model_loader: - kv  44:               general.quantization_version u32              = 2
+[exp7303-validation:measurement] llama_model_loader: - kv  45:                          general.file_type u32              = 15
+[exp7303-validation:measurement] llama_model_loader: - kv  46:                      quantize.imatrix.file str              = Qwen3.8-27B-GGUF/imatrix_unsloth.gguf
+[exp7303-validation:measurement] llama_model_loader: - kv  47:                   quantize.imatrix.dataset str              = unsloth_calibration_Qwen3.8-27B.txt
+[exp7303-validation:measurement] llama_model_loader: - kv  48:             quantize.imatrix.entries_count u32              = 496
+[exp7303-validation:measurement] llama_model_loader: - kv  49:              quantize.imatrix.chunks_count u32              = 45
+[exp7303-validation:measurement] llama_model_loader: - kv  50:                    tokenizer.chat_template str              = {%- set image_count = namespace(value...
+[exp7303-validation:measurement] llama_model_loader: - type  f32:  456 tensors
+[exp7303-validation:measurement] llama_model_loader: - type q8_0:    1 tensors
+[exp7303-validation:measurement] llama_model_loader: - type q4_K:  294 tensors
+[exp7303-validation:measurement] llama_model_loader: - type q5_K:   48 tensors
+[exp7303-validation:measurement] llama_model_loader: - type q6_K:   67 tensors
+[exp7303-validation:measurement] print_info: file format = GGUF V3 (latest)
+[exp7303-validation:measurement] print_info: file type   = Q4_K - Medium
+[exp7303-validation:measurement] print_info: file size   = 15.92 GiB (5.01 BPW)
+[exp7303-validation:measurement] llama_prepare_model_devices: using device CUDA0 (NVIDIA GeForce RTX 3090) (0000:03:00.0) - 23911 MiB free
+[exp7303-validation:measurement] llama_prepare_model_devices: using device CUDA1 (NVIDIA GeForce RTX 3090) (0000:62:00.0) - 23911 MiB free
+[exp7303-validation:measurement] init_tokenizer: initializing tokenizer for type 2
+[exp7303-validation:measurement] load: 0 unused tokens
+[exp7303-validation:measurement] load: control token: 248075 '<tts_text_bos_single>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248073 '<tts_text_bos>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248072 '<tts_pad>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248071 '<|audio_end|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248061 '<|fim_middle|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248055 '<|vision_pad|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248052 '<|quad_end|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248049 '<|box_start|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248048 '<|object_ref_end|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248045 '<|im_start|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248057 '<|video_pad|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248070 '<|audio_start|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248056 '<|image_pad|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248054 '<|vision_end|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248060 '<|fim_prefix|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248050 '<|box_end|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248074 '<tts_text_eod>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248053 '<|vision_start|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248062 '<|fim_suffix|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248047 '<|object_ref_start|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248051 '<|quad_start|>' is not marked as EOG
+[exp7303-validation:measurement] load: control token: 248076 '<|audio_pad|>' is not marked as EOG
+[exp7303-validation:measurement] load: printing all EOG tokens:
+[exp7303-validation:measurement] load:   - 248044 ('<|endoftext|>')
+[exp7303-validation:measurement] load:   - 248046 ('<|im_end|>')
+[exp7303-validation:measurement] load:   - 248063 ('<|fim_pad|>')
+[exp7303-validation:measurement] load:   - 248064 ('<|repo_name|>')
+[exp7303-validation:measurement] load:   - 248065 ('<|file_sep|>')
+[exp7303-validation:measurement] load: special tokens cache size = 33
+[exp7303-validation:measurement] load: token to piece cache size = 1.7581 MB
+[exp7303-validation:measurement] print_info: arch                  = qwen35
+[exp7303-validation:measurement] print_info: vocab_only            = 1
+[exp7303-validation:measurement] print_info: no_alloc              = 0
+[exp7303-validation:measurement] print_info: vocab type            = BPE
+[exp7303-validation:measurement] print_info: n_vocab               = 248320
+[exp7303-validation:measurement] print_info: n_merges              = 247587
+[exp7303-validation:measurement] print_info: BOS token             = 248044 '<|endoftext|>'
+[exp7303-validation:measurement] print_info: EOS token             = 248046 '<|im_end|>'
+[exp7303-validation:measurement] print_info: EOT token             = 248046 '<|im_end|>'
+[exp7303-validation:measurement] print_info: PAD token             = 248055 '<|vision_pad|>'
+[exp7303-validation:measurement] print_info: LF token              = 198 'Ċ'
+[exp7303-validation:measurement] print_info: FIM PRE token         = 248060 '<|fim_prefix|>'
+[exp7303-validation:measurement] print_info: FIM SUF token         = 248062 '<|fim_suffix|>'
+[exp7303-validation:measurement] print_info: FIM MID token         = 248061 '<|fim_middle|>'
+[exp7303-validation:measurement] print_info: FIM PAD token         = 248063 '<|fim_pad|>'
+[exp7303-validation:measurement] print_info: FIM REP token         = 248064 '<|repo_name|>'
+[exp7303-validation:measurement] print_info: FIM SEP token         = 248065 '<|file_sep|>'
+[exp7303-validation:measurement] print_info: EOG token             = 248044 '<|endoftext|>'
+[exp7303-validation:measurement] print_info: EOG token             = 248046 '<|im_end|>'
+[exp7303-validation:measurement] print_info: EOG token             = 248063 '<|fim_pad|>'
+[exp7303-validation:measurement] print_info: EOG token             = 248064 '<|repo_name|>'
+[exp7303-validation:measurement] print_info: EOG token             = 248065 '<|file_sep|>'
+[exp7303-validation:measurement] print_info: max token length      = 256
+[exp7303-validation:measurement] llama_model_load: vocab only - skipping tensors
+[exp7303-validation:measurement] llama_context: constructing llama_context
+[exp7303-validation:measurement] llama_context: n_seq_max     = 1
+[exp7303-validation:measurement] llama_context: n_ctx         = 512
+[exp7303-validation:measurement] llama_context: n_ctx_seq     = 512
+[exp7303-validation:measurement] llama_context: n_batch       = 512
+[exp7303-validation:measurement] llama_context: n_ubatch      = 512
+[exp7303-validation:measurement] llama_context: causal_attn   = 1
+[exp7303-validation:measurement] llama_context: flash_attn    = disabled
+[exp7303-validation:measurement] llama_context: kv_unified    = false
+[exp7303-validation:measurement] llama_context: freq_base     = 0.0
+[exp7303-validation:measurement] llama_context: freq_scale    = 1
+[exp7303-validation:measurement] llama_context: n_rs_seq      = 0
+[exp7303-validation:measurement] llama_context: n_outputs_max = 512
+[exp7303-validation:measurement] llama_context: n_ctx_seq (512) > n_ctx_train (0) -- possible training context overflow
+[exp7303-validation:measurement] CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 |
+[exp7303-validation:measurement] Model metadata: {'quantize.imatrix.chunks_count': '45', 'quantize.imatrix.file': 'Qwen3.8-27B-GGUF/imatrix_unsloth.gguf', 'general.file_type': '15', 'general.quantization_version': '2', 'tokenizer.ggml.padding_token_id': '248055', 'tokenizer.ggml.model': 'gpt2', 'tokenizer.chat_template': '{%- set image_count = namespace(value=0) %}\n{%- set video_count = namespace(value=0) %}\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\n    {%- if content is string %}\n        {{- content }}\n    {%- elif content is iterable and content is not mapping %}\n        {%- for item in content %}\n            {%- if \'image\' in item or \'image_url\' in item or item.type == \'image\' %}\n                {%- if is_system_content %}\n                    {{- raise_exception(\'System message cannot contain images.\') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set image_count.value = image_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- \'Picture \' ~ image_count.value ~ \': \' }}\n                {%- endif %}\n                {{- \'<|vision_start|><|image_pad|><|vision_end|>\' }}\n            {%- elif \'video\' in item or item.type == \'video\' %}\n                {%- if is_system_content %}\n                    {{- raise_exception(\'System message cannot contain videos.\') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set video_count.value = video_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- \'Video \' ~ video_count.value ~ \': \' }}\n                {%- endif %}\n                {{- \'<|vision_start|><|video_pad|><|vision_end|>\' }}\n            {%- elif \'text\' in item %}\n                {{- item.text }}\n            {%- else %}\n                {{- raise_exception(\'Unexpected item type in content.\') }}\n            {%- endif %}\n        {%- endfor %}\n    {%- elif content is none or content is undefined %}\n        {{- \'\' }}\n    {%- else %}\n        {{- raise_exception(\'Unexpected content type.\') }}\n    {%- endif %}\n{%- endmacro %}\n{%- if not messages %}\n    {{- raise_exception(\'No messages provided.\') }}\n{%- endif %}\n{%- set sysns = namespace(count=0, text=\'\') %}\n{%- for message in messages %}\n    {%- if sysns.count == loop.index0 and (message.role == \'system\' or message.role == \'developer\') %}\n        {%- set sys_content = render_content(message.content, false, true)|trim %}\n        {%- if sys_content %}\n            {%- set sysns.text = sysns.text + (\'\\n\' if sysns.text else \'\') + sys_content %}\n        {%- endif %}\n        {%- set sysns.count = sysns.count + 1 %}\n    {%- endif %}\n{%- endfor %}\n{%- set num_sys = sysns.count %}\n{%- set merged_system = sysns.text %}\n{%- set reasoning_instructions = \'\' %}\n{%- if enable_thinking is undefined or enable_thinking is true %}\n    {%- set resolved_reasoning_effort = reasoning_effort|default(\'xhigh\') %}\n    {%- if resolved_reasoning_effort == \'high\' %}\n        {%- set resolved_reasoning_effort = \'xhigh\' %}\n    {%- endif %}\n    {%- if resolved_reasoning_effort not in (\'xhigh\', \'medium\', \'low\') %}\n        {{- raise_exception(\'Unexpected reasoning effort \' ~ reasoning_effort ~ \'. Supported types are xhigh (default), medium, and low.\') }}\n    {%- endif %}\n    {%- if resolved_reasoning_effort == \'xhigh\' %}\n        {%- set reasoning_instructions = \'Reasoning effort is set to xhigh. Please think carefully through the task, validate key assumptions, consider plausible alternatives, and prioritize correctness, consistency, and clarity in the final answer.\' %}\n    {%- elif resolved_reasoning_effort == \'low\' %}\n        {%- set reasoning_instructions = \'Reasoning effort is set to low. Keep your thinking brief and focused, moving directly to the conclusion without unnecessary elaboration.\' %}\n    {%- endif %}\n{%- endif %}\n{%- if tools and tools is iterable and tools is not mapping %}\n    {{- \'<|im_start|>system\\n\' }}\n    {%- if reasoning_instructions %}\n        {{- reasoning_instructions + \'\\n\\n\' }}\n    {%- endif %}\n    {{- "# Tools\\n\\nYou have access to the following functions:\\n\\n<tools>" }}\n    {%- for tool in tools %}\n        {{- "\\n" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- "\\n</tools>" }}\n    {{- \'\\n\\nIf you choose to call a function ONLY reply in the following format with NO suffix:\\n\\n<tool_call>\\n<function=example_function_name>\\n<parameter=example_parameter_1>\\nvalue_1\\n</parameter>\\n<parameter=example_parameter_2>\\nThis is the value for the second parameter\\nthat can span\\nmultiple lines\\n</parameter>\\n</function>\\n</tool_call>\\n\\n<IMPORTANT>\\nReminder:\\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\\n- Required parameters MUST be specified\\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\\n</IMPORTANT>\' }}\n    {%- if merged_system %}\n        {{- \'\\n\\n\' + merged_system }}\n    {%- endif %}\n    {{- \'<|im_end|>\\n\' }}\n{%- else %}\n    {%- if merged_system %}\n        {{- \'<|im_start|>system\\n\' + (reasoning_instructions + \'\\n\\n\' if reasoning_instructions else \'\')  + merged_system + \'<|im_end|>\\n\' }}\n    {%- elif reasoning_instructions %}\n        {{- \'<|im_start|>system\\n\' + reasoning_instructions + \'<|im_end|>\\n\' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == "user" %}\n        {%- set content = render_content(message.content, false)|trim %}\n        {%- if not(content.startswith(\'<tool_response>\') and content.endswith(\'</tool_response>\')) %}\n            {%- set ns.multi_step_tool = false %}\n            {%- set ns.last_query_index = index %}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if loop.index0 >= num_sys %}\n    {%- set content = render_content(message.content, true)|trim %}\n    {%- if message.role == "system" or message.role == "developer" %}\n        {{- raise_exception(\'System message must be at the beginning.\') }}\n    {%- elif message.role == "user" %}\n        {{- \'<|im_start|>\' + message.role + \'\\n\' + content + \'<|im_end|>\' + \'\\n\' }}\n    {%- elif message.role == "assistant" %}\n        {%- set reasoning_content = \'\' %}\n        {%- if message.reasoning_content is string %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- endif %}\n        {%- set reasoning_content = reasoning_content|trim %}\n        {%- if preserve_thinking is undefined or preserve_thinking is true or loop.index0 > ns.last_query_index %}\n            {{- \'<|im_start|>\' + message.role + \'\\n<think>\\n\' + reasoning_content + \'\\n</think>\\n\\n\' + content }}\n        {%- else %}\n            {{- \'<|im_start|>\' + message.role + \'\\n\' + content }}\n        {%- endif %}\n        {%- if message.tool_calls and message.tool_calls is iterable and message.tool_calls is not mapping %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if tool_call.function is defined %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {%- if tool_call.name is not defined or tool_call.name is none %}\n                    {{- raise_exception(\'Tool call is missing a function name.\') }}\n                {%- endif %}\n                {%- if loop.first %}\n                    {%- if content|trim %}\n                        {{- \'\\n\\n<tool_call>\\n<function=\' + tool_call.name + \'>\\n\' }}\n                    {%- else %}\n                        {{- \'<tool_call>\\n<function=\' + tool_call.name + \'>\\n\' }}\n                    {%- endif %}\n                {%- else %}\n                    {{- \'\\n<tool_call>\\n<function=\' + tool_call.name + \'>\\n\' }}\n                {%- endif %}\n                {%- if tool_call.arguments is mapping %}\n                    {%- for args_name, args_value in tool_call.arguments|items %}\n                        {{- \'<parameter=\' + args_name + \'>\\n\' }}\n                        {%- set args_value = args_value | string if args_value is string else args_value | tojson | safe %}\n                        {{- args_value }}\n                        {{- \'\\n</parameter>\\n\' }}\n                    {%- endfor %}\n                {%- elif tool_call.arguments is string %}\n                    {%- if tool_call.arguments|trim %}\n                        {{- raise_exception(\'Tool call arguments for function "\' + (tool_call.name | string) + \'" were passed as a JSON string. Parse them into an object before calling apply_chat_template.\') }}\n                    {%- endif %}\n                {%- elif tool_call.arguments is defined and tool_call.arguments is not none %}\n                    {{- raise_exception(\'Tool call arguments for function "\' + (tool_call.name | string) + \'" must be an object/mapping or a JSON string.\') }}\n                {%- endif %}\n                {{- \'</function>\\n</tool_call>\' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- \'<|im_end|>\\n\' }}\n    {%- elif message.role == "tool" %}\n        {%- if loop.previtem and loop.previtem.role != "tool" %}\n            {{- \'<|im_start|>user\' }}\n        {%- endif %}\n        {{- \'\\n<tool_response>\\n\' }}\n        {{- content }}\n        {{- \'\\n</tool_response>\' }}\n        {%- if not loop.last and loop.nextitem.role != "tool" %}\n            {{- \'<|im_end|>\\n\' }}\n        {%- elif loop.last %}\n            {{- \'<|im_end|>\\n\' }}\n        {%- endif %}\n    {%- else %}\n        {{- raise_exception(\'Unexpected message role.\') }}\n    {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- \'<|im_start|>assistant\\n\' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- \'<think>\\n\\n</think>\\n\\n\' }}\n    {%- else %}\n        {{- \'<think>\\n\' }}\n    {%- endif %}\n{%- endif %}\n{#- Unsloth fixes - developer role, merged system messages, tool calling #}', 'qwen35.rope.dimension_count': '64', 'qwen35.full_attention_interval': '4', 'qwen35.ssm.inner_size': '6144', 'tokenizer.ggml.eos_token_id': '248046', 'qwen35.ssm.time_step_rank': '48', 'qwen35.ssm.group_count': '16', 'general.repo_url': 'https://huggingface.co/unsloth', 'general.type': 'model', 'general.quantized_by': 'Unsloth', 'tokenizer.ggml.pre': 'qwen35', 'qwen35.ssm.state_size': '128', 'general.description': 'Renewal of the beloved Qwen model, delivering unmatched intelligence density.', 'general.base_model.0.repo_url': 'https://huggingface.co/Qwen/Qwen3.8-27B', 'tokenizer.ggml.bos_token_id': '248044', 'general.name': 'Qwen3.8-27B', 'general.sampling.temp': '1.000000', 'general.sampling.top_p': '0.950000', 'general.base_model.count': '1', 'general.base_model.0.organization': 'Qwen', 'general.basename': 'Qwen3.8-27B', 'general.sampling.top_k': '20', 'qwen35.attention.value_length': '256', 'general.architecture': 'qwen35', 'qwen35.attention.head_count': '24', 'quantize.imatrix.dataset': 'unsloth_calibration_Qwen3.8-27B.txt', 'general.base_model.0.name': 'Qwen3.8 27B', 'qwen35.block_count': '65', 'qwen35.context_length': '262144', 'qwen35.embedding_length': '5120', 'qwen35.rope.freq_base': '10000000.000000', 'general.license': 'apache-2.0', 'qwen35.feed_forward_length': '17408', 'qwen35.attention.head_count_kv': '4', 'quantize.imatrix.entries_count': '496', 'qwen35.attention.layer_norm_rms_epsilon': '0.000001', 'qwen35.attention.key_length': '256', 'qwen35.nextn_predict_layers': '1', 'general.size_label': '27B', 'qwen35.ssm.conv_kernel': '4'}
+[exp7303-validation:measurement] Available chat formats from metadata: chat_template.default
+[exp7303-validation:measurement] Using gguf chat template: {%- set image_count = namespace(value=0) %}
+[exp7303-validation:measurement] {%- set video_count = namespace(value=0) %}
+[exp7303-validation:measurement] {%- macro render_content(content, do_vision_count, is_system_content=false) %}
+[exp7303-validation:measurement]     {%- if content is string %}
+[exp7303-validation:measurement]         {{- content }}
+[exp7303-validation:measurement]     {%- elif content is iterable and content is not mapping %}
+[exp7303-validation:measurement]         {%- for item in content %}
+[exp7303-validation:measurement]             {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}
+[exp7303-validation:measurement]                 {%- if is_system_content %}
+[exp7303-validation:measurement]                     {{- raise_exception('System message cannot contain images.') }}
+[exp7303-validation:measurement]                 {%- endif %}
+[exp7303-validation:measurement]                 {%- if do_vision_count %}
+[exp7303-validation:measurement]                     {%- set image_count.value = image_count.value + 1 %}
+[exp7303-validation:measurement]                 {%- endif %}
+[exp7303-validation:measurement]                 {%- if add_vision_id %}
+[exp7303-validation:measurement]                     {{- 'Picture ' ~ image_count.value ~ ': ' }}
+[exp7303-validation:measurement]                 {%- endif %}
+[exp7303-validation:measurement]                 {{- '<|vision_start|><|image_pad|><|vision_end|>' }}
+[exp7303-validation:measurement]             {%- elif 'video' in item or item.type == 'video' %}
+[exp7303-validation:measurement]                 {%- if is_system_content %}
+[exp7303-validation:measurement]                     {{- raise_exception('System message cannot contain videos.') }}
+[exp7303-validation:measurement]                 {%- endif %}
+[exp7303-validation:measurement]                 {%- if do_vision_count %}
+[exp7303-validation:measurement]                     {%- set video_count.value = video_count.value + 1 %}
+[exp7303-validation:measurement]                 {%- endif %}
+[exp7303-validation:measurement]                 {%- if add_vision_id %}
+[exp7303-validation:measurement]                     {{- 'Video ' ~ video_count.value ~ ': ' }}
+[exp7303-validation:measurement]                 {%- endif %}
+[exp7303-validation:measurement]                 {{- '<|vision_start|><|video_pad|><|vision_end|>' }}
+[exp7303-validation:measurement]             {%- elif 'text' in item %}
+[exp7303-validation:measurement]                 {{- item.text }}
+[exp7303-validation:measurement]             {%- else %}
+[exp7303-validation:measurement]                 {{- raise_exception('Unexpected item type in content.') }}
+[exp7303-validation:measurement]             {%- endif %}
+[exp7303-validation:measurement]         {%- endfor %}
+[exp7303-validation:measurement]     {%- elif content is none or content is undefined %}
+[exp7303-validation:measurement]         {{- '' }}
+[exp7303-validation:measurement]     {%- else %}
+[exp7303-validation:measurement]         {{- raise_exception('Unexpected content type.') }}
+[exp7303-validation:measurement]     {%- endif %}
+[exp7303-validation:measurement] {%- endmacro %}
+[exp7303-validation:measurement] {%- if not messages %}
+[exp7303-validation:measurement]     {{- raise_exception('No messages provided.') }}
+[exp7303-validation:measurement] {%- endif %}
+[exp7303-validation:measurement] {%- set sysns = namespace(count=0, text='') %}
+[exp7303-validation:measurement] {%- for message in messages %}
+[exp7303-validation:measurement]     {%- if sysns.count == loop.index0 and (message.role == 'system' or message.role == 'developer') %}
+[exp7303-validation:measurement]         {%- set sys_content = render_content(message.content, false, true)|trim %}
+[exp7303-validation:measurement]         {%- if sys_content %}
+[exp7303-validation:measurement]             {%- set sysns.text = sysns.text + ('\n' if sysns.text else '') + sys_content %}
+[exp7303-validation:measurement]         {%- endif %}
+[exp7303-validation:measurement]         {%- set sysns.count = sysns.count + 1 %}
+[exp7303-validation:measurement]     {%- endif %}
+[exp7303-validation:measurement] {%- endfor %}
+[exp7303-validation:measurement] {%- set num_sys = sysns.count %}
+[exp7303-validation:measurement] {%- set merged_system = sysns.text %}
+[exp7303-validation:measurement] {%- set reasoning_instructions = '' %}
+[exp7303-validation:measurement] {%- if enable_thinking is undefined or enable_thinking is true %}
+[exp7303-validation:measurement]     {%- set resolved_reasoning_effort = reasoning_effort|default('xhigh') %}
+[exp7303-validation:measurement]     {%- if resolved_reasoning_effort == 'high' %}
+[exp7303-validation:measurement]         {%- set resolved_reasoning_effort = 'xhigh' %}
+[exp7303-validation:measurement]     {%- endif %}
+[exp7303-validation:measurement]     {%- if resolved_reasoning_effort not in ('xhigh', 'medium', 'low') %}
+[exp7303-validation:measurement]         {{- raise_exception('Unexpected reasoning effort ' ~ reasoning_effort ~ '. Supported types are xhigh (default), medium, and low.') }}
+[exp7303-validation:measurement]     {%- endif %}
+[exp7303-validation:measurement]     {%- if resolved_reasoning_effort == 'xhigh' %}
+[exp7303-validation:measurement]         {%- set reasoning_instructions = 'Reasoning effort is set to xhigh. Please think carefully through the task, validate key assumptions, consider plausible alternatives, and prioritize correctness, consistency, and clarity in the final answer.' %}
+[exp7303-validation:measurement]     {%- elif resolved_reasoning_effort == 'low' %}
+[exp7303-validation:measurement]         {%- set reasoning_instructions = 'Reasoning effort is set to low. Keep your thinking brief and focused, moving directly to the conclusion without unnecessary elaboration.' %}
+[exp7303-validation:measurement]     {%- endif %}
+[exp7303-validation:measurement] {%- endif %}
+[exp7303-validation:measurement] {%- if tools and tools is iterable and tools is not mapping %}
+[exp7303-validation:measurement]     {{- '<|im_start|>system\n' }}
+[exp7303-validation:measurement]     {%- if reasoning_instructions %}
+[exp7303-validation:measurement]         {{- reasoning_instructions + '\n\n' }}
+[exp7303-validation:measurement]     {%- endif %}
+[exp7303-validation:measurement]     {{- "# Tools\n\nYou have access to the following functions:\n\n<tools>" }}
+[exp7303-validation:measurement]     {%- for tool in tools %}
+[exp7303-validation:measurement]         {{- "\n" }}
+[exp7303-validation:measurement]         {{- tool | tojson }}
+[exp7303-validation:measurement]     {%- endfor %}
+[exp7303-validation:measurement]     {{- "\n</tools>" }}
+[exp7303-validation:measurement]     {{- '\n\nIf you choose to call a function ONLY reply in the following format with NO suffix:\n\n<tool_call>\n<function=example_function_name>\n<parameter=example_parameter_1>\nvalue_1\n</parameter>\n<parameter=example_parameter_2>\nThis is the value for the second parameter\nthat can span\nmultiple lines\n</parameter>\n</function>\n</tool_call>\n\n<IMPORTANT>\nReminder:\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\n- Required parameters MUST be specified\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\n</IMPORTANT>' }}
+[exp7303-validation:measurement]     {%- if merged_system %}
+[exp7303-validation:measurement]         {{- '\n\n' + merged_system }}
+[exp7303-validation:measurement]     {%- endif %}
+[exp7303-validation:measurement]     {{- '<|im_end|>\n' }}
+[exp7303-validation:measurement] {%- else %}
+[exp7303-validation:measurement]     {%- if merged_system %}
+[exp7303-validation:measurement]         {{- '<|im_start|>system\n' + (reasoning_instructions + '\n\n' if reasoning_instructions else '')  + merged_system + '<|im_end|>\n' }}
+[exp7303-validation:measurement]     {%- elif reasoning_instructions %}
+[exp7303-validation:measurement]         {{- '<|im_start|>system\n' + reasoning_instructions + '<|im_end|>\n' }}
+[exp7303-validation:measurement]     {%- endif %}
+[exp7303-validation:measurement] {%- endif %}
+[exp7303-validation:measurement] {%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}
+[exp7303-validation:measurement] {%- for message in messages[::-1] %}
+[exp7303-validation:measurement]     {%- set index = (messages|length - 1) - loop.index0 %}
+[exp7303-validation:measurement]     {%- if ns.multi_step_tool and message.role == "user" %}
+[exp7303-validation:measurement]         {%- set content = render_content(message.content, false)|trim %}
+[exp7303-validation:measurement]         {%- if not(content.startswith('<tool_response>') and content.endswith('</tool_response>')) %}
+[exp7303-validation:measurement]             {%- set ns.multi_step_tool = false %}
+[exp7303-validation:measurement]             {%- set ns.last_query_index = index %}
+[exp7303-validation:measurement]         {%- endif %}
+[exp7303-validation:measurement]     {%- endif %}
+[exp7303-validation:measurement] {%- endfor %}
+[exp7303-validation:measurement] {%- for message in messages %}
+[exp7303-validation:measurement]     {%- if loop.index0 >= num_sys %}
+[exp7303-validation:measurement]     {%- set content = render_content(message.content, true)|trim %}
+[exp7303-validation:measurement]     {%- if message.role == "system" or message.role == "developer" %}
+[exp7303-validation:measurement]         {{- raise_exception('System message must be at the beginning.') }}
+[exp7303-validation:measurement]     {%- elif message.role == "user" %}
+[exp7303-validation:measurement]         {{- '<|im_start|>' + message.role + '\n' + content + '<|im_end|>' + '\n' }}
+[exp7303-validation:measurement]     {%- elif message.role == "assistant" %}
+[exp7303-validation:measurement]         {%- set reasoning_content = '' %}
+[exp7303-validation:measurement]         {%- if message.reasoning_content is string %}
+[exp7303-validation:measurement]             {%- set reasoning_content = message.reasoning_content %}
+[exp7303-validation:measurement]         {%- endif %}
+[exp7303-validation:measurement]         {%- set reasoning_content = reasoning_content|trim %}
+[exp7303-validation:measurement]         {%- if preserve_thinking is undefined or preserve_thinking is true or loop.index0 > ns.last_query_index %}
+[exp7303-validation:measurement]             {{- '<|im_start|>' + message.role + '\n<think>\n' + reasoning_content + '\n</think>\n\n' + content }}
+[exp7303-validation:measurement]         {%- else %}
+[exp7303-validation:measurement]             {{- '<|im_start|>' + message.role + '\n' + content }}
+[exp7303-validation:measurement]         {%- endif %}
+[exp7303-validation:measurement]         {%- if message.tool_calls and message.tool_calls is iterable and message.tool_calls is not mapping %}
+[exp7303-validation:measurement]             {%- for tool_call in message.tool_calls %}
+[exp7303-validation:measurement]                 {%- if tool_call.function is defined %}
+[exp7303-validation:measurement]                     {%- set tool_call = tool_call.function %}
+[exp7303-validation:measurement]                 {%- endif %}
+[exp7303-validation:measurement]                 {%- if tool_call.name is not defined or tool_call.name is none %}
+[exp7303-validation:measurement]                     {{- raise_exception('Tool call is missing a function name.') }}
+[exp7303-validation:measurement]                 {%- endif %}
+[exp7303-validation:measurement]                 {%- if loop.first %}
+[exp7303-validation:measurement]                     {%- if content|trim %}
+[exp7303-validation:measurement]                         {{- '\n\n<tool_call>\n<function=' + tool_call.name + '>\n' }}
+[exp7303-validation:measurement]                     {%- else %}
+[exp7303-validation:measurement]                         {{- '<tool_call>\n<function=' + tool_call.name + '>\n' }}
+[exp7303-validation:measurement]                     {%- endif %}
+[exp7303-validation:measurement]                 {%- else %}
+[exp7303-validation:measurement]                     {{- '\n<tool_call>\n<function=' + tool_call.name + '>\n' }}
+[exp7303-validation:measurement]                 {%- endif %}
+[exp7303-validation:measurement]                 {%- if tool_call.arguments is mapping %}
+[exp7303-validation:measurement]                     {%- for args_name, args_value in tool_call.arguments|items %}
+[exp7303-validation:measurement]                         {{- '<parameter=' + args_name + '>\n' }}
+[exp7303-validation:measurement]                         {%- set args_value = args_value | string if args_value is string else args_value | tojson | safe %}
+[exp7303-validation:measurement]                         {{- args_value }}
+[exp7303-validation:measurement]                         {{- '\n</parameter>\n' }}
+[exp7303-validation:measurement]                     {%- endfor %}
+[exp7303-validation:measurement]                 {%- elif tool_call.arguments is string %}
+[exp7303-validation:measurement]                     {%- if tool_call.arguments|trim %}
+[exp7303-validation:measurement]                         {{- raise_exception('Tool call arguments for function "' + (tool_call.name | string) + '" were passed as a JSON string. Parse them into an object before calling apply_chat_template.') }}
+[exp7303-validation:measurement]                     {%- endif %}
+[exp7303-validation:measurement]                 {%- elif tool_call.arguments is defined and tool_call.arguments is not none %}
+[exp7303-validation:measurement]                     {{- raise_exception('Tool call arguments for function "' + (tool_call.name | string) + '" must be an object/mapping or a JSON string.') }}
+[exp7303-validation:measurement]                 {%- endif %}
+[exp7303-validation:measurement]                 {{- '</function>\n</tool_call>' }}
+[exp7303-validation:measurement]             {%- endfor %}
+[exp7303-validation:measurement]         {%- endif %}
+[exp7303-validation:measurement]         {{- '<|im_end|>\n' }}
+[exp7303-validation:measurement]     {%- elif message.role == "tool" %}
+[exp7303-validation:measurement]         {%- if loop.previtem and loop.previtem.role != "tool" %}
+[exp7303-validation:measurement]             {{- '<|im_start|>user' }}
+[exp7303-validation:measurement]         {%- endif %}
+[exp7303-validation:measurement]         {{- '\n<tool_response>\n' }}
+[exp7303-validation:measurement]         {{- content }}
+[exp7303-validation:measurement]         {{- '\n</tool_response>' }}
+[exp7303-validation:measurement]         {%- if not loop.last and loop.nextitem.role != "tool" %}
+[exp7303-validation:measurement]             {{- '<|im_end|>\n' }}
+[exp7303-validation:measurement]         {%- elif loop.last %}
+[exp7303-validation:measurement]             {{- '<|im_end|>\n' }}
+[exp7303-validation:measurement]         {%- endif %}
+[exp7303-validation:measurement]     {%- else %}
+[exp7303-validation:measurement]         {{- raise_exception('Unexpected message role.') }}
+[exp7303-validation:measurement]     {%- endif %}
+[exp7303-validation:measurement]     {%- endif %}
+[exp7303-validation:measurement] {%- endfor %}
+[exp7303-validation:measurement] {%- if add_generation_prompt %}
+[exp7303-validation:measurement]     {{- '<|im_start|>assistant\n' }}
+[exp7303-validation:measurement]     {%- if enable_thinking is defined and enable_thinking is false %}
+[exp7303-validation:measurement]         {{- '<think>\n\n</think>\n\n' }}
+[exp7303-validation:measurement]     {%- else %}
+[exp7303-validation:measurement]         {{- '<think>\n' }}
+[exp7303-validation:measurement]     {%- endif %}
+[exp7303-validation:measurement] {%- endif %}
+[exp7303-validation:measurement] {#- Unsloth fixes - developer role, merged system messages, tool calling #}
+[exp7303-validation:measurement] Using chat eos_token: <|im_end|>
+[exp7303-validation:measurement] Using chat bos_token: <|endoftext|>
+[exp7303-validation:measurement] [exp8179] phase=after_tokenizer_vocabulary_read completed=1 pending=0
+[exp7303-validation:measurement] [exp8179] phase=before_transport_preflight completed=0 pending=320
+[exp7303-validation] subprocess_outstanding measurement elapsed_s=20.001
+[exp7303-validation] after_subprocess measurement elapsed_s=20.557 exit=-11 unit=1/1
+[exp8179] phase=after_measurement_subprocess completed=0 pending=0
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8179_v707_sentence_transport_methods.py", line 18, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/sentence_transport_methods_8179.py", line 476, in main
+    return execution.main(argv)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/methods_stream_execution_8111.py", line 218, in main
+    work = json.loads((raw / "measurement.json").read_text())
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8179_v707_sentence_transport_methods/invocations/1791247731569247670/measurement.json'

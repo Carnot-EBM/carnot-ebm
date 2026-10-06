@@ -93787,3 +93787,26 @@ hash mismatch stays detected even when a new snapshot captures changed bytes.
 The direct CLI works outside the checkout without PYTHONPATH. All added statements
 have test coverage; owned failures disqualify and zero both readiness scores.
 The conductor owns ops and traceability reconciliation per the final instruction.
+
+## REQ-REPORT-8179: Freeze bounded sentence evidence transport
+
+Exp8179 SHALL preserve all original128 fit,64 tune and128 reserved evaluation
+sources, complete source and answer bytes, historical exposure and failed receipts.
+Freeze V707 protocol, deterministic24 label-blind fit canary IDs across four
+sentence-length bins and paired arm order before capture. Use immutable historical
+methods, qualified upstream reductions and checked primary publication. Load no
+neural model; vocabulary-only tokenizer initialization earns zero model calls.
+The future Exp8181 canary requires22/24 complete grammar sources, valid indices
+on every accepted record and no structural-loss increase. Protocol readiness
+certifies preflight and custody only. No semantic or generalization credit.
+Freeze validation argv before measurement; require normal owned checks,100 percent
+new statement coverage, Ruff, strict mypy and explicit-path spec coverage. Preserve
+completed logs. Run full Python health once separately; conductor owns ops/BMAD
+reconciliation. No push, external publication or conductor source changes.
+
+### SCENARIO-REPORT-8179-CUSTODY
+
+Private CLI success, missing input, source tamper and cold replay run outside the
+checkout without PYTHONPATH. Changed sources, rows, configuration, code or logs
+fail replay. External missing evidence terminates complete_blocked_<check> with
+actual operands; owned validation failure disqualifies and zeros readiness.

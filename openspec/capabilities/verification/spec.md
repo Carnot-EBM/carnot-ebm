@@ -49447,3 +49447,27 @@ Recompute scheduling readiness from full authority checks and owned receipts.
 Recompute historical readiness independently from historical hash failures.
 Cold replay rejects altered rows, frozen inputs, logs, scope ledger or headlines,
 while a mutable source change after capture leaves frozen evidence reproducible.
+
+## REQ-VERIFY-8179: Lossless indexed records and fixed source support
+
+Partition source and answer losslessly with UTF-8 byte offsets and stable integer
+indices. Exact request grammar emits one ordered record per at most8 complete
+answer sentences: index|E/C/B|probability with two decimal digits|source-index list
+of length0–2. Retain full source and answer in every prompt. At most2 requests,
+6000 actual input tokens and256 output tokens; >16 sentences, incomplete answers
+or oversized input escalate the entire source. Enumerate maximal-length output
+encodings with the actual embedded tokenizer and retain a conservative grammar
+bound including EOS; never truncate or generate replacement answer text.
+Preserve V706's16 features and typed-cost matrix. Freeze H1 local-evidence radial16
+against the strongest V705 tune-cost control,96 paired reserved sources,12/class,
+lower97.5-percent cost gain>.02, five improvements, zero extra false accepts,
+Brier increase<=.01,10000 source draws and>=9500 valid draws. Missing records
+escalate all-slot analysis. Count preflight eligibility by role without opening
+reserved labels. Unreachable support blocks; capture never relaxes thresholds.
+
+### SCENARIO-VERIFY-8179-TRANSPORT
+
+Private E2E-010/015/019 cover Unicode, repeated sentences, empty references,
+invalid indices/probabilities/order, truncation, partial groups, incomplete tails,
+>16 sentences, oversized inputs and tampered source bytes. Predictions and valid
+addresses never become semantic gold. Both benefit scores always remain zero.
