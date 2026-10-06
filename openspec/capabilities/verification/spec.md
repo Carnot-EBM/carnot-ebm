@@ -49990,3 +49990,46 @@ Ruff, formatting, strict mypy and spec traceability pass. The frozen full-suite
 health diagnostic timed out during collection at 180 seconds; global spec
 coverage retains 1,142 existing gaps. Logs and coverage are retained under
 `/tmp/carnot-8205-fix-validation/`; no repository-wide pass is claimed.
+
+## REQ-VERIFY-8206: Invocation-local hard-exit coverage qualification
+
+Exp8206 SHALL start installed Coverage.py with a private frozen `patch = _exit`
+and parallel data configuration before importing the unchanged legacy trainer.
+It SHALL invoke the legacy CLI directly, without the Exp8193 profiler callback,
+mocked exits, excluded owned statements, or changed numerical protocol bytes.
+Require measured legacy save/flush/exit statements and 100 percent newly owned
+statements from only this invocation's child and unit shards. Preserve actual
+exit73, durable pending predictions before release, and exact resumed parameters,
+clocks, issued rows and pending state at distinct crash slots90 and170 against
+an uninterrupted child. Retain all twenty learnable and no-signal seeds,
+installation by208, at least32 changed later decisions, and the existing bounds,
+objective agreement, convergence, admission and overflow gates.
+
+### SCENARIO-VERIFY-8206-CHILD
+
+Real CLI children save coverage at actual hard exits and resume identically.
+Missing shards, wrong exits, state differences and any failed owned check
+prevent calibrated readiness. Keep each stream hash and measurement clock.
+
+### SCENARIO-VERIFY-8206-CUSTODY
+
+Authenticate original Exp8171/8172 stream bytes, delayed labels, role manifests
+and the separate retention cohort. Stream readiness SHALL be independent of
+fixture success. Freeze H2 unchanged before fixture outcomes. Fixtures remain
+circular evidence; exposed reuse adds zero independent generalization credit.
+Missing required operands block before dependent measurement. Preserve both
+Exp8180 and Exp8193 disqualifications and their exact failed receipts.
+
+### SCENARIO-VERIFY-8206-REPLAY
+
+A fresh process SHALL replay primitive trajectories and reject changed counts,
+coverage, child states, code/config/source hashes or receipts even after an outer
+checksum is recomputed. No LLM is loaded and all current model counters are zero.
+
+REQ-VERIFY-8206 implementation: `carnot.verify.hard_exit_learning_qualification_8206`
+reuses the unchanged calibrated trainer and the qualified process-group supervisor.
+`tests/python/test_hard_exit_learning_qualification_8206.py` verifies real exits,
+exact restart states, independent stream custody, blocks and tamper rejection.
+The frozen owned validation measured152/152 new verifier statements. All20
+learnable seeds install by140 and change at least57 later decisions. This is
+fixture readiness; H2 remains registered and unmeasured on natural outcomes.

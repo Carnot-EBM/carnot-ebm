@@ -94351,3 +94351,33 @@ The reader controls distinguish failed authenticated reports from invalid
 bindings. Regression coverage preserves a historical `passed=false` report
 and still qualifies the current reader. The design JSON and canonical digest
 include the active roadmap's escaped literal braces without changing that YAML.
+
+## REQ-REPORT-8206: Publish measured hard-exit qualification
+
+Freeze owned unit/CLI, scoped Ruff/format/strict mypy, explicit-file spec coverage,
+affected consumers and private E2E-015/019 argv before measurement. Run the full
+Python suite once as separate repository-health evidence; preserve unrelated
+failures without weakening owned checks or claiming global green. Use qualified
+bounded process-group supervision with separate complete stdout/stderr hashes,
+real exit codes and heartbeats at most60 seconds apart. Keep historical primary
+bytes immutable. The conductor owns ops/status/traceability reconciliation.
+
+### SCENARIO-REPORT-8206-CLI
+
+The direct runner SHALL work outside checkout without ambient PYTHONPATH for
+private success, blocked, invalid-date and cold-replay/tamper routes. Publish
+`results/experiment_8206_v709_hard_exit_learning_qualification.json` atomically
+only after the unchanged primary validator, cold replay, adversarial verification
+and strict row lint accept the private candidate. Seal primitive child evidence,
+statement counts, restart hashes, exact protocol and the complete field principles
+under this experiment's raw directory. Owned failure is disqualified; missing
+external prerequisites are terminal blocked, never partial. Do not activate or
+modify a roadmap or the conductor.
+
+REQ-REPORT-8206 implementation: `carnot.reporting.hard_exit_learning_execution_8206`
+and `scripts/experiments/experiment_8206_v709_hard_exit_learning_qualification.py`
+reuse atomic primary publication and the unchanged terminal validators.
+The frozen validation passed9 owned/numerical tests and56 consumer/E2E tests,
+scoped Ruff check/format, strict mypy and explicit-file spec coverage. Combined
+invocation data measured all193 new statements with zero exclusions. Repository
+health remains a separate diagnostic; the conductor owns ops reconciliation.

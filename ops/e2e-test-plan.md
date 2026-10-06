@@ -284,3 +284,16 @@ script from outside the checkout with `PYTHONPATH` removed; valid replay reports
 `replay_passed`, and tampered aggregates exit one with `reduction_drift`.
 The frozen fixture command must also save and combine real coverage in private
 scratch without the pytest child artifact guard redirecting its data writes.
+
+### E2E-020: Exp8206 measured hard exit and exact resume (CPU)
+
+Spec ref: REQ-VERIFY-8206, SCENARIO-VERIFY-8206-CHILD and
+SCENARIO-REPORT-8206-CLI. Run
+`pytest -n 0 -o addopts= --no-cov -q tests/python/test_hard_exit_learning_qualification_8206.py`.
+Private children invoke the unchanged legacy trainer directly under a frozen
+Coverage.py `patch=_exit` configuration before import. Require uninterrupted
+exit0, genuine exits73 at slots90/170, exact resumed complete states, pending
+predictions saved before release, and measured save/flush/exit statements.
+The same tests exercise private CLI publication, external blocking, date
+rejection, cold replay and rehashed tamper rejection. Combine only invocation
+unit/child shards and require100 percent newly owned statements.
