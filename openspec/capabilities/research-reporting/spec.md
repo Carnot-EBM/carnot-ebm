@@ -93766,3 +93766,24 @@ The existing authority reader accepts matching private staged and active copies.
 It rejects changed prompts, task omission, order changes, gate fields and digest.
 Planning validation uses existing guard tests and private E2E-018 authority paths.
 Status: planned; experiments remain unexecuted.
+
+## REQ-REPORT-8178: Immutable V707 contract custody
+
+Bind exactly fourteen tasks, Exp8178 through Exp8191, through the existing full
+executable authority reader. Freeze design and task bytes before spec changes.
+Accept activated authority when staging is consumed. Current scheduling readiness
+SHALL remain separate from historical evidence readiness. Preserve V706's original
+blocked verdict, eleven producer primaries, three gate skips and failed receipts.
+Use exact historical deliverable paths from immutable task authority. Freeze the
+scope ledger, literature mapping, validation argv and completed validation logs.
+Never rewrite historical logs, activate a roadmap, load a model or publish externally.
+
+### SCENARIO-REPORT-8178: Private lifecycle and provenance controls
+
+Private staged, activated and staged-absent authorities pass. Prompt tamper,
+missing inputs, modified immutable copies and changed reductions fail. A later
+live spec change does not invalidate a frozen current contract. An old expected
+hash mismatch stays detected even when a new snapshot captures changed bytes.
+The direct CLI works outside the checkout without PYTHONPATH. All added statements
+have test coverage; owned failures disqualify and zero both readiness scores.
+The conductor owns ops and traceability reconciliation per the final instruction.

@@ -49429,3 +49429,21 @@ V706's zero-yield capture cannot qualify new fitting. Its installed updates with
 zero changed decisions cannot establish FR-11 benefit. New model tasks declare
 Qwen3.8-27B GGUF and bounded generation. Artifact-only work declares no model load.
 Status: planned; task-specific specifications and tests precede implementation.
+
+## REQ-VERIFY-8178: Historical failures cannot grant scientific credit
+
+Exp8178 SHALL declare MODEL_SPECS=[], no_model_load and zero current model calls.
+Historical model provenance remains imported. Exp8168, Exp8169 and Exp8170 retain
+administrative gate skips with absent scientific verdicts. Preserve original
+expected hashes, original observed versions and captured current versions. Authentic
+saved copies can explain a mismatch but a new copy cannot repair old provenance.
+Historical failure SHALL NOT become an implicit gate on independent V707 branches.
+Generalization and learning-benefit scores remain zero. Required checks exit
+normally before atomic publication; full repository health is a separate observation.
+
+### SCENARIO-VERIFY-8178: Independent reductions and immutable replay
+
+Recompute scheduling readiness from full authority checks and owned receipts.
+Recompute historical readiness independently from historical hash failures.
+Cold replay rejects altered rows, frozen inputs, logs, scope ledger or headlines,
+while a mutable source change after capture leaves frozen evidence reproducible.

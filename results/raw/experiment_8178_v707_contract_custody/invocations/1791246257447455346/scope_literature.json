@@ -1,0 +1,326 @@
+{
+  "literature_mapping": {
+    "entry": "\nThis source check precedes the V707 design. Paper claims remain external evidence.\nThe new leads concern structured output and calibration retention. Existing energy,\nlearning and hardware references were checked again. No model training or device\nexecution occurred during this scan.\n\n### Findings selected for experiments\n\n- **Flexible and Efficient Grammar-Constrained Decoding**, February 2025,\n  revised July 2025. [Primary paper](https://arxiv.org/abs/2502.05111).\n  Token masking can enforce output syntax. This suggests a bounded relation\n  record for V706's failed sentence transport. Preserve complete input sentences;\n  output source indices instead of copying source quotes. Syntax does not prove\n  entailment. Use the installed runtime's grammar support, documented in the\n  [llama.cpp grammar guide](https://github.com/ggml-org/llama.cpp/blob/master/grammars/README.md).\n  First test a small paired canary; do not repeat a large zero-yield capture.\n- **Lost in Space: Finding the Right Tokens for Structured Output**, February\n  2025, revised August 2025. [Primary paper](https://arxiv.org/abs/2502.14969).\n  Apparently equivalent formats can change classification accuracy. Keep a\n  matched unconstrained arm in the canary. Preserve whitespace and tokenizer\n  identity. Freeze one syntax before evaluation; do not select formats using\n  reserved labels. A transport improvement is not a semantic improvement.\n- **RT4CHART**, March 2026, revised July 2026.\n  [Primary paper](https://arxiv.org/abs/2603.27752),\n  [Hugging Face discovery page](https://huggingface.co/papers/2603.27752).\n  Local claims and source-side evidence motivate the unfinished sentence study.\n  Carnot will retain original human answer labels. Predicted relations and\n  mechanically valid source indices are features, not replacement gold labels.\n- **Continual Calibration: Coverage Can Collapse Before Accuracy in Lifelong\n  LLM Fine-Tuning**, April 2026.\n  [Primary paper](https://arxiv.org/abs/2604.23987).\n  The paper separates uncertainty retention from accuracy retention. Its\n  task-specific calibration replay motivates a separate calibration-only control\n  and retention audit. Carnot adapts only a small head, not the generator.\n  The paper's exchangeability guarantees do not apply to this exposed delayed\n  stream. Measure Brier score, decision changes and false acceptance separately.\n- **KAC**, March 2025, and **Catastrophic Forgetting in KANs**, November 2025.\n  [KAC](https://arxiv.org/abs/2503.21076),\n  [author code](https://github.com/Ethanhuhuhu/KAC),\n  [forgetting paper](https://arxiv.org/abs/2511.12828).\n  Keep local radial memory and equal-capacity controls. V706 changed probabilities\n  without moving decisions. Test a learned base-logit scale with bounded convex\n  refitting before attributing failure to center selection. This is a Carnot\n  hypothesis from its measurements, not a result claimed by either paper.\n- **Delayed online convex optimization**, February 2026, and\n  **capacity-constrained delayed optimization**, June 2026.\n  [Delay reduction](https://arxiv.org/abs/2602.02634),\n  [capacity limits](https://arxiv.org/abs/2606.11711).\n  Keep label release, candidate commitment and admission distinct. Preserve the\n  qualified delay/capacity schedule. A changed optimizer receives no transferred\n  regret guarantee. Record convergence, remaining decision opportunities and\n  discarded feedback.\n\n### Requested primary-topic coverage\n\n| Topic | Checked primary source | Use or deferral |\n|---|---|---|\n| EBM reasoning and verification | [EBT](https://arxiv.org/abs/2507.02092); [ARM\u2013EBM v4](https://arxiv.org/abs/2512.15605) | Small conditional energies remain eligible. Include exact logistic equivalence; energy notation supplies no extra correctness signal. |\n| Neural constraint satisfaction | [AS2](https://arxiv.org/abs/2603.18436) | Encoded-rule satisfaction does not validate semantic extraction. Defer another solver. |\n| Ising applications in ML | [Neural Ising Machines](https://arxiv.org/abs/2602.00302); [equilibrium propagation hybrid](https://arxiv.org/abs/2606.09112) | Learned dynamics are future sampler leads. No present bottleneck justifies another optimizer family. |\n| Hallucination detection | RT4CHART above; [HalluScoring 2026](https://arxiv.org/abs/2609.38355) | Preserve source-level units and unseen-source versus unseen-generator claim boundaries. |\n| KANs | KAC and forgetting study above | Test decision movement and retention independently. |\n| Energy-guided or constrained generation | Grammar papers above; [ETS](https://arxiv.org/abs/2601.21484) | Use bounded structural constraints now. Defer energy steering until a useful semantic reward exists. |\n| Hardware sampling | [FPGA\u2013ASIC Ising co-design](https://arxiv.org/abs/2602.15985); [learning-to-sample hardness](https://arxiv.org/abs/2605.24752) | Charge communication and orchestration. Optimization speed does not establish sample quality. |\n| Continuous learning | Delayed feedback and continual calibration above | Calibrate from released labels only. Audit later decisions, retained calibration and restart state. |\n\n### Secondary sources and search limits\n\n- **OpenReview:** searched ICLR 2026, ICML 2026 and NeurIPS 2025 EBM work.\n  The indexed [energy-based conformal PDF](https://openreview.net/pdf?id=zCwTMRtASZ)\n  describes energy-adjusted nonconformity scores. Its forum returned a browser\n  challenge. The [difference-of-convex reasoning paper](https://openreview.net/pdf?id=QvsDTpf4yF)\n  is a convergence-method lead. Neither warrants importing a coverage or speed\n  guarantee. ICML searches did not establish another relevant primary method.\n- **Semantic Scholar:** citation API requests for\n  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)\n  and [ARM\u2013EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10)\n  failed. Targeted title searches did not recover a verified citing-paper list.\n  Citation discovery is incomplete; no count or citation relationship is asserted.\n- **Hugging Face papers:** inspected RT4CHART's page and primary paper. Community\n  summaries are discovery aids, not independent replications.\n- **GitHub trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)\n  and [Rust](https://github.com/trending/rust?since=weekly). Returned pages were\n  three weeks old. No current relevant trending claim follows. KAC author code\n  and llama.cpp grammar documentation provide concrete implementation leads.\n- **Extropic:** checked [Writing](https://extropic.ai/writing),\n  [Z1T, September 2026](https://extropic.ai/writing/z1t/) and\n  [research-agent update, October 2026](https://extropic.ai/writing/baby-thermo-rsi/).\n  Z1T explores sparse operations across TSU and digital processors. Its projected\n  figures do not measure Carnot. The research-agent announcement separates\n  execution from scientific reward. Keep acquisition, storage, readout and data\n  movement inside local service costs. No TSU access is established.\n- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).\n  Its public constraint-layer description provides no reproducible new training\n  recipe for this milestone. Treat it as vendor context.\n\nUse the existing CUDA runtime and CPU/Rust small heads. No purchase follows.\nRetain separate KV260 fabric, PolarFire CPU-only and GateMate JTAG boundaries.\nExact-request reuse is a conditional service experiment; repeat frequency must\nbe measured or explicitly hypothetical. It is not a new hardware speed claim.\n",
+    "frozen_design": {
+      "exists": true,
+      "role": "design",
+      "sha256": "sha256:4ecb84c9c7d966d5acb2af198a050c79cb8581c269f911521db1aad0e4933641",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8178_v707_contract_custody/invocations/1791246257447455346/authority/design-4ecb84c9c7d966d5acb2af198a050c79cb8581c269f911521db1aad0e4933641.bin",
+      "snapshot_sha256": "sha256:4ecb84c9c7d966d5acb2af198a050c79cb8581c269f911521db1aad0e4933641",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    "frozen_protocol": " \u2014 freeze and qualify methods, Exp8178\u2013Exp8180\n\n**8178** binds fourteen tasks through the existing authority parser. It copies\ncurrent authority and completed logs into immutable custody. It preserves V706's\nhistorical hash mismatches separately from current scheduling readiness.\n\n**8179** freezes the transport and scientific protocol. Full original source\nand answer text remain in each prompt. Lossless partitions retain byte offsets.\nOutput contains answer-sentence index, E/C/B relation, unsupported probability\nwith two decimal digits and up to two source indices. Empty evidence is allowed.\nSource indices are predicted evidence addresses, not semantic truth.\n\nEach request covers at most eight complete answer sentences. Two requests per\nsource are allowed. Limits are6000 input and256 output tokens per request.\nMore than sixteen answer sentences or excessive input triggers escalation.\nThe tokenizer must demonstrate that the grammar's worst-case valid output fits\nthe budget. No source truncation, paraphrase or removed qualifier is permitted.\nThis differs from retired compact generated-span extraction: the original text\nstays complete, and only output addresses are compact.\n\n**8180** ingests calibration and delayed-learning methods and qualifies a new\nsmall-head mechanism. The base score becomes trainable:\n\n`score = a * logit(clip(p_Qwen, 1e-6, 1-1e-6)) + b + w\u00b7phi(x)`.\n\nBounds are `a\u2208[0,2]`, `b\u2208[-8,8]`, each `w\u2208[-4,4]`. The initial state is\n`a=1,b=0,w=0`. The objective is mean binary log loss plus\n`.01*sum(w*w)/2 + .01*(a-1)^2/2`. Deterministic bounded L-BFGS-B gets200\niterations and projected-gradient tolerance1e-6. Nonconverged candidates cannot\nenter admission. Centers stay fixed during each convex fit.\n\nFive arms are calibrated_error_center, calibrated_fixed_center,\ncalibrated_random_center, calibration_only and frozen_qwen_offset. Adaptive arms\nreceive the same fit budget. The three growing arms have16 initial and24 maximum\ncenters. Calibration_only keeps16 centers. It isolates a shared calibration gain\nfrom the incremental value of choosing new local constraints.\n\nFixtures include learnable saturated scores, no signal, scalar-reference parity,\ncausal admission and hard-exit recovery. A learnable fixture must install by208\nand change32 later typed decisions. Its success is circular_positive only.\nNeither fixture success nor an optimizer stopping normally establishes natural\nbenefit. Natural fitting waits for qualification.\n\n## Phase 2 \u2014 make sentence evidence measurable, Exp8181\u2013Exp8185\n\n**8181** runs24 label-blind fit sources through paired short-record prompts,\nwith and without grammar. A deterministic length-stratified selection is frozen\nin8179. The budget is96 calls at most. Grammar readiness requires22 complete\nsources, valid references on every accepted record and no increased structural\nloss versus the paired arm. No semantic labels select the output syntax.\n\n**8182** captures the original128 fit and64 tune sources. It reuses only matching\ncanary responses. Their clocks and cost remain historical. Main calls are capped\nat384 minus reused calls;16 fixed source-removal/mismatch calls are descriptive.\nMissing or partial source records escalate. Trainability still requires96 fit,\n48 tune and12 targets per class in each role. Insufficient support is a valid\nnull. Thresholds cannot be reduced to make the branch run.\n\n**8183** trains the small radial16 energy head with the same sixteen numerical\nfeatures registered in V706. It includes prior scalar_span, linear12 and radial16\ncontrols, local_max, local-feature ablation and exact logistic representation.\nThe primary comparator is selected from V705 controls using original tune costs.\nHeads, calibration, cost matrix, thresholds and comparator freeze before8184.\n\n**8184** permits256 bounded calls on128 reserved slots. It seals all source\nfeatures and treatment/control decisions before evaluator labels are opened.\nCapture readiness and sufficient evaluation support remain separate fields.\n\n**8185** independently tests **H1**: local-evidence radial16 versus the frozen\nstrongest V705 control. Require96 complete paired sources and12/class. Primary\ncost uses all128 intended slots, with missing evidence escalated. Require five\nimproved sources, zero extra false accepts, Brier increase\u2264.01 and a one-sided\n97.5% bootstrap lower cost-gain bound>.02. Use10,000 source-level draws and at\nleast9500 valid draws. Complete-case and secondary-control comparisons cannot\nreplace this primary test. Exact logistic parity rules out a notation-only claim.\n\n## Phase 3 \u2014 continuous learning and service value, Exp8186\u2013Exp8188\n\n**8186** runs the new calibrated memory mechanism on authenticated historical\nfeatures, independently of sentence capture. **8187** reconstructs its issued\npredictions and audits later decisions, retained calibration and restart state.\n\nKeep256 stream slots,64 retention slots and all original missing masks. The\nfeedback delay is20 slots; pending capacity is32. Commit at64/144 and expire\nat144/224. Use newest64 released update-only rows and twelve strictly later,\none-use admission labels. Preserve modulo4 update/admission roles and20 seeds.\nAdmission interpolates `a,b,w` together under the original safety grid. It does\nnot fit on admission labels. Retention labels remain inaccessible until final\nheads and retention predictions are sealed.\n\n**H2:** calibrated_error_center versus calibrated_fixed_center. Require128 later\nsources,8/class and8 nonoverlapping original-slot blocks. Average seeds within\nsource. Use moving blocks of16, sensitivity8/32,10,000 draws and9500 valid draws.\nRequire lower97.5% cost gain>.02, five improved sources, zero extra false accepts,\nBrier increase\u2264.01 and cost no more than.02 above the other controls. Retention\nrequires48 sources,8/class, cost increase\u2264.02, Brier increase\u2264.01 and no extra\nfalse accepts against the initial frozen head. Calibration-only improvement\ncannot be called structural memory benefit. H1 and H2 each retain alpha=.025;\na blocked branch does not transfer its alpha.\n\n**8188** changes the service question. It tests an explicit deterministic\nexact-request response cache on24 fixed Exp8174 sources. Measure cold acquisition\nand insertion, identical repeat, forced-refresh duplicate and changed-source miss.\nThis allows72 current bounded generations plus two warmups,128 tokens each.\nCache raw evidence separately from decisions: head changes recompute decisions;\nsource/model/prompt/tokenizer/grammar/seed/runtime changes invalidate acquisition.\n\nTime complete arrival-to-response cost, including queue, key hashing, generation,\nparsing, native crossing, arithmetic, durable storage and acknowledgement.\nCharge priming once. Check output/decision parity against forced refresh and\nhard-restart recovery. Output divergence forbids an exact-equivalence speed claim.\nReport amortized estimates at hypothetical repeat fractions0,.25,.5,.9; these\nare scenarios, not observed deployment traffic. NFR-01 requires a measured\ncomplete-boundary lower95 speed ratio\u226510 with equivalent behavior. No new\nhardware speed claim follows from cache hits.\n\n## Phase 4 \u2014 continuity and independent decisions, Exp8189\u2013Exp8191\n\n**8189** reads only new authenticated live ARC supervisor outcomes after Exp8175's\nfrontier. No new events means a cheap terminal null and no policy change. Thirty\nresolved outcomes across five games are necessary before a recommendation;\nmatched within-game and held-game evidence remain necessary for transfer.\nNo new game runs, per-game reverse engineering or solve credit are scheduled.\nImported solve evidence keeps its provenance and registry precheck.\n\n**8190** reduces available cold/hit/invalidation costs and preserves three separate\nboard obligations. It does not repeat the unavailable historical composition.\nThat evidence stays unqualified. For each new branch, calculate Amdahl's bound\n`1/(1-f)` from removable arithmetic, with transfer, readout, acquisition and\nstorage retained. Mixed timers give only optimistic bounds. A100x whole-workload\nclaim needs `f\u2265.99` even with infinite kernel speed.\n\n**8191** always runs. It independently reduces fourteen dispositions, H1, H2,\ncalibration-only effects, service costs and board evidence. It preserves the\nSeptember28 oracle-distinct corrigendum and stable publication gate G1\u2013G4.\nExternal unchanged blocks use terminal `blocked`, never retryable `partial`.\nAdministrative readiness cannot become scientific success.\n\n## Structured dependency graph\n\nEvery gate uses `op: '=='`, `value: 1`. All other tasks have empty gates.\nEach field below appears verbatim in its producer's REQUIRED ARTIFACT FIELDS.\n\n| Consumer | Producer field |\n|---|---|\n| exp8181-sentence-transport-canary | exp8179-sentence-transport-methods.sentence_protocol_ready_score |\n| exp8182-fit-sentence-capture | exp8181-sentence-transport-canary.transport_canary_ready_score |\n| exp8183-sentence-energy-fit | exp8182-fit-sentence-capture.fit_trainable_score |\n| exp8184-reserved-sentence-capture | exp8183-sentence-energy-fit.energy_fit_ready_score |\n| exp8185-sentence-decision-audit | exp8184-reserved-sentence-capture.evaluation_capture_ready_score |\n| exp8186-calibrated-online-memory | exp8180-calibrated-memory-methods.calibrated_memory_ready_score |\n| exp8186-calibrated-online-memory | exp8180-calibrated-memory-methods.stream_input_ready_score |\n| exp8187-learning-benefit-audit | exp8186-calibrated-online-memory.learning_trajectory_ready_score |\n\nNo `requires` chain points to a retired task. Historical artifacts are immutable\ninputs, not claims that retired tasks will execute again. A failed source gate\ncannot remove the independent learning, service, ARC or capstone tasks.\n\n## Hardware and execution requirements\n\n| Resource | Use | Requirement and claim boundary |\n|---|---|---|\n| Two RTX3090 GPUs,24GB each | 8181/8182/8184/8188 bounded Qwen calls | Resolve the actual cache, own a CUDA lease and verify offload. GPU tasks execute sequentially. |\n| CPU, RAM and durable local storage | Small heads, events, evidence cache and audit | Check actual capacity; keep raw responses, immutable logs and recoverable pending state. |\n| Loaded Rust/PyO3 extension | Complete request service | Measure actual binding calls, parity, durable acknowledgement and recovery. |\n| KV260 | Preserved fabric evidence | Keep `k_max\u22645`; useful future workload and authenticated board timings are required. |\n| PolarFire | Separate CPU-only dispatch evidence | Linux CPU execution is not FPGA fabric acceleration. |\n| GateMate | Separate `0xffffffff` JTAG blocker | Reopen only after a dated physical or JTAG change. |\n| AMD APU/NPU, Extropic TSU | Deferred hardware paths | Require supported operators and authenticated access; no purchase or availability assumption. |\n\nThe wishlist contains historical inventory conflicts. Authenticated receipts\ncontrol operational claims. No new purchase, board setup or flashing is planned.\nFR-11's CPU head uses at most24 radial centers; SIMD/batched native evaluation\nand bounded state storage provide its deployment path. Hardware feasibility is\nmeasured in the service boundary, not inferred from an isolated operation count.\nIf arithmetic cannot support100x whole-service improvement, report the failed\npremise and target acquisition/storage before further fabric work.\n\nEvery LLM task declares `MODEL_SPECS: [unsloth/Qwen3.8-27B-GGUF]` and\n`model_bounded_generation`, with the10-second duration floor. Their fixed output\nbudgets make full-generation classification incorrect. No full-generation or\nload-only task is scheduled. Those classes would require60-second and2-second\nfloors respectively. CPU fitting and reductions use `no_model_load`, empty\ncurrent MODEL_SPECS and explicit historical model provenance. Legacy small\nmodels remain CPU smoke tests only. Generator weights stay frozen.\n\nAll prompts contain a numbered requirement for flushed phase and call progress.\nLong loops and child waits report real progress every60 seconds. Gaps must remain\nbelow600 seconds. Tool polls last at most60 seconds. Files above about200 lines\nare written in several calls, with progress messages between writes. Stop new\nmodel calls at3000 seconds; retain checkpoints and finish within4800 seconds.\nNeither floors nor timeouts authorize duration padding.\n\nSchema/custody work uses Opus100. Formulaic capture and cache plumbing use Codex\n`gpt-6.1-sol`. Routine scientific work keeps the default backend. ARC observation\nuses20 turns; software hardware bounds use30. No Luna or Gemini task is scheduled.\nBackend routing does not change the mandated local model used as research data.\n\n## Scope, retirement and validation\n\nEvery task contains all four prior-failure fields, including true same-verdict\nretirement. Exact prior verdicts are read from primary artifacts. Qualified\nnulls may appear as lineage; they are not relabeled as validation failures.\nSkipped V706 tasks have no invented primary verdict. The new sentence encoding\npreserves full text. The changed learning mechanism learns base calibration;\nit does not reopen unchanged importance anchoring or four-expert reweighting.\nExternal generated-text reward ranking against self-consistency remains retired.\nNo retired ID or fabricated operator override is used.\n\nImplementation starts from REQ-* and SCENARIO-*, then failing tests. Required\nvalidation includes scoped unit tests,100% changed-code coverage, Ruff check and\nformat, strict mypy, explicit-path spec coverage and relevant private E2E routes.\nStatic tools receive file paths; only pytest receives node selectors. Source work\nuses E2E-010/015/019. Learning uses E2E-016. Native service uses E2E-003/004.\nSupervisor reading uses E2E-017. Authority and capstone use E2E-018.\n\nEvery required check must exit normally. Unrelated repository health stays a\nseparate observation. Current completed logs are copied into immutable custody;\nno command writes into a sealed historical log. Publish only through the existing\nprimary publisher after unmodified adversarial verification and strict row lint.\nOracle fixtures are circular_positive; owned validation failures are disqualified.\nMissing unchanged external inputs are blocked. Only unfinished owned work retries.\n\nPlanning checks cover schema, scope/failure history, exclusions, ARC floor,\npriority, full contract agreement, gate names, paths, prompt requirements and\nprivate negative mutations. Record actual outcomes in `ops/test-results.md`.\nNo experiment, activation, push, generator training or external publication occurs\nin this planning change.\n\n",
+    "independent_generalization_credit": 0,
+    "method_to_tasks": [
+      {
+        "method": "bounded sentence transport and energy decisions",
+        "tasks": [
+          8179,
+          8180,
+          8181,
+          8182,
+          8183,
+          8184,
+          8185
+        ]
+      },
+      {
+        "method": "calibration and delayed energy memory",
+        "tasks": [
+          8180,
+          8186,
+          8187
+        ]
+      },
+      {
+        "method": "exact-request reuse and hardware obligations",
+        "tasks": [
+          8188,
+          8190
+        ]
+      },
+      {
+        "method": "ARC supervisor outcomes",
+        "tasks": [
+          8189
+        ]
+      }
+    ],
+    "source": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
+      "sha256": "sha256:efe8a3e3fb80c5a92b483b325de12818bb1fca537bb7bb062d3af263c6cdf7c8",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8178_v707_contract_custody/invocations/1791246257447455346/inputs/input-efe8a3e3fb80c5a92b483b325de12818bb1fca537bb7bb062d3af263c6cdf7c8.bin"
+    }
+  },
+  "prior_scope_ledger": [
+    {
+      "cause_class": "external_gate_block",
+      "consumer": "exp8178-contract-custody",
+      "failed_receipts": [],
+      "honest_verdict": "complete_blocked_sha256",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8164_v706_contract_custody.json",
+      "prior_failure": {
+        "addressed_by": "Snapshot current authority and completed logs before mutable specs change; report prior hash mismatches separately without repairing or qualifying their historical evidence.",
+        "experiment_id": "exp8164-contract-custody",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_blocked_sha256"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Snapshot current authority and completed logs before mutable specs change; report prior hash mismatches separately without repairing or qualifying their historical evidence.",
+      "sha256": "sha256:e0d3dd87cb335e79398be81551ec675065cbb326aba2986c32f05834a535864b",
+      "verdict_class": "blocked"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8179-sentence-transport-methods",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_fit_sentence_capture",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8167_v706_fit_sentence_capture.json",
+      "prior_failure": {
+        "addressed_by": "Replace verbose generated quotes with grammar-bound source indices and a fixed canary; preserve complete text and the original decision hypothesis.",
+        "experiment_id": "exp8167-fit-sentence-capture",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_fit_sentence_capture"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Replace verbose generated quotes with grammar-bound source indices and a fixed canary; preserve complete text and the original decision hypothesis.",
+      "sha256": "sha256:5dc84701520534b187fa607409c1d4f7ed37e6a3b533f639728c6d3f40f2bcb4",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8180-calibrated-memory-methods",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_no_later_typed_cost_benefit",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "prior_failure": {
+        "addressed_by": "Keep the successful admission schedule; replace the immutable saturated base offset and four-step residual fit with a bounded learned logit scale and converged convex candidate fit.",
+        "experiment_id": "exp8172-learning-benefit-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_no_later_typed_cost_benefit"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Keep the successful admission schedule; replace the immutable saturated base offset and four-step residual fit with a bounded learned logit scale and converged convex candidate fit.",
+      "sha256": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8181-sentence-transport-canary",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_fit_sentence_capture",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8167_v706_fit_sentence_capture.json",
+      "prior_failure": {
+        "addressed_by": "A fixed paired canary exercises actual grammar propagation and short index records before the full panel; repeated output-budget failure terminates this transport scope.",
+        "experiment_id": "exp8167-fit-sentence-capture",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_fit_sentence_capture"
+      },
+      "retry_unchanged": false,
+      "scope_change": "A fixed paired canary exercises actual grammar propagation and short index records before the full panel; repeated output-budget failure terminates this transport scope.",
+      "sha256": "sha256:5dc84701520534b187fa607409c1d4f7ed37e6a3b533f639728c6d3f40f2bcb4",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8182-fit-sentence-capture",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_fit_sentence_capture",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8167_v706_fit_sentence_capture.json",
+      "prior_failure": {
+        "addressed_by": "Scale only after a successful indexed-record canary; retain original labels, lossless input and exact transport support gates.",
+        "experiment_id": "exp8167-fit-sentence-capture",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_fit_sentence_capture"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Scale only after a successful indexed-record canary; retain original labels, lossless input and exact transport support gates.",
+      "sha256": "sha256:5dc84701520534b187fa607409c1d4f7ed37e6a3b533f639728c6d3f40f2bcb4",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8183-sentence-energy-fit",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_decision_development_null",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8156_v705_decision_audit.json",
+      "prior_failure": {
+        "addressed_by": "Add complete sentence relations after the answer-level span null; retain matched controls and an unchanged source-level decision criterion. V706 fitting was gate-skipped, not a scientific failure.",
+        "experiment_id": "exp8156-decision-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_decision_development_null"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Add complete sentence relations after the answer-level span null; retain matched controls and an unchanged source-level decision criterion. V706 fitting was gate-skipped, not a scientific failure.",
+      "sha256": "sha256:65a13925f00541b524172bb9c3ea2be765e078cee8bafda3d55619b9a8a4de13",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8184-reserved-sentence-capture",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_fit_sentence_capture",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8167_v706_fit_sentence_capture.json",
+      "prior_failure": {
+        "addressed_by": "Reserved acquisition uses only the proven short-record grammar and frozen heads; the original zero-yield transport is not retried unchanged.",
+        "experiment_id": "exp8167-fit-sentence-capture",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_fit_sentence_capture"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Reserved acquisition uses only the proven short-record grammar and frozen heads; the original zero-yield transport is not retried unchanged.",
+      "sha256": "sha256:5dc84701520534b187fa607409c1d4f7ed37e6a3b533f639728c6d3f40f2bcb4",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8185-sentence-decision-audit",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_decision_development_null",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8156_v705_decision_audit.json",
+      "prior_failure": {
+        "addressed_by": "Test full sentence evidence instead of one answer-level quote, using a frozen comparator and identical source-level benefit bar.",
+        "experiment_id": "exp8156-decision-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_decision_development_null"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Test full sentence evidence instead of one answer-level quote, using a frozen comparator and identical source-level benefit bar.",
+      "sha256": "sha256:65a13925f00541b524172bb9c3ea2be765e078cee8bafda3d55619b9a8a4de13",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8186-calibrated-online-memory",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_no_later_typed_cost_benefit",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "prior_failure": {
+        "addressed_by": "Earlier installation worked but never changed decisions; train the base-logit scale jointly under fixed causal feedback and convergence checks, with calibration-only and equal-capacity controls.",
+        "experiment_id": "exp8172-learning-benefit-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_no_later_typed_cost_benefit"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Earlier installation worked but never changed decisions; train the base-logit scale jointly under fixed causal feedback and convergence checks, with calibration-only and equal-capacity controls.",
+      "sha256": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8187-learning-benefit-audit",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_no_later_typed_cost_benefit",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "prior_failure": {
+        "addressed_by": "Audit the new jointly calibrated head, preserving the old null and testing whether center growth adds value beyond shared calibration.",
+        "experiment_id": "exp8172-learning-benefit-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_no_later_typed_cost_benefit"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Audit the new jointly calibrated head, preserving the old null and testing whether center growth adds value beyond shared calibration.",
+      "sha256": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8188-exact-request-service",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_complete_request_cost",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8174_v706_complete_request_cost.json",
+      "prior_failure": {
+        "addressed_by": "Target measured acquisition dominance with exact-request reuse and forced-refresh parity, rather than another arithmetic implementation comparison.",
+        "experiment_id": "exp8174-complete-request-cost",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_complete_request_cost"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Target measured acquisition dominance with exact-request reuse and forced-refresh parity, rather than another arithmetic implementation comparison.",
+      "sha256": "sha256:15a13284335442ff04a491c6683d825e2b4d96de3950e6aa602a7c0afa1a252f",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8189-arc-supervisor-frontier",
+      "failed_receipts": [
+        {
+          "actual_exit": -15,
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+            "tests/python",
+            "-q",
+            "--basetemp=/tmp/carnot-exp8175-lcvwwatv/full_python_suite/pytest"
+          ],
+          "classification": "repository_health",
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q --basetemp=/tmp/carnot-exp8175-lcvwwatv/full_python_suite/pytest",
+          "command_argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+            "tests/python",
+            "-q",
+            "--basetemp=/tmp/carnot-exp8175-lcvwwatv/full_python_suite/pytest"
+          ],
+          "deadline_s": 120,
+          "duration_s": 144.8837448459817,
+          "exit_code": -15,
+          "expected_exit": 0,
+          "expected_text": null,
+          "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8175_v706_arc_supervisor_delta/logs/full_python_suite-f6668499678ce9e29958a44d5660661dd03ca5c666144c7c3f14aac17b4e5350.log",
+          "log_sha256": "sha256:f6668499678ce9e29958a44d5660661dd03ca5c666144c7c3f14aac17b4e5350",
+          "name": "full_python_suite",
+          "normal_exit": false,
+          "output_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [76022 items]\n\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n................................................/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140130560848096, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140408328925552, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140323522539936, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139835479896000, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+          "passed": false,
+          "scope": "repository_health",
+          "timed_out": true
+        }
+      ],
+      "honest_verdict": "complete_null_no_new_outcomes",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8175_v706_arc_supervisor_delta.json",
+      "prior_failure": {
+        "addressed_by": "Advance only the qualified outcome frontier; an unchanged ledger completes a cheap terminal null with no repeated game runs or fabricated refinement.",
+        "experiment_id": "exp8175-arc-supervisor-delta",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_no_new_outcomes"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Advance only the qualified outcome frontier; an unchanged ledger completes a cheap terminal null with no repeated game runs or fabricated refinement.",
+      "sha256": "sha256:49f06784ce128fdeae263ef45f9b5d4f6fa627b305796c59b33efe299be20183",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "external_gate_block",
+      "consumer": "exp8190-hardware-service-boundary",
+      "failed_receipts": [],
+      "honest_verdict": "complete_blocked_composition_replay_ready_score",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8176_v706_hardware_workload_boundary.json",
+      "prior_failure": {
+        "addressed_by": "Use the new exact-request workload and qualified complete requests; do not require the unavailable historical composition to estimate this different boundary.",
+        "experiment_id": "exp8176-hardware-workload-boundary",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_blocked_composition_replay_ready_score"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Use the new exact-request workload and qualified complete requests; do not require the unavailable historical composition to estimate this different boundary.",
+      "sha256": "sha256:87c939826bae900889a1227801db0bed1bea4a082cd7bc0f8cbafa6af769ab91",
+      "verdict_class": "blocked"
+    },
+    {
+      "cause_class": "external_gate_block",
+      "consumer": "exp8191-capstone",
+      "failed_receipts": [],
+      "honest_verdict": "complete_blocked_sha256",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8177_v706_capstone.json",
+      "prior_failure": {
+        "addressed_by": "Use immutable current authority and independently qualified branches; retain old hash failures as historical dispositions instead of mutable global prerequisites.",
+        "experiment_id": "exp8177-capstone",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_blocked_sha256"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Use immutable current authority and independently qualified branches; retain old hash failures as historical dispositions instead of mutable global prerequisites.",
+      "sha256": "sha256:15d5ba2130db9ed0a911a872e44b330e3b29e15f16bded3cb4eec4e54c17cb81",
+      "verdict_class": "blocked"
+    }
+  ]
+}
