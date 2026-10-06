@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.708",
+  "generated_at": "2026-10-06T14:12:44Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 25.0,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Reconcile thirteen outcomes and decide verification learning and deployment gaps",
+      "duration_minutes": 13.11,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Inspect only new authenticated supervisor outcomes for transferable arm selectio",
+      "duration_minutes": 4.79,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Freeze an observed request sequence without injected exact repeats",
+      "duration_minutes": 3.49,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify calibrated memory through measured hard-exit coverage and cold replay",
+      "duration_minutes": 2.14,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bound selective and learning workloads while preserving each board obligation",
+      "duration_minutes": 1.13,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 10 experiments in 25 minutes, including 1 compute-bound task. Synthesis reconciliation was the longest listed task. Compute-time GPU efficiency and parallel-model dispatch remain unverified by the supplied evidence.",
+  "bottlenecks_identified": [
+    "The synthesis-only task 'Reconcile thirteen outcomes and decide verification learning and deployment gaps' took 13 minutes in TIMING DATA and is the longest listed task; no phase breakdown identifies the cause or the avoidable portion.",
+    "The synthesis-only task 'Inspect only new authenticated supervisor outcomes for transferable arm selectio' took 5 minutes in TIMING DATA and is the next longest listed task; the evidence does not show which inspection steps could be shortened.",
+    "Disk-mtime reconstruction provides task durations without execution-phase or dependency receipts, limiting diagnosis of the scheduling critical path."
+  ],
+  "improvements_suggested": [
+    "Build an incremental outcome reducer that caches checked evidence and emits an obligation-to-outcome table for reconciliation; measure whether it shortens the longest synthesis task.",
+    "Emit a reusable, source-linked summary from authenticated-supervisor inspection so reconciliation can consume the same checked evidence.",
+    "Record task start and end events, workload class, dependency waits, and phase durations instead of relying on disk-mtime reconstruction.",
+    "Join GPU utilization samples to active compute intervals and record concurrent model loading and runner dispatch, so the snapshot and locked task-idle indicator can be reconciled.",
+    "Use DualGPURunner only for confirmed concurrent multi-model workloads; single-model GGUF inference can correctly use a single GPU, and synthesis-only GPU idleness is expected."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Automate the reconciliation evidence table with incremental, source-linked outcome reduction.",
+    "Capture task and phase receipts to locate avoidable synthesis work and compute overhead.",
+    "Capture compute-interval GPU utilization, concurrent model loading, and runner dispatch to resolve utilization and DualGPURunner questions."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The sole compute-bound task, 'Freeze an observed request sequence without injected exact repeats', is reported as 3 minutes in TIMING DATA; no loading, inference, or I/O phase measurements explain its duration. The snapshot shows idle GPUs, but the locked task-idle flag is false and the snapshot is not linked to an active compute interval, so execution efficiency remains unresolved. Parallel-model overlap and DualGPURunner dispatch have no data available this milestone; the savings estimate is a conservative placeholder for unmeasured savings."
+}

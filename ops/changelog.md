@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-06 — Operational retrospective for milestone 2026.10.708
+
+- Wrote `results/operational_retro_2026_10_708.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.708`. Authoritative disk-mtime fallback data records 10 experiments completed (1 compute-bound, 9 synthesis-only) across 25.0 total wall-time minutes (average 3 minutes per experiment).
+- Execution wall time was led by synthesis task 'Reconcile thirteen outcomes and decide verification learning and deployment gaps' (13.11 minutes), followed by synthesis task 'Inspect only new authenticated supervisor outcomes for transferable arm selectio' (4.79 minutes), compute-bound task 'Freeze an observed request sequence without injected exact repeats' (3.49 minutes), synthesis task 'Qualify calibrated memory through measured hard-exit coverage and cold replay' (2.14 minutes), and synthesis task 'Bound selective and learning workloads while preserving each board obligation' (1.13 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs; `gpu_idle_on_compute_bound_tasks` is false as no compute-bound idle anomalies or multi-model parallel dispatch requirements were present.
+- Recommended operational improvements: profile synthesis outcome reconciliation latency, streamline supervisor outcome inspection, instrument experiment runners with intra-task sub-phase timers, and persist structured lifecycle timestamps directly into result receipts.
+
 ## 2026-10-06 — Operational retrospective for milestone 2026.10.707
 
 - Wrote `results/operational_retro_2026_10_707.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.707`. Authoritative disk-mtime fallback data records 12 experiments completed (4 compute-bound, 8 synthesis-only) across 42.5 total wall-time minutes (average 4 minutes per experiment).
@@ -21516,3 +21523,8 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-06: Inspect only new authenticated supervisor outcomes for transferable arm selection (⚠️ Blocked) — honest_verdict=complete_blocked_authenticate_live_state_is_file; results/experiment_8202_v708_arc_supervisor_frontier.json
 - 2026-10-06: Bound selective and learning workloads while preserving each board obligation (⚠️ Blocked) — honest_verdict=complete_blocked_exists; results/experiment_8203_v708_hardware_decision_boundary.json
 - 2026-10-06: Reconcile thirteen outcomes and decide verification learning and deployment gaps (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8204_v708_capstone.json
+
+
+### Milestone 2026.10.708 — operational retrospective
+
+Recorded 10 completed experiments in 25 minutes, including 1 compute-bound task. Synthesis reconciliation led the listed timings at 13 minutes. Proposed incremental evidence reduction and task-linked phase, GPU, and model-overlap telemetry. Locked artifact fields remain unchanged; compute-time GPU efficiency and parallel-model dispatch remain unresolved, and time savings are unmeasured. Artifact: `results/operational_retro_2026_10_708.json`.
