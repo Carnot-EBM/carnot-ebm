@@ -19665,3 +19665,4 @@ code |
 | 2026-10-06 19:07 UTC | Seal constrained predictions on every original res | OK | 102 passed, 1 warning in 26.16s |
 | 2026-10-06 19:47 UTC | Independently test constrained action utility and  | OK | 88 passed, 1 warning in 46.26s |
 | 2026-10-06 20:45 UTC | Run delayed-feedback learning after genuine crash  | OK | 87 passed, 1 warning in 150.07s (0:02:30) |
+| 2026-10-06 21:19 UTC | Measure later learning benefit and independent ret | OK | 87 passed, 1 warning in 174.88s (0:02:54) |
