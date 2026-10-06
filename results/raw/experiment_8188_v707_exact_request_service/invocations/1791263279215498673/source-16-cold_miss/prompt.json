@@ -1,0 +1,22 @@
+{
+  "cache_prompt": false,
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"address\\\":\\\"712 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Mexican, Restaurants, Fish & Chips\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-21:0\\\",\\\"Monday\\\":\\\"10:0-21:0\\\",\\\"Saturday\\\":\\\"10:0-21:0\\\",\\\"Sunday\\\":\\\"10:0-21:0\\\",\\\"Thursday\\\":\\\"10:0-21:0\\\",\\\"Tuesday\\\":\\\"10:0-21:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Cesar's Place\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-02 04:49:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"There is no picture posted because I was hangry!!! Definitely delicious, hubby's michelada was the high light of the night. The asada quesadilla was amazing. I had the enchilada with shrimp in the white sauce. Good place for our first night here\\\"},{\\\"review_date\\\":\\\"2021-12-11 19:07:43\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Visiting Santa Barbara and found this gem.\\\\nService was excellent, salsas were very Flavorful from the house salsa & guacamole. We order menudo & was not greasy & full of flavor, their hand made tortillas tops this dish, I got the green chilaquilles \\\\nNot to soggy & had just enough kick for me. Definitely will stop by here again when visiting\\\"},{\\\"review_date\\\":\\\"2021-10-29 01:20:06\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Had a really good meal here tonight. Good service, clean restaurant. Plenty of room to eat inside restaurant.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"Cesar's Place\\\" is a Mexican restaurant located at 712 N Milpas St, Santa Barbara, CA. It operates from 10:00 am to 9:00 pm every day. The restaurant offers a variety of dishes including Fish & Chips. According to customer reviews, the restaurant is known for its delicious food such as asada quesadilla, enchilada with shrimp in white sauce, menudo, and green chilaquilles. The restaurant has received a commendable average rating of 4.0 stars, with customers praising the flavorsome salsas, the high-quality service, and the clean environment. The restaurant offers take-out services and is suitable for group dining. However, it does not provide WiFi, offer outdoor seating, or accept reservations. Parking is available on-street. The ambiance of the place is described as casual.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "seed": 7078188,
+  "temperature": 0,
+  "top_p": 1
+}

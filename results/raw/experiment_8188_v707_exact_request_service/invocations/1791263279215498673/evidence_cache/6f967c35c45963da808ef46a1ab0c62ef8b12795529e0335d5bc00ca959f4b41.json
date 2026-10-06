@@ -1,0 +1,61 @@
+{
+  "evidence": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791263577,
+    "id": "chatcmpl-BFKWp9fOR9h1oHwz5HJleuTlw9pasAao",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 539.702,
+      "predicted_n": 23,
+      "predicted_per_second": 42.61611037202011,
+      "predicted_per_token_ms": 23.465304347826088,
+      "prompt_ms": 565.091,
+      "prompt_n": 479,
+      "prompt_per_second": 847.6510862852177,
+      "prompt_per_token_ms": 1.1797306889352819
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 479,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 502
+    }
+  },
+  "identity": {
+    "answer_bytes": "4a696c6c204475676761722044696c6c6172642c2066726f6d20746865207265616c6974792073686f7720223139204b69647320616e6420436f756e74696e672c222068617320676976656e20626972746820746f20686572206669727374206368696c642c206120736f6e206e616d65642049737261656c2044617669642e204a696c6c2c2077686f20697320612073747564656e74206d6964776966652c2077617320707265706172656420666f7220746865206261627920746f20676f206f766572206869732064756520646174652c20776869636820686520646964206279206f7665722061207765656b2e",
+    "generation_parameters": {
+      "cache_prompt": false,
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "max_tokens": 128,
+      "model": "unsloth/Qwen3.8-27B-GGUF",
+      "temperature": 0,
+      "top_p": 1
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "model_gguf": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "rendered_prompt": "<|im_start|>system\nEstimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.<|im_end|>\n<|im_start|>user\n{\"complete_source\": \"The first daughter to be married from the hit reality show \\\"19 Kids and Counting\\\" has also become the first mother. People magazine reports that Jill (Duggar) Dillard gave birth Monday to a 9-pound, 10-ounce son she and husband Derick have named Israel David. Jill's parents, Jim Bob and Michelle Duggar, posted a video of the new family on their official Facebook page. The baby was a bit tardy, going past his due date by more than a week. Dillard, who is a student midwife, said she gave herself two due dates and was prepared for the wait. \\\"I have told myself, 'First-time moms often go a week and a half over, so don't get discouraged,' \\\" she told People. \\\"When everyone else is asking you, 'When are you going to have that baby?' The baby will come when the baby comes.\\\" Dillard has a ways to go to catch up with her mother. Her super-sized family and their lives have been well-documented on their TLC series, including Jill and Derick's wedding on June 21. Eldest Duggar son Josh is already the father of three children, and his wife, Anna, is expecting their fourth in July.\\n\", \"original_answer\": \"Jill Duggar Dillard, from the reality show \\\"19 Kids and Counting,\\\" has given birth to her first child, a son named Israel David. Jill, who is a student midwife, was prepared for the baby to go over his due date, which he did by over a week.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+    "request_schema": "carnot.exact_request.v1",
+    "runtime": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "seed": 7078188,
+    "source_bytes": "54686520666972737420646175676874657220746f206265206d6172726965642066726f6d2074686520686974207265616c6974792073686f7720223139204b69647320616e6420436f756e74696e67222068617320616c736f206265636f6d6520746865206669727374206d6f746865722e2050656f706c65206d6167617a696e65207265706f7274732074686174204a696c6c2028447567676172292044696c6c6172642067617665206269727468204d6f6e64617920746f206120392d706f756e642c2031302d6f756e636520736f6e2073686520616e642068757362616e642044657269636b2068617665206e616d65642049737261656c2044617669642e204a696c6c277320706172656e74732c204a696d20426f6220616e64204d696368656c6c65204475676761722c20706f73746564206120766964656f206f6620746865206e65772066616d696c79206f6e207468656972206f6666696369616c2046616365626f6f6b20706167652e205468652062616279207761732061206269742074617264792c20676f696e67207061737420686973206475652064617465206279206d6f7265207468616e2061207765656b2e2044696c6c6172642c2077686f20697320612073747564656e74206d6964776966652c20736169642073686520676176652068657273656c662074776f2064756520646174657320616e642077617320707265706172656420666f722074686520776169742e202249206861766520746f6c64206d7973656c662c202746697273742d74696d65206d6f6d73206f6674656e20676f2061207765656b20616e6420612068616c66206f7665722c20736f20646f6e27742067657420646973636f7572616765642c2720222073686520746f6c642050656f706c652e20225768656e2065766572796f6e6520656c73652069732061736b696e6720796f752c20275768656e2061726520796f7520676f696e6720746f2068617665207468617420626162793f272054686520626162792077696c6c20636f6d65207768656e20746865206261627920636f6d65732e222044696c6c617264206861732061207761797320746f20676f20746f206361746368207570207769746820686572206d6f746865722e204865722073757065722d73697a65642066616d696c7920616e64207468656972206c697665732068617665206265656e2077656c6c2d646f63756d656e746564206f6e20746865697220544c43207365726965732c20696e636c7564696e67204a696c6c20616e642044657269636b27732077656464696e67206f6e204a756e652032312e20456c646573742044756767617220736f6e204a6f736820697320616c72656164792074686520666174686572206f66207468726565206368696c6472656e2c20616e642068697320776966652c20416e6e612c20697320657870656374696e6720746865697220666f7572746820696e204a756c792e0a",
+    "tokenizer": "sha256:288df31e4baa7a4b388e50591ab2f0dfb355f47104a6eaffb1aecb5302e7c456"
+  },
+  "sha256": "sha256:456bf99a75bcd355c1d8d588bbc226f3e672d2fd5a4d04f224096531d933b3eb"
+}

@@ -93952,3 +93952,32 @@ Implementation: `scripts/experiments/experiment_8185_v707_sentence_decision_audi
 uses the qualified validation supervisor and primary publisher. Private success,
 missing input, rehashed tamper and external cold replay are covered by
 `tests/python/test_sentence_decision_audit_8185.py`.
+# Exact-request service custody, 2026-10-06
+
+## REQ-REPORT-8188: Publish validated conditional reuse evidence
+
+Freeze validation argv before measurement. Require scoped pytest, 100 percent
+new statement coverage, Ruff check/format, strict mypy, explicit-path spec
+coverage and private complete CLI success/missing/tamper/cold replay. Run full
+Python tests once as separate repository health. Preserve completed immutable
+logs, failed receipts and historical primaries. Publish with primary_publication
+after independent reduction and unmodified adversarial and strict row auditors.
+External failure ends complete_blocked_<check>; owned failure disqualifies and
+zeros readiness. Current calls differ from imported provenance. Exposed and
+fixture evidence earn zero generalization and learning scores. The conductor
+owns ops/status.md, ops/changelog.md and _bmad/traceability.md reconciliation.
+
+### SCENARIO-REPORT-8188-CLI
+
+The thin CLI runs outside the checkout without PYTHONPATH. Private fixtures
+remain outside results/. Success, missing input, tamper and cold replay produce
+normal exits with exact receipts. No external publication occurs.
+
+Implementation: `python/carnot/reporting/exact_request_execution_8188.py` and
+`scripts/experiments/experiment_8188_v707_exact_request_service.py`. Preserve
+failed closure receipts before qualified recovery and final publication.
+
+The exact-request protocol is serial. Its owned E2E scope uses the unmodified
+all-at-once loaded-binding and durable-reopen cases. Paced host batching remains
+repository health. Preserve its failed timing receipt; do not weaken assertions.
+Reuse the one completed repository-health receipt during closure recovery.

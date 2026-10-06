@@ -1,0 +1,61 @@
+{
+  "evidence": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791263606,
+    "id": "chatcmpl-glbdzYsHDLwYxm1mnciCwluA9isVXpn5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 560.983,
+      "predicted_n": 24,
+      "predicted_per_second": 42.782045088710355,
+      "predicted_per_token_ms": 23.374291666666664,
+      "prompt_ms": 512.834,
+      "prompt_n": 456,
+      "prompt_per_second": 889.1766146550347,
+      "prompt_per_token_ms": 1.1246359649122806
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 456,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 480
+    }
+  },
+  "identity": {
+    "answer_bytes": "50656e6e205374617465206f666665727320616e20416c7465726e617465205265746972656d656e7420706c616e2c20776865726520656d706c6f796565732061726520726571756972656420746f20636f6e74726962757465203525206f662074686569722067726f73732073616c6172792c207768696c652050656e6e20537461746520636f6e747269627574657320392e323925206f662074686520656d706c6f79656527732067726f73732073616c6172792e2054686520706c616e206d61792061636365707420726f6c6c6f766572732066726f6d206f7468657220656d706c6f796572277320706c616e732c2077686963682063616e20696e63726561736520746865206d6178696d756d206c6f616e20616d6f756e742e20496e207465726d73206f662074617865732c2050656e6e73796c76616e6961206973207461782d667269656e646c7920746f77617264732072657469726565732c20646f6573206e6f742074617820736f6369616c20736563757269747920696e636f6d65206f72207769746864726177616c732066726f6d207265746972656d656e74206163636f756e74732e20426f7468207075626c696320616e6420707269766174652070656e73696f6e20696e636f6d6520617265206e6f742074617865642e",
+    "generation_parameters": {
+      "cache_prompt": false,
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "max_tokens": 128,
+      "model": "unsloth/Qwen3.8-27B-GGUF",
+      "temperature": 0,
+      "top_p": 1
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "model_gguf": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "rendered_prompt": "<|im_start|>system\nEstimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.<|im_end|>\n<|im_start|>user\n{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Once you have elected to participate in the Penn State Alternate Retirement plan, a mandatory employee contribution of 5% of your gross salary is required and Penn State will contribute 9.29% of your gross salary.\\\\n\\\\npassage 2:If you have money in other employer's plans, you may be able to transfer or roll it over to the The Pennsylvania State University retirement plan to increase your maximum loan amount. This is only if the The Pennsylvania State University retirement plan accepts rollovers.\\\\n\\\\npassage 3:Quick Guide to Pennsylvania Retirement Income Taxes. 1  Pennsylvania is tax-friendly toward retirees. 2  Social security income is not taxed. 3  Withdrawals from retirement accounts are not taxed. 4  Wages are taxed at normal rates, your marginal state tax rate is 5.0%. 5  Public pension income is not taxed, private pension income is not taxed.\\\\n\\\\n\\\",\\\"question\\\":\\\"penn state retirement benefits\\\"}\\n\", \"original_answer\": \"Penn State offers an Alternate Retirement plan, where employees are required to contribute 5% of their gross salary, while Penn State contributes 9.29% of the employee's gross salary. The plan may accept rollovers from other employer's plans, which can increase the maximum loan amount. In terms of taxes, Pennsylvania is tax-friendly towards retirees, does not tax social security income or withdrawals from retirement accounts. Both public and private pension income are not taxed.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+    "request_schema": "carnot.exact_request.v1",
+    "runtime": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "seed": 7078188,
+    "source_bytes": "7b227061737361676573223a227061737361676520313a4f6e636520796f75206861766520656c656374656420746f20706172746963697061746520696e207468652050656e6e20537461746520416c7465726e617465205265746972656d656e7420706c616e2c2061206d616e6461746f727920656d706c6f79656520636f6e747269627574696f6e206f66203525206f6620796f75722067726f73732073616c61727920697320726571756972656420616e642050656e6e2053746174652077696c6c20636f6e7472696275746520392e323925206f6620796f75722067726f73732073616c6172792e5c6e5c6e7061737361676520323a496620796f752068617665206d6f6e657920696e206f7468657220656d706c6f796572277320706c616e732c20796f75206d61792062652061626c6520746f207472616e73666572206f7220726f6c6c206974206f76657220746f20746865205468652050656e6e73796c76616e696120537461746520556e6976657273697479207265746972656d656e7420706c616e20746f20696e63726561736520796f7572206d6178696d756d206c6f616e20616d6f756e742e2054686973206973206f6e6c7920696620746865205468652050656e6e73796c76616e696120537461746520556e6976657273697479207265746972656d656e7420706c616e206163636570747320726f6c6c6f766572732e5c6e5c6e7061737361676520333a517569636b20477569646520746f2050656e6e73796c76616e6961205265746972656d656e7420496e636f6d652054617865732e2031202050656e6e73796c76616e6961206973207461782d667269656e646c7920746f776172642072657469726565732e20322020536f6369616c20736563757269747920696e636f6d65206973206e6f742074617865642e203320205769746864726177616c732066726f6d207265746972656d656e74206163636f756e747320617265206e6f742074617865642e20342020576167657320617265207461786564206174206e6f726d616c2072617465732c20796f7572206d617267696e616c20737461746520746178207261746520697320352e30252e203520205075626c69632070656e73696f6e20696e636f6d65206973206e6f742074617865642c20707269766174652070656e73696f6e20696e636f6d65206973206e6f742074617865642e5c6e5c6e222c227175657374696f6e223a2270656e6e207374617465207265746972656d656e742062656e6566697473227d0a",
+    "tokenizer": "sha256:288df31e4baa7a4b388e50591ab2f0dfb355f47104a6eaffb1aecb5302e7c456"
+  },
+  "sha256": "sha256:7fe4b7f664ca6bdc551bd7acf3f24c0bd48e96bf1e3b194683b88e36036d5ca1"
+}

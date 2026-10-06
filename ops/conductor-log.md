@@ -19636,3 +19636,4 @@ code |
 | 2026-10-06 04:43 UTC | Independently test sentence evidence against the f | OK | 87 passed, 1 warning in 34.07s |
 | 2026-10-06 04:46 UTC | Learn energy centers and base calibration from del | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8180-calibrated-memory-methods.calibrated_memory_ready_score (actual=0 == expected=1) |
 | 2026-10-06 04:48 UTC | Audit later decision movement calibration retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8186-calibrated-online-memory) |
+| 2026-10-06 05:46 UTC | Measure exact-request reuse including cold acquisi | FAIL | Codex CLI error: Stalled after 600s silence. Last output: argv=[str(e.ROOT / |

@@ -49627,3 +49627,44 @@ blocked with the exact operand. Owned validation failure disqualifies readiness.
 Implementation: `python/carnot/verify/sentence_decision_audit_8185.py`.
 Six tests in `tests/python/test_sentence_decision_audit_8185.py` qualify original
 labels, source identity, support floors, source bootstrap and independent equations.
+# Exact-request service, 2026-10-06
+
+## REQ-VERIFY-8188: Memoize fixed-seed verifier evidence
+
+Freeze the original 24 Exp8174 source IDs and a deterministic response service
+protocol before acquisition. A content key binds complete source and answer
+bytes, GGUF and revision, embedded tokenizer, runtime, rendered prompt, grammar,
+generation parameters, seed and request schema. Store raw evidence separately
+from head decisions. Head changes reuse evidence but recompute native decisions.
+Acquisition changes miss. Corruption fails closed and forces reacquisition.
+Use qualified complete-request acquisition, loaded Rust scoring and durable
+acknowledgement. Randomize source order and paired refresh order; measure cold
+insertion, repeat, forced refresh and changed-source miss. Limit current calls
+to 72 plus two warmups, 128 output tokens, launch cutoff 3000s, closure 4800s.
+Checkpoint every eight sources. Preserve failed and unstarted request rows.
+Record disjoint components and complete latency; charge priming once. Report
+hypothetical repeat fractions 0,.25,.5,.9 separately from unobserved traffic.
+Byte or decision divergence forbids equivalence claims. Conditional repeats
+cannot close NFR-01 for natural traffic. No generator updates or device changes.
+
+### SCENARIO-VERIFY-8188-CACHE
+
+Private tests cover restart, raw corruption, model/prompt/seed/source/answer/
+grammar/runtime/tokenizer/schema invalidation, head recomputation, forced-refresh
+divergence, failed acquisition, cutoff and exact source/request reconciliation.
+Loaded-binding parity and durable reopen satisfy applicable E2E-003/004.
+
+## REQ-VERIFY-8188-REPLAY: Independently authenticate service costs
+
+Cold replay rehashes input, code, config, logs and primitive bytes. It reparses
+evidence and recomputes decisions, identity, components, paired source bootstrap
+and hypothetical amortization. Rehashed headline or timer tampering must fail.
+
+### SCENARIO-VERIFY-8188-REPLAY
+
+Private replay rejects altered outputs, cache identities, clocks, decisions,
+counts, logs and headlines. External evidence blocks name actual operands.
+
+Implementation: `python/carnot/verify/exact_request_8188.py`; private tests in
+`tests/python/test_exact_request_8188.py`. Closed CUDA lease recovery authenticates
+the original code snapshot, requests and ledger without another model call.

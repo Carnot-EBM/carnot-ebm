@@ -1,0 +1,61 @@
+{
+  "evidence": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791263667,
+    "id": "chatcmpl-gwQwqyJMwG3O5VqqF79HuHMNA2ditOSY",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 563.294,
+      "predicted_n": 24,
+      "predicted_per_second": 42.60652518933275,
+      "predicted_per_token_ms": 23.470583333333334,
+      "prompt_ms": 644.605,
+      "prompt_n": 606,
+      "prompt_per_second": 940.1106103737948,
+      "prompt_per_token_ms": 1.0637046204620462
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 606,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 630
+    }
+  },
+  "identity": {
+    "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c206865726527732077686174207765206b6e6f772061626f757420746865207765617468657220696e204d616472696420696e20446563656d6265723a0a0a2a20546865206561726c696573742073756e7269736520697320383a313820414d206f6e20446563656d62657220312c20616e6420746865206c61746573742073756e7269736520697320383a333720414d206f6e20446563656d6265722033312e0a2a20546865206561726c696573742073756e73657420697320353a343820504d206f6e20446563656d62657220382c20616e6420746865206c61746573742073756e73657420697320353a353720504d206f6e20446563656d6265722033312e0a2a20546865206176657261676520686967682074656d70657261747572652069732039c2b04320283438c2b04629206f6e20446563656d6265722031352e0a2a205468652061766572616765206c6f772074656d70657261747572652069732030c2b04320283332c2b04629206f6e20446563656d6265722031352e0a2a204d61647269642074656e647320746f20737461792064727920696e206d69642d446563656d6265722e0a0a4f766572616c6c2c204d61647269642773207765617468657220696e20446563656d6265722069732072656c61746976656c79206d696c6420636f6d706172656420746f206f74686572207061727473206f66204575726f70652c20776974682074656d7065726174757265732072616e67696e672066726f6d2030c2b04320746f2039c2b04320283332c2b04620746f203438c2b0462920647572696e6720746865206461792e20486f77657665722c2069742063616e207374696c6c2067657420707265747479206368696c6c792c20657370656369616c6c7920696e20746865206576656e696e67732c20616e64207468657265206d617920626520736f6d65207261696e66616c6c2e",
+    "generation_parameters": {
+      "cache_prompt": false,
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "max_tokens": 128,
+      "model": "unsloth/Qwen3.8-27B-GGUF",
+      "temperature": 0,
+      "top_p": 1
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "model_gguf": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "rendered_prompt": "<|im_start|>system\nEstimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.<|im_end|>\n<|im_start|>user\n{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The earliest sunrise of the month in Madrid is 8:18 AM on December 1 and the latest sunrise is 19 minutes later at 8:37 AM on December 31. The earliest sunset is 5:48 PM on December 8 and the latest sunset is 10 minutes later at 5:57 PM on December 31.\\\\n\\\\npassage 2:Events in December in Madrid: For Christmas markets and other outdoor festivities in Madrid, see Christmas in Madrid. Madrid in Mid-December: Average Temperatures and Recent Years' Weather. It doesn't really get much colder as we head deeper into December and Madrid tends to stay dry. December 15 Averages High: 9\u00b0C. Low: 0\u00b0C.\\\\n\\\\npassage 3:See also: 100 Things to Do in Madrid. Weather in Barcelona in December. Main article: Weather in December in Barcelona. The sea has a warming effect in winter, so Barcelona isn't as cold in December as in Madrid, but it can still get pretty chilly.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather madrid december\\\"}\", \"original_answer\": \"Based on the given passages, here's what we know about the weather in Madrid in December:\\n\\n* The earliest sunrise is 8:18 AM on December 1, and the latest sunrise is 8:37 AM on December 31.\\n* The earliest sunset is 5:48 PM on December 8, and the latest sunset is 5:57 PM on December 31.\\n* The average high temperature is 9\u00b0C (48\u00b0F) on December 15.\\n* The average low temperature is 0\u00b0C (32\u00b0F) on December 15.\\n* Madrid tends to stay dry in mid-December.\\n\\nOverall, Madrid's weather in December is relatively mild compared to other parts of Europe, with temperatures ranging from 0\u00b0C to 9\u00b0C (32\u00b0F to 48\u00b0F) during the day. However, it can still get pretty chilly, especially in the evenings, and there may be some rainfall.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+    "request_schema": "carnot.exact_request.v1",
+    "runtime": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "seed": 7078188,
+    "source_bytes": "7b227061737361676573223a227061737361676520313a546865206561726c696573742073756e72697365206f6620746865206d6f6e746820696e204d616472696420697320383a313820414d206f6e20446563656d626572203120616e6420746865206c61746573742073756e72697365206973203139206d696e75746573206c6174657220617420383a333720414d206f6e20446563656d6265722033312e20546865206561726c696573742073756e73657420697320353a343820504d206f6e20446563656d626572203820616e6420746865206c61746573742073756e736574206973203130206d696e75746573206c6174657220617420353a353720504d206f6e20446563656d6265722033312e5c6e5c6e7061737361676520323a4576656e747320696e20446563656d62657220696e204d61647269643a20466f72204368726973746d6173206d61726b65747320616e64206f74686572206f7574646f6f7220666573746976697469657320696e204d61647269642c20736565204368726973746d617320696e204d61647269642e204d616472696420696e204d69642d446563656d6265723a20417665726167652054656d70657261747572657320616e6420526563656e742059656172732720576561746865722e20497420646f65736e2774207265616c6c7920676574206d75636820636f6c64657220617320776520686561642064656570657220696e746f20446563656d62657220616e64204d61647269642074656e647320746f2073746179206472792e20446563656d62657220313520417665726167657320486967683a2039c2b0432e204c6f773a2030c2b0432e5c6e5c6e7061737361676520333a53656520616c736f3a20313030205468696e677320746f20446f20696e204d61647269642e205765617468657220696e2042617263656c6f6e6120696e20446563656d6265722e204d61696e2061727469636c653a205765617468657220696e20446563656d62657220696e2042617263656c6f6e612e2054686520736561206861732061207761726d696e672065666665637420696e2077696e7465722c20736f2042617263656c6f6e612069736e277420617320636f6c6420696e20446563656d62657220617320696e204d61647269642c206275742069742063616e207374696c6c2067657420707265747479206368696c6c792e5c6e5c6e222c227175657374696f6e223a2277656174686572206d616472696420646563656d626572227d",
+    "tokenizer": "sha256:288df31e4baa7a4b388e50591ab2f0dfb355f47104a6eaffb1aecb5302e7c456"
+  },
+  "sha256": "sha256:b66fef03f2a50b50c8c0116a2347de58217f7d91a32b8a88328d4ce08d5c3220"
+}

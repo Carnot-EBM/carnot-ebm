@@ -1,0 +1,47 @@
+.................F.                                                      [100%]
+=================================== FAILURES ===================================
+__________ test_complete_transactions_and_queue[cadence_4ms-restart] ___________
+
+data = {'categories': {'accepted': 60, 'rejected': 0}, 'checks': [{'artifact_field': 'resource_exists', 'check': 'resource_ex...57089951198165, -0.0002456022125242887, 0.0029600156781327946, 0.001024196065447571, -0.000251473948528012, ...]}, ...}
+native = <module 'carnot._rust' from '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8105_v701_native_radial_kernel/_rust.cpython-312-x86_64-linux-gnu.so'>
+tmp_path = PosixPath('/tmp/carnot-8188-validation-fgcyg859/coverage/test_complete_transactions_and0')
+condition = 'restart', arrival = 'cadence_4ms'
+
+    @pytest.mark.parametrize("condition", ["cold", "warm", "restart"])
+    @pytest.mark.parametrize("arrival", ["all_at_once", "cadence_4ms"])
+    def test_complete_transactions_and_queue(data, native, tmp_path, condition, arrival):
+        """REQ-VERIFY-8159 / E2E-003/004: parity, durable return and actual wait receipts."""
+        slot = dict(unit_id="private", batch=8, repetition=0, condition=condition, arrival=arrival)
+        rows = [e.transaction(data, native, slot, arm, tmp_path / arm) for arm in e.ARMS]
+        assert e.parity(rows)
+        for row in rows:
+            assert row["duration_ns"] >= row["components"]["arithmetic_ns"] > 0
+            assert len(row["requests"]) == 8 and row["commit_count"] >= 1
+            state = e.Store(Path(row["store_path"]), e.canonical_hash(data["head"])).state
+            assert len(state["records"]) == 8
+            for r in row["requests"]:
+                assert r["enqueue_ns"] <= r["execution_start_ns"] <= r["execution_end_ns"]
+                assert r["execution_end_ns"] <= r["serialization_start_ns"] <= r["serialization_end_ns"]
+                assert (
+                    r["serialization_end_ns"]
+                    <= r["commit_start_ns"]
+                    <= r["commit_end_ns"]
+                    <= r["response_ns"]
+                )
+                assert r["latency_ns"] == r["response_ns"] - r["enqueue_ns"]
+                assert r["queue_ns"] == r["execution_start_ns"] - r["enqueue_ns"]
+                expected = e.old.engine.scalar_probability(data["head"], data["geometry"], r["values"])
+                assert abs(r["probability"] - expected) < 1e-10
+            if arrival == "cadence_4ms":
+                assert (
+                    rows[-1]["requests"][-1]["enqueue_ns"] - rows[-1]["requests"][0]["enqueue_ns"]
+                    >= 28_000_000
+                )
+        assert rows[0]["commit_count"] == 8
+>       assert rows[-1]["commit_count"] == 1
+E       assert 2 == 1
+
+tests/python/test_durable_batch_8159.py:95: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_durable_batch_8159.py::test_complete_transactions_and_queue[cadence_4ms-restart]
+1 failed, 18 passed in 149.52s (0:02:29)

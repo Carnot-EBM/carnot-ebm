@@ -1,0 +1,61 @@
+{
+  "evidence": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791263589,
+    "id": "chatcmpl-mxS7QtGAQp7dUM6uQIGexlnquW18OLzz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 536.828,
+      "predicted_n": 23,
+      "predicted_per_second": 42.844262966909334,
+      "predicted_per_token_ms": 23.340347826086955,
+      "prompt_ms": 695.802,
+      "prompt_n": 687,
+      "prompt_per_second": 987.3498495261583,
+      "prompt_per_token_ms": 1.012812227074236
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 687,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 710
+    }
+  },
+  "identity": {
+    "answer_bytes": "4c65747475636520422e204672616e6b2069732061206e6f772d636c6f73656420416d65726963616e20747261646974696f6e616c2072657374617572616e74206c6f636174656420696e2053616e746120426172626172612c2043412e204163636f7264696e6720746f20637573746f6d657220726576696577732c207468652072657374617572616e7420776173206b6e6f776e20666f722069747320756e69717565206d656e75206f7074696f6e732c20696e636c7564696e67207665676574617269616e20736c696465727320616e642076656767696520686f7420646f67732e204d616e7920637573746f6d657273206170707265636961746564207468652072657374617572616e7427732063617375616c2061746d6f73706865726520616e6420667269656e646c7920736572766963652c2077697468206f6e65207265766965776572206d656e74696f6e696e672074686174207468657920686164206120706c656173616e7420636f6e766572736174696f6e207769746820746865206f776e657220647572696e672074686569722076697369742e20486f77657665722c207468657265207765726520616c736f20636f6d706c61696e74732061626f7574207468652073746166662773206162696c69747920746f2066756c66696c6c206f726465727320636f72726563746c792c2077697468206f6e652072657669657765722065787072657373696e67206672757374726174696f6e20617420746865697220657870657269656e63652e204f766572616c6c2c204c65747475636520422e204672616e6b20726563656976656420616e206176657261676520726174696e67206f6620332e352073746172732066726f6d2069747320637573746f6d6572732e",
+    "generation_parameters": {
+      "cache_prompt": false,
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "max_tokens": 128,
+      "model": "unsloth/Qwen3.8-27B-GGUF",
+      "temperature": 0,
+      "top_p": 1
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "model_gguf": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "rendered_prompt": "<|im_start|>system\nEstimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.<|im_end|>\n<|im_start|>user\n{\"complete_source\": \"{\\\"address\\\":\\\"413 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"American (Traditional), Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Lettuce B. Frank\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2010-05-31 10:53:37\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I'm so sad to hear this place has closed.  I liked the menu and my hotdog very much.  I remember chatting with the owner late one night as I waited for my group to take care of the birthday boy after a night of drinking, and it seemed like things were going well.\\\"},{\\\"review_date\\\":\\\"2010-01-28 01:34:07\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I almost cried today when I went to LBF to have lunch with some friends and realized they're no longer in business.  I'm so sad.  It was the only place I've ever found that had vegetarian sliders.  Soooooooo amazing!  They're veggie hot dogs were awesome too!  I'm going to miss you LBF!\\\"},{\\\"review_date\\\":\\\"2009-10-19 17:21:00\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Staying true to my words - I will never come back here again.  Trying to give this place another shot on my recent SB visit, I was disappointed at the annoying staff that could not fulfill my order correctly.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Lettuce B. Frank is a now-closed American traditional restaurant located in Santa Barbara, CA. According to customer reviews, the restaurant was known for its unique menu options, including vegetarian sliders and veggie hot dogs. Many customers appreciated the restaurant's casual atmosphere and friendly service, with one reviewer mentioning that they had a pleasant conversation with the owner during their visit. However, there were also complaints about the staff's ability to fulfill orders correctly, with one reviewer expressing frustration at their experience. Overall, Lettuce B. Frank received an average rating of 3.5 stars from its customers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+    "request_schema": "carnot.exact_request.v1",
+    "runtime": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "seed": 7078188,
+    "source_bytes": "7b2261646472657373223a22343133205374617465205374222c2261747472696275746573223a7b22416d6269656e6365223a6e756c6c2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a66616c73652c22737472656574223a747275652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a66616c73652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a6e756c6c7d2c22627573696e6573735f7374617273223a332e352c2263617465676f72696573223a22416d65726963616e2028547261646974696f6e616c292c2052657374617572616e7473222c2263697479223a2253616e74612042617262617261222c22686f757273223a6e756c6c2c226e616d65223a224c65747475636520422e204672616e6b222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323031302d30352d33312031303a35333a3337222c227265766965775f7374617273223a342e302c227265766965775f74657874223a2249276d20736f2073616420746f2068656172207468697320706c6163652068617320636c6f7365642e202049206c696b656420746865206d656e7520616e64206d7920686f74646f672076657279206d7563682e2020492072656d656d626572206368617474696e67207769746820746865206f776e6572206c617465206f6e65206e6967687420617320492077616974656420666f72206d792067726f757020746f2074616b652063617265206f662074686520626972746864617920626f792061667465722061206e69676874206f66206472696e6b696e672c20616e64206974207365656d6564206c696b65207468696e6773207765726520676f696e672077656c6c2e227d2c7b227265766965775f64617465223a22323031302d30312d32382030313a33343a3037222c227265766965775f7374617273223a342e302c227265766965775f74657874223a224920616c6d6f737420637269656420746f646179207768656e20492077656e7420746f204c424620746f2068617665206c756e6368207769746820736f6d6520667269656e647320616e64207265616c697a65642074686579277265206e6f206c6f6e67657220696e20627573696e6573732e202049276d20736f207361642e202049742077617320746865206f6e6c7920706c6163652049277665206576657220666f756e64207468617420686164207665676574617269616e20736c69646572732e2020536f6f6f6f6f6f6f6f20616d617a696e67212020546865792772652076656767696520686f7420646f6773207765726520617765736f6d6520746f6f21202049276d20676f696e6720746f206d69737320796f75204c424621227d2c7b227265766965775f64617465223a22323030392d31302d31392031373a32313a3030222c227265766965775f7374617273223a312e302c227265766965775f74657874223a2253746179696e67207472756520746f206d7920776f726473202d20492077696c6c206e6576657220636f6d65206261636b206865726520616761696e2e2020547279696e6720746f2067697665207468697320706c61636520616e6f746865722073686f74206f6e206d7920726563656e742053422076697369742c204920776173206469736170706f696e7465642061742074686520616e6e6f79696e67207374616666207468617420636f756c64206e6f742066756c66696c6c206d79206f7264657220636f72726563746c792e227d5d2c227374617465223a224341227d",
+    "tokenizer": "sha256:288df31e4baa7a4b388e50591ab2f0dfb355f47104a6eaffb1aecb5302e7c456"
+  },
+  "sha256": "sha256:8e4004f29ba1b079c1218facc71af87bf024a1025099f498788fcf7abcd05bf3"
+}

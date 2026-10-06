@@ -1,0 +1,61 @@
+{
+  "evidence": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791263633,
+    "id": "chatcmpl-7Deuwj6vFlqny0aomH6BBo28S80PpFy2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 563.004,
+      "predicted_n": 24,
+      "predicted_per_second": 42.62847155615235,
+      "predicted_per_token_ms": 23.4585,
+      "prompt_ms": 633.715,
+      "prompt_n": 578,
+      "prompt_per_second": 912.0819295740198,
+      "prompt_per_token_ms": 1.0963927335640138
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 578,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 602
+    }
+  },
+  "identity": {
+    "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20746865206d61696e20646966666572656e636573206265747765656e2061206675656c2073656e64696e6720756e697420616e642061206675656c2070756d70206172653a0a0a2a2046756e6374696f6e616c6974793a2041206675656c2070756d702064656c6976657273206675656c20746f2074686520656e67696e652c207768696c652061206675656c2073656e64696e6720756e697420617373656d626c7920696e636c7564657320746865206675656c2070756d702c2066696c7465722c2073747261696e65722c20616e6420656c656374726f6e69632064657669636520746f206d6561737572652074686520616d6f756e74206f66206675656c20696e207468652074616e6b20616e642073656e64206461746120746f2074686520646173682d6d6f756e746564206675656c2067617567652e0a2a20436f73743a2041206675656c2070756d7020697320612072656c61746976656c7920696e657870656e73697665207061727420636f6d706172656420746f2074686520656e74697265206675656c2073656e64696e6720756e697420617373656d626c792e0a2a2045617365206f66207265706c6163656d656e743a205265706c6163696e6720746865206675656c2070756d7020616c6f6e652063616e206265206d6f726520646966666963756c74207468616e207265706c6163696e672074686520656e74697265206675656c2073656e64696e6720756e697420617373656d626c792c20617320746865206c617474657220636f6d6573206173206120636f6d706c65746520756e697420616e642069732065617369657220746f20696e7374616c6c2e0a0a486f77657665722c206974277320696d706f7274616e7420746f206e6f746520746861742074686520706173736167657320646f6e27742070726f76696465206120636c6561722064697374696e6374696f6e206265747765656e207468652074776f20636f6d706f6e656e74732c20616e642074686579207365656d20746f2062652064697363757373656420696e7465726368616e676561626c792e205468657265666f72652c20776974686f7574206d6f726520696e666f726d6174696f6e2c206974277320646966666963756c7420746f2067697665206120646566696e697469766520616e7377657220746f20746865207175657374696f6e2e",
+    "generation_parameters": {
+      "cache_prompt": false,
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "max_tokens": 128,
+      "model": "unsloth/Qwen3.8-27B-GGUF",
+      "temperature": 0,
+      "top_p": 1
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "model_gguf": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "rendered_prompt": "<|im_start|>system\nEstimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.<|im_end|>\n<|im_start|>user\n{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Fuel Pump. The fuel pump has three functions: to deliver enough fuel to supply the requirements of an engine under all operating conditions, to maintain enough pressure in the line between the carburetor and the pump to keep the fuel from boiling, and to prevent vapor lock.\\\\n\\\\npassage 2:The fuel sending unit assembly may be a combination of the electric fuel pump, the filter, the strainer, and the electronic device used to measure the amount of fuel in the tank via a float attached to a sensor which sends data to the dash-mounted fuel gauge. The fuel pump by itself is a relatively inexpensive part.\\\\n\\\\npassage 3:With the whole unit you will get a new pressure regulator. Its alot easier to change out, Plus its all new, And if you have a problem you dont have to dissemble it to figure it out. Sometimes the valve in the regulator/pump lets the fuel drain back to the tank which is the reason for the long starting. In the long run its worth the extra $$ for the whole unit. Good luck.\\\\n\\\\n\\\",\\\"question\\\":\\\"what's the difference between fuel sending unit and fuel pump\\\"}\\n\", \"original_answer\": \"Based on the given passages, the main differences between a fuel sending unit and a fuel pump are:\\n\\n* Functionality: A fuel pump delivers fuel to the engine, while a fuel sending unit assembly includes the fuel pump, filter, strainer, and electronic device to measure the amount of fuel in the tank and send data to the dash-mounted fuel gauge.\\n* Cost: A fuel pump is a relatively inexpensive part compared to the entire fuel sending unit assembly.\\n* Ease of replacement: Replacing the fuel pump alone can be more difficult than replacing the entire fuel sending unit assembly, as the latter comes as a complete unit and is easier to install.\\n\\nHowever, it's important to note that the passages don't provide a clear distinction between the two components, and they seem to be discussed interchangeably. Therefore, without more information, it's difficult to give a definitive answer to the question.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+    "request_schema": "carnot.exact_request.v1",
+    "runtime": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "seed": 7078188,
+    "source_bytes": "7b227061737361676573223a227061737361676520313a4675656c2050756d702e20546865206675656c2070756d70206861732074687265652066756e6374696f6e733a20746f2064656c6976657220656e6f756768206675656c20746f20737570706c792074686520726571756972656d656e7473206f6620616e20656e67696e6520756e64657220616c6c206f7065726174696e6720636f6e646974696f6e732c20746f206d61696e7461696e20656e6f75676820707265737375726520696e20746865206c696e65206265747765656e207468652063617262757265746f7220616e64207468652070756d7020746f206b65657020746865206675656c2066726f6d20626f696c696e672c20616e6420746f2070726576656e74207661706f72206c6f636b2e5c6e5c6e7061737361676520323a546865206675656c2073656e64696e6720756e697420617373656d626c79206d6179206265206120636f6d62696e6174696f6e206f662074686520656c656374726963206675656c2070756d702c207468652066696c7465722c207468652073747261696e65722c20616e642074686520656c656374726f6e696320646576696365207573656420746f206d6561737572652074686520616d6f756e74206f66206675656c20696e207468652074616e6b20766961206120666c6f617420617474616368656420746f20612073656e736f722077686963682073656e6473206461746120746f2074686520646173682d6d6f756e746564206675656c2067617567652e20546865206675656c2070756d7020627920697473656c6620697320612072656c61746976656c7920696e657870656e7369766520706172742e5c6e5c6e7061737361676520333a57697468207468652077686f6c6520756e697420796f752077696c6c206765742061206e657720707265737375726520726567756c61746f722e2049747320616c6f742065617369657220746f206368616e6765206f75742c20506c75732069747320616c6c206e65772c20416e6420696620796f75206861766520612070726f626c656d20796f7520646f6e74206861766520746f2064697373656d626c6520697420746f20666967757265206974206f75742e20536f6d6574696d6573207468652076616c766520696e2074686520726567756c61746f722f70756d70206c65747320746865206675656c20647261696e206261636b20746f207468652074616e6b2077686963682069732074686520726561736f6e20666f7220746865206c6f6e67207374617274696e672e20496e20746865206c6f6e672072756e2069747320776f7274682074686520657874726120242420666f72207468652077686f6c6520756e69742e20476f6f64206c75636b2e5c6e5c6e222c227175657374696f6e223a227768617427732074686520646966666572656e6365206265747765656e206675656c2073656e64696e6720756e697420616e64206675656c2070756d70227d0a",
+    "tokenizer": "sha256:288df31e4baa7a4b388e50591ab2f0dfb355f47104a6eaffb1aecb5302e7c456"
+  },
+  "sha256": "sha256:aefa65bb7eea53b0d3873af5f1d3383a20b5478e9ec7ed5de8578d0c70697111"
+}

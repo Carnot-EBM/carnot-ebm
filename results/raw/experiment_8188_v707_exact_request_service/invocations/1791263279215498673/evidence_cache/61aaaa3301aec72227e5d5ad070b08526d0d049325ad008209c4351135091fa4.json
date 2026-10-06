@@ -1,0 +1,61 @@
+{
+  "evidence": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791263628,
+    "id": "chatcmpl-cYdhfk0VXxMs0Q7ESzDYLXdwsGwKFaZU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 562.263,
+      "predicted_n": 24,
+      "predicted_per_second": 42.6846511330107,
+      "predicted_per_token_ms": 23.427625000000003,
+      "prompt_ms": 624.039,
+      "prompt_n": 523,
+      "prompt_per_second": 838.0886451007068,
+      "prompt_per_token_ms": 1.1931912045889101
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 523,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 547
+    }
+  },
+  "identity": {
+    "answer_bytes": "50726f70657274696573206f6620676f6c643a0a0a2a20476f6c6420686173206d6f7265207468616e206f6e65207368656c6c206f662076616c656e636520656c656374726f6e732c20616c6c6f77696e6720697420746f20666f726d20636f6d706f756e6473207769746820616e206f7869646174696f6e206e756d626572206f66202d312e0a2a20476f6c642069732061206865617679206d6574616c207769746820612064656e73697479206f662031392e3320672f636dc2b32e0a2a204f6e65206772616d206f6620676f6c642063616e2062652068616d6d65726564206f757420696e746f2061207468696e207368656574206f6620676f6c6420636f766572696e672061206d6574657220696e20617265612c20616e64206973207472616e736c7563656e742077697468206120677265656e6973682d626c756520636f6c6f722e0a2a20476f6c64206973206d616c6c6561626c6520616e642064756374696c652c206d65616e696e672069742063616e20626520656173696c792062656174656e20696e746f207468696e2073686565747320616e6420647261776e206f757420696e746f20776972657320776974686f757420627265616b696e672e0a2a20476f6c64206973206120736f6674206d6574616c20616e64206973207479706963616c6c7920616c6c6f7965642077697468206f74686572206d6574616c7320746f20696e6372656173652069747320737472656e6774682e",
+    "generation_parameters": {
+      "cache_prompt": false,
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "max_tokens": 128,
+      "model": "unsloth/Qwen3.8-27B-GGUF",
+      "temperature": 0,
+      "top_p": 1
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "model_gguf": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "rendered_prompt": "<|im_start|>system\nEstimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.<|im_end|>\n<|im_start|>user\n{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Like other transition metals gold's valence electrons, or the electrons it uses to combine with other elements, are present in more than one shell. Unusually for a metal, gold can also form compounds (aurides) in which its oxidation number is negative (-1).\\\\n\\\\npassage 2:Gold is a heavy metal (density 19.3 g cm -3) and one gram of gold can be hammered out into a thin sheet of gold a metre in area, and just 230 atoms or so thick. Gold leaf is translucent and the transmitted light is greenish blue (gold metal reflects yellow and red, leaving the greenish blue colour.\\\\n\\\\npassage 3:Gold is metallic, with a yellow colour when in a mass, but when finely divided it may be black, ruby, or purple. It is the most malleable and ductile metal; 1 ounce (28 g) of gold can be beaten out to 300 square feet. It is a soft metal and is usually alloyed to give it more strength.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are properties of gold\\\"}\\n\", \"original_answer\": \"Properties of gold:\\n\\n* Gold has more than one shell of valence electrons, allowing it to form compounds with an oxidation number of -1.\\n* Gold is a heavy metal with a density of 19.3 g/cm\\u00b3.\\n* One gram of gold can be hammered out into a thin sheet of gold covering a meter in area, and is translucent with a greenish-blue color.\\n* Gold is malleable and ductile, meaning it can be easily beaten into thin sheets and drawn out into wires without breaking.\\n* Gold is a soft metal and is typically alloyed with other metals to increase its strength.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+    "request_schema": "carnot.exact_request.v1",
+    "runtime": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "seed": 7078188,
+    "source_bytes": "7b227061737361676573223a227061737361676520313a4c696b65206f74686572207472616e736974696f6e206d6574616c7320676f6c6427732076616c656e636520656c656374726f6e732c206f722074686520656c656374726f6e73206974207573657320746f20636f6d62696e652077697468206f7468657220656c656d656e74732c206172652070726573656e7420696e206d6f7265207468616e206f6e65207368656c6c2e20556e757375616c6c7920666f722061206d6574616c2c20676f6c642063616e20616c736f20666f726d20636f6d706f756e64732028617572696465732920696e20776869636820697473206f7869646174696f6e206e756d626572206973206e6567617469766520282d31292e5c6e5c6e7061737361676520323a476f6c642069732061206865617679206d6574616c202864656e736974792031392e33206720636d202d332920616e64206f6e65206772616d206f6620676f6c642063616e2062652068616d6d65726564206f757420696e746f2061207468696e207368656574206f6620676f6c642061206d6574726520696e20617265612c20616e64206a757374203233302061746f6d73206f7220736f20746869636b2e20476f6c64206c656166206973207472616e736c7563656e7420616e6420746865207472616e736d6974746564206c6967687420697320677265656e69736820626c75652028676f6c64206d6574616c207265666c656374732079656c6c6f7720616e64207265642c206c656176696e672074686520677265656e69736820626c756520636f6c6f75722e5c6e5c6e7061737361676520333a476f6c64206973206d6574616c6c69632c207769746820612079656c6c6f7720636f6c6f7572207768656e20696e2061206d6173732c20627574207768656e2066696e656c792064697669646564206974206d617920626520626c61636b2c20727562792c206f7220707572706c652e20497420697320746865206d6f7374206d616c6c6561626c6520616e642064756374696c65206d6574616c3b2031206f756e636520283238206729206f6620676f6c642063616e2062652062656174656e206f757420746f203330302073717561726520666565742e204974206973206120736f6674206d6574616c20616e6420697320757375616c6c7920616c6c6f79656420746f2067697665206974206d6f726520737472656e6774682e5c6e5c6e222c227175657374696f6e223a2277686174206172652070726f70657274696573206f6620676f6c64227d0a",
+    "tokenizer": "sha256:288df31e4baa7a4b388e50591ab2f0dfb355f47104a6eaffb1aecb5302e7c456"
+  },
+  "sha256": "sha256:c8a0cf3ee33ed9f8d6073501871dd53900262f0fab8c7ab7feb64934cfbbb4a4"
+}

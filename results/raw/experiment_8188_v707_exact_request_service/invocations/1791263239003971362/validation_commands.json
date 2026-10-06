@@ -1,0 +1,206 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.verify.exact_request_8188",
+        "carnot.reporting.exact_request_execution_8188"
+      ],
+      "name": "worktree_imports",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8188-validation-iy8soa4d/focused",
+        "tests/python/test_exact_request_8188.py",
+        "tests/python/test_durable_batch_8159.py::test_complete_transactions_and_queue",
+        "tests/python/test_durable_batch_8159.py::test_crashes_deduplication",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "explicit_tests",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8188-validation-iy8soa4d/.coverage",
+        "--include=*/verify/exact_request_8188.py,*/reporting/exact_request_execution_8188.py,*/scripts/experiments/experiment_8188_v707_exact_request_service.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8188-validation-iy8soa4d/coverage",
+        "tests/python/test_exact_request_8188.py",
+        "tests/python/test_durable_batch_8159.py::test_complete_transactions_and_queue",
+        "tests/python/test_durable_batch_8159.py::test_crashes_deduplication",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "explicit_tests_and_changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8188-validation-iy8soa4d/.coverage",
+        "--include=*/verify/exact_request_8188.py,*/reporting/exact_request_execution_8188.py,*/scripts/experiments/experiment_8188_v707_exact_request_service.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/exact_request_8188.py",
+        "python/carnot/reporting/exact_request_execution_8188.py",
+        "scripts/experiments/experiment_8188_v707_exact_request_service.py",
+        "tests/python/test_exact_request_8188.py",
+        "tests/python/test_durable_batch_8159.py",
+        "tests/python/test_durable_batch_8159.py"
+      ],
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/exact_request_8188.py",
+        "python/carnot/reporting/exact_request_execution_8188.py",
+        "scripts/experiments/experiment_8188_v707_exact_request_service.py",
+        "tests/python/test_exact_request_8188.py",
+        "tests/python/test_durable_batch_8159.py",
+        "tests/python/test_durable_batch_8159.py"
+      ],
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/verify/exact_request_8188.py",
+        "python/carnot/reporting/exact_request_execution_8188.py",
+        "--strict",
+        "--follow-imports=silent"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_exact_request_8188.py",
+        "tests/python/test_durable_batch_8159.py",
+        "tests/python/test_durable_batch_8159.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 600
+    }
+  ],
+  "config": {
+    "batch_size": 8,
+    "bootstrap_draws": 10000,
+    "call_timeout_s": 120,
+    "closure_s": 4800,
+    "latest_launch_s": 3000,
+    "load_timeout_s": 300,
+    "main_calls": 72,
+    "max_tokens": 128,
+    "seed": 7078188,
+    "sources": 24,
+    "startup_amortization_requests": 96,
+    "warmups": 2
+  },
+  "frozen_before_measurement": true,
+  "protocol": {
+    "forced_refresh": true,
+    "fresh_stochastic_sample": false,
+    "head_in_acquisition_key": false,
+    "repeat_fractions": [
+      0,
+      0.25,
+      0.5,
+      0.9
+    ],
+    "schema": "carnot.exact_request.v1",
+    "semantics": "memoized fixed-seed verifier text"
+  },
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "name": "repository_health_once",
+    "scope": "repository_health_not_science_gate",
+    "timeout_s": 1800
+  },
+  "repository_health_env": {
+    "PYTEST_ADDOPTS": "-o addopts= --no-cov -n 4"
+  },
+  "terminal": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8188_v707_exact_request_service.py",
+        "--cold-replay",
+        "/tmp/carnot-8188-validation-iy8soa4d/experiment_8188_v707_exact_request_service.json"
+      ],
+      "name": "cold_replay",
+      "scope": "terminal",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-8188-validation-iy8soa4d/experiment_8188_v707_exact_request_service.json"
+      ],
+      "name": "adversarial",
+      "scope": "terminal",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-8188-validation-iy8soa4d/experiment_8188_v707_exact_request_service.json"
+      ],
+      "name": "strict_rows",
+      "scope": "terminal",
+      "timeout_s": 300
+    }
+  ]
+}
