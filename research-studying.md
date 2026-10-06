@@ -6485,3 +6485,15 @@ Semantic Scholar sweep returned HTTP429 and no new sources; no fan-out followed.
 V704 admissions at248 leave no resolved later predictions. V705 private fixtures
 qualify earlier installation and changed future exposure only. Natural benefit
 and independent generalization remain unqualified.
+## 2026-10-06 — Exp8180 calibrated memory leads ingested
+
+- [Continual Calibration](https://arxiv.org/abs/2604.23987v1): ingested for a
+  separate fixed-center calibration control and retained uncertainty checks.
+  No conformal or exchangeability guarantee transfers to this exposed stream.
+- [Delayed OCO](https://arxiv.org/abs/2602.02634v1) and
+  [capacity-constrained feedback](https://arxiv.org/abs/2606.11711v1): ingested
+  for distinct issue, release, admission and permanent-loss events. No regret
+  guarantee transfers to this finite implementation.
+- [KAC](https://arxiv.org/abs/2503.21076v1): ingested for local Gaussian capacity
+  controls and separate retention. Multivariate radial heads are not KAC's
+  channel-wise classifier. Frozen method map: V707 calibrated-memory protocol.

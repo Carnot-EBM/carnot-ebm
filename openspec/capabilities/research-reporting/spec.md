@@ -93810,3 +93810,30 @@ Private CLI success, missing input, source tamper and cold replay run outside th
 checkout without PYTHONPATH. Changed sources, rows, configuration, code or logs
 fail replay. External missing evidence terminates complete_blocked_<check> with
 actual operands; owned validation failure disqualifies and zeros readiness.
+# REQ-REPORT-8180: Publish checked calibrated-memory methods and primitive diagnosis
+
+### SCENARIO-REPORT-8180-HEALTH-CUSTODY
+
+A retry SHALL reuse a completed diagnostic full-suite receipt after checking its
+exact argv and sealed log hash. Pending diagnostics emit actual completed0,
+pending1 counts every30 seconds. Reuse never reports a new suite execution or
+changes the original failed/timed-out result. Coverage commands SHALL explicitly
+select the same combined data file despite supervisor environment overrides.
+
+Exp8180 SHALL load no LLM, freeze V707 protocol and validation argv before
+measurement, preserve imported provenance separately from current zero calls,
+bind input/code/config/log hashes, and publish through primary_publication.
+Readiness requires all owned checks to exit normally,100 percent new statement
+coverage, Ruff check/format, strict mypy, explicit-path spec coverage and E2E-016.
+Unrelated full-suite health is reported separately. External missing/retired/gate
+failure yields complete_blocked_<check> with exact failed operand. Owned failure
+disqualifies and zeros readiness. Fixture/exposed work yields zero independent
+generalization and generalized benefit scores. Historical primaries stay intact.
+
+### SCENARIO-REPORT-8180-CLI
+
+Private success, missing-input, changed gate, tamper and cold replay SHALL run
+from outside the checkout without PYTHONPATH. Rehashed row/headline mutation
+fails independent replay. Completed logs enter immutable custody with argv,
+expected/actual exit, duration and hash. Unmodified adversarial verifier and
+strict row lint SHALL pass before a qualified primary becomes reader-visible.

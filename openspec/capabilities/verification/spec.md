@@ -49471,3 +49471,43 @@ Private E2E-010/015/019 cover Unicode, repeated sentences, empty references,
 invalid indices/probabilities/order, truncation, partial groups, incomplete tails,
 >16 sentences, oversized inputs and tampered source bytes. Predictions and valid
 addresses never become semantic gold. Both benefit scores always remain zero.
+# REQ-VERIFY-8180: Qualify bounded base calibration before natural memory fitting
+
+### SCENARIO-VERIFY-8180-ROSTER
+
+Missing fixture trajectories SHALL disqualify qualification even when a producer
+sets all readiness operands true. Rehashed metric and diagnostic shards SHALL
+fail independent reduction. Hard-exit coverage SHALL join the owned collector.
+
+Exp8180 SHALL preserve immutable V705 geometry, delay20, capacity32, original
+256/64 stream/retention slots, opportunities64/144, expiry144/224, role hash
+modulo4 and twelve strictly later one-use admission labels. Five arms SHALL be
+frozen: calibrated_error_center, calibrated_fixed_center,
+calibrated_random_center, calibration_only (16 centers), frozen_qwen_offset.
+Growing arms start16 and add4 per opportunity to maximum24. All adaptive arms
+fit a,b,w on newest64 released update-only rows with the same budget. Score is
+a*logit(clip(p,1e-6,1-1e-6))+b+w.phi. Bounds are a[0,2], b[-8,8], w[-4,4].
+Initial values are1,0,0. Mean binary log loss adds .005*sum(w*w) and
+.005*(a-1)^2. Bounded deterministic L-BFGS-B gets200 iterations and projected
+gradient tolerance1e-6. Nonconverged candidates SHALL NOT enter admission.
+Admission interpolates all parameters together without fitting admission labels.
+
+### SCENARIO-VERIFY-8180-FIXTURES
+
+Independent scalar objective agrees within1e-8. Admitted fixture candidates
+have projected gradient<=1e-6. Saturated learnable fixtures install by208 and
+change at least32 later typed decisions. No-signal fixtures claim zero benefit.
+Overflow records permanent feedback loss. A real hard-exit73 and resumed child
+matches uninterrupted complete state. Fixture success is circular_positive only.
+
+### SCENARIO-VERIFY-8180-DIAGNOSIS
+
+Reconstruct V706 logit margins to actual typed thresholds and residual sizes
+from sealed states and primitive rows. Measure the old objective gradient to
+separate incomplete optimization from clipping saturation. Missing signal stays
+unresolved without a new independent comparison. Preserve the old protocol/null.
+Natural fitting and benefit testing belong to Exp8186/8187, not qualification.
+H2 retains128 later sources,8/class,8 original-slot blocks, retention48 and8/class,
+block16/sensitivity8,32,10000 draws,9500 valid, lower97.5 gain>.02, five improved
+sources, zero extra false accepts, Brier increase<=.01; retention cost<=.02 and
+Brier<=.01. H1/H2 alpha=.025 each. Seeds average within original source.
