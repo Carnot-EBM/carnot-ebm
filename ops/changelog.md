@@ -21581,3 +21581,4 @@ Recorded 10 completed experiments in 25 minutes, including 1 compute-bound task.
 - 2026-10-06: Freeze an acceptance-constrained energy decision experiment (⚠️ Research Finding) — honest_verdict=complete_null_restricted_action_methods; results/experiment_8207_v709_restricted_action_methods.json
 - 2026-10-06: Train matched energy and simple heads under the same action constraint (⚠️ Research Finding) — honest_verdict=complete_null_restricted_energy_fit; results/experiment_8208_v709_restricted_energy_fit.json
 - 2026-10-06: Seal constrained predictions on every original reserved source (⚠️ Research Finding) — honest_verdict=complete_null_restricted_predictions_sealed; results/experiment_8209_v709_restricted_sealed_evaluation.json
+- 2026-10-06: Independently test constrained action utility and remaining risk (⚠️ Research Finding) — honest_verdict=complete_disqualified_restricted_decision_audit; results/experiment_8210_v709_restricted_decision_audit.json
