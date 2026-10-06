@@ -94266,3 +94266,29 @@ are hashed. An owned check failure disqualifies the result.
 
 A private success fixture cold-replays from sealed inputs. Changing a primitive,
 configuration, receipt or headline is rejected; fixtures earn no natural credit.
+
+## REQ-REPORT-8204: Terminal thirteen-task V708 capstone custody
+
+Authenticate the frozen V708 design, visible rows, full executable tasks and
+canonical digest through the existing authority lifecycle. Account for exactly
+thirteen tasks Exp8192 through Exp8204, preserving producer primaries, conductor
+skips, absent primaries and current and historical hash failures separately.
+Check runtime and private writable storage before reduction. Load no model and
+train no head; current invocations are zero and imported provenance is explicit.
+Freeze validation argv before measurement. Require scoped pytest,100 percent
+new statement coverage,Ruff check/format,strict mypy,explicit spec coverage and
+private E2E-018 success,missing,mutation and cold replay outside the checkout
+without PYTHONPATH. Seal completed logs and evidence. Run the full Python suite
+once as separate repository health. Use unmodified terminal auditors and the
+checked primary publisher. External blocks terminate; owned failures disqualify
+and zero readiness. The conductor owns ops/status/changelog/traceability updates.
+
+### SCENARIO-REPORT-8204-CUSTODY
+
+Private matching authority passes; missing authority, changed complete-task
+operands and tampered primitive, aggregate or log bytes fail closed. A completed
+blocked capstone can be administratively ready without scientific progress.
+
+Implementation: `python/carnot/reporting/v708_capstone.py`,
+`v708_capstone_inputs.py`, `v708_capstone_science.py` and the Exp8204 thin CLI.
+Tests: `tests/python/test_v708_capstone_8204.py`.

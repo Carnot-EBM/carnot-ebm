@@ -49934,3 +49934,27 @@ counts and actual fallback timing recorded by original source.
 
 A100ns request with10ns mixed arithmetic/transfer has only an optimistic100/90
 ceiling; missing pure arithmetic never establishes a100x delivered speedup.
+
+## REQ-VERIFY-8204: Independent V708 science and gap decisions
+
+Reconstruct H1 selective typed costs and H2 later learning from qualified
+primitive sources. Reserve alpha.025 for each hypothesis without transferring
+blocked alpha. Keep missing masks, logistic equivalence, shared calibration and
+center growth separate. Exposed cohorts earn zero independent/generalized credit.
+Recompute observed repeat frequency and available complete-service Python/Rust
+ratios; conditional cache savings cannot close NFR-01, which requires a qualified
+complete-service10x ratio. Preserve board blockers and projections as such.
+All three PRD gaps name exact unmet operands and evidence paths. An exposed-data
+win authorizes only an independent validation proposal. A selective-policy null
+retires its exact exposed continuation without rescheduling unchanged capture or
+thresholds. Authenticate prior verdicts before same-scope retirement; standing
+ARC inventories are not scientific reruns. Preserve the September28 oracle-
+distinct corrigendum. Compute stable G1-G4 with publication_gate.py --json and
+retain its FoVer scope; paper_ready cannot certify these new hypotheses.
+
+### SCENARIO-VERIFY-8204-REDUCTION
+
+The qualified selective null survives blocked learning and request census.
+Missing scientific evidence is blocked, never an invented null or partial.
+Private positive controls cannot earn natural credit. Rehashed aggregate tamper
+and primitive drift fail replay; administrative readiness stays separate.
