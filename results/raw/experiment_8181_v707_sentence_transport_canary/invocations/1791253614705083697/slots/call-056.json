@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:f098973ae011dc49d2b13f2ca8d6c1b7d5ee1c70e9362d93c0fd2c71f19f8dbe",
+  "ended_monotonic_ns": 914774951883698,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r8 \"\\n\" r9 \"\\n\" r10 \"\\n\" r11 \"\\n\" r12\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nr9 ::= \"9|\" relation \"|\" probability \"|\" refs\nr10 ::= \"10|\" relation \"|\" probability \"|\" refs\nr11 ::= \"11|\" relation \"|\" probability \"|\" refs\nr12 ::= \"12|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"900 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":true,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":true,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Hot Dogs, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Dave\u2019s Dogs\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-29 20:27:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great hot dog! The staff was incredibly friendly and our food was ready quickly. Can't recommend it enough!\\\"},{\\\"review_date\\\":\\\"2021-10-21 03:29:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We stopped by here randomly after a trip to the zoo and we are so glad we did. The staff were so friendly and the food was so good. Our family agreed that this was the best hot dog we have had in a long time.\\\"},{\\\"review_date\\\":\\\"2021-06-27 20:40:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Dave is the best. He continues to work hard to bring great food to his community. Lots of delicious options on the menu but the pizza dog is my go to. Just when he thought it couldn't get better he brought in a great burger and chicken sandwich menu. Stop by and support local business.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Dave's Dogs is a local business located at 900 N Milpas St in Santa Barbara, CA. It is a restaurant that specializes in serving hot dogs. The business has received positive reviews from customers, with an average rating of 4.5 stars. \\n\\nCustomers have praised the friendly staff and quick service at Dave's Dogs. They have also mentioned that the food is of high quality and delicious. One customer mentioned that it was the best hot dog they have had in a long time. Another customer appreciated the owner, Dave, for his dedication in bringing great food to the community. \\n\\nThe restaurant offers outdoor seating and takeout options. It is suitable for groups and has a casual and trendy ambience. The business does not provide WiFi. \\n\\nDave's Dogs operates from 11:00 AM to 8:00 PM from Monday to Thursday, and from 11:00 AM to 9:00 PM on Fridays and Saturdays. The parking options include street parking and a parking lot. \\n\\nOverall, Dave's Dogs is a highly recommended local business in Santa Barbara, known for its friendly staff, delicious hot dogs, and a variety of menu options.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":768},{\"index\":1,\"byte_start\":768,\"byte_end\":834},{\"index\":2,\"byte_start\":834,\"byte_end\":1013},{\"index\":3,\"byte_start\":1013,\"byte_end\":1066},{\"index\":4,\"byte_start\":1066,\"byte_end\":1234},{\"index\":5,\"byte_start\":1234,\"byte_end\":1298},{\"index\":6,\"byte_start\":1298,\"byte_end\":1367},{\"index\":7,\"byte_start\":1367,\"byte_end\":1467},{\"index\":8,\"byte_start\":1467,\"byte_end\":1519}],\"answer_sentence_indices\":[8,9,10,11,12],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":81},{\"index\":1,\"byte_start\":81,\"byte_end\":138},{\"index\":2,\"byte_start\":138,\"byte_end\":236},{\"index\":3,\"byte_start\":236,\"byte_end\":312},{\"index\":4,\"byte_start\":312,\"byte_end\":385},{\"index\":5,\"byte_start\":385,\"byte_end\":467},{\"index\":6,\"byte_start\":467,\"byte_end\":575},{\"index\":7,\"byte_start\":575,\"byte_end\":634},{\"index\":8,\"byte_start\":634,\"byte_end\":698},{\"index\":9,\"byte_start\":698,\"byte_end\":736},{\"index\":10,\"byte_start\":736,\"byte_end\":862},{\"index\":11,\"byte_start\":862,\"byte_end\":926},{\"index\":12,\"byte_start\":926,\"byte_end\":1084}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1225,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"900 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":true,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":true,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Hot Dogs, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Dave\u2019s Dogs\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-29 20:27:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great hot dog! The staff was incredibly friendly and our food was ready quickly. Can't recommend it enough!\\\"},{\\\"review_date\\\":\\\"2021-10-21 03:29:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We stopped by here randomly after a trip to the zoo and we are so glad we did. The staff were so friendly and the food was so good. Our family agreed that this was the best hot dog we have had in a long time.\\\"},{\\\"review_date\\\":\\\"2021-06-27 20:40:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Dave is the best. He continues to work hard to bring great food to his community. Lots of delicious options on the menu but the pizza dog is my go to. Just when he thought it couldn't get better he brought in a great burger and chicken sandwich menu. Stop by and support local business.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Dave's Dogs is a local business located at 900 N Milpas St in Santa Barbara, CA. It is a restaurant that specializes in serving hot dogs. The business has received positive reviews from customers, with an average rating of 4.5 stars. \\n\\nCustomers have praised the friendly staff and quick service at Dave's Dogs. They have also mentioned that the food is of high quality and delicious. One customer mentioned that it was the best hot dog they have had in a long time. Another customer appreciated the owner, Dave, for his dedication in bringing great food to the community. \\n\\nThe restaurant offers outdoor seating and takeout options. It is suitable for groups and has a casual and trendy ambience. The business does not provide WiFi. \\n\\nDave's Dogs operates from 11:00 AM to 8:00 PM from Monday to Thursday, and from 11:00 AM to 9:00 PM on Fridays and Saturdays. The parking options include street parking and a parking lot. \\n\\nOverall, Dave's Dogs is a highly recommended local business in Santa Barbara, known for its friendly staff, delicious hot dogs, and a variety of menu options.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":768},{\"index\":1,\"byte_start\":768,\"byte_end\":834},{\"index\":2,\"byte_start\":834,\"byte_end\":1013},{\"index\":3,\"byte_start\":1013,\"byte_end\":1066},{\"index\":4,\"byte_start\":1066,\"byte_end\":1234},{\"index\":5,\"byte_start\":1234,\"byte_end\":1298},{\"index\":6,\"byte_start\":1298,\"byte_end\":1367},{\"index\":7,\"byte_start\":1367,\"byte_end\":1467},{\"index\":8,\"byte_start\":1467,\"byte_end\":1519}],\"answer_sentence_indices\":[8,9,10,11,12],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":81},{\"index\":1,\"byte_start\":81,\"byte_end\":138},{\"index\":2,\"byte_start\":138,\"byte_end\":236},{\"index\":3,\"byte_start\":236,\"byte_end\":312},{\"index\":4,\"byte_start\":312,\"byte_end\":385},{\"index\":5,\"byte_start\":385,\"byte_end\":467},{\"index\":6,\"byte_start\":467,\"byte_end\":575},{\"index\":7,\"byte_start\":575,\"byte_end\":634},{\"index\":8,\"byte_start\":634,\"byte_end\":698},{\"index\":9,\"byte_start\":698,\"byte_end\":736},{\"index\":10,\"byte_start\":736,\"byte_end\":862},{\"index\":11,\"byte_start\":862,\"byte_end\":926},{\"index\":12,\"byte_start\":926,\"byte_end\":1084}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r8 \"\\n\" r9 \"\\n\" r10 \"\\n\" r11 \"\\n\" r12\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nr9 ::= \"9|\" relation \"|\" probability \"|\" refs\nr10 ::= \"10|\" relation \"|\" probability \"|\" refs\nr11 ::= \"11|\" relation \"|\" probability \"|\" refs\nr12 ::= \"12|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\"\n",
+    "input_tokens": 1213,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"900 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":true,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":true,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Hot Dogs, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Dave\u2019s Dogs\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-29 20:27:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great hot dog! The staff was incredibly friendly and our food was ready quickly. Can't recommend it enough!\\\"},{\\\"review_date\\\":\\\"2021-10-21 03:29:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We stopped by here randomly after a trip to the zoo and we are so glad we did. The staff were so friendly and the food was so good. Our family agreed that this was the best hot dog we have had in a long time.\\\"},{\\\"review_date\\\":\\\"2021-06-27 20:40:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Dave is the best. He continues to work hard to bring great food to his community. Lots of delicious options on the menu but the pizza dog is my go to. Just when he thought it couldn't get better he brought in a great burger and chicken sandwich menu. Stop by and support local business.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Dave's Dogs is a local business located at 900 N Milpas St in Santa Barbara, CA. It is a restaurant that specializes in serving hot dogs. The business has received positive reviews from customers, with an average rating of 4.5 stars. \\n\\nCustomers have praised the friendly staff and quick service at Dave's Dogs. They have also mentioned that the food is of high quality and delicious. One customer mentioned that it was the best hot dog they have had in a long time. Another customer appreciated the owner, Dave, for his dedication in bringing great food to the community. \\n\\nThe restaurant offers outdoor seating and takeout options. It is suitable for groups and has a casual and trendy ambience. The business does not provide WiFi. \\n\\nDave's Dogs operates from 11:00 AM to 8:00 PM from Monday to Thursday, and from 11:00 AM to 9:00 PM on Fridays and Saturdays. The parking options include street parking and a parking lot. \\n\\nOverall, Dave's Dogs is a highly recommended local business in Santa Barbara, known for its friendly staff, delicious hot dogs, and a variety of menu options.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":768},{\"index\":1,\"byte_start\":768,\"byte_end\":834},{\"index\":2,\"byte_start\":834,\"byte_end\":1013},{\"index\":3,\"byte_start\":1013,\"byte_end\":1066},{\"index\":4,\"byte_start\":1066,\"byte_end\":1234},{\"index\":5,\"byte_start\":1234,\"byte_end\":1298},{\"index\":6,\"byte_start\":1298,\"byte_end\":1367},{\"index\":7,\"byte_start\":1367,\"byte_end\":1467},{\"index\":8,\"byte_start\":1467,\"byte_end\":1519}],\"answer_sentence_indices\":[8,9,10,11,12],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":81},{\"index\":1,\"byte_start\":81,\"byte_end\":138},{\"index\":2,\"byte_start\":138,\"byte_end\":236},{\"index\":3,\"byte_start\":236,\"byte_end\":312},{\"index\":4,\"byte_start\":312,\"byte_end\":385},{\"index\":5,\"byte_start\":385,\"byte_end\":467},{\"index\":6,\"byte_start\":467,\"byte_end\":575},{\"index\":7,\"byte_start\":575,\"byte_end\":634},{\"index\":8,\"byte_start\":634,\"byte_end\":698},{\"index\":9,\"byte_start\":698,\"byte_end\":736},{\"index\":10,\"byte_start\":736,\"byte_end\":862},{\"index\":11,\"byte_start\":862,\"byte_end\":926},{\"index\":12,\"byte_start\":926,\"byte_end\":1084}]}",
+    "request_index": 1,
+    "sentence_indices": [
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "8|E|1.00|[]\n9|E|1.00|[]\n10|E|1.00|[]\n11|E|1.00|[]\n12|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791253866,
+    "id": "chatcmpl-rBy25CEybYeHa2KKMlgada9TOl4gGDL6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 712,
+      "predicted_ms": 1419.553,
+      "predicted_n": 58,
+      "predicted_per_second": 40.85793203917007,
+      "predicted_per_token_ms": 24.475051724137934,
+      "prompt_ms": 540.038,
+      "prompt_n": 513,
+      "prompt_per_second": 949.9331528522066,
+      "prompt_per_token_ms": 1.0527056530214425
+    },
+    "usage": {
+      "completion_tokens": 58,
+      "prompt_tokens": 1225,
+      "prompt_tokens_details": {
+        "cached_tokens": 712
+      },
+      "total_tokens": 1283
+    }
+  },
+  "source_cluster_id": "sha256:d4966bebf02d45312b729a70018ccb7c1572f8c6b3bcdfa35e38eb22db824213",
+  "started_monotonic_ns": 914772963649133,
+  "status": "completed",
+  "unit_id": "sha256:c177c8194ab40ce99df3c76c2d2e3f63441bfb7c1fcf0baddac8fafca4149f52"
+}

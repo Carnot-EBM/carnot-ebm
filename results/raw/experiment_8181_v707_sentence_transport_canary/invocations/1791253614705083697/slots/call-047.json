@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:522b113282b6e9ab149229e3cd391fe58c198f9812ff6c004bdf45fd9cc152d3",
+  "ended_monotonic_ns": 914745991694553,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Combine the seasonings and oil in a large glass baking-dish, add the chicken and coat with the spice mixture. Cover and refrigerate overnight or for a few hours. Pre-heat the oven to Convection Roast or Convection Bake 350 degrees.Place the chicken pieces on a rimmed baking sheet and place it in the oven on rack position 2 (counting up from the bottom of the oven) Cook for 20 minutes, turn the pieces, brush with the BBQ sauce and cook for another 15 minutes.lace the chicken pieces on a rimmed baking sheet and place it in the oven on rack position 2 (counting up from the bottom of the oven) Cook for 20 minutes, turn the pieces, brush with the BBQ sauce and cook for another 15 minutes.\\\\n\\\\npassage 2:You should cook chicken legs in an convection oven for between 20 and 30 minutes depending on the temperature.The air movement of convection ovens greatly reduces cooking times when compared to traditional ovens.ou should cook chicken legs in an convection oven for between 20 and 30 minutes depending on the temperature.\\\\n\\\\npassage 3:Pre-heat oven to Convection Roast 400 degrees. Meanwhile, cover a pan with foil, and spray with a thin layer of canola spray. Place the chicken legs on the foil until the oven is preheated-about 15 minutes. When ready, put the pan in the oven and set your timer for 20 minutes.When time is up, change your heat to 325 degrees, then set timer for 10 minutes. When time is up, remove pan from oven and let sit for 10 minutes before eating.lace the chicken legs on the foil until the oven is preheated-about 15 minutes. When ready, put the pan in the oven and set your timer for 20 minutes.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to do chicken legs in a DC convection oven\\\"}\",\"answer\":\"Based on the provided passages, here are the steps to cook chicken legs in a DC convection oven:\\n\\n1. Combine seasonings and oil in a large glass baking dish, add the chicken legs and coat with the spice mixture. Cover and refrigerate overnight or for a few hours. (Passage 1)\\n2. Pre-heat the oven to Convection Roast or Convection Bake at 350 degrees. Place the chicken legs on a rimmed baking sheet and place it in the oven on rack position 2. Cook for 20 minutes, turn the pieces, brush with BBQ sauce and cook for another 15 minutes. (Passage 1)\\n3. Pre-heat the oven to Convection Roast at 400 degrees. Meanwhile, cover a pan with foil and spray with a thin layer of canola spray. Place the chicken legs on the foil and set your timer for 20 minutes. When ready, reduce the heat to 325 degrees and set the timer for 10 minutes. (Passage 3)\\n\\nTherefore, to cook chicken legs in a DC convection oven, you can use any of the methods described in Passages 1 and 3. The cooking time may vary depending on the temperature used, but generally, it takes around 20-30 minutes to cook chicken legs in a convection oven.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":133},{\"index\":1,\"byte_start\":133,\"byte_end\":185},{\"index\":2,\"byte_start\":185,\"byte_end\":1111},{\"index\":3,\"byte_start\":1111,\"byte_end\":1190},{\"index\":4,\"byte_start\":1190,\"byte_end\":1271},{\"index\":5,\"byte_start\":1271,\"byte_end\":1422},{\"index\":6,\"byte_start\":1422,\"byte_end\":1581},{\"index\":7,\"byte_start\":1581,\"byte_end\":1717}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":212},{\"index\":1,\"byte_start\":212,\"byte_end\":264},{\"index\":2,\"byte_start\":264,\"byte_end\":352},{\"index\":3,\"byte_start\":352,\"byte_end\":537},{\"index\":4,\"byte_start\":537,\"byte_end\":606},{\"index\":5,\"byte_start\":606,\"byte_end\":684},{\"index\":6,\"byte_start\":684,\"byte_end\":754},{\"index\":7,\"byte_start\":754,\"byte_end\":831},{\"index\":8,\"byte_start\":831,\"byte_end\":1111}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1132,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Combine the seasonings and oil in a large glass baking-dish, add the chicken and coat with the spice mixture. Cover and refrigerate overnight or for a few hours. Pre-heat the oven to Convection Roast or Convection Bake 350 degrees.Place the chicken pieces on a rimmed baking sheet and place it in the oven on rack position 2 (counting up from the bottom of the oven) Cook for 20 minutes, turn the pieces, brush with the BBQ sauce and cook for another 15 minutes.lace the chicken pieces on a rimmed baking sheet and place it in the oven on rack position 2 (counting up from the bottom of the oven) Cook for 20 minutes, turn the pieces, brush with the BBQ sauce and cook for another 15 minutes.\\\\n\\\\npassage 2:You should cook chicken legs in an convection oven for between 20 and 30 minutes depending on the temperature.The air movement of convection ovens greatly reduces cooking times when compared to traditional ovens.ou should cook chicken legs in an convection oven for between 20 and 30 minutes depending on the temperature.\\\\n\\\\npassage 3:Pre-heat oven to Convection Roast 400 degrees. Meanwhile, cover a pan with foil, and spray with a thin layer of canola spray. Place the chicken legs on the foil until the oven is preheated-about 15 minutes. When ready, put the pan in the oven and set your timer for 20 minutes.When time is up, change your heat to 325 degrees, then set timer for 10 minutes. When time is up, remove pan from oven and let sit for 10 minutes before eating.lace the chicken legs on the foil until the oven is preheated-about 15 minutes. When ready, put the pan in the oven and set your timer for 20 minutes.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to do chicken legs in a DC convection oven\\\"}\",\"answer\":\"Based on the provided passages, here are the steps to cook chicken legs in a DC convection oven:\\n\\n1. Combine seasonings and oil in a large glass baking dish, add the chicken legs and coat with the spice mixture. Cover and refrigerate overnight or for a few hours. (Passage 1)\\n2. Pre-heat the oven to Convection Roast or Convection Bake at 350 degrees. Place the chicken legs on a rimmed baking sheet and place it in the oven on rack position 2. Cook for 20 minutes, turn the pieces, brush with BBQ sauce and cook for another 15 minutes. (Passage 1)\\n3. Pre-heat the oven to Convection Roast at 400 degrees. Meanwhile, cover a pan with foil and spray with a thin layer of canola spray. Place the chicken legs on the foil and set your timer for 20 minutes. When ready, reduce the heat to 325 degrees and set the timer for 10 minutes. (Passage 3)\\n\\nTherefore, to cook chicken legs in a DC convection oven, you can use any of the methods described in Passages 1 and 3. The cooking time may vary depending on the temperature used, but generally, it takes around 20-30 minutes to cook chicken legs in a convection oven.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":133},{\"index\":1,\"byte_start\":133,\"byte_end\":185},{\"index\":2,\"byte_start\":185,\"byte_end\":1111},{\"index\":3,\"byte_start\":1111,\"byte_end\":1190},{\"index\":4,\"byte_start\":1190,\"byte_end\":1271},{\"index\":5,\"byte_start\":1271,\"byte_end\":1422},{\"index\":6,\"byte_start\":1422,\"byte_end\":1581},{\"index\":7,\"byte_start\":1581,\"byte_end\":1717}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":212},{\"index\":1,\"byte_start\":212,\"byte_end\":264},{\"index\":2,\"byte_start\":264,\"byte_end\":352},{\"index\":3,\"byte_start\":352,\"byte_end\":537},{\"index\":4,\"byte_start\":537,\"byte_end\":606},{\"index\":5,\"byte_start\":606,\"byte_end\":684},{\"index\":6,\"byte_start\":684,\"byte_end\":754},{\"index\":7,\"byte_start\":754,\"byte_end\":831},{\"index\":8,\"byte_start\":831,\"byte_end\":1111}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "input_tokens": 1120,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Combine the seasonings and oil in a large glass baking-dish, add the chicken and coat with the spice mixture. Cover and refrigerate overnight or for a few hours. Pre-heat the oven to Convection Roast or Convection Bake 350 degrees.Place the chicken pieces on a rimmed baking sheet and place it in the oven on rack position 2 (counting up from the bottom of the oven) Cook for 20 minutes, turn the pieces, brush with the BBQ sauce and cook for another 15 minutes.lace the chicken pieces on a rimmed baking sheet and place it in the oven on rack position 2 (counting up from the bottom of the oven) Cook for 20 minutes, turn the pieces, brush with the BBQ sauce and cook for another 15 minutes.\\\\n\\\\npassage 2:You should cook chicken legs in an convection oven for between 20 and 30 minutes depending on the temperature.The air movement of convection ovens greatly reduces cooking times when compared to traditional ovens.ou should cook chicken legs in an convection oven for between 20 and 30 minutes depending on the temperature.\\\\n\\\\npassage 3:Pre-heat oven to Convection Roast 400 degrees. Meanwhile, cover a pan with foil, and spray with a thin layer of canola spray. Place the chicken legs on the foil until the oven is preheated-about 15 minutes. When ready, put the pan in the oven and set your timer for 20 minutes.When time is up, change your heat to 325 degrees, then set timer for 10 minutes. When time is up, remove pan from oven and let sit for 10 minutes before eating.lace the chicken legs on the foil until the oven is preheated-about 15 minutes. When ready, put the pan in the oven and set your timer for 20 minutes.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to do chicken legs in a DC convection oven\\\"}\",\"answer\":\"Based on the provided passages, here are the steps to cook chicken legs in a DC convection oven:\\n\\n1. Combine seasonings and oil in a large glass baking dish, add the chicken legs and coat with the spice mixture. Cover and refrigerate overnight or for a few hours. (Passage 1)\\n2. Pre-heat the oven to Convection Roast or Convection Bake at 350 degrees. Place the chicken legs on a rimmed baking sheet and place it in the oven on rack position 2. Cook for 20 minutes, turn the pieces, brush with BBQ sauce and cook for another 15 minutes. (Passage 1)\\n3. Pre-heat the oven to Convection Roast at 400 degrees. Meanwhile, cover a pan with foil and spray with a thin layer of canola spray. Place the chicken legs on the foil and set your timer for 20 minutes. When ready, reduce the heat to 325 degrees and set the timer for 10 minutes. (Passage 3)\\n\\nTherefore, to cook chicken legs in a DC convection oven, you can use any of the methods described in Passages 1 and 3. The cooking time may vary depending on the temperature used, but generally, it takes around 20-30 minutes to cook chicken legs in a convection oven.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":133},{\"index\":1,\"byte_start\":133,\"byte_end\":185},{\"index\":2,\"byte_start\":185,\"byte_end\":1111},{\"index\":3,\"byte_start\":1111,\"byte_end\":1190},{\"index\":4,\"byte_start\":1190,\"byte_end\":1271},{\"index\":5,\"byte_start\":1271,\"byte_end\":1422},{\"index\":6,\"byte_start\":1422,\"byte_end\":1581},{\"index\":7,\"byte_start\":1581,\"byte_end\":1717}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":212},{\"index\":1,\"byte_start\":212,\"byte_end\":264},{\"index\":2,\"byte_start\":264,\"byte_end\":352},{\"index\":3,\"byte_start\":352,\"byte_end\":537},{\"index\":4,\"byte_start\":537,\"byte_end\":606},{\"index\":5,\"byte_start\":606,\"byte_end\":684},{\"index\":6,\"byte_start\":684,\"byte_end\":754},{\"index\":7,\"byte_start\":754,\"byte_end\":831},{\"index\":8,\"byte_start\":831,\"byte_end\":1111}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.00|[]\n1|E|0.00|[]\n2|E|0.00|[]\n3|E|0.00|[]\n4|E|0.00|[]\n5|E|0.00|[]\n6|E|0.00|[]\n7|E|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791253837,
+    "id": "chatcmpl-NUxryxNti48Un3B8g0lAJgGNNcX6TsrX",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 616,
+      "predicted_ms": 2142.576,
+      "predicted_n": 88,
+      "predicted_per_second": 41.072055320324694,
+      "predicted_per_token_ms": 24.347454545454546,
+      "prompt_ms": 540.685,
+      "prompt_n": 516,
+      "prompt_per_second": 954.344951311762,
+      "prompt_per_token_ms": 1.0478391472868216
+    },
+    "usage": {
+      "completion_tokens": 88,
+      "prompt_tokens": 1132,
+      "prompt_tokens_details": {
+        "cached_tokens": 616
+      },
+      "total_tokens": 1220
+    }
+  },
+  "source_cluster_id": "sha256:27124e3bb66d11abdab05df91de70367d761ca9ccbb3aa11da9af869c9a25744",
+  "started_monotonic_ns": 914743280957615,
+  "status": "completed",
+  "unit_id": "sha256:86bfc4f68578cf2d0f0cccb9f96105ef04298cd8b3e40f1cbfac1e0b53c23ab5"
+}

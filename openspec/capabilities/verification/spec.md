@@ -49473,6 +49473,33 @@ invalid indices/probabilities/order, truncation, partial groups, incomplete tail
 addresses never become semantic gold. Both benefit scores always remain zero.
 # REQ-VERIFY-8180: Qualify bounded base calibration before natural memory fitting
 
+## REQ-VERIFY-8181: Qualify original-condition bounded Qwen transport
+
+Compile and test finite grammar on CPU with the frozen embedded vocabulary
+before acquiring an owned CUDA lease. Resolve cache revision before hashing.
+Resolve installed chat template and disable optional reasoning through its
+supported interface. Save rendered prompts, actual offload and model/runtime/
+tokenizer hashes. Execute grammar and unconstrained arms with identical prompts,
+without labels, larger-budget retries, replacement answers or generator updates.
+Every requested sentence must have a complete indexed record against intact
+original text. Preserve truncation and schema failures, check all references,
+and compare source yields and structural losses independently. Checkpoint every
+eight sources, stop new calls at3000 seconds and reserve closure within4800.
+Freeze qualified configuration and original-condition cache keys only on passing
+live readiness; later reuse preserves provenance and charges acquisition once.
+
+### SCENARIO-VERIFY-8181-PAIRED
+
+Private paired fixtures cover complete records, partial groups, truncation,
+invalid source references, format effects, input overflow and expired launch
+budget. Scripted responses earn zero model calls. Unsupported runtime grammar
+or unreachable serialized lengths terminate blocked with exact operands.
+
+Implementation: `python/carnot/verify/sentence_transport_canary_8181.py` reuses
+Exp8179 partitioning and parsing and the qualified owned Qwen CUDA runner.
+`tests/python/test_sentence_transport_canary_8181.py` covers these boundaries.
+Exp8181 records syntax yield; it supplies no semantic correctness certificate.
+
 ### SCENARIO-VERIFY-8180-ROSTER
 
 Missing fixture trajectories SHALL disqualify qualification even when a producer

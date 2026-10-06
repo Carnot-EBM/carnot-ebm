@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:ca27f235d391d11bedd82b5f97cf29aa98717ba6f861eab85ff3eebd854d5589",
+  "ended_monotonic_ns": 914688851527318,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1221 State St, Ste 10\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Vietnamese, Pizza, Breakfast & Brunch, Restaurants, Gluten-Free\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-20:0\\\",\\\"Monday\\\":\\\"8:0-20:0\\\",\\\"Saturday\\\":\\\"8:0-20:0\\\",\\\"Sunday\\\":\\\"11:30-20:0\\\",\\\"Thursday\\\":\\\"8:0-20:0\\\",\\\"Wednesday\\\":\\\"8:0-20:0\\\"},\\\"name\\\":\\\"4 Eggs & Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 02:49:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"You wouldn't think a restaurant called \\\\\\\"4 eggs and pizza\\\\\\\" would have great pho, but  they most certainly do. I had the beef pho and spring rolls, both of which were fantastic. And as the other reviewers mentioned, they use quality beef. The spring rolls were crispy yet fluffy. Excited to try the bahn mi next time\\\"},{\\\"review_date\\\":\\\"2022-01-17 20:47:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Absolutely delicious! This place is a hidden gem. Everything I've tried on the menu has been amazing. They have the best bahn mi in town! I highly recommend checking it out.\\\"},{\\\"review_date\\\":\\\"2021-12-24 21:41:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Their pho is great!!!!When I walked in the restaurant, I wasn't sure if I should try the pho since the menu is mix with pizzas and burgers! But we decided to try, and surprisingly their pho is good! The broth reminded us the flavor in Vietnam! You should def try!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"4 Eggs & Pizza is a local business located at 1221 State St, Ste 10 in Santa Barbara, CA. The business offers a diverse range of cuisines, including Vietnamese, Pizza, Breakfast & Brunch, Restaurants, and Gluten-Free options. The operating hours are from 8:00 am to 8:00 pm on Monday, Wednesday, Thursday, and Friday, and from 8:00 am to 8:00 pm on Saturday. On Sundays, the business opens slightly later, starting at 11:30 am and closing at 8:00 pm. \\n\\nBased on customer reviews, 4 Eggs & Pizza receives a 5.0-star rating. Customers have praised the restaurant for its pho, spring rolls, and bahn mi. The quality of the beef used in the dishes has been highlighted as a positive aspect. The spring rolls are described as crispy and fluffy. Customers have been pleasantly surprised by the pho's authentic flavor, reminiscent of the taste found in Vietnam. The restaurant also offers outdoor seating and accepts reservations. Takeout services are available, making it convenient for customers who prefer to enjoy their meals at home. Overall, 4 Eggs & Pizza is recommended for its delicious Vietnamese cuisine and hidden gem status in Santa Barbara.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":911},{\"index\":1,\"byte_start\":911,\"byte_end\":978},{\"index\":2,\"byte_start\":978,\"byte_end\":1039},{\"index\":3,\"byte_start\":1039,\"byte_end\":1080},{\"index\":4,\"byte_start\":1080,\"byte_end\":1212},{\"index\":5,\"byte_start\":1212,\"byte_end\":1240},{\"index\":6,\"byte_start\":1240,\"byte_end\":1292},{\"index\":7,\"byte_start\":1292,\"byte_end\":1328},{\"index\":8,\"byte_start\":1328,\"byte_end\":1577},{\"index\":9,\"byte_start\":1577,\"byte_end\":1636},{\"index\":10,\"byte_start\":1636,\"byte_end\":1681},{\"index\":11,\"byte_start\":1681,\"byte_end\":1717}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":90},{\"index\":1,\"byte_start\":90,\"byte_end\":226},{\"index\":2,\"byte_start\":226,\"byte_end\":359},{\"index\":3,\"byte_start\":359,\"byte_end\":453},{\"index\":4,\"byte_start\":453,\"byte_end\":523},{\"index\":5,\"byte_start\":523,\"byte_end\":601},{\"index\":6,\"byte_start\":601,\"byte_end\":687},{\"index\":7,\"byte_start\":687,\"byte_end\":740},{\"index\":8,\"byte_start\":740,\"byte_end\":855},{\"index\":9,\"byte_start\":855,\"byte_end\":924},{\"index\":10,\"byte_start\":924,\"byte_end\":1032},{\"index\":11,\"byte_start\":1032,\"byte_end\":1147}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1346,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1221 State St, Ste 10\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Vietnamese, Pizza, Breakfast & Brunch, Restaurants, Gluten-Free\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-20:0\\\",\\\"Monday\\\":\\\"8:0-20:0\\\",\\\"Saturday\\\":\\\"8:0-20:0\\\",\\\"Sunday\\\":\\\"11:30-20:0\\\",\\\"Thursday\\\":\\\"8:0-20:0\\\",\\\"Wednesday\\\":\\\"8:0-20:0\\\"},\\\"name\\\":\\\"4 Eggs & Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 02:49:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"You wouldn't think a restaurant called \\\\\\\"4 eggs and pizza\\\\\\\" would have great pho, but  they most certainly do. I had the beef pho and spring rolls, both of which were fantastic. And as the other reviewers mentioned, they use quality beef. The spring rolls were crispy yet fluffy. Excited to try the bahn mi next time\\\"},{\\\"review_date\\\":\\\"2022-01-17 20:47:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Absolutely delicious! This place is a hidden gem. Everything I've tried on the menu has been amazing. They have the best bahn mi in town! I highly recommend checking it out.\\\"},{\\\"review_date\\\":\\\"2021-12-24 21:41:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Their pho is great!!!!When I walked in the restaurant, I wasn't sure if I should try the pho since the menu is mix with pizzas and burgers! But we decided to try, and surprisingly their pho is good! The broth reminded us the flavor in Vietnam! You should def try!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"4 Eggs & Pizza is a local business located at 1221 State St, Ste 10 in Santa Barbara, CA. The business offers a diverse range of cuisines, including Vietnamese, Pizza, Breakfast & Brunch, Restaurants, and Gluten-Free options. The operating hours are from 8:00 am to 8:00 pm on Monday, Wednesday, Thursday, and Friday, and from 8:00 am to 8:00 pm on Saturday. On Sundays, the business opens slightly later, starting at 11:30 am and closing at 8:00 pm. \\n\\nBased on customer reviews, 4 Eggs & Pizza receives a 5.0-star rating. Customers have praised the restaurant for its pho, spring rolls, and bahn mi. The quality of the beef used in the dishes has been highlighted as a positive aspect. The spring rolls are described as crispy and fluffy. Customers have been pleasantly surprised by the pho's authentic flavor, reminiscent of the taste found in Vietnam. The restaurant also offers outdoor seating and accepts reservations. Takeout services are available, making it convenient for customers who prefer to enjoy their meals at home. Overall, 4 Eggs & Pizza is recommended for its delicious Vietnamese cuisine and hidden gem status in Santa Barbara.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":911},{\"index\":1,\"byte_start\":911,\"byte_end\":978},{\"index\":2,\"byte_start\":978,\"byte_end\":1039},{\"index\":3,\"byte_start\":1039,\"byte_end\":1080},{\"index\":4,\"byte_start\":1080,\"byte_end\":1212},{\"index\":5,\"byte_start\":1212,\"byte_end\":1240},{\"index\":6,\"byte_start\":1240,\"byte_end\":1292},{\"index\":7,\"byte_start\":1292,\"byte_end\":1328},{\"index\":8,\"byte_start\":1328,\"byte_end\":1577},{\"index\":9,\"byte_start\":1577,\"byte_end\":1636},{\"index\":10,\"byte_start\":1636,\"byte_end\":1681},{\"index\":11,\"byte_start\":1681,\"byte_end\":1717}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":90},{\"index\":1,\"byte_start\":90,\"byte_end\":226},{\"index\":2,\"byte_start\":226,\"byte_end\":359},{\"index\":3,\"byte_start\":359,\"byte_end\":453},{\"index\":4,\"byte_start\":453,\"byte_end\":523},{\"index\":5,\"byte_start\":523,\"byte_end\":601},{\"index\":6,\"byte_start\":601,\"byte_end\":687},{\"index\":7,\"byte_start\":687,\"byte_end\":740},{\"index\":8,\"byte_start\":740,\"byte_end\":855},{\"index\":9,\"byte_start\":855,\"byte_end\":924},{\"index\":10,\"byte_start\":924,\"byte_end\":1032},{\"index\":11,\"byte_start\":1032,\"byte_end\":1147}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "input_tokens": 1334,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1221 State St, Ste 10\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Vietnamese, Pizza, Breakfast & Brunch, Restaurants, Gluten-Free\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-20:0\\\",\\\"Monday\\\":\\\"8:0-20:0\\\",\\\"Saturday\\\":\\\"8:0-20:0\\\",\\\"Sunday\\\":\\\"11:30-20:0\\\",\\\"Thursday\\\":\\\"8:0-20:0\\\",\\\"Wednesday\\\":\\\"8:0-20:0\\\"},\\\"name\\\":\\\"4 Eggs & Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 02:49:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"You wouldn't think a restaurant called \\\\\\\"4 eggs and pizza\\\\\\\" would have great pho, but  they most certainly do. I had the beef pho and spring rolls, both of which were fantastic. And as the other reviewers mentioned, they use quality beef. The spring rolls were crispy yet fluffy. Excited to try the bahn mi next time\\\"},{\\\"review_date\\\":\\\"2022-01-17 20:47:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Absolutely delicious! This place is a hidden gem. Everything I've tried on the menu has been amazing. They have the best bahn mi in town! I highly recommend checking it out.\\\"},{\\\"review_date\\\":\\\"2021-12-24 21:41:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Their pho is great!!!!When I walked in the restaurant, I wasn't sure if I should try the pho since the menu is mix with pizzas and burgers! But we decided to try, and surprisingly their pho is good! The broth reminded us the flavor in Vietnam! You should def try!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"4 Eggs & Pizza is a local business located at 1221 State St, Ste 10 in Santa Barbara, CA. The business offers a diverse range of cuisines, including Vietnamese, Pizza, Breakfast & Brunch, Restaurants, and Gluten-Free options. The operating hours are from 8:00 am to 8:00 pm on Monday, Wednesday, Thursday, and Friday, and from 8:00 am to 8:00 pm on Saturday. On Sundays, the business opens slightly later, starting at 11:30 am and closing at 8:00 pm. \\n\\nBased on customer reviews, 4 Eggs & Pizza receives a 5.0-star rating. Customers have praised the restaurant for its pho, spring rolls, and bahn mi. The quality of the beef used in the dishes has been highlighted as a positive aspect. The spring rolls are described as crispy and fluffy. Customers have been pleasantly surprised by the pho's authentic flavor, reminiscent of the taste found in Vietnam. The restaurant also offers outdoor seating and accepts reservations. Takeout services are available, making it convenient for customers who prefer to enjoy their meals at home. Overall, 4 Eggs & Pizza is recommended for its delicious Vietnamese cuisine and hidden gem status in Santa Barbara.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":911},{\"index\":1,\"byte_start\":911,\"byte_end\":978},{\"index\":2,\"byte_start\":978,\"byte_end\":1039},{\"index\":3,\"byte_start\":1039,\"byte_end\":1080},{\"index\":4,\"byte_start\":1080,\"byte_end\":1212},{\"index\":5,\"byte_start\":1212,\"byte_end\":1240},{\"index\":6,\"byte_start\":1240,\"byte_end\":1292},{\"index\":7,\"byte_start\":1292,\"byte_end\":1328},{\"index\":8,\"byte_start\":1328,\"byte_end\":1577},{\"index\":9,\"byte_start\":1577,\"byte_end\":1636},{\"index\":10,\"byte_start\":1636,\"byte_end\":1681},{\"index\":11,\"byte_start\":1681,\"byte_end\":1717}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":90},{\"index\":1,\"byte_start\":90,\"byte_end\":226},{\"index\":2,\"byte_start\":226,\"byte_end\":359},{\"index\":3,\"byte_start\":359,\"byte_end\":453},{\"index\":4,\"byte_start\":453,\"byte_end\":523},{\"index\":5,\"byte_start\":523,\"byte_end\":601},{\"index\":6,\"byte_start\":601,\"byte_end\":687},{\"index\":7,\"byte_start\":687,\"byte_end\":740},{\"index\":8,\"byte_start\":740,\"byte_end\":855},{\"index\":9,\"byte_start\":855,\"byte_end\":924},{\"index\":10,\"byte_start\":924,\"byte_end\":1032},{\"index\":11,\"byte_start\":1032,\"byte_end\":1147}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]\n4|E|1.00|[]\n5|E|1.00|[]\n6|E|1.00|[]\n7|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791253780,
+    "id": "chatcmpl-qqAlME5y760zGrOnIGj6M1FroHku0BfA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2135.962,
+      "predicted_n": 88,
+      "predicted_per_second": 41.19923481784788,
+      "predicted_per_token_ms": 24.272295454545453,
+      "prompt_ms": 1162.683,
+      "prompt_n": 1346,
+      "prompt_per_second": 1157.6672231382072,
+      "prompt_per_token_ms": 0.8638060921248143
+    },
+    "usage": {
+      "completion_tokens": 88,
+      "prompt_tokens": 1346,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1434
+    }
+  },
+  "source_cluster_id": "sha256:a022cfa467bd5262c93eb0b0b0e7d063af12b033acbbd55dc78dc25404d43df0",
+  "started_monotonic_ns": 914685331611236,
+  "status": "completed",
+  "unit_id": "sha256:ee4bcb14d6e706c4670532336ab48988f3c95e34de3e527adde85745fd01a9f7"
+}

@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:72df698f009c973561dffd27176a1323f57955a597c493008fa2d6f807351dd4",
+  "ended_monotonic_ns": 914678720282401,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"More than 500 Houthi rebels have been killed since the start of Saudi-led military operations against Yemeni Shia fighters, a Saudi Defense Ministry official said Saturday, according to the state-run Saudi Press Agency. A Saudi general said Saturday the nine-nation coalition has undertaken 1,200 airstrikes since they began on March 26. Gen. Ahmed Asiri added that the raids aim to keep the rebels from moving toward southern Yemen,  according to the SPA. Clashes took place Friday near the Saudi-Yemeni border, in the Najran region. Saudi forces responded to mortar rounds fired by Houthis on a Saudi border site. Three Saudi military officers were killed and two others were wounded in the shelling, a defense official said, according to SPA. A Saudi source also confirmed to CNN's Nic Robertson that three Saudi soldiers were killed in the shelling. The Yemeni Health Ministry on Saturday said 385 civilians have been killed and 342 others have been wounded. The World Health Organization has put higher figure on both tolls -- 648 killed and 2,191 wounded -- but includes militant casualties in the totals. Yemen has been descending into chaos in the weeks since Houthi rebels -- minority Shiites who have long complained of being marginalized in the majority Sunni country -- forced Yemeni President Abdu Rabu Mansour Hadi from power in January. And even before the crisis escalated with the Saudi airstrikes, most of the 25 million people in Yemen required humanitarian assistance to meet their most basic needs, the United Nations said Friday. CNN's Pierre Meilhan and Mohammed Tawfeeq contributed to this report.\\n\",\"answer\":\"Over 500 Houthi rebels have been killed in Saudi-led airstrikes in Yemen, according to a Saudi Defense Ministry official. The coalition has conducted 1,200 airstrikes since March 26, aiming to prevent the rebels from advancing towards southern Yemen. Clashes near the Saudi-Yemeni border resulted in three Saudi military officers being killed and two wounded. The Yemeni Health Ministry reported 385 civilian deaths and 342 injuries, while the World Health Organization's figures include militant casualties and are higher at 648 killed and 2,191 wounded. The situation in Yemen was already dire before the airstrikes, with most of the population needing humanitarian assistance.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":220},{\"index\":1,\"byte_start\":220,\"byte_end\":343},{\"index\":2,\"byte_start\":343,\"byte_end\":457},{\"index\":3,\"byte_start\":457,\"byte_end\":535},{\"index\":4,\"byte_start\":535,\"byte_end\":616},{\"index\":5,\"byte_start\":616,\"byte_end\":746},{\"index\":6,\"byte_start\":746,\"byte_end\":854},{\"index\":7,\"byte_start\":854,\"byte_end\":963},{\"index\":8,\"byte_start\":963,\"byte_end\":1112},{\"index\":9,\"byte_start\":1112,\"byte_end\":1352},{\"index\":10,\"byte_start\":1352,\"byte_end\":1552},{\"index\":11,\"byte_start\":1552,\"byte_end\":1622}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":122},{\"index\":1,\"byte_start\":122,\"byte_end\":251},{\"index\":2,\"byte_start\":251,\"byte_end\":360},{\"index\":3,\"byte_start\":360,\"byte_end\":556},{\"index\":4,\"byte_start\":556,\"byte_end\":679}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 881,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"More than 500 Houthi rebels have been killed since the start of Saudi-led military operations against Yemeni Shia fighters, a Saudi Defense Ministry official said Saturday, according to the state-run Saudi Press Agency. A Saudi general said Saturday the nine-nation coalition has undertaken 1,200 airstrikes since they began on March 26. Gen. Ahmed Asiri added that the raids aim to keep the rebels from moving toward southern Yemen,  according to the SPA. Clashes took place Friday near the Saudi-Yemeni border, in the Najran region. Saudi forces responded to mortar rounds fired by Houthis on a Saudi border site. Three Saudi military officers were killed and two others were wounded in the shelling, a defense official said, according to SPA. A Saudi source also confirmed to CNN's Nic Robertson that three Saudi soldiers were killed in the shelling. The Yemeni Health Ministry on Saturday said 385 civilians have been killed and 342 others have been wounded. The World Health Organization has put higher figure on both tolls -- 648 killed and 2,191 wounded -- but includes militant casualties in the totals. Yemen has been descending into chaos in the weeks since Houthi rebels -- minority Shiites who have long complained of being marginalized in the majority Sunni country -- forced Yemeni President Abdu Rabu Mansour Hadi from power in January. And even before the crisis escalated with the Saudi airstrikes, most of the 25 million people in Yemen required humanitarian assistance to meet their most basic needs, the United Nations said Friday. CNN's Pierre Meilhan and Mohammed Tawfeeq contributed to this report.\\n\",\"answer\":\"Over 500 Houthi rebels have been killed in Saudi-led airstrikes in Yemen, according to a Saudi Defense Ministry official. The coalition has conducted 1,200 airstrikes since March 26, aiming to prevent the rebels from advancing towards southern Yemen. Clashes near the Saudi-Yemeni border resulted in three Saudi military officers being killed and two wounded. The Yemeni Health Ministry reported 385 civilian deaths and 342 injuries, while the World Health Organization's figures include militant casualties and are higher at 648 killed and 2,191 wounded. The situation in Yemen was already dire before the airstrikes, with most of the population needing humanitarian assistance.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":220},{\"index\":1,\"byte_start\":220,\"byte_end\":343},{\"index\":2,\"byte_start\":343,\"byte_end\":457},{\"index\":3,\"byte_start\":457,\"byte_end\":535},{\"index\":4,\"byte_start\":535,\"byte_end\":616},{\"index\":5,\"byte_start\":616,\"byte_end\":746},{\"index\":6,\"byte_start\":746,\"byte_end\":854},{\"index\":7,\"byte_start\":854,\"byte_end\":963},{\"index\":8,\"byte_start\":963,\"byte_end\":1112},{\"index\":9,\"byte_start\":1112,\"byte_end\":1352},{\"index\":10,\"byte_start\":1352,\"byte_end\":1552},{\"index\":11,\"byte_start\":1552,\"byte_end\":1622}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":122},{\"index\":1,\"byte_start\":122,\"byte_end\":251},{\"index\":2,\"byte_start\":251,\"byte_end\":360},{\"index\":3,\"byte_start\":360,\"byte_end\":556},{\"index\":4,\"byte_start\":556,\"byte_end\":679}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "input_tokens": 869,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"More than 500 Houthi rebels have been killed since the start of Saudi-led military operations against Yemeni Shia fighters, a Saudi Defense Ministry official said Saturday, according to the state-run Saudi Press Agency. A Saudi general said Saturday the nine-nation coalition has undertaken 1,200 airstrikes since they began on March 26. Gen. Ahmed Asiri added that the raids aim to keep the rebels from moving toward southern Yemen,  according to the SPA. Clashes took place Friday near the Saudi-Yemeni border, in the Najran region. Saudi forces responded to mortar rounds fired by Houthis on a Saudi border site. Three Saudi military officers were killed and two others were wounded in the shelling, a defense official said, according to SPA. A Saudi source also confirmed to CNN's Nic Robertson that three Saudi soldiers were killed in the shelling. The Yemeni Health Ministry on Saturday said 385 civilians have been killed and 342 others have been wounded. The World Health Organization has put higher figure on both tolls -- 648 killed and 2,191 wounded -- but includes militant casualties in the totals. Yemen has been descending into chaos in the weeks since Houthi rebels -- minority Shiites who have long complained of being marginalized in the majority Sunni country -- forced Yemeni President Abdu Rabu Mansour Hadi from power in January. And even before the crisis escalated with the Saudi airstrikes, most of the 25 million people in Yemen required humanitarian assistance to meet their most basic needs, the United Nations said Friday. CNN's Pierre Meilhan and Mohammed Tawfeeq contributed to this report.\\n\",\"answer\":\"Over 500 Houthi rebels have been killed in Saudi-led airstrikes in Yemen, according to a Saudi Defense Ministry official. The coalition has conducted 1,200 airstrikes since March 26, aiming to prevent the rebels from advancing towards southern Yemen. Clashes near the Saudi-Yemeni border resulted in three Saudi military officers being killed and two wounded. The Yemeni Health Ministry reported 385 civilian deaths and 342 injuries, while the World Health Organization's figures include militant casualties and are higher at 648 killed and 2,191 wounded. The situation in Yemen was already dire before the airstrikes, with most of the population needing humanitarian assistance.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":220},{\"index\":1,\"byte_start\":220,\"byte_end\":343},{\"index\":2,\"byte_start\":343,\"byte_end\":457},{\"index\":3,\"byte_start\":457,\"byte_end\":535},{\"index\":4,\"byte_start\":535,\"byte_end\":616},{\"index\":5,\"byte_start\":616,\"byte_end\":746},{\"index\":6,\"byte_start\":746,\"byte_end\":854},{\"index\":7,\"byte_start\":854,\"byte_end\":963},{\"index\":8,\"byte_start\":963,\"byte_end\":1112},{\"index\":9,\"byte_start\":1112,\"byte_end\":1352},{\"index\":10,\"byte_start\":1352,\"byte_end\":1552},{\"index\":11,\"byte_start\":1552,\"byte_end\":1622}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":122},{\"index\":1,\"byte_start\":122,\"byte_end\":251},{\"index\":2,\"byte_start\":251,\"byte_end\":360},{\"index\":3,\"byte_start\":360,\"byte_end\":556},{\"index\":4,\"byte_start\":556,\"byte_end\":679}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,1]\n1|E|0.95|[1,2]\n2|E|0.95|[3,4]\n3|E|0.95|[5,6]\n4|E|0.95|[9,10]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791253770,
+    "id": "chatcmpl-zrhzcm6GtjPyct3I6X05fbmRty82P71z",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1841.583,
+      "predicted_n": 76,
+      "predicted_per_second": 41.26884316373467,
+      "predicted_per_token_ms": 24.231355263157894,
+      "prompt_ms": 810.265,
+      "prompt_n": 881,
+      "prompt_per_second": 1087.2985998407928,
+      "prompt_per_token_ms": 0.919710556186152
+    },
+    "usage": {
+      "completion_tokens": 76,
+      "prompt_tokens": 881,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 957
+    }
+  },
+  "source_cluster_id": "sha256:72480358635ad4c2b8505901b7a1f4bbe539ed5bd40228be28d49fb1cd4ec1af",
+  "started_monotonic_ns": 914675879827185,
+  "status": "completed",
+  "unit_id": "sha256:43186f6e989434cfc7eec12b1f94cb2ab7a8def140b22d227d543b57b406b9ef"
+}

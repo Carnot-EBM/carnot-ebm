@@ -93812,6 +93812,31 @@ fail replay. External missing evidence terminates complete_blocked_<check> with
 actual operands; owned validation failure disqualifies and zeros readiness.
 # REQ-REPORT-8180: Publish checked calibrated-memory methods and primitive diagnosis
 
+## REQ-REPORT-8181: Publish a bounded paired evidence transport canary
+
+Authenticate Exp8179 readiness and immutable protocol, source, tokenizer and
+request bytes before any GPU acquisition. Preserve historical failures. Report
+24 original fit sources, frozen paired arm order, at most96 calls,256 output
+and6000 rendered input tokens. A terminal external block names exact operands;
+an observed yield failure is null. Required owned checks must exit normally with
+100 percent new statement coverage before checked primary publication. Retain
+immutable logs, raw responses, real token counts, runtime identity and cache keys.
+Readiness requires22/24 complete grammar sources, valid accepted indices and no
+increase in paired structural loss. Grammar never certifies a semantic relation.
+Both independent benefit scores remain zero. Conductor owns ops reconciliation.
+
+### SCENARIO-REPORT-8181-CUSTODY
+
+Private success, missing upstream, hash drift, response tamper and cold replay
+must run outside the checkout without PYTHONPATH. Runtime propagation, partial
+response arrays and tamper use E2E-010/015/019. Failed owned validation zeros
+readiness and disqualifies; unrelated full-suite health is reported separately.
+
+Implementation: `python/carnot/verify/sentence_transport_canary_8181.py` and the
+thin `scripts/experiments/experiment_8181_v707_sentence_transport_canary.py` CLI.
+Private coverage is in `tests/python/test_sentence_transport_canary_8181.py`.
+The Exp8181 artifact binds measured responses and terminal validation receipts.
+
 ### SCENARIO-REPORT-8180-HEALTH-CUSTODY
 
 A retry SHALL reuse a completed diagnostic full-suite receipt after checking its
