@@ -94427,3 +94427,21 @@ Exp8208 implementation: the executable runner and
 `tests/python/test_restricted_energy_fit_8208.py` provide checked private
 publication, external blocking, source custody and fresh-process replay.
 Ops and traceability reconciliation remain owned by the conductor.
+
+## REQ-REPORT-8209: Publish immutable prediction custody
+
+Freeze exact validation commands before measurement. Reuse qualified bounded
+child supervision and primary publication. Preserve complete stdout/stderr
+hashes, exits, measurement clocks and input/code/config hashes. Keep historical
+primaries immutable. Conductor owns ops/status/changelog/traceability updates.
+
+### SCENARIO-REPORT-8209-CLI
+
+Exercise the real private script-path CLI without ambient repository imports,
+blocked operands, invalid dates, successful cold replay and rehashed primitive
+tampering. Measure100% of new Python statements including real child paths;
+run scoped Ruff/format/strict mypy, explicit-file spec coverage, affected
+consumers and E2E-015/019. Freeze full-suite health separately and run it once.
+Owned failure forbids positive readiness. Cold-replay and unchanged terminal,
+adversarial and strict-row validators SHALL pass on the private candidate
+before atomic publication. Sealing readiness does not claim scientific benefit.

@@ -50106,3 +50106,29 @@ null fit SHALL have readiness1 after validation; both generalization scores0.
 Exp8208 implementation: `restricted_energy_8208.py` and
 `restricted_energy_fit_8208.py`; the owned tests cover all new Python statements
 and the real private CLI. Reserved evaluation remains deferred to Exp8209.
+
+## REQ-VERIFY-8209: Seal target-free restricted decisions
+
+Require authenticated Exp8208 action_fit_ready_score == 1. Reconstruct all128
+original identities and missingness before accessing feature vectors. Apply
+only frozen heads and original baseline permission to public sixteen-feature
+inputs. Reject evaluator targets and derived label fields. Keep incomplete
+slots escalated in every arm. Save energies, p_bad, allowed/chosen/baseline
+actions, head hashes and source identities. Historical Qwen calls remain
+historical; current model loads and calls are zero.
+
+### SCENARIO-VERIFY-8209-SEAL
+
+Frozen energy, tune-selected simple, equivalent-logistic and descriptive
+reference arms SHALL retain original slot order and denominator128. Require
+probability/decision parity and acceptance-set inclusion on every slot and
+adversarial missing, extreme and boundary fixtures. A permission violation
+disqualifies. Save immutable predictions and access order before any current
+evaluator label access. Exposed development scores remain zero.
+
+### SCENARIO-VERIFY-8209-REJECT
+
+Reject modified heads, duplicate/replaced sources or slots, malformed features,
+target-bearing nested fields and changed baseline predictions. Missing external
+operands block dependent scoring with exact path/hash/field/expected/observed
+evidence. Owned scoring or validation failures disqualify and readiness is zero.
