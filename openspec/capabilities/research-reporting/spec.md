@@ -94485,3 +94485,19 @@ real CLI coverage is 254/254 statements without exclusions. Private natural
 replay and unchanged terminal validators qualify a ready null audit. E2E-021
 and the repair evidence are recorded in ops and traceability; the prior full-suite
 timeout and existing global spec gaps remain separate diagnostic results.
+## REQ-REPORT-8211: Publish calibrated trajectory evidence atomically
+
+Freeze exact owned validation commands before measurement. Reuse bounded child
+supervision, template normalization and checked primary publication. Preserve
+complete output hashes, exits, clocks and source/code/config identities. Validate
+the private candidate with unchanged terminal validators before publication.
+Historical primaries remain immutable. Conductor owns ops/status/changelog and
+traceability reconciliation for this invocation, as requested by the operator.
+
+### SCENARIO-REPORT-8211-CLI
+
+Direct private CLI exercises natural success, blocking, invalid dates, genuine
+hard exit/resume and cold replay without ambient imports. Measure100% newly owned
+statements including real CLI/child routes. Run scoped Ruff/format/strict mypy,
+explicit-file spec coverage, affected consumers and E2E-015/019. Run full Python
+health once and preserve unrelated failures separately without claiming global green.

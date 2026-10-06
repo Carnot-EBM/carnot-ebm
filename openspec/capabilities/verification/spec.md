@@ -50158,3 +50158,27 @@ costs, paired source intervals and every H1 operand. The seven focused tests in
 `test_restricted_decision_audit_8210.py` include natural evidence, positive and
 null controls, missing slots, cold rejection of rehashed primitive mutations and
 the standalone frozen terminal command's exact audit identity.
+## REQ-VERIFY-8211: Causal calibrated memory on the original stream
+
+Require Exp8206 calibrated_memory_ready_score and stream_input_ready_score equal
+one. Bind the frozen V707 numerical protocol and original stream/retention bytes.
+Reuse the qualified learner, seeds101–120, all256 issue slots and192 later slots.
+Retain its five arms, delay20, capacity32, admission horizons and missing masks.
+No Exp8207–8210 action restriction enters this branch. Generator weights stay fixed.
+Persist each issue before release. Persist raw outcomes only at their release time.
+Seal all trajectories and retention predictions before opening retention targets.
+Report actual centers, later influence, equal update exposure, CPU storage/work,
+and continuous activation overlap as a diagnostic without retention-label tuning.
+
+### SCENARIO-VERIFY-8211-CAUSAL
+
+Future-target mutation preserves earlier issues. Duplicate, late or out-of-order
+delivery fails. Genuine child exit73 and resume reproduce uninterrupted issued
+rows and pending state. A checkpoint older than its durable journal fails.
+
+### SCENARIO-VERIFY-8211-REPLAY
+
+Cold replay reconstructs numerical states, rows, counts and readiness. Rehashed
+primitive or aggregate tampering fails. Missing external operands block with exact
+field/path/hash/operator/expected/observed evidence. Failed owned checks disqualify.
+Valid trajectories can be null; exposed data earn zero generalization credit.
