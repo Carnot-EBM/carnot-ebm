@@ -94219,3 +94219,27 @@ The conductor owns ops/status/changelog/traceability reconciliation for this tas
 Run the script outside checkout without PYTHONPATH. Private success, missing
 input, primitive tamper and aggregate tamper cases require normal expected exits.
 Cold replay recomputes selection, exclusions and both identities from sealed bytes.
+## REQ-REPORT-8202: Authenticate the V708 supervisor frontier
+
+Authenticate the Exp8189 primary, inventory, terminal sidecar and qualified reader
+hashes before measurement. Run the solve registry precheck first. Require the
+requested live state input; a missing input yields a complete blocked result with
+its exact operand. Read methods from preserved versioned bytes.
+Reuse the qualified reader. Producer mtimes cannot exclude authenticated events.
+Skip unchanged receipt hashes. Admit only unseen event identities after the saved
+frontier. Preserve historical failures and imported solve provenance.
+Load no model, train no head and run no game. An unchanged or unresolved frontier
+completes with no arm recommendation. Require30 resolved outcomes across5 games
+before selection changes; transfer also needs matched within-game and held-game
+evidence. Observations alone cannot establish causal benefit or new solve credit.
+
+### SCENARIO-REPORT-8202-FRONTIER
+
+Private fixtures verify old file mtimes with fresh event clocks, duplicate IDs,
+unchanged bytes, unresolved redirects, missing state and changed reader hashes.
+Execution readiness is zero on blocked or disqualified results. Empty authentic
+evidence completes as complete_null_no_new_outcomes when prerequisites pass.
+
+Implementation: `python/carnot/reporting/arc_supervisor_v708_frontier.py` and
+`scripts/experiments/experiment_8202_v708_arc_supervisor_frontier.py` reuse the
+qualified reader. Tests: `tests/python/test_arc_supervisor_frontier_8202.py`.

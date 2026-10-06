@@ -49889,3 +49889,21 @@ single schema; zero hits can pass. Missing support blocks the benchmark.
 Private fixtures exercise chronological ties, last96 selection, session retention,
 different seeds/runtimes, replay mapping, zero hits, missing timestamps/bodies,
 designed arms and tampered frozen evidence. Production demand remains unavailable.
+## REQ-VERIFY-8202: Validate the thin V708 frontier adapter
+
+Tests precede implementation and keep fixtures in private temporary directories.
+Freeze owned commands before measurement. Run scoped pytest,100% new statement
+coverage, Ruff check/format, strict mypy and explicit-path spec coverage.
+Run unchanged E2E-017 plus private CLI empty, missing-input, tamper and cold replay
+from outside the checkout without PYTHONPATH. Run the full suite once and record
+unrelated repository health separately. Seal argv, expected/actual exit, durations
+and log hashes in durable custody. Every required check exits normally.
+Unmodified adversarial_verify and strict verdict_row_consistency_lint validate
+the candidate before primary_publication exposes it. Independently reduce rows
+and rehash evidence. Preserve failed checks and all historical primaries.
+
+### SCENARIO-VERIFY-8202-COLD
+
+Cold replay rejects headline, primitive-byte and log mutations. Direct execution
+uses absolute script paths. Missing external prerequisites block; owned validation
+failures disqualify. Neither outcome can retain execution readiness.
