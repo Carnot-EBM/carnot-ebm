@@ -21514,3 +21514,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-06: Audit safe decision utility and calibration on all intended slots (⚠️ Research Finding) — honest_verdict=complete_null_selective_decision_null; results/experiment_8197_v708_selective_decision_audit.json
 - 2026-10-06: Freeze an observed request sequence without injected exact repeats (⚠️ Blocked) — honest_verdict=complete_blocked_reconstructable_request_count; results/experiment_8200_v708_request_trace_census.json
 - 2026-10-06: Inspect only new authenticated supervisor outcomes for transferable arm selection (⚠️ Blocked) — honest_verdict=complete_blocked_authenticate_live_state_is_file; results/experiment_8202_v708_arc_supervisor_frontier.json
+- 2026-10-06: Bound selective and learning workloads while preserving each board obligation (⚠️ Blocked) — honest_verdict=complete_blocked_exists; results/experiment_8203_v708_hardware_decision_boundary.json
