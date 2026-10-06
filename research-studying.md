@@ -6497,3 +6497,15 @@ and independent generalization remain unqualified.
 - [KAC](https://arxiv.org/abs/2503.21076v1): ingested for local Gaussian capacity
   controls and separate retention. Multivariate radial heads are not KAC's
   channel-wise classifier. Frozen method map: V707 calibrated-memory protocol.
+
+## 2026-10-06 — Exp8194 V708 selective-method ingestion
+
+Ingested: Energy-conformal classification and author LAC/EnergyLAC code,
+Continual Calibration (2604.23987), delayed ACI (2609.07251), KAC (2503.21076),
+and KANtize (2603.17230). A focused sequential source check saved exact response
+bytes and hashes under results/raw/experiment_8194_v708_selective_methods/literature/.
+The frozen v708-selective-decision-protocol.json records equations, source URLs,
+assumptions and adaptation limits. Use probability-only class-conditional LAC.
+Author energy code has different softplus signs in single/all-label paths;
+no external code is installed. No exchangeability or fresh-data guarantee is
+established. KAC capacity and KANtize precision remain separate future tests.

@@ -49779,3 +49779,34 @@ tampered source operands block explicitly; owned failures zero readiness.
 Cold replay reexecutes fixtures and rejects changed rows, counts, child coverage,
 protocol, source/code bytes and sealed logs, even with a recomputed checksum.
 Zero current model calls and zero independent benefit remain mandatory.
+
+## REQ-VERIFY-8194: Frozen class-conditional selective decisions
+
+Exp8194 SHALL keep the original128 fit,64 tune and128 reserved slots and original
+labels. Sort original fit source_id by SHA256(id + literal `v708-fit-role`), then
+assign96 head-fit and32 temperature-fit slots. Tune is calibration-only. Save
+all role IDs before opening reserved row labels. Require72 complete head-fit,
+24 temperature-fit with8/class,48 calibration with20/class and96 reserved pairs
+with12/class. Do not lower these gates. Use the qualified V707 geometry, features,
+ridge grid and fit-only folds for local16 and radial12 inputs on identical sources.
+Fit one temperature in[.25,4] on temperature sources only. For each class use
+A_y=1-p_y and rank ceil((n_y+1)*.95); overflow uses infinity. Inclusive ties retain
+labels; singleton0 accepts, singleton1 rejects, other sets and missing escalate.
+Freeze seven arms, original typed costs, H1 alpha.025 and separate H2 alpha.025.
+H1 compares local_set with frozen_v707_radial over128 slots:10000 source draws,
+9500 valid, lower97.5% gain>.02, five improved sources, zero extra false accepts,
+and Brier increase<=.01. Report class coverage, singleton coverage and errors
+among accepts separately. Exposed development establishes no exchangeability.
+
+### SCENARIO-VERIFY-8194: Exact quantiles and leakage boundaries
+
+Private tests SHALL exercise scalar quantiles, ties, empty classes, n<19, swapped
+labels, missing features, evaluator-label leakage, role separation, logit-shift
+invariance and energy/logistic parity. Independent scalar arithmetic SHALL
+recompute prediction rows and source aggregates from primitive evidence.
+
+Implementation: `python/carnot/verify/selective_rule_8194.py` and
+`python/carnot/verify/selective_methods_8194.py`. Eight private tests in
+`tests/python/test_selective_methods_8194.py` cover exact quantiles, role support,
+calibration-label independence, solver failure, scalar replay, rehashed tampering,
+original-label swaps, no-model direct CLI and a known-positive H1 control.

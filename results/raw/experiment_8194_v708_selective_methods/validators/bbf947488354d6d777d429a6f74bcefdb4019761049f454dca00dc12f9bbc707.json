@@ -1,0 +1,95 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8194_v708_selective_methods.json",
+  "primary_sha256": "sha256:bbf947488354d6d777d429a6f74bcefdb4019761049f454dca00dc12f9bbc707",
+  "report": {
+    "checks": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8194_v708_selective_methods.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8194_v708_selective_methods/terminal_candidate.json"
+        ],
+        "classification": "required",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8194_v708_selective_methods.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8194_v708_selective_methods/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8194_v708_selective_methods.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8194_v708_selective_methods/terminal_candidate.json"
+        ],
+        "deadline_s": 60,
+        "duration_s": 2.853313327068463,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8194_v708_selective_methods/invocations/1791281923395744982/terminal_logs/cold_replay-fc8fd000755832035e49b48f81ab7d1292e5e2ecc7004e942558395e4e80527b.log",
+        "log_sha256": "sha256:fc8fd000755832035e49b48f81ab7d1292e5e2ecc7004e942558395e4e80527b",
+        "name": "cold_replay",
+        "output_tail": "[exp8194] phase=start completed=0 pending=0\n[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000\n[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0\n[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000\n[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0\n[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000\n[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0\n[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000\n[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0\n[exp8194] phase=replay_passed completed=0 pending=0\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8194_v708_selective_methods/terminal_candidate.json"
+        ],
+        "classification": "required",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8194_v708_selective_methods/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8194_v708_selective_methods/terminal_candidate.json"
+        ],
+        "deadline_s": 60,
+        "duration_s": 1.8570039169862866,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8194_v708_selective_methods/invocations/1791281923395744982/terminal_logs/adversarial_verify-87c19a9fd839234d200fc4c5c8326bbdd0feaf29d91c2dc48b32fac34c35789f.log",
+        "log_sha256": "sha256:87c19a9fd839234d200fc4c5c8326bbdd0feaf29d91c2dc48b32fac34c35789f",
+        "name": "adversarial_verify",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8194_v708_selective_methods/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8194,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_selective_decision_null\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8194_v708_selective_methods/terminal_candidate.json"
+        ],
+        "classification": "required",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8194_v708_selective_methods/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8194_v708_selective_methods/terminal_candidate.json"
+        ],
+        "deadline_s": 60,
+        "duration_s": 0.06262393097858876,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8194_v708_selective_methods/invocations/1791281923395744982/terminal_logs/strict_row_lint-ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_row_lint",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      }
+    ],
+    "passed": true
+  }
+}

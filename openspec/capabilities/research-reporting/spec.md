@@ -94111,3 +94111,32 @@ The thin CLI executes privately outside checkout without PYTHONPATH for success,
 missing-input, tamper and cold replay. External blocks name actual failed gate
 operands. Only unfinished owned work is partial. New primitive evidence binds
 source/code/config hashes, measured coverage counts and the unchanged protocol.
+
+## REQ-REPORT-8194: Publish selective-method evidence with no model calls
+
+Exp8194 SHALL authenticate immutable upstream and V707 method bytes, runtime,
+retirement gates and private writable storage before measurement. Load no LLM;
+MODEL_SPECS=[] and no_model_load are distinct from imported Qwen provenance.
+Declare every trained head. Freeze argv before measurement, then require scoped
+pytest,100 percent new statement coverage, Ruff check/format, strict mypy,
+explicit-file spec coverage and private E2E-015/019. Preserve completed logs in
+immutable invocation custody. Run one full Python health diagnostic separately.
+Missing external inputs yield complete_blocked_<operand>; failed owned checks
+disqualify and zero readiness. Publish through primary_publication after normal
+validation exits, independent cold replay, unmodified adversarial verification
+and strict row lint. Preserve historical primaries and failures. Record literature
+equations and assumptions without importing external code or claiming fresh truth.
+
+### SCENARIO-REPORT-8194: Private direct script and sealed replay
+
+Outside-checkout CLI execution without PYTHONPATH SHALL publish private success
+and missing-input fixtures. Cold replay SHALL reject changed primitive bytes,
+rehashed aggregate forgeries and evaluator-label leakage. Validation receipts
+SHALL retain exact argv, expected/actual exits, duration and durable log hashes.
+
+Implementation: thin `scripts/experiments/experiment_8194_v708_selective_methods.py`
+reuses qualified bounded supervision and primary publication. Frozen protocol:
+`openspec/change-proposals/v708-selective-decision-protocol.json`. Exact source_id
+sorting replaces a preserved fingerprint-key draft under the experiment's raw
+failed_attempts directory. Operator-curated pages and conductor-managed ops and
+traceability reconciliation remain untouched under the task's final instruction.
