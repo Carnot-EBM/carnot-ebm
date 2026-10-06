@@ -19634,3 +19634,5 @@ code |
 | 2026-10-06 03:42 UTC | Train calibrated energy decisions with matched sou | OK | 88 passed, 1 warning in 26.42s |
 | 2026-10-06 04:19 UTC | Seal reserved source predictions from frozen evide | OK | 92 passed, 1 warning in 22.17s |
 | 2026-10-06 04:43 UTC | Independently test sentence evidence against the f | OK | 87 passed, 1 warning in 34.07s |
+| 2026-10-06 04:46 UTC | Learn energy centers and base calibration from del | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8180-calibrated-memory-methods.calibrated_memory_ready_score (actual=0 == expected=1) |
+| 2026-10-06 04:48 UTC | Audit later decision movement calibration retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8186-calibrated-online-memory) |
