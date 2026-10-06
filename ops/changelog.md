@@ -21492,3 +21492,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-06: Qualify learned base calibration before testing new energy centers (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8180_v707_calibrated_memory_methods.json
 - 2026-10-06: Test bounded Qwen evidence transport before scaling capture (✅ Complete) — honest_verdict=complete_positive_sentence_transport_canary; results/experiment_8181_v707_sentence_transport_canary.json
 - 2026-10-06: Collect qualified sentence evidence on fixed fit and tune sources (✅ Complete) — honest_verdict=complete_positive_fit_sentence_capture; results/experiment_8182_v707_fit_sentence_capture.json
+- 2026-10-06: Train calibrated energy decisions with matched source controls (⚠️ Research Finding) — honest_verdict=complete_null_sentence_energy_fit; results/experiment_8183_v707_sentence_energy_fit.json
