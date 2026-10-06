@@ -21495,3 +21495,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-06: Train calibrated energy decisions with matched source controls (⚠️ Research Finding) — honest_verdict=complete_null_sentence_energy_fit; results/experiment_8183_v707_sentence_energy_fit.json
 - 2026-10-06: Seal reserved source predictions from frozen evidence heads (⚠️ Research Finding) — honest_verdict=complete_null_reserved_sentence_capture; results/experiment_8184_v707_reserved_sentence_capture.json
 - 2026-10-06: Independently test sentence evidence against the frozen comparator (⚠️ Research Finding) — honest_verdict=complete_null_sentence_decision_null; results/experiment_8185_v707_sentence_decision_audit.json
+- 2026-10-06: Measure exact-request reuse including cold acquisition invalidation and recovery (✅ Complete) — honest_verdict=complete_positive_exact_request_service; results/experiment_8188_v707_exact_request_service.json
