@@ -21506,3 +21506,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-06: Inspect new live supervisor outcomes for transferable arm selection (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8189_v707_arc_supervisor_frontier.json
 - 2026-10-06: Bound the measured reuse workload and preserve each board obligation (⚠️ Research Finding) — honest_verdict=complete_null_hardware_service_boundary; results/experiment_8190_v707_hardware_service_boundary.json
 - 2026-10-06: Decide fourteen outcomes and the verification learning and deployment gaps (⚠️ Blocked) — honest_verdict=complete_blocked_required_checks_passed; results/experiment_8191_v707_capstone.json
+- 2026-10-06: Bind thirteen tasks and preserve all fourteen V707 dispositions (⚠️ Blocked) — honest_verdict=complete_blocked_sha256; results/experiment_8192_v708_contract_custody.json
