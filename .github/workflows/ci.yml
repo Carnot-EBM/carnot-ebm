@@ -1,10 +1,10 @@
 name: CI
 
+# Automatic triggers disabled 2026-10-06 (operator). This no longer runs on push or pull
+# request. Start it by hand from the Actions tab. The original triggers were: push to main,
+# and pull_request into main.
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   rust-check:
