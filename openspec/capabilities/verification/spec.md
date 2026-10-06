@@ -49668,3 +49668,23 @@ counts, logs and headlines. External evidence blocks name actual operands.
 Implementation: `python/carnot/verify/exact_request_8188.py`; private tests in
 `tests/python/test_exact_request_8188.py`. Closed CUDA lease recovery authenticates
 the original code snapshot, requests and ledger without another model call.
+## REQ-VERIFY-8189: Qualify the owned frontier adapter and private CLI
+
+Freeze validation argv before measurement. Require scoped pytest,100 percent
+added statement coverage, Ruff check/format, strict mypy and explicit-file spec
+coverage. Run the full Python suite once as separate repository health. Retain
+normal process exits, argv, expected and observed exits, durations and sealed log
+hashes. Run E2E-017 and private direct CLI success, missing-input, tamper and cold
+replay outside the checkout without PYTHONPATH. Independently recompute headlines
+and source/code/config hashes. Run unchanged adversarial_verify and strict
+verdict_row_consistency_lint before checked-primary publication.
+
+### SCENARIO-VERIFY-8189-COLD
+
+Cold replay SHALL reject forged aggregates, changed frontiers, reader hashes,
+source shards and validation logs. Required validation failures disqualify the
+owned result without erasing historical receipts.
+
+Implementation: `python/carnot/reporting/arc_supervisor_v707_frontier.py` and
+`scripts/experiments/experiment_8189_v707_arc_supervisor_frontier.py`.
+Tests: `tests/python/test_arc_supervisor_frontier_8189.py`.

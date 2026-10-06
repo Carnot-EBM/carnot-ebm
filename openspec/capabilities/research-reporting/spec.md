@@ -93981,3 +93981,30 @@ The exact-request protocol is serial. Its owned E2E scope uses the unmodified
 all-at-once loaded-binding and durable-reopen cases. Paced host batching remains
 repository health. Preserve its failed timing receipt; do not weaken assertions.
 Reuse the one completed repository-health receipt during closure recovery.
+## REQ-REPORT-8189: Inspect only the authenticated Exp8175 supervisor frontier
+
+Exp8189 SHALL authenticate the Exp8175 primary, terminal receipt, reader hashes
+and stored inventory before reusing the unchanged live supervisor reader.
+Historical methods SHALL come from immutable versioned bytes. Discover current
+producer metadata and inspect only changed or new receipts after the frontier;
+never repeat a broad history scan. Preserve prior primaries and failed receipts.
+Load no model, declare MODEL_SPECS=[], no_model_load, current calls0 and no heads.
+An empty authenticated delta SHALL complete complete_null_no_new_outcomes, with
+no arm changes or solve credit and both independent benefit scores0. Missing or
+changed external operands SHALL complete blocked with the exact failed value.
+Owned failures SHALL disqualify and zero readiness. Per-game and per-arm fired,
+helped, actions-to-levelup and unresolved stagnations remain observational.
+Recommend only existing curated arms after30 new resolved outcomes across5
+games, matched within-game comparisons and reserved held-game evidence.
+Publish checked bytes through primary_publication. The conductor owns ops and
+BMAD reconciliation.
+
+### SCENARIO-REPORT-8189-FRONTIER
+
+Private empty, duplicate, unresolved, pre-frontier and changed-reader controls
+SHALL preserve event identity, censor unresolved outcomes and reject changed
+authority. Exposed fixtures SHALL confer neither independent benefit nor solves.
+
+Implementation: `python/carnot/reporting/arc_supervisor_v707_frontier.py` and
+`scripts/experiments/experiment_8189_v707_arc_supervisor_frontier.py`.
+Tests: `tests/python/test_arc_supervisor_frontier_8189.py`.
