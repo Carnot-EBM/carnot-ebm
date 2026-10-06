@@ -1,0 +1,96 @@
+{
+  "checks": [
+    {
+      "actual_exit": 1,
+      "argv": [
+        "/usr/bin/env",
+        "-u",
+        "PYTHONPATH",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8193_v708_learning_qualification.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8193_v708_learning_qualification/terminal_candidate.json"
+      ],
+      "classification": "required",
+      "command": "/usr/bin/env -u PYTHONPATH /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8193_v708_learning_qualification.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8193_v708_learning_qualification/terminal_candidate.json",
+      "command_argv": [
+        "/usr/bin/env",
+        "-u",
+        "PYTHONPATH",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8193_v708_learning_qualification.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8193_v708_learning_qualification/terminal_candidate.json"
+      ],
+      "deadline_s": 300,
+      "duration_s": 2.975619983044453,
+      "exit_code": 1,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8193_v708_learning_qualification/invocations/1791277633188200149/terminal_logs/cold_replay-0e81f802c8acd5e877de0d410ac01c3f936ce1589c1337f37b65174312a7515b.log",
+      "log_sha256": "sha256:0e81f802c8acd5e877de0d410ac01c3f936ce1589c1337f37b65174312a7515b",
+      "name": "cold_replay",
+      "output_tail": "[exp8193] phase=start completed=0 pending=0\n[exp8193] phase=cold_replay_start completed=0 pending=0\n[exp8193] phase=cold_replay_complete completed=40 pending=0\n[exp8193] phase=reduction_drift completed=0 pending=0\n",
+      "passed": false,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8193_v708_learning_qualification/terminal_candidate.json"
+      ],
+      "classification": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8193_v708_learning_qualification/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8193_v708_learning_qualification/terminal_candidate.json"
+      ],
+      "deadline_s": 300,
+      "duration_s": 30.562498306971975,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8193_v708_learning_qualification/invocations/1791277633188200149/terminal_logs/adversarial_verify-3de813632c2a1abf992f583c5c480ef6c71109fbe9913da23d75abefe53934a1.log",
+      "log_sha256": "sha256:3de813632c2a1abf992f583c5c480ef6c71109fbe9913da23d75abefe53934a1",
+      "name": "adversarial_verify",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8193_v708_learning_qualification/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8193,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_disqualified_owned_validation\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8193_v708_learning_qualification/terminal_candidate.json"
+      ],
+      "classification": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8193_v708_learning_qualification/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8193_v708_learning_qualification/terminal_candidate.json"
+      ],
+      "deadline_s": 300,
+      "duration_s": 1.6551134880864993,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8193_v708_learning_qualification/invocations/1791277633188200149/terminal_logs/strict_row_lint-ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_row_lint",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "required",
+      "timed_out": false
+    }
+  ]
+}

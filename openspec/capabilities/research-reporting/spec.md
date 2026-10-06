@@ -94095,3 +94095,19 @@ Implementation: `carnot.reporting.v708_contract_custody`,
 `v708_contract_history` and the Exp8192 thin CLI reuse the qualified authority
 reader and publication runner. Missing design contracts retain readable active
 task bytes, but cannot grant contract readiness.
+## REQ-REPORT-8193: Publish new qualification without laundering old failure
+
+Freeze owned validation argv before measurement. Require normal scoped pytest,
+100 percent added statement coverage, measured legacy hard-exit statements,
+Ruff check/format, strict mypy, explicit-path spec coverage and private E2E-016
+success/replay. Run full Python health once and report unrelated failures
+separately. Seal completed logs and publish through primary_publication after
+unchanged adversarial verification and strict row lint. Preserve historical
+primaries, operator pages and live roadmaps. The conductor owns ops reconciliation.
+
+### SCENARIO-REPORT-8193-CLI
+
+The thin CLI executes privately outside checkout without PYTHONPATH for success,
+missing-input, tamper and cold replay. External blocks name actual failed gate
+operands. Only unfinished owned work is partial. New primitive evidence binds
+source/code/config hashes, measured coverage counts and the unchanged protocol.

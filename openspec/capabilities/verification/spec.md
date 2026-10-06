@@ -49756,3 +49756,26 @@ repair old provenance. Private fixtures stay outside results/.
 Implementation: `tests/python/test_contract_custody_8192.py` uses private
 fixtures for thirteen-task lifecycle, fourteen historical outcomes, failed old
 validation, source/code/log mutation and direct external CLI replay.
+## REQ-VERIFY-8193: Measured hard-exit calibration qualification
+
+Preserve the V707 numerical protocol bytes and Exp8180's failed receipt. Start
+coverage inside the real seed child, reach active.save(), exit73, resume and
+combine measured child data. Require objective parity1e-8, projected gradient
+1e-6, causal admission, overflow handling and exact restart state. Qualify all
+twenty learnable seeds with installation by208 and32 later changed decisions;
+retain no-signal controls. Fixtures grant circular_positive mechanics only.
+Reconstruct256 original stream slots and64 retention slots, source identities,
+missing masks and evaluator release roles independently of calibrated readiness.
+
+### SCENARIO-VERIFY-8193-CHILD
+
+Private tests execute the actual coverage child outside checkout without
+PYTHONPATH. Measured lines291/292 must enter combined coverage. Resume must match
+the uninterrupted state exactly apart from measured durations. Missing or
+tampered source operands block explicitly; owned failures zero readiness.
+
+### SCENARIO-VERIFY-8193-REPLAY
+
+Cold replay reexecutes fixtures and rejects changed rows, counts, child coverage,
+protocol, source/code bytes and sealed logs, even with a recomputed checksum.
+Zero current model calls and zero independent benefit remain mandatory.
