@@ -21497,3 +21497,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-06: Independently test sentence evidence against the frozen comparator (⚠️ Research Finding) — honest_verdict=complete_null_sentence_decision_null; results/experiment_8185_v707_sentence_decision_audit.json
 - 2026-10-06: Measure exact-request reuse including cold acquisition invalidation and recovery (✅ Complete) — honest_verdict=complete_positive_exact_request_service; results/experiment_8188_v707_exact_request_service.json
 - 2026-10-06: Inspect new live supervisor outcomes for transferable arm selection (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8189_v707_arc_supervisor_frontier.json
+- 2026-10-06: Bound the measured reuse workload and preserve each board obligation (⚠️ Research Finding) — honest_verdict=complete_null_hardware_service_boundary; results/experiment_8190_v707_hardware_service_boundary.json
