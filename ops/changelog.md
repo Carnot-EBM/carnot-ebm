@@ -21509,3 +21509,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-06: Bind thirteen tasks and preserve all fourteen V707 dispositions (⚠️ Blocked) — honest_verdict=complete_blocked_sha256; results/experiment_8192_v708_contract_custody.json
 - 2026-10-06: Qualify calibrated memory through measured hard-exit coverage and cold replay (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8193_v708_learning_qualification.json
 - 2026-10-06: Freeze class-conditional escalation and train calibration without reserved-label selection (⚠️ Research Finding) — honest_verdict=complete_null_selective_decision_null; results/experiment_8194_v708_selective_methods.json
+- 2026-10-06: Train small energy heads with separate temperature and set calibration (⚠️ Research Finding) — honest_verdict=complete_null_selective_fit_sealed; results/experiment_8195_v708_selective_energy_fit.json
