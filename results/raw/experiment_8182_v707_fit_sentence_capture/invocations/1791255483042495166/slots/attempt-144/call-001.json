@@ -1,0 +1,92 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:e3b697ee992544e3cb2f36d2384538fe25af07fd423a8bc1113479270a436df2",
+  "ended_monotonic_ns": 916811905911336,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"910 Embarcadero Del Norte\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Nightlife, Restaurants, Sports Bars, Bars\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Dublin's Sports Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-05-31 07:01:35\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I payed 12$ to play a couple songs and waited 40min because bartender (girl) was putting her songs next the whole time to kick everyone out before closing time. Worst service and attitude from bartender girl. Not coming back\\\"},{\\\"review_date\\\":\\\"2019-05-31 06:41:02\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The bartender is the most miserable human I've ever met. She is actually miserable enough to make me take the effort to write this review and post it.\\\"},{\\\"review_date\\\":\\\"2019-05-12 07:19:15\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The bartender tonight was yelling at us to \\\\\\\"GET THE FUCK OUT\\\\\\\" 20 minutes before they closed. We were just trying to finish a pool game. I work at a restaurant and we could NEVER tell people to leave before closing like that. I understand it is a bar in IV, but we should have been able to have at least 10 more minutes to enjoy our time there. We were not being disruptive or rude. I get wanting to close and go home but your job is to close at 12, not kick people out early for convenience. Unprofessional.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Dublin's Sports Grill in Isla Vista, CA is a nightlife spot that offers food, drinks, and sports games on TV. According to customer reviews, the atmosphere is casual and not particularly trendy or upscale. While the menu includes a variety of pub-style fare, the service has been described as subpar by some patrons. One reviewer noted that the bartender seemed uninterested in serving customers, and another reported being yelled at to leave 20 minutes before closing time. The venue does not offer reservations, outdoor seating, or WiFi, and is known for having a DJ spinning music on weekends. Based on the provided data, Dublin's Sports Grill seems to be a no-frills hangout popular among locals, but its service may be inconsistent.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":831},{\"index\":1,\"byte_start\":831,\"byte_end\":879},{\"index\":2,\"byte_start\":879,\"byte_end\":1025},{\"index\":3,\"byte_start\":1025,\"byte_end\":1287},{\"index\":4,\"byte_start\":1287,\"byte_end\":1330},{\"index\":5,\"byte_start\":1330,\"byte_end\":1419},{\"index\":6,\"byte_start\":1419,\"byte_end\":1538},{\"index\":7,\"byte_start\":1538,\"byte_end\":1576},{\"index\":8,\"byte_start\":1576,\"byte_end\":1686},{\"index\":9,\"byte_start\":1686,\"byte_end\":1718}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":110},{\"index\":1,\"byte_start\":110,\"byte_end\":206},{\"index\":2,\"byte_start\":206,\"byte_end\":317},{\"index\":3,\"byte_start\":317,\"byte_end\":475},{\"index\":4,\"byte_start\":475,\"byte_end\":597},{\"index\":5,\"byte_start\":597,\"byte_end\":737}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1022,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"910 Embarcadero Del Norte\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Nightlife, Restaurants, Sports Bars, Bars\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Dublin's Sports Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-05-31 07:01:35\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I payed 12$ to play a couple songs and waited 40min because bartender (girl) was putting her songs next the whole time to kick everyone out before closing time. Worst service and attitude from bartender girl. Not coming back\\\"},{\\\"review_date\\\":\\\"2019-05-31 06:41:02\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The bartender is the most miserable human I've ever met. She is actually miserable enough to make me take the effort to write this review and post it.\\\"},{\\\"review_date\\\":\\\"2019-05-12 07:19:15\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The bartender tonight was yelling at us to \\\\\\\"GET THE FUCK OUT\\\\\\\" 20 minutes before they closed. We were just trying to finish a pool game. I work at a restaurant and we could NEVER tell people to leave before closing like that. I understand it is a bar in IV, but we should have been able to have at least 10 more minutes to enjoy our time there. We were not being disruptive or rude. I get wanting to close and go home but your job is to close at 12, not kick people out early for convenience. Unprofessional.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Dublin's Sports Grill in Isla Vista, CA is a nightlife spot that offers food, drinks, and sports games on TV. According to customer reviews, the atmosphere is casual and not particularly trendy or upscale. While the menu includes a variety of pub-style fare, the service has been described as subpar by some patrons. One reviewer noted that the bartender seemed uninterested in serving customers, and another reported being yelled at to leave 20 minutes before closing time. The venue does not offer reservations, outdoor seating, or WiFi, and is known for having a DJ spinning music on weekends. Based on the provided data, Dublin's Sports Grill seems to be a no-frills hangout popular among locals, but its service may be inconsistent.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":831},{\"index\":1,\"byte_start\":831,\"byte_end\":879},{\"index\":2,\"byte_start\":879,\"byte_end\":1025},{\"index\":3,\"byte_start\":1025,\"byte_end\":1287},{\"index\":4,\"byte_start\":1287,\"byte_end\":1330},{\"index\":5,\"byte_start\":1330,\"byte_end\":1419},{\"index\":6,\"byte_start\":1419,\"byte_end\":1538},{\"index\":7,\"byte_start\":1538,\"byte_end\":1576},{\"index\":8,\"byte_start\":1576,\"byte_end\":1686},{\"index\":9,\"byte_start\":1686,\"byte_end\":1718}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":110},{\"index\":1,\"byte_start\":110,\"byte_end\":206},{\"index\":2,\"byte_start\":206,\"byte_end\":317},{\"index\":3,\"byte_start\":317,\"byte_end\":475},{\"index\":4,\"byte_start\":475,\"byte_end\":597},{\"index\":5,\"byte_start\":597,\"byte_end\":737}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+    "input_tokens": 1010,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"910 Embarcadero Del Norte\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Nightlife, Restaurants, Sports Bars, Bars\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Dublin's Sports Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-05-31 07:01:35\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I payed 12$ to play a couple songs and waited 40min because bartender (girl) was putting her songs next the whole time to kick everyone out before closing time. Worst service and attitude from bartender girl. Not coming back\\\"},{\\\"review_date\\\":\\\"2019-05-31 06:41:02\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The bartender is the most miserable human I've ever met. She is actually miserable enough to make me take the effort to write this review and post it.\\\"},{\\\"review_date\\\":\\\"2019-05-12 07:19:15\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The bartender tonight was yelling at us to \\\\\\\"GET THE FUCK OUT\\\\\\\" 20 minutes before they closed. We were just trying to finish a pool game. I work at a restaurant and we could NEVER tell people to leave before closing like that. I understand it is a bar in IV, but we should have been able to have at least 10 more minutes to enjoy our time there. We were not being disruptive or rude. I get wanting to close and go home but your job is to close at 12, not kick people out early for convenience. Unprofessional.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Dublin's Sports Grill in Isla Vista, CA is a nightlife spot that offers food, drinks, and sports games on TV. According to customer reviews, the atmosphere is casual and not particularly trendy or upscale. While the menu includes a variety of pub-style fare, the service has been described as subpar by some patrons. One reviewer noted that the bartender seemed uninterested in serving customers, and another reported being yelled at to leave 20 minutes before closing time. The venue does not offer reservations, outdoor seating, or WiFi, and is known for having a DJ spinning music on weekends. Based on the provided data, Dublin's Sports Grill seems to be a no-frills hangout popular among locals, but its service may be inconsistent.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":831},{\"index\":1,\"byte_start\":831,\"byte_end\":879},{\"index\":2,\"byte_start\":879,\"byte_end\":1025},{\"index\":3,\"byte_start\":1025,\"byte_end\":1287},{\"index\":4,\"byte_start\":1287,\"byte_end\":1330},{\"index\":5,\"byte_start\":1330,\"byte_end\":1419},{\"index\":6,\"byte_start\":1419,\"byte_end\":1538},{\"index\":7,\"byte_start\":1538,\"byte_end\":1576},{\"index\":8,\"byte_start\":1576,\"byte_end\":1686},{\"index\":9,\"byte_start\":1686,\"byte_end\":1718}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":110},{\"index\":1,\"byte_start\":110,\"byte_end\":206},{\"index\":2,\"byte_start\":206,\"byte_end\":317},{\"index\":3,\"byte_start\":317,\"byte_end\":475},{\"index\":4,\"byte_start\":475,\"byte_end\":597},{\"index\":5,\"byte_start\":597,\"byte_end\":737}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[]\n1|B|0.00|[]\n2|B|0.00|[]\n3|C|0.90|[0,1]\n4|C|0.95|[0,1]\n5|B|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255903,
+    "id": "chatcmpl-kk00ph06R7VhlwXNuhWMzU8bBMzVWnzW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1767.17,
+      "predicted_n": 72,
+      "predicted_per_second": 40.74310903874556,
+      "predicted_per_token_ms": 24.544027777777778,
+      "prompt_ms": 957.526,
+      "prompt_n": 983,
+      "prompt_per_second": 1026.6039773332525,
+      "prompt_per_token_ms": 0.974085452695829
+    },
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 1022,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1094
+    }
+  },
+  "source_cluster_id": "sha256:2e91700cb050f9e571c37c84fffeb36726e06cdf68a5354446a1cbefce68ba40",
+  "started_monotonic_ns": 916809048465413,
+  "status": "completed",
+  "unit_id": "sha256:b36cff2f370269d9e58de45e331ec65f315eb06ee8df5a1c949866022a41e882"
+}

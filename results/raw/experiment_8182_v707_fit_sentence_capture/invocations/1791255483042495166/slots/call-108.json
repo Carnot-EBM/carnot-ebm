@@ -1,0 +1,97 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:c0e9692ede2d66026711e8149b6f3aab4d72179b86be7ce6e7707370bc3d4b08",
+  "condition": "original",
+  "ended_monotonic_ns": 914724658146797,
+  "exclusion_reason": null,
+  "historical": true,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"217 E Anacapa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-15:30\\\",\\\"Monday\\\":\\\"10:30-15:30\\\",\\\"Saturday\\\":\\\"10:30-15:30\\\",\\\"Thursday\\\":\\\"10:30-15:30\\\",\\\"Tuesday\\\":\\\"10:30-15:30\\\",\\\"Wednesday\\\":\\\"10:30-15:30\\\"},\\\"name\\\":\\\"Mony's Mexican Food\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 22:50:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"All four of us had an amazing experience. Guacamole is the thicker rather than creamy. More so a pico de gallo con guacamole. \\\\n\\\\nBurrito had some great fresh rice and beans! \\\\n\\\\nGive a try of the mole and mango salsa. We went back for more!\\\"},{\\\"review_date\\\":\\\"2022-01-08 21:08:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The tacos tasted unbelievably good, there was so much flavor in them which was the highlight.\\\"},{\\\"review_date\\\":\\\"2021-12-21 04:00:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best tacos and salsa bar in SB. Very reasonable too, friendly staff. Avocado salsa is so yummy.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sure! Here's an objective overview of Mony's Mexican Food based on the provided structured data:\\n\\nMony's Mexican Food is a popular Mexican restaurant located in the heart of Santa Barbara, California. With an average rating of 4.5 stars out of 5 based on three customer reviews, this restaurant is known for its delicious and authentic Mexican cuisine. The menu features a variety of dishes, including tacos, burritos, and quesadillas, all made with fresh and flavorful ingredients.\\n\\nOne customer raved about the guacamole, describing it as \\\"thicker rather than creamy\\\" and recommending the pico de gallo con guacamole. Another customer praised the restaurant's fresh rice and beans, as well as the delicious mole and mango salsa. A third reviewer enjoyed the tacos, stating that they were full of flavor and a highlight of their meal.\\n\\nThe restaurant has a cozy and casual atmosphere, with no WiFi or outdoor seating available. However, customers can enjoy takeout or dine in during its hours of operation, which are from 10:30 AM to 3:30 PM from Monday to Friday, and 10:30 AM to 4:00 PM on Saturday. Despite the limited hours and lack of WiFi, Mony's Mexican Food remains a popular choice among locals and visitors alike, with many return customers and high praise from reviewers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":820},{\"index\":1,\"byte_start\":820,\"byte_end\":865},{\"index\":2,\"byte_start\":865,\"byte_end\":904},{\"index\":3,\"byte_start\":904,\"byte_end\":953},{\"index\":4,\"byte_start\":953,\"byte_end\":997},{\"index\":5,\"byte_start\":997,\"byte_end\":1292},{\"index\":6,\"byte_start\":1292,\"byte_end\":1329},{\"index\":7,\"byte_start\":1329,\"byte_end\":1372}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":201},{\"index\":2,\"byte_start\":201,\"byte_end\":353},{\"index\":3,\"byte_start\":353,\"byte_end\":484},{\"index\":4,\"byte_start\":484,\"byte_end\":620},{\"index\":5,\"byte_start\":620,\"byte_end\":731},{\"index\":6,\"byte_start\":731,\"byte_end\":837},{\"index\":7,\"byte_start\":837,\"byte_end\":929},{\"index\":8,\"byte_start\":929,\"byte_end\":1103},{\"index\":9,\"byte_start\":1103,\"byte_end\":1283}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8181-sentence-transport-canary",
+  "rendered_input_tokens": 1170,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"217 E Anacapa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-15:30\\\",\\\"Monday\\\":\\\"10:30-15:30\\\",\\\"Saturday\\\":\\\"10:30-15:30\\\",\\\"Thursday\\\":\\\"10:30-15:30\\\",\\\"Tuesday\\\":\\\"10:30-15:30\\\",\\\"Wednesday\\\":\\\"10:30-15:30\\\"},\\\"name\\\":\\\"Mony's Mexican Food\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 22:50:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"All four of us had an amazing experience. Guacamole is the thicker rather than creamy. More so a pico de gallo con guacamole. \\\\n\\\\nBurrito had some great fresh rice and beans! \\\\n\\\\nGive a try of the mole and mango salsa. We went back for more!\\\"},{\\\"review_date\\\":\\\"2022-01-08 21:08:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The tacos tasted unbelievably good, there was so much flavor in them which was the highlight.\\\"},{\\\"review_date\\\":\\\"2021-12-21 04:00:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best tacos and salsa bar in SB. Very reasonable too, friendly staff. Avocado salsa is so yummy.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sure! Here's an objective overview of Mony's Mexican Food based on the provided structured data:\\n\\nMony's Mexican Food is a popular Mexican restaurant located in the heart of Santa Barbara, California. With an average rating of 4.5 stars out of 5 based on three customer reviews, this restaurant is known for its delicious and authentic Mexican cuisine. The menu features a variety of dishes, including tacos, burritos, and quesadillas, all made with fresh and flavorful ingredients.\\n\\nOne customer raved about the guacamole, describing it as \\\"thicker rather than creamy\\\" and recommending the pico de gallo con guacamole. Another customer praised the restaurant's fresh rice and beans, as well as the delicious mole and mango salsa. A third reviewer enjoyed the tacos, stating that they were full of flavor and a highlight of their meal.\\n\\nThe restaurant has a cozy and casual atmosphere, with no WiFi or outdoor seating available. However, customers can enjoy takeout or dine in during its hours of operation, which are from 10:30 AM to 3:30 PM from Monday to Friday, and 10:30 AM to 4:00 PM on Saturday. Despite the limited hours and lack of WiFi, Mony's Mexican Food remains a popular choice among locals and visitors alike, with many return customers and high praise from reviewers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":820},{\"index\":1,\"byte_start\":820,\"byte_end\":865},{\"index\":2,\"byte_start\":865,\"byte_end\":904},{\"index\":3,\"byte_start\":904,\"byte_end\":953},{\"index\":4,\"byte_start\":953,\"byte_end\":997},{\"index\":5,\"byte_start\":997,\"byte_end\":1292},{\"index\":6,\"byte_start\":1292,\"byte_end\":1329},{\"index\":7,\"byte_start\":1329,\"byte_end\":1372}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":201},{\"index\":2,\"byte_start\":201,\"byte_end\":353},{\"index\":3,\"byte_start\":353,\"byte_end\":484},{\"index\":4,\"byte_start\":484,\"byte_end\":620},{\"index\":5,\"byte_start\":620,\"byte_end\":731},{\"index\":6,\"byte_start\":731,\"byte_end\":837},{\"index\":7,\"byte_start\":837,\"byte_end\":929},{\"index\":8,\"byte_start\":929,\"byte_end\":1103},{\"index\":9,\"byte_start\":1103,\"byte_end\":1283}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "input_tokens": 1158,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"217 E Anacapa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-15:30\\\",\\\"Monday\\\":\\\"10:30-15:30\\\",\\\"Saturday\\\":\\\"10:30-15:30\\\",\\\"Thursday\\\":\\\"10:30-15:30\\\",\\\"Tuesday\\\":\\\"10:30-15:30\\\",\\\"Wednesday\\\":\\\"10:30-15:30\\\"},\\\"name\\\":\\\"Mony's Mexican Food\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 22:50:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"All four of us had an amazing experience. Guacamole is the thicker rather than creamy. More so a pico de gallo con guacamole. \\\\n\\\\nBurrito had some great fresh rice and beans! \\\\n\\\\nGive a try of the mole and mango salsa. We went back for more!\\\"},{\\\"review_date\\\":\\\"2022-01-08 21:08:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The tacos tasted unbelievably good, there was so much flavor in them which was the highlight.\\\"},{\\\"review_date\\\":\\\"2021-12-21 04:00:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best tacos and salsa bar in SB. Very reasonable too, friendly staff. Avocado salsa is so yummy.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sure! Here's an objective overview of Mony's Mexican Food based on the provided structured data:\\n\\nMony's Mexican Food is a popular Mexican restaurant located in the heart of Santa Barbara, California. With an average rating of 4.5 stars out of 5 based on three customer reviews, this restaurant is known for its delicious and authentic Mexican cuisine. The menu features a variety of dishes, including tacos, burritos, and quesadillas, all made with fresh and flavorful ingredients.\\n\\nOne customer raved about the guacamole, describing it as \\\"thicker rather than creamy\\\" and recommending the pico de gallo con guacamole. Another customer praised the restaurant's fresh rice and beans, as well as the delicious mole and mango salsa. A third reviewer enjoyed the tacos, stating that they were full of flavor and a highlight of their meal.\\n\\nThe restaurant has a cozy and casual atmosphere, with no WiFi or outdoor seating available. However, customers can enjoy takeout or dine in during its hours of operation, which are from 10:30 AM to 3:30 PM from Monday to Friday, and 10:30 AM to 4:00 PM on Saturday. Despite the limited hours and lack of WiFi, Mony's Mexican Food remains a popular choice among locals and visitors alike, with many return customers and high praise from reviewers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":820},{\"index\":1,\"byte_start\":820,\"byte_end\":865},{\"index\":2,\"byte_start\":865,\"byte_end\":904},{\"index\":3,\"byte_start\":904,\"byte_end\":953},{\"index\":4,\"byte_start\":953,\"byte_end\":997},{\"index\":5,\"byte_start\":997,\"byte_end\":1292},{\"index\":6,\"byte_start\":1292,\"byte_end\":1329},{\"index\":7,\"byte_start\":1329,\"byte_end\":1372}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":201},{\"index\":2,\"byte_start\":201,\"byte_end\":353},{\"index\":3,\"byte_start\":353,\"byte_end\":484},{\"index\":4,\"byte_start\":484,\"byte_end\":620},{\"index\":5,\"byte_start\":620,\"byte_end\":731},{\"index\":6,\"byte_start\":731,\"byte_end\":837},{\"index\":7,\"byte_start\":837,\"byte_end\":929},{\"index\":8,\"byte_start\":929,\"byte_end\":1103},{\"index\":9,\"byte_start\":1103,\"byte_end\":1283}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|1.00|[]\n1|C|1.00|[0]\n2|C|1.00|[0]\n3|C|1.00|[0]\n4|C|1.00|[0]\n5|C|1.00|[0]\n6|C|1.00|[0]\n7|C|1.00|[0]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791253816,
+    "id": "chatcmpl-5WeMC7EWey2icjD7Kmo1CrQLsvpflflL",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 654,
+      "predicted_ms": 2324.528,
+      "predicted_n": 95,
+      "predicted_per_second": 40.86851180110543,
+      "predicted_per_token_ms": 24.46871578947368,
+      "prompt_ms": 541.21,
+      "prompt_n": 516,
+      "prompt_per_second": 953.4191903327728,
+      "prompt_per_token_ms": 1.048856589147287
+    },
+    "usage": {
+      "completion_tokens": 95,
+      "prompt_tokens": 1170,
+      "prompt_tokens_details": {
+        "cached_tokens": 654
+      },
+      "total_tokens": 1265
+    }
+  },
+  "source_cluster_id": "sha256:92313a447d30cab78230786ad4aae2afcb20ae024fe3cca30dca523fc9d489d7",
+  "started_monotonic_ns": 914721766037431,
+  "status": "completed",
+  "unit_id": "sha256:3cd07cc9b62e6c79d5419aad1d177e4e9478462143c799da8be688a950eda3a9"
+}

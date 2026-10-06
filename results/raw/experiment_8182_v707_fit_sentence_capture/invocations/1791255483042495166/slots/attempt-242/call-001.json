@@ -1,0 +1,88 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:ecc6e0ac9123033a307556f8b459a89f44264f14995956d135d139653a4e4403",
+  "ended_monotonic_ns": 917084528809941,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"2840 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Pizza, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-21:0\\\",\\\"Monday\\\":\\\"12:0-21:0\\\",\\\"Saturday\\\":\\\"12:0-21:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Nicky D's Wood fired Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-07-21 17:37:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Excellent wood fired pizza. I ordered the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil and Tomato. Perfect!\\\"},{\\\"review_date\\\":\\\"2018-06-03 02:28:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The best pizza money can buy IN Santa Barbara hands down .. I met Nicky D he is always there on weekends great guy to talk 2 ..\\\"},{\\\"review_date\\\":\\\"2018-05-12 03:42:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We just ate dinner here tonight! I Yelped pizza's nearby since we are from San Diego and I am so glad we found this place!!! It was sooooo good! Really good cheese and great flavor!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the given passages, pasta is a feminine noun in Italian. Passage 2 states that the article \\\"la\\\" is used before feminine words, and since pasta is a feminine word, it would be referred to as \\\"la pasta\\\".\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":825},{\"index\":1,\"byte_start\":825,\"byte_end\":932},{\"index\":2,\"byte_start\":932,\"byte_end\":1074},{\"index\":3,\"byte_start\":1074,\"byte_end\":1248},{\"index\":4,\"byte_start\":1248,\"byte_end\":1340},{\"index\":5,\"byte_start\":1340,\"byte_end\":1360},{\"index\":6,\"byte_start\":1360,\"byte_end\":1413}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":66},{\"index\":1,\"byte_start\":66,\"byte_end\":210}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 766,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"2840 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Pizza, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-21:0\\\",\\\"Monday\\\":\\\"12:0-21:0\\\",\\\"Saturday\\\":\\\"12:0-21:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Nicky D's Wood fired Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-07-21 17:37:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Excellent wood fired pizza. I ordered the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil and Tomato. Perfect!\\\"},{\\\"review_date\\\":\\\"2018-06-03 02:28:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The best pizza money can buy IN Santa Barbara hands down .. I met Nicky D he is always there on weekends great guy to talk 2 ..\\\"},{\\\"review_date\\\":\\\"2018-05-12 03:42:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We just ate dinner here tonight! I Yelped pizza's nearby since we are from San Diego and I am so glad we found this place!!! It was sooooo good! Really good cheese and great flavor!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the given passages, pasta is a feminine noun in Italian. Passage 2 states that the article \\\"la\\\" is used before feminine words, and since pasta is a feminine word, it would be referred to as \\\"la pasta\\\".\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":825},{\"index\":1,\"byte_start\":825,\"byte_end\":932},{\"index\":2,\"byte_start\":932,\"byte_end\":1074},{\"index\":3,\"byte_start\":1074,\"byte_end\":1248},{\"index\":4,\"byte_start\":1248,\"byte_end\":1340},{\"index\":5,\"byte_start\":1340,\"byte_end\":1360},{\"index\":6,\"byte_start\":1360,\"byte_end\":1413}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":66},{\"index\":1,\"byte_start\":66,\"byte_end\":210}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "input_tokens": 0,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"2840 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Pizza, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-21:0\\\",\\\"Monday\\\":\\\"12:0-21:0\\\",\\\"Saturday\\\":\\\"12:0-21:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Nicky D's Wood fired Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-07-21 17:37:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Excellent wood fired pizza. I ordered the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil and Tomato. Perfect!\\\"},{\\\"review_date\\\":\\\"2018-06-03 02:28:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The best pizza money can buy IN Santa Barbara hands down .. I met Nicky D he is always there on weekends great guy to talk 2 ..\\\"},{\\\"review_date\\\":\\\"2018-05-12 03:42:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We just ate dinner here tonight! I Yelped pizza's nearby since we are from San Diego and I am so glad we found this place!!! It was sooooo good! Really good cheese and great flavor!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the given passages, pasta is a feminine noun in Italian. Passage 2 states that the article \\\"la\\\" is used before feminine words, and since pasta is a feminine word, it would be referred to as \\\"la pasta\\\".\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":825},{\"index\":1,\"byte_start\":825,\"byte_end\":932},{\"index\":2,\"byte_start\":932,\"byte_end\":1074},{\"index\":3,\"byte_start\":1074,\"byte_end\":1248},{\"index\":4,\"byte_start\":1248,\"byte_end\":1340},{\"index\":5,\"byte_start\":1340,\"byte_end\":1360},{\"index\":6,\"byte_start\":1360,\"byte_end\":1413}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":66},{\"index\":1,\"byte_start\":66,\"byte_end\":210}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256176,
+    "id": "chatcmpl-8HzApF9djmeH5YPGbJjXtBXWU3ALL6VX",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 538.002,
+      "predicted_n": 22,
+      "predicted_per_second": 40.892041293526795,
+      "predicted_per_token_ms": 24.45463636363636,
+      "prompt_ms": 706.56,
+      "prompt_n": 727,
+      "prompt_per_second": 1028.9288949275362,
+      "prompt_per_token_ms": 0.9718844566712517
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 766,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 788
+    }
+  },
+  "source_cluster_id": "sha256:9a17d890820157662eed680a2da12f4b7dae91841d118f5891ccdd7fa5cbd6c6",
+  "started_monotonic_ns": 917083179128567,
+  "status": "completed",
+  "unit_id": "sha256:b5fcb3991e84b73d1e8191aa70c37dbad8c44ddbc61ad39e9e83458b30e2f25e"
+}

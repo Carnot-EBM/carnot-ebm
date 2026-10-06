@@ -1,0 +1,88 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:ae85389ac6f80a7a63d966fd5cfc3a552608c32d618d1740069248c5b4c03995",
+  "ended_monotonic_ns": 916790557256468,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Often, though, you can relieve that persistent cough with simple home remedies that will soothe your throat and help you breathe easier. However, if your cough persists or worsens, you should seek medical help. Drink plenty of water. The fluid will help flush out harmful bacteria or viruses and keep your throat moist.\\\\n\\\\npassage 2:Home treatment can help you feel more comfortable when you have a cough. 1  Drink more fluids. Water helps loosen mucus and soothe an irritated throat. 2  Elevate your head with extra pillows at night to ease a dry cough. 3  Try a cough drop to soothe an irritated throat.\\\\n\\\\npassage 3:However, if your cough persists or worsens, you should seek medical help. 1  Drink plenty of water. 2  Suck on cough lozenges or hard candies. 3  Drink herbal tea, or lemon juice and hot water, with a spoonful of honey mixed in.  Chew on a piece of ginger with salt sprinkled on 1  it. Gargle with a mixture of water and salt.\\\\n\\\\n\\\",\\\"question\\\":\\\"what do you do with a cough\\\"}\",\"answer\":\"Based on the given passages, if you have a cough, you can try home remedies such as drinking plenty of water, using cough drops, elevating your head with extra pillows, and drinking herbal tea or lemon juice with honey. However, if your cough persists or worsens, it is recommended to seek medical help.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":160},{\"index\":1,\"byte_start\":160,\"byte_end\":234},{\"index\":2,\"byte_start\":234,\"byte_end\":257},{\"index\":3,\"byte_start\":257,\"byte_end\":429},{\"index\":4,\"byte_start\":429,\"byte_end\":451},{\"index\":5,\"byte_start\":451,\"byte_end\":508},{\"index\":6,\"byte_start\":508,\"byte_end\":578},{\"index\":7,\"byte_start\":578,\"byte_end\":716},{\"index\":8,\"byte_start\":716,\"byte_end\":742},{\"index\":9,\"byte_start\":742,\"byte_end\":785},{\"index\":10,\"byte_start\":785,\"byte_end\":872},{\"index\":11,\"byte_start\":872,\"byte_end\":928},{\"index\":12,\"byte_start\":928,\"byte_end\":1015}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":220},{\"index\":1,\"byte_start\":220,\"byte_end\":303}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 672,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Often, though, you can relieve that persistent cough with simple home remedies that will soothe your throat and help you breathe easier. However, if your cough persists or worsens, you should seek medical help. Drink plenty of water. The fluid will help flush out harmful bacteria or viruses and keep your throat moist.\\\\n\\\\npassage 2:Home treatment can help you feel more comfortable when you have a cough. 1  Drink more fluids. Water helps loosen mucus and soothe an irritated throat. 2  Elevate your head with extra pillows at night to ease a dry cough. 3  Try a cough drop to soothe an irritated throat.\\\\n\\\\npassage 3:However, if your cough persists or worsens, you should seek medical help. 1  Drink plenty of water. 2  Suck on cough lozenges or hard candies. 3  Drink herbal tea, or lemon juice and hot water, with a spoonful of honey mixed in.  Chew on a piece of ginger with salt sprinkled on 1  it. Gargle with a mixture of water and salt.\\\\n\\\\n\\\",\\\"question\\\":\\\"what do you do with a cough\\\"}\",\"answer\":\"Based on the given passages, if you have a cough, you can try home remedies such as drinking plenty of water, using cough drops, elevating your head with extra pillows, and drinking herbal tea or lemon juice with honey. However, if your cough persists or worsens, it is recommended to seek medical help.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":160},{\"index\":1,\"byte_start\":160,\"byte_end\":234},{\"index\":2,\"byte_start\":234,\"byte_end\":257},{\"index\":3,\"byte_start\":257,\"byte_end\":429},{\"index\":4,\"byte_start\":429,\"byte_end\":451},{\"index\":5,\"byte_start\":451,\"byte_end\":508},{\"index\":6,\"byte_start\":508,\"byte_end\":578},{\"index\":7,\"byte_start\":578,\"byte_end\":716},{\"index\":8,\"byte_start\":716,\"byte_end\":742},{\"index\":9,\"byte_start\":742,\"byte_end\":785},{\"index\":10,\"byte_start\":785,\"byte_end\":872},{\"index\":11,\"byte_start\":872,\"byte_end\":928},{\"index\":12,\"byte_start\":928,\"byte_end\":1015}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":220},{\"index\":1,\"byte_start\":220,\"byte_end\":303}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "input_tokens": 660,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Often, though, you can relieve that persistent cough with simple home remedies that will soothe your throat and help you breathe easier. However, if your cough persists or worsens, you should seek medical help. Drink plenty of water. The fluid will help flush out harmful bacteria or viruses and keep your throat moist.\\\\n\\\\npassage 2:Home treatment can help you feel more comfortable when you have a cough. 1  Drink more fluids. Water helps loosen mucus and soothe an irritated throat. 2  Elevate your head with extra pillows at night to ease a dry cough. 3  Try a cough drop to soothe an irritated throat.\\\\n\\\\npassage 3:However, if your cough persists or worsens, you should seek medical help. 1  Drink plenty of water. 2  Suck on cough lozenges or hard candies. 3  Drink herbal tea, or lemon juice and hot water, with a spoonful of honey mixed in.  Chew on a piece of ginger with salt sprinkled on 1  it. Gargle with a mixture of water and salt.\\\\n\\\\n\\\",\\\"question\\\":\\\"what do you do with a cough\\\"}\",\"answer\":\"Based on the given passages, if you have a cough, you can try home remedies such as drinking plenty of water, using cough drops, elevating your head with extra pillows, and drinking herbal tea or lemon juice with honey. However, if your cough persists or worsens, it is recommended to seek medical help.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":160},{\"index\":1,\"byte_start\":160,\"byte_end\":234},{\"index\":2,\"byte_start\":234,\"byte_end\":257},{\"index\":3,\"byte_start\":257,\"byte_end\":429},{\"index\":4,\"byte_start\":429,\"byte_end\":451},{\"index\":5,\"byte_start\":451,\"byte_end\":508},{\"index\":6,\"byte_start\":508,\"byte_end\":578},{\"index\":7,\"byte_start\":578,\"byte_end\":716},{\"index\":8,\"byte_start\":716,\"byte_end\":742},{\"index\":9,\"byte_start\":742,\"byte_end\":785},{\"index\":10,\"byte_start\":785,\"byte_end\":872},{\"index\":11,\"byte_start\":872,\"byte_end\":928},{\"index\":12,\"byte_start\":928,\"byte_end\":1015}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":220},{\"index\":1,\"byte_start\":220,\"byte_end\":303}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[]\n1|E|0.95|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255882,
+    "id": "chatcmpl-gVKDnGc544eRfe481rOsO6vllJ1waT8J",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 531.237,
+      "predicted_n": 22,
+      "predicted_per_second": 41.41277810092294,
+      "predicted_per_token_ms": 24.147136363636363,
+      "prompt_ms": 639.751,
+      "prompt_n": 633,
+      "prompt_per_second": 989.4474569012006,
+      "prompt_per_token_ms": 1.0106650868878357
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 672,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 694
+    }
+  },
+  "source_cluster_id": "sha256:54e86c18764e7681d8afe1ba94c496a036465867c122f87829692fa783e86d65",
+  "started_monotonic_ns": 916789210644060,
+  "status": "completed",
+  "unit_id": "sha256:03d197bc02313a1ae9f408cff2eb95574dee70416b4bc2bceb0813a5b9468c34"
+}

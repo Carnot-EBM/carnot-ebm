@@ -1,0 +1,92 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:7b7aa4415905d142061d85961583758940838be7b6639958920cb464a54389db",
+  "condition": "original",
+  "ended_monotonic_ns": 916896632849217,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Below is a diagram from Cummins showing the difference between the Tier 3 engines and the Tier 4 Interim engines. As shown below the muffler is replaced by the Diesel Particulate Filter (DPF) which also acts as a muffler; plus the addition of the Exhaust Gas Recirculation (EGR) system.\\\\n\\\\npassage 2:Tier 4 refers to a set of emissions requirements established by the EPA to reduce emissions of particulate matter (PM), oxides of nitrogen (NOx) and other harmful toxins from new, non-road diesel engines. As part of this clean-air initiative, the EPA established acceptable levels of emissions in diesel engines.\\\\n\\\\npassage 3:The Tier 1to 3 standards are met primarily through improvementsin the combustion process with no, or only limited useof exhaust aftertreatment (oxidation catalysts). In 2004, the EPA signed the final rule introducing Tier 4emission standards, to be phased-in over the period of2008 to 2015.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between tier 3 and tier 4 engines\\\"}\",\"answer\":\"Based on the given passages, the main differences between Tier 3 and Tier 4 engines are:\\n\\n1. The presence of a Diesel Particulate Filter (DPF) in Tier 4 engines, which acts as a muffler and reduces particulate matter (PM) emissions.\\n2. The addition of an Exhaust Gas Recirculation (EGR) system in Tier 4 engines to reduce oxides of nitrogen (NOx) emissions.\\n\\nTherefore, Tier 4 engines have more stringent emissions controls compared to Tier 3 engines, resulting in cleaner emissions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":137},{\"index\":1,\"byte_start\":137,\"byte_end\":528},{\"index\":2,\"byte_start\":528,\"byte_end\":815},{\"index\":3,\"byte_start\":815,\"byte_end\":1015}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":233},{\"index\":1,\"byte_start\":233,\"byte_end\":359},{\"index\":2,\"byte_start\":359,\"byte_end\":483}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 575,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Below is a diagram from Cummins showing the difference between the Tier 3 engines and the Tier 4 Interim engines. As shown below the muffler is replaced by the Diesel Particulate Filter (DPF) which also acts as a muffler; plus the addition of the Exhaust Gas Recirculation (EGR) system.\\\\n\\\\npassage 2:Tier 4 refers to a set of emissions requirements established by the EPA to reduce emissions of particulate matter (PM), oxides of nitrogen (NOx) and other harmful toxins from new, non-road diesel engines. As part of this clean-air initiative, the EPA established acceptable levels of emissions in diesel engines.\\\\n\\\\npassage 3:The Tier 1to 3 standards are met primarily through improvementsin the combustion process with no, or only limited useof exhaust aftertreatment (oxidation catalysts). In 2004, the EPA signed the final rule introducing Tier 4emission standards, to be phased-in over the period of2008 to 2015.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between tier 3 and tier 4 engines\\\"}\",\"answer\":\"Based on the given passages, the main differences between Tier 3 and Tier 4 engines are:\\n\\n1. The presence of a Diesel Particulate Filter (DPF) in Tier 4 engines, which acts as a muffler and reduces particulate matter (PM) emissions.\\n2. The addition of an Exhaust Gas Recirculation (EGR) system in Tier 4 engines to reduce oxides of nitrogen (NOx) emissions.\\n\\nTherefore, Tier 4 engines have more stringent emissions controls compared to Tier 3 engines, resulting in cleaner emissions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":137},{\"index\":1,\"byte_start\":137,\"byte_end\":528},{\"index\":2,\"byte_start\":528,\"byte_end\":815},{\"index\":3,\"byte_start\":815,\"byte_end\":1015}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":233},{\"index\":1,\"byte_start\":233,\"byte_end\":359},{\"index\":2,\"byte_start\":359,\"byte_end\":483}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\"\n",
+    "input_tokens": 563,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Below is a diagram from Cummins showing the difference between the Tier 3 engines and the Tier 4 Interim engines. As shown below the muffler is replaced by the Diesel Particulate Filter (DPF) which also acts as a muffler; plus the addition of the Exhaust Gas Recirculation (EGR) system.\\\\n\\\\npassage 2:Tier 4 refers to a set of emissions requirements established by the EPA to reduce emissions of particulate matter (PM), oxides of nitrogen (NOx) and other harmful toxins from new, non-road diesel engines. As part of this clean-air initiative, the EPA established acceptable levels of emissions in diesel engines.\\\\n\\\\npassage 3:The Tier 1to 3 standards are met primarily through improvementsin the combustion process with no, or only limited useof exhaust aftertreatment (oxidation catalysts). In 2004, the EPA signed the final rule introducing Tier 4emission standards, to be phased-in over the period of2008 to 2015.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between tier 3 and tier 4 engines\\\"}\",\"answer\":\"Based on the given passages, the main differences between Tier 3 and Tier 4 engines are:\\n\\n1. The presence of a Diesel Particulate Filter (DPF) in Tier 4 engines, which acts as a muffler and reduces particulate matter (PM) emissions.\\n2. The addition of an Exhaust Gas Recirculation (EGR) system in Tier 4 engines to reduce oxides of nitrogen (NOx) emissions.\\n\\nTherefore, Tier 4 engines have more stringent emissions controls compared to Tier 3 engines, resulting in cleaner emissions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":137},{\"index\":1,\"byte_start\":137,\"byte_end\":528},{\"index\":2,\"byte_start\":528,\"byte_end\":815},{\"index\":3,\"byte_start\":815,\"byte_end\":1015}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":233},{\"index\":1,\"byte_start\":233,\"byte_end\":359},{\"index\":2,\"byte_start\":359,\"byte_end\":483}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,1]\n1|E|0.95|[0,1]\n2|C|0.85|[1,2]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255988,
+    "id": "chatcmpl-NK8ZfTBawKU2ojsO3szT0ck14vMq8WI4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1106.167,
+      "predicted_n": 45,
+      "predicted_per_second": 40.68101832725077,
+      "predicted_per_token_ms": 24.581488888888888,
+      "prompt_ms": 577.308,
+      "prompt_n": 536,
+      "prompt_per_second": 928.4472066903629,
+      "prompt_per_token_ms": 1.0770671641791045
+    },
+    "usage": {
+      "completion_tokens": 45,
+      "prompt_tokens": 575,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 620
+    }
+  },
+  "source_cluster_id": "sha256:2c6156cfbd5d60d86ae89b36f117c62d5c854b2149e78dbc6bea806a57571fe2",
+  "started_monotonic_ns": 916894802501849,
+  "status": "completed",
+  "unit_id": "sha256:e444b8b8a4c98e05a63d56336014d5e6a7285a482290fc3829ce1eb2b752bfa4"
+}

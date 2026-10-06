@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:7dbafd3e941ae13204d4ac9101cf539b62bc4f2b99cd84eb3351f5ea10417e03",
+  "ended_monotonic_ns": 916636941107606,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"A mother-of-four from Florida,  disappears mysteriously after leaving Walmart shift in 2010\\nMarie Chantal Delly, a mother-of-four from Florida, vanished under mysterious circumstances after concluding her cashier shift at a Naples Walmart on May 17, 2010.\\nAccording to details provided by Collier County Sheriff\u2019s Detective Scott Peterson, Delly was dropped off at the Walmart by her husband, Mathnauld Dareus, around 8:30 a.m. She clocked out around 4:30 p.m., but her subsequent movements remain shrouded in mystery. \\\"Marie had sought a day-off for the following day, intending to attend her child\u2019s doctor appointment. However, she never turned up for that appointment,\u201d Detective Peterson reported.\\nThe alarm was raised on May 19 when Delly failed to report for her scheduled shift. Walmart subsequently reached out to her husband, who then reported her as missing to the sheriff\u2019s office.\\nNotably, Detective Peterson mentioned that Delly had previously taken short breaks when she faced \u201cmarital difficulties,\u201d often not informing her husband of her whereabouts. But she always kept her family and children in the loop \u2014 a practice she deviated from this time.\\nA key piece of evidence has emerged in the form of Walmart\u2019s security footage. The footage captured a silver vehicle at the store during Delly\u2019s exit time, which was later spotted at an area toll booth. Significantly, Dareus, Delly\u2019s husband, has not been ruled out as a person of interest due to \\\"inconsistencies between his account and the findings of our investigation.\\\"\\nSince her mysterious disappearance, Delly has neither accessed her bank nor her social media accounts. Further, there's no indication of her contacting friends or family or leaving the country. Importantly, Detective Peterson highlighted that Delly is an immigrant from Haiti.\\nIn a startling twist, the Naples Daily News reported that Dareus moved to Orlando shortly after Marie\u2019s disappearance. The same publication also highlighted that Dareus was convicted in 2015 for first-degree murder with a firearm, linked to the fatal shooting of Hyatt Regency employee Cedilien Forestal in Orlando.\\nEvery piece of information can be pivotal. If you know anything about Marie Chantal Delly or the ongoing investigation, please assist by calling the Collier County Sheriff\u2019s Office at (239) 252-9300. And remember, if you're more comfortable remaining anonymous, Crime Stoppers is ready to listen at (800) 780-TIPS (8477).\",\"answer\":\"Marie Chantal Delly, a mother of four from Florida, disappeared mysteriously after finishing her shift at Walmart in 2010. She was last seen leaving the store and has not been heard from since. Her husband, Mathnauld Dareus, is a person of interest due to inconsistencies in his account and has since moved to Orlando. There is a reward for any information leading to Delly's whereabouts.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":430},{\"index\":1,\"byte_start\":430,\"byte_end\":521},{\"index\":2,\"byte_start\":521,\"byte_end\":626},{\"index\":3,\"byte_start\":626,\"byte_end\":709},{\"index\":4,\"byte_start\":709,\"byte_end\":793},{\"index\":5,\"byte_start\":793,\"byte_end\":902},{\"index\":6,\"byte_start\":902,\"byte_end\":1080},{\"index\":7,\"byte_start\":1080,\"byte_end\":1180},{\"index\":8,\"byte_start\":1180,\"byte_end\":1261},{\"index\":9,\"byte_start\":1261,\"byte_end\":1387},{\"index\":10,\"byte_start\":1387,\"byte_end\":1560},{\"index\":11,\"byte_start\":1560,\"byte_end\":1663},{\"index\":12,\"byte_start\":1663,\"byte_end\":1754},{\"index\":13,\"byte_start\":1754,\"byte_end\":1837},{\"index\":14,\"byte_start\":1837,\"byte_end\":1958},{\"index\":15,\"byte_start\":1958,\"byte_end\":2155},{\"index\":16,\"byte_start\":2155,\"byte_end\":2198},{\"index\":17,\"byte_start\":2198,\"byte_end\":2478}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":194},{\"index\":1,\"byte_start\":194,\"byte_end\":319},{\"index\":2,\"byte_start\":319,\"byte_end\":388}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1111,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"A mother-of-four from Florida,  disappears mysteriously after leaving Walmart shift in 2010\\nMarie Chantal Delly, a mother-of-four from Florida, vanished under mysterious circumstances after concluding her cashier shift at a Naples Walmart on May 17, 2010.\\nAccording to details provided by Collier County Sheriff\u2019s Detective Scott Peterson, Delly was dropped off at the Walmart by her husband, Mathnauld Dareus, around 8:30 a.m. She clocked out around 4:30 p.m., but her subsequent movements remain shrouded in mystery. \\\"Marie had sought a day-off for the following day, intending to attend her child\u2019s doctor appointment. However, she never turned up for that appointment,\u201d Detective Peterson reported.\\nThe alarm was raised on May 19 when Delly failed to report for her scheduled shift. Walmart subsequently reached out to her husband, who then reported her as missing to the sheriff\u2019s office.\\nNotably, Detective Peterson mentioned that Delly had previously taken short breaks when she faced \u201cmarital difficulties,\u201d often not informing her husband of her whereabouts. But she always kept her family and children in the loop \u2014 a practice she deviated from this time.\\nA key piece of evidence has emerged in the form of Walmart\u2019s security footage. The footage captured a silver vehicle at the store during Delly\u2019s exit time, which was later spotted at an area toll booth. Significantly, Dareus, Delly\u2019s husband, has not been ruled out as a person of interest due to \\\"inconsistencies between his account and the findings of our investigation.\\\"\\nSince her mysterious disappearance, Delly has neither accessed her bank nor her social media accounts. Further, there's no indication of her contacting friends or family or leaving the country. Importantly, Detective Peterson highlighted that Delly is an immigrant from Haiti.\\nIn a startling twist, the Naples Daily News reported that Dareus moved to Orlando shortly after Marie\u2019s disappearance. The same publication also highlighted that Dareus was convicted in 2015 for first-degree murder with a firearm, linked to the fatal shooting of Hyatt Regency employee Cedilien Forestal in Orlando.\\nEvery piece of information can be pivotal. If you know anything about Marie Chantal Delly or the ongoing investigation, please assist by calling the Collier County Sheriff\u2019s Office at (239) 252-9300. And remember, if you're more comfortable remaining anonymous, Crime Stoppers is ready to listen at (800) 780-TIPS (8477).\",\"answer\":\"Marie Chantal Delly, a mother of four from Florida, disappeared mysteriously after finishing her shift at Walmart in 2010. She was last seen leaving the store and has not been heard from since. Her husband, Mathnauld Dareus, is a person of interest due to inconsistencies in his account and has since moved to Orlando. There is a reward for any information leading to Delly's whereabouts.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":430},{\"index\":1,\"byte_start\":430,\"byte_end\":521},{\"index\":2,\"byte_start\":521,\"byte_end\":626},{\"index\":3,\"byte_start\":626,\"byte_end\":709},{\"index\":4,\"byte_start\":709,\"byte_end\":793},{\"index\":5,\"byte_start\":793,\"byte_end\":902},{\"index\":6,\"byte_start\":902,\"byte_end\":1080},{\"index\":7,\"byte_start\":1080,\"byte_end\":1180},{\"index\":8,\"byte_start\":1180,\"byte_end\":1261},{\"index\":9,\"byte_start\":1261,\"byte_end\":1387},{\"index\":10,\"byte_start\":1387,\"byte_end\":1560},{\"index\":11,\"byte_start\":1560,\"byte_end\":1663},{\"index\":12,\"byte_start\":1663,\"byte_end\":1754},{\"index\":13,\"byte_start\":1754,\"byte_end\":1837},{\"index\":14,\"byte_start\":1837,\"byte_end\":1958},{\"index\":15,\"byte_start\":1958,\"byte_end\":2155},{\"index\":16,\"byte_start\":2155,\"byte_end\":2198},{\"index\":17,\"byte_start\":2198,\"byte_end\":2478}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":194},{\"index\":1,\"byte_start\":194,\"byte_end\":319},{\"index\":2,\"byte_start\":319,\"byte_end\":388}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\"\n",
+    "input_tokens": 1099,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"A mother-of-four from Florida,  disappears mysteriously after leaving Walmart shift in 2010\\nMarie Chantal Delly, a mother-of-four from Florida, vanished under mysterious circumstances after concluding her cashier shift at a Naples Walmart on May 17, 2010.\\nAccording to details provided by Collier County Sheriff\u2019s Detective Scott Peterson, Delly was dropped off at the Walmart by her husband, Mathnauld Dareus, around 8:30 a.m. She clocked out around 4:30 p.m., but her subsequent movements remain shrouded in mystery. \\\"Marie had sought a day-off for the following day, intending to attend her child\u2019s doctor appointment. However, she never turned up for that appointment,\u201d Detective Peterson reported.\\nThe alarm was raised on May 19 when Delly failed to report for her scheduled shift. Walmart subsequently reached out to her husband, who then reported her as missing to the sheriff\u2019s office.\\nNotably, Detective Peterson mentioned that Delly had previously taken short breaks when she faced \u201cmarital difficulties,\u201d often not informing her husband of her whereabouts. But she always kept her family and children in the loop \u2014 a practice she deviated from this time.\\nA key piece of evidence has emerged in the form of Walmart\u2019s security footage. The footage captured a silver vehicle at the store during Delly\u2019s exit time, which was later spotted at an area toll booth. Significantly, Dareus, Delly\u2019s husband, has not been ruled out as a person of interest due to \\\"inconsistencies between his account and the findings of our investigation.\\\"\\nSince her mysterious disappearance, Delly has neither accessed her bank nor her social media accounts. Further, there's no indication of her contacting friends or family or leaving the country. Importantly, Detective Peterson highlighted that Delly is an immigrant from Haiti.\\nIn a startling twist, the Naples Daily News reported that Dareus moved to Orlando shortly after Marie\u2019s disappearance. The same publication also highlighted that Dareus was convicted in 2015 for first-degree murder with a firearm, linked to the fatal shooting of Hyatt Regency employee Cedilien Forestal in Orlando.\\nEvery piece of information can be pivotal. If you know anything about Marie Chantal Delly or the ongoing investigation, please assist by calling the Collier County Sheriff\u2019s Office at (239) 252-9300. And remember, if you're more comfortable remaining anonymous, Crime Stoppers is ready to listen at (800) 780-TIPS (8477).\",\"answer\":\"Marie Chantal Delly, a mother of four from Florida, disappeared mysteriously after finishing her shift at Walmart in 2010. She was last seen leaving the store and has not been heard from since. Her husband, Mathnauld Dareus, is a person of interest due to inconsistencies in his account and has since moved to Orlando. There is a reward for any information leading to Delly's whereabouts.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":430},{\"index\":1,\"byte_start\":430,\"byte_end\":521},{\"index\":2,\"byte_start\":521,\"byte_end\":626},{\"index\":3,\"byte_start\":626,\"byte_end\":709},{\"index\":4,\"byte_start\":709,\"byte_end\":793},{\"index\":5,\"byte_start\":793,\"byte_end\":902},{\"index\":6,\"byte_start\":902,\"byte_end\":1080},{\"index\":7,\"byte_start\":1080,\"byte_end\":1180},{\"index\":8,\"byte_start\":1180,\"byte_end\":1261},{\"index\":9,\"byte_start\":1261,\"byte_end\":1387},{\"index\":10,\"byte_start\":1387,\"byte_end\":1560},{\"index\":11,\"byte_start\":1560,\"byte_end\":1663},{\"index\":12,\"byte_start\":1663,\"byte_end\":1754},{\"index\":13,\"byte_start\":1754,\"byte_end\":1837},{\"index\":14,\"byte_start\":1837,\"byte_end\":1958},{\"index\":15,\"byte_start\":1958,\"byte_end\":2155},{\"index\":16,\"byte_start\":2155,\"byte_end\":2198},{\"index\":17,\"byte_start\":2198,\"byte_end\":2478}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":194},{\"index\":1,\"byte_start\":194,\"byte_end\":319},{\"index\":2,\"byte_start\":319,\"byte_end\":388}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255728,
+    "id": "chatcmpl-xvzRddVxuNT6x8tAcdyasyCcAWteLa7Z",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 799.345,
+      "predicted_n": 33,
+      "predicted_per_second": 41.28380111216058,
+      "predicted_per_token_ms": 24.222575757575758,
+      "prompt_ms": 1029.971,
+      "prompt_n": 1072,
+      "prompt_per_second": 1040.8060032758203,
+      "prompt_per_token_ms": 0.9607938432835821
+    },
+    "usage": {
+      "completion_tokens": 33,
+      "prompt_tokens": 1111,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1144
+    }
+  },
+  "source_cluster_id": "sha256:71902cea1f088ed1839e717741eef7a2930d0c78dd14baa1f6aa539ddc9f33d6",
+  "started_monotonic_ns": 916634949552848,
+  "status": "completed",
+  "unit_id": "sha256:f6b1517a0301272ac16afc9905122256cc66d8a832a4aa6d974df63dbb24cb1e"
+}

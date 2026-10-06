@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:cdc7280631b1c96fde33e96058bb76d470e0f0832dc40e6d4a0ef931b5593fb6",
+  "condition": "original",
+  "ended_monotonic_ns": 917001953457687,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Quick Guide for Basic Orchid Care. Orchids need six things to bloom. Light - Give orchids bright light, but no direct sun. Water - Water them thoroughly once or twice a week -- more when it's warmer, less when it's cooler. Make sure the water drains completely out of the holes at the bottom of the pot.\\\\n\\\\npassage 2:Cut Back the Orchid Flower Spike. After the flowers drop from the orchid you have three choices: leave the flower spike (or stem) intact, cut it back to a node, or remove it entirely. If you leave the stem intact, there is a chance that new blooms will emerge from the tip. You can also cut the stem back to the.\\\\n\\\\npassage 3:If you cannot identify your orchid, then start with these basic care guidelines: 1  Light - Give orchids bright light, but no direct sun. 2  Water - Water them thoroughly once or twice a week -- more when it's warmer, less when it's cooler. 3  Fertilizer - Fertilize them when they are growing.  Air movement - Provide gentle air circulation for the plant.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you care for orchids\\\"}\",\"answer\":\"Sure! Here's a brief answer to the question \\\"How do you care for orchids?\\\" based on the given passages:\\n\\nTo care for orchids, provide them with bright light but no direct sun, water them thoroughly once or twice a week, and make sure the water drains completely out of the pot. You can also fertilize them when they are growing, and provide gentle air circulation for the plant. Additionally, after the flowers drop, you can cut the flower spike back to a node or remove it entirely to encourage new blooms to emerge.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":58},{\"index\":1,\"byte_start\":58,\"byte_end\":92},{\"index\":2,\"byte_start\":92,\"byte_end\":146},{\"index\":3,\"byte_start\":146,\"byte_end\":246},{\"index\":4,\"byte_start\":246,\"byte_end\":374},{\"index\":5,\"byte_start\":374,\"byte_end\":524},{\"index\":6,\"byte_start\":524,\"byte_end\":614},{\"index\":7,\"byte_start\":614,\"byte_end\":804},{\"index\":8,\"byte_start\":804,\"byte_end\":907},{\"index\":9,\"byte_start\":907,\"byte_end\":962},{\"index\":10,\"byte_start\":962,\"byte_end\":1069}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":75},{\"index\":2,\"byte_start\":75,\"byte_end\":278},{\"index\":3,\"byte_start\":278,\"byte_end\":379},{\"index\":4,\"byte_start\":379,\"byte_end\":517}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 744,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Quick Guide for Basic Orchid Care. Orchids need six things to bloom. Light - Give orchids bright light, but no direct sun. Water - Water them thoroughly once or twice a week -- more when it's warmer, less when it's cooler. Make sure the water drains completely out of the holes at the bottom of the pot.\\\\n\\\\npassage 2:Cut Back the Orchid Flower Spike. After the flowers drop from the orchid you have three choices: leave the flower spike (or stem) intact, cut it back to a node, or remove it entirely. If you leave the stem intact, there is a chance that new blooms will emerge from the tip. You can also cut the stem back to the.\\\\n\\\\npassage 3:If you cannot identify your orchid, then start with these basic care guidelines: 1  Light - Give orchids bright light, but no direct sun. 2  Water - Water them thoroughly once or twice a week -- more when it's warmer, less when it's cooler. 3  Fertilizer - Fertilize them when they are growing.  Air movement - Provide gentle air circulation for the plant.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you care for orchids\\\"}\",\"answer\":\"Sure! Here's a brief answer to the question \\\"How do you care for orchids?\\\" based on the given passages:\\n\\nTo care for orchids, provide them with bright light but no direct sun, water them thoroughly once or twice a week, and make sure the water drains completely out of the pot. You can also fertilize them when they are growing, and provide gentle air circulation for the plant. Additionally, after the flowers drop, you can cut the flower spike back to a node or remove it entirely to encourage new blooms to emerge.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":58},{\"index\":1,\"byte_start\":58,\"byte_end\":92},{\"index\":2,\"byte_start\":92,\"byte_end\":146},{\"index\":3,\"byte_start\":146,\"byte_end\":246},{\"index\":4,\"byte_start\":246,\"byte_end\":374},{\"index\":5,\"byte_start\":374,\"byte_end\":524},{\"index\":6,\"byte_start\":524,\"byte_end\":614},{\"index\":7,\"byte_start\":614,\"byte_end\":804},{\"index\":8,\"byte_start\":804,\"byte_end\":907},{\"index\":9,\"byte_start\":907,\"byte_end\":962},{\"index\":10,\"byte_start\":962,\"byte_end\":1069}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":75},{\"index\":2,\"byte_start\":75,\"byte_end\":278},{\"index\":3,\"byte_start\":278,\"byte_end\":379},{\"index\":4,\"byte_start\":379,\"byte_end\":517}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\"\n",
+    "input_tokens": 732,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Quick Guide for Basic Orchid Care. Orchids need six things to bloom. Light - Give orchids bright light, but no direct sun. Water - Water them thoroughly once or twice a week -- more when it's warmer, less when it's cooler. Make sure the water drains completely out of the holes at the bottom of the pot.\\\\n\\\\npassage 2:Cut Back the Orchid Flower Spike. After the flowers drop from the orchid you have three choices: leave the flower spike (or stem) intact, cut it back to a node, or remove it entirely. If you leave the stem intact, there is a chance that new blooms will emerge from the tip. You can also cut the stem back to the.\\\\n\\\\npassage 3:If you cannot identify your orchid, then start with these basic care guidelines: 1  Light - Give orchids bright light, but no direct sun. 2  Water - Water them thoroughly once or twice a week -- more when it's warmer, less when it's cooler. 3  Fertilizer - Fertilize them when they are growing.  Air movement - Provide gentle air circulation for the plant.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you care for orchids\\\"}\",\"answer\":\"Sure! Here's a brief answer to the question \\\"How do you care for orchids?\\\" based on the given passages:\\n\\nTo care for orchids, provide them with bright light but no direct sun, water them thoroughly once or twice a week, and make sure the water drains completely out of the pot. You can also fertilize them when they are growing, and provide gentle air circulation for the plant. Additionally, after the flowers drop, you can cut the flower spike back to a node or remove it entirely to encourage new blooms to emerge.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":58},{\"index\":1,\"byte_start\":58,\"byte_end\":92},{\"index\":2,\"byte_start\":92,\"byte_end\":146},{\"index\":3,\"byte_start\":146,\"byte_end\":246},{\"index\":4,\"byte_start\":246,\"byte_end\":374},{\"index\":5,\"byte_start\":374,\"byte_end\":524},{\"index\":6,\"byte_start\":524,\"byte_end\":614},{\"index\":7,\"byte_start\":614,\"byte_end\":804},{\"index\":8,\"byte_start\":804,\"byte_end\":907},{\"index\":9,\"byte_start\":907,\"byte_end\":962},{\"index\":10,\"byte_start\":962,\"byte_end\":1069}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":75},{\"index\":2,\"byte_start\":75,\"byte_end\":278},{\"index\":3,\"byte_start\":278,\"byte_end\":379},{\"index\":4,\"byte_start\":379,\"byte_end\":517}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.00|[]\n1|E|0.95|[0,2]\n2|E|0.95|[0,2]\n3|E|0.90|[2]\n4|E|0.85|[1]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256093,
+    "id": "chatcmpl-htuckgdxd2GNy7Dji2XOPmmZpgmSPN7u",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1534.555,
+      "predicted_n": 63,
+      "predicted_per_second": 41.05424699668633,
+      "predicted_per_token_ms": 24.358015873015873,
+      "prompt_ms": 689.543,
+      "prompt_n": 705,
+      "prompt_per_second": 1022.4162960105461,
+      "prompt_per_token_ms": 0.9780751773049645
+    },
+    "usage": {
+      "completion_tokens": 63,
+      "prompt_tokens": 744,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 807
+    }
+  },
+  "source_cluster_id": "sha256:91c3aa5990edfda3d5aab8fbcc7c78cf5af3e384218e44b4443d2aeb0308869d",
+  "started_monotonic_ns": 916999562819080,
+  "status": "completed",
+  "unit_id": "sha256:21a6dd343ea1f36314c0bce684cefedf0da2517df48aaf3ea60583b1bb45ca61"
+}

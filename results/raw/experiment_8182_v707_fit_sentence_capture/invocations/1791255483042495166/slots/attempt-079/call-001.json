@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:a710ebe94005711c511632b3a496e0dd90547d5a162ec8b1553d421ac6445356",
+  "ended_monotonic_ns": 916667927573597,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"All we want for Christmas is you, Mariah Carey! According to EW, New Line Cinema is planning a Mariah Carey Christmas movie. Producer Jonathan Shestack confirmed that he is working on the yet-untitled project with Carey's good friend director Brett Ratner co-producing. \\\"It's a little bit about how music can take you back in time,\\\" Shestack told EW. \\\"It will be everything you hope a Christmas movie with Mariah Carey would be.\\\" Here are five reasons this movie has to happen:. What is the Christmas season without a little Mariah? Duh! Her 1994 hit \\\"All I Want For Christmas is You\\\" is a classic, and admit it: You start listening to it well before the holiday season even begins. It's the jam! The '90s are so coming back. The Backstreet Boys have a documentary out, NBC is bringing the sitcom \\\"Coach\\\" back to television, JNCO jeans are being spotted, and there's talk of a new version of \\\"Full House.\\\" Mariah was the queen of the 1990s, so it's only right that she get in on the revival. You can't forget about her. She already told you: \\\"Don't Forget About Us.\\\" She's come a long way from \\\"Glitter\\\" Carey was ridiculed for the dismal 2001 film \\\"Glitter,\\\" but she has more than since redeemed herself with small roles in the critically acclaimed Lee Daniels films \\\"Precious\\\" and \\\"The Butler.\\\" The Diva still reigns. Lest we forget how much sparkle she can bring into our lives, check out this collection of Mariah Carey throwing shade. It really is everything.\\n\",\"answer\":\"New Line Cinema is planning a Christmas movie featuring Mariah Carey. The untitled project will be produced by Jonathan Shestack and co-produced by director Brett Ratner. The movie will showcase how music can transport you back in time and it's expected to be the perfect Christmas movie fans of Mariah Carey would hope for.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":48},{\"index\":1,\"byte_start\":48,\"byte_end\":125},{\"index\":2,\"byte_start\":125,\"byte_end\":270},{\"index\":3,\"byte_start\":270,\"byte_end\":351},{\"index\":4,\"byte_start\":351,\"byte_end\":430},{\"index\":5,\"byte_start\":430,\"byte_end\":479},{\"index\":6,\"byte_start\":479,\"byte_end\":533},{\"index\":7,\"byte_start\":533,\"byte_end\":538},{\"index\":8,\"byte_start\":538,\"byte_end\":683},{\"index\":9,\"byte_start\":683,\"byte_end\":697},{\"index\":10,\"byte_start\":697,\"byte_end\":726},{\"index\":11,\"byte_start\":726,\"byte_end\":906},{\"index\":12,\"byte_start\":906,\"byte_end\":992},{\"index\":13,\"byte_start\":992,\"byte_end\":1020},{\"index\":14,\"byte_start\":1020,\"byte_end\":1067},{\"index\":15,\"byte_start\":1067,\"byte_end\":1297},{\"index\":16,\"byte_start\":1297,\"byte_end\":1320},{\"index\":17,\"byte_start\":1320,\"byte_end\":1440},{\"index\":18,\"byte_start\":1440,\"byte_end\":1465}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":70},{\"index\":1,\"byte_start\":70,\"byte_end\":171},{\"index\":2,\"byte_start\":171,\"byte_end\":324}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 905,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"All we want for Christmas is you, Mariah Carey! According to EW, New Line Cinema is planning a Mariah Carey Christmas movie. Producer Jonathan Shestack confirmed that he is working on the yet-untitled project with Carey's good friend director Brett Ratner co-producing. \\\"It's a little bit about how music can take you back in time,\\\" Shestack told EW. \\\"It will be everything you hope a Christmas movie with Mariah Carey would be.\\\" Here are five reasons this movie has to happen:. What is the Christmas season without a little Mariah? Duh! Her 1994 hit \\\"All I Want For Christmas is You\\\" is a classic, and admit it: You start listening to it well before the holiday season even begins. It's the jam! The '90s are so coming back. The Backstreet Boys have a documentary out, NBC is bringing the sitcom \\\"Coach\\\" back to television, JNCO jeans are being spotted, and there's talk of a new version of \\\"Full House.\\\" Mariah was the queen of the 1990s, so it's only right that she get in on the revival. You can't forget about her. She already told you: \\\"Don't Forget About Us.\\\" She's come a long way from \\\"Glitter\\\" Carey was ridiculed for the dismal 2001 film \\\"Glitter,\\\" but she has more than since redeemed herself with small roles in the critically acclaimed Lee Daniels films \\\"Precious\\\" and \\\"The Butler.\\\" The Diva still reigns. Lest we forget how much sparkle she can bring into our lives, check out this collection of Mariah Carey throwing shade. It really is everything.\\n\",\"answer\":\"New Line Cinema is planning a Christmas movie featuring Mariah Carey. The untitled project will be produced by Jonathan Shestack and co-produced by director Brett Ratner. The movie will showcase how music can transport you back in time and it's expected to be the perfect Christmas movie fans of Mariah Carey would hope for.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":48},{\"index\":1,\"byte_start\":48,\"byte_end\":125},{\"index\":2,\"byte_start\":125,\"byte_end\":270},{\"index\":3,\"byte_start\":270,\"byte_end\":351},{\"index\":4,\"byte_start\":351,\"byte_end\":430},{\"index\":5,\"byte_start\":430,\"byte_end\":479},{\"index\":6,\"byte_start\":479,\"byte_end\":533},{\"index\":7,\"byte_start\":533,\"byte_end\":538},{\"index\":8,\"byte_start\":538,\"byte_end\":683},{\"index\":9,\"byte_start\":683,\"byte_end\":697},{\"index\":10,\"byte_start\":697,\"byte_end\":726},{\"index\":11,\"byte_start\":726,\"byte_end\":906},{\"index\":12,\"byte_start\":906,\"byte_end\":992},{\"index\":13,\"byte_start\":992,\"byte_end\":1020},{\"index\":14,\"byte_start\":1020,\"byte_end\":1067},{\"index\":15,\"byte_start\":1067,\"byte_end\":1297},{\"index\":16,\"byte_start\":1297,\"byte_end\":1320},{\"index\":17,\"byte_start\":1320,\"byte_end\":1440},{\"index\":18,\"byte_start\":1440,\"byte_end\":1465}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":70},{\"index\":1,\"byte_start\":70,\"byte_end\":171},{\"index\":2,\"byte_start\":171,\"byte_end\":324}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\"\n",
+    "input_tokens": 893,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"All we want for Christmas is you, Mariah Carey! According to EW, New Line Cinema is planning a Mariah Carey Christmas movie. Producer Jonathan Shestack confirmed that he is working on the yet-untitled project with Carey's good friend director Brett Ratner co-producing. \\\"It's a little bit about how music can take you back in time,\\\" Shestack told EW. \\\"It will be everything you hope a Christmas movie with Mariah Carey would be.\\\" Here are five reasons this movie has to happen:. What is the Christmas season without a little Mariah? Duh! Her 1994 hit \\\"All I Want For Christmas is You\\\" is a classic, and admit it: You start listening to it well before the holiday season even begins. It's the jam! The '90s are so coming back. The Backstreet Boys have a documentary out, NBC is bringing the sitcom \\\"Coach\\\" back to television, JNCO jeans are being spotted, and there's talk of a new version of \\\"Full House.\\\" Mariah was the queen of the 1990s, so it's only right that she get in on the revival. You can't forget about her. She already told you: \\\"Don't Forget About Us.\\\" She's come a long way from \\\"Glitter\\\" Carey was ridiculed for the dismal 2001 film \\\"Glitter,\\\" but she has more than since redeemed herself with small roles in the critically acclaimed Lee Daniels films \\\"Precious\\\" and \\\"The Butler.\\\" The Diva still reigns. Lest we forget how much sparkle she can bring into our lives, check out this collection of Mariah Carey throwing shade. It really is everything.\\n\",\"answer\":\"New Line Cinema is planning a Christmas movie featuring Mariah Carey. The untitled project will be produced by Jonathan Shestack and co-produced by director Brett Ratner. The movie will showcase how music can transport you back in time and it's expected to be the perfect Christmas movie fans of Mariah Carey would hope for.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":48},{\"index\":1,\"byte_start\":48,\"byte_end\":125},{\"index\":2,\"byte_start\":125,\"byte_end\":270},{\"index\":3,\"byte_start\":270,\"byte_end\":351},{\"index\":4,\"byte_start\":351,\"byte_end\":430},{\"index\":5,\"byte_start\":430,\"byte_end\":479},{\"index\":6,\"byte_start\":479,\"byte_end\":533},{\"index\":7,\"byte_start\":533,\"byte_end\":538},{\"index\":8,\"byte_start\":538,\"byte_end\":683},{\"index\":9,\"byte_start\":683,\"byte_end\":697},{\"index\":10,\"byte_start\":697,\"byte_end\":726},{\"index\":11,\"byte_start\":726,\"byte_end\":906},{\"index\":12,\"byte_start\":906,\"byte_end\":992},{\"index\":13,\"byte_start\":992,\"byte_end\":1020},{\"index\":14,\"byte_start\":1020,\"byte_end\":1067},{\"index\":15,\"byte_start\":1067,\"byte_end\":1297},{\"index\":16,\"byte_start\":1297,\"byte_end\":1320},{\"index\":17,\"byte_start\":1320,\"byte_end\":1440},{\"index\":18,\"byte_start\":1440,\"byte_end\":1465}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":70},{\"index\":1,\"byte_start\":70,\"byte_end\":171},{\"index\":2,\"byte_start\":171,\"byte_end\":324}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[1,2]\n1|E|1.00|[2]\n2|E|1.00|[3,4]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255759,
+    "id": "chatcmpl-0M9jIXyRzpgQkYQlwVAFbShVWNePSdQy",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 994.888,
+      "predicted_n": 41,
+      "predicted_per_second": 41.21066893961933,
+      "predicted_per_token_ms": 24.265560975609755,
+      "prompt_ms": 875.992,
+      "prompt_n": 866,
+      "prompt_per_second": 988.593503137015,
+      "prompt_per_token_ms": 1.0115381062355657
+    },
+    "usage": {
+      "completion_tokens": 41,
+      "prompt_tokens": 905,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 946
+    }
+  },
+  "source_cluster_id": "sha256:d43f1aff163a6747805553177292e73dd44da5f2442ef5638f125301ea7c2244",
+  "started_monotonic_ns": 916665897926598,
+  "status": "completed",
+  "unit_id": "sha256:5b267903592f50826b12c1ae8c315c22c86952b04fd93c066c99da64d6f71b0f"
+}

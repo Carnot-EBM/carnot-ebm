@@ -1,0 +1,92 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:e72a1045cefa61b5cc8cde734ace032f1176186ce69ad6f768d5f3f0046bd7a9",
+  "ended_monotonic_ns": 916580770703433,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"901 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Farmers Market, American (Traditional), American (New), Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-17:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-20:30\\\",\\\"Sunday\\\":\\\"17:0-20:0\\\",\\\"Thursday\\\":\\\"17:0-20:30\\\",\\\"Wednesday\\\":\\\"17:0-20:30\\\"},\\\"name\\\":\\\"Bossie's Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-09 17:02:07\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Korean Spicy Chicken was not at all spicy. Make sure you get a spicy sauce with it to make the burger spicy.\\\"},{\\\"review_date\\\":\\\"2021-11-11 03:43:29\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Stopped in before a concert - overall, the food and beer was very tasty.\\\\n\\\\nMinus a star because we intended to order fries with the burgers but they ended up adding an additional plate of fries... so just be super clear with the person up front about what you're getting since we were basically drowning in (admittedly, delicious) fries. Also, you'll pay extra for the buttermilk aioli (or their menu didn't display accurate prices, who knows).\\\\n\\\\nAnd, it took longer than we expected (~30 mins) to get the food after ordering -- we missed a bit of the concert opener, but c'est la vie.\\\"},{\\\"review_date\\\":\\\"2021-10-14 21:59:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Holy moly!\\\\nKorean chicken sandwich and fries were delicious.  I'm only sad that we were going to the Bowl for a concert afterwards, and I had to leave my leftovers behind.  A friend had the burger with fries and also raved.  I can't wait to go back.  It took a little while for the food to come out, as they seemed to be busy with pickup orders.  Absolutely worth the short wait.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the provided structured data, here is an objective overview of Bossie's Kitchen:\\n\\nBossie's Kitchen is a popular farm-to-table restaurant located in Santa Barbara, California. With a rating of 4.5 stars, the establishment offers a cozy atmosphere and excellent service. Customers have praised the restaurant's American-style cuisine, particularly the Korean Spicy Chicken burger, which some have found to be not spicy enough. However, many reviewers have enjoyed their meals, citing the delicious flavors and quality ingredients used in their dishes. The restaurant has a small patio area, making it suitable for casual dining. While there have been some issues with long wait times, customers generally find the experience to be worthwhile.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":786},{\"index\":1,\"byte_start\":786,\"byte_end\":1123},{\"index\":2,\"byte_start\":1123,\"byte_end\":1264},{\"index\":3,\"byte_start\":1264,\"byte_end\":1649},{\"index\":4,\"byte_start\":1649,\"byte_end\":1760},{\"index\":5,\"byte_start\":1760,\"byte_end\":1812},{\"index\":6,\"byte_start\":1812,\"byte_end\":1838},{\"index\":7,\"byte_start\":1838,\"byte_end\":1934},{\"index\":8,\"byte_start\":1934,\"byte_end\":1983}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":184},{\"index\":1,\"byte_start\":184,\"byte_end\":278},{\"index\":2,\"byte_start\":278,\"byte_end\":434},{\"index\":3,\"byte_start\":434,\"byte_end\":559},{\"index\":4,\"byte_start\":559,\"byte_end\":636},{\"index\":5,\"byte_start\":636,\"byte_end\":749}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1107,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"901 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Farmers Market, American (Traditional), American (New), Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-17:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-20:30\\\",\\\"Sunday\\\":\\\"17:0-20:0\\\",\\\"Thursday\\\":\\\"17:0-20:30\\\",\\\"Wednesday\\\":\\\"17:0-20:30\\\"},\\\"name\\\":\\\"Bossie's Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-09 17:02:07\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Korean Spicy Chicken was not at all spicy. Make sure you get a spicy sauce with it to make the burger spicy.\\\"},{\\\"review_date\\\":\\\"2021-11-11 03:43:29\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Stopped in before a concert - overall, the food and beer was very tasty.\\\\n\\\\nMinus a star because we intended to order fries with the burgers but they ended up adding an additional plate of fries... so just be super clear with the person up front about what you're getting since we were basically drowning in (admittedly, delicious) fries. Also, you'll pay extra for the buttermilk aioli (or their menu didn't display accurate prices, who knows).\\\\n\\\\nAnd, it took longer than we expected (~30 mins) to get the food after ordering -- we missed a bit of the concert opener, but c'est la vie.\\\"},{\\\"review_date\\\":\\\"2021-10-14 21:59:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Holy moly!\\\\nKorean chicken sandwich and fries were delicious.  I'm only sad that we were going to the Bowl for a concert afterwards, and I had to leave my leftovers behind.  A friend had the burger with fries and also raved.  I can't wait to go back.  It took a little while for the food to come out, as they seemed to be busy with pickup orders.  Absolutely worth the short wait.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the provided structured data, here is an objective overview of Bossie's Kitchen:\\n\\nBossie's Kitchen is a popular farm-to-table restaurant located in Santa Barbara, California. With a rating of 4.5 stars, the establishment offers a cozy atmosphere and excellent service. Customers have praised the restaurant's American-style cuisine, particularly the Korean Spicy Chicken burger, which some have found to be not spicy enough. However, many reviewers have enjoyed their meals, citing the delicious flavors and quality ingredients used in their dishes. The restaurant has a small patio area, making it suitable for casual dining. While there have been some issues with long wait times, customers generally find the experience to be worthwhile.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":786},{\"index\":1,\"byte_start\":786,\"byte_end\":1123},{\"index\":2,\"byte_start\":1123,\"byte_end\":1264},{\"index\":3,\"byte_start\":1264,\"byte_end\":1649},{\"index\":4,\"byte_start\":1649,\"byte_end\":1760},{\"index\":5,\"byte_start\":1760,\"byte_end\":1812},{\"index\":6,\"byte_start\":1812,\"byte_end\":1838},{\"index\":7,\"byte_start\":1838,\"byte_end\":1934},{\"index\":8,\"byte_start\":1934,\"byte_end\":1983}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":184},{\"index\":1,\"byte_start\":184,\"byte_end\":278},{\"index\":2,\"byte_start\":278,\"byte_end\":434},{\"index\":3,\"byte_start\":434,\"byte_end\":559},{\"index\":4,\"byte_start\":559,\"byte_end\":636},{\"index\":5,\"byte_start\":636,\"byte_end\":749}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\"\n",
+    "input_tokens": 1095,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"901 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Farmers Market, American (Traditional), American (New), Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-17:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-20:30\\\",\\\"Sunday\\\":\\\"17:0-20:0\\\",\\\"Thursday\\\":\\\"17:0-20:30\\\",\\\"Wednesday\\\":\\\"17:0-20:30\\\"},\\\"name\\\":\\\"Bossie's Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-09 17:02:07\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Korean Spicy Chicken was not at all spicy. Make sure you get a spicy sauce with it to make the burger spicy.\\\"},{\\\"review_date\\\":\\\"2021-11-11 03:43:29\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Stopped in before a concert - overall, the food and beer was very tasty.\\\\n\\\\nMinus a star because we intended to order fries with the burgers but they ended up adding an additional plate of fries... so just be super clear with the person up front about what you're getting since we were basically drowning in (admittedly, delicious) fries. Also, you'll pay extra for the buttermilk aioli (or their menu didn't display accurate prices, who knows).\\\\n\\\\nAnd, it took longer than we expected (~30 mins) to get the food after ordering -- we missed a bit of the concert opener, but c'est la vie.\\\"},{\\\"review_date\\\":\\\"2021-10-14 21:59:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Holy moly!\\\\nKorean chicken sandwich and fries were delicious.  I'm only sad that we were going to the Bowl for a concert afterwards, and I had to leave my leftovers behind.  A friend had the burger with fries and also raved.  I can't wait to go back.  It took a little while for the food to come out, as they seemed to be busy with pickup orders.  Absolutely worth the short wait.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the provided structured data, here is an objective overview of Bossie's Kitchen:\\n\\nBossie's Kitchen is a popular farm-to-table restaurant located in Santa Barbara, California. With a rating of 4.5 stars, the establishment offers a cozy atmosphere and excellent service. Customers have praised the restaurant's American-style cuisine, particularly the Korean Spicy Chicken burger, which some have found to be not spicy enough. However, many reviewers have enjoyed their meals, citing the delicious flavors and quality ingredients used in their dishes. The restaurant has a small patio area, making it suitable for casual dining. While there have been some issues with long wait times, customers generally find the experience to be worthwhile.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":786},{\"index\":1,\"byte_start\":786,\"byte_end\":1123},{\"index\":2,\"byte_start\":1123,\"byte_end\":1264},{\"index\":3,\"byte_start\":1264,\"byte_end\":1649},{\"index\":4,\"byte_start\":1649,\"byte_end\":1760},{\"index\":5,\"byte_start\":1760,\"byte_end\":1812},{\"index\":6,\"byte_start\":1812,\"byte_end\":1838},{\"index\":7,\"byte_start\":1838,\"byte_end\":1934},{\"index\":8,\"byte_start\":1934,\"byte_end\":1983}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":184},{\"index\":1,\"byte_start\":184,\"byte_end\":278},{\"index\":2,\"byte_start\":278,\"byte_end\":434},{\"index\":3,\"byte_start\":434,\"byte_end\":559},{\"index\":4,\"byte_start\":559,\"byte_end\":636},{\"index\":5,\"byte_start\":636,\"byte_end\":749}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[]\n1|C|0.90|[]\n2|C|0.85|[]\n3|C|0.80|[]\n4|C|0.75|[]\n5|C|0.70|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255672,
+    "id": "chatcmpl-AsYugxfbpcblRamfXhKJVwcawZtEHQrq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1601.403,
+      "predicted_n": 66,
+      "predicted_per_second": 41.21386059598989,
+      "predicted_per_token_ms": 24.26368181818182,
+      "prompt_ms": 987.709,
+      "prompt_n": 1107,
+      "prompt_per_second": 1120.7754510690902,
+      "prompt_per_token_ms": 0.8922393857271905
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 1107,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1173
+    }
+  },
+  "source_cluster_id": "sha256:bcc5d9aa7b6f34261f544b52c81a5e8e4e3065bb3fbdb521ea334cbb999a57ba",
+  "started_monotonic_ns": 916578028523619,
+  "status": "completed",
+  "unit_id": "sha256:dffbd3a7ff65253574de32edbd0c10bf8a3b47ff2f15f1454cbef1d5be4df3a6"
+}

@@ -1,0 +1,92 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:1eae2370daada9ca00fc570377e91f638f30857e47b9453a40d22d1baf85868e",
+  "ended_monotonic_ns": 916947024722562,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Raynaud's disease, or Primary Raynaud's, is diagnosed if the symptoms are idiopathic, that is, if they occur by themselves and not in association with other diseases. Some refer to Primary Raynaud's disease as being allergic to coldness. It often develops in young women in their teens and early adulthood.\\\\n\\\\npassage 2:Symptoms of Raynaud\u2019s Syndrome. 1) Fingers start to go white as the circulation is restricted in the capillaries. Whiteness can be on just one or just part of one finger, or two or three fingers at a time. Often there are patches of white, showing a mottled appearance. 2) Affected areas will feel numb and have a white waxy look. 3) Symptoms can often include the affected areas going blue or showing a bluish tinge. This is due to a lack of oxygen in the red blood cells. 4) As the episode ends, affected areas will go bright red as the fresh oxygenated blood returns to the capillaries and cells. 4) As the circulation is restored to the attacked areas, one can experience tingling and pain and may feel like pins and needles.\\\\n\\\\npassage 3:Secondary Raynaud's can occur due a connective tissue disorder such as scleroderma or lupus, injuries to the hands, smoking, and certain medications such as birth control pills. Diagnosis is typically based on the symptoms.\\\\n\\\\n\\\",\\\"question\\\":\\\"symptoms of raynaud's disease\\\"}\",\"answer\":\"Based on the given passages, the symptoms of Raynaud's disease include:\\n\\n1. Fingers (or toes, ears, nose, or tongue) turning white or pale due to reduced blood flow.\\n2. Numbness or a waxy feeling in the affected area.\\n3. The affected area(s) turning blue or showing a bluish tinge due to lack of oxygen.\\n4. Pain, tingling, or a feeling of pins and needles as blood flow returns to the affected area.\\n5. The symptoms can be triggered by exposure to cold temperatures, stress, or other factors.\\n\\nIt is important to note that these symptoms can also be caused by other conditions, so a proper diagnosis by a medical professional is necessary to confirm Raynaud's disease.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":190},{\"index\":1,\"byte_start\":190,\"byte_end\":261},{\"index\":2,\"byte_start\":261,\"byte_end\":377},{\"index\":3,\"byte_start\":377,\"byte_end\":459},{\"index\":4,\"byte_start\":459,\"byte_end\":551},{\"index\":5,\"byte_start\":551,\"byte_end\":615},{\"index\":6,\"byte_start\":615,\"byte_end\":676},{\"index\":7,\"byte_start\":676,\"byte_end\":763},{\"index\":8,\"byte_start\":763,\"byte_end\":819},{\"index\":9,\"byte_start\":819,\"byte_end\":945},{\"index\":10,\"byte_start\":945,\"byte_end\":1266},{\"index\":11,\"byte_start\":1266,\"byte_end\":1360}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":166},{\"index\":1,\"byte_start\":166,\"byte_end\":218},{\"index\":2,\"byte_start\":218,\"byte_end\":304},{\"index\":3,\"byte_start\":304,\"byte_end\":400},{\"index\":4,\"byte_start\":400,\"byte_end\":494},{\"index\":5,\"byte_start\":494,\"byte_end\":668}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 898,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Raynaud's disease, or Primary Raynaud's, is diagnosed if the symptoms are idiopathic, that is, if they occur by themselves and not in association with other diseases. Some refer to Primary Raynaud's disease as being allergic to coldness. It often develops in young women in their teens and early adulthood.\\\\n\\\\npassage 2:Symptoms of Raynaud\u2019s Syndrome. 1) Fingers start to go white as the circulation is restricted in the capillaries. Whiteness can be on just one or just part of one finger, or two or three fingers at a time. Often there are patches of white, showing a mottled appearance. 2) Affected areas will feel numb and have a white waxy look. 3) Symptoms can often include the affected areas going blue or showing a bluish tinge. This is due to a lack of oxygen in the red blood cells. 4) As the episode ends, affected areas will go bright red as the fresh oxygenated blood returns to the capillaries and cells. 4) As the circulation is restored to the attacked areas, one can experience tingling and pain and may feel like pins and needles.\\\\n\\\\npassage 3:Secondary Raynaud's can occur due a connective tissue disorder such as scleroderma or lupus, injuries to the hands, smoking, and certain medications such as birth control pills. Diagnosis is typically based on the symptoms.\\\\n\\\\n\\\",\\\"question\\\":\\\"symptoms of raynaud's disease\\\"}\",\"answer\":\"Based on the given passages, the symptoms of Raynaud's disease include:\\n\\n1. Fingers (or toes, ears, nose, or tongue) turning white or pale due to reduced blood flow.\\n2. Numbness or a waxy feeling in the affected area.\\n3. The affected area(s) turning blue or showing a bluish tinge due to lack of oxygen.\\n4. Pain, tingling, or a feeling of pins and needles as blood flow returns to the affected area.\\n5. The symptoms can be triggered by exposure to cold temperatures, stress, or other factors.\\n\\nIt is important to note that these symptoms can also be caused by other conditions, so a proper diagnosis by a medical professional is necessary to confirm Raynaud's disease.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":190},{\"index\":1,\"byte_start\":190,\"byte_end\":261},{\"index\":2,\"byte_start\":261,\"byte_end\":377},{\"index\":3,\"byte_start\":377,\"byte_end\":459},{\"index\":4,\"byte_start\":459,\"byte_end\":551},{\"index\":5,\"byte_start\":551,\"byte_end\":615},{\"index\":6,\"byte_start\":615,\"byte_end\":676},{\"index\":7,\"byte_start\":676,\"byte_end\":763},{\"index\":8,\"byte_start\":763,\"byte_end\":819},{\"index\":9,\"byte_start\":819,\"byte_end\":945},{\"index\":10,\"byte_start\":945,\"byte_end\":1266},{\"index\":11,\"byte_start\":1266,\"byte_end\":1360}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":166},{\"index\":1,\"byte_start\":166,\"byte_end\":218},{\"index\":2,\"byte_start\":218,\"byte_end\":304},{\"index\":3,\"byte_start\":304,\"byte_end\":400},{\"index\":4,\"byte_start\":400,\"byte_end\":494},{\"index\":5,\"byte_start\":494,\"byte_end\":668}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "input_tokens": 886,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Raynaud's disease, or Primary Raynaud's, is diagnosed if the symptoms are idiopathic, that is, if they occur by themselves and not in association with other diseases. Some refer to Primary Raynaud's disease as being allergic to coldness. It often develops in young women in their teens and early adulthood.\\\\n\\\\npassage 2:Symptoms of Raynaud\u2019s Syndrome. 1) Fingers start to go white as the circulation is restricted in the capillaries. Whiteness can be on just one or just part of one finger, or two or three fingers at a time. Often there are patches of white, showing a mottled appearance. 2) Affected areas will feel numb and have a white waxy look. 3) Symptoms can often include the affected areas going blue or showing a bluish tinge. This is due to a lack of oxygen in the red blood cells. 4) As the episode ends, affected areas will go bright red as the fresh oxygenated blood returns to the capillaries and cells. 4) As the circulation is restored to the attacked areas, one can experience tingling and pain and may feel like pins and needles.\\\\n\\\\npassage 3:Secondary Raynaud's can occur due a connective tissue disorder such as scleroderma or lupus, injuries to the hands, smoking, and certain medications such as birth control pills. Diagnosis is typically based on the symptoms.\\\\n\\\\n\\\",\\\"question\\\":\\\"symptoms of raynaud's disease\\\"}\",\"answer\":\"Based on the given passages, the symptoms of Raynaud's disease include:\\n\\n1. Fingers (or toes, ears, nose, or tongue) turning white or pale due to reduced blood flow.\\n2. Numbness or a waxy feeling in the affected area.\\n3. The affected area(s) turning blue or showing a bluish tinge due to lack of oxygen.\\n4. Pain, tingling, or a feeling of pins and needles as blood flow returns to the affected area.\\n5. The symptoms can be triggered by exposure to cold temperatures, stress, or other factors.\\n\\nIt is important to note that these symptoms can also be caused by other conditions, so a proper diagnosis by a medical professional is necessary to confirm Raynaud's disease.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":190},{\"index\":1,\"byte_start\":190,\"byte_end\":261},{\"index\":2,\"byte_start\":261,\"byte_end\":377},{\"index\":3,\"byte_start\":377,\"byte_end\":459},{\"index\":4,\"byte_start\":459,\"byte_end\":551},{\"index\":5,\"byte_start\":551,\"byte_end\":615},{\"index\":6,\"byte_start\":615,\"byte_end\":676},{\"index\":7,\"byte_start\":676,\"byte_end\":763},{\"index\":8,\"byte_start\":763,\"byte_end\":819},{\"index\":9,\"byte_start\":819,\"byte_end\":945},{\"index\":10,\"byte_start\":945,\"byte_end\":1266},{\"index\":11,\"byte_start\":1266,\"byte_end\":1360}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":166},{\"index\":1,\"byte_start\":166,\"byte_end\":218},{\"index\":2,\"byte_start\":218,\"byte_end\":304},{\"index\":3,\"byte_start\":304,\"byte_end\":400},{\"index\":4,\"byte_start\":400,\"byte_end\":494},{\"index\":5,\"byte_start\":494,\"byte_end\":668}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[10]\n2|C|0.00|[10]\n3|C|0.00|[10]\n4|C|0.00|[10]\n5|B|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256038,
+    "id": "chatcmpl-oQojG4hxCiGCeast9lmF5S6Gw1vmv4xP",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1798.443,
+      "predicted_n": 74,
+      "predicted_per_second": 41.14670300921408,
+      "predicted_per_token_ms": 24.303283783783783,
+      "prompt_ms": 876.123,
+      "prompt_n": 859,
+      "prompt_per_second": 980.4559405471606,
+      "prompt_per_token_ms": 1.0199336437718278
+    },
+    "usage": {
+      "completion_tokens": 74,
+      "prompt_tokens": 898,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 972
+    }
+  },
+  "source_cluster_id": "sha256:4449d30b741a8481352179c4722bee78ff4ad9ee4c22ba173562017cf6ec3234",
+  "started_monotonic_ns": 916944148361829,
+  "status": "completed",
+  "unit_id": "sha256:ebef9d9a58cda6fcbd31651aeb063fd80ebaa15aa96bb7696b0a8094968391d2"
+}

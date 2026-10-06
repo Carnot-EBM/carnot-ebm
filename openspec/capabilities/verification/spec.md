@@ -49538,3 +49538,24 @@ H2 retains128 later sources,8/class,8 original-slot blocks, retention48 and8/cla
 block16/sensitivity8,32,10000 draws,9500 valid, lower97.5 gain>.02, five improved
 sources, zero extra false accepts, Brier increase<=.01; retention cost<=.02 and
 Brier<=.01. H1/H2 alpha=.025 each. Seeds average within original source.
+
+## REQ-VERIFY-8182: Capture qualified grammar evidence without changing transport
+
+Reuse canary grammar responses only when source, answer, request, model,
+revision, tokenizer, runtime, template, reasoning and generation configuration
+match. Reuse stays historical and adds zero current calls. Preserve sentence
+offsets and source reference indices; incomplete sources escalate. Checkpoint
+every8 sources; no new calls after3000 seconds and closure within4800 seconds.
+Use owned CUDA and frozen Qwen3.8-27B-GGUF,6000 input and256 output tokens.
+Retain V705 paired controls and append four V706 local features by source identity.
+Diagnostic source removal/mismatch uses the first8 eligible fit sources and the
+first sentence group, exactly one call per intervention, with null human targets.
+
+### SCENARIO-VERIFY-8182-BOUNDARIES
+
+Private tests reject cache identity drift, missing records, wrong reference
+indices, original-slot drift, source drift and rehashed aggregate tampering.
+All192 original slots retain completed/failed/censored/excluded distinctions.
+Insufficient support produces a terminal null without invented feature rows.
+Implementation and private tests: `python/carnot/verify/fit_sentence_capture_8182.py`
+and `tests/python/test_fit_sentence_capture_8182.py`.

@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:36a6775d4f8097394dfa0f9eb3f952d80f30f32555c159e96c7c0b0f12bac5fe",
+  "ended_monotonic_ns": 917094944915231,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Fruit flies can enter a household or business on a piece of fruit or vegetable from a grocery store or through an open door or window in the kitchen. Keeping your house or business clean and sanitized and throwing away overripe and rotting fruits and vegetables will help ensure that fruit flies do not invade your space.hile it is nearly impossible to prevent house flies from entering your home or business, there are a few things you can do to help prevent them from multiplying. The first and most important thing that you can do is keep your home or business clean.\\\\n\\\\npassage 2:Method 12 of 12: Luring flies away from the house. 1. Try to discourage flies from seeing your house as inviting in the first place. Place traps outdoors and give them a playground outside by making them a delicious blood and bone feasting zone: 1  Purchase a bag of blood and bone from your local nursery or garden center.2  Pour some into a resealable large plastic bag.3  Seal.ethod 12 of 12: Luring flies away from the house. 1. Try to discourage flies from seeing your house as inviting in the first place. Place traps outdoors and give them a playground outside by making them a delicious blood and bone feasting zone: 1  Purchase a bag of blood and bone from your local nursery or garden center.\\\\n\\\\npassage 3:Keeping a room free of uneaten food and other trash will keep flies from being attracted to an area. Also keep garbage cans and dumpsters as far away from windows and homes as possible. Place a sticky trap near a window to capture any stray flies that do get into a home.Hang the sticky trap in a window sill or near the window. Flies will get stuck on the trap, and the dead flies and trap can be replaced as needed.eeping a room free of uneaten food and other trash will keep flies from being attracted to an area. Also keep garbage cans and dumpsters as far away from windows and homes as possible. Place a sticky trap near a window to capture any stray flies that do get into a home.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to stop flies coming through the window\\\"}\",\"answer\":\"Blenders In the Grass is a juice bar and restaurant located in Santa Barbara, California. They offer a variety of smoothies, juices, and food options, and cater to vegetarian and vegan diets. According to their listed hours, they are open seven days a week, with extended hours on weekends. The business has a 3.5-star rating and offers amenities such as free Wi-Fi and take-out services. However, some customers have reported issues with the quality of their drinks, including too much ice and not enough fruit, and poor customer service. Additionally, there have been complaints about the lack of organic and non-GMO ingredients used in their products. Despite these concerns, Blenders In the Grass remains a popular spot for health-conscious individuals looking for quick and nutritious meals and drinks.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":173},{\"index\":1,\"byte_start\":173,\"byte_end\":506},{\"index\":2,\"byte_start\":506,\"byte_end\":658},{\"index\":3,\"byte_start\":658,\"byte_end\":740},{\"index\":4,\"byte_start\":740,\"byte_end\":1037},{\"index\":5,\"byte_start\":1037,\"byte_end\":1119},{\"index\":6,\"byte_start\":1119,\"byte_end\":1424},{\"index\":7,\"byte_start\":1424,\"byte_end\":1509},{\"index\":8,\"byte_start\":1509,\"byte_end\":1652},{\"index\":9,\"byte_start\":1652,\"byte_end\":1840},{\"index\":10,\"byte_start\":1840,\"byte_end\":1925},{\"index\":11,\"byte_start\":1925,\"byte_end\":2073}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":90},{\"index\":1,\"byte_start\":90,\"byte_end\":192},{\"index\":2,\"byte_start\":192,\"byte_end\":291},{\"index\":3,\"byte_start\":291,\"byte_end\":389},{\"index\":4,\"byte_start\":389,\"byte_end\":540},{\"index\":5,\"byte_start\":540,\"byte_end\":655},{\"index\":6,\"byte_start\":655,\"byte_end\":807}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1064,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Fruit flies can enter a household or business on a piece of fruit or vegetable from a grocery store or through an open door or window in the kitchen. Keeping your house or business clean and sanitized and throwing away overripe and rotting fruits and vegetables will help ensure that fruit flies do not invade your space.hile it is nearly impossible to prevent house flies from entering your home or business, there are a few things you can do to help prevent them from multiplying. The first and most important thing that you can do is keep your home or business clean.\\\\n\\\\npassage 2:Method 12 of 12: Luring flies away from the house. 1. Try to discourage flies from seeing your house as inviting in the first place. Place traps outdoors and give them a playground outside by making them a delicious blood and bone feasting zone: 1  Purchase a bag of blood and bone from your local nursery or garden center.2  Pour some into a resealable large plastic bag.3  Seal.ethod 12 of 12: Luring flies away from the house. 1. Try to discourage flies from seeing your house as inviting in the first place. Place traps outdoors and give them a playground outside by making them a delicious blood and bone feasting zone: 1  Purchase a bag of blood and bone from your local nursery or garden center.\\\\n\\\\npassage 3:Keeping a room free of uneaten food and other trash will keep flies from being attracted to an area. Also keep garbage cans and dumpsters as far away from windows and homes as possible. Place a sticky trap near a window to capture any stray flies that do get into a home.Hang the sticky trap in a window sill or near the window. Flies will get stuck on the trap, and the dead flies and trap can be replaced as needed.eeping a room free of uneaten food and other trash will keep flies from being attracted to an area. Also keep garbage cans and dumpsters as far away from windows and homes as possible. Place a sticky trap near a window to capture any stray flies that do get into a home.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to stop flies coming through the window\\\"}\",\"answer\":\"Blenders In the Grass is a juice bar and restaurant located in Santa Barbara, California. They offer a variety of smoothies, juices, and food options, and cater to vegetarian and vegan diets. According to their listed hours, they are open seven days a week, with extended hours on weekends. The business has a 3.5-star rating and offers amenities such as free Wi-Fi and take-out services. However, some customers have reported issues with the quality of their drinks, including too much ice and not enough fruit, and poor customer service. Additionally, there have been complaints about the lack of organic and non-GMO ingredients used in their products. Despite these concerns, Blenders In the Grass remains a popular spot for health-conscious individuals looking for quick and nutritious meals and drinks.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":173},{\"index\":1,\"byte_start\":173,\"byte_end\":506},{\"index\":2,\"byte_start\":506,\"byte_end\":658},{\"index\":3,\"byte_start\":658,\"byte_end\":740},{\"index\":4,\"byte_start\":740,\"byte_end\":1037},{\"index\":5,\"byte_start\":1037,\"byte_end\":1119},{\"index\":6,\"byte_start\":1119,\"byte_end\":1424},{\"index\":7,\"byte_start\":1424,\"byte_end\":1509},{\"index\":8,\"byte_start\":1509,\"byte_end\":1652},{\"index\":9,\"byte_start\":1652,\"byte_end\":1840},{\"index\":10,\"byte_start\":1840,\"byte_end\":1925},{\"index\":11,\"byte_start\":1925,\"byte_end\":2073}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":90},{\"index\":1,\"byte_start\":90,\"byte_end\":192},{\"index\":2,\"byte_start\":192,\"byte_end\":291},{\"index\":3,\"byte_start\":291,\"byte_end\":389},{\"index\":4,\"byte_start\":389,\"byte_end\":540},{\"index\":5,\"byte_start\":540,\"byte_end\":655},{\"index\":6,\"byte_start\":655,\"byte_end\":807}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "input_tokens": 0,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Fruit flies can enter a household or business on a piece of fruit or vegetable from a grocery store or through an open door or window in the kitchen. Keeping your house or business clean and sanitized and throwing away overripe and rotting fruits and vegetables will help ensure that fruit flies do not invade your space.hile it is nearly impossible to prevent house flies from entering your home or business, there are a few things you can do to help prevent them from multiplying. The first and most important thing that you can do is keep your home or business clean.\\\\n\\\\npassage 2:Method 12 of 12: Luring flies away from the house. 1. Try to discourage flies from seeing your house as inviting in the first place. Place traps outdoors and give them a playground outside by making them a delicious blood and bone feasting zone: 1  Purchase a bag of blood and bone from your local nursery or garden center.2  Pour some into a resealable large plastic bag.3  Seal.ethod 12 of 12: Luring flies away from the house. 1. Try to discourage flies from seeing your house as inviting in the first place. Place traps outdoors and give them a playground outside by making them a delicious blood and bone feasting zone: 1  Purchase a bag of blood and bone from your local nursery or garden center.\\\\n\\\\npassage 3:Keeping a room free of uneaten food and other trash will keep flies from being attracted to an area. Also keep garbage cans and dumpsters as far away from windows and homes as possible. Place a sticky trap near a window to capture any stray flies that do get into a home.Hang the sticky trap in a window sill or near the window. Flies will get stuck on the trap, and the dead flies and trap can be replaced as needed.eeping a room free of uneaten food and other trash will keep flies from being attracted to an area. Also keep garbage cans and dumpsters as far away from windows and homes as possible. Place a sticky trap near a window to capture any stray flies that do get into a home.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to stop flies coming through the window\\\"}\",\"answer\":\"Blenders In the Grass is a juice bar and restaurant located in Santa Barbara, California. They offer a variety of smoothies, juices, and food options, and cater to vegetarian and vegan diets. According to their listed hours, they are open seven days a week, with extended hours on weekends. The business has a 3.5-star rating and offers amenities such as free Wi-Fi and take-out services. However, some customers have reported issues with the quality of their drinks, including too much ice and not enough fruit, and poor customer service. Additionally, there have been complaints about the lack of organic and non-GMO ingredients used in their products. Despite these concerns, Blenders In the Grass remains a popular spot for health-conscious individuals looking for quick and nutritious meals and drinks.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":173},{\"index\":1,\"byte_start\":173,\"byte_end\":506},{\"index\":2,\"byte_start\":506,\"byte_end\":658},{\"index\":3,\"byte_start\":658,\"byte_end\":740},{\"index\":4,\"byte_start\":740,\"byte_end\":1037},{\"index\":5,\"byte_start\":1037,\"byte_end\":1119},{\"index\":6,\"byte_start\":1119,\"byte_end\":1424},{\"index\":7,\"byte_start\":1424,\"byte_end\":1509},{\"index\":8,\"byte_start\":1509,\"byte_end\":1652},{\"index\":9,\"byte_start\":1652,\"byte_end\":1840},{\"index\":10,\"byte_start\":1840,\"byte_end\":1925},{\"index\":11,\"byte_start\":1925,\"byte_end\":2073}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":90},{\"index\":1,\"byte_start\":90,\"byte_end\":192},{\"index\":2,\"byte_start\":192,\"byte_end\":291},{\"index\":3,\"byte_start\":291,\"byte_end\":389},{\"index\":4,\"byte_start\":389,\"byte_end\":540},{\"index\":5,\"byte_start\":540,\"byte_end\":655},{\"index\":6,\"byte_start\":655,\"byte_end\":807}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|B|0.00|[]\n1|B|0.00|[]\n2|B|0.00|[]\n3|B|0.00|[]\n4|B|0.00|[]\n5|B|0.00|[]\n6|B|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256186,
+    "id": "chatcmpl-lSuJ4messRtR4XojGtowPkeNazrWVtSP",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1870.348,
+      "predicted_n": 77,
+      "predicted_per_second": 41.168809226946,
+      "predicted_per_token_ms": 24.290233766233765,
+      "prompt_ms": 967.549,
+      "prompt_n": 1025,
+      "prompt_per_second": 1059.3778713016086,
+      "prompt_per_token_ms": 0.943950243902439
+    },
+    "usage": {
+      "completion_tokens": 77,
+      "prompt_tokens": 1064,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1141
+    }
+  },
+  "source_cluster_id": "sha256:dddceea7ec23d285b505da80ef37e799450027506cb25d914b57a180927e6839",
+  "started_monotonic_ns": 917091986264264,
+  "status": "completed",
+  "unit_id": "sha256:a825923cdaea973b8ce8ecc863a277158626cb786c7d63e36b896760a591bf40"
+}

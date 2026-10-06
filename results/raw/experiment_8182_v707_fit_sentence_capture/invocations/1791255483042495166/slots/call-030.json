@@ -1,0 +1,95 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:9ba7a145435d719af7c2886fb49095170417fcd50908ba40a7685c4db4fed2dc",
+  "condition": "original",
+  "ended_monotonic_ns": 916564142140724,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Washington (CNN)Washington was rocked late Thursday by shootings -- one at the gates of the U.S. Census Bureau's headquarters and another in a popular area packed with restaurant patrons. The shootings were connected, authorities said. They began with what authorities believe was a domestic kidnapping incident, according to D.C. Police Chief Cathy Lanier. The suspect's vehicle was spotted outside the Census Bureau, which is in Suitland, Maryland. A guard apparently approached the vehicle and saw two people arguing. That guard was then shot at least once in the upper body, said Prince George's County Fire Department spokesman Mark Brady. The guard was in extremely critical condition, according to Brady. The police chief said the suspect then fled the scene. Officers picked up the chase, and the suspect fired gunshots at multiple locations, Lanier said. The chase ended in a crash on Washington's busy H Street. A shootout ensues, Lanier said. An officer and the suspect were wounded, according to the police chief. Both were conscious and talking when they left the scene. \\\"Right now, we have every reason to believe that the car that we have in this last incident here is the same car involved and the same person involved in the kidnapping,\\\" she said. Lanier told reporters the kidnapping victim was located and is in good condition. She did not identify the suspect, nor the guard, nor the officer who were injured. Steve Brusk reported from Washington. Dana Ford wrote from Atlanta. CNN's Greg Botelho also contributed to this report.\\n\",\"answer\":\"Two shootings occurred in Washington, D.C., with authorities stating they were connected. The shootings started with a domestic kidnapping incident, and a guard at the U.S. Census Bureau was shot when approaching the suspect's vehicle. The suspect fled and a chase ensued, ending in a shootout and leaving an officer and the suspect injured. The police chief believes the same car and person were involved in the kidnapping. The victim was found and in good condition. The identities of those involved were not disclosed.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":188},{\"index\":1,\"byte_start\":188,\"byte_end\":236},{\"index\":2,\"byte_start\":236,\"byte_end\":331},{\"index\":3,\"byte_start\":331,\"byte_end\":358},{\"index\":4,\"byte_start\":358,\"byte_end\":451},{\"index\":5,\"byte_start\":451,\"byte_end\":521},{\"index\":6,\"byte_start\":521,\"byte_end\":645},{\"index\":7,\"byte_start\":645,\"byte_end\":712},{\"index\":8,\"byte_start\":712,\"byte_end\":767},{\"index\":9,\"byte_start\":767,\"byte_end\":864},{\"index\":10,\"byte_start\":864,\"byte_end\":922},{\"index\":11,\"byte_start\":922,\"byte_end\":954},{\"index\":12,\"byte_start\":954,\"byte_end\":1026},{\"index\":13,\"byte_start\":1026,\"byte_end\":1084},{\"index\":14,\"byte_start\":1084,\"byte_end\":1265},{\"index\":15,\"byte_start\":1265,\"byte_end\":1347},{\"index\":16,\"byte_start\":1347,\"byte_end\":1430},{\"index\":17,\"byte_start\":1430,\"byte_end\":1468},{\"index\":18,\"byte_start\":1468,\"byte_end\":1498},{\"index\":19,\"byte_start\":1498,\"byte_end\":1550}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":90},{\"index\":1,\"byte_start\":90,\"byte_end\":236},{\"index\":2,\"byte_start\":236,\"byte_end\":342},{\"index\":3,\"byte_start\":342,\"byte_end\":425},{\"index\":4,\"byte_start\":425,\"byte_end\":469},{\"index\":5,\"byte_start\":469,\"byte_end\":521}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 981,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Washington (CNN)Washington was rocked late Thursday by shootings -- one at the gates of the U.S. Census Bureau's headquarters and another in a popular area packed with restaurant patrons. The shootings were connected, authorities said. They began with what authorities believe was a domestic kidnapping incident, according to D.C. Police Chief Cathy Lanier. The suspect's vehicle was spotted outside the Census Bureau, which is in Suitland, Maryland. A guard apparently approached the vehicle and saw two people arguing. That guard was then shot at least once in the upper body, said Prince George's County Fire Department spokesman Mark Brady. The guard was in extremely critical condition, according to Brady. The police chief said the suspect then fled the scene. Officers picked up the chase, and the suspect fired gunshots at multiple locations, Lanier said. The chase ended in a crash on Washington's busy H Street. A shootout ensues, Lanier said. An officer and the suspect were wounded, according to the police chief. Both were conscious and talking when they left the scene. \\\"Right now, we have every reason to believe that the car that we have in this last incident here is the same car involved and the same person involved in the kidnapping,\\\" she said. Lanier told reporters the kidnapping victim was located and is in good condition. She did not identify the suspect, nor the guard, nor the officer who were injured. Steve Brusk reported from Washington. Dana Ford wrote from Atlanta. CNN's Greg Botelho also contributed to this report.\\n\",\"answer\":\"Two shootings occurred in Washington, D.C., with authorities stating they were connected. The shootings started with a domestic kidnapping incident, and a guard at the U.S. Census Bureau was shot when approaching the suspect's vehicle. The suspect fled and a chase ensued, ending in a shootout and leaving an officer and the suspect injured. The police chief believes the same car and person were involved in the kidnapping. The victim was found and in good condition. The identities of those involved were not disclosed.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":188},{\"index\":1,\"byte_start\":188,\"byte_end\":236},{\"index\":2,\"byte_start\":236,\"byte_end\":331},{\"index\":3,\"byte_start\":331,\"byte_end\":358},{\"index\":4,\"byte_start\":358,\"byte_end\":451},{\"index\":5,\"byte_start\":451,\"byte_end\":521},{\"index\":6,\"byte_start\":521,\"byte_end\":645},{\"index\":7,\"byte_start\":645,\"byte_end\":712},{\"index\":8,\"byte_start\":712,\"byte_end\":767},{\"index\":9,\"byte_start\":767,\"byte_end\":864},{\"index\":10,\"byte_start\":864,\"byte_end\":922},{\"index\":11,\"byte_start\":922,\"byte_end\":954},{\"index\":12,\"byte_start\":954,\"byte_end\":1026},{\"index\":13,\"byte_start\":1026,\"byte_end\":1084},{\"index\":14,\"byte_start\":1084,\"byte_end\":1265},{\"index\":15,\"byte_start\":1265,\"byte_end\":1347},{\"index\":16,\"byte_start\":1347,\"byte_end\":1430},{\"index\":17,\"byte_start\":1430,\"byte_end\":1468},{\"index\":18,\"byte_start\":1468,\"byte_end\":1498},{\"index\":19,\"byte_start\":1498,\"byte_end\":1550}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":90},{\"index\":1,\"byte_start\":90,\"byte_end\":236},{\"index\":2,\"byte_start\":236,\"byte_end\":342},{\"index\":3,\"byte_start\":342,\"byte_end\":425},{\"index\":4,\"byte_start\":425,\"byte_end\":469},{\"index\":5,\"byte_start\":469,\"byte_end\":521}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\"\n",
+    "input_tokens": 969,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Washington (CNN)Washington was rocked late Thursday by shootings -- one at the gates of the U.S. Census Bureau's headquarters and another in a popular area packed with restaurant patrons. The shootings were connected, authorities said. They began with what authorities believe was a domestic kidnapping incident, according to D.C. Police Chief Cathy Lanier. The suspect's vehicle was spotted outside the Census Bureau, which is in Suitland, Maryland. A guard apparently approached the vehicle and saw two people arguing. That guard was then shot at least once in the upper body, said Prince George's County Fire Department spokesman Mark Brady. The guard was in extremely critical condition, according to Brady. The police chief said the suspect then fled the scene. Officers picked up the chase, and the suspect fired gunshots at multiple locations, Lanier said. The chase ended in a crash on Washington's busy H Street. A shootout ensues, Lanier said. An officer and the suspect were wounded, according to the police chief. Both were conscious and talking when they left the scene. \\\"Right now, we have every reason to believe that the car that we have in this last incident here is the same car involved and the same person involved in the kidnapping,\\\" she said. Lanier told reporters the kidnapping victim was located and is in good condition. She did not identify the suspect, nor the guard, nor the officer who were injured. Steve Brusk reported from Washington. Dana Ford wrote from Atlanta. CNN's Greg Botelho also contributed to this report.\\n\",\"answer\":\"Two shootings occurred in Washington, D.C., with authorities stating they were connected. The shootings started with a domestic kidnapping incident, and a guard at the U.S. Census Bureau was shot when approaching the suspect's vehicle. The suspect fled and a chase ensued, ending in a shootout and leaving an officer and the suspect injured. The police chief believes the same car and person were involved in the kidnapping. The victim was found and in good condition. The identities of those involved were not disclosed.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":188},{\"index\":1,\"byte_start\":188,\"byte_end\":236},{\"index\":2,\"byte_start\":236,\"byte_end\":331},{\"index\":3,\"byte_start\":331,\"byte_end\":358},{\"index\":4,\"byte_start\":358,\"byte_end\":451},{\"index\":5,\"byte_start\":451,\"byte_end\":521},{\"index\":6,\"byte_start\":521,\"byte_end\":645},{\"index\":7,\"byte_start\":645,\"byte_end\":712},{\"index\":8,\"byte_start\":712,\"byte_end\":767},{\"index\":9,\"byte_start\":767,\"byte_end\":864},{\"index\":10,\"byte_start\":864,\"byte_end\":922},{\"index\":11,\"byte_start\":922,\"byte_end\":954},{\"index\":12,\"byte_start\":954,\"byte_end\":1026},{\"index\":13,\"byte_start\":1026,\"byte_end\":1084},{\"index\":14,\"byte_start\":1084,\"byte_end\":1265},{\"index\":15,\"byte_start\":1265,\"byte_end\":1347},{\"index\":16,\"byte_start\":1347,\"byte_end\":1430},{\"index\":17,\"byte_start\":1430,\"byte_end\":1468},{\"index\":18,\"byte_start\":1468,\"byte_end\":1498},{\"index\":19,\"byte_start\":1498,\"byte_end\":1550}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":90},{\"index\":1,\"byte_start\":90,\"byte_end\":236},{\"index\":2,\"byte_start\":236,\"byte_end\":342},{\"index\":3,\"byte_start\":342,\"byte_end\":425},{\"index\":4,\"byte_start\":425,\"byte_end\":469},{\"index\":5,\"byte_start\":469,\"byte_end\":521}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[0,1]\n1|E|1.00|[2,4]\n2|E|1.00|[6,9]\n3|E|1.00|[14]\n4|E|1.00|[15]\n5|E|1.00|[16]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255655,
+    "id": "chatcmpl-tAiau4mcZmIMmANsW2wi3lR0Gtg3SPGx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2137.759,
+      "predicted_n": 87,
+      "predicted_per_second": 40.696823168561096,
+      "predicted_per_token_ms": 24.571942528735633,
+      "prompt_ms": 893.22,
+      "prompt_n": 981,
+      "prompt_per_second": 1098.2736615839324,
+      "prompt_per_token_ms": 0.910519877675841
+    },
+    "usage": {
+      "completion_tokens": 87,
+      "prompt_tokens": 981,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1068
+    }
+  },
+  "source_cluster_id": "sha256:6896043359d602608595b836e71b2e05ea32d2ddcb02bf907ca80f11c8c6599d",
+  "started_monotonic_ns": 916560977316665,
+  "status": "completed",
+  "unit_id": "sha256:6e5c8f2ca7bac6ea66ba86ac3d26c872361ffad15878f737723f37ae53d2752e"
+}

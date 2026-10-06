@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:9b740540d016e28efb5d4a992860a7816d9470bad9e43ceb4fb70e1b6df504b7",
+  "ended_monotonic_ns": 916500449394601,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The two-toed sloth is slightly bigger than the three-toed sloth, though they share many of the same features. They are about the size of a medium-sized dog at around 23 to 27 inches (58 to 68 cm) and 17.5 to 18.75 pounds (about 8 kilograms).he two-toed sloth is slightly bigger than the three-toed sloth, though they share many of the same features. They are about the size of a medium-sized dog at around 23 to 27 inches (58 to 68 cm) and 17.5 to 18.75 pounds (about 8 kilograms).\\\\n\\\\npassage 2:1 Two-toed and three-toed sloths were formerly placed in the same family but the two genera have profound behavioral and anatomical differences and are believed to come from two different fossil lineages. 2  They are now placed in separate families. 3  2-toed is larger, faster, and nocturnal. Long limbs \u2014 forelegs only slightly longer than hind legs (3-toed sloth's forelegs are 35% longer than hind legs). 2  Two-toed sloths have hands with two functioning fingers with sharp claws 76 - 102 mm (3 - 4 inches). 3  Three-toed sloths have three fingers on their hands. 4  Three claws on hind limbs.\\\\n\\\\npassage 3:1 Besides the fact that one has two toes on its forelimbs and the other three, they have different numbers of vertebrae (three-toed ones have nine; two-toed ones have six or seven). 2  Also, Three-toed sloths have a small tail and its forelegs are substantially longer than the rear ones.ifference Between Two and Three Toed Sloths: 1  Besides the fact that one has two toes on its forelimbs and the other three, they have different numbers of vertebrae (three-toed ones have nine; two-toed ones have six or seven).\\\\n\\\\n\\\",\\\"question\\\":\\\"what makes the two toed sloth different\\\"}\",\"answer\":\"Based on the provided passages, the main differences between the two-toed sloth (Choloepus didactylus) and the three-toed sloth (Bradypus variegatus) are:\\n\\n1. Number of toes on the front limbs: The two-toed sloth has two toes on each front limb, while the three-toed sloth has three toes.\\n2. Size: The two-toed sloth is generally smaller than the three-toed sloth, with a length of around 23-27 inches (58-68 cm) and a weight of around 17.5-18.75 pounds (about 8 kilograms), compared to the three-toed sloth's length of around 30-40 inches (76-102 cm) and weight of around 20-30 pounds (around 9-14 kilograms).\\n3. Limb structure: The two-toed sloth has longer limbs overall, with the forelegs being slightly longer than the hind legs, while the three-toed sloth has shorter forelegs that are 35% longer than the hind legs.\\n4. Hand structure: The two-toed sloth has hands with two functioning fingers and sharp claws, while the three-toed sloth has three fingers on its hands.\\n5. Vertebral count: The two-toed sloth has six or seven vertebrae in its body, while the three-toed sloth has nine vertebrae.\\n6. Tail length: The three-toed sloth has a smaller tail than the two-toed sloth.\\n7. Forelimb length: The three-toed sloth has substantially longer forelegs than the rear legs, while the two-toed sloth has more balanced proportions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":133},{\"index\":1,\"byte_start\":133,\"byte_end\":373},{\"index\":2,\"byte_start\":373,\"byte_end\":723},{\"index\":3,\"byte_start\":723,\"byte_end\":768},{\"index\":4,\"byte_start\":768,\"byte_end\":812},{\"index\":5,\"byte_start\":812,\"byte_end\":929},{\"index\":6,\"byte_start\":929,\"byte_end\":1033},{\"index\":7,\"byte_start\":1033,\"byte_end\":1089},{\"index\":8,\"byte_start\":1089,\"byte_end\":1314},{\"index\":9,\"byte_start\":1314,\"byte_end\":1706}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":289},{\"index\":1,\"byte_start\":289,\"byte_end\":611},{\"index\":2,\"byte_start\":611,\"byte_end\":823},{\"index\":3,\"byte_start\":823,\"byte_end\":976},{\"index\":4,\"byte_start\":976,\"byte_end\":1102},{\"index\":5,\"byte_start\":1102,\"byte_end\":1183},{\"index\":6,\"byte_start\":1183,\"byte_end\":1333}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1255,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The two-toed sloth is slightly bigger than the three-toed sloth, though they share many of the same features. They are about the size of a medium-sized dog at around 23 to 27 inches (58 to 68 cm) and 17.5 to 18.75 pounds (about 8 kilograms).he two-toed sloth is slightly bigger than the three-toed sloth, though they share many of the same features. They are about the size of a medium-sized dog at around 23 to 27 inches (58 to 68 cm) and 17.5 to 18.75 pounds (about 8 kilograms).\\\\n\\\\npassage 2:1 Two-toed and three-toed sloths were formerly placed in the same family but the two genera have profound behavioral and anatomical differences and are believed to come from two different fossil lineages. 2  They are now placed in separate families. 3  2-toed is larger, faster, and nocturnal. Long limbs \u2014 forelegs only slightly longer than hind legs (3-toed sloth's forelegs are 35% longer than hind legs). 2  Two-toed sloths have hands with two functioning fingers with sharp claws 76 - 102 mm (3 - 4 inches). 3  Three-toed sloths have three fingers on their hands. 4  Three claws on hind limbs.\\\\n\\\\npassage 3:1 Besides the fact that one has two toes on its forelimbs and the other three, they have different numbers of vertebrae (three-toed ones have nine; two-toed ones have six or seven). 2  Also, Three-toed sloths have a small tail and its forelegs are substantially longer than the rear ones.ifference Between Two and Three Toed Sloths: 1  Besides the fact that one has two toes on its forelimbs and the other three, they have different numbers of vertebrae (three-toed ones have nine; two-toed ones have six or seven).\\\\n\\\\n\\\",\\\"question\\\":\\\"what makes the two toed sloth different\\\"}\",\"answer\":\"Based on the provided passages, the main differences between the two-toed sloth (Choloepus didactylus) and the three-toed sloth (Bradypus variegatus) are:\\n\\n1. Number of toes on the front limbs: The two-toed sloth has two toes on each front limb, while the three-toed sloth has three toes.\\n2. Size: The two-toed sloth is generally smaller than the three-toed sloth, with a length of around 23-27 inches (58-68 cm) and a weight of around 17.5-18.75 pounds (about 8 kilograms), compared to the three-toed sloth's length of around 30-40 inches (76-102 cm) and weight of around 20-30 pounds (around 9-14 kilograms).\\n3. Limb structure: The two-toed sloth has longer limbs overall, with the forelegs being slightly longer than the hind legs, while the three-toed sloth has shorter forelegs that are 35% longer than the hind legs.\\n4. Hand structure: The two-toed sloth has hands with two functioning fingers and sharp claws, while the three-toed sloth has three fingers on its hands.\\n5. Vertebral count: The two-toed sloth has six or seven vertebrae in its body, while the three-toed sloth has nine vertebrae.\\n6. Tail length: The three-toed sloth has a smaller tail than the two-toed sloth.\\n7. Forelimb length: The three-toed sloth has substantially longer forelegs than the rear legs, while the two-toed sloth has more balanced proportions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":133},{\"index\":1,\"byte_start\":133,\"byte_end\":373},{\"index\":2,\"byte_start\":373,\"byte_end\":723},{\"index\":3,\"byte_start\":723,\"byte_end\":768},{\"index\":4,\"byte_start\":768,\"byte_end\":812},{\"index\":5,\"byte_start\":812,\"byte_end\":929},{\"index\":6,\"byte_start\":929,\"byte_end\":1033},{\"index\":7,\"byte_start\":1033,\"byte_end\":1089},{\"index\":8,\"byte_start\":1089,\"byte_end\":1314},{\"index\":9,\"byte_start\":1314,\"byte_end\":1706}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":289},{\"index\":1,\"byte_start\":289,\"byte_end\":611},{\"index\":2,\"byte_start\":611,\"byte_end\":823},{\"index\":3,\"byte_start\":823,\"byte_end\":976},{\"index\":4,\"byte_start\":976,\"byte_end\":1102},{\"index\":5,\"byte_start\":1102,\"byte_end\":1183},{\"index\":6,\"byte_start\":1183,\"byte_end\":1333}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+    "input_tokens": 1243,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The two-toed sloth is slightly bigger than the three-toed sloth, though they share many of the same features. They are about the size of a medium-sized dog at around 23 to 27 inches (58 to 68 cm) and 17.5 to 18.75 pounds (about 8 kilograms).he two-toed sloth is slightly bigger than the three-toed sloth, though they share many of the same features. They are about the size of a medium-sized dog at around 23 to 27 inches (58 to 68 cm) and 17.5 to 18.75 pounds (about 8 kilograms).\\\\n\\\\npassage 2:1 Two-toed and three-toed sloths were formerly placed in the same family but the two genera have profound behavioral and anatomical differences and are believed to come from two different fossil lineages. 2  They are now placed in separate families. 3  2-toed is larger, faster, and nocturnal. Long limbs \u2014 forelegs only slightly longer than hind legs (3-toed sloth's forelegs are 35% longer than hind legs). 2  Two-toed sloths have hands with two functioning fingers with sharp claws 76 - 102 mm (3 - 4 inches). 3  Three-toed sloths have three fingers on their hands. 4  Three claws on hind limbs.\\\\n\\\\npassage 3:1 Besides the fact that one has two toes on its forelimbs and the other three, they have different numbers of vertebrae (three-toed ones have nine; two-toed ones have six or seven). 2  Also, Three-toed sloths have a small tail and its forelegs are substantially longer than the rear ones.ifference Between Two and Three Toed Sloths: 1  Besides the fact that one has two toes on its forelimbs and the other three, they have different numbers of vertebrae (three-toed ones have nine; two-toed ones have six or seven).\\\\n\\\\n\\\",\\\"question\\\":\\\"what makes the two toed sloth different\\\"}\",\"answer\":\"Based on the provided passages, the main differences between the two-toed sloth (Choloepus didactylus) and the three-toed sloth (Bradypus variegatus) are:\\n\\n1. Number of toes on the front limbs: The two-toed sloth has two toes on each front limb, while the three-toed sloth has three toes.\\n2. Size: The two-toed sloth is generally smaller than the three-toed sloth, with a length of around 23-27 inches (58-68 cm) and a weight of around 17.5-18.75 pounds (about 8 kilograms), compared to the three-toed sloth's length of around 30-40 inches (76-102 cm) and weight of around 20-30 pounds (around 9-14 kilograms).\\n3. Limb structure: The two-toed sloth has longer limbs overall, with the forelegs being slightly longer than the hind legs, while the three-toed sloth has shorter forelegs that are 35% longer than the hind legs.\\n4. Hand structure: The two-toed sloth has hands with two functioning fingers and sharp claws, while the three-toed sloth has three fingers on its hands.\\n5. Vertebral count: The two-toed sloth has six or seven vertebrae in its body, while the three-toed sloth has nine vertebrae.\\n6. Tail length: The three-toed sloth has a smaller tail than the two-toed sloth.\\n7. Forelimb length: The three-toed sloth has substantially longer forelegs than the rear legs, while the two-toed sloth has more balanced proportions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":133},{\"index\":1,\"byte_start\":133,\"byte_end\":373},{\"index\":2,\"byte_start\":373,\"byte_end\":723},{\"index\":3,\"byte_start\":723,\"byte_end\":768},{\"index\":4,\"byte_start\":768,\"byte_end\":812},{\"index\":5,\"byte_start\":812,\"byte_end\":929},{\"index\":6,\"byte_start\":929,\"byte_end\":1033},{\"index\":7,\"byte_start\":1033,\"byte_end\":1089},{\"index\":8,\"byte_start\":1089,\"byte_end\":1314},{\"index\":9,\"byte_start\":1314,\"byte_end\":1706}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":289},{\"index\":1,\"byte_start\":289,\"byte_end\":611},{\"index\":2,\"byte_start\":611,\"byte_end\":823},{\"index\":3,\"byte_start\":823,\"byte_end\":976},{\"index\":4,\"byte_start\":976,\"byte_end\":1102},{\"index\":5,\"byte_start\":1102,\"byte_end\":1183},{\"index\":6,\"byte_start\":1183,\"byte_end\":1333}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|B|0.00|[0,1]\n2|B|0.00|[2]\n3|B|0.00|[2]\n4|B|0.00|[2]\n5|B|0.00|[3]\n6|B|0.00|[3]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255592,
+    "id": "chatcmpl-dOreO32AG4meK0fsHlMRkv51zRInkttA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2050.489,
+      "predicted_n": 85,
+      "predicted_per_second": 41.45352645149523,
+      "predicted_per_token_ms": 24.1234,
+      "prompt_ms": 1065.624,
+      "prompt_n": 1255,
+      "prompt_per_second": 1177.7137151565655,
+      "prompt_per_token_ms": 0.8491027888446215
+    },
+    "usage": {
+      "completion_tokens": 85,
+      "prompt_tokens": 1255,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1340
+    }
+  },
+  "source_cluster_id": "sha256:511582318bd1904dc5ed7ec7437bf7d1041875d4b1ab29bb6f8cbf84d081ef0a",
+  "started_monotonic_ns": 916497178666267,
+  "status": "completed",
+  "unit_id": "sha256:15502b3bb03d762de685e8f5db2fd2cf267c5ef0f3ae63ca8fdbf1965e289c00"
+}

@@ -1,0 +1,92 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:5228ce60ea44746cb783b2d37b883244cc42ef2b0079d1dde0b2096f2d2ac0ec",
+  "ended_monotonic_ns": 917055090085102,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Racetrack mystery: CA exercise rider killed during horse training; Officials unsure how he died\\nThe racing community is mourning the loss of Alfredo Luevano, a 53-year-old exercise rider, who tragically lost his life during a training incident at Los Alamitos Race Course early Saturday morning, the track announced.\\nLuevano was riding a filly on the backstretch when the incident occurred, and despite immediate assistance, he did not survive his injuries.\\nThe track is located in Cypress, Calif. in Orange County.\\nThe filly, named Fly From The Fire, emerged unscathed.\\nDetails surrounding the incident remain unclear, with no eyewitness accounts providing precise information on what transpired, according to the racetrack.\\nLuevano was quickly transported to Long Beach Memorial, where he was pronounced dead.\\nThe 2-year-old filly, Fly From The Fire, had previously made five starts this year under the guidance of trainer Mike Casselman.\\nScheduled to participate in the seventh race on Saturday night, track management has decided to scratch her from the race as a precautionary measure.\\nLos Alamitos Race Course spokesperson Orlando Gutierrez expressed condolences on behalf of the racing facility, saying, \\\"On behalf of the Los Alamitos Race Course family, we express our deepest condolences to Mr. Luevano's family members and friends.\\\"\\nAlfredo Luevano, born in the city of Luis Moya in Zacatecas, Mexico, had a distinguished professional riding career that included 33 mounts, with most of his rides taking place in Mexico and Colorado.\\nEarlier this year, he was issued an exercise rider license by the California Horse Racing Board.\\nAlfredo Luevano is survived by his wife, Marisela Martinez, and their children: Lisbet, Alfredo Jr., Alex, Aldo, and Camila.\\nHe also leaves behind six grandchildren and his father, Augustine.\",\"answer\":\"Alfredo Luevano, a 53-year-old exercise rider, died during a training incident at Los Alamitos Race Course in California. He was riding a filly when the incident occurred, and despite immediate assistance, he did not survive his injuries. The details surrounding the incident are unclear, and there were no eyewitness accounts providing specific information. The filly, named Fly From The Fire, was unharmed. Luevano had a distinguished riding career and is survived by his wife, children, grandchildren, and father. The racecourse expressed condolences to his family.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":317},{\"index\":1,\"byte_start\":317,\"byte_end\":458},{\"index\":2,\"byte_start\":458,\"byte_end\":498},{\"index\":3,\"byte_start\":498,\"byte_end\":516},{\"index\":4,\"byte_start\":516,\"byte_end\":571},{\"index\":5,\"byte_start\":571,\"byte_end\":726},{\"index\":6,\"byte_start\":726,\"byte_end\":812},{\"index\":7,\"byte_start\":812,\"byte_end\":941},{\"index\":8,\"byte_start\":941,\"byte_end\":1091},{\"index\":9,\"byte_start\":1091,\"byte_end\":1343},{\"index\":10,\"byte_start\":1343,\"byte_end\":1544},{\"index\":11,\"byte_start\":1544,\"byte_end\":1641},{\"index\":12,\"byte_start\":1641,\"byte_end\":1766},{\"index\":13,\"byte_start\":1766,\"byte_end\":1832}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":122},{\"index\":1,\"byte_start\":122,\"byte_end\":239},{\"index\":2,\"byte_start\":239,\"byte_end\":359},{\"index\":3,\"byte_start\":359,\"byte_end\":409},{\"index\":4,\"byte_start\":409,\"byte_end\":517},{\"index\":5,\"byte_start\":517,\"byte_end\":568}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 965,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Racetrack mystery: CA exercise rider killed during horse training; Officials unsure how he died\\nThe racing community is mourning the loss of Alfredo Luevano, a 53-year-old exercise rider, who tragically lost his life during a training incident at Los Alamitos Race Course early Saturday morning, the track announced.\\nLuevano was riding a filly on the backstretch when the incident occurred, and despite immediate assistance, he did not survive his injuries.\\nThe track is located in Cypress, Calif. in Orange County.\\nThe filly, named Fly From The Fire, emerged unscathed.\\nDetails surrounding the incident remain unclear, with no eyewitness accounts providing precise information on what transpired, according to the racetrack.\\nLuevano was quickly transported to Long Beach Memorial, where he was pronounced dead.\\nThe 2-year-old filly, Fly From The Fire, had previously made five starts this year under the guidance of trainer Mike Casselman.\\nScheduled to participate in the seventh race on Saturday night, track management has decided to scratch her from the race as a precautionary measure.\\nLos Alamitos Race Course spokesperson Orlando Gutierrez expressed condolences on behalf of the racing facility, saying, \\\"On behalf of the Los Alamitos Race Course family, we express our deepest condolences to Mr. Luevano's family members and friends.\\\"\\nAlfredo Luevano, born in the city of Luis Moya in Zacatecas, Mexico, had a distinguished professional riding career that included 33 mounts, with most of his rides taking place in Mexico and Colorado.\\nEarlier this year, he was issued an exercise rider license by the California Horse Racing Board.\\nAlfredo Luevano is survived by his wife, Marisela Martinez, and their children: Lisbet, Alfredo Jr., Alex, Aldo, and Camila.\\nHe also leaves behind six grandchildren and his father, Augustine.\",\"answer\":\"Alfredo Luevano, a 53-year-old exercise rider, died during a training incident at Los Alamitos Race Course in California. He was riding a filly when the incident occurred, and despite immediate assistance, he did not survive his injuries. The details surrounding the incident are unclear, and there were no eyewitness accounts providing specific information. The filly, named Fly From The Fire, was unharmed. Luevano had a distinguished riding career and is survived by his wife, children, grandchildren, and father. The racecourse expressed condolences to his family.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":317},{\"index\":1,\"byte_start\":317,\"byte_end\":458},{\"index\":2,\"byte_start\":458,\"byte_end\":498},{\"index\":3,\"byte_start\":498,\"byte_end\":516},{\"index\":4,\"byte_start\":516,\"byte_end\":571},{\"index\":5,\"byte_start\":571,\"byte_end\":726},{\"index\":6,\"byte_start\":726,\"byte_end\":812},{\"index\":7,\"byte_start\":812,\"byte_end\":941},{\"index\":8,\"byte_start\":941,\"byte_end\":1091},{\"index\":9,\"byte_start\":1091,\"byte_end\":1343},{\"index\":10,\"byte_start\":1343,\"byte_end\":1544},{\"index\":11,\"byte_start\":1544,\"byte_end\":1641},{\"index\":12,\"byte_start\":1641,\"byte_end\":1766},{\"index\":13,\"byte_start\":1766,\"byte_end\":1832}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":122},{\"index\":1,\"byte_start\":122,\"byte_end\":239},{\"index\":2,\"byte_start\":239,\"byte_end\":359},{\"index\":3,\"byte_start\":359,\"byte_end\":409},{\"index\":4,\"byte_start\":409,\"byte_end\":517},{\"index\":5,\"byte_start\":517,\"byte_end\":568}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "input_tokens": 953,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Racetrack mystery: CA exercise rider killed during horse training; Officials unsure how he died\\nThe racing community is mourning the loss of Alfredo Luevano, a 53-year-old exercise rider, who tragically lost his life during a training incident at Los Alamitos Race Course early Saturday morning, the track announced.\\nLuevano was riding a filly on the backstretch when the incident occurred, and despite immediate assistance, he did not survive his injuries.\\nThe track is located in Cypress, Calif. in Orange County.\\nThe filly, named Fly From The Fire, emerged unscathed.\\nDetails surrounding the incident remain unclear, with no eyewitness accounts providing precise information on what transpired, according to the racetrack.\\nLuevano was quickly transported to Long Beach Memorial, where he was pronounced dead.\\nThe 2-year-old filly, Fly From The Fire, had previously made five starts this year under the guidance of trainer Mike Casselman.\\nScheduled to participate in the seventh race on Saturday night, track management has decided to scratch her from the race as a precautionary measure.\\nLos Alamitos Race Course spokesperson Orlando Gutierrez expressed condolences on behalf of the racing facility, saying, \\\"On behalf of the Los Alamitos Race Course family, we express our deepest condolences to Mr. Luevano's family members and friends.\\\"\\nAlfredo Luevano, born in the city of Luis Moya in Zacatecas, Mexico, had a distinguished professional riding career that included 33 mounts, with most of his rides taking place in Mexico and Colorado.\\nEarlier this year, he was issued an exercise rider license by the California Horse Racing Board.\\nAlfredo Luevano is survived by his wife, Marisela Martinez, and their children: Lisbet, Alfredo Jr., Alex, Aldo, and Camila.\\nHe also leaves behind six grandchildren and his father, Augustine.\",\"answer\":\"Alfredo Luevano, a 53-year-old exercise rider, died during a training incident at Los Alamitos Race Course in California. He was riding a filly when the incident occurred, and despite immediate assistance, he did not survive his injuries. The details surrounding the incident are unclear, and there were no eyewitness accounts providing specific information. The filly, named Fly From The Fire, was unharmed. Luevano had a distinguished riding career and is survived by his wife, children, grandchildren, and father. The racecourse expressed condolences to his family.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":317},{\"index\":1,\"byte_start\":317,\"byte_end\":458},{\"index\":2,\"byte_start\":458,\"byte_end\":498},{\"index\":3,\"byte_start\":498,\"byte_end\":516},{\"index\":4,\"byte_start\":516,\"byte_end\":571},{\"index\":5,\"byte_start\":571,\"byte_end\":726},{\"index\":6,\"byte_start\":726,\"byte_end\":812},{\"index\":7,\"byte_start\":812,\"byte_end\":941},{\"index\":8,\"byte_start\":941,\"byte_end\":1091},{\"index\":9,\"byte_start\":1091,\"byte_end\":1343},{\"index\":10,\"byte_start\":1343,\"byte_end\":1544},{\"index\":11,\"byte_start\":1544,\"byte_end\":1641},{\"index\":12,\"byte_start\":1641,\"byte_end\":1766},{\"index\":13,\"byte_start\":1766,\"byte_end\":1832}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":122},{\"index\":1,\"byte_start\":122,\"byte_end\":239},{\"index\":2,\"byte_start\":239,\"byte_end\":359},{\"index\":3,\"byte_start\":359,\"byte_end\":409},{\"index\":4,\"byte_start\":409,\"byte_end\":517},{\"index\":5,\"byte_start\":517,\"byte_end\":568}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,1]\n1|E|0.95|[1]\n2|E|0.95|[5]\n3|E|0.95|[4]\n4|E|0.95|[10,12]\n5|E|0.95|[9]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256146,
+    "id": "chatcmpl-5TyiwCTqEtraW5Bf5MnLT3I1hmSsrzdt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 2046.813,
+      "predicted_n": 84,
+      "predicted_per_second": 41.039411025824045,
+      "predicted_per_token_ms": 24.36682142857143,
+      "prompt_ms": 923.041,
+      "prompt_n": 926,
+      "prompt_per_second": 1003.2057080888064,
+      "prompt_per_token_ms": 0.9968045356371491
+    },
+    "usage": {
+      "completion_tokens": 84,
+      "prompt_tokens": 965,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1049
+    }
+  },
+  "source_cluster_id": "sha256:016b5beb3e1c5790c04bd6b983a5a636c9c42af56a071d3ab8238bbae0e685fb",
+  "started_monotonic_ns": 917051993386346,
+  "status": "completed",
+  "unit_id": "sha256:c2796506f6c4a234c8548823f5b829cf9657d928409b4cb8f4b206556b352e0c"
+}

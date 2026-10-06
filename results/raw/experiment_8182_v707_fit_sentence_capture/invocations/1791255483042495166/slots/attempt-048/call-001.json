@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:3a0b08a6af236b79045ea59e15ec16c6df613efd448746e7621b4ed4e440dce6",
+  "ended_monotonic_ns": 916608018342462,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Breakfast in France is usually a light affair, with the beverage (usually coffee) being just as important as the food. Some typical French breakfast choices:  1 Tartines, which is toast with jam, is a typical French breakfast loved for its simplicity and the sweet flavor that goes well with coffee.\\\\n\\\\npassage 2:South-West France: In the south-west of France the emphasis is on rich foods. The main specialities are duck, foie gras, prunes, oysters, mushrooms and truffles. And of course a nice rich red Bordeaux wine to go with it.\\\\n\\\\npassage 3:French regional cuisines use locally grown vegetables, such as: 1  Potatoes. 2  haricot verts (A type of French green bean). 3  Carrots. 4  leeks. 5  Turnips. 6  Aubergine (eggplant). 7  Courgette (zucchini). 8  Mushrooms, oyster mushrooms, cepes (c\u00e8pes). 9  Porcini. 10  Truffle.  shallots\\\\n\\\\n\\\",\\\"question\\\":\\\"types of food in france\\\"}\",\"answer\":\"French food varies by region and meal. Breakfast in France is typically light, often including tartines which is toast with jam. In South-West France, the cuisine emphasizes rich foods such as duck, foie gras, prunes, oysters, mushrooms, truffles, and is commonly accompanied by a rich red Bordeaux wine. French regional cuisines also heavily utilize locally grown vegetables, including potatoes, haricot verts (French green beans), carrots, leeks, turnips, aubergine (eggplant), courgette (zucchini), various types of mushrooms such as oyster mushrooms and cepes, porcini, truffle, and shallots.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":142},{\"index\":1,\"byte_start\":142,\"byte_end\":414},{\"index\":2,\"byte_start\":414,\"byte_end\":498},{\"index\":3,\"byte_start\":498,\"byte_end\":647},{\"index\":4,\"byte_start\":647,\"byte_end\":695},{\"index\":5,\"byte_start\":695,\"byte_end\":707},{\"index\":6,\"byte_start\":707,\"byte_end\":717},{\"index\":7,\"byte_start\":717,\"byte_end\":729},{\"index\":8,\"byte_start\":729,\"byte_end\":754},{\"index\":9,\"byte_start\":754,\"byte_end\":779},{\"index\":10,\"byte_start\":779,\"byte_end\":827},{\"index\":11,\"byte_start\":827,\"byte_end\":839},{\"index\":12,\"byte_start\":839,\"byte_end\":853},{\"index\":13,\"byte_start\":853,\"byte_end\":904}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":39},{\"index\":1,\"byte_start\":39,\"byte_end\":129},{\"index\":2,\"byte_start\":129,\"byte_end\":305},{\"index\":3,\"byte_start\":305,\"byte_end\":596}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 796,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Breakfast in France is usually a light affair, with the beverage (usually coffee) being just as important as the food. Some typical French breakfast choices:  1 Tartines, which is toast with jam, is a typical French breakfast loved for its simplicity and the sweet flavor that goes well with coffee.\\\\n\\\\npassage 2:South-West France: In the south-west of France the emphasis is on rich foods. The main specialities are duck, foie gras, prunes, oysters, mushrooms and truffles. And of course a nice rich red Bordeaux wine to go with it.\\\\n\\\\npassage 3:French regional cuisines use locally grown vegetables, such as: 1  Potatoes. 2  haricot verts (A type of French green bean). 3  Carrots. 4  leeks. 5  Turnips. 6  Aubergine (eggplant). 7  Courgette (zucchini). 8  Mushrooms, oyster mushrooms, cepes (c\u00e8pes). 9  Porcini. 10  Truffle.  shallots\\\\n\\\\n\\\",\\\"question\\\":\\\"types of food in france\\\"}\",\"answer\":\"French food varies by region and meal. Breakfast in France is typically light, often including tartines which is toast with jam. In South-West France, the cuisine emphasizes rich foods such as duck, foie gras, prunes, oysters, mushrooms, truffles, and is commonly accompanied by a rich red Bordeaux wine. French regional cuisines also heavily utilize locally grown vegetables, including potatoes, haricot verts (French green beans), carrots, leeks, turnips, aubergine (eggplant), courgette (zucchini), various types of mushrooms such as oyster mushrooms and cepes, porcini, truffle, and shallots.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":142},{\"index\":1,\"byte_start\":142,\"byte_end\":414},{\"index\":2,\"byte_start\":414,\"byte_end\":498},{\"index\":3,\"byte_start\":498,\"byte_end\":647},{\"index\":4,\"byte_start\":647,\"byte_end\":695},{\"index\":5,\"byte_start\":695,\"byte_end\":707},{\"index\":6,\"byte_start\":707,\"byte_end\":717},{\"index\":7,\"byte_start\":717,\"byte_end\":729},{\"index\":8,\"byte_start\":729,\"byte_end\":754},{\"index\":9,\"byte_start\":754,\"byte_end\":779},{\"index\":10,\"byte_start\":779,\"byte_end\":827},{\"index\":11,\"byte_start\":827,\"byte_end\":839},{\"index\":12,\"byte_start\":839,\"byte_end\":853},{\"index\":13,\"byte_start\":853,\"byte_end\":904}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":39},{\"index\":1,\"byte_start\":39,\"byte_end\":129},{\"index\":2,\"byte_start\":129,\"byte_end\":305},{\"index\":3,\"byte_start\":305,\"byte_end\":596}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "input_tokens": 784,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Breakfast in France is usually a light affair, with the beverage (usually coffee) being just as important as the food. Some typical French breakfast choices:  1 Tartines, which is toast with jam, is a typical French breakfast loved for its simplicity and the sweet flavor that goes well with coffee.\\\\n\\\\npassage 2:South-West France: In the south-west of France the emphasis is on rich foods. The main specialities are duck, foie gras, prunes, oysters, mushrooms and truffles. And of course a nice rich red Bordeaux wine to go with it.\\\\n\\\\npassage 3:French regional cuisines use locally grown vegetables, such as: 1  Potatoes. 2  haricot verts (A type of French green bean). 3  Carrots. 4  leeks. 5  Turnips. 6  Aubergine (eggplant). 7  Courgette (zucchini). 8  Mushrooms, oyster mushrooms, cepes (c\u00e8pes). 9  Porcini. 10  Truffle.  shallots\\\\n\\\\n\\\",\\\"question\\\":\\\"types of food in france\\\"}\",\"answer\":\"French food varies by region and meal. Breakfast in France is typically light, often including tartines which is toast with jam. In South-West France, the cuisine emphasizes rich foods such as duck, foie gras, prunes, oysters, mushrooms, truffles, and is commonly accompanied by a rich red Bordeaux wine. French regional cuisines also heavily utilize locally grown vegetables, including potatoes, haricot verts (French green beans), carrots, leeks, turnips, aubergine (eggplant), courgette (zucchini), various types of mushrooms such as oyster mushrooms and cepes, porcini, truffle, and shallots.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":142},{\"index\":1,\"byte_start\":142,\"byte_end\":414},{\"index\":2,\"byte_start\":414,\"byte_end\":498},{\"index\":3,\"byte_start\":498,\"byte_end\":647},{\"index\":4,\"byte_start\":647,\"byte_end\":695},{\"index\":5,\"byte_start\":695,\"byte_end\":707},{\"index\":6,\"byte_start\":707,\"byte_end\":717},{\"index\":7,\"byte_start\":717,\"byte_end\":729},{\"index\":8,\"byte_start\":729,\"byte_end\":754},{\"index\":9,\"byte_start\":754,\"byte_end\":779},{\"index\":10,\"byte_start\":779,\"byte_end\":827},{\"index\":11,\"byte_start\":827,\"byte_end\":839},{\"index\":12,\"byte_start\":839,\"byte_end\":853},{\"index\":13,\"byte_start\":853,\"byte_end\":904}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":39},{\"index\":1,\"byte_start\":39,\"byte_end\":129},{\"index\":2,\"byte_start\":129,\"byte_end\":305},{\"index\":3,\"byte_start\":305,\"byte_end\":596}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[]\n1|E|0.95|[0]\n2|E|0.95|[1]\n3|E|0.95|[2]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255699,
+    "id": "chatcmpl-NvNJUVcoko9ZqUwOmhstXMug2Vu2JdUW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1140.053,
+      "predicted_n": 47,
+      "predicted_per_second": 41.22615352093279,
+      "predicted_per_token_ms": 24.256446808510642,
+      "prompt_ms": 761.126,
+      "prompt_n": 796,
+      "prompt_per_second": 1045.8189577021415,
+      "prompt_per_token_ms": 0.9561884422110553
+    },
+    "usage": {
+      "completion_tokens": 47,
+      "prompt_tokens": 796,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 843
+    }
+  },
+  "source_cluster_id": "sha256:b5f60c208cfb3209c1a1233bfb9a268a06948b421bc33a3991564270653468f8",
+  "started_monotonic_ns": 916605964536859,
+  "status": "completed",
+  "unit_id": "sha256:2d84535a31dd51fcb83b0dd3bdf7c7cbd81159bbd59e63a326921653200d7dd8"
+}

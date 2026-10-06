@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:037c5e90bf834c51c7a57086d19d04abc9d3dca28c1cf763dfd06dfc10133728",
+  "ended_monotonic_ns": 916878058333659,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r8 \"\\n\" r9 \"\\n\" r10\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nr9 ::= \"9|\" relation \"|\" probability \"|\" refs\nr10 ::= \"10|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:We would like to build a pergola over a patio outside a sliding glass door. I would like it to be attached to the house on one side and 2 posts on the opposite side. The soffit enclosing the rafters comes right above the sliding door so there is no room to attach a ledger board above the door.The fascia board has a gutter attached to it. would like it to be attached to the house on one side and 2 posts on the opposite side. The soffit enclosing the rafters comes right above the sliding door so there is no room to attach a ledger board above the door. The fascia board has a gutter attached to it.\\\\n\\\\npassage 2:Installing a ledger board ensures the structural support of your patio cover. A ledger is a pressure-treated board that attaches to an existing wall to anchor a new construction or attachment and support the weight load.se the drill to make a 3/8-inch pilot hole through the ledger and into the home's rim joist. Place a lag screw and washer into the hole and tighten with the socket wrench by turning clockwise. Cut equal strips of waterproof self-adhering membrane and metal flashing the length of the ledger and 6 inches wide.\\\\n\\\\npassage 3:1 Position the ledger board. 2  The first step in attaching a patio roofto a house structureisto place the ledger board at the correct height, horizontal and level with the roof.The ledger board should be fastened securely in place with wall bolts or lag screws.3  Reinforce with flashing. The first step in attaching a patio roofto a house structureisto place the ledger board at the correct height, horizontal and level with the roof.The ledger board should be fastened securely in place with wall bolts or lag screws. 2  Reinforce with flashing.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to attach a ledger board to a house for a patio cover\\\"}\",\"answer\":\"Based on the given passages, here are the steps to attach a ledger board to a house for a patio cover:\\n\\n1. Determine the correct height for the ledger board: Measure the height of the soffit board above the sliding glass door to determine where the ledger board should be positioned. Make sure the ledger board is level and horizontal with the roof.\\n2. Install wall bolts or lag screws: Use wall bolts or lag screws to secure the ledger board to the house. Drill a pilot hole through the ledger board and into the rim joist of the house, then insert a lag screw and washer. Tighten the screw with a socket wrench.\\n3. Cut flashing strips: Cut equal strips of waterproof self-adhering membrane and metal flashing the length of the ledger board and 6 inches wide.\\n4. Attach the flashing: Apply the flashing strips to the ledger board, starting from the bottom and working upwards. Ensure the flashing is secured tightly to the ledger board and overlaps the edges of the board.\\n5. Reinforce with additional flashing: Add additional flashing strips at the eaves and rake edges of the roof to ensure proper drainage and protection against water intrusion.\\n\\nPlease note that the passages do not provide specific instructions for attaching the ledger board to the two posts on the opposite side of the patio. It is assumed that these details will be addressed in subsequent passages or separate instructions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":99},{\"index\":1,\"byte_start\":99,\"byte_end\":189},{\"index\":2,\"byte_start\":189,\"byte_end\":363},{\"index\":3,\"byte_start\":363,\"byte_end\":451},{\"index\":4,\"byte_start\":451,\"byte_end\":580},{\"index\":5,\"byte_start\":580,\"byte_end\":717},{\"index\":6,\"byte_start\":717,\"byte_end\":952},{\"index\":7,\"byte_start\":952,\"byte_end\":1052},{\"index\":8,\"byte_start\":1052,\"byte_end\":1211},{\"index\":9,\"byte_start\":1211,\"byte_end\":1472},{\"index\":10,\"byte_start\":1472,\"byte_end\":1703},{\"index\":11,\"byte_start\":1703,\"byte_end\":1807}],\"answer_sentence_indices\":[8,9,10],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":284},{\"index\":1,\"byte_start\":284,\"byte_end\":350},{\"index\":2,\"byte_start\":350,\"byte_end\":457},{\"index\":3,\"byte_start\":457,\"byte_end\":574},{\"index\":4,\"byte_start\":574,\"byte_end\":614},{\"index\":5,\"byte_start\":614,\"byte_end\":761},{\"index\":6,\"byte_start\":761,\"byte_end\":878},{\"index\":7,\"byte_start\":878,\"byte_end\":974},{\"index\":8,\"byte_start\":974,\"byte_end\":1151},{\"index\":9,\"byte_start\":1151,\"byte_end\":1301},{\"index\":10,\"byte_start\":1301,\"byte_end\":1400}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1192,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:We would like to build a pergola over a patio outside a sliding glass door. I would like it to be attached to the house on one side and 2 posts on the opposite side. The soffit enclosing the rafters comes right above the sliding door so there is no room to attach a ledger board above the door.The fascia board has a gutter attached to it. would like it to be attached to the house on one side and 2 posts on the opposite side. The soffit enclosing the rafters comes right above the sliding door so there is no room to attach a ledger board above the door. The fascia board has a gutter attached to it.\\\\n\\\\npassage 2:Installing a ledger board ensures the structural support of your patio cover. A ledger is a pressure-treated board that attaches to an existing wall to anchor a new construction or attachment and support the weight load.se the drill to make a 3/8-inch pilot hole through the ledger and into the home's rim joist. Place a lag screw and washer into the hole and tighten with the socket wrench by turning clockwise. Cut equal strips of waterproof self-adhering membrane and metal flashing the length of the ledger and 6 inches wide.\\\\n\\\\npassage 3:1 Position the ledger board. 2  The first step in attaching a patio roofto a house structureisto place the ledger board at the correct height, horizontal and level with the roof.The ledger board should be fastened securely in place with wall bolts or lag screws.3  Reinforce with flashing. The first step in attaching a patio roofto a house structureisto place the ledger board at the correct height, horizontal and level with the roof.The ledger board should be fastened securely in place with wall bolts or lag screws. 2  Reinforce with flashing.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to attach a ledger board to a house for a patio cover\\\"}\",\"answer\":\"Based on the given passages, here are the steps to attach a ledger board to a house for a patio cover:\\n\\n1. Determine the correct height for the ledger board: Measure the height of the soffit board above the sliding glass door to determine where the ledger board should be positioned. Make sure the ledger board is level and horizontal with the roof.\\n2. Install wall bolts or lag screws: Use wall bolts or lag screws to secure the ledger board to the house. Drill a pilot hole through the ledger board and into the rim joist of the house, then insert a lag screw and washer. Tighten the screw with a socket wrench.\\n3. Cut flashing strips: Cut equal strips of waterproof self-adhering membrane and metal flashing the length of the ledger board and 6 inches wide.\\n4. Attach the flashing: Apply the flashing strips to the ledger board, starting from the bottom and working upwards. Ensure the flashing is secured tightly to the ledger board and overlaps the edges of the board.\\n5. Reinforce with additional flashing: Add additional flashing strips at the eaves and rake edges of the roof to ensure proper drainage and protection against water intrusion.\\n\\nPlease note that the passages do not provide specific instructions for attaching the ledger board to the two posts on the opposite side of the patio. It is assumed that these details will be addressed in subsequent passages or separate instructions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":99},{\"index\":1,\"byte_start\":99,\"byte_end\":189},{\"index\":2,\"byte_start\":189,\"byte_end\":363},{\"index\":3,\"byte_start\":363,\"byte_end\":451},{\"index\":4,\"byte_start\":451,\"byte_end\":580},{\"index\":5,\"byte_start\":580,\"byte_end\":717},{\"index\":6,\"byte_start\":717,\"byte_end\":952},{\"index\":7,\"byte_start\":952,\"byte_end\":1052},{\"index\":8,\"byte_start\":1052,\"byte_end\":1211},{\"index\":9,\"byte_start\":1211,\"byte_end\":1472},{\"index\":10,\"byte_start\":1472,\"byte_end\":1703},{\"index\":11,\"byte_start\":1703,\"byte_end\":1807}],\"answer_sentence_indices\":[8,9,10],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":284},{\"index\":1,\"byte_start\":284,\"byte_end\":350},{\"index\":2,\"byte_start\":350,\"byte_end\":457},{\"index\":3,\"byte_start\":457,\"byte_end\":574},{\"index\":4,\"byte_start\":574,\"byte_end\":614},{\"index\":5,\"byte_start\":614,\"byte_end\":761},{\"index\":6,\"byte_start\":761,\"byte_end\":878},{\"index\":7,\"byte_start\":878,\"byte_end\":974},{\"index\":8,\"byte_start\":974,\"byte_end\":1151},{\"index\":9,\"byte_start\":1151,\"byte_end\":1301},{\"index\":10,\"byte_start\":1301,\"byte_end\":1400}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r8 \"\\n\" r9 \"\\n\" r10\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nr9 ::= \"9|\" relation \"|\" probability \"|\" refs\nr10 ::= \"10|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "input_tokens": 1180,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:We would like to build a pergola over a patio outside a sliding glass door. I would like it to be attached to the house on one side and 2 posts on the opposite side. The soffit enclosing the rafters comes right above the sliding door so there is no room to attach a ledger board above the door.The fascia board has a gutter attached to it. would like it to be attached to the house on one side and 2 posts on the opposite side. The soffit enclosing the rafters comes right above the sliding door so there is no room to attach a ledger board above the door. The fascia board has a gutter attached to it.\\\\n\\\\npassage 2:Installing a ledger board ensures the structural support of your patio cover. A ledger is a pressure-treated board that attaches to an existing wall to anchor a new construction or attachment and support the weight load.se the drill to make a 3/8-inch pilot hole through the ledger and into the home's rim joist. Place a lag screw and washer into the hole and tighten with the socket wrench by turning clockwise. Cut equal strips of waterproof self-adhering membrane and metal flashing the length of the ledger and 6 inches wide.\\\\n\\\\npassage 3:1 Position the ledger board. 2  The first step in attaching a patio roofto a house structureisto place the ledger board at the correct height, horizontal and level with the roof.The ledger board should be fastened securely in place with wall bolts or lag screws.3  Reinforce with flashing. The first step in attaching a patio roofto a house structureisto place the ledger board at the correct height, horizontal and level with the roof.The ledger board should be fastened securely in place with wall bolts or lag screws. 2  Reinforce with flashing.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to attach a ledger board to a house for a patio cover\\\"}\",\"answer\":\"Based on the given passages, here are the steps to attach a ledger board to a house for a patio cover:\\n\\n1. Determine the correct height for the ledger board: Measure the height of the soffit board above the sliding glass door to determine where the ledger board should be positioned. Make sure the ledger board is level and horizontal with the roof.\\n2. Install wall bolts or lag screws: Use wall bolts or lag screws to secure the ledger board to the house. Drill a pilot hole through the ledger board and into the rim joist of the house, then insert a lag screw and washer. Tighten the screw with a socket wrench.\\n3. Cut flashing strips: Cut equal strips of waterproof self-adhering membrane and metal flashing the length of the ledger board and 6 inches wide.\\n4. Attach the flashing: Apply the flashing strips to the ledger board, starting from the bottom and working upwards. Ensure the flashing is secured tightly to the ledger board and overlaps the edges of the board.\\n5. Reinforce with additional flashing: Add additional flashing strips at the eaves and rake edges of the roof to ensure proper drainage and protection against water intrusion.\\n\\nPlease note that the passages do not provide specific instructions for attaching the ledger board to the two posts on the opposite side of the patio. It is assumed that these details will be addressed in subsequent passages or separate instructions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":99},{\"index\":1,\"byte_start\":99,\"byte_end\":189},{\"index\":2,\"byte_start\":189,\"byte_end\":363},{\"index\":3,\"byte_start\":363,\"byte_end\":451},{\"index\":4,\"byte_start\":451,\"byte_end\":580},{\"index\":5,\"byte_start\":580,\"byte_end\":717},{\"index\":6,\"byte_start\":717,\"byte_end\":952},{\"index\":7,\"byte_start\":952,\"byte_end\":1052},{\"index\":8,\"byte_start\":1052,\"byte_end\":1211},{\"index\":9,\"byte_start\":1211,\"byte_end\":1472},{\"index\":10,\"byte_start\":1472,\"byte_end\":1703},{\"index\":11,\"byte_start\":1703,\"byte_end\":1807}],\"answer_sentence_indices\":[8,9,10],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":284},{\"index\":1,\"byte_start\":284,\"byte_end\":350},{\"index\":2,\"byte_start\":350,\"byte_end\":457},{\"index\":3,\"byte_start\":457,\"byte_end\":574},{\"index\":4,\"byte_start\":574,\"byte_end\":614},{\"index\":5,\"byte_start\":614,\"byte_end\":761},{\"index\":6,\"byte_start\":761,\"byte_end\":878},{\"index\":7,\"byte_start\":878,\"byte_end\":974},{\"index\":8,\"byte_start\":974,\"byte_end\":1151},{\"index\":9,\"byte_start\":1151,\"byte_end\":1301},{\"index\":10,\"byte_start\":1301,\"byte_end\":1400}]}",
+    "request_index": 1,
+    "sentence_indices": [
+      8,
+      9,
+      10
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "8|C|0.00|[]\n9|C|0.00|[]\n10|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255969,
+    "id": "chatcmpl-HtRTgIt1T0LNNiNoB03CgbgiwpT3xdpk",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 685,
+      "predicted_ms": 823.349,
+      "predicted_n": 34,
+      "predicted_per_second": 41.29476078795262,
+      "predicted_per_token_ms": 24.21614705882353,
+      "prompt_ms": 536.931,
+      "prompt_n": 507,
+      "prompt_per_second": 944.2554071193505,
+      "prompt_per_token_ms": 1.05903550295858
+    },
+    "usage": {
+      "completion_tokens": 34,
+      "prompt_tokens": 1192,
+      "prompt_tokens_details": {
+        "cached_tokens": 685
+      },
+      "total_tokens": 1226
+    }
+  },
+  "source_cluster_id": "sha256:25fba83d15be1cbcd2af4c98242669dc537ad1518d4fbb7feb1f44874d348011",
+  "started_monotonic_ns": 916876671343528,
+  "status": "completed",
+  "unit_id": "sha256:511c516240be29ffc65636f64c5750b1bec4da0249bbd713d4b667782963e15f"
+}

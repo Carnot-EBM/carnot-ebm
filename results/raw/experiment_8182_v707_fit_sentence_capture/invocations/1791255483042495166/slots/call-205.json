@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:00024461cec71c758d02ad5d931a5b592c08c10f8da001fa9f60708ad5b124c2",
+  "condition": "original",
+  "ended_monotonic_ns": 916973062482480,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:8. \u201cA 10-minute parent-teacher consultation isn\u2019t enough to keep you abreast of what\u2019s happening at school, particularly if there are concerns about your child, so ask the teacher how you can keep each other informed, whether that\u2019s with a weekly chat after school or with email updates,\u201d says Kay.\\\\n\\\\npassage 2:Usually progress reports are either mailed home, sent home with your child, or put online, but if your child's progress report didn't make its way into your hands, feel free to request it from the school directly. Contact your child's teacher and ask if it's available online, or if he or she can send you a copy.\\\\n\\\\npassage 3:1 You can also ask to see some of your child's classwork. 2  The teacher should have samples on hand. 3  If there is something that you don't understand, ask the teacher to clarify or further explain what he or she means. 4  It is often easy to get upset during a meeting especially if your child is having problems with school.\\\\n\\\\n\\\",\\\"question\\\":\\\"how often can i ask for a progress report from my child's teacher?\\\"}\",\"answer\":\"Based on the given passages, you can ask for a progress report from your child's teacher by requesting it directly from the school or asking the teacher if it is available online or if they can send you a copy. There is no specific mention of how often you can ask for a progress report, so the frequency can be determined through communication with the teacher.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":559},{\"index\":1,\"byte_start\":559,\"byte_end\":730},{\"index\":2,\"byte_start\":730,\"byte_end\":774},{\"index\":3,\"byte_start\":774,\"byte_end\":894},{\"index\":4,\"byte_start\":894,\"byte_end\":1086}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":211},{\"index\":1,\"byte_start\":211,\"byte_end\":362}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 532,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:8. \u201cA 10-minute parent-teacher consultation isn\u2019t enough to keep you abreast of what\u2019s happening at school, particularly if there are concerns about your child, so ask the teacher how you can keep each other informed, whether that\u2019s with a weekly chat after school or with email updates,\u201d says Kay.\\\\n\\\\npassage 2:Usually progress reports are either mailed home, sent home with your child, or put online, but if your child's progress report didn't make its way into your hands, feel free to request it from the school directly. Contact your child's teacher and ask if it's available online, or if he or she can send you a copy.\\\\n\\\\npassage 3:1 You can also ask to see some of your child's classwork. 2  The teacher should have samples on hand. 3  If there is something that you don't understand, ask the teacher to clarify or further explain what he or she means. 4  It is often easy to get upset during a meeting especially if your child is having problems with school.\\\\n\\\\n\\\",\\\"question\\\":\\\"how often can i ask for a progress report from my child's teacher?\\\"}\",\"answer\":\"Based on the given passages, you can ask for a progress report from your child's teacher by requesting it directly from the school or asking the teacher if it is available online or if they can send you a copy. There is no specific mention of how often you can ask for a progress report, so the frequency can be determined through communication with the teacher.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":559},{\"index\":1,\"byte_start\":559,\"byte_end\":730},{\"index\":2,\"byte_start\":730,\"byte_end\":774},{\"index\":3,\"byte_start\":774,\"byte_end\":894},{\"index\":4,\"byte_start\":894,\"byte_end\":1086}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":211},{\"index\":1,\"byte_start\":211,\"byte_end\":362}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\"\n",
+    "input_tokens": 520,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:8. \u201cA 10-minute parent-teacher consultation isn\u2019t enough to keep you abreast of what\u2019s happening at school, particularly if there are concerns about your child, so ask the teacher how you can keep each other informed, whether that\u2019s with a weekly chat after school or with email updates,\u201d says Kay.\\\\n\\\\npassage 2:Usually progress reports are either mailed home, sent home with your child, or put online, but if your child's progress report didn't make its way into your hands, feel free to request it from the school directly. Contact your child's teacher and ask if it's available online, or if he or she can send you a copy.\\\\n\\\\npassage 3:1 You can also ask to see some of your child's classwork. 2  The teacher should have samples on hand. 3  If there is something that you don't understand, ask the teacher to clarify or further explain what he or she means. 4  It is often easy to get upset during a meeting especially if your child is having problems with school.\\\\n\\\\n\\\",\\\"question\\\":\\\"how often can i ask for a progress report from my child's teacher?\\\"}\",\"answer\":\"Based on the given passages, you can ask for a progress report from your child's teacher by requesting it directly from the school or asking the teacher if it is available online or if they can send you a copy. There is no specific mention of how often you can ask for a progress report, so the frequency can be determined through communication with the teacher.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":559},{\"index\":1,\"byte_start\":559,\"byte_end\":730},{\"index\":2,\"byte_start\":730,\"byte_end\":774},{\"index\":3,\"byte_start\":774,\"byte_end\":894},{\"index\":4,\"byte_start\":894,\"byte_end\":1086}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":211},{\"index\":1,\"byte_start\":211,\"byte_end\":362}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256064,
+    "id": "chatcmpl-Ochz6RR9U8xb1x32064lV5gQqzdT6746",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 530.749,
+      "predicted_n": 22,
+      "predicted_per_second": 41.45085530071653,
+      "predicted_per_token_ms": 24.124954545454546,
+      "prompt_ms": 530.561,
+      "prompt_n": 493,
+      "prompt_per_second": 929.2051243872052,
+      "prompt_per_token_ms": 1.076188640973631
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 532,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 554
+    }
+  },
+  "source_cluster_id": "sha256:7eed77402e76f5fb97f704c7d7e3b81fbb80b7c869a2b0f3036da3f0c035dc07",
+  "started_monotonic_ns": 916971834190647,
+  "status": "completed",
+  "unit_id": "sha256:9fea7ef3b778d80ed3cdbe4e8b516a294f929886fd6d2543e8609f4698842219"
+}

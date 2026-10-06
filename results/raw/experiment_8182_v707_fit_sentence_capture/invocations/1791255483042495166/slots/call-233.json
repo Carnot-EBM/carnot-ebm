@@ -1,0 +1,95 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:9e44e5aae2fd1b982ed40dbecc4434d406d7cf1e4c84bf7a62b071cb765ac294",
+  "condition": "source_mismatched",
+  "ended_monotonic_ns": 917060039749384,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-13:30\\\",\\\"Sunday\\\":\\\"7:30-13:30\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Tuesday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine\u2019s American Bakery & Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:31:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very nice place for breakfast close to Stearns Wharf. And if you like French toast, try the Kahula Banana! Wow! Amazing. \\\\n\\\\nService is excellent! Order at the bakery counter and your order will be served at your table. Indoor and outdoor seating. Good coffee too!\\\\n\\\\nThis is the breakfast place!\\\"},{\\\"review_date\\\":\\\"2022-01-19 03:51:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome location and great food. Customer service is top notch   and food comes out quick.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the espresso chocolate chip scone and it was perfect! The breakfast looked delicious. The service was quick and great. Would recommend! Lovely seating looking out to the beach.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the given passages, here's a brief answer to the question \\\"How to stop flies coming through the window\\\":\\n\\nTo stop flies from coming through the window, try the following methods:\\n\\n1. Keep your house or business clean and sanitized, and throw away overripe and rotting fruits and vegetables.\\n2. Place traps outdoors and create a delicious blood and bone feasting zone to lure flies away from the house.\\n3. Keep a room free of uneaten food and other trash, and keep garbage cans and dumpsters as far away from windows and homes as possible.\\n4. Hang a sticky trap near a window to capture any stray flies that do get into a home.\\n\\nIf these methods do not work, consider using window screens or repairing any torn screens to prevent flies from entering through the window. Additionally, check for any other entry points in the home, such as open doors or vents, and seal them to prevent flies from entering.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":775},{\"index\":1,\"byte_start\":775,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":833},{\"index\":3,\"byte_start\":833,\"byte_end\":842},{\"index\":4,\"byte_start\":842,\"byte_end\":868},{\"index\":5,\"byte_start\":868,\"byte_end\":941},{\"index\":6,\"byte_start\":941,\"byte_end\":969},{\"index\":7,\"byte_start\":969,\"byte_end\":1124},{\"index\":8,\"byte_start\":1124,\"byte_end\":1319},{\"index\":9,\"byte_start\":1319,\"byte_end\":1351},{\"index\":10,\"byte_start\":1351,\"byte_end\":1384},{\"index\":11,\"byte_start\":1384,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1458}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":300},{\"index\":1,\"byte_start\":300,\"byte_end\":411},{\"index\":2,\"byte_start\":411,\"byte_end\":548},{\"index\":3,\"byte_start\":548,\"byte_end\":637},{\"index\":4,\"byte_start\":637,\"byte_end\":778},{\"index\":5,\"byte_start\":778,\"byte_end\":912}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 1100,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-13:30\\\",\\\"Sunday\\\":\\\"7:30-13:30\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Tuesday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine\u2019s American Bakery & Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:31:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very nice place for breakfast close to Stearns Wharf. And if you like French toast, try the Kahula Banana! Wow! Amazing. \\\\n\\\\nService is excellent! Order at the bakery counter and your order will be served at your table. Indoor and outdoor seating. Good coffee too!\\\\n\\\\nThis is the breakfast place!\\\"},{\\\"review_date\\\":\\\"2022-01-19 03:51:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome location and great food. Customer service is top notch   and food comes out quick.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the espresso chocolate chip scone and it was perfect! The breakfast looked delicious. The service was quick and great. Would recommend! Lovely seating looking out to the beach.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the given passages, here's a brief answer to the question \\\"How to stop flies coming through the window\\\":\\n\\nTo stop flies from coming through the window, try the following methods:\\n\\n1. Keep your house or business clean and sanitized, and throw away overripe and rotting fruits and vegetables.\\n2. Place traps outdoors and create a delicious blood and bone feasting zone to lure flies away from the house.\\n3. Keep a room free of uneaten food and other trash, and keep garbage cans and dumpsters as far away from windows and homes as possible.\\n4. Hang a sticky trap near a window to capture any stray flies that do get into a home.\\n\\nIf these methods do not work, consider using window screens or repairing any torn screens to prevent flies from entering through the window. Additionally, check for any other entry points in the home, such as open doors or vents, and seal them to prevent flies from entering.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":775},{\"index\":1,\"byte_start\":775,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":833},{\"index\":3,\"byte_start\":833,\"byte_end\":842},{\"index\":4,\"byte_start\":842,\"byte_end\":868},{\"index\":5,\"byte_start\":868,\"byte_end\":941},{\"index\":6,\"byte_start\":941,\"byte_end\":969},{\"index\":7,\"byte_start\":969,\"byte_end\":1124},{\"index\":8,\"byte_start\":1124,\"byte_end\":1319},{\"index\":9,\"byte_start\":1319,\"byte_end\":1351},{\"index\":10,\"byte_start\":1351,\"byte_end\":1384},{\"index\":11,\"byte_start\":1384,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1458}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":300},{\"index\":1,\"byte_start\":300,\"byte_end\":411},{\"index\":2,\"byte_start\":411,\"byte_end\":548},{\"index\":3,\"byte_start\":548,\"byte_end\":637},{\"index\":4,\"byte_start\":637,\"byte_end\":778},{\"index\":5,\"byte_start\":778,\"byte_end\":912}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "input_tokens": 0,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-13:30\\\",\\\"Sunday\\\":\\\"7:30-13:30\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Tuesday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine\u2019s American Bakery & Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:31:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very nice place for breakfast close to Stearns Wharf. And if you like French toast, try the Kahula Banana! Wow! Amazing. \\\\n\\\\nService is excellent! Order at the bakery counter and your order will be served at your table. Indoor and outdoor seating. Good coffee too!\\\\n\\\\nThis is the breakfast place!\\\"},{\\\"review_date\\\":\\\"2022-01-19 03:51:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome location and great food. Customer service is top notch   and food comes out quick.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the espresso chocolate chip scone and it was perfect! The breakfast looked delicious. The service was quick and great. Would recommend! Lovely seating looking out to the beach.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the given passages, here's a brief answer to the question \\\"How to stop flies coming through the window\\\":\\n\\nTo stop flies from coming through the window, try the following methods:\\n\\n1. Keep your house or business clean and sanitized, and throw away overripe and rotting fruits and vegetables.\\n2. Place traps outdoors and create a delicious blood and bone feasting zone to lure flies away from the house.\\n3. Keep a room free of uneaten food and other trash, and keep garbage cans and dumpsters as far away from windows and homes as possible.\\n4. Hang a sticky trap near a window to capture any stray flies that do get into a home.\\n\\nIf these methods do not work, consider using window screens or repairing any torn screens to prevent flies from entering through the window. Additionally, check for any other entry points in the home, such as open doors or vents, and seal them to prevent flies from entering.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":775},{\"index\":1,\"byte_start\":775,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":833},{\"index\":3,\"byte_start\":833,\"byte_end\":842},{\"index\":4,\"byte_start\":842,\"byte_end\":868},{\"index\":5,\"byte_start\":868,\"byte_end\":941},{\"index\":6,\"byte_start\":941,\"byte_end\":969},{\"index\":7,\"byte_start\":969,\"byte_end\":1124},{\"index\":8,\"byte_start\":1124,\"byte_end\":1319},{\"index\":9,\"byte_start\":1319,\"byte_end\":1351},{\"index\":10,\"byte_start\":1351,\"byte_end\":1384},{\"index\":11,\"byte_start\":1384,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1458}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":300},{\"index\":1,\"byte_start\":300,\"byte_end\":411},{\"index\":2,\"byte_start\":411,\"byte_end\":548},{\"index\":3,\"byte_start\":548,\"byte_end\":637},{\"index\":4,\"byte_start\":637,\"byte_end\":778},{\"index\":5,\"byte_start\":778,\"byte_end\":912}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|B|0.00|[]\n1|B|0.00|[]\n2|B|0.00|[]\n3|B|0.00|[]\n4|B|0.00|[]\n5|B|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256151,
+    "id": "chatcmpl-x5NRgYG6eZPRz5sOqUw3wIeNa1gs9blt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1601.843,
+      "predicted_n": 66,
+      "predicted_per_second": 41.20253982443972,
+      "predicted_per_token_ms": 24.270348484848487,
+      "prompt_ms": 1020.455,
+      "prompt_n": 1061,
+      "prompt_per_second": 1039.7322762885183,
+      "prompt_per_token_ms": 0.9617860508953817
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 1100,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1166
+    }
+  },
+  "source_cluster_id": "sha256:2bafa81b856aa98ea3543d8455f436b8571ed954ae017f05edca2d20dc44dc37",
+  "started_monotonic_ns": 917057293789917,
+  "status": "completed",
+  "unit_id": "sha256:afbc53c67c23b61cb44d181f4198309ab17782044b25dad1c2529100148c9c9c"
+}

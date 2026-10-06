@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:1abec1c6e8db58c81093a9df819911f475e27dd01601223542cb597236004195",
+  "ended_monotonic_ns": 916672127827643,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Rinse thoroughly. Let it dry for at least 48 hours. Lay two intersecting chalk lines over the floor, so they cross in the center of the floor and divide it into four quadrants. Use a square at the intersection to adjust the lines as you lay them so each angle is 90 degrees. Peel the paper backing off your first tile. Press it to the floor at one corner of the intersection, so two perpendicular edges of the tile are bordered by the two of the lines. Press it firmly to the concrete, using the palms of your hands and all your weight. Peel the paper off the next tile.\\\\n\\\\npassage 2:If your previous tile was peel and stick you can use Henry Easy Release Adhesive Remover. The HENRY 1-Gallon EasyRelease Adhesive Remover is for indoor use on vinyl flooring. The adhesive remover is white, covers up to 100 sq. ft. and dries in 1 hour. For use on vinyl flooring. Dries in 1 hour. Covers up to 100 sq. ft.\\\\n\\\\npassage 3:Vinyl tile expands and contracts over time. To acclimate, place the open boxes of tile in the room where they'll be installed for at least 48 hours (or per the product recommendations). Also follow any product-specific instructions for installation temperature ranges. Remove all trim from around the floor.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to peel and stick tile over cement floor\\\"}\",\"answer\":\"Based on the provided passages, here is how to peel and stick tile over a cement floor:\\n\\n1. Rinse the cement floor thoroughly and let it dry for at least 48 hours before starting the installation.\\n2. Lay two intersecting chalk lines over the floor to divide it into four quadrants and mark the location of each tile.\\n3. Apply Henry Easy Release Adhesive Remover to remove any existing peel and stick tile.\\n4. Place the open boxes of tile in the room where they will be installed for at least 48 hours to acclimate.\\n5. Remove all trim from around the floor before installing the new tile.\\n6. Start by pressing the first tile to the floor at one corner of the intersection, making sure the two perpendicular edges of the tile are bordered by the two lines.\\n7. Peel the paper backing off the next tile and press it to the floor, aligning it with the edge of the first tile.\\n8. Repeat steps 6 and 7 until all tiles are installed.\\n\\nUnable to answer based on given passages. Please provide more context or clarify the question.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":41},{\"index\":1,\"byte_start\":41,\"byte_end\":75},{\"index\":2,\"byte_start\":75,\"byte_end\":200},{\"index\":3,\"byte_start\":200,\"byte_end\":298},{\"index\":4,\"byte_start\":298,\"byte_end\":342},{\"index\":5,\"byte_start\":342,\"byte_end\":476},{\"index\":6,\"byte_start\":476,\"byte_end\":560},{\"index\":7,\"byte_start\":560,\"byte_end\":697},{\"index\":8,\"byte_start\":697,\"byte_end\":782},{\"index\":9,\"byte_start\":782,\"byte_end\":834},{\"index\":10,\"byte_start\":834,\"byte_end\":838},{\"index\":11,\"byte_start\":838,\"byte_end\":859},{\"index\":12,\"byte_start\":859,\"byte_end\":886},{\"index\":13,\"byte_start\":886,\"byte_end\":903},{\"index\":14,\"byte_start\":903,\"byte_end\":924},{\"index\":15,\"byte_start\":924,\"byte_end\":985},{\"index\":16,\"byte_start\":985,\"byte_end\":1127},{\"index\":17,\"byte_start\":1127,\"byte_end\":1210},{\"index\":18,\"byte_start\":1210,\"byte_end\":1312}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":197},{\"index\":1,\"byte_start\":197,\"byte_end\":317},{\"index\":2,\"byte_start\":317,\"byte_end\":406},{\"index\":3,\"byte_start\":406,\"byte_end\":515},{\"index\":4,\"byte_start\":515,\"byte_end\":588},{\"index\":5,\"byte_start\":588,\"byte_end\":755},{\"index\":6,\"byte_start\":755,\"byte_end\":871},{\"index\":7,\"byte_start\":871,\"byte_end\":927},{\"index\":8,\"byte_start\":927,\"byte_end\":969},{\"index\":9,\"byte_start\":969,\"byte_end\":1021}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1178,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Rinse thoroughly. Let it dry for at least 48 hours. Lay two intersecting chalk lines over the floor, so they cross in the center of the floor and divide it into four quadrants. Use a square at the intersection to adjust the lines as you lay them so each angle is 90 degrees. Peel the paper backing off your first tile. Press it to the floor at one corner of the intersection, so two perpendicular edges of the tile are bordered by the two of the lines. Press it firmly to the concrete, using the palms of your hands and all your weight. Peel the paper off the next tile.\\\\n\\\\npassage 2:If your previous tile was peel and stick you can use Henry Easy Release Adhesive Remover. The HENRY 1-Gallon EasyRelease Adhesive Remover is for indoor use on vinyl flooring. The adhesive remover is white, covers up to 100 sq. ft. and dries in 1 hour. For use on vinyl flooring. Dries in 1 hour. Covers up to 100 sq. ft.\\\\n\\\\npassage 3:Vinyl tile expands and contracts over time. To acclimate, place the open boxes of tile in the room where they'll be installed for at least 48 hours (or per the product recommendations). Also follow any product-specific instructions for installation temperature ranges. Remove all trim from around the floor.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to peel and stick tile over cement floor\\\"}\",\"answer\":\"Based on the provided passages, here is how to peel and stick tile over a cement floor:\\n\\n1. Rinse the cement floor thoroughly and let it dry for at least 48 hours before starting the installation.\\n2. Lay two intersecting chalk lines over the floor to divide it into four quadrants and mark the location of each tile.\\n3. Apply Henry Easy Release Adhesive Remover to remove any existing peel and stick tile.\\n4. Place the open boxes of tile in the room where they will be installed for at least 48 hours to acclimate.\\n5. Remove all trim from around the floor before installing the new tile.\\n6. Start by pressing the first tile to the floor at one corner of the intersection, making sure the two perpendicular edges of the tile are bordered by the two lines.\\n7. Peel the paper backing off the next tile and press it to the floor, aligning it with the edge of the first tile.\\n8. Repeat steps 6 and 7 until all tiles are installed.\\n\\nUnable to answer based on given passages. Please provide more context or clarify the question.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":41},{\"index\":1,\"byte_start\":41,\"byte_end\":75},{\"index\":2,\"byte_start\":75,\"byte_end\":200},{\"index\":3,\"byte_start\":200,\"byte_end\":298},{\"index\":4,\"byte_start\":298,\"byte_end\":342},{\"index\":5,\"byte_start\":342,\"byte_end\":476},{\"index\":6,\"byte_start\":476,\"byte_end\":560},{\"index\":7,\"byte_start\":560,\"byte_end\":697},{\"index\":8,\"byte_start\":697,\"byte_end\":782},{\"index\":9,\"byte_start\":782,\"byte_end\":834},{\"index\":10,\"byte_start\":834,\"byte_end\":838},{\"index\":11,\"byte_start\":838,\"byte_end\":859},{\"index\":12,\"byte_start\":859,\"byte_end\":886},{\"index\":13,\"byte_start\":886,\"byte_end\":903},{\"index\":14,\"byte_start\":903,\"byte_end\":924},{\"index\":15,\"byte_start\":924,\"byte_end\":985},{\"index\":16,\"byte_start\":985,\"byte_end\":1127},{\"index\":17,\"byte_start\":1127,\"byte_end\":1210},{\"index\":18,\"byte_start\":1210,\"byte_end\":1312}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":197},{\"index\":1,\"byte_start\":197,\"byte_end\":317},{\"index\":2,\"byte_start\":317,\"byte_end\":406},{\"index\":3,\"byte_start\":406,\"byte_end\":515},{\"index\":4,\"byte_start\":515,\"byte_end\":588},{\"index\":5,\"byte_start\":588,\"byte_end\":755},{\"index\":6,\"byte_start\":755,\"byte_end\":871},{\"index\":7,\"byte_start\":871,\"byte_end\":927},{\"index\":8,\"byte_start\":927,\"byte_end\":969},{\"index\":9,\"byte_start\":969,\"byte_end\":1021}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\"\n",
+    "input_tokens": 1166,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Rinse thoroughly. Let it dry for at least 48 hours. Lay two intersecting chalk lines over the floor, so they cross in the center of the floor and divide it into four quadrants. Use a square at the intersection to adjust the lines as you lay them so each angle is 90 degrees. Peel the paper backing off your first tile. Press it to the floor at one corner of the intersection, so two perpendicular edges of the tile are bordered by the two of the lines. Press it firmly to the concrete, using the palms of your hands and all your weight. Peel the paper off the next tile.\\\\n\\\\npassage 2:If your previous tile was peel and stick you can use Henry Easy Release Adhesive Remover. The HENRY 1-Gallon EasyRelease Adhesive Remover is for indoor use on vinyl flooring. The adhesive remover is white, covers up to 100 sq. ft. and dries in 1 hour. For use on vinyl flooring. Dries in 1 hour. Covers up to 100 sq. ft.\\\\n\\\\npassage 3:Vinyl tile expands and contracts over time. To acclimate, place the open boxes of tile in the room where they'll be installed for at least 48 hours (or per the product recommendations). Also follow any product-specific instructions for installation temperature ranges. Remove all trim from around the floor.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to peel and stick tile over cement floor\\\"}\",\"answer\":\"Based on the provided passages, here is how to peel and stick tile over a cement floor:\\n\\n1. Rinse the cement floor thoroughly and let it dry for at least 48 hours before starting the installation.\\n2. Lay two intersecting chalk lines over the floor to divide it into four quadrants and mark the location of each tile.\\n3. Apply Henry Easy Release Adhesive Remover to remove any existing peel and stick tile.\\n4. Place the open boxes of tile in the room where they will be installed for at least 48 hours to acclimate.\\n5. Remove all trim from around the floor before installing the new tile.\\n6. Start by pressing the first tile to the floor at one corner of the intersection, making sure the two perpendicular edges of the tile are bordered by the two lines.\\n7. Peel the paper backing off the next tile and press it to the floor, aligning it with the edge of the first tile.\\n8. Repeat steps 6 and 7 until all tiles are installed.\\n\\nUnable to answer based on given passages. Please provide more context or clarify the question.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":41},{\"index\":1,\"byte_start\":41,\"byte_end\":75},{\"index\":2,\"byte_start\":75,\"byte_end\":200},{\"index\":3,\"byte_start\":200,\"byte_end\":298},{\"index\":4,\"byte_start\":298,\"byte_end\":342},{\"index\":5,\"byte_start\":342,\"byte_end\":476},{\"index\":6,\"byte_start\":476,\"byte_end\":560},{\"index\":7,\"byte_start\":560,\"byte_end\":697},{\"index\":8,\"byte_start\":697,\"byte_end\":782},{\"index\":9,\"byte_start\":782,\"byte_end\":834},{\"index\":10,\"byte_start\":834,\"byte_end\":838},{\"index\":11,\"byte_start\":838,\"byte_end\":859},{\"index\":12,\"byte_start\":859,\"byte_end\":886},{\"index\":13,\"byte_start\":886,\"byte_end\":903},{\"index\":14,\"byte_start\":903,\"byte_end\":924},{\"index\":15,\"byte_start\":924,\"byte_end\":985},{\"index\":16,\"byte_start\":985,\"byte_end\":1127},{\"index\":17,\"byte_start\":1127,\"byte_end\":1210},{\"index\":18,\"byte_start\":1210,\"byte_end\":1312}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":197},{\"index\":1,\"byte_start\":197,\"byte_end\":317},{\"index\":2,\"byte_start\":317,\"byte_end\":406},{\"index\":3,\"byte_start\":406,\"byte_end\":515},{\"index\":4,\"byte_start\":515,\"byte_end\":588},{\"index\":5,\"byte_start\":588,\"byte_end\":755},{\"index\":6,\"byte_start\":755,\"byte_end\":871},{\"index\":7,\"byte_start\":871,\"byte_end\":927},{\"index\":8,\"byte_start\":927,\"byte_end\":969},{\"index\":9,\"byte_start\":969,\"byte_end\":1021}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[0,1]\n1|C|0.90|[2,3]\n2|C|0.85|[4,5]\n3|C|0.90|[6,7]\n4|C|0.90|[8,9]\n5|C|0.95|[10,11]\n6|C|0.80|[12,13]\n7|B|0.10|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255763,
+    "id": "chatcmpl-ZnojuJZcaNeibqyTcIL7H4kfLTRR9Xlj",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 2946.415,
+      "predicted_n": 120,
+      "predicted_per_second": 40.7274603204233,
+      "predicted_per_token_ms": 24.55345833333333,
+      "prompt_ms": 1073.203,
+      "prompt_n": 1139,
+      "prompt_per_second": 1061.3089974590082,
+      "prompt_per_token_ms": 0.9422326602282703
+    },
+    "usage": {
+      "completion_tokens": 120,
+      "prompt_tokens": 1178,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1298
+    }
+  },
+  "source_cluster_id": "sha256:8c2979045c8a002268c86e009a5620efb76e62947c336172b559b621e7855158",
+  "started_monotonic_ns": 916667929984213,
+  "status": "completed",
+  "unit_id": "sha256:186e8cac5a701b259c469cb851aab2fcad629d7e6acfa2e002c263beff20fbe6"
+}

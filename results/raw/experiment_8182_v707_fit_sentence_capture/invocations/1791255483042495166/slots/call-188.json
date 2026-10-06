@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:af7ceaa7036ad50595f712eea2e3c2be6841c22cf7ee39782166f695e320e535",
+  "condition": "original",
+  "ended_monotonic_ns": 916923486355322,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Monday:The Long Beach forecast for Apr 24 is 70 degrees and Sunny. There is 53 percentage chance of rain and 6 mph winds from the South. Tuesday:The Long Beach forecast for Apr 25 is 68 degrees and Sunny. There is 58 percentage chance of rain and 7 mph winds from the South-Southwest.\\\\n\\\\npassage 2:Long Beach 10 Day Weather. 1  Thursday:The Long Beach forecast for Apr 20 is 73 degrees and Sunny. There is 35 percentage chance of rain and 9 mph winds from the West. 2  Friday:The Long Beach forecast for Apr 21 is 82 degrees and Sunny. There is 21 percentage chance of rain and 3 mph winds from the Northwest.\\\\n\\\\npassage 3:For more than 20 years Earth Networks has operated the world\u2019s largest and most comprehensive weather observation, lightning detection, and climate networks. We are now leveraging our big data smarts to deliver on the promise of IoT.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather forecast in long beach\\\"}\",\"answer\":\"Unable to answer based on given passages. The passages provided do not contain information about the current weather forecast in Long Beach or any upcoming weather conditions. The first passage provides a forecast for April 24th and 25th, while the second passage provides a 10-day weather forecast starting from April 20th. However, the question asks for the current weather forecast in Long Beach, which is not available in the given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":90},{\"index\":1,\"byte_start\":90,\"byte_end\":160},{\"index\":2,\"byte_start\":160,\"byte_end\":228},{\"index\":3,\"byte_start\":228,\"byte_end\":348},{\"index\":4,\"byte_start\":348,\"byte_end\":420},{\"index\":5,\"byte_start\":420,\"byte_end\":489},{\"index\":6,\"byte_start\":489,\"byte_end\":559},{\"index\":7,\"byte_start\":559,\"byte_end\":806},{\"index\":8,\"byte_start\":806,\"byte_end\":931}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":42},{\"index\":1,\"byte_start\":42,\"byte_end\":176},{\"index\":2,\"byte_start\":176,\"byte_end\":325},{\"index\":3,\"byte_start\":325,\"byte_end\":445}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 645,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Monday:The Long Beach forecast for Apr 24 is 70 degrees and Sunny. There is 53 percentage chance of rain and 6 mph winds from the South. Tuesday:The Long Beach forecast for Apr 25 is 68 degrees and Sunny. There is 58 percentage chance of rain and 7 mph winds from the South-Southwest.\\\\n\\\\npassage 2:Long Beach 10 Day Weather. 1  Thursday:The Long Beach forecast for Apr 20 is 73 degrees and Sunny. There is 35 percentage chance of rain and 9 mph winds from the West. 2  Friday:The Long Beach forecast for Apr 21 is 82 degrees and Sunny. There is 21 percentage chance of rain and 3 mph winds from the Northwest.\\\\n\\\\npassage 3:For more than 20 years Earth Networks has operated the world\u2019s largest and most comprehensive weather observation, lightning detection, and climate networks. We are now leveraging our big data smarts to deliver on the promise of IoT.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather forecast in long beach\\\"}\",\"answer\":\"Unable to answer based on given passages. The passages provided do not contain information about the current weather forecast in Long Beach or any upcoming weather conditions. The first passage provides a forecast for April 24th and 25th, while the second passage provides a 10-day weather forecast starting from April 20th. However, the question asks for the current weather forecast in Long Beach, which is not available in the given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":90},{\"index\":1,\"byte_start\":90,\"byte_end\":160},{\"index\":2,\"byte_start\":160,\"byte_end\":228},{\"index\":3,\"byte_start\":228,\"byte_end\":348},{\"index\":4,\"byte_start\":348,\"byte_end\":420},{\"index\":5,\"byte_start\":420,\"byte_end\":489},{\"index\":6,\"byte_start\":489,\"byte_end\":559},{\"index\":7,\"byte_start\":559,\"byte_end\":806},{\"index\":8,\"byte_start\":806,\"byte_end\":931}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":42},{\"index\":1,\"byte_start\":42,\"byte_end\":176},{\"index\":2,\"byte_start\":176,\"byte_end\":325},{\"index\":3,\"byte_start\":325,\"byte_end\":445}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\"\n",
+    "input_tokens": 633,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Monday:The Long Beach forecast for Apr 24 is 70 degrees and Sunny. There is 53 percentage chance of rain and 6 mph winds from the South. Tuesday:The Long Beach forecast for Apr 25 is 68 degrees and Sunny. There is 58 percentage chance of rain and 7 mph winds from the South-Southwest.\\\\n\\\\npassage 2:Long Beach 10 Day Weather. 1  Thursday:The Long Beach forecast for Apr 20 is 73 degrees and Sunny. There is 35 percentage chance of rain and 9 mph winds from the West. 2  Friday:The Long Beach forecast for Apr 21 is 82 degrees and Sunny. There is 21 percentage chance of rain and 3 mph winds from the Northwest.\\\\n\\\\npassage 3:For more than 20 years Earth Networks has operated the world\u2019s largest and most comprehensive weather observation, lightning detection, and climate networks. We are now leveraging our big data smarts to deliver on the promise of IoT.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather forecast in long beach\\\"}\",\"answer\":\"Unable to answer based on given passages. The passages provided do not contain information about the current weather forecast in Long Beach or any upcoming weather conditions. The first passage provides a forecast for April 24th and 25th, while the second passage provides a 10-day weather forecast starting from April 20th. However, the question asks for the current weather forecast in Long Beach, which is not available in the given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":90},{\"index\":1,\"byte_start\":90,\"byte_end\":160},{\"index\":2,\"byte_start\":160,\"byte_end\":228},{\"index\":3,\"byte_start\":228,\"byte_end\":348},{\"index\":4,\"byte_start\":348,\"byte_end\":420},{\"index\":5,\"byte_start\":420,\"byte_end\":489},{\"index\":6,\"byte_start\":489,\"byte_end\":559},{\"index\":7,\"byte_start\":559,\"byte_end\":806},{\"index\":8,\"byte_start\":806,\"byte_end\":931}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":42},{\"index\":1,\"byte_start\":42,\"byte_end\":176},{\"index\":2,\"byte_start\":176,\"byte_end\":325},{\"index\":3,\"byte_start\":325,\"byte_end\":445}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[]\n2|C|0.00|[]\n3|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256015,
+    "id": "chatcmpl-Cf1dpsdtpeb8hW60xGUqBDcjTEA6Cfe2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1067.755,
+      "predicted_n": 44,
+      "predicted_per_second": 41.207955008405484,
+      "predicted_per_token_ms": 24.267159090909093,
+      "prompt_ms": 624.0,
+      "prompt_n": 606,
+      "prompt_per_second": 971.1538461538462,
+      "prompt_per_token_ms": 1.0297029702970297
+    },
+    "usage": {
+      "completion_tokens": 44,
+      "prompt_tokens": 645,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 689
+    }
+  },
+  "source_cluster_id": "sha256:c04e5eaba334e769f44e48341c544e36e94bf8cc21b3aa1cd8b0f8fceafe5aaf",
+  "started_monotonic_ns": 916921651401143,
+  "status": "completed",
+  "unit_id": "sha256:131464178e53948fca8b073b7fd68326ed85119e0d04ce4b985eaf07ece39615"
+}

@@ -1,0 +1,96 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:4dfa5607d2f61c12057eadaf8eefd00a861b9bae06dc15e141ad6ae7ab76e872",
+  "condition": "original",
+  "ended_monotonic_ns": 916642328475929,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"38 W Victoria St, Unit 108\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Specialty Food, Food, Sandwiches, Soup, Restaurants, Salad\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-20:0\\\",\\\"Monday\\\":\\\"8:0-20:0\\\",\\\"Saturday\\\":\\\"9:0-20:0\\\",\\\"Sunday\\\":\\\"9:0-20:0\\\",\\\"Thursday\\\":\\\"8:0-20:0\\\",\\\"Tuesday\\\":\\\"8:0-20:0\\\",\\\"Wednesday\\\":\\\"8:0-20:0\\\"},\\\"name\\\":\\\"Flagstone Pantry\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-08-03 17:08:25\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Flagstone has two of my favorite things: delicious food and convenience.  As a bonus, it's of the healthy variety.  They always have some sort of soup and the cookies are a worthy splurge.\\\"},{\\\"review_date\\\":\\\"2018-07-04 18:38:03\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Such a good deal to get a soup and sandwich combo for $9 after tax. I got the Italian salami sandwich. Beware, there is quite a bit of unexpected butter there. Overall, very tasty combination of ingredients. \\\\n\\\\nI loved the quinoa and corn soup! It seems homemade since there isn't an abnormally thick texture and too salty. This tastes fresh and hearty. Combo is the right amount of food :)\\\"},{\\\"review_date\\\":\\\"2018-05-03 00:25:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Fresh, local, easy, and simply delicious. \\\\n\\\\nGrab-and-go salads are very good,  reasonable, and there is a diverse selection. Sesame noodle is my personal fave. Very filling and tasty. \\\\n\\\\nOn the sweet side, they do very well too.  The lemon tart is amazing! \\\\n\\\\nAlso, I'm always on the hunt  for who makes the best chocolate chip cookies in town....For  Santa Barbara,  I nominate these as one of  the best:  full of chunky chocolate chips and a nice sprinkle of salt on top. mmmm!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Flagstone Pantry is a highly-rated local business in Santa Barbara, CA, specializing in specialty food, sandwiches, soup, salads, and other restaurant fare. It operates from 8:00 am to 8:00 pm from Monday to Friday and 9:00 am to 8:00 pm on weekends. Notable features include free WiFi, outdoor seating, suitability for groups, and a casual ambience, but reservations are not accepted. The restaurant also provides take-out services. Garage parking is available, however, it does not provide street parking, lot parking, valet services or validated parking. The business has an overall star rating of 4.5 with customer reviews highlighting the convenience, healthiness, and tastiness of the food. The soup and sandwich combo, grab-and-go salads, and chocolate chip cookies are particularly praised.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":903},{\"index\":1,\"byte_start\":903,\"byte_end\":945},{\"index\":2,\"byte_start\":945,\"byte_end\":1159},{\"index\":3,\"byte_start\":1159,\"byte_end\":1194},{\"index\":4,\"byte_start\":1194,\"byte_end\":1251},{\"index\":5,\"byte_start\":1251,\"byte_end\":1299},{\"index\":6,\"byte_start\":1299,\"byte_end\":1337},{\"index\":7,\"byte_start\":1337,\"byte_end\":1416},{\"index\":8,\"byte_start\":1416,\"byte_end\":1446},{\"index\":9,\"byte_start\":1446,\"byte_end\":1598},{\"index\":10,\"byte_start\":1598,\"byte_end\":1683},{\"index\":11,\"byte_start\":1683,\"byte_end\":1718},{\"index\":12,\"byte_start\":1718,\"byte_end\":1742},{\"index\":13,\"byte_start\":1742,\"byte_end\":1789},{\"index\":14,\"byte_start\":1789,\"byte_end\":1816},{\"index\":15,\"byte_start\":1816,\"byte_end\":2034},{\"index\":16,\"byte_start\":2034,\"byte_end\":2056}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":157},{\"index\":1,\"byte_start\":157,\"byte_end\":251},{\"index\":2,\"byte_start\":251,\"byte_end\":386},{\"index\":3,\"byte_start\":386,\"byte_end\":434},{\"index\":4,\"byte_start\":434,\"byte_end\":558},{\"index\":5,\"byte_start\":558,\"byte_end\":697},{\"index\":6,\"byte_start\":697,\"byte_end\":798}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 1357,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"38 W Victoria St, Unit 108\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Specialty Food, Food, Sandwiches, Soup, Restaurants, Salad\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-20:0\\\",\\\"Monday\\\":\\\"8:0-20:0\\\",\\\"Saturday\\\":\\\"9:0-20:0\\\",\\\"Sunday\\\":\\\"9:0-20:0\\\",\\\"Thursday\\\":\\\"8:0-20:0\\\",\\\"Tuesday\\\":\\\"8:0-20:0\\\",\\\"Wednesday\\\":\\\"8:0-20:0\\\"},\\\"name\\\":\\\"Flagstone Pantry\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-08-03 17:08:25\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Flagstone has two of my favorite things: delicious food and convenience.  As a bonus, it's of the healthy variety.  They always have some sort of soup and the cookies are a worthy splurge.\\\"},{\\\"review_date\\\":\\\"2018-07-04 18:38:03\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Such a good deal to get a soup and sandwich combo for $9 after tax. I got the Italian salami sandwich. Beware, there is quite a bit of unexpected butter there. Overall, very tasty combination of ingredients. \\\\n\\\\nI loved the quinoa and corn soup! It seems homemade since there isn't an abnormally thick texture and too salty. This tastes fresh and hearty. Combo is the right amount of food :)\\\"},{\\\"review_date\\\":\\\"2018-05-03 00:25:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Fresh, local, easy, and simply delicious. \\\\n\\\\nGrab-and-go salads are very good,  reasonable, and there is a diverse selection. Sesame noodle is my personal fave. Very filling and tasty. \\\\n\\\\nOn the sweet side, they do very well too.  The lemon tart is amazing! \\\\n\\\\nAlso, I'm always on the hunt  for who makes the best chocolate chip cookies in town....For  Santa Barbara,  I nominate these as one of  the best:  full of chunky chocolate chips and a nice sprinkle of salt on top. mmmm!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Flagstone Pantry is a highly-rated local business in Santa Barbara, CA, specializing in specialty food, sandwiches, soup, salads, and other restaurant fare. It operates from 8:00 am to 8:00 pm from Monday to Friday and 9:00 am to 8:00 pm on weekends. Notable features include free WiFi, outdoor seating, suitability for groups, and a casual ambience, but reservations are not accepted. The restaurant also provides take-out services. Garage parking is available, however, it does not provide street parking, lot parking, valet services or validated parking. The business has an overall star rating of 4.5 with customer reviews highlighting the convenience, healthiness, and tastiness of the food. The soup and sandwich combo, grab-and-go salads, and chocolate chip cookies are particularly praised.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":903},{\"index\":1,\"byte_start\":903,\"byte_end\":945},{\"index\":2,\"byte_start\":945,\"byte_end\":1159},{\"index\":3,\"byte_start\":1159,\"byte_end\":1194},{\"index\":4,\"byte_start\":1194,\"byte_end\":1251},{\"index\":5,\"byte_start\":1251,\"byte_end\":1299},{\"index\":6,\"byte_start\":1299,\"byte_end\":1337},{\"index\":7,\"byte_start\":1337,\"byte_end\":1416},{\"index\":8,\"byte_start\":1416,\"byte_end\":1446},{\"index\":9,\"byte_start\":1446,\"byte_end\":1598},{\"index\":10,\"byte_start\":1598,\"byte_end\":1683},{\"index\":11,\"byte_start\":1683,\"byte_end\":1718},{\"index\":12,\"byte_start\":1718,\"byte_end\":1742},{\"index\":13,\"byte_start\":1742,\"byte_end\":1789},{\"index\":14,\"byte_start\":1789,\"byte_end\":1816},{\"index\":15,\"byte_start\":1816,\"byte_end\":2034},{\"index\":16,\"byte_start\":2034,\"byte_end\":2056}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":157},{\"index\":1,\"byte_start\":157,\"byte_end\":251},{\"index\":2,\"byte_start\":251,\"byte_end\":386},{\"index\":3,\"byte_start\":386,\"byte_end\":434},{\"index\":4,\"byte_start\":434,\"byte_end\":558},{\"index\":5,\"byte_start\":558,\"byte_end\":697},{\"index\":6,\"byte_start\":697,\"byte_end\":798}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+    "input_tokens": 1345,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"38 W Victoria St, Unit 108\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Specialty Food, Food, Sandwiches, Soup, Restaurants, Salad\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-20:0\\\",\\\"Monday\\\":\\\"8:0-20:0\\\",\\\"Saturday\\\":\\\"9:0-20:0\\\",\\\"Sunday\\\":\\\"9:0-20:0\\\",\\\"Thursday\\\":\\\"8:0-20:0\\\",\\\"Tuesday\\\":\\\"8:0-20:0\\\",\\\"Wednesday\\\":\\\"8:0-20:0\\\"},\\\"name\\\":\\\"Flagstone Pantry\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-08-03 17:08:25\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Flagstone has two of my favorite things: delicious food and convenience.  As a bonus, it's of the healthy variety.  They always have some sort of soup and the cookies are a worthy splurge.\\\"},{\\\"review_date\\\":\\\"2018-07-04 18:38:03\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Such a good deal to get a soup and sandwich combo for $9 after tax. I got the Italian salami sandwich. Beware, there is quite a bit of unexpected butter there. Overall, very tasty combination of ingredients. \\\\n\\\\nI loved the quinoa and corn soup! It seems homemade since there isn't an abnormally thick texture and too salty. This tastes fresh and hearty. Combo is the right amount of food :)\\\"},{\\\"review_date\\\":\\\"2018-05-03 00:25:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Fresh, local, easy, and simply delicious. \\\\n\\\\nGrab-and-go salads are very good,  reasonable, and there is a diverse selection. Sesame noodle is my personal fave. Very filling and tasty. \\\\n\\\\nOn the sweet side, they do very well too.  The lemon tart is amazing! \\\\n\\\\nAlso, I'm always on the hunt  for who makes the best chocolate chip cookies in town....For  Santa Barbara,  I nominate these as one of  the best:  full of chunky chocolate chips and a nice sprinkle of salt on top. mmmm!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Flagstone Pantry is a highly-rated local business in Santa Barbara, CA, specializing in specialty food, sandwiches, soup, salads, and other restaurant fare. It operates from 8:00 am to 8:00 pm from Monday to Friday and 9:00 am to 8:00 pm on weekends. Notable features include free WiFi, outdoor seating, suitability for groups, and a casual ambience, but reservations are not accepted. The restaurant also provides take-out services. Garage parking is available, however, it does not provide street parking, lot parking, valet services or validated parking. The business has an overall star rating of 4.5 with customer reviews highlighting the convenience, healthiness, and tastiness of the food. The soup and sandwich combo, grab-and-go salads, and chocolate chip cookies are particularly praised.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":903},{\"index\":1,\"byte_start\":903,\"byte_end\":945},{\"index\":2,\"byte_start\":945,\"byte_end\":1159},{\"index\":3,\"byte_start\":1159,\"byte_end\":1194},{\"index\":4,\"byte_start\":1194,\"byte_end\":1251},{\"index\":5,\"byte_start\":1251,\"byte_end\":1299},{\"index\":6,\"byte_start\":1299,\"byte_end\":1337},{\"index\":7,\"byte_start\":1337,\"byte_end\":1416},{\"index\":8,\"byte_start\":1416,\"byte_end\":1446},{\"index\":9,\"byte_start\":1446,\"byte_end\":1598},{\"index\":10,\"byte_start\":1598,\"byte_end\":1683},{\"index\":11,\"byte_start\":1683,\"byte_end\":1718},{\"index\":12,\"byte_start\":1718,\"byte_end\":1742},{\"index\":13,\"byte_start\":1742,\"byte_end\":1789},{\"index\":14,\"byte_start\":1789,\"byte_end\":1816},{\"index\":15,\"byte_start\":1816,\"byte_end\":2034},{\"index\":16,\"byte_start\":2034,\"byte_end\":2056}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":157},{\"index\":1,\"byte_start\":157,\"byte_end\":251},{\"index\":2,\"byte_start\":251,\"byte_end\":386},{\"index\":3,\"byte_start\":386,\"byte_end\":434},{\"index\":4,\"byte_start\":434,\"byte_end\":558},{\"index\":5,\"byte_start\":558,\"byte_end\":697},{\"index\":6,\"byte_start\":697,\"byte_end\":798}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]\n4|E|1.00|[]\n5|E|1.00|[]\n6|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255734,
+    "id": "chatcmpl-tIiHbLLODCLEPE3xZrgdSnhOU9fH641v",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1872.134,
+      "predicted_n": 77,
+      "predicted_per_second": 41.12953453118207,
+      "predicted_per_token_ms": 24.31342857142857,
+      "prompt_ms": 1225.464,
+      "prompt_n": 1318,
+      "prompt_per_second": 1075.5109901229248,
+      "prompt_per_token_ms": 0.9297905918057663
+    },
+    "usage": {
+      "completion_tokens": 77,
+      "prompt_tokens": 1357,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1434
+    }
+  },
+  "source_cluster_id": "sha256:0a804909360d135fa841661189b03fcc5d4e5797e9c1e38f8df72b46c9c5a9ac",
+  "started_monotonic_ns": 916639101776807,
+  "status": "completed",
+  "unit_id": "sha256:40d0e89e38d99379e3142bd75f6a8d1f5504c600a094ac18e36ebb31cd86a660"
+}

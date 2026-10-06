@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:ee5e4752b628763f2b3fb8aa65a9d617f40e0c87b4b283e64e531dddb19accc5",
+  "ended_monotonic_ns": 917077161598534,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Honey can produce hydrogen peroxide and kill bacteria by dehydrating it. It can be used to treat sore gums, ulcers and other problems inside the mouth.  Use a q-tip to apply a small amount of 100% pure honey to sore areas inside your mouth. Do this three times a day for five days.\\\\n\\\\npassage 2:Soothe sore gums with chamomile tea. Put one tea bag of chamomile in a cup of boiling water. Allow to to steep for five minutes and cool slightly before drinking. Swish the tea around your mouth to sooth your gums before swallowing.\\\\n\\\\npassage 3:Apply aloe vera on sore gums. Aloe vera can be directly applied to red and inflamed gum tissues. It can also be used to cure viral oral lesions, ulcers, and gum abscesses. After brushing your teeth, apply a small amount of natural aloe vera gel directly to the inflamed gums.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to soothe mouth sore caused from biting gums\\\"}\",\"answer\":\"Rasta Taco Catering is a highly-rated business located at 3375 Foothill Rd, Ste 6333 in Carpinteria, California. It offers a variety of services including catering, event planning, food delivery, and bartending, with a specific focus on Mexican cuisine. Its business hours are from 8:00 am to 5:00 pm on weekdays, and 9:00 am to 2:00 pm on weekends. Customers rave about the business's ability to enhance events with their services. Notable mentions include a margarita truck that adds a fun atmosphere to parties and a charismatic staff member named Mario. It has been noted that Rasta Taco Catering is a hit at military events and weddings. The business also offers street parking and outdoor seating to its customers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":98},{\"index\":1,\"byte_start\":98,\"byte_end\":178},{\"index\":2,\"byte_start\":178,\"byte_end\":266},{\"index\":3,\"byte_start\":266,\"byte_end\":357},{\"index\":4,\"byte_start\":357,\"byte_end\":413},{\"index\":5,\"byte_start\":413,\"byte_end\":483},{\"index\":6,\"byte_start\":483,\"byte_end\":596},{\"index\":7,\"byte_start\":596,\"byte_end\":663},{\"index\":8,\"byte_start\":663,\"byte_end\":738},{\"index\":9,\"byte_start\":738,\"byte_end\":909}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":113},{\"index\":1,\"byte_start\":113,\"byte_end\":254},{\"index\":2,\"byte_start\":254,\"byte_end\":350},{\"index\":3,\"byte_start\":350,\"byte_end\":433},{\"index\":4,\"byte_start\":433,\"byte_end\":558},{\"index\":5,\"byte_start\":558,\"byte_end\":643},{\"index\":6,\"byte_start\":643,\"byte_end\":720}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 789,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Honey can produce hydrogen peroxide and kill bacteria by dehydrating it. It can be used to treat sore gums, ulcers and other problems inside the mouth.  Use a q-tip to apply a small amount of 100% pure honey to sore areas inside your mouth. Do this three times a day for five days.\\\\n\\\\npassage 2:Soothe sore gums with chamomile tea. Put one tea bag of chamomile in a cup of boiling water. Allow to to steep for five minutes and cool slightly before drinking. Swish the tea around your mouth to sooth your gums before swallowing.\\\\n\\\\npassage 3:Apply aloe vera on sore gums. Aloe vera can be directly applied to red and inflamed gum tissues. It can also be used to cure viral oral lesions, ulcers, and gum abscesses. After brushing your teeth, apply a small amount of natural aloe vera gel directly to the inflamed gums.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to soothe mouth sore caused from biting gums\\\"}\",\"answer\":\"Rasta Taco Catering is a highly-rated business located at 3375 Foothill Rd, Ste 6333 in Carpinteria, California. It offers a variety of services including catering, event planning, food delivery, and bartending, with a specific focus on Mexican cuisine. Its business hours are from 8:00 am to 5:00 pm on weekdays, and 9:00 am to 2:00 pm on weekends. Customers rave about the business's ability to enhance events with their services. Notable mentions include a margarita truck that adds a fun atmosphere to parties and a charismatic staff member named Mario. It has been noted that Rasta Taco Catering is a hit at military events and weddings. The business also offers street parking and outdoor seating to its customers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":98},{\"index\":1,\"byte_start\":98,\"byte_end\":178},{\"index\":2,\"byte_start\":178,\"byte_end\":266},{\"index\":3,\"byte_start\":266,\"byte_end\":357},{\"index\":4,\"byte_start\":357,\"byte_end\":413},{\"index\":5,\"byte_start\":413,\"byte_end\":483},{\"index\":6,\"byte_start\":483,\"byte_end\":596},{\"index\":7,\"byte_start\":596,\"byte_end\":663},{\"index\":8,\"byte_start\":663,\"byte_end\":738},{\"index\":9,\"byte_start\":738,\"byte_end\":909}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":113},{\"index\":1,\"byte_start\":113,\"byte_end\":254},{\"index\":2,\"byte_start\":254,\"byte_end\":350},{\"index\":3,\"byte_start\":350,\"byte_end\":433},{\"index\":4,\"byte_start\":433,\"byte_end\":558},{\"index\":5,\"byte_start\":558,\"byte_end\":643},{\"index\":6,\"byte_start\":643,\"byte_end\":720}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+    "input_tokens": 0,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Honey can produce hydrogen peroxide and kill bacteria by dehydrating it. It can be used to treat sore gums, ulcers and other problems inside the mouth.  Use a q-tip to apply a small amount of 100% pure honey to sore areas inside your mouth. Do this three times a day for five days.\\\\n\\\\npassage 2:Soothe sore gums with chamomile tea. Put one tea bag of chamomile in a cup of boiling water. Allow to to steep for five minutes and cool slightly before drinking. Swish the tea around your mouth to sooth your gums before swallowing.\\\\n\\\\npassage 3:Apply aloe vera on sore gums. Aloe vera can be directly applied to red and inflamed gum tissues. It can also be used to cure viral oral lesions, ulcers, and gum abscesses. After brushing your teeth, apply a small amount of natural aloe vera gel directly to the inflamed gums.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to soothe mouth sore caused from biting gums\\\"}\",\"answer\":\"Rasta Taco Catering is a highly-rated business located at 3375 Foothill Rd, Ste 6333 in Carpinteria, California. It offers a variety of services including catering, event planning, food delivery, and bartending, with a specific focus on Mexican cuisine. Its business hours are from 8:00 am to 5:00 pm on weekdays, and 9:00 am to 2:00 pm on weekends. Customers rave about the business's ability to enhance events with their services. Notable mentions include a margarita truck that adds a fun atmosphere to parties and a charismatic staff member named Mario. It has been noted that Rasta Taco Catering is a hit at military events and weddings. The business also offers street parking and outdoor seating to its customers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":98},{\"index\":1,\"byte_start\":98,\"byte_end\":178},{\"index\":2,\"byte_start\":178,\"byte_end\":266},{\"index\":3,\"byte_start\":266,\"byte_end\":357},{\"index\":4,\"byte_start\":357,\"byte_end\":413},{\"index\":5,\"byte_start\":413,\"byte_end\":483},{\"index\":6,\"byte_start\":483,\"byte_end\":596},{\"index\":7,\"byte_start\":596,\"byte_end\":663},{\"index\":8,\"byte_start\":663,\"byte_end\":738},{\"index\":9,\"byte_start\":738,\"byte_end\":909}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":113},{\"index\":1,\"byte_start\":113,\"byte_end\":254},{\"index\":2,\"byte_start\":254,\"byte_end\":350},{\"index\":3,\"byte_start\":350,\"byte_end\":433},{\"index\":4,\"byte_start\":433,\"byte_end\":558},{\"index\":5,\"byte_start\":558,\"byte_end\":643},{\"index\":6,\"byte_start\":643,\"byte_end\":720}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|B|0.00|[]\n1|B|0.00|[]\n2|B|0.00|[]\n3|B|0.00|[]\n4|B|0.00|[]\n5|B|0.00|[]\n6|B|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256168,
+    "id": "chatcmpl-96Lf6i8uc2DnmOCayaFk4wyxRnfGq9zy",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1868.431,
+      "predicted_n": 77,
+      "predicted_per_second": 41.21104820033493,
+      "predicted_per_token_ms": 24.265337662337664,
+      "prompt_ms": 725.961,
+      "prompt_n": 750,
+      "prompt_per_second": 1033.113349064206,
+      "prompt_per_token_ms": 0.967948
+    },
+    "usage": {
+      "completion_tokens": 77,
+      "prompt_tokens": 789,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 866
+    }
+  },
+  "source_cluster_id": "sha256:cf6f88df625edc1733365cade2aeba2f217e2fa57319a9defe6bba03892b7766",
+  "started_monotonic_ns": 917074444834245,
+  "status": "completed",
+  "unit_id": "sha256:77758793354fb575a7ed4a111a761910889fb97fe88db6b6d9407ff0ca3446d5"
+}

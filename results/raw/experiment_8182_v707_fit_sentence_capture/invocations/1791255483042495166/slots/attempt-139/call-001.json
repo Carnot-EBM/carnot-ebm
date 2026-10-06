@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:5921b7189d0596b40f8a285ee182d34785812bcbfec7e13643bfb5258c69a2b1",
+  "ended_monotonic_ns": 916797976258252,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Paris (CNN)Six survivors of the Paris kosher supermarket siege in January are suing a French media outlet for what they call dangerous live broadcasting during the hostage-taking. According to Paris prosecutor's spokeswoman Agnes Thibault-Lecuivre, the lawsuit was filed March 27 and a preliminary investigation was opened by the prosecutor's office Wednesday. The media outlet, CNN affiliate BFMTV, is accused of endangering the lives of the hostages, who were hiding in a cold room during the attack, by broadcasting their location live during the siege. BFM in a statement Friday said one of its journalists \\\"mentioned only once the presence of a woman hidden inside the Hyper Cacher, on the basis of police sources on the ground.\\\" \\\"Immediately, the chief editor felt that this information should not be released. It therefore has subsequently never been repeated on air or posted on-screen. BFMTV regrets that the mention of this information could cause concern to the hostages, as well as their relatives, that their lives were in danger,\\\" the statement said. Gunman Amedy Coulibaly, also suspected in the slaying of a police officer, stormed the Hyper Cacher Jewish supermarket on January 9, killing four people and taking others hostage. He was killed in the police operation to end the siege. A 24-year-old supermarket employee, Malian-born Lassana Bathily, was hailed as a hero afterward when it emerged that he had risked his life to hide 15 customers from Coulibaly in the cold room. The hostage-taking was the culmination of three days of terror in Paris that began with the January 7 shooting of 12 people at the offices of French satirical magazine Charlie Hebdo. The two brothers blamed for that attack, Cherif and Said Kouachi, were killed on January 9 after a violent standoff at an industrial site. The terror attacks claimed the lives of 17 people and put France on a heightened state of alert. CNN's Ariana Williams reported from Paris, and Laura Smith-Spark wrote from London. CNN's Pierre Meilhan contributed to this report.\\n\",\"answer\":\"Six survivors of the Paris kosher supermarket siege in January have filed a lawsuit against French media outlet BFMTV for endangering their lives during the hostage situation. The survivors claim that BFMTV broadcasted their location live during the siege, putting them at risk. BFMTV has responded by saying that they only mentioned the presence of a woman once, based on police sources, and regret any concern it may have caused. The supermarket siege was part of a series of terror attacks in Paris in January, which claimed the lives of 17 people.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":180},{\"index\":1,\"byte_start\":180,\"byte_end\":361},{\"index\":2,\"byte_start\":361,\"byte_end\":557},{\"index\":3,\"byte_start\":557,\"byte_end\":735},{\"index\":4,\"byte_start\":735,\"byte_end\":817},{\"index\":5,\"byte_start\":817,\"byte_end\":895},{\"index\":6,\"byte_start\":895,\"byte_end\":1065},{\"index\":7,\"byte_start\":1065,\"byte_end\":1245},{\"index\":8,\"byte_start\":1245,\"byte_end\":1301},{\"index\":9,\"byte_start\":1301,\"byte_end\":1495},{\"index\":10,\"byte_start\":1495,\"byte_end\":1678},{\"index\":11,\"byte_start\":1678,\"byte_end\":1817},{\"index\":12,\"byte_start\":1817,\"byte_end\":1914},{\"index\":13,\"byte_start\":1914,\"byte_end\":1998},{\"index\":14,\"byte_start\":1998,\"byte_end\":2047}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":176},{\"index\":1,\"byte_start\":176,\"byte_end\":279},{\"index\":2,\"byte_start\":279,\"byte_end\":432},{\"index\":3,\"byte_start\":432,\"byte_end\":551}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 982,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Paris (CNN)Six survivors of the Paris kosher supermarket siege in January are suing a French media outlet for what they call dangerous live broadcasting during the hostage-taking. According to Paris prosecutor's spokeswoman Agnes Thibault-Lecuivre, the lawsuit was filed March 27 and a preliminary investigation was opened by the prosecutor's office Wednesday. The media outlet, CNN affiliate BFMTV, is accused of endangering the lives of the hostages, who were hiding in a cold room during the attack, by broadcasting their location live during the siege. BFM in a statement Friday said one of its journalists \\\"mentioned only once the presence of a woman hidden inside the Hyper Cacher, on the basis of police sources on the ground.\\\" \\\"Immediately, the chief editor felt that this information should not be released. It therefore has subsequently never been repeated on air or posted on-screen. BFMTV regrets that the mention of this information could cause concern to the hostages, as well as their relatives, that their lives were in danger,\\\" the statement said. Gunman Amedy Coulibaly, also suspected in the slaying of a police officer, stormed the Hyper Cacher Jewish supermarket on January 9, killing four people and taking others hostage. He was killed in the police operation to end the siege. A 24-year-old supermarket employee, Malian-born Lassana Bathily, was hailed as a hero afterward when it emerged that he had risked his life to hide 15 customers from Coulibaly in the cold room. The hostage-taking was the culmination of three days of terror in Paris that began with the January 7 shooting of 12 people at the offices of French satirical magazine Charlie Hebdo. The two brothers blamed for that attack, Cherif and Said Kouachi, were killed on January 9 after a violent standoff at an industrial site. The terror attacks claimed the lives of 17 people and put France on a heightened state of alert. CNN's Ariana Williams reported from Paris, and Laura Smith-Spark wrote from London. CNN's Pierre Meilhan contributed to this report.\\n\",\"answer\":\"Six survivors of the Paris kosher supermarket siege in January have filed a lawsuit against French media outlet BFMTV for endangering their lives during the hostage situation. The survivors claim that BFMTV broadcasted their location live during the siege, putting them at risk. BFMTV has responded by saying that they only mentioned the presence of a woman once, based on police sources, and regret any concern it may have caused. The supermarket siege was part of a series of terror attacks in Paris in January, which claimed the lives of 17 people.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":180},{\"index\":1,\"byte_start\":180,\"byte_end\":361},{\"index\":2,\"byte_start\":361,\"byte_end\":557},{\"index\":3,\"byte_start\":557,\"byte_end\":735},{\"index\":4,\"byte_start\":735,\"byte_end\":817},{\"index\":5,\"byte_start\":817,\"byte_end\":895},{\"index\":6,\"byte_start\":895,\"byte_end\":1065},{\"index\":7,\"byte_start\":1065,\"byte_end\":1245},{\"index\":8,\"byte_start\":1245,\"byte_end\":1301},{\"index\":9,\"byte_start\":1301,\"byte_end\":1495},{\"index\":10,\"byte_start\":1495,\"byte_end\":1678},{\"index\":11,\"byte_start\":1678,\"byte_end\":1817},{\"index\":12,\"byte_start\":1817,\"byte_end\":1914},{\"index\":13,\"byte_start\":1914,\"byte_end\":1998},{\"index\":14,\"byte_start\":1998,\"byte_end\":2047}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":176},{\"index\":1,\"byte_start\":176,\"byte_end\":279},{\"index\":2,\"byte_start\":279,\"byte_end\":432},{\"index\":3,\"byte_start\":432,\"byte_end\":551}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "input_tokens": 970,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Paris (CNN)Six survivors of the Paris kosher supermarket siege in January are suing a French media outlet for what they call dangerous live broadcasting during the hostage-taking. According to Paris prosecutor's spokeswoman Agnes Thibault-Lecuivre, the lawsuit was filed March 27 and a preliminary investigation was opened by the prosecutor's office Wednesday. The media outlet, CNN affiliate BFMTV, is accused of endangering the lives of the hostages, who were hiding in a cold room during the attack, by broadcasting their location live during the siege. BFM in a statement Friday said one of its journalists \\\"mentioned only once the presence of a woman hidden inside the Hyper Cacher, on the basis of police sources on the ground.\\\" \\\"Immediately, the chief editor felt that this information should not be released. It therefore has subsequently never been repeated on air or posted on-screen. BFMTV regrets that the mention of this information could cause concern to the hostages, as well as their relatives, that their lives were in danger,\\\" the statement said. Gunman Amedy Coulibaly, also suspected in the slaying of a police officer, stormed the Hyper Cacher Jewish supermarket on January 9, killing four people and taking others hostage. He was killed in the police operation to end the siege. A 24-year-old supermarket employee, Malian-born Lassana Bathily, was hailed as a hero afterward when it emerged that he had risked his life to hide 15 customers from Coulibaly in the cold room. The hostage-taking was the culmination of three days of terror in Paris that began with the January 7 shooting of 12 people at the offices of French satirical magazine Charlie Hebdo. The two brothers blamed for that attack, Cherif and Said Kouachi, were killed on January 9 after a violent standoff at an industrial site. The terror attacks claimed the lives of 17 people and put France on a heightened state of alert. CNN's Ariana Williams reported from Paris, and Laura Smith-Spark wrote from London. CNN's Pierre Meilhan contributed to this report.\\n\",\"answer\":\"Six survivors of the Paris kosher supermarket siege in January have filed a lawsuit against French media outlet BFMTV for endangering their lives during the hostage situation. The survivors claim that BFMTV broadcasted their location live during the siege, putting them at risk. BFMTV has responded by saying that they only mentioned the presence of a woman once, based on police sources, and regret any concern it may have caused. The supermarket siege was part of a series of terror attacks in Paris in January, which claimed the lives of 17 people.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":180},{\"index\":1,\"byte_start\":180,\"byte_end\":361},{\"index\":2,\"byte_start\":361,\"byte_end\":557},{\"index\":3,\"byte_start\":557,\"byte_end\":735},{\"index\":4,\"byte_start\":735,\"byte_end\":817},{\"index\":5,\"byte_start\":817,\"byte_end\":895},{\"index\":6,\"byte_start\":895,\"byte_end\":1065},{\"index\":7,\"byte_start\":1065,\"byte_end\":1245},{\"index\":8,\"byte_start\":1245,\"byte_end\":1301},{\"index\":9,\"byte_start\":1301,\"byte_end\":1495},{\"index\":10,\"byte_start\":1495,\"byte_end\":1678},{\"index\":11,\"byte_start\":1678,\"byte_end\":1817},{\"index\":12,\"byte_start\":1817,\"byte_end\":1914},{\"index\":13,\"byte_start\":1914,\"byte_end\":1998},{\"index\":14,\"byte_start\":1998,\"byte_end\":2047}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":176},{\"index\":1,\"byte_start\":176,\"byte_end\":279},{\"index\":2,\"byte_start\":279,\"byte_end\":432},{\"index\":3,\"byte_start\":432,\"byte_end\":551}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[0,2]\n1|C|0.95|[2]\n2|C|0.95|[3]\n3|C|0.95|[10,12]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255889,
+    "id": "chatcmpl-ejwx0Q5dLvQRdKw8n7aiNSWwRSPtNinh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1415.001,
+      "predicted_n": 58,
+      "predicted_per_second": 40.98937032553334,
+      "predicted_per_token_ms": 24.39656896551724,
+      "prompt_ms": 926.205,
+      "prompt_n": 943,
+      "prompt_per_second": 1018.1331346732094,
+      "prompt_per_token_ms": 0.9821898197242842
+    },
+    "usage": {
+      "completion_tokens": 58,
+      "prompt_tokens": 982,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1040
+    }
+  },
+  "source_cluster_id": "sha256:8fdf3a401f1a5a75a7a77c337932ec06d3c771e50f71f081f32eb844a0f897bc",
+  "started_monotonic_ns": 916795511956287,
+  "status": "completed",
+  "unit_id": "sha256:691358573df44abbc469b153a1197fc87a2799f45c5640c4a8a0653c3b9ecc1c"
+}

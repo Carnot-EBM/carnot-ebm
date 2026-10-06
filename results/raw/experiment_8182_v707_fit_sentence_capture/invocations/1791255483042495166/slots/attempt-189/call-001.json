@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:27609d08440d38177224f7d03a2ec1677d5a2c434939cbeb114c32bd993f8c54",
+  "ended_monotonic_ns": 916929570286344,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"3102 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Gas Stations, Delis, Automotive, Greek\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-17:0\\\",\\\"Monday\\\":\\\"10:0-17:0\\\",\\\"Saturday\\\":\\\"10:0-17:0\\\",\\\"Thursday\\\":\\\"10:0-17:0\\\",\\\"Tuesday\\\":\\\"10:0-17:0\\\",\\\"Wednesday\\\":\\\"10:0-17:0\\\"},\\\"name\\\":\\\"Yanni's Greek & American Deli\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-09-11 16:13:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Always super quick on Door Dash. Eat here and get some grub. Add extra sauce on the Gyro and go with the lamb.\\\"},{\\\"review_date\\\":\\\"2021-02-08 23:48:43\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Doesn't exist. Was looking forward to a gyro but business just doesn't exist anymore. Please update online sites to reflect this.\\\"},{\\\"review_date\\\":\\\"2021-01-06 00:44:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We're doing a staycation for our anniversary and didn't want to wander far. Got gas across the street and saw this place. Delicious gyros! I got mine without tzatziki sauce (allergies) and it was still fulfilling. I did taste a bit from my husband's and it was so good! Owner was great and glad to share a few laughs for a bit given our days of late.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"\\\"Yanni's Greek & American Deli\\\" is a local business located at 3102 State St, Santa Barbara, CA. It operates from 10:00 am to 5:00 pm from Monday to Saturday. This establishment is categorized under Restaurants, Gas Stations, Delis, Automotive, and Greek. The deli offers a variety of amenities such as outdoor seating, a parking lot, and takeout services. However, they do not provide WiFi, music, or a restaurant reservation service. The business has an average rating of 4.5 stars. Customer reviews are mixed, with some praising the quick delivery service and delicious gyros, while one review reports that the business was closed.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":841},{\"index\":1,\"byte_start\":841,\"byte_end\":869},{\"index\":2,\"byte_start\":869,\"byte_end\":1007},{\"index\":3,\"byte_start\":1007,\"byte_end\":1078},{\"index\":4,\"byte_start\":1078,\"byte_end\":1271},{\"index\":5,\"byte_start\":1271,\"byte_end\":1317},{\"index\":6,\"byte_start\":1317,\"byte_end\":1334},{\"index\":7,\"byte_start\":1334,\"byte_end\":1409},{\"index\":8,\"byte_start\":1409,\"byte_end\":1465},{\"index\":9,\"byte_start\":1465,\"byte_end\":1562}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":97},{\"index\":1,\"byte_start\":97,\"byte_end\":159},{\"index\":2,\"byte_start\":159,\"byte_end\":256},{\"index\":3,\"byte_start\":256,\"byte_end\":357},{\"index\":4,\"byte_start\":357,\"byte_end\":436},{\"index\":5,\"byte_start\":436,\"byte_end\":485},{\"index\":6,\"byte_start\":485,\"byte_end\":634}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1046,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"3102 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Gas Stations, Delis, Automotive, Greek\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-17:0\\\",\\\"Monday\\\":\\\"10:0-17:0\\\",\\\"Saturday\\\":\\\"10:0-17:0\\\",\\\"Thursday\\\":\\\"10:0-17:0\\\",\\\"Tuesday\\\":\\\"10:0-17:0\\\",\\\"Wednesday\\\":\\\"10:0-17:0\\\"},\\\"name\\\":\\\"Yanni's Greek & American Deli\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-09-11 16:13:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Always super quick on Door Dash. Eat here and get some grub. Add extra sauce on the Gyro and go with the lamb.\\\"},{\\\"review_date\\\":\\\"2021-02-08 23:48:43\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Doesn't exist. Was looking forward to a gyro but business just doesn't exist anymore. Please update online sites to reflect this.\\\"},{\\\"review_date\\\":\\\"2021-01-06 00:44:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We're doing a staycation for our anniversary and didn't want to wander far. Got gas across the street and saw this place. Delicious gyros! I got mine without tzatziki sauce (allergies) and it was still fulfilling. I did taste a bit from my husband's and it was so good! Owner was great and glad to share a few laughs for a bit given our days of late.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"\\\"Yanni's Greek & American Deli\\\" is a local business located at 3102 State St, Santa Barbara, CA. It operates from 10:00 am to 5:00 pm from Monday to Saturday. This establishment is categorized under Restaurants, Gas Stations, Delis, Automotive, and Greek. The deli offers a variety of amenities such as outdoor seating, a parking lot, and takeout services. However, they do not provide WiFi, music, or a restaurant reservation service. The business has an average rating of 4.5 stars. Customer reviews are mixed, with some praising the quick delivery service and delicious gyros, while one review reports that the business was closed.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":841},{\"index\":1,\"byte_start\":841,\"byte_end\":869},{\"index\":2,\"byte_start\":869,\"byte_end\":1007},{\"index\":3,\"byte_start\":1007,\"byte_end\":1078},{\"index\":4,\"byte_start\":1078,\"byte_end\":1271},{\"index\":5,\"byte_start\":1271,\"byte_end\":1317},{\"index\":6,\"byte_start\":1317,\"byte_end\":1334},{\"index\":7,\"byte_start\":1334,\"byte_end\":1409},{\"index\":8,\"byte_start\":1409,\"byte_end\":1465},{\"index\":9,\"byte_start\":1465,\"byte_end\":1562}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":97},{\"index\":1,\"byte_start\":97,\"byte_end\":159},{\"index\":2,\"byte_start\":159,\"byte_end\":256},{\"index\":3,\"byte_start\":256,\"byte_end\":357},{\"index\":4,\"byte_start\":357,\"byte_end\":436},{\"index\":5,\"byte_start\":436,\"byte_end\":485},{\"index\":6,\"byte_start\":485,\"byte_end\":634}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+    "input_tokens": 1034,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"3102 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Gas Stations, Delis, Automotive, Greek\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-17:0\\\",\\\"Monday\\\":\\\"10:0-17:0\\\",\\\"Saturday\\\":\\\"10:0-17:0\\\",\\\"Thursday\\\":\\\"10:0-17:0\\\",\\\"Tuesday\\\":\\\"10:0-17:0\\\",\\\"Wednesday\\\":\\\"10:0-17:0\\\"},\\\"name\\\":\\\"Yanni's Greek & American Deli\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-09-11 16:13:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Always super quick on Door Dash. Eat here and get some grub. Add extra sauce on the Gyro and go with the lamb.\\\"},{\\\"review_date\\\":\\\"2021-02-08 23:48:43\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Doesn't exist. Was looking forward to a gyro but business just doesn't exist anymore. Please update online sites to reflect this.\\\"},{\\\"review_date\\\":\\\"2021-01-06 00:44:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We're doing a staycation for our anniversary and didn't want to wander far. Got gas across the street and saw this place. Delicious gyros! I got mine without tzatziki sauce (allergies) and it was still fulfilling. I did taste a bit from my husband's and it was so good! Owner was great and glad to share a few laughs for a bit given our days of late.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"\\\"Yanni's Greek & American Deli\\\" is a local business located at 3102 State St, Santa Barbara, CA. It operates from 10:00 am to 5:00 pm from Monday to Saturday. This establishment is categorized under Restaurants, Gas Stations, Delis, Automotive, and Greek. The deli offers a variety of amenities such as outdoor seating, a parking lot, and takeout services. However, they do not provide WiFi, music, or a restaurant reservation service. The business has an average rating of 4.5 stars. Customer reviews are mixed, with some praising the quick delivery service and delicious gyros, while one review reports that the business was closed.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":841},{\"index\":1,\"byte_start\":841,\"byte_end\":869},{\"index\":2,\"byte_start\":869,\"byte_end\":1007},{\"index\":3,\"byte_start\":1007,\"byte_end\":1078},{\"index\":4,\"byte_start\":1078,\"byte_end\":1271},{\"index\":5,\"byte_start\":1271,\"byte_end\":1317},{\"index\":6,\"byte_start\":1317,\"byte_end\":1334},{\"index\":7,\"byte_start\":1334,\"byte_end\":1409},{\"index\":8,\"byte_start\":1409,\"byte_end\":1465},{\"index\":9,\"byte_start\":1465,\"byte_end\":1562}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":97},{\"index\":1,\"byte_start\":97,\"byte_end\":159},{\"index\":2,\"byte_start\":159,\"byte_end\":256},{\"index\":3,\"byte_start\":256,\"byte_end\":357},{\"index\":4,\"byte_start\":357,\"byte_end\":436},{\"index\":5,\"byte_start\":436,\"byte_end\":485},{\"index\":6,\"byte_start\":485,\"byte_end\":634}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]\n4|E|1.00|[]\n5|E|1.00|[]\n6|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256021,
+    "id": "chatcmpl-Xh0vbbYs7KfZr4mPUaKQMWdorbhTJ87I",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1873.613,
+      "predicted_n": 77,
+      "predicted_per_second": 41.097067537426355,
+      "predicted_per_token_ms": 24.332636363636365,
+      "prompt_ms": 971.063,
+      "prompt_n": 1007,
+      "prompt_per_second": 1037.0078975308502,
+      "prompt_per_token_ms": 0.964312810327706
+    },
+    "usage": {
+      "completion_tokens": 77,
+      "prompt_tokens": 1046,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1123
+    }
+  },
+  "source_cluster_id": "sha256:696ff5e8e75d39d52025f65ca10b0a3b6870cdc43177b340be69ec1c9329ce53",
+  "started_monotonic_ns": 916926565388441,
+  "status": "completed",
+  "unit_id": "sha256:5687a1bff9785413953bcf47a4ff2c6783548de1fc3b9c23855b0b2f4510507c"
+}

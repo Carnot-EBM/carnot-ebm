@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:3a949a2462bcdfb61ff4e9555363cafe29be84914ffcc5ddc2001a58e29495bc",
+  "condition": "original",
+  "ended_monotonic_ns": 916837228028676,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Seoul (CNN)South Korea's Prime Minister Lee Wan-koo offered to resign on Monday amid a growing political scandal. Lee will stay in his official role until South Korean President Park Geun-hye accepts his resignation. He has transferred his role of chairing Cabinet meetings to the deputy prime minister for the time being, according to his office. Park heard about the resignation and called it \\\"regrettable,\\\" according to the South Korean presidential office. Calls for Lee to resign began after South Korean tycoon Sung Woan-jong was found hanging from a tree in Seoul in an apparent suicide on April 9. Sung, who was under investigation for fraud and bribery, left a note listing names and amounts of cash given to top officials, including those who work for the President. Lee and seven other politicians with links to the South Korean President are under investigation. A special prosecutor's team has been established to investigate the case. Lee had adamantly denied the allegations as the scandal escalated: \\\"If there are any evidence, I will give out my life. As a Prime Minister, I will accept Prosecutor Office's investigation first.\\\" Park has said that she is taking the accusations very seriously. Before departing on her trip to Central and South America, she condemned political corruption in her country. \\\"Corruption and deep-rooted evil are issues that can lead to taking away people's lives. We take this very seriously.\\\" \\\"We must make sure to set straight this issue as a matter of political reform. I will not forgive anyone who is responsible for corruption or wrongdoing.\\\" Park is in Peru and is expected to arrive back to South Korea on April 27. CNN's Paula Hancocks contributed to this report.\\n\",\"answer\":\"Sure! Here's the summary in 70 words:\\n\\nSouth Korea's Prime Minister Lee Wan-koo offered to resign amid a political scandal over alleged bribery and corruption. Seven politicians, including Lee and those linked to President Park Geun-hye, are under investigation. Lee denies allegations, but the President is taking them seriously and has promised to root out corruption.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":114},{\"index\":1,\"byte_start\":114,\"byte_end\":217},{\"index\":2,\"byte_start\":217,\"byte_end\":348},{\"index\":3,\"byte_start\":348,\"byte_end\":461},{\"index\":4,\"byte_start\":461,\"byte_end\":777},{\"index\":5,\"byte_start\":777,\"byte_end\":875},{\"index\":6,\"byte_start\":875,\"byte_end\":949},{\"index\":7,\"byte_start\":949,\"byte_end\":1069},{\"index\":8,\"byte_start\":1069,\"byte_end\":1146},{\"index\":9,\"byte_start\":1146,\"byte_end\":1211},{\"index\":10,\"byte_start\":1211,\"byte_end\":1321},{\"index\":11,\"byte_start\":1321,\"byte_end\":1410},{\"index\":12,\"byte_start\":1410,\"byte_end\":1440},{\"index\":13,\"byte_start\":1440,\"byte_end\":1519},{\"index\":14,\"byte_start\":1519,\"byte_end\":1595},{\"index\":15,\"byte_start\":1595,\"byte_end\":1719}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":160},{\"index\":2,\"byte_start\":160,\"byte_end\":263},{\"index\":3,\"byte_start\":263,\"byte_end\":370}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 878,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Seoul (CNN)South Korea's Prime Minister Lee Wan-koo offered to resign on Monday amid a growing political scandal. Lee will stay in his official role until South Korean President Park Geun-hye accepts his resignation. He has transferred his role of chairing Cabinet meetings to the deputy prime minister for the time being, according to his office. Park heard about the resignation and called it \\\"regrettable,\\\" according to the South Korean presidential office. Calls for Lee to resign began after South Korean tycoon Sung Woan-jong was found hanging from a tree in Seoul in an apparent suicide on April 9. Sung, who was under investigation for fraud and bribery, left a note listing names and amounts of cash given to top officials, including those who work for the President. Lee and seven other politicians with links to the South Korean President are under investigation. A special prosecutor's team has been established to investigate the case. Lee had adamantly denied the allegations as the scandal escalated: \\\"If there are any evidence, I will give out my life. As a Prime Minister, I will accept Prosecutor Office's investigation first.\\\" Park has said that she is taking the accusations very seriously. Before departing on her trip to Central and South America, she condemned political corruption in her country. \\\"Corruption and deep-rooted evil are issues that can lead to taking away people's lives. We take this very seriously.\\\" \\\"We must make sure to set straight this issue as a matter of political reform. I will not forgive anyone who is responsible for corruption or wrongdoing.\\\" Park is in Peru and is expected to arrive back to South Korea on April 27. CNN's Paula Hancocks contributed to this report.\\n\",\"answer\":\"Sure! Here's the summary in 70 words:\\n\\nSouth Korea's Prime Minister Lee Wan-koo offered to resign amid a political scandal over alleged bribery and corruption. Seven politicians, including Lee and those linked to President Park Geun-hye, are under investigation. Lee denies allegations, but the President is taking them seriously and has promised to root out corruption.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":114},{\"index\":1,\"byte_start\":114,\"byte_end\":217},{\"index\":2,\"byte_start\":217,\"byte_end\":348},{\"index\":3,\"byte_start\":348,\"byte_end\":461},{\"index\":4,\"byte_start\":461,\"byte_end\":777},{\"index\":5,\"byte_start\":777,\"byte_end\":875},{\"index\":6,\"byte_start\":875,\"byte_end\":949},{\"index\":7,\"byte_start\":949,\"byte_end\":1069},{\"index\":8,\"byte_start\":1069,\"byte_end\":1146},{\"index\":9,\"byte_start\":1146,\"byte_end\":1211},{\"index\":10,\"byte_start\":1211,\"byte_end\":1321},{\"index\":11,\"byte_start\":1321,\"byte_end\":1410},{\"index\":12,\"byte_start\":1410,\"byte_end\":1440},{\"index\":13,\"byte_start\":1440,\"byte_end\":1519},{\"index\":14,\"byte_start\":1519,\"byte_end\":1595},{\"index\":15,\"byte_start\":1595,\"byte_end\":1719}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":160},{\"index\":2,\"byte_start\":160,\"byte_end\":263},{\"index\":3,\"byte_start\":263,\"byte_end\":370}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "input_tokens": 866,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Seoul (CNN)South Korea's Prime Minister Lee Wan-koo offered to resign on Monday amid a growing political scandal. Lee will stay in his official role until South Korean President Park Geun-hye accepts his resignation. He has transferred his role of chairing Cabinet meetings to the deputy prime minister for the time being, according to his office. Park heard about the resignation and called it \\\"regrettable,\\\" according to the South Korean presidential office. Calls for Lee to resign began after South Korean tycoon Sung Woan-jong was found hanging from a tree in Seoul in an apparent suicide on April 9. Sung, who was under investigation for fraud and bribery, left a note listing names and amounts of cash given to top officials, including those who work for the President. Lee and seven other politicians with links to the South Korean President are under investigation. A special prosecutor's team has been established to investigate the case. Lee had adamantly denied the allegations as the scandal escalated: \\\"If there are any evidence, I will give out my life. As a Prime Minister, I will accept Prosecutor Office's investigation first.\\\" Park has said that she is taking the accusations very seriously. Before departing on her trip to Central and South America, she condemned political corruption in her country. \\\"Corruption and deep-rooted evil are issues that can lead to taking away people's lives. We take this very seriously.\\\" \\\"We must make sure to set straight this issue as a matter of political reform. I will not forgive anyone who is responsible for corruption or wrongdoing.\\\" Park is in Peru and is expected to arrive back to South Korea on April 27. CNN's Paula Hancocks contributed to this report.\\n\",\"answer\":\"Sure! Here's the summary in 70 words:\\n\\nSouth Korea's Prime Minister Lee Wan-koo offered to resign amid a political scandal over alleged bribery and corruption. Seven politicians, including Lee and those linked to President Park Geun-hye, are under investigation. Lee denies allegations, but the President is taking them seriously and has promised to root out corruption.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":114},{\"index\":1,\"byte_start\":114,\"byte_end\":217},{\"index\":2,\"byte_start\":217,\"byte_end\":348},{\"index\":3,\"byte_start\":348,\"byte_end\":461},{\"index\":4,\"byte_start\":461,\"byte_end\":777},{\"index\":5,\"byte_start\":777,\"byte_end\":875},{\"index\":6,\"byte_start\":875,\"byte_end\":949},{\"index\":7,\"byte_start\":949,\"byte_end\":1069},{\"index\":8,\"byte_start\":1069,\"byte_end\":1146},{\"index\":9,\"byte_start\":1146,\"byte_end\":1211},{\"index\":10,\"byte_start\":1211,\"byte_end\":1321},{\"index\":11,\"byte_start\":1321,\"byte_end\":1410},{\"index\":12,\"byte_start\":1410,\"byte_end\":1440},{\"index\":13,\"byte_start\":1440,\"byte_end\":1519},{\"index\":14,\"byte_start\":1519,\"byte_end\":1595},{\"index\":15,\"byte_start\":1595,\"byte_end\":1719}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":160},{\"index\":2,\"byte_start\":160,\"byte_end\":263},{\"index\":3,\"byte_start\":263,\"byte_end\":370}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[0,4]\n1|C|0.90|[4,5]\n2|C|0.85|[5,6]\n3|C|0.90|[7,8]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255929,
+    "id": "chatcmpl-f3U29FWp7KJ8jeF6VsoaUK7PEkX4tDX4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1453.687,
+      "predicted_n": 60,
+      "predicted_per_second": 41.274359611112985,
+      "predicted_per_token_ms": 24.228116666666665,
+      "prompt_ms": 847.477,
+      "prompt_n": 839,
+      "prompt_per_second": 989.9973686601525,
+      "prompt_per_token_ms": 1.010103694874851
+    },
+    "usage": {
+      "completion_tokens": 60,
+      "prompt_tokens": 878,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 938
+    }
+  },
+  "source_cluster_id": "sha256:8a03d7b23dbcfdf9e6fbba6e5c8e0ccc4063e4edec57368c9fbf2140f0f2129b",
+  "started_monotonic_ns": 916834796835171,
+  "status": "completed",
+  "unit_id": "sha256:8df63fcd3c4f90e558b1aade15d4a9e0ca6b3e10f180a45ea01a8d87793b3df8"
+}

@@ -1,0 +1,88 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:42bd784ac38d06a3e5c3a5b833008d294aa77383918d947c147fb4d80b8a67aa",
+  "ended_monotonic_ns": 916738237102468,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Honor a Hero's Legacy - Join Us in Paying Respects to U.S. Army Corporal Mirl Duane Forrest\\nFollow me on Newsbreak for the latest developements on this story! https://original.newsbreak.com/@dr-michael-moates-1589310\\nIn a heartfelt call to the community, the Central Texas State Veterans Cemetery is extending an open invitation to all members of the public to partake in honoring the service and memory of U.S. Army Corporal Mirl Duane Forrest during his Unaccompanied Veteran Burial.\\nCorporal Forrest, born on April 3, 1937, dedicated nearly a decade of his life in service to our nation, actively serving in the U.S. Army from September 1954 to October 1963. His commitment and sacrifices for our country will be commemorated in a burial ceremony, ensuring his memory lives on with the respect and honor it deserves.\\nThe ceremony, scheduled for Thursday, Oct. 5 at 11 a.m., is anticipated to proceed without the presence of next-of-kin. The Texas General Land Office has expressed, \\\"Corporal Forrest is not expected to have any next-of-kin attend his burial. Please help us spread the word and ensure that this U.S. Army Veteran is not buried alone. Members of the Killeen community are encouraged to attend.\\\"\\nIn a solemn tribute to Corporal Forrest's military service, he will be accorded military honors. In the event that no family members are present, a representative from the Veterans Land Board will respectfully accept the United States flag on Corporal Forrest\u2019s behalf.\\nThe Central Texas State Veterans Cemetery and the wider community are coming together to ensure that no veteran is laid to rest alone. Your presence can stand as a testament to the enduring respect and gratitude our community holds for those who have served.\\nLet us come together to honor Corporal Forrest's memory and service, ensuring that his contributions to our nation are celebrated and remembered with the dignity they warrant.\\nFor those who wish to pay their respects, the burial will take place at the Central Texas State Veterans Cemetery. Community members are encouraged to share this message widely and stand united in honoring the memory of a veteran who served our country with honor and distinction.\",\"answer\":\"Here is a summary of the article in 88 words:\\n\\nThe Central Texas State Veterans Cemetery is hosting a burial ceremony for U.S. Army Corporal Mirl Duane Forrest, who served from 1954 to 1963. Due to no known next of kin, the community is invited to attend and pay their respects. The ceremony will include military honors, and your presence can show appreciation for his service.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":159},{\"index\":1,\"byte_start\":159,\"byte_end\":486},{\"index\":2,\"byte_start\":486,\"byte_end\":820},{\"index\":3,\"byte_start\":820,\"byte_end\":863},{\"index\":4,\"byte_start\":863,\"byte_end\":940},{\"index\":5,\"byte_start\":940,\"byte_end\":1062},{\"index\":6,\"byte_start\":1062,\"byte_end\":1153},{\"index\":7,\"byte_start\":1153,\"byte_end\":1213},{\"index\":8,\"byte_start\":1213,\"byte_end\":1310},{\"index\":9,\"byte_start\":1310,\"byte_end\":1485},{\"index\":10,\"byte_start\":1485,\"byte_end\":1620},{\"index\":11,\"byte_start\":1620,\"byte_end\":1744},{\"index\":12,\"byte_start\":1744,\"byte_end\":1920},{\"index\":13,\"byte_start\":1920,\"byte_end\":2035},{\"index\":14,\"byte_start\":2035,\"byte_end\":2200}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":279},{\"index\":1,\"byte_start\":279,\"byte_end\":378}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 968,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Honor a Hero's Legacy - Join Us in Paying Respects to U.S. Army Corporal Mirl Duane Forrest\\nFollow me on Newsbreak for the latest developements on this story! https://original.newsbreak.com/@dr-michael-moates-1589310\\nIn a heartfelt call to the community, the Central Texas State Veterans Cemetery is extending an open invitation to all members of the public to partake in honoring the service and memory of U.S. Army Corporal Mirl Duane Forrest during his Unaccompanied Veteran Burial.\\nCorporal Forrest, born on April 3, 1937, dedicated nearly a decade of his life in service to our nation, actively serving in the U.S. Army from September 1954 to October 1963. His commitment and sacrifices for our country will be commemorated in a burial ceremony, ensuring his memory lives on with the respect and honor it deserves.\\nThe ceremony, scheduled for Thursday, Oct. 5 at 11 a.m., is anticipated to proceed without the presence of next-of-kin. The Texas General Land Office has expressed, \\\"Corporal Forrest is not expected to have any next-of-kin attend his burial. Please help us spread the word and ensure that this U.S. Army Veteran is not buried alone. Members of the Killeen community are encouraged to attend.\\\"\\nIn a solemn tribute to Corporal Forrest's military service, he will be accorded military honors. In the event that no family members are present, a representative from the Veterans Land Board will respectfully accept the United States flag on Corporal Forrest\u2019s behalf.\\nThe Central Texas State Veterans Cemetery and the wider community are coming together to ensure that no veteran is laid to rest alone. Your presence can stand as a testament to the enduring respect and gratitude our community holds for those who have served.\\nLet us come together to honor Corporal Forrest's memory and service, ensuring that his contributions to our nation are celebrated and remembered with the dignity they warrant.\\nFor those who wish to pay their respects, the burial will take place at the Central Texas State Veterans Cemetery. Community members are encouraged to share this message widely and stand united in honoring the memory of a veteran who served our country with honor and distinction.\",\"answer\":\"Here is a summary of the article in 88 words:\\n\\nThe Central Texas State Veterans Cemetery is hosting a burial ceremony for U.S. Army Corporal Mirl Duane Forrest, who served from 1954 to 1963. Due to no known next of kin, the community is invited to attend and pay their respects. The ceremony will include military honors, and your presence can show appreciation for his service.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":159},{\"index\":1,\"byte_start\":159,\"byte_end\":486},{\"index\":2,\"byte_start\":486,\"byte_end\":820},{\"index\":3,\"byte_start\":820,\"byte_end\":863},{\"index\":4,\"byte_start\":863,\"byte_end\":940},{\"index\":5,\"byte_start\":940,\"byte_end\":1062},{\"index\":6,\"byte_start\":1062,\"byte_end\":1153},{\"index\":7,\"byte_start\":1153,\"byte_end\":1213},{\"index\":8,\"byte_start\":1213,\"byte_end\":1310},{\"index\":9,\"byte_start\":1310,\"byte_end\":1485},{\"index\":10,\"byte_start\":1485,\"byte_end\":1620},{\"index\":11,\"byte_start\":1620,\"byte_end\":1744},{\"index\":12,\"byte_start\":1744,\"byte_end\":1920},{\"index\":13,\"byte_start\":1920,\"byte_end\":2035},{\"index\":14,\"byte_start\":2035,\"byte_end\":2200}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":279},{\"index\":1,\"byte_start\":279,\"byte_end\":378}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "input_tokens": 956,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Honor a Hero's Legacy - Join Us in Paying Respects to U.S. Army Corporal Mirl Duane Forrest\\nFollow me on Newsbreak for the latest developements on this story! https://original.newsbreak.com/@dr-michael-moates-1589310\\nIn a heartfelt call to the community, the Central Texas State Veterans Cemetery is extending an open invitation to all members of the public to partake in honoring the service and memory of U.S. Army Corporal Mirl Duane Forrest during his Unaccompanied Veteran Burial.\\nCorporal Forrest, born on April 3, 1937, dedicated nearly a decade of his life in service to our nation, actively serving in the U.S. Army from September 1954 to October 1963. His commitment and sacrifices for our country will be commemorated in a burial ceremony, ensuring his memory lives on with the respect and honor it deserves.\\nThe ceremony, scheduled for Thursday, Oct. 5 at 11 a.m., is anticipated to proceed without the presence of next-of-kin. The Texas General Land Office has expressed, \\\"Corporal Forrest is not expected to have any next-of-kin attend his burial. Please help us spread the word and ensure that this U.S. Army Veteran is not buried alone. Members of the Killeen community are encouraged to attend.\\\"\\nIn a solemn tribute to Corporal Forrest's military service, he will be accorded military honors. In the event that no family members are present, a representative from the Veterans Land Board will respectfully accept the United States flag on Corporal Forrest\u2019s behalf.\\nThe Central Texas State Veterans Cemetery and the wider community are coming together to ensure that no veteran is laid to rest alone. Your presence can stand as a testament to the enduring respect and gratitude our community holds for those who have served.\\nLet us come together to honor Corporal Forrest's memory and service, ensuring that his contributions to our nation are celebrated and remembered with the dignity they warrant.\\nFor those who wish to pay their respects, the burial will take place at the Central Texas State Veterans Cemetery. Community members are encouraged to share this message widely and stand united in honoring the memory of a veteran who served our country with honor and distinction.\",\"answer\":\"Here is a summary of the article in 88 words:\\n\\nThe Central Texas State Veterans Cemetery is hosting a burial ceremony for U.S. Army Corporal Mirl Duane Forrest, who served from 1954 to 1963. Due to no known next of kin, the community is invited to attend and pay their respects. The ceremony will include military honors, and your presence can show appreciation for his service.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":159},{\"index\":1,\"byte_start\":159,\"byte_end\":486},{\"index\":2,\"byte_start\":486,\"byte_end\":820},{\"index\":3,\"byte_start\":820,\"byte_end\":863},{\"index\":4,\"byte_start\":863,\"byte_end\":940},{\"index\":5,\"byte_start\":940,\"byte_end\":1062},{\"index\":6,\"byte_start\":1062,\"byte_end\":1153},{\"index\":7,\"byte_start\":1153,\"byte_end\":1213},{\"index\":8,\"byte_start\":1213,\"byte_end\":1310},{\"index\":9,\"byte_start\":1310,\"byte_end\":1485},{\"index\":10,\"byte_start\":1485,\"byte_end\":1620},{\"index\":11,\"byte_start\":1620,\"byte_end\":1744},{\"index\":12,\"byte_start\":1744,\"byte_end\":1920},{\"index\":13,\"byte_start\":1920,\"byte_end\":2035},{\"index\":14,\"byte_start\":2035,\"byte_end\":2200}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":279},{\"index\":1,\"byte_start\":279,\"byte_end\":378}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[1,2]\n1|C|0.90|[3,4]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255830,
+    "id": "chatcmpl-XOBAT9mDRXmD6bqWBGA3Nl7CbWYYuqjN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 727.769,
+      "predicted_n": 30,
+      "predicted_per_second": 41.221871225622415,
+      "predicted_per_token_ms": 24.258966666666666,
+      "prompt_ms": 930.663,
+      "prompt_n": 929,
+      "prompt_per_second": 998.21310184245,
+      "prompt_per_token_ms": 1.0017900968783637
+    },
+    "usage": {
+      "completion_tokens": 30,
+      "prompt_tokens": 968,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 998
+    }
+  },
+  "source_cluster_id": "sha256:b5dfaddd70628e8f197bed9ac495482e479d3d4d30111163117d06369fa5dbf9",
+  "started_monotonic_ns": 916736416633015,
+  "status": "completed",
+  "unit_id": "sha256:f8dab1a52c42fe49e5856ea2647f50e7a67545314771897a973e5f518c268f1d"
+}

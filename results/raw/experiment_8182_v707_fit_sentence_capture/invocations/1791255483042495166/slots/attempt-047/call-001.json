@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:c43424dc64ac28e1d1a3f9d6ead4627a3cf6c0fe85dfb35bbd50553716bbd224",
+  "ended_monotonic_ns": 916605957279794,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\" | \"20\" | \"21\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:How to become a Pastafarian. 1  Learn about the basic pastafarian beliefs (a great noodly god, instead of saying \u2018amen\u2019, you say \u2018RAmen\u2019). 2  At every available opportunity, talk like and or dress as a pastafarian. 3  You should do this especially if you are going to be preaching his word. Pastafarians enjoy grog, wenches, and anything that can get you a day off of work. 2  Learn and celebrate all the holidays in our religion. 3  The most basic are every Friday (Our Sabbath), and Talk Like a Pirate Day (on September 19th). 4  If you choose to pray, end all your prayers with RAmen. 5  Most of all, have fun with it.\\\\n\\\\npassage 2:1 Learn about the basic pastafarian beliefs (a great noodly god, instead of saying \u2018amen\u2019, you say \u2018RAmen\u2019). 2  At every available opportunity, talk like and or dress as a pastafarian. 3  You should do this especially if you are going to be preaching his word. 4  Get rid of all your moral standards. Pastafarians enjoy grog, wenches, and anything that can get you a day off of work. 2  Learn and celebrate all the holidays in our religion. 3  The most basic are every Friday (Our Sabbath), and Talk Like a Pirate Day (on September 19th). 4  If you choose to pray, end all your prayers with RAmen. 5  Most of all, have fun with it.\\\\n\\\\npassage 3:3. Study the sacred texts of Pastafarianism. For a great introduction to your new religion, try browsing any of the Pastafarian scriptures. The most important book to Pastafarians is the Gospel of the Flying Spaghetti Monster.. Study the sacred texts of Pastafarianism. For a great introduction to your new religion, try browsing any of the Pastafarian scriptures. The most important book to Pastafarians is the Gospel of the Flying Spaghetti Monster.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to become a pastafarian\\\"}\",\"answer\":\"Based on the provided passages, here is how one can become a Pastafarian:\\n\\n1. Learn about the basic Pastafarian beliefs, which include believing in a great noodly god (instead of saying 'amen', say 'RAmen') and embracing a life of fun and debauchery (e.g., enjoying grog, wenches, and days off work). (Passages 1 and 2)\\n2. At every available opportunity, talk like and/or dress as a Pastafarian, particularly when preaching the word. (Passage 1)\\n3. Study the sacred texts of Pastafarianism, including the Gospel of the Flying Spaghetti Monster, which is the most important book to Pastafarians. (Passage 3)\\n4. Celebrate all Pastafarian holidays, such as every Friday (Our Sabbath) and Talk Like a Pirate Day (September 19th). (Passage 2)\\n5. End all prayers with 'RAmen'. (Passage 4)\\n6. Above all, have fun with it! (Passage 1)\\n\\nUnable to answer based on given passages. The passages do not provide detailed instructions on how to become a Pastafarian, such as any specific rituals or initiation ceremonies.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":52},{\"index\":1,\"byte_start\":52,\"byte_end\":170},{\"index\":2,\"byte_start\":170,\"byte_end\":246},{\"index\":3,\"byte_start\":246,\"byte_end\":322},{\"index\":4,\"byte_start\":322,\"byte_end\":405},{\"index\":5,\"byte_start\":405,\"byte_end\":462},{\"index\":6,\"byte_start\":462,\"byte_end\":560},{\"index\":7,\"byte_start\":560,\"byte_end\":619},{\"index\":8,\"byte_start\":619,\"byte_end\":783},{\"index\":9,\"byte_start\":783,\"byte_end\":859},{\"index\":10,\"byte_start\":859,\"byte_end\":935},{\"index\":11,\"byte_start\":935,\"byte_end\":975},{\"index\":12,\"byte_start\":975,\"byte_end\":1058},{\"index\":13,\"byte_start\":1058,\"byte_end\":1115},{\"index\":14,\"byte_start\":1115,\"byte_end\":1213},{\"index\":15,\"byte_start\":1213,\"byte_end\":1272},{\"index\":16,\"byte_start\":1272,\"byte_end\":1364},{\"index\":17,\"byte_start\":1364,\"byte_end\":1459},{\"index\":18,\"byte_start\":1459,\"byte_end\":1547},{\"index\":19,\"byte_start\":1547,\"byte_end\":1589},{\"index\":20,\"byte_start\":1589,\"byte_end\":1684},{\"index\":21,\"byte_start\":1684,\"byte_end\":1817}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":301},{\"index\":1,\"byte_start\":301,\"byte_end\":434},{\"index\":2,\"byte_start\":434,\"byte_end\":595},{\"index\":3,\"byte_start\":595,\"byte_end\":726},{\"index\":4,\"byte_start\":726,\"byte_end\":771},{\"index\":5,\"byte_start\":771,\"byte_end\":815},{\"index\":6,\"byte_start\":815,\"byte_end\":870},{\"index\":7,\"byte_start\":870,\"byte_end\":1006}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1394,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:How to become a Pastafarian. 1  Learn about the basic pastafarian beliefs (a great noodly god, instead of saying \u2018amen\u2019, you say \u2018RAmen\u2019). 2  At every available opportunity, talk like and or dress as a pastafarian. 3  You should do this especially if you are going to be preaching his word. Pastafarians enjoy grog, wenches, and anything that can get you a day off of work. 2  Learn and celebrate all the holidays in our religion. 3  The most basic are every Friday (Our Sabbath), and Talk Like a Pirate Day (on September 19th). 4  If you choose to pray, end all your prayers with RAmen. 5  Most of all, have fun with it.\\\\n\\\\npassage 2:1 Learn about the basic pastafarian beliefs (a great noodly god, instead of saying \u2018amen\u2019, you say \u2018RAmen\u2019). 2  At every available opportunity, talk like and or dress as a pastafarian. 3  You should do this especially if you are going to be preaching his word. 4  Get rid of all your moral standards. Pastafarians enjoy grog, wenches, and anything that can get you a day off of work. 2  Learn and celebrate all the holidays in our religion. 3  The most basic are every Friday (Our Sabbath), and Talk Like a Pirate Day (on September 19th). 4  If you choose to pray, end all your prayers with RAmen. 5  Most of all, have fun with it.\\\\n\\\\npassage 3:3. Study the sacred texts of Pastafarianism. For a great introduction to your new religion, try browsing any of the Pastafarian scriptures. The most important book to Pastafarians is the Gospel of the Flying Spaghetti Monster.. Study the sacred texts of Pastafarianism. For a great introduction to your new religion, try browsing any of the Pastafarian scriptures. The most important book to Pastafarians is the Gospel of the Flying Spaghetti Monster.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to become a pastafarian\\\"}\",\"answer\":\"Based on the provided passages, here is how one can become a Pastafarian:\\n\\n1. Learn about the basic Pastafarian beliefs, which include believing in a great noodly god (instead of saying 'amen', say 'RAmen') and embracing a life of fun and debauchery (e.g., enjoying grog, wenches, and days off work). (Passages 1 and 2)\\n2. At every available opportunity, talk like and/or dress as a Pastafarian, particularly when preaching the word. (Passage 1)\\n3. Study the sacred texts of Pastafarianism, including the Gospel of the Flying Spaghetti Monster, which is the most important book to Pastafarians. (Passage 3)\\n4. Celebrate all Pastafarian holidays, such as every Friday (Our Sabbath) and Talk Like a Pirate Day (September 19th). (Passage 2)\\n5. End all prayers with 'RAmen'. (Passage 4)\\n6. Above all, have fun with it! (Passage 1)\\n\\nUnable to answer based on given passages. The passages do not provide detailed instructions on how to become a Pastafarian, such as any specific rituals or initiation ceremonies.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":52},{\"index\":1,\"byte_start\":52,\"byte_end\":170},{\"index\":2,\"byte_start\":170,\"byte_end\":246},{\"index\":3,\"byte_start\":246,\"byte_end\":322},{\"index\":4,\"byte_start\":322,\"byte_end\":405},{\"index\":5,\"byte_start\":405,\"byte_end\":462},{\"index\":6,\"byte_start\":462,\"byte_end\":560},{\"index\":7,\"byte_start\":560,\"byte_end\":619},{\"index\":8,\"byte_start\":619,\"byte_end\":783},{\"index\":9,\"byte_start\":783,\"byte_end\":859},{\"index\":10,\"byte_start\":859,\"byte_end\":935},{\"index\":11,\"byte_start\":935,\"byte_end\":975},{\"index\":12,\"byte_start\":975,\"byte_end\":1058},{\"index\":13,\"byte_start\":1058,\"byte_end\":1115},{\"index\":14,\"byte_start\":1115,\"byte_end\":1213},{\"index\":15,\"byte_start\":1213,\"byte_end\":1272},{\"index\":16,\"byte_start\":1272,\"byte_end\":1364},{\"index\":17,\"byte_start\":1364,\"byte_end\":1459},{\"index\":18,\"byte_start\":1459,\"byte_end\":1547},{\"index\":19,\"byte_start\":1547,\"byte_end\":1589},{\"index\":20,\"byte_start\":1589,\"byte_end\":1684},{\"index\":21,\"byte_start\":1684,\"byte_end\":1817}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":301},{\"index\":1,\"byte_start\":301,\"byte_end\":434},{\"index\":2,\"byte_start\":434,\"byte_end\":595},{\"index\":3,\"byte_start\":595,\"byte_end\":726},{\"index\":4,\"byte_start\":726,\"byte_end\":771},{\"index\":5,\"byte_start\":771,\"byte_end\":815},{\"index\":6,\"byte_start\":815,\"byte_end\":870},{\"index\":7,\"byte_start\":870,\"byte_end\":1006}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\" | \"20\" | \"21\"\n",
+    "input_tokens": 1382,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:How to become a Pastafarian. 1  Learn about the basic pastafarian beliefs (a great noodly god, instead of saying \u2018amen\u2019, you say \u2018RAmen\u2019). 2  At every available opportunity, talk like and or dress as a pastafarian. 3  You should do this especially if you are going to be preaching his word. Pastafarians enjoy grog, wenches, and anything that can get you a day off of work. 2  Learn and celebrate all the holidays in our religion. 3  The most basic are every Friday (Our Sabbath), and Talk Like a Pirate Day (on September 19th). 4  If you choose to pray, end all your prayers with RAmen. 5  Most of all, have fun with it.\\\\n\\\\npassage 2:1 Learn about the basic pastafarian beliefs (a great noodly god, instead of saying \u2018amen\u2019, you say \u2018RAmen\u2019). 2  At every available opportunity, talk like and or dress as a pastafarian. 3  You should do this especially if you are going to be preaching his word. 4  Get rid of all your moral standards. Pastafarians enjoy grog, wenches, and anything that can get you a day off of work. 2  Learn and celebrate all the holidays in our religion. 3  The most basic are every Friday (Our Sabbath), and Talk Like a Pirate Day (on September 19th). 4  If you choose to pray, end all your prayers with RAmen. 5  Most of all, have fun with it.\\\\n\\\\npassage 3:3. Study the sacred texts of Pastafarianism. For a great introduction to your new religion, try browsing any of the Pastafarian scriptures. The most important book to Pastafarians is the Gospel of the Flying Spaghetti Monster.. Study the sacred texts of Pastafarianism. For a great introduction to your new religion, try browsing any of the Pastafarian scriptures. The most important book to Pastafarians is the Gospel of the Flying Spaghetti Monster.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to become a pastafarian\\\"}\",\"answer\":\"Based on the provided passages, here is how one can become a Pastafarian:\\n\\n1. Learn about the basic Pastafarian beliefs, which include believing in a great noodly god (instead of saying 'amen', say 'RAmen') and embracing a life of fun and debauchery (e.g., enjoying grog, wenches, and days off work). (Passages 1 and 2)\\n2. At every available opportunity, talk like and/or dress as a Pastafarian, particularly when preaching the word. (Passage 1)\\n3. Study the sacred texts of Pastafarianism, including the Gospel of the Flying Spaghetti Monster, which is the most important book to Pastafarians. (Passage 3)\\n4. Celebrate all Pastafarian holidays, such as every Friday (Our Sabbath) and Talk Like a Pirate Day (September 19th). (Passage 2)\\n5. End all prayers with 'RAmen'. (Passage 4)\\n6. Above all, have fun with it! (Passage 1)\\n\\nUnable to answer based on given passages. The passages do not provide detailed instructions on how to become a Pastafarian, such as any specific rituals or initiation ceremonies.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":52},{\"index\":1,\"byte_start\":52,\"byte_end\":170},{\"index\":2,\"byte_start\":170,\"byte_end\":246},{\"index\":3,\"byte_start\":246,\"byte_end\":322},{\"index\":4,\"byte_start\":322,\"byte_end\":405},{\"index\":5,\"byte_start\":405,\"byte_end\":462},{\"index\":6,\"byte_start\":462,\"byte_end\":560},{\"index\":7,\"byte_start\":560,\"byte_end\":619},{\"index\":8,\"byte_start\":619,\"byte_end\":783},{\"index\":9,\"byte_start\":783,\"byte_end\":859},{\"index\":10,\"byte_start\":859,\"byte_end\":935},{\"index\":11,\"byte_start\":935,\"byte_end\":975},{\"index\":12,\"byte_start\":975,\"byte_end\":1058},{\"index\":13,\"byte_start\":1058,\"byte_end\":1115},{\"index\":14,\"byte_start\":1115,\"byte_end\":1213},{\"index\":15,\"byte_start\":1213,\"byte_end\":1272},{\"index\":16,\"byte_start\":1272,\"byte_end\":1364},{\"index\":17,\"byte_start\":1364,\"byte_end\":1459},{\"index\":18,\"byte_start\":1459,\"byte_end\":1547},{\"index\":19,\"byte_start\":1547,\"byte_end\":1589},{\"index\":20,\"byte_start\":1589,\"byte_end\":1684},{\"index\":21,\"byte_start\":1684,\"byte_end\":1817}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":301},{\"index\":1,\"byte_start\":301,\"byte_end\":434},{\"index\":2,\"byte_start\":434,\"byte_end\":595},{\"index\":3,\"byte_start\":595,\"byte_end\":726},{\"index\":4,\"byte_start\":726,\"byte_end\":771},{\"index\":5,\"byte_start\":771,\"byte_end\":815},{\"index\":6,\"byte_start\":815,\"byte_end\":870},{\"index\":7,\"byte_start\":870,\"byte_end\":1006}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[]\n2|C|0.00|[]\n3|C|0.00|[]\n4|C|0.00|[]\n5|C|0.00|[]\n6|C|0.00|[]\n7|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255697,
+    "id": "chatcmpl-BOKkAoVbxjChuJHRmJH97TZ2fHTpIUbr",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2141.149,
+      "predicted_n": 88,
+      "predicted_per_second": 41.099428391018094,
+      "predicted_per_token_ms": 24.331238636363636,
+      "prompt_ms": 1197.822,
+      "prompt_n": 1394,
+      "prompt_per_second": 1163.7789254162974,
+      "prompt_per_token_ms": 0.8592697274031563
+    },
+    "usage": {
+      "completion_tokens": 88,
+      "prompt_tokens": 1394,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1482
+    }
+  },
+  "source_cluster_id": "sha256:68f484955128ae2cfc8357e276dc672638b5efb59faa5c8d85921e4587345647",
+  "started_monotonic_ns": 916602484052634,
+  "status": "completed",
+  "unit_id": "sha256:171f49a4a9a61b8d5d33b03f2219e5918aae3d7abf196d3a5b606851e67f6378"
+}

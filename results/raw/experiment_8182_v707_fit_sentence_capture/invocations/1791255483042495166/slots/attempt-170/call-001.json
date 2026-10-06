@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:265921e6d6c599a9eca79bdd8e7dc3d86b5c08b446d9556ad94a243f7c21ced6",
+  "ended_monotonic_ns": 916880450816156,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Lost all keyboard and Mouse functions. 1  Jun 12, 2010, 5:19 PM. Hey johnniedoo, I had this problem a while back and found that the issue was a setting in the BIOS. I know you've already had a look, but try looking for a Allow USB Keyboard option. If that's on, then everything should be working.\\\\n\\\\npassage 2:The computer keyboard is used in conjunction with the mouse as the primary input device. numeric keypad, navigation and editing keys, directional keys, function keys, and the escape key (ESC). (ALT), and the Windows key ( ). The CTRL, ALT, and Windows keys are usually found on each end of the space bar.\\\\n\\\\npassage 3:A mouse typically controls the motion of a pointer in two dimensions in a graphical user interface (GUI). The mouse turns movements of the hand backward and forward, left and right into equivalent electronic signals that in turn are used to move the pointer.\\\\n\\\\n\\\",\\\"question\\\":\\\"the function of a keyboard and mouse\\\"}\",\"answer\":\"The function of a keyboard and mouse is to serve as the primary input devices for a computer. The keyboard is used for various functions such as inputting numerical data, navigation and editing, among others. It consists of keys like the numeric keypad, directional keys, function keys, and the escape key (ESC), including the CTRL, ALT, and Windows keys. The mouse, on the other hand, controls the motion of a pointer in two dimensions in a graphical user interface (GUI). It turns movements of the hand backward and forward, left and right into equivalent electronic signals which are used to move the pointer.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":62},{\"index\":1,\"byte_start\":62,\"byte_end\":88},{\"index\":2,\"byte_start\":88,\"byte_end\":188},{\"index\":3,\"byte_start\":188,\"byte_end\":271},{\"index\":4,\"byte_start\":271,\"byte_end\":422},{\"index\":5,\"byte_start\":422,\"byte_end\":526},{\"index\":6,\"byte_start\":526,\"byte_end\":558},{\"index\":7,\"byte_start\":558,\"byte_end\":757},{\"index\":8,\"byte_start\":757,\"byte_end\":965}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":94},{\"index\":1,\"byte_start\":94,\"byte_end\":209},{\"index\":2,\"byte_start\":209,\"byte_end\":356},{\"index\":3,\"byte_start\":356,\"byte_end\":474},{\"index\":4,\"byte_start\":474,\"byte_end\":612}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 685,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Lost all keyboard and Mouse functions. 1  Jun 12, 2010, 5:19 PM. Hey johnniedoo, I had this problem a while back and found that the issue was a setting in the BIOS. I know you've already had a look, but try looking for a Allow USB Keyboard option. If that's on, then everything should be working.\\\\n\\\\npassage 2:The computer keyboard is used in conjunction with the mouse as the primary input device. numeric keypad, navigation and editing keys, directional keys, function keys, and the escape key (ESC). (ALT), and the Windows key ( ). The CTRL, ALT, and Windows keys are usually found on each end of the space bar.\\\\n\\\\npassage 3:A mouse typically controls the motion of a pointer in two dimensions in a graphical user interface (GUI). The mouse turns movements of the hand backward and forward, left and right into equivalent electronic signals that in turn are used to move the pointer.\\\\n\\\\n\\\",\\\"question\\\":\\\"the function of a keyboard and mouse\\\"}\",\"answer\":\"The function of a keyboard and mouse is to serve as the primary input devices for a computer. The keyboard is used for various functions such as inputting numerical data, navigation and editing, among others. It consists of keys like the numeric keypad, directional keys, function keys, and the escape key (ESC), including the CTRL, ALT, and Windows keys. The mouse, on the other hand, controls the motion of a pointer in two dimensions in a graphical user interface (GUI). It turns movements of the hand backward and forward, left and right into equivalent electronic signals which are used to move the pointer.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":62},{\"index\":1,\"byte_start\":62,\"byte_end\":88},{\"index\":2,\"byte_start\":88,\"byte_end\":188},{\"index\":3,\"byte_start\":188,\"byte_end\":271},{\"index\":4,\"byte_start\":271,\"byte_end\":422},{\"index\":5,\"byte_start\":422,\"byte_end\":526},{\"index\":6,\"byte_start\":526,\"byte_end\":558},{\"index\":7,\"byte_start\":558,\"byte_end\":757},{\"index\":8,\"byte_start\":757,\"byte_end\":965}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":94},{\"index\":1,\"byte_start\":94,\"byte_end\":209},{\"index\":2,\"byte_start\":209,\"byte_end\":356},{\"index\":3,\"byte_start\":356,\"byte_end\":474},{\"index\":4,\"byte_start\":474,\"byte_end\":612}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\"\n",
+    "input_tokens": 673,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Lost all keyboard and Mouse functions. 1  Jun 12, 2010, 5:19 PM. Hey johnniedoo, I had this problem a while back and found that the issue was a setting in the BIOS. I know you've already had a look, but try looking for a Allow USB Keyboard option. If that's on, then everything should be working.\\\\n\\\\npassage 2:The computer keyboard is used in conjunction with the mouse as the primary input device. numeric keypad, navigation and editing keys, directional keys, function keys, and the escape key (ESC). (ALT), and the Windows key ( ). The CTRL, ALT, and Windows keys are usually found on each end of the space bar.\\\\n\\\\npassage 3:A mouse typically controls the motion of a pointer in two dimensions in a graphical user interface (GUI). The mouse turns movements of the hand backward and forward, left and right into equivalent electronic signals that in turn are used to move the pointer.\\\\n\\\\n\\\",\\\"question\\\":\\\"the function of a keyboard and mouse\\\"}\",\"answer\":\"The function of a keyboard and mouse is to serve as the primary input devices for a computer. The keyboard is used for various functions such as inputting numerical data, navigation and editing, among others. It consists of keys like the numeric keypad, directional keys, function keys, and the escape key (ESC), including the CTRL, ALT, and Windows keys. The mouse, on the other hand, controls the motion of a pointer in two dimensions in a graphical user interface (GUI). It turns movements of the hand backward and forward, left and right into equivalent electronic signals which are used to move the pointer.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":62},{\"index\":1,\"byte_start\":62,\"byte_end\":88},{\"index\":2,\"byte_start\":88,\"byte_end\":188},{\"index\":3,\"byte_start\":188,\"byte_end\":271},{\"index\":4,\"byte_start\":271,\"byte_end\":422},{\"index\":5,\"byte_start\":422,\"byte_end\":526},{\"index\":6,\"byte_start\":526,\"byte_end\":558},{\"index\":7,\"byte_start\":558,\"byte_end\":757},{\"index\":8,\"byte_start\":757,\"byte_end\":965}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":94},{\"index\":1,\"byte_start\":94,\"byte_end\":209},{\"index\":2,\"byte_start\":209,\"byte_end\":356},{\"index\":3,\"byte_start\":356,\"byte_end\":474},{\"index\":4,\"byte_start\":474,\"byte_end\":612}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|1.00|[]\n1|C|1.00|[1,2]\n2|C|1.00|[2,3]\n3|C|1.00|[4]\n4|C|1.00|[5,6]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255972,
+    "id": "chatcmpl-Nsdq1hUTrMau705GsER1QHmPEbGRLks8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1574.398,
+      "predicted_n": 65,
+      "predicted_per_second": 41.28562155185665,
+      "predicted_per_token_ms": 24.22150769230769,
+      "prompt_ms": 664.349,
+      "prompt_n": 646,
+      "prompt_per_second": 972.380480741297,
+      "prompt_per_token_ms": 1.028404024767802
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 685,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 750
+    }
+  },
+  "source_cluster_id": "sha256:15acc9c5fc82a4c84b7c5c80a024de92332f451df9fdc27f1bfebd187a0bbc37",
+  "started_monotonic_ns": 916878060359142,
+  "status": "completed",
+  "unit_id": "sha256:0adde617806beeb0710b070374823068d316ffac778b9f96d8746ba97eab1208"
+}

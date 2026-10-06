@@ -1,0 +1,97 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:130513d0ed376cb03476745ffc8fe90b5c3e43c2ff8053132c20997e12e7ff37",
+  "condition": "original",
+  "ended_monotonic_ns": 914711660669649,
+  "exclusion_reason": null,
+  "historical": true,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Fold both tails of the cheer bow ribbon down following the outline on the template mat. If using a ruler, fold. down crossing in the center starting at 3 from the end middle point. Cross the ribbon in the middle. making the top of the cross just under the back piece of ribbon.\\\\n\\\\npassage 2:Hold the ribbon firmly in the center and slide the template material out of the ribbon. Keeping a firm grasp on the center, work the middle back and forth a few times to create \u201cmountains and valleys\u201d in the ribbon. While holding the center crease, place the plastic zip tie around the center and close it half way.\\\\n\\\\npassage 3:Be careful not to get glue all over the ribbon. With the bow facing up, use a small piece of ribbon to create the center tie. Hot glue one end to the hair band area, wrap the ribbon around and hot glue the other end on top of the ribbon. Again, don't use too much glue because it will ooze out and look bad. The finished ribbon looks something like this.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to fold a cheer bow\\\"}\",\"answer\":\"Based on the provided passages, here is how you can fold a cheer bow:\\n\\n1. Fold both tails of the cheer bow ribbon down following the outline on the template mat. If using a ruler, fold down the crossing in the center, starting at 3 inches from the end middle point. Cross the ribbon in the middle, making the top of the cross just under the back piece of ribbon. (Passage 1)\\n2. Hold the ribbon firmly in the center and slide the template material out of the ribbon. Keeping a firm grasp on the center, work the middle back and forth a few times to create \\\"mountains and valleys\\\" in the ribbon. While holding the center crease, place the plastic zip tie around the center and close it halfway. (Passage 2)\\n3. Be careful not to get glue all over the ribbon when creating the center tie. Use a small piece of ribbon to create the center tie, and hot glue one end to the hair band area. Wrap the ribbon around and hot glue the other end on top of the ribbon. Make sure not to use too much glue, as it may ooze out and look bad. (Passage 3)\\n\\nI hope this helps! Let me know if you have any further questions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":111},{\"index\":1,\"byte_start\":111,\"byte_end\":135},{\"index\":2,\"byte_start\":135,\"byte_end\":204},{\"index\":3,\"byte_start\":204,\"byte_end\":236},{\"index\":4,\"byte_start\":236,\"byte_end\":402},{\"index\":5,\"byte_start\":402,\"byte_end\":534},{\"index\":6,\"byte_start\":534,\"byte_end\":695},{\"index\":7,\"byte_start\":695,\"byte_end\":773},{\"index\":8,\"byte_start\":773,\"byte_end\":885},{\"index\":9,\"byte_start\":885,\"byte_end\":955},{\"index\":10,\"byte_start\":955,\"byte_end\":1044}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":162},{\"index\":1,\"byte_start\":162,\"byte_end\":266},{\"index\":2,\"byte_start\":266,\"byte_end\":363},{\"index\":3,\"byte_start\":363,\"byte_end\":466},{\"index\":4,\"byte_start\":466,\"byte_end\":594},{\"index\":5,\"byte_start\":594,\"byte_end\":693},{\"index\":6,\"byte_start\":693,\"byte_end\":785},{\"index\":7,\"byte_start\":785,\"byte_end\":883},{\"index\":8,\"byte_start\":883,\"byte_end\":955},{\"index\":9,\"byte_start\":955,\"byte_end\":1024},{\"index\":10,\"byte_start\":1024,\"byte_end\":1056},{\"index\":11,\"byte_start\":1056,\"byte_end\":1102}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8181-sentence-transport-canary",
+  "rendered_input_tokens": 1022,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Fold both tails of the cheer bow ribbon down following the outline on the template mat. If using a ruler, fold. down crossing in the center starting at 3 from the end middle point. Cross the ribbon in the middle. making the top of the cross just under the back piece of ribbon.\\\\n\\\\npassage 2:Hold the ribbon firmly in the center and slide the template material out of the ribbon. Keeping a firm grasp on the center, work the middle back and forth a few times to create \u201cmountains and valleys\u201d in the ribbon. While holding the center crease, place the plastic zip tie around the center and close it half way.\\\\n\\\\npassage 3:Be careful not to get glue all over the ribbon. With the bow facing up, use a small piece of ribbon to create the center tie. Hot glue one end to the hair band area, wrap the ribbon around and hot glue the other end on top of the ribbon. Again, don't use too much glue because it will ooze out and look bad. The finished ribbon looks something like this.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to fold a cheer bow\\\"}\",\"answer\":\"Based on the provided passages, here is how you can fold a cheer bow:\\n\\n1. Fold both tails of the cheer bow ribbon down following the outline on the template mat. If using a ruler, fold down the crossing in the center, starting at 3 inches from the end middle point. Cross the ribbon in the middle, making the top of the cross just under the back piece of ribbon. (Passage 1)\\n2. Hold the ribbon firmly in the center and slide the template material out of the ribbon. Keeping a firm grasp on the center, work the middle back and forth a few times to create \\\"mountains and valleys\\\" in the ribbon. While holding the center crease, place the plastic zip tie around the center and close it halfway. (Passage 2)\\n3. Be careful not to get glue all over the ribbon when creating the center tie. Use a small piece of ribbon to create the center tie, and hot glue one end to the hair band area. Wrap the ribbon around and hot glue the other end on top of the ribbon. Make sure not to use too much glue, as it may ooze out and look bad. (Passage 3)\\n\\nI hope this helps! Let me know if you have any further questions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":111},{\"index\":1,\"byte_start\":111,\"byte_end\":135},{\"index\":2,\"byte_start\":135,\"byte_end\":204},{\"index\":3,\"byte_start\":204,\"byte_end\":236},{\"index\":4,\"byte_start\":236,\"byte_end\":402},{\"index\":5,\"byte_start\":402,\"byte_end\":534},{\"index\":6,\"byte_start\":534,\"byte_end\":695},{\"index\":7,\"byte_start\":695,\"byte_end\":773},{\"index\":8,\"byte_start\":773,\"byte_end\":885},{\"index\":9,\"byte_start\":885,\"byte_end\":955},{\"index\":10,\"byte_start\":955,\"byte_end\":1044}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":162},{\"index\":1,\"byte_start\":162,\"byte_end\":266},{\"index\":2,\"byte_start\":266,\"byte_end\":363},{\"index\":3,\"byte_start\":363,\"byte_end\":466},{\"index\":4,\"byte_start\":466,\"byte_end\":594},{\"index\":5,\"byte_start\":594,\"byte_end\":693},{\"index\":6,\"byte_start\":693,\"byte_end\":785},{\"index\":7,\"byte_start\":785,\"byte_end\":883},{\"index\":8,\"byte_start\":883,\"byte_end\":955},{\"index\":9,\"byte_start\":955,\"byte_end\":1024},{\"index\":10,\"byte_start\":1024,\"byte_end\":1056},{\"index\":11,\"byte_start\":1056,\"byte_end\":1102}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\"\n",
+    "input_tokens": 1010,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Fold both tails of the cheer bow ribbon down following the outline on the template mat. If using a ruler, fold. down crossing in the center starting at 3 from the end middle point. Cross the ribbon in the middle. making the top of the cross just under the back piece of ribbon.\\\\n\\\\npassage 2:Hold the ribbon firmly in the center and slide the template material out of the ribbon. Keeping a firm grasp on the center, work the middle back and forth a few times to create \u201cmountains and valleys\u201d in the ribbon. While holding the center crease, place the plastic zip tie around the center and close it half way.\\\\n\\\\npassage 3:Be careful not to get glue all over the ribbon. With the bow facing up, use a small piece of ribbon to create the center tie. Hot glue one end to the hair band area, wrap the ribbon around and hot glue the other end on top of the ribbon. Again, don't use too much glue because it will ooze out and look bad. The finished ribbon looks something like this.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to fold a cheer bow\\\"}\",\"answer\":\"Based on the provided passages, here is how you can fold a cheer bow:\\n\\n1. Fold both tails of the cheer bow ribbon down following the outline on the template mat. If using a ruler, fold down the crossing in the center, starting at 3 inches from the end middle point. Cross the ribbon in the middle, making the top of the cross just under the back piece of ribbon. (Passage 1)\\n2. Hold the ribbon firmly in the center and slide the template material out of the ribbon. Keeping a firm grasp on the center, work the middle back and forth a few times to create \\\"mountains and valleys\\\" in the ribbon. While holding the center crease, place the plastic zip tie around the center and close it halfway. (Passage 2)\\n3. Be careful not to get glue all over the ribbon when creating the center tie. Use a small piece of ribbon to create the center tie, and hot glue one end to the hair band area. Wrap the ribbon around and hot glue the other end on top of the ribbon. Make sure not to use too much glue, as it may ooze out and look bad. (Passage 3)\\n\\nI hope this helps! Let me know if you have any further questions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":111},{\"index\":1,\"byte_start\":111,\"byte_end\":135},{\"index\":2,\"byte_start\":135,\"byte_end\":204},{\"index\":3,\"byte_start\":204,\"byte_end\":236},{\"index\":4,\"byte_start\":236,\"byte_end\":402},{\"index\":5,\"byte_start\":402,\"byte_end\":534},{\"index\":6,\"byte_start\":534,\"byte_end\":695},{\"index\":7,\"byte_start\":695,\"byte_end\":773},{\"index\":8,\"byte_start\":773,\"byte_end\":885},{\"index\":9,\"byte_start\":885,\"byte_end\":955},{\"index\":10,\"byte_start\":955,\"byte_end\":1044}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":162},{\"index\":1,\"byte_start\":162,\"byte_end\":266},{\"index\":2,\"byte_start\":266,\"byte_end\":363},{\"index\":3,\"byte_start\":363,\"byte_end\":466},{\"index\":4,\"byte_start\":466,\"byte_end\":594},{\"index\":5,\"byte_start\":594,\"byte_end\":693},{\"index\":6,\"byte_start\":693,\"byte_end\":785},{\"index\":7,\"byte_start\":785,\"byte_end\":883},{\"index\":8,\"byte_start\":883,\"byte_end\":955},{\"index\":9,\"byte_start\":955,\"byte_end\":1024},{\"index\":10,\"byte_start\":1024,\"byte_end\":1056},{\"index\":11,\"byte_start\":1056,\"byte_end\":1102}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[0,1]\n2|E|1.00|[2,3]\n3|E|1.00|[4,5]\n4|E|1.00|[6,7]\n5|E|1.00|[8,9]\n6|E|1.00|[10]\n7|B|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791253803,
+    "id": "chatcmpl-WWeUzEVqiBl51VvgRrQzLZy4rOPN04Lj",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2577.227,
+      "predicted_n": 105,
+      "predicted_per_second": 40.741463596338235,
+      "predicted_per_token_ms": 24.545019047619046,
+      "prompt_ms": 908.068,
+      "prompt_n": 1022,
+      "prompt_per_second": 1125.4663747648854,
+      "prompt_per_token_ms": 0.8885205479452055
+    },
+    "usage": {
+      "completion_tokens": 105,
+      "prompt_tokens": 1022,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1127
+    }
+  },
+  "source_cluster_id": "sha256:1ee928dd7b92971e254ea77f20b2c484d06ff08faf0b2d3776f976727b48ac79",
+  "started_monotonic_ns": 914707936569378,
+  "status": "completed",
+  "unit_id": "sha256:e084a0c097d84135e1847b2d95928ae5362fa59ccc3e1322042399583111039f"
+}

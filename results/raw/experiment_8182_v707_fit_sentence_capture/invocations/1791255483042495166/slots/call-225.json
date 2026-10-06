@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:aec887c650341b2b478f3c03c0aa6b29da04663c6b2d52d8d367e0e970f43360",
+  "condition": "original",
+  "ended_monotonic_ns": 917038726325993,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"5112 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, Barbeque\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:0\\\",\\\"Monday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-20:0\\\",\\\"Sunday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Woody's BBQ\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-13 19:50:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Closed, after 39 years!  RIP Woody's. Bodacious!\\\\n\\\\nAlways a fun eclectic atmosphere and great energy and bountiful comfort food . I'll miss Woody's. And I'm vegetarian! Yummy fries. \\\\n\\\\nA lot of history. I used to go to the location on Montecito Street. They were always at festivals, too. \\\\n\\\\nDo you remember when the Goleta location was Flapper Alley? The old logo is still on the windows. \\\\n\\\\nThe owners are opening a new restaurant at the old Timbers location\\\"},{\\\"review_date\\\":\\\"2021-10-10 19:53:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Been coming here more than a decade, found out it's closing down. Offerings are slim, but swing by and get it while you can!\\\"},{\\\"review_date\\\":\\\"2021-08-26 19:47:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We need last minute small catering (15 people) planned for a corporate summer event and found Woody's here on yelp. I was a little hesitant because some of the reviews, but I am so glad we went with Woody's. Kim was extremely helpful in planning our event even with only 2 days lead time. She was efficient, friendly, and made sure we had what was needed for our small event. Food was delivered timely and it was hot and delicious. The tri-tip and ribs were a hit and there was tons of food provided (and leftovers) for what we chose. I would definitely choose Woody's for both a casual get together or another corporate event.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Woody's BBQ is a popular restaurant located in Santa Barbara, California, known for its delicious barbecue and eclectic atmosphere. With a rating of 3.0 stars, the business offers a range of dining experiences, including outdoor seating and takeout options. While some customers have expressed disappointment with the lack of parking and WiFi, many have praised the quality of the food and the friendly service. The business has a loyal customer base, with many reviewers mentioning their fondness for the place and the nostalgia it evokes. Despite its closure after 39 years, Woody's will be remembered as a beloved local institution.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":808},{\"index\":1,\"byte_start\":808,\"byte_end\":821},{\"index\":2,\"byte_start\":821,\"byte_end\":914},{\"index\":3,\"byte_start\":914,\"byte_end\":933},{\"index\":4,\"byte_start\":933,\"byte_end\":953},{\"index\":5,\"byte_start\":953,\"byte_end\":966},{\"index\":6,\"byte_start\":966,\"byte_end\":988},{\"index\":7,\"byte_start\":988,\"byte_end\":1038},{\"index\":8,\"byte_start\":1038,\"byte_end\":1074},{\"index\":9,\"byte_start\":1074,\"byte_end\":1138},{\"index\":10,\"byte_start\":1138,\"byte_end\":1176},{\"index\":11,\"byte_start\":1176,\"byte_end\":1387},{\"index\":12,\"byte_start\":1387,\"byte_end\":1635},{\"index\":13,\"byte_start\":1635,\"byte_end\":1727},{\"index\":14,\"byte_start\":1727,\"byte_end\":1808},{\"index\":15,\"byte_start\":1808,\"byte_end\":1895},{\"index\":16,\"byte_start\":1895,\"byte_end\":1951},{\"index\":17,\"byte_start\":1951,\"byte_end\":2054},{\"index\":18,\"byte_start\":2054,\"byte_end\":2163}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":132},{\"index\":1,\"byte_start\":132,\"byte_end\":258},{\"index\":2,\"byte_start\":258,\"byte_end\":412},{\"index\":3,\"byte_start\":412,\"byte_end\":541},{\"index\":4,\"byte_start\":541,\"byte_end\":635}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 1320,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"5112 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, Barbeque\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:0\\\",\\\"Monday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-20:0\\\",\\\"Sunday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Woody's BBQ\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-13 19:50:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Closed, after 39 years!  RIP Woody's. Bodacious!\\\\n\\\\nAlways a fun eclectic atmosphere and great energy and bountiful comfort food . I'll miss Woody's. And I'm vegetarian! Yummy fries. \\\\n\\\\nA lot of history. I used to go to the location on Montecito Street. They were always at festivals, too. \\\\n\\\\nDo you remember when the Goleta location was Flapper Alley? The old logo is still on the windows. \\\\n\\\\nThe owners are opening a new restaurant at the old Timbers location\\\"},{\\\"review_date\\\":\\\"2021-10-10 19:53:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Been coming here more than a decade, found out it's closing down. Offerings are slim, but swing by and get it while you can!\\\"},{\\\"review_date\\\":\\\"2021-08-26 19:47:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We need last minute small catering (15 people) planned for a corporate summer event and found Woody's here on yelp. I was a little hesitant because some of the reviews, but I am so glad we went with Woody's. Kim was extremely helpful in planning our event even with only 2 days lead time. She was efficient, friendly, and made sure we had what was needed for our small event. Food was delivered timely and it was hot and delicious. The tri-tip and ribs were a hit and there was tons of food provided (and leftovers) for what we chose. I would definitely choose Woody's for both a casual get together or another corporate event.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Woody's BBQ is a popular restaurant located in Santa Barbara, California, known for its delicious barbecue and eclectic atmosphere. With a rating of 3.0 stars, the business offers a range of dining experiences, including outdoor seating and takeout options. While some customers have expressed disappointment with the lack of parking and WiFi, many have praised the quality of the food and the friendly service. The business has a loyal customer base, with many reviewers mentioning their fondness for the place and the nostalgia it evokes. Despite its closure after 39 years, Woody's will be remembered as a beloved local institution.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":808},{\"index\":1,\"byte_start\":808,\"byte_end\":821},{\"index\":2,\"byte_start\":821,\"byte_end\":914},{\"index\":3,\"byte_start\":914,\"byte_end\":933},{\"index\":4,\"byte_start\":933,\"byte_end\":953},{\"index\":5,\"byte_start\":953,\"byte_end\":966},{\"index\":6,\"byte_start\":966,\"byte_end\":988},{\"index\":7,\"byte_start\":988,\"byte_end\":1038},{\"index\":8,\"byte_start\":1038,\"byte_end\":1074},{\"index\":9,\"byte_start\":1074,\"byte_end\":1138},{\"index\":10,\"byte_start\":1138,\"byte_end\":1176},{\"index\":11,\"byte_start\":1176,\"byte_end\":1387},{\"index\":12,\"byte_start\":1387,\"byte_end\":1635},{\"index\":13,\"byte_start\":1635,\"byte_end\":1727},{\"index\":14,\"byte_start\":1727,\"byte_end\":1808},{\"index\":15,\"byte_start\":1808,\"byte_end\":1895},{\"index\":16,\"byte_start\":1895,\"byte_end\":1951},{\"index\":17,\"byte_start\":1951,\"byte_end\":2054},{\"index\":18,\"byte_start\":2054,\"byte_end\":2163}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":132},{\"index\":1,\"byte_start\":132,\"byte_end\":258},{\"index\":2,\"byte_start\":258,\"byte_end\":412},{\"index\":3,\"byte_start\":412,\"byte_end\":541},{\"index\":4,\"byte_start\":541,\"byte_end\":635}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\"\n",
+    "input_tokens": 1308,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"5112 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, Barbeque\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:0\\\",\\\"Monday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-20:0\\\",\\\"Sunday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Woody's BBQ\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-13 19:50:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Closed, after 39 years!  RIP Woody's. Bodacious!\\\\n\\\\nAlways a fun eclectic atmosphere and great energy and bountiful comfort food . I'll miss Woody's. And I'm vegetarian! Yummy fries. \\\\n\\\\nA lot of history. I used to go to the location on Montecito Street. They were always at festivals, too. \\\\n\\\\nDo you remember when the Goleta location was Flapper Alley? The old logo is still on the windows. \\\\n\\\\nThe owners are opening a new restaurant at the old Timbers location\\\"},{\\\"review_date\\\":\\\"2021-10-10 19:53:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Been coming here more than a decade, found out it's closing down. Offerings are slim, but swing by and get it while you can!\\\"},{\\\"review_date\\\":\\\"2021-08-26 19:47:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We need last minute small catering (15 people) planned for a corporate summer event and found Woody's here on yelp. I was a little hesitant because some of the reviews, but I am so glad we went with Woody's. Kim was extremely helpful in planning our event even with only 2 days lead time. She was efficient, friendly, and made sure we had what was needed for our small event. Food was delivered timely and it was hot and delicious. The tri-tip and ribs were a hit and there was tons of food provided (and leftovers) for what we chose. I would definitely choose Woody's for both a casual get together or another corporate event.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Woody's BBQ is a popular restaurant located in Santa Barbara, California, known for its delicious barbecue and eclectic atmosphere. With a rating of 3.0 stars, the business offers a range of dining experiences, including outdoor seating and takeout options. While some customers have expressed disappointment with the lack of parking and WiFi, many have praised the quality of the food and the friendly service. The business has a loyal customer base, with many reviewers mentioning their fondness for the place and the nostalgia it evokes. Despite its closure after 39 years, Woody's will be remembered as a beloved local institution.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":808},{\"index\":1,\"byte_start\":808,\"byte_end\":821},{\"index\":2,\"byte_start\":821,\"byte_end\":914},{\"index\":3,\"byte_start\":914,\"byte_end\":933},{\"index\":4,\"byte_start\":933,\"byte_end\":953},{\"index\":5,\"byte_start\":953,\"byte_end\":966},{\"index\":6,\"byte_start\":966,\"byte_end\":988},{\"index\":7,\"byte_start\":988,\"byte_end\":1038},{\"index\":8,\"byte_start\":1038,\"byte_end\":1074},{\"index\":9,\"byte_start\":1074,\"byte_end\":1138},{\"index\":10,\"byte_start\":1138,\"byte_end\":1176},{\"index\":11,\"byte_start\":1176,\"byte_end\":1387},{\"index\":12,\"byte_start\":1387,\"byte_end\":1635},{\"index\":13,\"byte_start\":1635,\"byte_end\":1727},{\"index\":14,\"byte_start\":1727,\"byte_end\":1808},{\"index\":15,\"byte_start\":1808,\"byte_end\":1895},{\"index\":16,\"byte_start\":1895,\"byte_end\":1951},{\"index\":17,\"byte_start\":1951,\"byte_end\":2054},{\"index\":18,\"byte_start\":2054,\"byte_end\":2163}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":132},{\"index\":1,\"byte_start\":132,\"byte_end\":258},{\"index\":2,\"byte_start\":258,\"byte_end\":412},{\"index\":3,\"byte_start\":412,\"byte_end\":541},{\"index\":4,\"byte_start\":541,\"byte_end\":635}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[]\n1|C|0.90|[0,11]\n2|C|0.85|[0,11]\n3|C|0.80|[0,11]\n4|C|0.95|[0,11]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256130,
+    "id": "chatcmpl-h4SPmKxgP1ehSk3ZGnyYbq7EZgkKYCPn",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1724.546,
+      "predicted_n": 71,
+      "predicted_per_second": 41.17025582385161,
+      "predicted_per_token_ms": 24.289380281690143,
+      "prompt_ms": 1167.156,
+      "prompt_n": 1281,
+      "prompt_per_second": 1097.5396605081069,
+      "prompt_per_token_ms": 0.9111288056206088
+    },
+    "usage": {
+      "completion_tokens": 71,
+      "prompt_tokens": 1320,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1391
+    }
+  },
+  "source_cluster_id": "sha256:64790a0aea65362d5d9d1bedbdcadc2a0369c06abe5516df1bd4e8f4efa412d4",
+  "started_monotonic_ns": 917035687113887,
+  "status": "completed",
+  "unit_id": "sha256:783ba41272a8dcdd6c91f91d979cfc0ad8ebe9959e3fbc1cf609f6a4d152ab47"
+}

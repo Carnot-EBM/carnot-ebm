@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:0d71b59e9ac2b81c0aca087ce46cd6c0cf28044d02393cd72a4e994f27264db4",
+  "ended_monotonic_ns": 916553928807979,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Ravens Appear to Be Landing Spot for Derrick Henry\\nThe Baltimore Ravens appear to be se tot make a big move ahead of the NFL Trade deadline on Tuesday, with the running game the target.\\nWith the Tennessee Titans seemingly embracing a much needed rebuild, kicked off by the decision to start Will Levis as Ryan Tannehill is injured and the trading of long-time safety and team captain Kevin Byard, it appears that the Titans may be sellers at the deadline.\\nA number of NFL journalists, sports content creators, and analysts have already been speculating that the Titans may be very busy at the deadline, but now it appears that one of their biggest names will likely be changing jerseys next week.\\nThat player is Titans running back Derrick Henry, who has long been one of the best running backs in the league, despite having a down season in 2023, compared to his production in prior seasons.\\nHenry had been rumored to be available during the offseason, so trading him next week wouldn't come as a complete shock, and it appears that two teams are considered to be leading the pack when it comes to landing Henry.\\nThe Baltimore Ravens and Cleveland Browns already have a storied rivalry, and they appear set to battle it out for Henry in the coming days.\\nHowever, it appears that the Ravens have the inside track.\\nBaltimore, which has a Top 5 rushing offense in the NFL, has had to rely on quarterback Lamar Jackson for the bulk of their rushing yards and rushing touchdowns, and without Jackson's contributions the Ravens would drop out of the Top 10 in rushing.\\nThe Ravens are also without running back J.K. Dobbins who suffered a season-ending Achilles injury in the season opener, leaving the team to rely on the likes of Gus Edwards and Justive Hill, along with Melvin Gordon.\\nThe leads to the Ravens having interest in Henry, and likely being the most aggressive in landing him.\\nRegardless of where he lands, it appears likely that Henry will be on the move next week.\",\"answer\":\"The Baltimore Ravens are expected to make a big move by acquiring running back Derrick Henry from the Tennessee Titans before the NFL Trade deadline. The Titans seem to be embracing a rebuild and may be sellers at the deadline. Henry, despite a less productive season in 2023, is still considered one of the best running backs in the league. The Ravens, with their strong rushing offense and lack of depth at the position, are seen as the frontrunners to land Henry. It is likely that Henry will be traded next week.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":186},{\"index\":1,\"byte_start\":186,\"byte_end\":456},{\"index\":2,\"byte_start\":456,\"byte_end\":697},{\"index\":3,\"byte_start\":697,\"byte_end\":893},{\"index\":4,\"byte_start\":893,\"byte_end\":1114},{\"index\":5,\"byte_start\":1114,\"byte_end\":1255},{\"index\":6,\"byte_start\":1255,\"byte_end\":1314},{\"index\":7,\"byte_start\":1314,\"byte_end\":1564},{\"index\":8,\"byte_start\":1564,\"byte_end\":1610},{\"index\":9,\"byte_start\":1610,\"byte_end\":1782},{\"index\":10,\"byte_start\":1782,\"byte_end\":1885},{\"index\":11,\"byte_start\":1885,\"byte_end\":1974}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":150},{\"index\":1,\"byte_start\":150,\"byte_end\":228},{\"index\":2,\"byte_start\":228,\"byte_end\":342},{\"index\":3,\"byte_start\":342,\"byte_end\":467},{\"index\":4,\"byte_start\":467,\"byte_end\":516}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 926,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Ravens Appear to Be Landing Spot for Derrick Henry\\nThe Baltimore Ravens appear to be se tot make a big move ahead of the NFL Trade deadline on Tuesday, with the running game the target.\\nWith the Tennessee Titans seemingly embracing a much needed rebuild, kicked off by the decision to start Will Levis as Ryan Tannehill is injured and the trading of long-time safety and team captain Kevin Byard, it appears that the Titans may be sellers at the deadline.\\nA number of NFL journalists, sports content creators, and analysts have already been speculating that the Titans may be very busy at the deadline, but now it appears that one of their biggest names will likely be changing jerseys next week.\\nThat player is Titans running back Derrick Henry, who has long been one of the best running backs in the league, despite having a down season in 2023, compared to his production in prior seasons.\\nHenry had been rumored to be available during the offseason, so trading him next week wouldn't come as a complete shock, and it appears that two teams are considered to be leading the pack when it comes to landing Henry.\\nThe Baltimore Ravens and Cleveland Browns already have a storied rivalry, and they appear set to battle it out for Henry in the coming days.\\nHowever, it appears that the Ravens have the inside track.\\nBaltimore, which has a Top 5 rushing offense in the NFL, has had to rely on quarterback Lamar Jackson for the bulk of their rushing yards and rushing touchdowns, and without Jackson's contributions the Ravens would drop out of the Top 10 in rushing.\\nThe Ravens are also without running back J.K. Dobbins who suffered a season-ending Achilles injury in the season opener, leaving the team to rely on the likes of Gus Edwards and Justive Hill, along with Melvin Gordon.\\nThe leads to the Ravens having interest in Henry, and likely being the most aggressive in landing him.\\nRegardless of where he lands, it appears likely that Henry will be on the move next week.\",\"answer\":\"The Baltimore Ravens are expected to make a big move by acquiring running back Derrick Henry from the Tennessee Titans before the NFL Trade deadline. The Titans seem to be embracing a rebuild and may be sellers at the deadline. Henry, despite a less productive season in 2023, is still considered one of the best running backs in the league. The Ravens, with their strong rushing offense and lack of depth at the position, are seen as the frontrunners to land Henry. It is likely that Henry will be traded next week.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":186},{\"index\":1,\"byte_start\":186,\"byte_end\":456},{\"index\":2,\"byte_start\":456,\"byte_end\":697},{\"index\":3,\"byte_start\":697,\"byte_end\":893},{\"index\":4,\"byte_start\":893,\"byte_end\":1114},{\"index\":5,\"byte_start\":1114,\"byte_end\":1255},{\"index\":6,\"byte_start\":1255,\"byte_end\":1314},{\"index\":7,\"byte_start\":1314,\"byte_end\":1564},{\"index\":8,\"byte_start\":1564,\"byte_end\":1610},{\"index\":9,\"byte_start\":1610,\"byte_end\":1782},{\"index\":10,\"byte_start\":1782,\"byte_end\":1885},{\"index\":11,\"byte_start\":1885,\"byte_end\":1974}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":150},{\"index\":1,\"byte_start\":150,\"byte_end\":228},{\"index\":2,\"byte_start\":228,\"byte_end\":342},{\"index\":3,\"byte_start\":342,\"byte_end\":467},{\"index\":4,\"byte_start\":467,\"byte_end\":516}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "input_tokens": 914,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Ravens Appear to Be Landing Spot for Derrick Henry\\nThe Baltimore Ravens appear to be se tot make a big move ahead of the NFL Trade deadline on Tuesday, with the running game the target.\\nWith the Tennessee Titans seemingly embracing a much needed rebuild, kicked off by the decision to start Will Levis as Ryan Tannehill is injured and the trading of long-time safety and team captain Kevin Byard, it appears that the Titans may be sellers at the deadline.\\nA number of NFL journalists, sports content creators, and analysts have already been speculating that the Titans may be very busy at the deadline, but now it appears that one of their biggest names will likely be changing jerseys next week.\\nThat player is Titans running back Derrick Henry, who has long been one of the best running backs in the league, despite having a down season in 2023, compared to his production in prior seasons.\\nHenry had been rumored to be available during the offseason, so trading him next week wouldn't come as a complete shock, and it appears that two teams are considered to be leading the pack when it comes to landing Henry.\\nThe Baltimore Ravens and Cleveland Browns already have a storied rivalry, and they appear set to battle it out for Henry in the coming days.\\nHowever, it appears that the Ravens have the inside track.\\nBaltimore, which has a Top 5 rushing offense in the NFL, has had to rely on quarterback Lamar Jackson for the bulk of their rushing yards and rushing touchdowns, and without Jackson's contributions the Ravens would drop out of the Top 10 in rushing.\\nThe Ravens are also without running back J.K. Dobbins who suffered a season-ending Achilles injury in the season opener, leaving the team to rely on the likes of Gus Edwards and Justive Hill, along with Melvin Gordon.\\nThe leads to the Ravens having interest in Henry, and likely being the most aggressive in landing him.\\nRegardless of where he lands, it appears likely that Henry will be on the move next week.\",\"answer\":\"The Baltimore Ravens are expected to make a big move by acquiring running back Derrick Henry from the Tennessee Titans before the NFL Trade deadline. The Titans seem to be embracing a rebuild and may be sellers at the deadline. Henry, despite a less productive season in 2023, is still considered one of the best running backs in the league. The Ravens, with their strong rushing offense and lack of depth at the position, are seen as the frontrunners to land Henry. It is likely that Henry will be traded next week.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":186},{\"index\":1,\"byte_start\":186,\"byte_end\":456},{\"index\":2,\"byte_start\":456,\"byte_end\":697},{\"index\":3,\"byte_start\":697,\"byte_end\":893},{\"index\":4,\"byte_start\":893,\"byte_end\":1114},{\"index\":5,\"byte_start\":1114,\"byte_end\":1255},{\"index\":6,\"byte_start\":1255,\"byte_end\":1314},{\"index\":7,\"byte_start\":1314,\"byte_end\":1564},{\"index\":8,\"byte_start\":1564,\"byte_end\":1610},{\"index\":9,\"byte_start\":1610,\"byte_end\":1782},{\"index\":10,\"byte_start\":1782,\"byte_end\":1885},{\"index\":11,\"byte_start\":1885,\"byte_end\":1974}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":150},{\"index\":1,\"byte_start\":150,\"byte_end\":228},{\"index\":2,\"byte_start\":228,\"byte_end\":342},{\"index\":3,\"byte_start\":342,\"byte_end\":467},{\"index\":4,\"byte_start\":467,\"byte_end\":516}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,1]\n1|E|0.90|[1]\n2|E|0.95|[4]\n3|E|0.90|[7,9]\n4|E|0.95|[11]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255645,
+    "id": "chatcmpl-NWOn60ofOtlUiVSJsTGM4PzkSZlIfVek",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1743.242,
+      "predicted_n": 70,
+      "predicted_per_second": 40.15506739741241,
+      "predicted_per_token_ms": 24.903457142857143,
+      "prompt_ms": 855.185,
+      "prompt_n": 926,
+      "prompt_per_second": 1082.8066441764063,
+      "prompt_per_token_ms": 0.9235259179265658
+    },
+    "usage": {
+      "completion_tokens": 70,
+      "prompt_tokens": 926,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 996
+    }
+  },
+  "source_cluster_id": "sha256:7dfb5c7284b91d208931487d267a44f3832d3366b71e958bb01a2911503ef5b0",
+  "started_monotonic_ns": 916551201876429,
+  "status": "completed",
+  "unit_id": "sha256:72ab4b15e7aec735972522a94dc9c98db8424af805ca4a9f273b350a10ba78e9"
+}

@@ -1,0 +1,88 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:e1234d06cb8596165ff2911a19dcb9e5b1628e40c72d1578aedd30dcb0b1915d",
+  "ended_monotonic_ns": 916612769409684,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Hydrocortisone should be used with caution in: children, the elderly, patients with ulcers of the stomach or duodenum, patients with a history of or family history of mental illness including depression, renal disease, liver disease, heart failure, heart attack, diabetes, glaucoma (an eye condition), osteoporosis (a bone condition), inflammation of ...\\\\n\\\\npassage 2:Hydrocortisone is a topical steroid. It reduces the actions of chemicals in the body that cause inflammation, redness, and swelling. Hydrocortisone topical is used to treat inflammation of the skin caused by a number of conditions such as allergic reactions, eczema, or psoriasis.\\\\n\\\\npassage 3:DRUG CLASS AND MECHANISM: Hydrocortisone is a naturally-occurring corticosteroid produced by the adrenal glands. Corticosteroids have potent anti-inflammatory properties and are used in a wide variety of inflammatory conditions such as: arthritis, colitis, asthma, bronchitis, certain skin rashes, and.\\\\n\\\\n\\\",\\\"question\\\":\\\"what would hydrocortisone capsules be used for\\\"}\",\"answer\":\"Based on the given passages, hydrocortisone capsules would be used for reducing inflammation of the skin caused by various conditions like allergic reactions, eczema, or psoriasis. However, it should be used with caution in children, the elderly, patients with ulcers of the stomach or duodenum, patients with a history of or family history of mental illness including depression, renal disease, liver disease, heart failure, heart attack, diabetes, glaucoma (an eye condition), osteoporosis (a bone condition), and inflammation of other parts of the body.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":428},{\"index\":1,\"byte_start\":428,\"byte_end\":524},{\"index\":2,\"byte_start\":524,\"byte_end\":798},{\"index\":3,\"byte_start\":798,\"byte_end\":1053}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":181},{\"index\":1,\"byte_start\":181,\"byte_end\":556}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 555,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Hydrocortisone should be used with caution in: children, the elderly, patients with ulcers of the stomach or duodenum, patients with a history of or family history of mental illness including depression, renal disease, liver disease, heart failure, heart attack, diabetes, glaucoma (an eye condition), osteoporosis (a bone condition), inflammation of ...\\\\n\\\\npassage 2:Hydrocortisone is a topical steroid. It reduces the actions of chemicals in the body that cause inflammation, redness, and swelling. Hydrocortisone topical is used to treat inflammation of the skin caused by a number of conditions such as allergic reactions, eczema, or psoriasis.\\\\n\\\\npassage 3:DRUG CLASS AND MECHANISM: Hydrocortisone is a naturally-occurring corticosteroid produced by the adrenal glands. Corticosteroids have potent anti-inflammatory properties and are used in a wide variety of inflammatory conditions such as: arthritis, colitis, asthma, bronchitis, certain skin rashes, and.\\\\n\\\\n\\\",\\\"question\\\":\\\"what would hydrocortisone capsules be used for\\\"}\",\"answer\":\"Based on the given passages, hydrocortisone capsules would be used for reducing inflammation of the skin caused by various conditions like allergic reactions, eczema, or psoriasis. However, it should be used with caution in children, the elderly, patients with ulcers of the stomach or duodenum, patients with a history of or family history of mental illness including depression, renal disease, liver disease, heart failure, heart attack, diabetes, glaucoma (an eye condition), osteoporosis (a bone condition), and inflammation of other parts of the body.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":428},{\"index\":1,\"byte_start\":428,\"byte_end\":524},{\"index\":2,\"byte_start\":524,\"byte_end\":798},{\"index\":3,\"byte_start\":798,\"byte_end\":1053}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":181},{\"index\":1,\"byte_start\":181,\"byte_end\":556}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\"\n",
+    "input_tokens": 543,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Hydrocortisone should be used with caution in: children, the elderly, patients with ulcers of the stomach or duodenum, patients with a history of or family history of mental illness including depression, renal disease, liver disease, heart failure, heart attack, diabetes, glaucoma (an eye condition), osteoporosis (a bone condition), inflammation of ...\\\\n\\\\npassage 2:Hydrocortisone is a topical steroid. It reduces the actions of chemicals in the body that cause inflammation, redness, and swelling. Hydrocortisone topical is used to treat inflammation of the skin caused by a number of conditions such as allergic reactions, eczema, or psoriasis.\\\\n\\\\npassage 3:DRUG CLASS AND MECHANISM: Hydrocortisone is a naturally-occurring corticosteroid produced by the adrenal glands. Corticosteroids have potent anti-inflammatory properties and are used in a wide variety of inflammatory conditions such as: arthritis, colitis, asthma, bronchitis, certain skin rashes, and.\\\\n\\\\n\\\",\\\"question\\\":\\\"what would hydrocortisone capsules be used for\\\"}\",\"answer\":\"Based on the given passages, hydrocortisone capsules would be used for reducing inflammation of the skin caused by various conditions like allergic reactions, eczema, or psoriasis. However, it should be used with caution in children, the elderly, patients with ulcers of the stomach or duodenum, patients with a history of or family history of mental illness including depression, renal disease, liver disease, heart failure, heart attack, diabetes, glaucoma (an eye condition), osteoporosis (a bone condition), and inflammation of other parts of the body.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":428},{\"index\":1,\"byte_start\":428,\"byte_end\":524},{\"index\":2,\"byte_start\":524,\"byte_end\":798},{\"index\":3,\"byte_start\":798,\"byte_end\":1053}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":181},{\"index\":1,\"byte_start\":181,\"byte_end\":556}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255704,
+    "id": "chatcmpl-K1G9rONg7JxqT1A2VBm5HRwxPeSH7yEG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 531.166,
+      "predicted_n": 22,
+      "predicted_per_second": 41.418313672185334,
+      "predicted_per_token_ms": 24.143909090909094,
+      "prompt_ms": 584.27,
+      "prompt_n": 555,
+      "prompt_per_second": 949.9032981327127,
+      "prompt_per_token_ms": 1.0527387387387388
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 555,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 577
+    }
+  },
+  "source_cluster_id": "sha256:d1e1c19a0396c4288e4680e35fcd68e709f9f3588c48651e591e8ff52ed17ebc",
+  "started_monotonic_ns": 916611505925518,
+  "status": "completed",
+  "unit_id": "sha256:30f18169617d9616dd4414faf8de5d24ce2b3c7577e0e9c3887eabf6f1ae61a0"
+}

@@ -1,0 +1,96 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:25d0193fdbda3990e01fc820e2ff3df93e4a35a186eb2860ce13b75681898f86",
+  "condition": "original",
+  "ended_monotonic_ns": 916809034045941,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:JSON is Like XML Because. 1  Both JSON and XML are self describing (human readable) 2  Both JSON and XML are hierarchical (values within values) 3  Both JSON and XML can be parsed and used by lots of programming languages.  Both JSON and XML can be fetched with an XMLHttpRequest.\\\\n\\\\npassage 2:Syntax: JSON syntax is quite light and definitely less verbose than XML, with all of its start and end tags. When it comes down to pure byte-size, JSON can represent the same data as XML using fewer characters. Weight: Since JSON syntax requires fewer characters, it is lighter on the wire than XML. The question is if this really matters. Any large data set is going to be large regardless of the data format you use.\\\\n\\\\npassage 3:Let's compare XML and JSON on the attributes that the XML community considers important. From http://www.simonstl.com/articles/whyxml.htm. XML is simpler than SGML, but JSON is much simpler than XML. JSON has a much smaller grammar and maps more directly onto the data structures used in modern programming languages. JSON is not extensible because it does not need to be.\\\\n\\\\n\\\",\\\"question\\\":\\\"why json vs xml\\\"}\",\"answer\":\"JSON is preferred over XML for several reasons. First, both JSON and XML are self-describing and hierarchical, and can be parsed and used by many programming languages. Additionally, both can be fetched using an XMLHttpRequest. However, JSON syntax is lighter and less verbose than XML, using fewer characters to represent the same data. This makes JSON lighter on the wire, although the impact on data size may not be significant for large datasets. Furthermore, JSON is simpler than XML, with a smaller grammar that directly maps onto data structures used in modern programming languages. JSON does not need to be extensible, unlike XML.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":49},{\"index\":1,\"byte_start\":49,\"byte_end\":247},{\"index\":2,\"byte_start\":247,\"byte_end\":426},{\"index\":3,\"byte_start\":426,\"byte_end\":528},{\"index\":4,\"byte_start\":528,\"byte_end\":617},{\"index\":5,\"byte_start\":617,\"byte_end\":657},{\"index\":6,\"byte_start\":657,\"byte_end\":838},{\"index\":7,\"byte_start\":838,\"byte_end\":888},{\"index\":8,\"byte_start\":888,\"byte_end\":949},{\"index\":9,\"byte_start\":949,\"byte_end\":1067},{\"index\":10,\"byte_start\":1067,\"byte_end\":1156}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":48},{\"index\":1,\"byte_start\":48,\"byte_end\":169},{\"index\":2,\"byte_start\":169,\"byte_end\":228},{\"index\":3,\"byte_start\":228,\"byte_end\":338},{\"index\":4,\"byte_start\":338,\"byte_end\":451},{\"index\":5,\"byte_start\":451,\"byte_end\":591},{\"index\":6,\"byte_start\":591,\"byte_end\":639}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 800,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:JSON is Like XML Because. 1  Both JSON and XML are self describing (human readable) 2  Both JSON and XML are hierarchical (values within values) 3  Both JSON and XML can be parsed and used by lots of programming languages.  Both JSON and XML can be fetched with an XMLHttpRequest.\\\\n\\\\npassage 2:Syntax: JSON syntax is quite light and definitely less verbose than XML, with all of its start and end tags. When it comes down to pure byte-size, JSON can represent the same data as XML using fewer characters. Weight: Since JSON syntax requires fewer characters, it is lighter on the wire than XML. The question is if this really matters. Any large data set is going to be large regardless of the data format you use.\\\\n\\\\npassage 3:Let's compare XML and JSON on the attributes that the XML community considers important. From http://www.simonstl.com/articles/whyxml.htm. XML is simpler than SGML, but JSON is much simpler than XML. JSON has a much smaller grammar and maps more directly onto the data structures used in modern programming languages. JSON is not extensible because it does not need to be.\\\\n\\\\n\\\",\\\"question\\\":\\\"why json vs xml\\\"}\",\"answer\":\"JSON is preferred over XML for several reasons. First, both JSON and XML are self-describing and hierarchical, and can be parsed and used by many programming languages. Additionally, both can be fetched using an XMLHttpRequest. However, JSON syntax is lighter and less verbose than XML, using fewer characters to represent the same data. This makes JSON lighter on the wire, although the impact on data size may not be significant for large datasets. Furthermore, JSON is simpler than XML, with a smaller grammar that directly maps onto data structures used in modern programming languages. JSON does not need to be extensible, unlike XML.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":49},{\"index\":1,\"byte_start\":49,\"byte_end\":247},{\"index\":2,\"byte_start\":247,\"byte_end\":426},{\"index\":3,\"byte_start\":426,\"byte_end\":528},{\"index\":4,\"byte_start\":528,\"byte_end\":617},{\"index\":5,\"byte_start\":617,\"byte_end\":657},{\"index\":6,\"byte_start\":657,\"byte_end\":838},{\"index\":7,\"byte_start\":838,\"byte_end\":888},{\"index\":8,\"byte_start\":888,\"byte_end\":949},{\"index\":9,\"byte_start\":949,\"byte_end\":1067},{\"index\":10,\"byte_start\":1067,\"byte_end\":1156}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":48},{\"index\":1,\"byte_start\":48,\"byte_end\":169},{\"index\":2,\"byte_start\":169,\"byte_end\":228},{\"index\":3,\"byte_start\":228,\"byte_end\":338},{\"index\":4,\"byte_start\":338,\"byte_end\":451},{\"index\":5,\"byte_start\":451,\"byte_end\":591},{\"index\":6,\"byte_start\":591,\"byte_end\":639}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\"\n",
+    "input_tokens": 788,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:JSON is Like XML Because. 1  Both JSON and XML are self describing (human readable) 2  Both JSON and XML are hierarchical (values within values) 3  Both JSON and XML can be parsed and used by lots of programming languages.  Both JSON and XML can be fetched with an XMLHttpRequest.\\\\n\\\\npassage 2:Syntax: JSON syntax is quite light and definitely less verbose than XML, with all of its start and end tags. When it comes down to pure byte-size, JSON can represent the same data as XML using fewer characters. Weight: Since JSON syntax requires fewer characters, it is lighter on the wire than XML. The question is if this really matters. Any large data set is going to be large regardless of the data format you use.\\\\n\\\\npassage 3:Let's compare XML and JSON on the attributes that the XML community considers important. From http://www.simonstl.com/articles/whyxml.htm. XML is simpler than SGML, but JSON is much simpler than XML. JSON has a much smaller grammar and maps more directly onto the data structures used in modern programming languages. JSON is not extensible because it does not need to be.\\\\n\\\\n\\\",\\\"question\\\":\\\"why json vs xml\\\"}\",\"answer\":\"JSON is preferred over XML for several reasons. First, both JSON and XML are self-describing and hierarchical, and can be parsed and used by many programming languages. Additionally, both can be fetched using an XMLHttpRequest. However, JSON syntax is lighter and less verbose than XML, using fewer characters to represent the same data. This makes JSON lighter on the wire, although the impact on data size may not be significant for large datasets. Furthermore, JSON is simpler than XML, with a smaller grammar that directly maps onto data structures used in modern programming languages. JSON does not need to be extensible, unlike XML.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":49},{\"index\":1,\"byte_start\":49,\"byte_end\":247},{\"index\":2,\"byte_start\":247,\"byte_end\":426},{\"index\":3,\"byte_start\":426,\"byte_end\":528},{\"index\":4,\"byte_start\":528,\"byte_end\":617},{\"index\":5,\"byte_start\":617,\"byte_end\":657},{\"index\":6,\"byte_start\":657,\"byte_end\":838},{\"index\":7,\"byte_start\":838,\"byte_end\":888},{\"index\":8,\"byte_start\":888,\"byte_end\":949},{\"index\":9,\"byte_start\":949,\"byte_end\":1067},{\"index\":10,\"byte_start\":1067,\"byte_end\":1156}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":48},{\"index\":1,\"byte_start\":48,\"byte_end\":169},{\"index\":2,\"byte_start\":169,\"byte_end\":228},{\"index\":3,\"byte_start\":228,\"byte_end\":338},{\"index\":4,\"byte_start\":338,\"byte_end\":451},{\"index\":5,\"byte_start\":451,\"byte_end\":591},{\"index\":6,\"byte_start\":591,\"byte_end\":639}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|1.00|[]\n1|C|1.00|[0,1]\n2|C|1.00|[1]\n3|C|1.00|[1]\n4|C|1.00|[1]\n5|C|1.00|[2]\n6|C|1.00|[2]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255900,
+    "id": "chatcmpl-56vvDKyB045SQUqatOfBu0mmAm6zq44W",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 2062.621,
+      "predicted_n": 85,
+      "predicted_per_second": 41.20970357617808,
+      "predicted_per_token_ms": 24.266129411764705,
+      "prompt_ms": 728.861,
+      "prompt_n": 761,
+      "prompt_per_second": 1044.0948274087928,
+      "prompt_per_token_ms": 0.9577674113009198
+    },
+    "usage": {
+      "completion_tokens": 85,
+      "prompt_tokens": 800,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 885
+    }
+  },
+  "source_cluster_id": "sha256:7e2b8b8a03afbacfb2118679ee3b653bc8529ace8d528d9295f0b49a7c6445ce",
+  "started_monotonic_ns": 916806083224636,
+  "status": "completed",
+  "unit_id": "sha256:354130cdbecd5bdd0f497e210fa140faea66debb9def146b03ab1f973a07490a"
+}

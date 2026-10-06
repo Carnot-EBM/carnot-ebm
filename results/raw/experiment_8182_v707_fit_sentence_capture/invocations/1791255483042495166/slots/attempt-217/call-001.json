@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:ee48404933355662334057e3dee14a69cf171342e54e65d983656143e8e7c347",
+  "ended_monotonic_ns": 917016341901068,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Adding a healthy dose of Epsom salts to the tub is another way to boost that bath. Like the grapefruit oil, you can also just use a bucket, if you\u2019re only having swelling in your feet and ankles. If your calves are swollen, too, a bath is probably your best bet. Epsom salts are like magic for swelling.wimming or even floating in water can help with swollen feet and ankles. The pressure from the water can help get things moving in your legs, and floating gives your circulatory system a break from gravity\u2019s constant pull. If you don\u2019t have a pool, check out local gyms to see what they offer. 10.\\\\n\\\\npassage 2:Check out some of these natural solutions to help relieve swollen feet and ankles! Swelling in your feet and ankles is called edema, and there are a lot of things that can cause the problem, from high blood pressure to pregnancy.wimming or even floating in water can help with swollen feet and ankles. The pressure from the water can help get things moving in your legs, and floating gives your circulatory system a break from gravity\u2019s constant pull. If you don\u2019t have a pool, check out local gyms to see what they offer. 10.\\\\n\\\\npassage 3:Swollen ankles and feet. Swollen ankles and swollen feet are common and are often caused by fluid retention, or oedema. The cause of the swelling can range from an injury to medical conditions. Seek medical advice if you are concerned about swollen feet or ankles.o reduce the swelling from a foot or ankle injury, rest to avoid walking on the injured ankle or foot. Use an ice pack wrapped in a towel (don\u2019t use in direct contact with the skin) for up to 20 minutes, reapply if necessary after a 20 minute break.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cure a swollen foot\\\"}\",\"answer\":\"Based on the given passages, adding Epsom salts to a bath or swimming or floating in water can help with swollen feet and ankles by reducing the swelling. Additionally, resting the injured ankle or foot and using an ice pack can also help with swelling. It is important to note that seeking medical advice is recommended if concerned about swollen feet or ankles.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":106},{\"index\":1,\"byte_start\":106,\"byte_end\":221},{\"index\":2,\"byte_start\":221,\"byte_end\":288},{\"index\":3,\"byte_start\":288,\"byte_end\":401},{\"index\":4,\"byte_start\":401,\"byte_end\":553},{\"index\":5,\"byte_start\":553,\"byte_end\":626},{\"index\":6,\"byte_start\":626,\"byte_end\":726},{\"index\":7,\"byte_start\":726,\"byte_end\":945},{\"index\":8,\"byte_start\":945,\"byte_end\":1097},{\"index\":9,\"byte_start\":1097,\"byte_end\":1170},{\"index\":10,\"byte_start\":1170,\"byte_end\":1212},{\"index\":11,\"byte_start\":1212,\"byte_end\":1307},{\"index\":12,\"byte_start\":1307,\"byte_end\":1381},{\"index\":13,\"byte_start\":1381,\"byte_end\":1554},{\"index\":14,\"byte_start\":1554,\"byte_end\":1748}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":155},{\"index\":1,\"byte_start\":155,\"byte_end\":254},{\"index\":2,\"byte_start\":254,\"byte_end\":363}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 895,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Adding a healthy dose of Epsom salts to the tub is another way to boost that bath. Like the grapefruit oil, you can also just use a bucket, if you\u2019re only having swelling in your feet and ankles. If your calves are swollen, too, a bath is probably your best bet. Epsom salts are like magic for swelling.wimming or even floating in water can help with swollen feet and ankles. The pressure from the water can help get things moving in your legs, and floating gives your circulatory system a break from gravity\u2019s constant pull. If you don\u2019t have a pool, check out local gyms to see what they offer. 10.\\\\n\\\\npassage 2:Check out some of these natural solutions to help relieve swollen feet and ankles! Swelling in your feet and ankles is called edema, and there are a lot of things that can cause the problem, from high blood pressure to pregnancy.wimming or even floating in water can help with swollen feet and ankles. The pressure from the water can help get things moving in your legs, and floating gives your circulatory system a break from gravity\u2019s constant pull. If you don\u2019t have a pool, check out local gyms to see what they offer. 10.\\\\n\\\\npassage 3:Swollen ankles and feet. Swollen ankles and swollen feet are common and are often caused by fluid retention, or oedema. The cause of the swelling can range from an injury to medical conditions. Seek medical advice if you are concerned about swollen feet or ankles.o reduce the swelling from a foot or ankle injury, rest to avoid walking on the injured ankle or foot. Use an ice pack wrapped in a towel (don\u2019t use in direct contact with the skin) for up to 20 minutes, reapply if necessary after a 20 minute break.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cure a swollen foot\\\"}\",\"answer\":\"Based on the given passages, adding Epsom salts to a bath or swimming or floating in water can help with swollen feet and ankles by reducing the swelling. Additionally, resting the injured ankle or foot and using an ice pack can also help with swelling. It is important to note that seeking medical advice is recommended if concerned about swollen feet or ankles.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":106},{\"index\":1,\"byte_start\":106,\"byte_end\":221},{\"index\":2,\"byte_start\":221,\"byte_end\":288},{\"index\":3,\"byte_start\":288,\"byte_end\":401},{\"index\":4,\"byte_start\":401,\"byte_end\":553},{\"index\":5,\"byte_start\":553,\"byte_end\":626},{\"index\":6,\"byte_start\":626,\"byte_end\":726},{\"index\":7,\"byte_start\":726,\"byte_end\":945},{\"index\":8,\"byte_start\":945,\"byte_end\":1097},{\"index\":9,\"byte_start\":1097,\"byte_end\":1170},{\"index\":10,\"byte_start\":1170,\"byte_end\":1212},{\"index\":11,\"byte_start\":1212,\"byte_end\":1307},{\"index\":12,\"byte_start\":1307,\"byte_end\":1381},{\"index\":13,\"byte_start\":1381,\"byte_end\":1554},{\"index\":14,\"byte_start\":1554,\"byte_end\":1748}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":155},{\"index\":1,\"byte_start\":155,\"byte_end\":254},{\"index\":2,\"byte_start\":254,\"byte_end\":363}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "input_tokens": 883,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Adding a healthy dose of Epsom salts to the tub is another way to boost that bath. Like the grapefruit oil, you can also just use a bucket, if you\u2019re only having swelling in your feet and ankles. If your calves are swollen, too, a bath is probably your best bet. Epsom salts are like magic for swelling.wimming or even floating in water can help with swollen feet and ankles. The pressure from the water can help get things moving in your legs, and floating gives your circulatory system a break from gravity\u2019s constant pull. If you don\u2019t have a pool, check out local gyms to see what they offer. 10.\\\\n\\\\npassage 2:Check out some of these natural solutions to help relieve swollen feet and ankles! Swelling in your feet and ankles is called edema, and there are a lot of things that can cause the problem, from high blood pressure to pregnancy.wimming or even floating in water can help with swollen feet and ankles. The pressure from the water can help get things moving in your legs, and floating gives your circulatory system a break from gravity\u2019s constant pull. If you don\u2019t have a pool, check out local gyms to see what they offer. 10.\\\\n\\\\npassage 3:Swollen ankles and feet. Swollen ankles and swollen feet are common and are often caused by fluid retention, or oedema. The cause of the swelling can range from an injury to medical conditions. Seek medical advice if you are concerned about swollen feet or ankles.o reduce the swelling from a foot or ankle injury, rest to avoid walking on the injured ankle or foot. Use an ice pack wrapped in a towel (don\u2019t use in direct contact with the skin) for up to 20 minutes, reapply if necessary after a 20 minute break.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cure a swollen foot\\\"}\",\"answer\":\"Based on the given passages, adding Epsom salts to a bath or swimming or floating in water can help with swollen feet and ankles by reducing the swelling. Additionally, resting the injured ankle or foot and using an ice pack can also help with swelling. It is important to note that seeking medical advice is recommended if concerned about swollen feet or ankles.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":106},{\"index\":1,\"byte_start\":106,\"byte_end\":221},{\"index\":2,\"byte_start\":221,\"byte_end\":288},{\"index\":3,\"byte_start\":288,\"byte_end\":401},{\"index\":4,\"byte_start\":401,\"byte_end\":553},{\"index\":5,\"byte_start\":553,\"byte_end\":626},{\"index\":6,\"byte_start\":626,\"byte_end\":726},{\"index\":7,\"byte_start\":726,\"byte_end\":945},{\"index\":8,\"byte_start\":945,\"byte_end\":1097},{\"index\":9,\"byte_start\":1097,\"byte_end\":1170},{\"index\":10,\"byte_start\":1170,\"byte_end\":1212},{\"index\":11,\"byte_start\":1212,\"byte_end\":1307},{\"index\":12,\"byte_start\":1307,\"byte_end\":1381},{\"index\":13,\"byte_start\":1381,\"byte_end\":1554},{\"index\":14,\"byte_start\":1554,\"byte_end\":1748}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":155},{\"index\":1,\"byte_start\":155,\"byte_end\":254},{\"index\":2,\"byte_start\":254,\"byte_end\":363}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,4]\n1|E|0.90|[3,7]\n2|C|0.85|[13]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256108,
+    "id": "chatcmpl-ndtfKMTiG6qVFdOxD0xTci9H02A5l0YO",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1067.917,
+      "predicted_n": 44,
+      "predicted_per_second": 41.201703877735824,
+      "predicted_per_token_ms": 24.270840909090907,
+      "prompt_ms": 870.789,
+      "prompt_n": 856,
+      "prompt_per_second": 983.016551656027,
+      "prompt_per_token_ms": 1.0172768691588785
+    },
+    "usage": {
+      "completion_tokens": 44,
+      "prompt_tokens": 895,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 939
+    }
+  },
+  "source_cluster_id": "sha256:6bbd6167b2779932bc17785dd8d9343a65a1e9d0b84a675d86278e9ef1ec5e41",
+  "started_monotonic_ns": 917014244813017,
+  "status": "completed",
+  "unit_id": "sha256:a4f9b44e339b52378fac65bef3c35f9138bbcdf5c27f4129b7aab97eaf85ecb2"
+}

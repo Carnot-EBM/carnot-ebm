@@ -1,0 +1,95 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:6139fdda72a20a68532849289e46e738f18655417cbcb86134005ccdba86fa6d",
+  "condition": "original",
+  "ended_monotonic_ns": 916549343586065,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:This is because the chicken we eat today are young and have under developed bone structure. When the chick is frozen, the blood seeps into the bone and forms ice crystals, only to be released when heated. I was taught in school to buy fresh, never frozen chicken to alleviate this problem, or cook it longer.\\\\n\\\\npassage 2:Heat the shortening in a large, cast iron skillet over medium-high heat. In a brown paper lunch bag, combine the flour, salt, and pepper. Shake two chicken pieces in the bag to coat, and place them in the skillet. Repeat until all of the chicken is coated and in the skillet. Fry the chicken over medium-high heat until all of the pieces have been browned on both sides. Turn the heat to medium-low, cover, and cook for 25 minutes.\\\\n\\\\npassage 3:Here's how you do it! 1  In a pot or a very deep pan, heat the oil to 350F. 2  Gently lower the chicken pieces into the oil.They should be completely submerged. 3  Cook the chicken until it reaches an internal temperature of 165F. This'll take about 10 minutes for white meat, 14 for dark, and maybe 7 minutes for wings.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to get chicken completely done when frying\\\"}\",\"answer\":\"Based on the given passages, to get chicken completely done when frying, you should follow these steps:\\n1. Heat the oil or shortening to the recommended temperature of 350F.\\n2. Coat the chicken pieces in flour, salt, and pepper mixture.\\n3. Gently lower the coated chicken pieces into the hot oil, ensuring they are completely submerged.\\n4. Fry the chicken until it reaches an internal temperature of 165F.\\n5. The cooking time may vary depending on the type of chicken piece, approximately 10 minutes for white meat, 14 minutes for dark meat, and 7 minutes for wings.\\n\\nTherefore, the chicken should be completely done when it reaches an internal temperature of 165F while frying.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":115},{\"index\":1,\"byte_start\":115,\"byte_end\":228},{\"index\":2,\"byte_start\":228,\"byte_end\":418},{\"index\":3,\"byte_start\":418,\"byte_end\":483},{\"index\":4,\"byte_start\":483,\"byte_end\":559},{\"index\":5,\"byte_start\":559,\"byte_end\":621},{\"index\":6,\"byte_start\":621,\"byte_end\":716},{\"index\":7,\"byte_start\":716,\"byte_end\":812},{\"index\":8,\"byte_start\":812,\"byte_end\":866},{\"index\":9,\"byte_start\":866,\"byte_end\":951},{\"index\":10,\"byte_start\":951,\"byte_end\":1021},{\"index\":11,\"byte_start\":1021,\"byte_end\":1176}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":174},{\"index\":1,\"byte_start\":174,\"byte_end\":237},{\"index\":2,\"byte_start\":237,\"byte_end\":337},{\"index\":3,\"byte_start\":337,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":568},{\"index\":5,\"byte_start\":568,\"byte_end\":678}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 871,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:This is because the chicken we eat today are young and have under developed bone structure. When the chick is frozen, the blood seeps into the bone and forms ice crystals, only to be released when heated. I was taught in school to buy fresh, never frozen chicken to alleviate this problem, or cook it longer.\\\\n\\\\npassage 2:Heat the shortening in a large, cast iron skillet over medium-high heat. In a brown paper lunch bag, combine the flour, salt, and pepper. Shake two chicken pieces in the bag to coat, and place them in the skillet. Repeat until all of the chicken is coated and in the skillet. Fry the chicken over medium-high heat until all of the pieces have been browned on both sides. Turn the heat to medium-low, cover, and cook for 25 minutes.\\\\n\\\\npassage 3:Here's how you do it! 1  In a pot or a very deep pan, heat the oil to 350F. 2  Gently lower the chicken pieces into the oil.They should be completely submerged. 3  Cook the chicken until it reaches an internal temperature of 165F. This'll take about 10 minutes for white meat, 14 for dark, and maybe 7 minutes for wings.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to get chicken completely done when frying\\\"}\",\"answer\":\"Based on the given passages, to get chicken completely done when frying, you should follow these steps:\\n1. Heat the oil or shortening to the recommended temperature of 350F.\\n2. Coat the chicken pieces in flour, salt, and pepper mixture.\\n3. Gently lower the coated chicken pieces into the hot oil, ensuring they are completely submerged.\\n4. Fry the chicken until it reaches an internal temperature of 165F.\\n5. The cooking time may vary depending on the type of chicken piece, approximately 10 minutes for white meat, 14 minutes for dark meat, and 7 minutes for wings.\\n\\nTherefore, the chicken should be completely done when it reaches an internal temperature of 165F while frying.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":115},{\"index\":1,\"byte_start\":115,\"byte_end\":228},{\"index\":2,\"byte_start\":228,\"byte_end\":418},{\"index\":3,\"byte_start\":418,\"byte_end\":483},{\"index\":4,\"byte_start\":483,\"byte_end\":559},{\"index\":5,\"byte_start\":559,\"byte_end\":621},{\"index\":6,\"byte_start\":621,\"byte_end\":716},{\"index\":7,\"byte_start\":716,\"byte_end\":812},{\"index\":8,\"byte_start\":812,\"byte_end\":866},{\"index\":9,\"byte_start\":866,\"byte_end\":951},{\"index\":10,\"byte_start\":951,\"byte_end\":1021},{\"index\":11,\"byte_start\":1021,\"byte_end\":1176}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":174},{\"index\":1,\"byte_start\":174,\"byte_end\":237},{\"index\":2,\"byte_start\":237,\"byte_end\":337},{\"index\":3,\"byte_start\":337,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":568},{\"index\":5,\"byte_start\":568,\"byte_end\":678}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "input_tokens": 859,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:This is because the chicken we eat today are young and have under developed bone structure. When the chick is frozen, the blood seeps into the bone and forms ice crystals, only to be released when heated. I was taught in school to buy fresh, never frozen chicken to alleviate this problem, or cook it longer.\\\\n\\\\npassage 2:Heat the shortening in a large, cast iron skillet over medium-high heat. In a brown paper lunch bag, combine the flour, salt, and pepper. Shake two chicken pieces in the bag to coat, and place them in the skillet. Repeat until all of the chicken is coated and in the skillet. Fry the chicken over medium-high heat until all of the pieces have been browned on both sides. Turn the heat to medium-low, cover, and cook for 25 minutes.\\\\n\\\\npassage 3:Here's how you do it! 1  In a pot or a very deep pan, heat the oil to 350F. 2  Gently lower the chicken pieces into the oil.They should be completely submerged. 3  Cook the chicken until it reaches an internal temperature of 165F. This'll take about 10 minutes for white meat, 14 for dark, and maybe 7 minutes for wings.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to get chicken completely done when frying\\\"}\",\"answer\":\"Based on the given passages, to get chicken completely done when frying, you should follow these steps:\\n1. Heat the oil or shortening to the recommended temperature of 350F.\\n2. Coat the chicken pieces in flour, salt, and pepper mixture.\\n3. Gently lower the coated chicken pieces into the hot oil, ensuring they are completely submerged.\\n4. Fry the chicken until it reaches an internal temperature of 165F.\\n5. The cooking time may vary depending on the type of chicken piece, approximately 10 minutes for white meat, 14 minutes for dark meat, and 7 minutes for wings.\\n\\nTherefore, the chicken should be completely done when it reaches an internal temperature of 165F while frying.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":115},{\"index\":1,\"byte_start\":115,\"byte_end\":228},{\"index\":2,\"byte_start\":228,\"byte_end\":418},{\"index\":3,\"byte_start\":418,\"byte_end\":483},{\"index\":4,\"byte_start\":483,\"byte_end\":559},{\"index\":5,\"byte_start\":559,\"byte_end\":621},{\"index\":6,\"byte_start\":621,\"byte_end\":716},{\"index\":7,\"byte_start\":716,\"byte_end\":812},{\"index\":8,\"byte_start\":812,\"byte_end\":866},{\"index\":9,\"byte_start\":866,\"byte_end\":951},{\"index\":10,\"byte_start\":951,\"byte_end\":1021},{\"index\":11,\"byte_start\":1021,\"byte_end\":1176}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":174},{\"index\":1,\"byte_start\":174,\"byte_end\":237},{\"index\":2,\"byte_start\":237,\"byte_end\":337},{\"index\":3,\"byte_start\":337,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":568},{\"index\":5,\"byte_start\":568,\"byte_end\":678}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[]\n2|C|0.00|[]\n3|C|0.00|[]\n4|C|0.00|[]\n5|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255641,
+    "id": "chatcmpl-gtyT3Gzqva1FIUBxezEaV2dL7WGZ0sAI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1595.726,
+      "predicted_n": 66,
+      "predicted_per_second": 41.360484193401625,
+      "predicted_per_token_ms": 24.177666666666667,
+      "prompt_ms": 805.426,
+      "prompt_n": 871,
+      "prompt_per_second": 1081.4153007228472,
+      "prompt_per_token_ms": 0.9247141216991964
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 871,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 937
+    }
+  },
+  "source_cluster_id": "sha256:8bd43adcbba64584ae0dcc22d18dcadee5e73dcbabf6b16b72d45f9d467ff495",
+  "started_monotonic_ns": 916546797393856,
+  "status": "completed",
+  "unit_id": "sha256:31309fd6ac21d87e583e5237046fb3aeb5b292d721c71b266718514042df07f8"
+}

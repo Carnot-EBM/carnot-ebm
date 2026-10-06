@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:02ab24228f5420152d6e2d57e08d91fc0d0a06766b647803995ed9e2f1d53a60",
+  "ended_monotonic_ns": 916559844694416,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"134 E Canon Perdido St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Japanese, Sushi Bars, Do-It-Yourself Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-21:0\\\",\\\"Monday\\\":\\\"10:30-21:0\\\",\\\"Saturday\\\":\\\"10:30-21:0\\\",\\\"Sunday\\\":\\\"10:30-21:0\\\",\\\"Thursday\\\":\\\"10:30-21:0\\\",\\\"Tuesday\\\":\\\"10:30-21:0\\\",\\\"Wednesday\\\":\\\"10:30-21:0\\\"},\\\"name\\\":\\\"Miso Hungry\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-08-29 04:51:05\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Miso closed...sign on the door for six weeks stating that they're closed for building maintenance. Didn't work out for them here.\\\"},{\\\"review_date\\\":\\\"2018-07-12 20:00:32\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"It was my first time and they were really nice and friendly but the quality of food was not there. I paid over $11 for a shrimp salad. The cucumbers werent even fresh. They looked spoiled.\\\"},{\\\"review_date\\\":\\\"2018-07-07 22:54:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Tried to order delivery, they let us know it'd be about an hour wait and then never showed up. When we called back they said it would be another 20 minutes and never showed up. If you can't pay enough employees to deliver food don't offer it on your website. Can't comment on the food because we never got any.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Here is an objective overview of Miso Hungry based on the provided structured data:\\n\\nMiso Hungry is a Japanese restaurant located in Santa Barbara, California. The restaurant offers sushi, do-it-yourself food, and takes reservations. It has free WiFi and outdoor seating, and is open seven days a week from 10:30am to 9:00pm. According to reviews, the restaurant has a casual atmosphere and the staff is friendly, but the quality of food may be inconsistent. One reviewer mentioned that the cucumbers used in a dish were not fresh, while another reviewer had a negative experience with delivery. Additionally, there have been reports of the restaurant being closed for building maintenance, so it may be best to call ahead or check the restaurant's website before visiting. Overall, Miso Hungry has an average rating of 3.0 out of 4.0 stars based on three reviews.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":934},{\"index\":1,\"byte_start\":934,\"byte_end\":1137},{\"index\":2,\"byte_start\":1137,\"byte_end\":1173},{\"index\":3,\"byte_start\":1173,\"byte_end\":1206},{\"index\":4,\"byte_start\":1206,\"byte_end\":1395},{\"index\":5,\"byte_start\":1395,\"byte_end\":1477},{\"index\":6,\"byte_start\":1477,\"byte_end\":1559},{\"index\":7,\"byte_start\":1559,\"byte_end\":1627}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":160},{\"index\":1,\"byte_start\":160,\"byte_end\":234},{\"index\":2,\"byte_start\":234,\"byte_end\":326},{\"index\":3,\"byte_start\":326,\"byte_end\":459},{\"index\":4,\"byte_start\":459,\"byte_end\":596},{\"index\":5,\"byte_start\":596,\"byte_end\":774},{\"index\":6,\"byte_start\":774,\"byte_end\":864}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1083,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"134 E Canon Perdido St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Japanese, Sushi Bars, Do-It-Yourself Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-21:0\\\",\\\"Monday\\\":\\\"10:30-21:0\\\",\\\"Saturday\\\":\\\"10:30-21:0\\\",\\\"Sunday\\\":\\\"10:30-21:0\\\",\\\"Thursday\\\":\\\"10:30-21:0\\\",\\\"Tuesday\\\":\\\"10:30-21:0\\\",\\\"Wednesday\\\":\\\"10:30-21:0\\\"},\\\"name\\\":\\\"Miso Hungry\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-08-29 04:51:05\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Miso closed...sign on the door for six weeks stating that they're closed for building maintenance. Didn't work out for them here.\\\"},{\\\"review_date\\\":\\\"2018-07-12 20:00:32\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"It was my first time and they were really nice and friendly but the quality of food was not there. I paid over $11 for a shrimp salad. The cucumbers werent even fresh. They looked spoiled.\\\"},{\\\"review_date\\\":\\\"2018-07-07 22:54:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Tried to order delivery, they let us know it'd be about an hour wait and then never showed up. When we called back they said it would be another 20 minutes and never showed up. If you can't pay enough employees to deliver food don't offer it on your website. Can't comment on the food because we never got any.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Here is an objective overview of Miso Hungry based on the provided structured data:\\n\\nMiso Hungry is a Japanese restaurant located in Santa Barbara, California. The restaurant offers sushi, do-it-yourself food, and takes reservations. It has free WiFi and outdoor seating, and is open seven days a week from 10:30am to 9:00pm. According to reviews, the restaurant has a casual atmosphere and the staff is friendly, but the quality of food may be inconsistent. One reviewer mentioned that the cucumbers used in a dish were not fresh, while another reviewer had a negative experience with delivery. Additionally, there have been reports of the restaurant being closed for building maintenance, so it may be best to call ahead or check the restaurant's website before visiting. Overall, Miso Hungry has an average rating of 3.0 out of 4.0 stars based on three reviews.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":934},{\"index\":1,\"byte_start\":934,\"byte_end\":1137},{\"index\":2,\"byte_start\":1137,\"byte_end\":1173},{\"index\":3,\"byte_start\":1173,\"byte_end\":1206},{\"index\":4,\"byte_start\":1206,\"byte_end\":1395},{\"index\":5,\"byte_start\":1395,\"byte_end\":1477},{\"index\":6,\"byte_start\":1477,\"byte_end\":1559},{\"index\":7,\"byte_start\":1559,\"byte_end\":1627}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":160},{\"index\":1,\"byte_start\":160,\"byte_end\":234},{\"index\":2,\"byte_start\":234,\"byte_end\":326},{\"index\":3,\"byte_start\":326,\"byte_end\":459},{\"index\":4,\"byte_start\":459,\"byte_end\":596},{\"index\":5,\"byte_start\":596,\"byte_end\":774},{\"index\":6,\"byte_start\":774,\"byte_end\":864}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "input_tokens": 1071,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"134 E Canon Perdido St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Japanese, Sushi Bars, Do-It-Yourself Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-21:0\\\",\\\"Monday\\\":\\\"10:30-21:0\\\",\\\"Saturday\\\":\\\"10:30-21:0\\\",\\\"Sunday\\\":\\\"10:30-21:0\\\",\\\"Thursday\\\":\\\"10:30-21:0\\\",\\\"Tuesday\\\":\\\"10:30-21:0\\\",\\\"Wednesday\\\":\\\"10:30-21:0\\\"},\\\"name\\\":\\\"Miso Hungry\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-08-29 04:51:05\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Miso closed...sign on the door for six weeks stating that they're closed for building maintenance. Didn't work out for them here.\\\"},{\\\"review_date\\\":\\\"2018-07-12 20:00:32\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"It was my first time and they were really nice and friendly but the quality of food was not there. I paid over $11 for a shrimp salad. The cucumbers werent even fresh. They looked spoiled.\\\"},{\\\"review_date\\\":\\\"2018-07-07 22:54:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Tried to order delivery, they let us know it'd be about an hour wait and then never showed up. When we called back they said it would be another 20 minutes and never showed up. If you can't pay enough employees to deliver food don't offer it on your website. Can't comment on the food because we never got any.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Here is an objective overview of Miso Hungry based on the provided structured data:\\n\\nMiso Hungry is a Japanese restaurant located in Santa Barbara, California. The restaurant offers sushi, do-it-yourself food, and takes reservations. It has free WiFi and outdoor seating, and is open seven days a week from 10:30am to 9:00pm. According to reviews, the restaurant has a casual atmosphere and the staff is friendly, but the quality of food may be inconsistent. One reviewer mentioned that the cucumbers used in a dish were not fresh, while another reviewer had a negative experience with delivery. Additionally, there have been reports of the restaurant being closed for building maintenance, so it may be best to call ahead or check the restaurant's website before visiting. Overall, Miso Hungry has an average rating of 3.0 out of 4.0 stars based on three reviews.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":934},{\"index\":1,\"byte_start\":934,\"byte_end\":1137},{\"index\":2,\"byte_start\":1137,\"byte_end\":1173},{\"index\":3,\"byte_start\":1173,\"byte_end\":1206},{\"index\":4,\"byte_start\":1206,\"byte_end\":1395},{\"index\":5,\"byte_start\":1395,\"byte_end\":1477},{\"index\":6,\"byte_start\":1477,\"byte_end\":1559},{\"index\":7,\"byte_start\":1559,\"byte_end\":1627}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":160},{\"index\":1,\"byte_start\":160,\"byte_end\":234},{\"index\":2,\"byte_start\":234,\"byte_end\":326},{\"index\":3,\"byte_start\":326,\"byte_end\":459},{\"index\":4,\"byte_start\":459,\"byte_end\":596},{\"index\":5,\"byte_start\":596,\"byte_end\":774},{\"index\":6,\"byte_start\":774,\"byte_end\":864}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]\n4|E|1.00|[]\n5|E|1.00|[]\n6|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255651,
+    "id": "chatcmpl-7lV7W0XQMoZD5ircT0YvdplOJhCjHpO5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1866.328,
+      "predicted_n": 77,
+      "predicted_per_second": 41.25748528661629,
+      "predicted_per_token_ms": 24.238025974025973,
+      "prompt_ms": 970.323,
+      "prompt_n": 1083,
+      "prompt_per_second": 1116.1231878456967,
+      "prompt_per_token_ms": 0.8959584487534625
+    },
+    "usage": {
+      "completion_tokens": 77,
+      "prompt_tokens": 1083,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1160
+    }
+  },
+  "source_cluster_id": "sha256:f18f297198e0d59db94dcb4ae3188a8d717667f5d0737cc786cbd400d58d724f",
+  "started_monotonic_ns": 916556858476061,
+  "status": "completed",
+  "unit_id": "sha256:a5c1e7f19fadb94f2ce8674c87d408aed2f3155833281034a354a1531a84d3f3"
+}

@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:1430d8a605cdbeda614da087bbe040b33c21cc9fba396f5928e5e81acd660259",
+  "ended_monotonic_ns": 916800413469554,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Because your calorie maintenance level already is how many calories are needed for you to maintain your current weight. You already did 99% of the work in that last step when you calculated what yours is. (If you skipped the previous step, now is the time to go back and do it.).All that\u2019s left to do now is make sure the amount of calories you calculated truly is 100% accurate for you and truly is how many calories you need to eat per day to maintain your current weight.f it doesn\u2019t, then just adjust your daily calorie intake up or down in small 250 calorie increments until it does. When you reach the point where you are maintaining your weight from week to week, you\u2019re done. That\u2019s how many calories you need to eat per day to maintain your current weight.\\\\n\\\\npassage 2:Women ages 19 to 30 generally require 1,800 to 2,400 calories a day, females ages 31 to 50 need about 1,800 to 2,200 calories and women over age 50 usually require about 1,600 to 2,200 calories a day to maintain healthy body weights, according to the Dietary Guidelines for Americans 2010.he more active you are, the more calories \u2013 per pound of your body weight \u2013 you require to maintain your weight.\\\\n\\\\npassage 3:To figure out exactly how many calories are needed to maintain your current weight, all it takes is a very simple 4 step experiment: 1  Consistently eat the same number of calories each day for a few weeks, and keep your activity level fairly consistent as well.f it doesn\u2019t, then just adjust your daily calorie intake up or down in small 250 calorie increments until it does. When you reach the point where you are maintaining your weight from week to week, you\u2019re done. That\u2019s how many calories you need to eat per day to maintain your current weight.\\\\n\\\\n\\\",\\\"question\\\":\\\"how many calories do i need to eat to maintain my current weight\\\"}\",\"answer\":\"Based on the given passages, the number of calories needed to maintain your current weight varies depending on factors such as age, gender, and activity level. Women ages 19 to 30 generally require 1,800 to 2,400 calories a day, females ages 31 to 50 need about 1,800 to 2,200 calories, and women over age 50 usually require about 1,600 to 2,200 calories a day. However, it is recommended to conduct a simple 4-step experiment to accurately determine the exact number of calories needed to maintain your weight. Adjusting your daily calorie intake in small increments may be necessary until you reach a point where you are maintaining your weight from week to week.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":143},{\"index\":1,\"byte_start\":143,\"byte_end\":228},{\"index\":2,\"byte_start\":228,\"byte_end\":616},{\"index\":3,\"byte_start\":616,\"byte_end\":713},{\"index\":4,\"byte_start\":713,\"byte_end\":1608},{\"index\":5,\"byte_start\":1608,\"byte_end\":1705},{\"index\":6,\"byte_start\":1705,\"byte_end\":1872}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":160},{\"index\":1,\"byte_start\":160,\"byte_end\":362},{\"index\":2,\"byte_start\":362,\"byte_end\":512},{\"index\":3,\"byte_start\":512,\"byte_end\":665}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 903,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Because your calorie maintenance level already is how many calories are needed for you to maintain your current weight. You already did 99% of the work in that last step when you calculated what yours is. (If you skipped the previous step, now is the time to go back and do it.).All that\u2019s left to do now is make sure the amount of calories you calculated truly is 100% accurate for you and truly is how many calories you need to eat per day to maintain your current weight.f it doesn\u2019t, then just adjust your daily calorie intake up or down in small 250 calorie increments until it does. When you reach the point where you are maintaining your weight from week to week, you\u2019re done. That\u2019s how many calories you need to eat per day to maintain your current weight.\\\\n\\\\npassage 2:Women ages 19 to 30 generally require 1,800 to 2,400 calories a day, females ages 31 to 50 need about 1,800 to 2,200 calories and women over age 50 usually require about 1,600 to 2,200 calories a day to maintain healthy body weights, according to the Dietary Guidelines for Americans 2010.he more active you are, the more calories \u2013 per pound of your body weight \u2013 you require to maintain your weight.\\\\n\\\\npassage 3:To figure out exactly how many calories are needed to maintain your current weight, all it takes is a very simple 4 step experiment: 1  Consistently eat the same number of calories each day for a few weeks, and keep your activity level fairly consistent as well.f it doesn\u2019t, then just adjust your daily calorie intake up or down in small 250 calorie increments until it does. When you reach the point where you are maintaining your weight from week to week, you\u2019re done. That\u2019s how many calories you need to eat per day to maintain your current weight.\\\\n\\\\n\\\",\\\"question\\\":\\\"how many calories do i need to eat to maintain my current weight\\\"}\",\"answer\":\"Based on the given passages, the number of calories needed to maintain your current weight varies depending on factors such as age, gender, and activity level. Women ages 19 to 30 generally require 1,800 to 2,400 calories a day, females ages 31 to 50 need about 1,800 to 2,200 calories, and women over age 50 usually require about 1,600 to 2,200 calories a day. However, it is recommended to conduct a simple 4-step experiment to accurately determine the exact number of calories needed to maintain your weight. Adjusting your daily calorie intake in small increments may be necessary until you reach a point where you are maintaining your weight from week to week.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":143},{\"index\":1,\"byte_start\":143,\"byte_end\":228},{\"index\":2,\"byte_start\":228,\"byte_end\":616},{\"index\":3,\"byte_start\":616,\"byte_end\":713},{\"index\":4,\"byte_start\":713,\"byte_end\":1608},{\"index\":5,\"byte_start\":1608,\"byte_end\":1705},{\"index\":6,\"byte_start\":1705,\"byte_end\":1872}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":160},{\"index\":1,\"byte_start\":160,\"byte_end\":362},{\"index\":2,\"byte_start\":362,\"byte_end\":512},{\"index\":3,\"byte_start\":512,\"byte_end\":665}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "input_tokens": 891,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Because your calorie maintenance level already is how many calories are needed for you to maintain your current weight. You already did 99% of the work in that last step when you calculated what yours is. (If you skipped the previous step, now is the time to go back and do it.).All that\u2019s left to do now is make sure the amount of calories you calculated truly is 100% accurate for you and truly is how many calories you need to eat per day to maintain your current weight.f it doesn\u2019t, then just adjust your daily calorie intake up or down in small 250 calorie increments until it does. When you reach the point where you are maintaining your weight from week to week, you\u2019re done. That\u2019s how many calories you need to eat per day to maintain your current weight.\\\\n\\\\npassage 2:Women ages 19 to 30 generally require 1,800 to 2,400 calories a day, females ages 31 to 50 need about 1,800 to 2,200 calories and women over age 50 usually require about 1,600 to 2,200 calories a day to maintain healthy body weights, according to the Dietary Guidelines for Americans 2010.he more active you are, the more calories \u2013 per pound of your body weight \u2013 you require to maintain your weight.\\\\n\\\\npassage 3:To figure out exactly how many calories are needed to maintain your current weight, all it takes is a very simple 4 step experiment: 1  Consistently eat the same number of calories each day for a few weeks, and keep your activity level fairly consistent as well.f it doesn\u2019t, then just adjust your daily calorie intake up or down in small 250 calorie increments until it does. When you reach the point where you are maintaining your weight from week to week, you\u2019re done. That\u2019s how many calories you need to eat per day to maintain your current weight.\\\\n\\\\n\\\",\\\"question\\\":\\\"how many calories do i need to eat to maintain my current weight\\\"}\",\"answer\":\"Based on the given passages, the number of calories needed to maintain your current weight varies depending on factors such as age, gender, and activity level. Women ages 19 to 30 generally require 1,800 to 2,400 calories a day, females ages 31 to 50 need about 1,800 to 2,200 calories, and women over age 50 usually require about 1,600 to 2,200 calories a day. However, it is recommended to conduct a simple 4-step experiment to accurately determine the exact number of calories needed to maintain your weight. Adjusting your daily calorie intake in small increments may be necessary until you reach a point where you are maintaining your weight from week to week.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":143},{\"index\":1,\"byte_start\":143,\"byte_end\":228},{\"index\":2,\"byte_start\":228,\"byte_end\":616},{\"index\":3,\"byte_start\":616,\"byte_end\":713},{\"index\":4,\"byte_start\":713,\"byte_end\":1608},{\"index\":5,\"byte_start\":1608,\"byte_end\":1705},{\"index\":6,\"byte_start\":1705,\"byte_end\":1872}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":160},{\"index\":1,\"byte_start\":160,\"byte_end\":362},{\"index\":2,\"byte_start\":362,\"byte_end\":512},{\"index\":3,\"byte_start\":512,\"byte_end\":665}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[1,4]\n1|C|0.90|[4]\n2|C|0.85|[2,5]\n3|C|0.80|[0,2]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255892,
+    "id": "chatcmpl-dMLO9GeKmDmdYpfH83Fuom9gDy2kUupl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1407.475,
+      "predicted_n": 58,
+      "predicted_per_second": 41.20854722108741,
+      "predicted_per_token_ms": 24.266810344827583,
+      "prompt_ms": 872.124,
+      "prompt_n": 864,
+      "prompt_per_second": 990.6848108755177,
+      "prompt_per_token_ms": 1.0094027777777779
+    },
+    "usage": {
+      "completion_tokens": 58,
+      "prompt_tokens": 903,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 961
+    }
+  },
+  "source_cluster_id": "sha256:e1018e2543568fd1f9d7bb136eab299e468d6215aff7d39e8905b681cc55c386",
+  "started_monotonic_ns": 916797978149693,
+  "status": "completed",
+  "unit_id": "sha256:e85aa5f49b6cd84bdc5f3238bcf65fc9abd13e07ae1b719e6157b53ada7aff06"
+}

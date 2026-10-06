@@ -1,0 +1,92 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:cd7c9eee4cb287534b96b28c46307c8a360642df4d436942cb419a1b17750212",
+  "ended_monotonic_ns": 917026123378422,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:A good guideline is: If you play 2-3 hours a day, every day, you should change your strings every 2 to 3 weeks. If you play 30 minutes to an hour every day, you should change your strings every 4 to 6 weeks.If you play 30 minutes to an hour every other day, 6 to 8 weeks.If you play every once in a while, you still should change your strings at least 3 times a year.I\u2019m now going to give you a walk through on how the change a string on this guitar. As you can hear right now it sounds a little dull so were going to change it and you will hear the difference in the tone.uitar strings need to be changed periodically because oil and dirt from your fingers causes your strings to sound dull. How often you have to change your guitar strings depends on how often you play and humidity levels.\\\\n\\\\npassage 2:The former depends on your guitar playing habits. If you\u2019re playing every day for an hour or two then you might want to change the strings as often as once every other week. If you\u2019re a performing artist then don\u2019t ever go on stage without a new set of strings.f you don\u2019t play that often your strings might die of old age. In this case I advise to change them every other month or every three months. Again, if you\u2019re planning on impressing your girlfriend with a nice tune it\u2019ll be nice to have a new set of strings for that too.\\\\n\\\\npassage 3:You should change your strings at least every 2 or 3 months, but this can vary so much from player to player. Professionals will change strings for every gig. Do not change your strings only if they break. You need to change all of the strings on your guitar at the same time on a regular basis.ou should change your strings at least every 2 or 3 months, but this can vary so much from player to player. Professionals will change strings for every gig. Do not change your strings only if they break. You need to change all of the strings on your guitar at the same time on a regular basis.\\\\n\\\\n\\\",\\\"question\\\":\\\"how often should i change guitar strings\\\"}\",\"answer\":\"Based on the given passages, here's the answer to the question:\\n\\nAccording to the passages, it is recommended to change guitar strings every 2 to 3 weeks if you play 2-3 hours a day, every day. If you play 30 minutes to an hour every day, you should change your strings every 4 to 6 weeks. If you play every once in a while, you should change your strings at least 3 times a year. Professionals will change their strings for every gig.\\n\\nTherefore, the frequency of changing guitar strings depends on the amount of playing time and the individual's playing habits. It is important to change all the strings on the guitar at the same time on a regular basis to maintain good tone and prevent the strings from becoming dull.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":135},{\"index\":1,\"byte_start\":135,\"byte_end\":476},{\"index\":2,\"byte_start\":476,\"byte_end\":718},{\"index\":3,\"byte_start\":718,\"byte_end\":881},{\"index\":4,\"byte_start\":881,\"byte_end\":1007},{\"index\":5,\"byte_start\":1007,\"byte_end\":1163},{\"index\":6,\"byte_start\":1163,\"byte_end\":1241},{\"index\":7,\"byte_start\":1241,\"byte_end\":1498},{\"index\":8,\"byte_start\":1498,\"byte_end\":1547},{\"index\":9,\"byte_start\":1547,\"byte_end\":1594},{\"index\":10,\"byte_start\":1594,\"byte_end\":1792},{\"index\":11,\"byte_start\":1792,\"byte_end\":1841},{\"index\":12,\"byte_start\":1841,\"byte_end\":1888},{\"index\":13,\"byte_start\":1888,\"byte_end\":2037}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":194},{\"index\":1,\"byte_start\":194,\"byte_end\":290},{\"index\":2,\"byte_start\":290,\"byte_end\":381},{\"index\":3,\"byte_start\":381,\"byte_end\":437},{\"index\":4,\"byte_start\":437,\"byte_end\":564},{\"index\":5,\"byte_start\":564,\"byte_end\":721}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1097,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:A good guideline is: If you play 2-3 hours a day, every day, you should change your strings every 2 to 3 weeks. If you play 30 minutes to an hour every day, you should change your strings every 4 to 6 weeks.If you play 30 minutes to an hour every other day, 6 to 8 weeks.If you play every once in a while, you still should change your strings at least 3 times a year.I\u2019m now going to give you a walk through on how the change a string on this guitar. As you can hear right now it sounds a little dull so were going to change it and you will hear the difference in the tone.uitar strings need to be changed periodically because oil and dirt from your fingers causes your strings to sound dull. How often you have to change your guitar strings depends on how often you play and humidity levels.\\\\n\\\\npassage 2:The former depends on your guitar playing habits. If you\u2019re playing every day for an hour or two then you might want to change the strings as often as once every other week. If you\u2019re a performing artist then don\u2019t ever go on stage without a new set of strings.f you don\u2019t play that often your strings might die of old age. In this case I advise to change them every other month or every three months. Again, if you\u2019re planning on impressing your girlfriend with a nice tune it\u2019ll be nice to have a new set of strings for that too.\\\\n\\\\npassage 3:You should change your strings at least every 2 or 3 months, but this can vary so much from player to player. Professionals will change strings for every gig. Do not change your strings only if they break. You need to change all of the strings on your guitar at the same time on a regular basis.ou should change your strings at least every 2 or 3 months, but this can vary so much from player to player. Professionals will change strings for every gig. Do not change your strings only if they break. You need to change all of the strings on your guitar at the same time on a regular basis.\\\\n\\\\n\\\",\\\"question\\\":\\\"how often should i change guitar strings\\\"}\",\"answer\":\"Based on the given passages, here's the answer to the question:\\n\\nAccording to the passages, it is recommended to change guitar strings every 2 to 3 weeks if you play 2-3 hours a day, every day. If you play 30 minutes to an hour every day, you should change your strings every 4 to 6 weeks. If you play every once in a while, you should change your strings at least 3 times a year. Professionals will change their strings for every gig.\\n\\nTherefore, the frequency of changing guitar strings depends on the amount of playing time and the individual's playing habits. It is important to change all the strings on the guitar at the same time on a regular basis to maintain good tone and prevent the strings from becoming dull.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":135},{\"index\":1,\"byte_start\":135,\"byte_end\":476},{\"index\":2,\"byte_start\":476,\"byte_end\":718},{\"index\":3,\"byte_start\":718,\"byte_end\":881},{\"index\":4,\"byte_start\":881,\"byte_end\":1007},{\"index\":5,\"byte_start\":1007,\"byte_end\":1163},{\"index\":6,\"byte_start\":1163,\"byte_end\":1241},{\"index\":7,\"byte_start\":1241,\"byte_end\":1498},{\"index\":8,\"byte_start\":1498,\"byte_end\":1547},{\"index\":9,\"byte_start\":1547,\"byte_end\":1594},{\"index\":10,\"byte_start\":1594,\"byte_end\":1792},{\"index\":11,\"byte_start\":1792,\"byte_end\":1841},{\"index\":12,\"byte_start\":1841,\"byte_end\":1888},{\"index\":13,\"byte_start\":1888,\"byte_end\":2037}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":194},{\"index\":1,\"byte_start\":194,\"byte_end\":290},{\"index\":2,\"byte_start\":290,\"byte_end\":381},{\"index\":3,\"byte_start\":381,\"byte_end\":437},{\"index\":4,\"byte_start\":437,\"byte_end\":564},{\"index\":5,\"byte_start\":564,\"byte_end\":721}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "input_tokens": 1085,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:A good guideline is: If you play 2-3 hours a day, every day, you should change your strings every 2 to 3 weeks. If you play 30 minutes to an hour every day, you should change your strings every 4 to 6 weeks.If you play 30 minutes to an hour every other day, 6 to 8 weeks.If you play every once in a while, you still should change your strings at least 3 times a year.I\u2019m now going to give you a walk through on how the change a string on this guitar. As you can hear right now it sounds a little dull so were going to change it and you will hear the difference in the tone.uitar strings need to be changed periodically because oil and dirt from your fingers causes your strings to sound dull. How often you have to change your guitar strings depends on how often you play and humidity levels.\\\\n\\\\npassage 2:The former depends on your guitar playing habits. If you\u2019re playing every day for an hour or two then you might want to change the strings as often as once every other week. If you\u2019re a performing artist then don\u2019t ever go on stage without a new set of strings.f you don\u2019t play that often your strings might die of old age. In this case I advise to change them every other month or every three months. Again, if you\u2019re planning on impressing your girlfriend with a nice tune it\u2019ll be nice to have a new set of strings for that too.\\\\n\\\\npassage 3:You should change your strings at least every 2 or 3 months, but this can vary so much from player to player. Professionals will change strings for every gig. Do not change your strings only if they break. You need to change all of the strings on your guitar at the same time on a regular basis.ou should change your strings at least every 2 or 3 months, but this can vary so much from player to player. Professionals will change strings for every gig. Do not change your strings only if they break. You need to change all of the strings on your guitar at the same time on a regular basis.\\\\n\\\\n\\\",\\\"question\\\":\\\"how often should i change guitar strings\\\"}\",\"answer\":\"Based on the given passages, here's the answer to the question:\\n\\nAccording to the passages, it is recommended to change guitar strings every 2 to 3 weeks if you play 2-3 hours a day, every day. If you play 30 minutes to an hour every day, you should change your strings every 4 to 6 weeks. If you play every once in a while, you should change your strings at least 3 times a year. Professionals will change their strings for every gig.\\n\\nTherefore, the frequency of changing guitar strings depends on the amount of playing time and the individual's playing habits. It is important to change all the strings on the guitar at the same time on a regular basis to maintain good tone and prevent the strings from becoming dull.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":135},{\"index\":1,\"byte_start\":135,\"byte_end\":476},{\"index\":2,\"byte_start\":476,\"byte_end\":718},{\"index\":3,\"byte_start\":718,\"byte_end\":881},{\"index\":4,\"byte_start\":881,\"byte_end\":1007},{\"index\":5,\"byte_start\":1007,\"byte_end\":1163},{\"index\":6,\"byte_start\":1163,\"byte_end\":1241},{\"index\":7,\"byte_start\":1241,\"byte_end\":1498},{\"index\":8,\"byte_start\":1498,\"byte_end\":1547},{\"index\":9,\"byte_start\":1547,\"byte_end\":1594},{\"index\":10,\"byte_start\":1594,\"byte_end\":1792},{\"index\":11,\"byte_start\":1792,\"byte_end\":1841},{\"index\":12,\"byte_start\":1841,\"byte_end\":1888},{\"index\":13,\"byte_start\":1888,\"byte_end\":2037}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":194},{\"index\":1,\"byte_start\":194,\"byte_end\":290},{\"index\":2,\"byte_start\":290,\"byte_end\":381},{\"index\":3,\"byte_start\":381,\"byte_end\":437},{\"index\":4,\"byte_start\":437,\"byte_end\":564},{\"index\":5,\"byte_start\":564,\"byte_end\":721}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[]\n1|E|0.95|[0,1]\n2|E|0.95|[0,1]\n3|E|0.95|[0,1]\n4|E|0.95|[2]\n5|E|0.95|[2]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256117,
+    "id": "chatcmpl-sfaYaOEoA00PK7eyChN8jDZiRQ8H9F8V",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1870.886,
+      "predicted_n": 77,
+      "predicted_per_second": 41.15697054764428,
+      "predicted_per_token_ms": 24.29722077922078,
+      "prompt_ms": 1016.8,
+      "prompt_n": 1058,
+      "prompt_per_second": 1040.5192761605035,
+      "prompt_per_token_ms": 0.9610586011342155
+    },
+    "usage": {
+      "completion_tokens": 77,
+      "prompt_tokens": 1097,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1174
+    }
+  },
+  "source_cluster_id": "sha256:7f93997ff7c0a451d0c8c6ae28bae05f35f4a38d8572f35c8a3914350b7c9938",
+  "started_monotonic_ns": 917023067441110,
+  "status": "completed",
+  "unit_id": "sha256:1bc425181013de3f45789079e728161360dc24301d81a355460b4e2e06411b66"
+}

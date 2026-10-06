@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:f56dd625bddab57641aa90af647a62e1fb630b0e1d6ed13c4ad12542ec8a1068",
+  "ended_monotonic_ns": 916687632557734,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Genetic testing is a type of medical test that identifies changes in chromosomes, genes, or proteins. The results of a genetic test can confirm or rule out a suspected genetic condition or help determine a person\u2019s chance of developing or passing on a genetic disorder.efore a person has a genetic test, it is important that he or she understands the testing procedure, the benefits and limitations of the test, and the possible consequences of the test results. The process of educating a person about the test and obtaining permission is called informed consent.\\\\n\\\\npassage 2:Reasons for Genetic Testing: Why It Matters. 80% of babies with genetic diseases are born to parents with no known family history of that disease. Early genetic screening is an important step in planning for a healthy family, and allows you to take control and make choices about your future.eing a carrier of a genetic disease means that even though you or your partner do not show symptoms, you can still pass that disease to your child. If you and your partner are both carriers of the same disease gene, each of your children has a 25% chance of being born with the disease itself.\\\\n\\\\npassage 3:Several types of genetic testing are done for different reasons: 1  Diagnostic testing. 2  If you have symptoms of a disease that may be caused by genetic alterations, genetic testing can reveal if you have the suspected disorder. If you have a family history of a genetic disorder \u2014 such as sickle cell anemia or cystic fibrosis \u2014 or you are in an ethnic group that has a high risk of a particular genetic disorder, you may choose to have genetic testing before you have children.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are some reasons genetic testing is done\\\"}\",\"answer\":\"Genetic testing is done to identify changes in chromosomes, genes, or proteins. The results can confirm or rule out a suspected genetic condition or help determine a person\u2019s chance of developing or passing on a genetic disorder. Genetic testing is often done if a person has symptoms of a disease that may be caused by genetic alterations, or if they have a family history of a genetic disorder. It can also be done if a person is in an ethnic group that has a high risk of a particular genetic disorder. Additionally, early genetic screening can be an important step in planning for a healthy family, particularly if one or both parents are carriers of a genetic disease.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":125},{\"index\":1,\"byte_start\":125,\"byte_end\":488},{\"index\":2,\"byte_start\":488,\"byte_end\":648},{\"index\":3,\"byte_start\":648,\"byte_end\":750},{\"index\":4,\"byte_start\":750,\"byte_end\":1043},{\"index\":5,\"byte_start\":1043,\"byte_end\":1290},{\"index\":6,\"byte_start\":1290,\"byte_end\":1433},{\"index\":7,\"byte_start\":1433,\"byte_end\":1752}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":80},{\"index\":1,\"byte_start\":80,\"byte_end\":232},{\"index\":2,\"byte_start\":232,\"byte_end\":399},{\"index\":3,\"byte_start\":399,\"byte_end\":508},{\"index\":4,\"byte_start\":508,\"byte_end\":675}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 819,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Genetic testing is a type of medical test that identifies changes in chromosomes, genes, or proteins. The results of a genetic test can confirm or rule out a suspected genetic condition or help determine a person\u2019s chance of developing or passing on a genetic disorder.efore a person has a genetic test, it is important that he or she understands the testing procedure, the benefits and limitations of the test, and the possible consequences of the test results. The process of educating a person about the test and obtaining permission is called informed consent.\\\\n\\\\npassage 2:Reasons for Genetic Testing: Why It Matters. 80% of babies with genetic diseases are born to parents with no known family history of that disease. Early genetic screening is an important step in planning for a healthy family, and allows you to take control and make choices about your future.eing a carrier of a genetic disease means that even though you or your partner do not show symptoms, you can still pass that disease to your child. If you and your partner are both carriers of the same disease gene, each of your children has a 25% chance of being born with the disease itself.\\\\n\\\\npassage 3:Several types of genetic testing are done for different reasons: 1  Diagnostic testing. 2  If you have symptoms of a disease that may be caused by genetic alterations, genetic testing can reveal if you have the suspected disorder. If you have a family history of a genetic disorder \u2014 such as sickle cell anemia or cystic fibrosis \u2014 or you are in an ethnic group that has a high risk of a particular genetic disorder, you may choose to have genetic testing before you have children.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are some reasons genetic testing is done\\\"}\",\"answer\":\"Genetic testing is done to identify changes in chromosomes, genes, or proteins. The results can confirm or rule out a suspected genetic condition or help determine a person\u2019s chance of developing or passing on a genetic disorder. Genetic testing is often done if a person has symptoms of a disease that may be caused by genetic alterations, or if they have a family history of a genetic disorder. It can also be done if a person is in an ethnic group that has a high risk of a particular genetic disorder. Additionally, early genetic screening can be an important step in planning for a healthy family, particularly if one or both parents are carriers of a genetic disease.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":125},{\"index\":1,\"byte_start\":125,\"byte_end\":488},{\"index\":2,\"byte_start\":488,\"byte_end\":648},{\"index\":3,\"byte_start\":648,\"byte_end\":750},{\"index\":4,\"byte_start\":750,\"byte_end\":1043},{\"index\":5,\"byte_start\":1043,\"byte_end\":1290},{\"index\":6,\"byte_start\":1290,\"byte_end\":1433},{\"index\":7,\"byte_start\":1433,\"byte_end\":1752}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":80},{\"index\":1,\"byte_start\":80,\"byte_end\":232},{\"index\":2,\"byte_start\":232,\"byte_end\":399},{\"index\":3,\"byte_start\":399,\"byte_end\":508},{\"index\":4,\"byte_start\":508,\"byte_end\":675}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "input_tokens": 807,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Genetic testing is a type of medical test that identifies changes in chromosomes, genes, or proteins. The results of a genetic test can confirm or rule out a suspected genetic condition or help determine a person\u2019s chance of developing or passing on a genetic disorder.efore a person has a genetic test, it is important that he or she understands the testing procedure, the benefits and limitations of the test, and the possible consequences of the test results. The process of educating a person about the test and obtaining permission is called informed consent.\\\\n\\\\npassage 2:Reasons for Genetic Testing: Why It Matters. 80% of babies with genetic diseases are born to parents with no known family history of that disease. Early genetic screening is an important step in planning for a healthy family, and allows you to take control and make choices about your future.eing a carrier of a genetic disease means that even though you or your partner do not show symptoms, you can still pass that disease to your child. If you and your partner are both carriers of the same disease gene, each of your children has a 25% chance of being born with the disease itself.\\\\n\\\\npassage 3:Several types of genetic testing are done for different reasons: 1  Diagnostic testing. 2  If you have symptoms of a disease that may be caused by genetic alterations, genetic testing can reveal if you have the suspected disorder. If you have a family history of a genetic disorder \u2014 such as sickle cell anemia or cystic fibrosis \u2014 or you are in an ethnic group that has a high risk of a particular genetic disorder, you may choose to have genetic testing before you have children.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are some reasons genetic testing is done\\\"}\",\"answer\":\"Genetic testing is done to identify changes in chromosomes, genes, or proteins. The results can confirm or rule out a suspected genetic condition or help determine a person\u2019s chance of developing or passing on a genetic disorder. Genetic testing is often done if a person has symptoms of a disease that may be caused by genetic alterations, or if they have a family history of a genetic disorder. It can also be done if a person is in an ethnic group that has a high risk of a particular genetic disorder. Additionally, early genetic screening can be an important step in planning for a healthy family, particularly if one or both parents are carriers of a genetic disease.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":125},{\"index\":1,\"byte_start\":125,\"byte_end\":488},{\"index\":2,\"byte_start\":488,\"byte_end\":648},{\"index\":3,\"byte_start\":648,\"byte_end\":750},{\"index\":4,\"byte_start\":750,\"byte_end\":1043},{\"index\":5,\"byte_start\":1043,\"byte_end\":1290},{\"index\":6,\"byte_start\":1290,\"byte_end\":1433},{\"index\":7,\"byte_start\":1433,\"byte_end\":1752}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":80},{\"index\":1,\"byte_start\":80,\"byte_end\":232},{\"index\":2,\"byte_start\":232,\"byte_end\":399},{\"index\":3,\"byte_start\":399,\"byte_end\":508},{\"index\":4,\"byte_start\":508,\"byte_end\":675}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[0,1]\n1|E|1.00|[0,1]\n2|E|1.00|[4,5]\n3|E|1.00|[4,5]\n4|E|1.00|[2,3]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255779,
+    "id": "chatcmpl-CXLnPzlV7IN0Jm7rFSIhG3YTsGVF1onZ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1821.3,
+      "predicted_n": 75,
+      "predicted_per_second": 41.179377367814205,
+      "predicted_per_token_ms": 24.284,
+      "prompt_ms": 820.175,
+      "prompt_n": 780,
+      "prompt_per_second": 951.0165513457495,
+      "prompt_per_token_ms": 1.0515064102564102
+    },
+    "usage": {
+      "completion_tokens": 75,
+      "prompt_tokens": 819,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 894
+    }
+  },
+  "source_cluster_id": "sha256:e7abc805dc99445fa641b4d41e894158a0c79b0670e2528568572f6304237aeb",
+  "started_monotonic_ns": 916684865805503,
+  "status": "completed",
+  "unit_id": "sha256:aaf96d0f496bd9a3cf0a1cc57b71106ac0d6f6b0e4ba392d2b951f30a66b1757"
+}

@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:809cf59c907cf169ee20b02a3828c447929bb17491038ef5deb131a31e0a248a",
+  "ended_monotonic_ns": 916639099292162,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Loss Mitigation. Loss mitigation is a process used by mortgage lenders to work with buyers who are delinquent on their home loans. Through the loss mitigation process, a lender may modify the terms of a home loan, allowing the homeowner to sell the property for less than is owed, or transfer the deed back to the lender. The goals of loss mitigation are to reduce the potential loss being incurred by a lender when the borrower is delinquent.\\\\n\\\\npassage 2:Kinds of loss mitigation. Loan modification: This is a process whereby a homeowner's mortgage is modified and both lender and homeowner are bound by the new terms. The most common modifications are lowering the interest rate and extending the term to up to 40 years.\\\\n\\\\npassage 3:putting in place new procedures to facilitate borrowers\u2019 access to foreclosure avoidance options. The new rules are designed to provide consistent and meaningful protections for borrowers, and to give industry necessary flexibility. The following summary highlights the key provisions. Foreclosure process The new CFPB mortgage rules provide important new\\\\n\\\\n\\\",\\\"question\\\":\\\"what of the procedures of a loss mitigation mortgage\\\"}\",\"answer\":\"Loss mitigation is a process used by mortgage lenders to work with buyers who are delinquent on their home loans. It involves modifying the terms of a home loan, allowing the homeowner to sell the property for less than is owed, or transferring the deed back to the lender. The goal is to reduce the potential loss being incurred by a lender when the borrower is delinquent. This can include lowering the interest rate and extending the term to up to 40 years. New procedures have been put in place to facilitate borrowers\u2019 access to foreclosure avoidance options, providing consistent and meaningful protections for borrowers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":40},{\"index\":1,\"byte_start\":40,\"byte_end\":154},{\"index\":2,\"byte_start\":154,\"byte_end\":345},{\"index\":3,\"byte_start\":345,\"byte_end\":506},{\"index\":4,\"byte_start\":506,\"byte_end\":644},{\"index\":5,\"byte_start\":644,\"byte_end\":860},{\"index\":6,\"byte_start\":860,\"byte_end\":995},{\"index\":7,\"byte_start\":995,\"byte_end\":1048},{\"index\":8,\"byte_start\":1048,\"byte_end\":1189}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":114},{\"index\":1,\"byte_start\":114,\"byte_end\":274},{\"index\":2,\"byte_start\":274,\"byte_end\":375},{\"index\":3,\"byte_start\":375,\"byte_end\":461},{\"index\":4,\"byte_start\":461,\"byte_end\":629}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 699,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Loss Mitigation. Loss mitigation is a process used by mortgage lenders to work with buyers who are delinquent on their home loans. Through the loss mitigation process, a lender may modify the terms of a home loan, allowing the homeowner to sell the property for less than is owed, or transfer the deed back to the lender. The goals of loss mitigation are to reduce the potential loss being incurred by a lender when the borrower is delinquent.\\\\n\\\\npassage 2:Kinds of loss mitigation. Loan modification: This is a process whereby a homeowner's mortgage is modified and both lender and homeowner are bound by the new terms. The most common modifications are lowering the interest rate and extending the term to up to 40 years.\\\\n\\\\npassage 3:putting in place new procedures to facilitate borrowers\u2019 access to foreclosure avoidance options. The new rules are designed to provide consistent and meaningful protections for borrowers, and to give industry necessary flexibility. The following summary highlights the key provisions. Foreclosure process The new CFPB mortgage rules provide important new\\\\n\\\\n\\\",\\\"question\\\":\\\"what of the procedures of a loss mitigation mortgage\\\"}\",\"answer\":\"Loss mitigation is a process used by mortgage lenders to work with buyers who are delinquent on their home loans. It involves modifying the terms of a home loan, allowing the homeowner to sell the property for less than is owed, or transferring the deed back to the lender. The goal is to reduce the potential loss being incurred by a lender when the borrower is delinquent. This can include lowering the interest rate and extending the term to up to 40 years. New procedures have been put in place to facilitate borrowers\u2019 access to foreclosure avoidance options, providing consistent and meaningful protections for borrowers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":40},{\"index\":1,\"byte_start\":40,\"byte_end\":154},{\"index\":2,\"byte_start\":154,\"byte_end\":345},{\"index\":3,\"byte_start\":345,\"byte_end\":506},{\"index\":4,\"byte_start\":506,\"byte_end\":644},{\"index\":5,\"byte_start\":644,\"byte_end\":860},{\"index\":6,\"byte_start\":860,\"byte_end\":995},{\"index\":7,\"byte_start\":995,\"byte_end\":1048},{\"index\":8,\"byte_start\":1048,\"byte_end\":1189}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":114},{\"index\":1,\"byte_start\":114,\"byte_end\":274},{\"index\":2,\"byte_start\":274,\"byte_end\":375},{\"index\":3,\"byte_start\":375,\"byte_end\":461},{\"index\":4,\"byte_start\":461,\"byte_end\":629}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\"\n",
+    "input_tokens": 687,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Loss Mitigation. Loss mitigation is a process used by mortgage lenders to work with buyers who are delinquent on their home loans. Through the loss mitigation process, a lender may modify the terms of a home loan, allowing the homeowner to sell the property for less than is owed, or transfer the deed back to the lender. The goals of loss mitigation are to reduce the potential loss being incurred by a lender when the borrower is delinquent.\\\\n\\\\npassage 2:Kinds of loss mitigation. Loan modification: This is a process whereby a homeowner's mortgage is modified and both lender and homeowner are bound by the new terms. The most common modifications are lowering the interest rate and extending the term to up to 40 years.\\\\n\\\\npassage 3:putting in place new procedures to facilitate borrowers\u2019 access to foreclosure avoidance options. The new rules are designed to provide consistent and meaningful protections for borrowers, and to give industry necessary flexibility. The following summary highlights the key provisions. Foreclosure process The new CFPB mortgage rules provide important new\\\\n\\\\n\\\",\\\"question\\\":\\\"what of the procedures of a loss mitigation mortgage\\\"}\",\"answer\":\"Loss mitigation is a process used by mortgage lenders to work with buyers who are delinquent on their home loans. It involves modifying the terms of a home loan, allowing the homeowner to sell the property for less than is owed, or transferring the deed back to the lender. The goal is to reduce the potential loss being incurred by a lender when the borrower is delinquent. This can include lowering the interest rate and extending the term to up to 40 years. New procedures have been put in place to facilitate borrowers\u2019 access to foreclosure avoidance options, providing consistent and meaningful protections for borrowers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":40},{\"index\":1,\"byte_start\":40,\"byte_end\":154},{\"index\":2,\"byte_start\":154,\"byte_end\":345},{\"index\":3,\"byte_start\":345,\"byte_end\":506},{\"index\":4,\"byte_start\":506,\"byte_end\":644},{\"index\":5,\"byte_start\":644,\"byte_end\":860},{\"index\":6,\"byte_start\":860,\"byte_end\":995},{\"index\":7,\"byte_start\":995,\"byte_end\":1048},{\"index\":8,\"byte_start\":1048,\"byte_end\":1189}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":114},{\"index\":1,\"byte_start\":114,\"byte_end\":274},{\"index\":2,\"byte_start\":274,\"byte_end\":375},{\"index\":3,\"byte_start\":375,\"byte_end\":461},{\"index\":4,\"byte_start\":461,\"byte_end\":629}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]\n4|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255730,
+    "id": "chatcmpl-pATZBDj5yRXlfnr4Qb3fXtA7HCSqqFPX",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1334.148,
+      "predicted_n": 55,
+      "predicted_per_second": 41.22481164008791,
+      "predicted_per_token_ms": 24.257236363636363,
+      "prompt_ms": 669.146,
+      "prompt_n": 660,
+      "prompt_per_second": 986.3318319171003,
+      "prompt_per_token_ms": 1.0138575757575756
+    },
+    "usage": {
+      "completion_tokens": 55,
+      "prompt_tokens": 699,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 754
+    }
+  },
+  "source_cluster_id": "sha256:d1f40952b276ffb8bed5c913a2bb5a9d66d0de4ba74def0d8f0573a4fab1592c",
+  "started_monotonic_ns": 916636942937892,
+  "status": "completed",
+  "unit_id": "sha256:e25519ebb5d90b84812774fb1aa1194519abf8fa370f9a812d6a27fba8764577"
+}

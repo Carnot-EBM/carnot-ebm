@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:bd25805b14faf126df65d6e55876ed8d96a1b3d9642f65b9cd60c4fc34245d78",
+  "condition": "original",
+  "ended_monotonic_ns": 916849191953041,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\" | \"20\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Michigan Church Group Stuck in Israel\\nOver the last week, Israel was attacked by the terrorist group Hamas. Tensions mount as Israel mounts a response.\\nIsrael has already locked down the West Bank and launched missiles at suspected terrorist sites.\\nUnited States President Joe Biden has sent one aircraft carrier strike group and is possibly sending a second in a show of support of Israel.\\nThe attack also reaches people here in Michigan. Israel is a population destination for religious groups to visit.\\nNow, a Michigan church group is stuck in Israel.\\nAudacity reports there are at least two dozen members of a Novi based church in Israel. The country is locked down, and the Tel Aviv airport was a target of Mamas attacks.\\nPastor Jon Morales, his wife Anna, and an additional 25 members of the Oak Pointe Church are in the country.\\nAnna told WWJ, \u201cWe were being told by people on the street and our tour guide to get inside the hotel. We could hear the booming, the bombs, as we were going in.\u201d\\nPastor Jon recounted rushing into the hotel basement as alarms sounded.\\nJerusalem is north of where the attacks took place and so far the group is safe. They have not been able to make arrangements to get home.\\n\u201cThey\u2019re accustomed to a degree of conflict and things happening, but this is just a different scale altogether. They\u2019re just shocked, family members are being called to active duty,\u201d Jon Morales said.\\nSeveral church groups around the country were in the country when the attacks happened. Detroit Lions Linebacker Alex Anzalone\u2019s parents were part of a Florida based group and are also stuck in Israel.\\nSo far at least nine Americans have died in the conflict and an unknown number have been kidnapped.\\nReports indicate that Israel has regained control along the West Bank and has been launching retaliatory strikes.\",\"answer\":\"A church group from Michigan is currently stuck in Israel due to the recent attacks by Hamas. The group, consisting of two dozen members from Oak Pointe Church, is unable to leave the country as Israel is on lockdown and the Tel Aviv airport was targeted. The members have experienced the booming sounds of bombs and have taken shelter in hotel basements. Despite being safe in Jerusalem, they have not been able to make arrangements to return home. Other church groups and Americans are also affected by the conflict.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":108},{\"index\":1,\"byte_start\":108,\"byte_end\":152},{\"index\":2,\"byte_start\":152,\"byte_end\":249},{\"index\":3,\"byte_start\":249,\"byte_end\":391},{\"index\":4,\"byte_start\":391,\"byte_end\":440},{\"index\":5,\"byte_start\":440,\"byte_end\":506},{\"index\":6,\"byte_start\":506,\"byte_end\":555},{\"index\":7,\"byte_start\":555,\"byte_end\":643},{\"index\":8,\"byte_start\":643,\"byte_end\":727},{\"index\":9,\"byte_start\":727,\"byte_end\":836},{\"index\":10,\"byte_start\":836,\"byte_end\":941},{\"index\":11,\"byte_start\":941,\"byte_end\":1003},{\"index\":12,\"byte_start\":1003,\"byte_end\":1075},{\"index\":13,\"byte_start\":1075,\"byte_end\":1156},{\"index\":14,\"byte_start\":1156,\"byte_end\":1214},{\"index\":15,\"byte_start\":1214,\"byte_end\":1331},{\"index\":16,\"byte_start\":1331,\"byte_end\":1424},{\"index\":17,\"byte_start\":1424,\"byte_end\":1512},{\"index\":18,\"byte_start\":1512,\"byte_end\":1628},{\"index\":19,\"byte_start\":1628,\"byte_end\":1728},{\"index\":20,\"byte_start\":1728,\"byte_end\":1841}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":94},{\"index\":1,\"byte_start\":94,\"byte_end\":256},{\"index\":2,\"byte_start\":256,\"byte_end\":356},{\"index\":3,\"byte_start\":356,\"byte_end\":450},{\"index\":4,\"byte_start\":450,\"byte_end\":518}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 1057,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Michigan Church Group Stuck in Israel\\nOver the last week, Israel was attacked by the terrorist group Hamas. Tensions mount as Israel mounts a response.\\nIsrael has already locked down the West Bank and launched missiles at suspected terrorist sites.\\nUnited States President Joe Biden has sent one aircraft carrier strike group and is possibly sending a second in a show of support of Israel.\\nThe attack also reaches people here in Michigan. Israel is a population destination for religious groups to visit.\\nNow, a Michigan church group is stuck in Israel.\\nAudacity reports there are at least two dozen members of a Novi based church in Israel. The country is locked down, and the Tel Aviv airport was a target of Mamas attacks.\\nPastor Jon Morales, his wife Anna, and an additional 25 members of the Oak Pointe Church are in the country.\\nAnna told WWJ, \u201cWe were being told by people on the street and our tour guide to get inside the hotel. We could hear the booming, the bombs, as we were going in.\u201d\\nPastor Jon recounted rushing into the hotel basement as alarms sounded.\\nJerusalem is north of where the attacks took place and so far the group is safe. They have not been able to make arrangements to get home.\\n\u201cThey\u2019re accustomed to a degree of conflict and things happening, but this is just a different scale altogether. They\u2019re just shocked, family members are being called to active duty,\u201d Jon Morales said.\\nSeveral church groups around the country were in the country when the attacks happened. Detroit Lions Linebacker Alex Anzalone\u2019s parents were part of a Florida based group and are also stuck in Israel.\\nSo far at least nine Americans have died in the conflict and an unknown number have been kidnapped.\\nReports indicate that Israel has regained control along the West Bank and has been launching retaliatory strikes.\",\"answer\":\"A church group from Michigan is currently stuck in Israel due to the recent attacks by Hamas. The group, consisting of two dozen members from Oak Pointe Church, is unable to leave the country as Israel is on lockdown and the Tel Aviv airport was targeted. The members have experienced the booming sounds of bombs and have taken shelter in hotel basements. Despite being safe in Jerusalem, they have not been able to make arrangements to return home. Other church groups and Americans are also affected by the conflict.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":108},{\"index\":1,\"byte_start\":108,\"byte_end\":152},{\"index\":2,\"byte_start\":152,\"byte_end\":249},{\"index\":3,\"byte_start\":249,\"byte_end\":391},{\"index\":4,\"byte_start\":391,\"byte_end\":440},{\"index\":5,\"byte_start\":440,\"byte_end\":506},{\"index\":6,\"byte_start\":506,\"byte_end\":555},{\"index\":7,\"byte_start\":555,\"byte_end\":643},{\"index\":8,\"byte_start\":643,\"byte_end\":727},{\"index\":9,\"byte_start\":727,\"byte_end\":836},{\"index\":10,\"byte_start\":836,\"byte_end\":941},{\"index\":11,\"byte_start\":941,\"byte_end\":1003},{\"index\":12,\"byte_start\":1003,\"byte_end\":1075},{\"index\":13,\"byte_start\":1075,\"byte_end\":1156},{\"index\":14,\"byte_start\":1156,\"byte_end\":1214},{\"index\":15,\"byte_start\":1214,\"byte_end\":1331},{\"index\":16,\"byte_start\":1331,\"byte_end\":1424},{\"index\":17,\"byte_start\":1424,\"byte_end\":1512},{\"index\":18,\"byte_start\":1512,\"byte_end\":1628},{\"index\":19,\"byte_start\":1628,\"byte_end\":1728},{\"index\":20,\"byte_start\":1728,\"byte_end\":1841}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":94},{\"index\":1,\"byte_start\":94,\"byte_end\":256},{\"index\":2,\"byte_start\":256,\"byte_end\":356},{\"index\":3,\"byte_start\":356,\"byte_end\":450},{\"index\":4,\"byte_start\":450,\"byte_end\":518}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\" | \"20\"\n",
+    "input_tokens": 1045,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Michigan Church Group Stuck in Israel\\nOver the last week, Israel was attacked by the terrorist group Hamas. Tensions mount as Israel mounts a response.\\nIsrael has already locked down the West Bank and launched missiles at suspected terrorist sites.\\nUnited States President Joe Biden has sent one aircraft carrier strike group and is possibly sending a second in a show of support of Israel.\\nThe attack also reaches people here in Michigan. Israel is a population destination for religious groups to visit.\\nNow, a Michigan church group is stuck in Israel.\\nAudacity reports there are at least two dozen members of a Novi based church in Israel. The country is locked down, and the Tel Aviv airport was a target of Mamas attacks.\\nPastor Jon Morales, his wife Anna, and an additional 25 members of the Oak Pointe Church are in the country.\\nAnna told WWJ, \u201cWe were being told by people on the street and our tour guide to get inside the hotel. We could hear the booming, the bombs, as we were going in.\u201d\\nPastor Jon recounted rushing into the hotel basement as alarms sounded.\\nJerusalem is north of where the attacks took place and so far the group is safe. They have not been able to make arrangements to get home.\\n\u201cThey\u2019re accustomed to a degree of conflict and things happening, but this is just a different scale altogether. They\u2019re just shocked, family members are being called to active duty,\u201d Jon Morales said.\\nSeveral church groups around the country were in the country when the attacks happened. Detroit Lions Linebacker Alex Anzalone\u2019s parents were part of a Florida based group and are also stuck in Israel.\\nSo far at least nine Americans have died in the conflict and an unknown number have been kidnapped.\\nReports indicate that Israel has regained control along the West Bank and has been launching retaliatory strikes.\",\"answer\":\"A church group from Michigan is currently stuck in Israel due to the recent attacks by Hamas. The group, consisting of two dozen members from Oak Pointe Church, is unable to leave the country as Israel is on lockdown and the Tel Aviv airport was targeted. The members have experienced the booming sounds of bombs and have taken shelter in hotel basements. Despite being safe in Jerusalem, they have not been able to make arrangements to return home. Other church groups and Americans are also affected by the conflict.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":108},{\"index\":1,\"byte_start\":108,\"byte_end\":152},{\"index\":2,\"byte_start\":152,\"byte_end\":249},{\"index\":3,\"byte_start\":249,\"byte_end\":391},{\"index\":4,\"byte_start\":391,\"byte_end\":440},{\"index\":5,\"byte_start\":440,\"byte_end\":506},{\"index\":6,\"byte_start\":506,\"byte_end\":555},{\"index\":7,\"byte_start\":555,\"byte_end\":643},{\"index\":8,\"byte_start\":643,\"byte_end\":727},{\"index\":9,\"byte_start\":727,\"byte_end\":836},{\"index\":10,\"byte_start\":836,\"byte_end\":941},{\"index\":11,\"byte_start\":941,\"byte_end\":1003},{\"index\":12,\"byte_start\":1003,\"byte_end\":1075},{\"index\":13,\"byte_start\":1075,\"byte_end\":1156},{\"index\":14,\"byte_start\":1156,\"byte_end\":1214},{\"index\":15,\"byte_start\":1214,\"byte_end\":1331},{\"index\":16,\"byte_start\":1331,\"byte_end\":1424},{\"index\":17,\"byte_start\":1424,\"byte_end\":1512},{\"index\":18,\"byte_start\":1512,\"byte_end\":1628},{\"index\":19,\"byte_start\":1628,\"byte_end\":1728},{\"index\":20,\"byte_start\":1728,\"byte_end\":1841}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":94},{\"index\":1,\"byte_start\":94,\"byte_end\":256},{\"index\":2,\"byte_start\":256,\"byte_end\":356},{\"index\":3,\"byte_start\":356,\"byte_end\":450},{\"index\":4,\"byte_start\":450,\"byte_end\":518}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,5]\n1|E|0.90|[6,7]\n2|E|0.95|[8,9]\n3|E|0.90|[10,11]\n4|E|0.85|[12,13]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255940,
+    "id": "chatcmpl-qJK20gx6PC5th3Vprh6OOa6Gd6Ij5J57",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1930.024,
+      "predicted_n": 79,
+      "predicted_per_second": 40.93213348642297,
+      "predicted_per_token_ms": 24.430683544303797,
+      "prompt_ms": 966.65,
+      "prompt_n": 1018,
+      "prompt_per_second": 1053.121605544923,
+      "prompt_per_token_ms": 0.949557956777996
+    },
+    "usage": {
+      "completion_tokens": 79,
+      "prompt_tokens": 1057,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1136
+    }
+  },
+  "source_cluster_id": "sha256:8ad0441a10d4ed6a2310bad18f84af81ac7f114875ef833e261ae7677848852d",
+  "started_monotonic_ns": 916846138436084,
+  "status": "completed",
+  "unit_id": "sha256:4eaf43bbb396864a6078bb6f293a57cb2cff7949ed1726303aed90f8c423e7ed"
+}

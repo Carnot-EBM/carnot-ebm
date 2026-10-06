@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:974a16874fbf27cb08d094d0d2faf1e7172f1f84cb9ab3499eedda95fb0e98f0",
+  "ended_monotonic_ns": 916684862373690,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Communicable disease refers to diseases that can pass from one person to another. Non-communicable diseases occur in one person and cannot be passed on to another person. Communicable diseases are also known as infectious diseases, and non-communicable diseases are referred to as chronic.\\\\n\\\\npassage 2:One important difference between communicable and non-communicable disease is that non-communicable diseases tend to be chronic, which means they last a long time and progress slowly. Communicable diseases are more likely to be acute, which means the disease develops quickly.\\\\n\\\\npassage 3:Cancers are one category of non-communicable diseases that cannot be spread to others. Chicken pox and other conditions caused by viruses are communicable diseases. Non-infectious diseases involving the respiratory system are a class of non-communicable conditions.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between communicable and non communicable diseases\\\"}\",\"answer\":\"Communicable diseases can be passed from one person to another, while non-communicable diseases cannot be transmitted. Communicable diseases are often acute and caused by viruses, while non-communicable diseases are chronic and can last a long time. Some examples of communicable diseases are chicken pox, while non-communicable diseases include cancers and respiratory system conditions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":105},{\"index\":1,\"byte_start\":105,\"byte_end\":194},{\"index\":2,\"byte_start\":194,\"byte_end\":510},{\"index\":3,\"byte_start\":510,\"byte_end\":703},{\"index\":4,\"byte_start\":703,\"byte_end\":781},{\"index\":5,\"byte_start\":781,\"byte_end\":974}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":119},{\"index\":1,\"byte_start\":119,\"byte_end\":250},{\"index\":2,\"byte_start\":250,\"byte_end\":388}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 515,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Communicable disease refers to diseases that can pass from one person to another. Non-communicable diseases occur in one person and cannot be passed on to another person. Communicable diseases are also known as infectious diseases, and non-communicable diseases are referred to as chronic.\\\\n\\\\npassage 2:One important difference between communicable and non-communicable disease is that non-communicable diseases tend to be chronic, which means they last a long time and progress slowly. Communicable diseases are more likely to be acute, which means the disease develops quickly.\\\\n\\\\npassage 3:Cancers are one category of non-communicable diseases that cannot be spread to others. Chicken pox and other conditions caused by viruses are communicable diseases. Non-infectious diseases involving the respiratory system are a class of non-communicable conditions.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between communicable and non communicable diseases\\\"}\",\"answer\":\"Communicable diseases can be passed from one person to another, while non-communicable diseases cannot be transmitted. Communicable diseases are often acute and caused by viruses, while non-communicable diseases are chronic and can last a long time. Some examples of communicable diseases are chicken pox, while non-communicable diseases include cancers and respiratory system conditions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":105},{\"index\":1,\"byte_start\":105,\"byte_end\":194},{\"index\":2,\"byte_start\":194,\"byte_end\":510},{\"index\":3,\"byte_start\":510,\"byte_end\":703},{\"index\":4,\"byte_start\":703,\"byte_end\":781},{\"index\":5,\"byte_start\":781,\"byte_end\":974}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":119},{\"index\":1,\"byte_start\":119,\"byte_end\":250},{\"index\":2,\"byte_start\":250,\"byte_end\":388}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\"\n",
+    "input_tokens": 503,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Communicable disease refers to diseases that can pass from one person to another. Non-communicable diseases occur in one person and cannot be passed on to another person. Communicable diseases are also known as infectious diseases, and non-communicable diseases are referred to as chronic.\\\\n\\\\npassage 2:One important difference between communicable and non-communicable disease is that non-communicable diseases tend to be chronic, which means they last a long time and progress slowly. Communicable diseases are more likely to be acute, which means the disease develops quickly.\\\\n\\\\npassage 3:Cancers are one category of non-communicable diseases that cannot be spread to others. Chicken pox and other conditions caused by viruses are communicable diseases. Non-infectious diseases involving the respiratory system are a class of non-communicable conditions.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between communicable and non communicable diseases\\\"}\",\"answer\":\"Communicable diseases can be passed from one person to another, while non-communicable diseases cannot be transmitted. Communicable diseases are often acute and caused by viruses, while non-communicable diseases are chronic and can last a long time. Some examples of communicable diseases are chicken pox, while non-communicable diseases include cancers and respiratory system conditions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":105},{\"index\":1,\"byte_start\":105,\"byte_end\":194},{\"index\":2,\"byte_start\":194,\"byte_end\":510},{\"index\":3,\"byte_start\":510,\"byte_end\":703},{\"index\":4,\"byte_start\":703,\"byte_end\":781},{\"index\":5,\"byte_start\":781,\"byte_end\":974}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":119},{\"index\":1,\"byte_start\":119,\"byte_end\":250},{\"index\":2,\"byte_start\":250,\"byte_end\":388}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255776,
+    "id": "chatcmpl-I5rzcv9nx4jTwF37sVRH1f6rz7cIlnvm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 798.8,
+      "predicted_n": 33,
+      "predicted_per_second": 41.31196795192789,
+      "predicted_per_token_ms": 24.206060606060603,
+      "prompt_ms": 528.222,
+      "prompt_n": 476,
+      "prompt_per_second": 901.1362646765944,
+      "prompt_per_token_ms": 1.1097100840336134
+    },
+    "usage": {
+      "completion_tokens": 33,
+      "prompt_tokens": 515,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 548
+    }
+  },
+  "source_cluster_id": "sha256:f4984d97cb02218065a47814f5741d23e65bb0cbfacbc142ff6b145a22ee274c",
+  "started_monotonic_ns": 916683376390048,
+  "status": "completed",
+  "unit_id": "sha256:f4fa68709969c7e8286191eb00d1151d45406d8cfc76edb9095747672516d2b7"
+}

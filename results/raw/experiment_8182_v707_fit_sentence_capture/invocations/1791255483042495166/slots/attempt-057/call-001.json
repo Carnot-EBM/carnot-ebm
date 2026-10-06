@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:660a0fdb711c482fbe86d8eb1159c988a106f02f33ff02208ca305f2667d3c78",
+  "ended_monotonic_ns": 916624819493503,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Magic mouthwash is a prescription mixture typically used to treat mouth sores caused by cancer treatment. However, a modified homemade version can provide pain relief for tongue and other mouth ulcers.\\\\n\\\\npassage 2:Salt Water Mouth Rinse. Rinsing your mouth several times daily with a simple salt water solution helps keep the area clean and might provide temporary pain relief caused by tongue ulcers. Mix one-half teaspoon of salt in a cup of warm water. If the solution stings too much, dilute it with more warm water.\\\\n\\\\npassage 3:Strawberries and oranges are also traditional forms of vitamin C that can be safely consumed. Try placing a wet tea bag on the spot of the tongue where you feel the scorched and burning sensation. The tea bag will help absorb the pain and is an effective home remedy.\\\\n\\\\n\\\",\\\"question\\\":\\\"tongue sores remedy\\\"}\",\"answer\":\"Based on the provided passages, here are some remedies for treating tongue sores:\\n\\n1. Magic mouthwash: A homemade version of this prescription mixture can provide pain relief for tongue and other mouth ulcers. (Passage 1)\\n2. Salt water rinse: Rinsing the mouth with a salt water solution several times a day can help keep the area clean and provide temporary pain relief. (Passage 2)\\n3. Strawberries and oranges: Placing a wet tea bag on the spot of the tongue where you feel the scorched and burning sensation can help absorb the pain and is an effective home remedy. (Passage 3)\\n\\nUnable to answer based on the given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":129},{\"index\":1,\"byte_start\":129,\"byte_end\":262},{\"index\":2,\"byte_start\":262,\"byte_end\":426},{\"index\":3,\"byte_start\":426,\"byte_end\":480},{\"index\":4,\"byte_start\":480,\"byte_end\":652},{\"index\":5,\"byte_start\":652,\"byte_end\":755},{\"index\":6,\"byte_start\":755,\"byte_end\":864}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":210},{\"index\":1,\"byte_start\":210,\"byte_end\":372},{\"index\":2,\"byte_start\":372,\"byte_end\":569},{\"index\":3,\"byte_start\":569,\"byte_end\":627}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 622,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Magic mouthwash is a prescription mixture typically used to treat mouth sores caused by cancer treatment. However, a modified homemade version can provide pain relief for tongue and other mouth ulcers.\\\\n\\\\npassage 2:Salt Water Mouth Rinse. Rinsing your mouth several times daily with a simple salt water solution helps keep the area clean and might provide temporary pain relief caused by tongue ulcers. Mix one-half teaspoon of salt in a cup of warm water. If the solution stings too much, dilute it with more warm water.\\\\n\\\\npassage 3:Strawberries and oranges are also traditional forms of vitamin C that can be safely consumed. Try placing a wet tea bag on the spot of the tongue where you feel the scorched and burning sensation. The tea bag will help absorb the pain and is an effective home remedy.\\\\n\\\\n\\\",\\\"question\\\":\\\"tongue sores remedy\\\"}\",\"answer\":\"Based on the provided passages, here are some remedies for treating tongue sores:\\n\\n1. Magic mouthwash: A homemade version of this prescription mixture can provide pain relief for tongue and other mouth ulcers. (Passage 1)\\n2. Salt water rinse: Rinsing the mouth with a salt water solution several times a day can help keep the area clean and provide temporary pain relief. (Passage 2)\\n3. Strawberries and oranges: Placing a wet tea bag on the spot of the tongue where you feel the scorched and burning sensation can help absorb the pain and is an effective home remedy. (Passage 3)\\n\\nUnable to answer based on the given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":129},{\"index\":1,\"byte_start\":129,\"byte_end\":262},{\"index\":2,\"byte_start\":262,\"byte_end\":426},{\"index\":3,\"byte_start\":426,\"byte_end\":480},{\"index\":4,\"byte_start\":480,\"byte_end\":652},{\"index\":5,\"byte_start\":652,\"byte_end\":755},{\"index\":6,\"byte_start\":755,\"byte_end\":864}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":210},{\"index\":1,\"byte_start\":210,\"byte_end\":372},{\"index\":2,\"byte_start\":372,\"byte_end\":569},{\"index\":3,\"byte_start\":569,\"byte_end\":627}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "input_tokens": 610,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Magic mouthwash is a prescription mixture typically used to treat mouth sores caused by cancer treatment. However, a modified homemade version can provide pain relief for tongue and other mouth ulcers.\\\\n\\\\npassage 2:Salt Water Mouth Rinse. Rinsing your mouth several times daily with a simple salt water solution helps keep the area clean and might provide temporary pain relief caused by tongue ulcers. Mix one-half teaspoon of salt in a cup of warm water. If the solution stings too much, dilute it with more warm water.\\\\n\\\\npassage 3:Strawberries and oranges are also traditional forms of vitamin C that can be safely consumed. Try placing a wet tea bag on the spot of the tongue where you feel the scorched and burning sensation. The tea bag will help absorb the pain and is an effective home remedy.\\\\n\\\\n\\\",\\\"question\\\":\\\"tongue sores remedy\\\"}\",\"answer\":\"Based on the provided passages, here are some remedies for treating tongue sores:\\n\\n1. Magic mouthwash: A homemade version of this prescription mixture can provide pain relief for tongue and other mouth ulcers. (Passage 1)\\n2. Salt water rinse: Rinsing the mouth with a salt water solution several times a day can help keep the area clean and provide temporary pain relief. (Passage 2)\\n3. Strawberries and oranges: Placing a wet tea bag on the spot of the tongue where you feel the scorched and burning sensation can help absorb the pain and is an effective home remedy. (Passage 3)\\n\\nUnable to answer based on the given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":129},{\"index\":1,\"byte_start\":129,\"byte_end\":262},{\"index\":2,\"byte_start\":262,\"byte_end\":426},{\"index\":3,\"byte_start\":426,\"byte_end\":480},{\"index\":4,\"byte_start\":480,\"byte_end\":652},{\"index\":5,\"byte_start\":652,\"byte_end\":755},{\"index\":6,\"byte_start\":755,\"byte_end\":864}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":210},{\"index\":1,\"byte_start\":210,\"byte_end\":372},{\"index\":2,\"byte_start\":372,\"byte_end\":569},{\"index\":3,\"byte_start\":569,\"byte_end\":627}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.00|[]\n1|E|0.00|[]\n2|E|0.00|[]\n3|E|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255716,
+    "id": "chatcmpl-9btW8wcg5zgrF83121bWLu2Zyx9i2N0u",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1065.534,
+      "predicted_n": 44,
+      "predicted_per_second": 41.293848905806854,
+      "predicted_per_token_ms": 24.216681818181822,
+      "prompt_ms": 609.366,
+      "prompt_n": 583,
+      "prompt_per_second": 956.7320789148065,
+      "prompt_per_token_ms": 1.0452246998284733
+    },
+    "usage": {
+      "completion_tokens": 44,
+      "prompt_tokens": 622,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 666
+    }
+  },
+  "source_cluster_id": "sha256:f90d0d5fa29e02ac4e3688ec887cbea917efeb33ae4353eec8afffd1d3821608",
+  "started_monotonic_ns": 916622963039972,
+  "status": "completed",
+  "unit_id": "sha256:438eae9a524c5c668afcd2e4da47651a3a6e3f582caf73b769a03d7d0b7e0d7d"
+}

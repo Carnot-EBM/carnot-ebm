@@ -1,0 +1,92 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:fad79f011d7023bddce0d992f2cd6b1905ba7126e61435177a5c90c2e088bd42",
+  "ended_monotonic_ns": 916704160984004,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:When your ingredients have finished cooking, remove the kebabs from the grill and place them on a clean plate or platter. Don't use any of the plates you used to hold your un-cooked kebabs, especially if you used meat-germs from uncooked meat can contaminate cooked food, leading to serious illness.6.. Skewer the ingredients end-to-end on the sticks. Once your ingredients are just how you'd like them, it's time to make skewers! Use the sharp skewer sticks to pierce each piece of meat or vegetable and slide it to the end, building a stack of skewered ingredients as you go.\\\\n\\\\npassage 2:1. Heat the grill to a medium heat. For a delicious outer sear on your kebabs, it's important to have a nice hot grill before you place your kebabs on it. For gas grills, this is easy-simply set the grill's burner(s) to a medium level, close the grill, and allow it to heat up.. Skewer the ingredients end-to-end on the sticks. Once your ingredients are just how you'd like them, it's time to make skewers! Use the sharp skewer sticks to pierce each piece of meat or vegetable and slide it to the end, building a stack of skewered ingredients as you go.\\\\n\\\\npassage 3:1 1 Heat gas or charcoal grill. 2  In small microwavable bowl, mix barbecue sauce and marmalade. 3  Remove 1/4 cup of the sauce mixture to small dish; set aside. 4  2 On each of 4 (11-inch) metal skewers, thread chicken pieces, leaving 1/4-inch space between each piece.irections. 1  1 Heat gas or charcoal grill. 2  2 On each of 4 (11-inch) metal skewers, thread chicken pieces, leaving 1/4-inch space between each piece. 3  3 Place kabobs on grill over medium heat. 4  4 Microwave remaining barbecue sauce mixture uncovered on High 20 to 30 seconds or until thoroughly heated.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you cook kabobs on the grill\\\"}\",\"answer\":\"Based on the given passages, here's a step-by-step guide on how to cook kabobs on the grill:\\n\\n1. Heat the grill to a medium heat. (Passage 2)\\n2. Skewer the ingredients end-to-end on the sticks. (Passage 1 and Passage 3)\\n3. Place kabobs on grill over medium heat. (Passage 3)\\n4. Cook for 8-10 minutes, turning occasionally, or until the chicken is cooked through and the vegetables are tender. (Not specified in the passages)\\n5. Remove the kebabs from the grill and place them on a clean plate or platter. (Passage 1)\\n\\nTherefore, the steps to cook kabobs on the grill are: heat the grill, skewer the ingredients, place kabobs on grill, cook for 8-10 minutes, and remove from grill.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":145},{\"index\":1,\"byte_start\":145,\"byte_end\":326},{\"index\":2,\"byte_start\":326,\"byte_end\":375},{\"index\":3,\"byte_start\":375,\"byte_end\":454},{\"index\":4,\"byte_start\":454,\"byte_end\":650},{\"index\":5,\"byte_start\":650,\"byte_end\":769},{\"index\":6,\"byte_start\":769,\"byte_end\":893},{\"index\":7,\"byte_start\":893,\"byte_end\":942},{\"index\":8,\"byte_start\":942,\"byte_end\":1021},{\"index\":9,\"byte_start\":1021,\"byte_end\":1213},{\"index\":10,\"byte_start\":1213,\"byte_end\":1278},{\"index\":11,\"byte_start\":1278,\"byte_end\":1343},{\"index\":12,\"byte_start\":1343,\"byte_end\":1462},{\"index\":13,\"byte_start\":1462,\"byte_end\":1495},{\"index\":14,\"byte_start\":1495,\"byte_end\":1604},{\"index\":15,\"byte_start\":1604,\"byte_end\":1649},{\"index\":16,\"byte_start\":1649,\"byte_end\":1814}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":130},{\"index\":1,\"byte_start\":130,\"byte_end\":194},{\"index\":2,\"byte_start\":194,\"byte_end\":263},{\"index\":3,\"byte_start\":263,\"byte_end\":393},{\"index\":4,\"byte_start\":393,\"byte_end\":505},{\"index\":5,\"byte_start\":505,\"byte_end\":680}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1195,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:When your ingredients have finished cooking, remove the kebabs from the grill and place them on a clean plate or platter. Don't use any of the plates you used to hold your un-cooked kebabs, especially if you used meat-germs from uncooked meat can contaminate cooked food, leading to serious illness.6.. Skewer the ingredients end-to-end on the sticks. Once your ingredients are just how you'd like them, it's time to make skewers! Use the sharp skewer sticks to pierce each piece of meat or vegetable and slide it to the end, building a stack of skewered ingredients as you go.\\\\n\\\\npassage 2:1. Heat the grill to a medium heat. For a delicious outer sear on your kebabs, it's important to have a nice hot grill before you place your kebabs on it. For gas grills, this is easy-simply set the grill's burner(s) to a medium level, close the grill, and allow it to heat up.. Skewer the ingredients end-to-end on the sticks. Once your ingredients are just how you'd like them, it's time to make skewers! Use the sharp skewer sticks to pierce each piece of meat or vegetable and slide it to the end, building a stack of skewered ingredients as you go.\\\\n\\\\npassage 3:1 1 Heat gas or charcoal grill. 2  In small microwavable bowl, mix barbecue sauce and marmalade. 3  Remove 1/4 cup of the sauce mixture to small dish; set aside. 4  2 On each of 4 (11-inch) metal skewers, thread chicken pieces, leaving 1/4-inch space between each piece.irections. 1  1 Heat gas or charcoal grill. 2  2 On each of 4 (11-inch) metal skewers, thread chicken pieces, leaving 1/4-inch space between each piece. 3  3 Place kabobs on grill over medium heat. 4  4 Microwave remaining barbecue sauce mixture uncovered on High 20 to 30 seconds or until thoroughly heated.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you cook kabobs on the grill\\\"}\",\"answer\":\"Based on the given passages, here's a step-by-step guide on how to cook kabobs on the grill:\\n\\n1. Heat the grill to a medium heat. (Passage 2)\\n2. Skewer the ingredients end-to-end on the sticks. (Passage 1 and Passage 3)\\n3. Place kabobs on grill over medium heat. (Passage 3)\\n4. Cook for 8-10 minutes, turning occasionally, or until the chicken is cooked through and the vegetables are tender. (Not specified in the passages)\\n5. Remove the kebabs from the grill and place them on a clean plate or platter. (Passage 1)\\n\\nTherefore, the steps to cook kabobs on the grill are: heat the grill, skewer the ingredients, place kabobs on grill, cook for 8-10 minutes, and remove from grill.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":145},{\"index\":1,\"byte_start\":145,\"byte_end\":326},{\"index\":2,\"byte_start\":326,\"byte_end\":375},{\"index\":3,\"byte_start\":375,\"byte_end\":454},{\"index\":4,\"byte_start\":454,\"byte_end\":650},{\"index\":5,\"byte_start\":650,\"byte_end\":769},{\"index\":6,\"byte_start\":769,\"byte_end\":893},{\"index\":7,\"byte_start\":893,\"byte_end\":942},{\"index\":8,\"byte_start\":942,\"byte_end\":1021},{\"index\":9,\"byte_start\":1021,\"byte_end\":1213},{\"index\":10,\"byte_start\":1213,\"byte_end\":1278},{\"index\":11,\"byte_start\":1278,\"byte_end\":1343},{\"index\":12,\"byte_start\":1343,\"byte_end\":1462},{\"index\":13,\"byte_start\":1462,\"byte_end\":1495},{\"index\":14,\"byte_start\":1495,\"byte_end\":1604},{\"index\":15,\"byte_start\":1604,\"byte_end\":1649},{\"index\":16,\"byte_start\":1649,\"byte_end\":1814}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":130},{\"index\":1,\"byte_start\":130,\"byte_end\":194},{\"index\":2,\"byte_start\":194,\"byte_end\":263},{\"index\":3,\"byte_start\":263,\"byte_end\":393},{\"index\":4,\"byte_start\":393,\"byte_end\":505},{\"index\":5,\"byte_start\":505,\"byte_end\":680}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+    "input_tokens": 1183,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:When your ingredients have finished cooking, remove the kebabs from the grill and place them on a clean plate or platter. Don't use any of the plates you used to hold your un-cooked kebabs, especially if you used meat-germs from uncooked meat can contaminate cooked food, leading to serious illness.6.. Skewer the ingredients end-to-end on the sticks. Once your ingredients are just how you'd like them, it's time to make skewers! Use the sharp skewer sticks to pierce each piece of meat or vegetable and slide it to the end, building a stack of skewered ingredients as you go.\\\\n\\\\npassage 2:1. Heat the grill to a medium heat. For a delicious outer sear on your kebabs, it's important to have a nice hot grill before you place your kebabs on it. For gas grills, this is easy-simply set the grill's burner(s) to a medium level, close the grill, and allow it to heat up.. Skewer the ingredients end-to-end on the sticks. Once your ingredients are just how you'd like them, it's time to make skewers! Use the sharp skewer sticks to pierce each piece of meat or vegetable and slide it to the end, building a stack of skewered ingredients as you go.\\\\n\\\\npassage 3:1 1 Heat gas or charcoal grill. 2  In small microwavable bowl, mix barbecue sauce and marmalade. 3  Remove 1/4 cup of the sauce mixture to small dish; set aside. 4  2 On each of 4 (11-inch) metal skewers, thread chicken pieces, leaving 1/4-inch space between each piece.irections. 1  1 Heat gas or charcoal grill. 2  2 On each of 4 (11-inch) metal skewers, thread chicken pieces, leaving 1/4-inch space between each piece. 3  3 Place kabobs on grill over medium heat. 4  4 Microwave remaining barbecue sauce mixture uncovered on High 20 to 30 seconds or until thoroughly heated.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you cook kabobs on the grill\\\"}\",\"answer\":\"Based on the given passages, here's a step-by-step guide on how to cook kabobs on the grill:\\n\\n1. Heat the grill to a medium heat. (Passage 2)\\n2. Skewer the ingredients end-to-end on the sticks. (Passage 1 and Passage 3)\\n3. Place kabobs on grill over medium heat. (Passage 3)\\n4. Cook for 8-10 minutes, turning occasionally, or until the chicken is cooked through and the vegetables are tender. (Not specified in the passages)\\n5. Remove the kebabs from the grill and place them on a clean plate or platter. (Passage 1)\\n\\nTherefore, the steps to cook kabobs on the grill are: heat the grill, skewer the ingredients, place kabobs on grill, cook for 8-10 minutes, and remove from grill.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":145},{\"index\":1,\"byte_start\":145,\"byte_end\":326},{\"index\":2,\"byte_start\":326,\"byte_end\":375},{\"index\":3,\"byte_start\":375,\"byte_end\":454},{\"index\":4,\"byte_start\":454,\"byte_end\":650},{\"index\":5,\"byte_start\":650,\"byte_end\":769},{\"index\":6,\"byte_start\":769,\"byte_end\":893},{\"index\":7,\"byte_start\":893,\"byte_end\":942},{\"index\":8,\"byte_start\":942,\"byte_end\":1021},{\"index\":9,\"byte_start\":1021,\"byte_end\":1213},{\"index\":10,\"byte_start\":1213,\"byte_end\":1278},{\"index\":11,\"byte_start\":1278,\"byte_end\":1343},{\"index\":12,\"byte_start\":1343,\"byte_end\":1462},{\"index\":13,\"byte_start\":1462,\"byte_end\":1495},{\"index\":14,\"byte_start\":1495,\"byte_end\":1604},{\"index\":15,\"byte_start\":1604,\"byte_end\":1649},{\"index\":16,\"byte_start\":1649,\"byte_end\":1814}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":130},{\"index\":1,\"byte_start\":130,\"byte_end\":194},{\"index\":2,\"byte_start\":194,\"byte_end\":263},{\"index\":3,\"byte_start\":263,\"byte_end\":393},{\"index\":4,\"byte_start\":393,\"byte_end\":505},{\"index\":5,\"byte_start\":505,\"byte_end\":680}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.90|[]\n1|C|0.90|[1,4]\n2|C|0.90|[1,4]\n3|B|0.00|[]\n4|C|0.90|[0]\n5|C|0.90|[0,1]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255795,
+    "id": "chatcmpl-P8saqwi9QxjX9mSVry61W9NltZzRhIoC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1866.644,
+      "predicted_n": 76,
+      "predicted_per_second": 40.71478010804417,
+      "predicted_per_token_ms": 24.561105263157895,
+      "prompt_ms": 1084.012,
+      "prompt_n": 1156,
+      "prompt_per_second": 1066.408858942521,
+      "prompt_per_token_ms": 0.9377266435986159
+    },
+    "usage": {
+      "completion_tokens": 76,
+      "prompt_tokens": 1195,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1271
+    }
+  },
+  "source_cluster_id": "sha256:f7323828c968227c4279735de9730cb0cd69dd6cc75f2fbdf3099d438b044b3b",
+  "started_monotonic_ns": 916701062879704,
+  "status": "completed",
+  "unit_id": "sha256:a5e2020a81f04224911e9429029f9f9a5caa9537b4467d6c891f1f7d307209cc"
+}

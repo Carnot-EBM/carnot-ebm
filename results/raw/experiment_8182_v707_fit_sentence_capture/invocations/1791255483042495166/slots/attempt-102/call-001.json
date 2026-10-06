@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:178fb27df69151aefe5248b5c376e5073bbca53ca3abeedfdfaf9c755bb786e0",
+  "ended_monotonic_ns": 916718940701221,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Warm weather Eastern US but big changes coming this weekend, Tropical Storm Philippe to Nova Scotia\\nThe warm dry weather pattern that dominates the weather in the Eastern US will come into its own today and Wednesday. Warm fall days usually start with some low clouds and fog and we saw that in a few places this morning. Satellite loops and radar loops are nice and quiet and we will have sunshine all day long. Temperatures will rise to the lower 80s in most places today. There are no weather issues as far as rain is concerned and that will be the case probbaly into the first part of Friday\\nTonight we will be warm and there will be some patchy low clouds and fog. Warm Wednesday morning lows will be in the 50s inland and low to mid 60s in warmer urban locations. Wednesday will be the warmest day of this stretch with sunshine taking highs up to the low and middle 80s and a few places could possibly set record high temperatures for the day.\\nYou will likely notice humidity levels going up over the next few days especially as the wind turns more southeast with time. That will start to impact temperatures some beginning Thursday. We will probably have clouds to start the day with the long nights producing low clouds and fog, and then developing sunshine taking highs to the mid and upper 70s.\\nA cold front will approach Friday as low pressure moves east across the Great Lakes and into Southeastern Canada. The front will be slowing down as it heads east and this is going to be due to Tropical Storm Philippe which will be moving up the east coast offshore. Philippe will be headed possibly for Nova Scotia over the weekend so the front slows until the tropical cyclone moves northward and then swing through the Eastern US Friday night and Saturday.\\nFriday we will see arriving clouds and perhaps a couple of scattered showers during the day. Friday highs will be in the mid to upper 70s. Showers and a few thunderstorms will become more numerous overnight into Saturday and it looks like we will have to wait until late in the day Saturday for a front to pass and for showers to end. Saturday highs will be in the upper 60s to around or just over 70. The front moves offshore and then we see the arrivial of much cooler air and also the beginning of what will be a new pattern for next week and beyond. Sunday will be colder with clouds and some sun along with the chance for an instability shower. Highs will just be in the upper 50s and lower 60s. Next week we could see at least a few days where daytime highs do not get out of the 50s.\",\"answer\":\"The Eastern US is set to enjoy warm, dry weather on 24 and 25 October, with sunshine and temperatures up to the lower 80s. However, a cold front will approach on Friday and Tropical Storm Philippe is expected to move up the east coast offshore, possibly heading for Nova Scotia over the weekend. This will cause the front to slow before swinging through the Eastern US on Friday night and Saturday, bringing clouds, scattered showers and possible thunderstorms. After the front moves offshore, much cooler air will arrive, marking the start of a new weather pattern.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":218},{\"index\":1,\"byte_start\":218,\"byte_end\":322},{\"index\":2,\"byte_start\":322,\"byte_end\":413},{\"index\":3,\"byte_start\":413,\"byte_end\":475},{\"index\":4,\"byte_start\":475,\"byte_end\":670},{\"index\":5,\"byte_start\":670,\"byte_end\":770},{\"index\":6,\"byte_start\":770,\"byte_end\":950},{\"index\":7,\"byte_start\":950,\"byte_end\":1076},{\"index\":8,\"byte_start\":1076,\"byte_end\":1140},{\"index\":9,\"byte_start\":1140,\"byte_end\":1305},{\"index\":10,\"byte_start\":1305,\"byte_end\":1419},{\"index\":11,\"byte_start\":1419,\"byte_end\":1571},{\"index\":12,\"byte_start\":1571,\"byte_end\":1764},{\"index\":13,\"byte_start\":1764,\"byte_end\":1857},{\"index\":14,\"byte_start\":1857,\"byte_end\":1903},{\"index\":15,\"byte_start\":1903,\"byte_end\":2099},{\"index\":16,\"byte_start\":2099,\"byte_end\":2318},{\"index\":17,\"byte_start\":2318,\"byte_end\":2414},{\"index\":18,\"byte_start\":2414,\"byte_end\":2465},{\"index\":19,\"byte_start\":2465,\"byte_end\":2554}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":123},{\"index\":1,\"byte_start\":123,\"byte_end\":296},{\"index\":2,\"byte_start\":296,\"byte_end\":462},{\"index\":3,\"byte_start\":462,\"byte_end\":566}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1208,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Warm weather Eastern US but big changes coming this weekend, Tropical Storm Philippe to Nova Scotia\\nThe warm dry weather pattern that dominates the weather in the Eastern US will come into its own today and Wednesday. Warm fall days usually start with some low clouds and fog and we saw that in a few places this morning. Satellite loops and radar loops are nice and quiet and we will have sunshine all day long. Temperatures will rise to the lower 80s in most places today. There are no weather issues as far as rain is concerned and that will be the case probbaly into the first part of Friday\\nTonight we will be warm and there will be some patchy low clouds and fog. Warm Wednesday morning lows will be in the 50s inland and low to mid 60s in warmer urban locations. Wednesday will be the warmest day of this stretch with sunshine taking highs up to the low and middle 80s and a few places could possibly set record high temperatures for the day.\\nYou will likely notice humidity levels going up over the next few days especially as the wind turns more southeast with time. That will start to impact temperatures some beginning Thursday. We will probably have clouds to start the day with the long nights producing low clouds and fog, and then developing sunshine taking highs to the mid and upper 70s.\\nA cold front will approach Friday as low pressure moves east across the Great Lakes and into Southeastern Canada. The front will be slowing down as it heads east and this is going to be due to Tropical Storm Philippe which will be moving up the east coast offshore. Philippe will be headed possibly for Nova Scotia over the weekend so the front slows until the tropical cyclone moves northward and then swing through the Eastern US Friday night and Saturday.\\nFriday we will see arriving clouds and perhaps a couple of scattered showers during the day. Friday highs will be in the mid to upper 70s. Showers and a few thunderstorms will become more numerous overnight into Saturday and it looks like we will have to wait until late in the day Saturday for a front to pass and for showers to end. Saturday highs will be in the upper 60s to around or just over 70. The front moves offshore and then we see the arrivial of much cooler air and also the beginning of what will be a new pattern for next week and beyond. Sunday will be colder with clouds and some sun along with the chance for an instability shower. Highs will just be in the upper 50s and lower 60s. Next week we could see at least a few days where daytime highs do not get out of the 50s.\",\"answer\":\"The Eastern US is set to enjoy warm, dry weather on 24 and 25 October, with sunshine and temperatures up to the lower 80s. However, a cold front will approach on Friday and Tropical Storm Philippe is expected to move up the east coast offshore, possibly heading for Nova Scotia over the weekend. This will cause the front to slow before swinging through the Eastern US on Friday night and Saturday, bringing clouds, scattered showers and possible thunderstorms. After the front moves offshore, much cooler air will arrive, marking the start of a new weather pattern.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":218},{\"index\":1,\"byte_start\":218,\"byte_end\":322},{\"index\":2,\"byte_start\":322,\"byte_end\":413},{\"index\":3,\"byte_start\":413,\"byte_end\":475},{\"index\":4,\"byte_start\":475,\"byte_end\":670},{\"index\":5,\"byte_start\":670,\"byte_end\":770},{\"index\":6,\"byte_start\":770,\"byte_end\":950},{\"index\":7,\"byte_start\":950,\"byte_end\":1076},{\"index\":8,\"byte_start\":1076,\"byte_end\":1140},{\"index\":9,\"byte_start\":1140,\"byte_end\":1305},{\"index\":10,\"byte_start\":1305,\"byte_end\":1419},{\"index\":11,\"byte_start\":1419,\"byte_end\":1571},{\"index\":12,\"byte_start\":1571,\"byte_end\":1764},{\"index\":13,\"byte_start\":1764,\"byte_end\":1857},{\"index\":14,\"byte_start\":1857,\"byte_end\":1903},{\"index\":15,\"byte_start\":1903,\"byte_end\":2099},{\"index\":16,\"byte_start\":2099,\"byte_end\":2318},{\"index\":17,\"byte_start\":2318,\"byte_end\":2414},{\"index\":18,\"byte_start\":2414,\"byte_end\":2465},{\"index\":19,\"byte_start\":2465,\"byte_end\":2554}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":123},{\"index\":1,\"byte_start\":123,\"byte_end\":296},{\"index\":2,\"byte_start\":296,\"byte_end\":462},{\"index\":3,\"byte_start\":462,\"byte_end\":566}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\"\n",
+    "input_tokens": 1196,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Warm weather Eastern US but big changes coming this weekend, Tropical Storm Philippe to Nova Scotia\\nThe warm dry weather pattern that dominates the weather in the Eastern US will come into its own today and Wednesday. Warm fall days usually start with some low clouds and fog and we saw that in a few places this morning. Satellite loops and radar loops are nice and quiet and we will have sunshine all day long. Temperatures will rise to the lower 80s in most places today. There are no weather issues as far as rain is concerned and that will be the case probbaly into the first part of Friday\\nTonight we will be warm and there will be some patchy low clouds and fog. Warm Wednesday morning lows will be in the 50s inland and low to mid 60s in warmer urban locations. Wednesday will be the warmest day of this stretch with sunshine taking highs up to the low and middle 80s and a few places could possibly set record high temperatures for the day.\\nYou will likely notice humidity levels going up over the next few days especially as the wind turns more southeast with time. That will start to impact temperatures some beginning Thursday. We will probably have clouds to start the day with the long nights producing low clouds and fog, and then developing sunshine taking highs to the mid and upper 70s.\\nA cold front will approach Friday as low pressure moves east across the Great Lakes and into Southeastern Canada. The front will be slowing down as it heads east and this is going to be due to Tropical Storm Philippe which will be moving up the east coast offshore. Philippe will be headed possibly for Nova Scotia over the weekend so the front slows until the tropical cyclone moves northward and then swing through the Eastern US Friday night and Saturday.\\nFriday we will see arriving clouds and perhaps a couple of scattered showers during the day. Friday highs will be in the mid to upper 70s. Showers and a few thunderstorms will become more numerous overnight into Saturday and it looks like we will have to wait until late in the day Saturday for a front to pass and for showers to end. Saturday highs will be in the upper 60s to around or just over 70. The front moves offshore and then we see the arrivial of much cooler air and also the beginning of what will be a new pattern for next week and beyond. Sunday will be colder with clouds and some sun along with the chance for an instability shower. Highs will just be in the upper 50s and lower 60s. Next week we could see at least a few days where daytime highs do not get out of the 50s.\",\"answer\":\"The Eastern US is set to enjoy warm, dry weather on 24 and 25 October, with sunshine and temperatures up to the lower 80s. However, a cold front will approach on Friday and Tropical Storm Philippe is expected to move up the east coast offshore, possibly heading for Nova Scotia over the weekend. This will cause the front to slow before swinging through the Eastern US on Friday night and Saturday, bringing clouds, scattered showers and possible thunderstorms. After the front moves offshore, much cooler air will arrive, marking the start of a new weather pattern.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":218},{\"index\":1,\"byte_start\":218,\"byte_end\":322},{\"index\":2,\"byte_start\":322,\"byte_end\":413},{\"index\":3,\"byte_start\":413,\"byte_end\":475},{\"index\":4,\"byte_start\":475,\"byte_end\":670},{\"index\":5,\"byte_start\":670,\"byte_end\":770},{\"index\":6,\"byte_start\":770,\"byte_end\":950},{\"index\":7,\"byte_start\":950,\"byte_end\":1076},{\"index\":8,\"byte_start\":1076,\"byte_end\":1140},{\"index\":9,\"byte_start\":1140,\"byte_end\":1305},{\"index\":10,\"byte_start\":1305,\"byte_end\":1419},{\"index\":11,\"byte_start\":1419,\"byte_end\":1571},{\"index\":12,\"byte_start\":1571,\"byte_end\":1764},{\"index\":13,\"byte_start\":1764,\"byte_end\":1857},{\"index\":14,\"byte_start\":1857,\"byte_end\":1903},{\"index\":15,\"byte_start\":1903,\"byte_end\":2099},{\"index\":16,\"byte_start\":2099,\"byte_end\":2318},{\"index\":17,\"byte_start\":2318,\"byte_end\":2414},{\"index\":18,\"byte_start\":2414,\"byte_end\":2465},{\"index\":19,\"byte_start\":2465,\"byte_end\":2554}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":123},{\"index\":1,\"byte_start\":123,\"byte_end\":296},{\"index\":2,\"byte_start\":296,\"byte_end\":462},{\"index\":3,\"byte_start\":462,\"byte_end\":566}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,1]\n1|E|0.90|[6,7]\n2|E|0.90|[7,8]\n3|E|0.85|[9,10]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255810,
+    "id": "chatcmpl-fZ7g0l44bjAqi7kAxE972w7j7On51wAQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1483.365,
+      "predicted_n": 61,
+      "predicted_per_second": 41.12271760490506,
+      "predicted_per_token_ms": 24.317459016393443,
+      "prompt_ms": 1108.275,
+      "prompt_n": 1169,
+      "prompt_per_second": 1054.7923574924996,
+      "prompt_per_token_ms": 0.9480538922155689
+    },
+    "usage": {
+      "completion_tokens": 61,
+      "prompt_tokens": 1208,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1269
+    }
+  },
+  "source_cluster_id": "sha256:847df2f7de080d6b1966e7978c333c27223f6469af41e0ded59e923b96d609ab",
+  "started_monotonic_ns": 916716197985731,
+  "status": "completed",
+  "unit_id": "sha256:b124f2809a933cf438a7cd0ac114ae101fd6f2db16518fa7a82b8255e2dc8d3d"
+}

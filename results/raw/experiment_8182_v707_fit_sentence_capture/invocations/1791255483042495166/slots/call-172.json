@@ -1,0 +1,95 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:0d759c5821be98760cd035aa457fdd13db1b48eb59a305e731b8f4fdbe1d21f0",
+  "condition": "original",
+  "ended_monotonic_ns": 916882977144330,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Linear Bus: If all network nodes are connected to a combine transmission medium that has two endpoints the Bus is Linear. 2  Distributed Bus: If all network nodes are connected to a combine transmission medium that has more than two endpoints created by branching the main section of the transmitting medium.\\\\n\\\\npassage 2:This type of network is also difficult to troubleshoot. For these reasons, this type of topology is not used for large networks, such as those covering an entire building. Star. In star topology, each computer is connected to a central hub using a point-to-point connection\\\\n\\\\npassage 3:Mesh topology introduces the concept of routes. Unlike each of the previous topologies, messages sent on a mesh network can take any of several possible paths from source to destination. (Recall that even in a ring, although two cable paths exist, messages can only travel in one direction.) Some WANs, most notably the Internet, employ mesh routing.\\\\n\\\\n\\\",\\\"question\\\":\\\"meaning of each types of topology network\\\"}\",\"answer\":\"Sure! Here's my answer based on the given passages:\\n\\nLinear Bus Topology: A network where all nodes are connected to a single transmission medium with two endpoints, creating a linear bus. (Passage 1)\\n\\nDistributed Bus Topology: A network where all nodes are connected to a common transmission medium with more than two endpoints, formed by branching the main section of the transmitting medium. (Passage 1)\\n\\nStar Topology: A network where each computer is connected to a central hub using a point-to-point connection. (Passage 2)\\n\\nMesh Topology: A network where messages can take any of several possible paths from source to destination, introduced the concept of routes. (Passage 3)\\n\\nNote that the passages do not provide information about the meaning of Ring or Tree topology, so I am unable to answer those parts of the question.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":147},{\"index\":1,\"byte_start\":147,\"byte_end\":403},{\"index\":2,\"byte_start\":403,\"byte_end\":519},{\"index\":3,\"byte_start\":519,\"byte_end\":525},{\"index\":4,\"byte_start\":525,\"byte_end\":682},{\"index\":5,\"byte_start\":682,\"byte_end\":821},{\"index\":6,\"byte_start\":821,\"byte_end\":926},{\"index\":7,\"byte_start\":926,\"byte_end\":1045}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":189},{\"index\":2,\"byte_start\":189,\"byte_end\":395},{\"index\":3,\"byte_start\":395,\"byte_end\":518},{\"index\":4,\"byte_start\":518,\"byte_end\":672},{\"index\":5,\"byte_start\":672,\"byte_end\":832}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 740,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Linear Bus: If all network nodes are connected to a combine transmission medium that has two endpoints the Bus is Linear. 2  Distributed Bus: If all network nodes are connected to a combine transmission medium that has more than two endpoints created by branching the main section of the transmitting medium.\\\\n\\\\npassage 2:This type of network is also difficult to troubleshoot. For these reasons, this type of topology is not used for large networks, such as those covering an entire building. Star. In star topology, each computer is connected to a central hub using a point-to-point connection\\\\n\\\\npassage 3:Mesh topology introduces the concept of routes. Unlike each of the previous topologies, messages sent on a mesh network can take any of several possible paths from source to destination. (Recall that even in a ring, although two cable paths exist, messages can only travel in one direction.) Some WANs, most notably the Internet, employ mesh routing.\\\\n\\\\n\\\",\\\"question\\\":\\\"meaning of each types of topology network\\\"}\",\"answer\":\"Sure! Here's my answer based on the given passages:\\n\\nLinear Bus Topology: A network where all nodes are connected to a single transmission medium with two endpoints, creating a linear bus. (Passage 1)\\n\\nDistributed Bus Topology: A network where all nodes are connected to a common transmission medium with more than two endpoints, formed by branching the main section of the transmitting medium. (Passage 1)\\n\\nStar Topology: A network where each computer is connected to a central hub using a point-to-point connection. (Passage 2)\\n\\nMesh Topology: A network where messages can take any of several possible paths from source to destination, introduced the concept of routes. (Passage 3)\\n\\nNote that the passages do not provide information about the meaning of Ring or Tree topology, so I am unable to answer those parts of the question.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":147},{\"index\":1,\"byte_start\":147,\"byte_end\":403},{\"index\":2,\"byte_start\":403,\"byte_end\":519},{\"index\":3,\"byte_start\":519,\"byte_end\":525},{\"index\":4,\"byte_start\":525,\"byte_end\":682},{\"index\":5,\"byte_start\":682,\"byte_end\":821},{\"index\":6,\"byte_start\":821,\"byte_end\":926},{\"index\":7,\"byte_start\":926,\"byte_end\":1045}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":189},{\"index\":2,\"byte_start\":189,\"byte_end\":395},{\"index\":3,\"byte_start\":395,\"byte_end\":518},{\"index\":4,\"byte_start\":518,\"byte_end\":672},{\"index\":5,\"byte_start\":672,\"byte_end\":832}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "input_tokens": 728,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Linear Bus: If all network nodes are connected to a combine transmission medium that has two endpoints the Bus is Linear. 2  Distributed Bus: If all network nodes are connected to a combine transmission medium that has more than two endpoints created by branching the main section of the transmitting medium.\\\\n\\\\npassage 2:This type of network is also difficult to troubleshoot. For these reasons, this type of topology is not used for large networks, such as those covering an entire building. Star. In star topology, each computer is connected to a central hub using a point-to-point connection\\\\n\\\\npassage 3:Mesh topology introduces the concept of routes. Unlike each of the previous topologies, messages sent on a mesh network can take any of several possible paths from source to destination. (Recall that even in a ring, although two cable paths exist, messages can only travel in one direction.) Some WANs, most notably the Internet, employ mesh routing.\\\\n\\\\n\\\",\\\"question\\\":\\\"meaning of each types of topology network\\\"}\",\"answer\":\"Sure! Here's my answer based on the given passages:\\n\\nLinear Bus Topology: A network where all nodes are connected to a single transmission medium with two endpoints, creating a linear bus. (Passage 1)\\n\\nDistributed Bus Topology: A network where all nodes are connected to a common transmission medium with more than two endpoints, formed by branching the main section of the transmitting medium. (Passage 1)\\n\\nStar Topology: A network where each computer is connected to a central hub using a point-to-point connection. (Passage 2)\\n\\nMesh Topology: A network where messages can take any of several possible paths from source to destination, introduced the concept of routes. (Passage 3)\\n\\nNote that the passages do not provide information about the meaning of Ring or Tree topology, so I am unable to answer those parts of the question.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":147},{\"index\":1,\"byte_start\":147,\"byte_end\":403},{\"index\":2,\"byte_start\":403,\"byte_end\":519},{\"index\":3,\"byte_start\":519,\"byte_end\":525},{\"index\":4,\"byte_start\":525,\"byte_end\":682},{\"index\":5,\"byte_start\":682,\"byte_end\":821},{\"index\":6,\"byte_start\":821,\"byte_end\":926},{\"index\":7,\"byte_start\":926,\"byte_end\":1045}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":189},{\"index\":2,\"byte_start\":189,\"byte_end\":395},{\"index\":3,\"byte_start\":395,\"byte_end\":518},{\"index\":4,\"byte_start\":518,\"byte_end\":672},{\"index\":5,\"byte_start\":672,\"byte_end\":832}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[0]\n2|E|1.00|[1]\n3|E|1.00|[2]\n4|E|1.00|[4]\n5|B|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255974,
+    "id": "chatcmpl-SqMiFjkIIk0JBio7RDEkMBIpfsUK35Ux",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1704.302,
+      "predicted_n": 70,
+      "predicted_per_second": 41.07253291963514,
+      "predicted_per_token_ms": 24.34717142857143,
+      "prompt_ms": 690.729,
+      "prompt_n": 701,
+      "prompt_per_second": 1014.8697969826082,
+      "prompt_per_token_ms": 0.9853480741797432
+    },
+    "usage": {
+      "completion_tokens": 70,
+      "prompt_tokens": 740,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 810
+    }
+  },
+  "source_cluster_id": "sha256:3953f07b85ff94186a382fe4cf5237e733ebe5208a62f4c6619172ca3f949a10",
+  "started_monotonic_ns": 916880453023229,
+  "status": "completed",
+  "unit_id": "sha256:417da3bc98d8dfa28743579175827f69ccbceefb82213979f3767a0adcc8db0a"
+}

@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:c2c9632485d4cbd0c62f746aa7949b4dd9f3ec84e489d5de8d747300b0becee9",
+  "condition": "original",
+  "ended_monotonic_ns": 914643875760085,
+  "exclusion_reason": null,
+  "historical": true,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"'Bold and the Beautiful' Spoilers: Hope and Steffy\u2019s New Feud, Logan Believes Finn Deserves Better?\\nThe Bold and the Beautiful (B&B) spoilers tease that Steffy Forrester (Jacqueline MacInnes Wood) and Hope Logan's (Annika Noelle) will be reignited. She Knows Soaps reports that Hope makes a play for John 'Finn' Finnegan (Tanner Novlan), and Steffy finds out.\\nHope and Steffy spent years fighting over Liam Spencer (Scott Clifton). He would waffle between the women, each one believing they were his favorite. He did this for years. Steffy decided she could not do that anymore, finding a man with only eyes for her.\\nSheila Carter's (Kimberlin Brown) charges were dropped, making her a free woman. Ever since her jail release, Sheila has been a thorn in Finn's side, demanding to have a relationship with him.\\nThe Bold and the Beautiful spoilers say that Finn and Hope will bond over Sheila and Deacon Sharpe's (Sean Kanan) relationship. They will plot for a way to break them up. In the meantime, they will develop a deep friendship that could become more.\\nSoaps Spoilers reports that Hope will confide in her mother, Brooke Logan (Katherine Kelly Lang), that she believes Finn deserves better than Steffy. She points out that she wouldn't leave town even with a Sheila threat if he were her husband.\\nIt's clear that Hope is beginning to develop feelings for the handsome doctor. It could spell trouble when Steffy gets wind of it.\\nB&B fans, do you think Finn and Hope will cross the line? Keep watching The Bold and the Beautiful, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\",\"answer\":\"In an upcoming episode of 'The Bold and the Beautiful,' Hope Logan will make a move on John 'Finn' Finnegan, which will reignite the feud between her and Steffy Forrester. Hope believes Finn deserves better than Steffy and confides in her mother about her feelings. Finn and Hope will bond over their dislike for Sheila Carter and plot a way to break up her relationship with Deacon Sharpe. Steffy may soon find out about the developing connection between Finn and Hope.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":102},{\"index\":1,\"byte_start\":102,\"byte_end\":251},{\"index\":2,\"byte_start\":251,\"byte_end\":362},{\"index\":3,\"byte_start\":362,\"byte_end\":434},{\"index\":4,\"byte_start\":434,\"byte_end\":512},{\"index\":5,\"byte_start\":512,\"byte_end\":535},{\"index\":6,\"byte_start\":535,\"byte_end\":619},{\"index\":7,\"byte_start\":619,\"byte_end\":700},{\"index\":8,\"byte_start\":700,\"byte_end\":812},{\"index\":9,\"byte_start\":812,\"byte_end\":940},{\"index\":10,\"byte_start\":940,\"byte_end\":983},{\"index\":11,\"byte_start\":983,\"byte_end\":1060},{\"index\":12,\"byte_start\":1060,\"byte_end\":1210},{\"index\":13,\"byte_start\":1210,\"byte_end\":1304},{\"index\":14,\"byte_start\":1304,\"byte_end\":1383},{\"index\":15,\"byte_start\":1383,\"byte_end\":1435},{\"index\":16,\"byte_start\":1435,\"byte_end\":1493},{\"index\":17,\"byte_start\":1493,\"byte_end\":1591},{\"index\":18,\"byte_start\":1591,\"byte_end\":1657},{\"index\":19,\"byte_start\":1657,\"byte_end\":1706}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":172},{\"index\":1,\"byte_start\":172,\"byte_end\":266},{\"index\":2,\"byte_start\":266,\"byte_end\":391},{\"index\":3,\"byte_start\":391,\"byte_end\":470}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8181-sentence-transport-canary",
+  "rendered_input_tokens": 1031,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"'Bold and the Beautiful' Spoilers: Hope and Steffy\u2019s New Feud, Logan Believes Finn Deserves Better?\\nThe Bold and the Beautiful (B&B) spoilers tease that Steffy Forrester (Jacqueline MacInnes Wood) and Hope Logan's (Annika Noelle) will be reignited. She Knows Soaps reports that Hope makes a play for John 'Finn' Finnegan (Tanner Novlan), and Steffy finds out.\\nHope and Steffy spent years fighting over Liam Spencer (Scott Clifton). He would waffle between the women, each one believing they were his favorite. He did this for years. Steffy decided she could not do that anymore, finding a man with only eyes for her.\\nSheila Carter's (Kimberlin Brown) charges were dropped, making her a free woman. Ever since her jail release, Sheila has been a thorn in Finn's side, demanding to have a relationship with him.\\nThe Bold and the Beautiful spoilers say that Finn and Hope will bond over Sheila and Deacon Sharpe's (Sean Kanan) relationship. They will plot for a way to break them up. In the meantime, they will develop a deep friendship that could become more.\\nSoaps Spoilers reports that Hope will confide in her mother, Brooke Logan (Katherine Kelly Lang), that she believes Finn deserves better than Steffy. She points out that she wouldn't leave town even with a Sheila threat if he were her husband.\\nIt's clear that Hope is beginning to develop feelings for the handsome doctor. It could spell trouble when Steffy gets wind of it.\\nB&B fans, do you think Finn and Hope will cross the line? Keep watching The Bold and the Beautiful, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\",\"answer\":\"In an upcoming episode of 'The Bold and the Beautiful,' Hope Logan will make a move on John 'Finn' Finnegan, which will reignite the feud between her and Steffy Forrester. Hope believes Finn deserves better than Steffy and confides in her mother about her feelings. Finn and Hope will bond over their dislike for Sheila Carter and plot a way to break up her relationship with Deacon Sharpe. Steffy may soon find out about the developing connection between Finn and Hope.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":102},{\"index\":1,\"byte_start\":102,\"byte_end\":251},{\"index\":2,\"byte_start\":251,\"byte_end\":362},{\"index\":3,\"byte_start\":362,\"byte_end\":434},{\"index\":4,\"byte_start\":434,\"byte_end\":512},{\"index\":5,\"byte_start\":512,\"byte_end\":535},{\"index\":6,\"byte_start\":535,\"byte_end\":619},{\"index\":7,\"byte_start\":619,\"byte_end\":700},{\"index\":8,\"byte_start\":700,\"byte_end\":812},{\"index\":9,\"byte_start\":812,\"byte_end\":940},{\"index\":10,\"byte_start\":940,\"byte_end\":983},{\"index\":11,\"byte_start\":983,\"byte_end\":1060},{\"index\":12,\"byte_start\":1060,\"byte_end\":1210},{\"index\":13,\"byte_start\":1210,\"byte_end\":1304},{\"index\":14,\"byte_start\":1304,\"byte_end\":1383},{\"index\":15,\"byte_start\":1383,\"byte_end\":1435},{\"index\":16,\"byte_start\":1435,\"byte_end\":1493},{\"index\":17,\"byte_start\":1493,\"byte_end\":1591},{\"index\":18,\"byte_start\":1591,\"byte_end\":1657},{\"index\":19,\"byte_start\":1657,\"byte_end\":1706}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":172},{\"index\":1,\"byte_start\":172,\"byte_end\":266},{\"index\":2,\"byte_start\":266,\"byte_end\":391},{\"index\":3,\"byte_start\":391,\"byte_end\":470}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\"\n",
+    "input_tokens": 1019,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"'Bold and the Beautiful' Spoilers: Hope and Steffy\u2019s New Feud, Logan Believes Finn Deserves Better?\\nThe Bold and the Beautiful (B&B) spoilers tease that Steffy Forrester (Jacqueline MacInnes Wood) and Hope Logan's (Annika Noelle) will be reignited. She Knows Soaps reports that Hope makes a play for John 'Finn' Finnegan (Tanner Novlan), and Steffy finds out.\\nHope and Steffy spent years fighting over Liam Spencer (Scott Clifton). He would waffle between the women, each one believing they were his favorite. He did this for years. Steffy decided she could not do that anymore, finding a man with only eyes for her.\\nSheila Carter's (Kimberlin Brown) charges were dropped, making her a free woman. Ever since her jail release, Sheila has been a thorn in Finn's side, demanding to have a relationship with him.\\nThe Bold and the Beautiful spoilers say that Finn and Hope will bond over Sheila and Deacon Sharpe's (Sean Kanan) relationship. They will plot for a way to break them up. In the meantime, they will develop a deep friendship that could become more.\\nSoaps Spoilers reports that Hope will confide in her mother, Brooke Logan (Katherine Kelly Lang), that she believes Finn deserves better than Steffy. She points out that she wouldn't leave town even with a Sheila threat if he were her husband.\\nIt's clear that Hope is beginning to develop feelings for the handsome doctor. It could spell trouble when Steffy gets wind of it.\\nB&B fans, do you think Finn and Hope will cross the line? Keep watching The Bold and the Beautiful, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\",\"answer\":\"In an upcoming episode of 'The Bold and the Beautiful,' Hope Logan will make a move on John 'Finn' Finnegan, which will reignite the feud between her and Steffy Forrester. Hope believes Finn deserves better than Steffy and confides in her mother about her feelings. Finn and Hope will bond over their dislike for Sheila Carter and plot a way to break up her relationship with Deacon Sharpe. Steffy may soon find out about the developing connection between Finn and Hope.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":102},{\"index\":1,\"byte_start\":102,\"byte_end\":251},{\"index\":2,\"byte_start\":251,\"byte_end\":362},{\"index\":3,\"byte_start\":362,\"byte_end\":434},{\"index\":4,\"byte_start\":434,\"byte_end\":512},{\"index\":5,\"byte_start\":512,\"byte_end\":535},{\"index\":6,\"byte_start\":535,\"byte_end\":619},{\"index\":7,\"byte_start\":619,\"byte_end\":700},{\"index\":8,\"byte_start\":700,\"byte_end\":812},{\"index\":9,\"byte_start\":812,\"byte_end\":940},{\"index\":10,\"byte_start\":940,\"byte_end\":983},{\"index\":11,\"byte_start\":983,\"byte_end\":1060},{\"index\":12,\"byte_start\":1060,\"byte_end\":1210},{\"index\":13,\"byte_start\":1210,\"byte_end\":1304},{\"index\":14,\"byte_start\":1304,\"byte_end\":1383},{\"index\":15,\"byte_start\":1383,\"byte_end\":1435},{\"index\":16,\"byte_start\":1435,\"byte_end\":1493},{\"index\":17,\"byte_start\":1493,\"byte_end\":1591},{\"index\":18,\"byte_start\":1591,\"byte_end\":1657},{\"index\":19,\"byte_start\":1657,\"byte_end\":1706}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":172},{\"index\":1,\"byte_start\":172,\"byte_end\":266},{\"index\":2,\"byte_start\":266,\"byte_end\":391},{\"index\":3,\"byte_start\":391,\"byte_end\":470}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,1]\n1|E|0.90|[12]\n2|E|0.95|[8]\n3|E|0.90|[1,13]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791253735,
+    "id": "chatcmpl-EJDLtkiNYoQbgvjA6UjqDVTeXsyDWruN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1398.169,
+      "predicted_n": 58,
+      "predicted_per_second": 41.48282503760275,
+      "predicted_per_token_ms": 24.10636206896552,
+      "prompt_ms": 922.004,
+      "prompt_n": 1031,
+      "prompt_per_second": 1118.216406870252,
+      "prompt_per_token_ms": 0.8942812803103783
+    },
+    "usage": {
+      "completion_tokens": 58,
+      "prompt_tokens": 1031,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1089
+    }
+  },
+  "source_cluster_id": "sha256:542794fca9364ac8553195bb79d121fe52ed5e66a049888a4b60f0fa974ef595",
+  "started_monotonic_ns": 914641391649816,
+  "status": "completed",
+  "unit_id": "sha256:8602fb7ae92d508802f1ffe44eb765fdce10b20e723829209e5ea3a60305a823"
+}

@@ -1,0 +1,92 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:3e0f2f33b573adeb68671f76bbd8d0ac6164704fcfe4433caeed4d45723b8336",
+  "condition": "original",
+  "ended_monotonic_ns": 916587519028423,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Bucks County Rep. Brian Fitzpatrick Votes To Elevate Extremist Republican Jim Jordan To House Speaker, Twice\\nFor a second time, Bucks County\u2019s self-proclaimed moderate Congressman Brian Fitzpatrick voted Tuesday to elevate Jim Jordan, the MAGA, election denying Republican from Ohio who supports a national abortion ban, to Speaker of the House of Representatives.\\n\u201cAfter years of paying lip service to bipartisanship, Fitzpatrick doubled down on his drive to the right wing of the Republican Party by voting for Trump\u2019s hand-picked Speaker,\u201d said Ashley Ehasz , the Democratic contender for Fitzpatrick\u2019s PA01 congressional seat. \u201dWhat else would we expect from a representative who claims to represent us, but then votes with MAGA to ban abortions, restrict our freedom to vote, and take books out of our schools?\u201d\\nInternet criticisms about Fitzpatrick\u2019s vote for Jordan on Tuesday, barely a day old, remain fresh and abundant.\\n\u201cWhy does Brian Fitzpatrick lack the political courage to vote against an election-denying anti-choice extremist, while other members of the GOP are standing on the right side of justice,\u201d Ehasz added.\\nIn a 393 word statement on the Speaker Vote issued by the Congressman , Fitzpatrick didn\u2019t even have the courage to inform his constituents who he voted for, not mentioning Jordan\u2019s name once, let alone why he voted for the far-right Ohio congressman.\\n\u201cBrian Fitzpatrick makes frequent claims about his moderate stance and his bipartisanship credentials,\u201d wrote Indivisible Bucks County in a news release that pointed out the congressman\u2019s support for a national abortion ban, school book bans and the GOP\u2019s \u201csham committee to amplify conspiracy theories and discredited witnesses.\u201d\\nJordan, the founding member of the right-wing House Freedom Caucus , is alleged to have first-hand knowledge of events surrounding the January 6 insurrection and defied a Jan. 6 Committee subpoena for testimony and documents. An outspoken support of Donald Trump, Jordan has also refused to acknowledge that President Joe Biden won the 2020 election.\\n\u201cOver a dozen other Republicans had the courage to vote against Representative Jordan for Speaker, and Fitzpatrick chose to vote for Donald Trump\u2019s choice instead of joining his more principled colleagues,\u201d said Kierstyn Zolfo of Indivisible Bucks County.\\nReactions on Twitter (X) to Fitzpatrick\u2019s Support for Jim Jordan :\",\"answer\":\"Here is a summary of the article in 92 words:\\n\\nBucks County Rep. Brian Fitzpatrick voted to elect Jim Jordan as Speaker of the House, despite criticism from his Democratic opponent and indivisible groups. Fitzpatrick has been touted as a moderate, but his support for Jordan, a far-right Republican, raises questions about his political courage and values.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":18},{\"index\":1,\"byte_start\":18,\"byte_end\":367},{\"index\":2,\"byte_start\":367,\"byte_end\":641},{\"index\":3,\"byte_start\":641,\"byte_end\":831},{\"index\":4,\"byte_start\":831,\"byte_end\":946},{\"index\":5,\"byte_start\":946,\"byte_end\":1152},{\"index\":6,\"byte_start\":1152,\"byte_end\":1408},{\"index\":7,\"byte_start\":1408,\"byte_end\":1751},{\"index\":8,\"byte_start\":1751,\"byte_end\":1927},{\"index\":9,\"byte_start\":1927,\"byte_end\":1977},{\"index\":10,\"byte_start\":1977,\"byte_end\":2102},{\"index\":11,\"byte_start\":2102,\"byte_end\":2364},{\"index\":12,\"byte_start\":2364,\"byte_end\":2432}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":65},{\"index\":1,\"byte_start\":65,\"byte_end\":205},{\"index\":2,\"byte_start\":205,\"byte_end\":356}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 944,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Bucks County Rep. Brian Fitzpatrick Votes To Elevate Extremist Republican Jim Jordan To House Speaker, Twice\\nFor a second time, Bucks County\u2019s self-proclaimed moderate Congressman Brian Fitzpatrick voted Tuesday to elevate Jim Jordan, the MAGA, election denying Republican from Ohio who supports a national abortion ban, to Speaker of the House of Representatives.\\n\u201cAfter years of paying lip service to bipartisanship, Fitzpatrick doubled down on his drive to the right wing of the Republican Party by voting for Trump\u2019s hand-picked Speaker,\u201d said Ashley Ehasz , the Democratic contender for Fitzpatrick\u2019s PA01 congressional seat. \u201dWhat else would we expect from a representative who claims to represent us, but then votes with MAGA to ban abortions, restrict our freedom to vote, and take books out of our schools?\u201d\\nInternet criticisms about Fitzpatrick\u2019s vote for Jordan on Tuesday, barely a day old, remain fresh and abundant.\\n\u201cWhy does Brian Fitzpatrick lack the political courage to vote against an election-denying anti-choice extremist, while other members of the GOP are standing on the right side of justice,\u201d Ehasz added.\\nIn a 393 word statement on the Speaker Vote issued by the Congressman , Fitzpatrick didn\u2019t even have the courage to inform his constituents who he voted for, not mentioning Jordan\u2019s name once, let alone why he voted for the far-right Ohio congressman.\\n\u201cBrian Fitzpatrick makes frequent claims about his moderate stance and his bipartisanship credentials,\u201d wrote Indivisible Bucks County in a news release that pointed out the congressman\u2019s support for a national abortion ban, school book bans and the GOP\u2019s \u201csham committee to amplify conspiracy theories and discredited witnesses.\u201d\\nJordan, the founding member of the right-wing House Freedom Caucus , is alleged to have first-hand knowledge of events surrounding the January 6 insurrection and defied a Jan. 6 Committee subpoena for testimony and documents. An outspoken support of Donald Trump, Jordan has also refused to acknowledge that President Joe Biden won the 2020 election.\\n\u201cOver a dozen other Republicans had the courage to vote against Representative Jordan for Speaker, and Fitzpatrick chose to vote for Donald Trump\u2019s choice instead of joining his more principled colleagues,\u201d said Kierstyn Zolfo of Indivisible Bucks County.\\nReactions on Twitter (X) to Fitzpatrick\u2019s Support for Jim Jordan :\",\"answer\":\"Here is a summary of the article in 92 words:\\n\\nBucks County Rep. Brian Fitzpatrick voted to elect Jim Jordan as Speaker of the House, despite criticism from his Democratic opponent and indivisible groups. Fitzpatrick has been touted as a moderate, but his support for Jordan, a far-right Republican, raises questions about his political courage and values.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":18},{\"index\":1,\"byte_start\":18,\"byte_end\":367},{\"index\":2,\"byte_start\":367,\"byte_end\":641},{\"index\":3,\"byte_start\":641,\"byte_end\":831},{\"index\":4,\"byte_start\":831,\"byte_end\":946},{\"index\":5,\"byte_start\":946,\"byte_end\":1152},{\"index\":6,\"byte_start\":1152,\"byte_end\":1408},{\"index\":7,\"byte_start\":1408,\"byte_end\":1751},{\"index\":8,\"byte_start\":1751,\"byte_end\":1927},{\"index\":9,\"byte_start\":1927,\"byte_end\":1977},{\"index\":10,\"byte_start\":1977,\"byte_end\":2102},{\"index\":11,\"byte_start\":2102,\"byte_end\":2364},{\"index\":12,\"byte_start\":2364,\"byte_end\":2432}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":65},{\"index\":1,\"byte_start\":65,\"byte_end\":205},{\"index\":2,\"byte_start\":205,\"byte_end\":356}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "input_tokens": 932,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Bucks County Rep. Brian Fitzpatrick Votes To Elevate Extremist Republican Jim Jordan To House Speaker, Twice\\nFor a second time, Bucks County\u2019s self-proclaimed moderate Congressman Brian Fitzpatrick voted Tuesday to elevate Jim Jordan, the MAGA, election denying Republican from Ohio who supports a national abortion ban, to Speaker of the House of Representatives.\\n\u201cAfter years of paying lip service to bipartisanship, Fitzpatrick doubled down on his drive to the right wing of the Republican Party by voting for Trump\u2019s hand-picked Speaker,\u201d said Ashley Ehasz , the Democratic contender for Fitzpatrick\u2019s PA01 congressional seat. \u201dWhat else would we expect from a representative who claims to represent us, but then votes with MAGA to ban abortions, restrict our freedom to vote, and take books out of our schools?\u201d\\nInternet criticisms about Fitzpatrick\u2019s vote for Jordan on Tuesday, barely a day old, remain fresh and abundant.\\n\u201cWhy does Brian Fitzpatrick lack the political courage to vote against an election-denying anti-choice extremist, while other members of the GOP are standing on the right side of justice,\u201d Ehasz added.\\nIn a 393 word statement on the Speaker Vote issued by the Congressman , Fitzpatrick didn\u2019t even have the courage to inform his constituents who he voted for, not mentioning Jordan\u2019s name once, let alone why he voted for the far-right Ohio congressman.\\n\u201cBrian Fitzpatrick makes frequent claims about his moderate stance and his bipartisanship credentials,\u201d wrote Indivisible Bucks County in a news release that pointed out the congressman\u2019s support for a national abortion ban, school book bans and the GOP\u2019s \u201csham committee to amplify conspiracy theories and discredited witnesses.\u201d\\nJordan, the founding member of the right-wing House Freedom Caucus , is alleged to have first-hand knowledge of events surrounding the January 6 insurrection and defied a Jan. 6 Committee subpoena for testimony and documents. An outspoken support of Donald Trump, Jordan has also refused to acknowledge that President Joe Biden won the 2020 election.\\n\u201cOver a dozen other Republicans had the courage to vote against Representative Jordan for Speaker, and Fitzpatrick chose to vote for Donald Trump\u2019s choice instead of joining his more principled colleagues,\u201d said Kierstyn Zolfo of Indivisible Bucks County.\\nReactions on Twitter (X) to Fitzpatrick\u2019s Support for Jim Jordan :\",\"answer\":\"Here is a summary of the article in 92 words:\\n\\nBucks County Rep. Brian Fitzpatrick voted to elect Jim Jordan as Speaker of the House, despite criticism from his Democratic opponent and indivisible groups. Fitzpatrick has been touted as a moderate, but his support for Jordan, a far-right Republican, raises questions about his political courage and values.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":18},{\"index\":1,\"byte_start\":18,\"byte_end\":367},{\"index\":2,\"byte_start\":367,\"byte_end\":641},{\"index\":3,\"byte_start\":641,\"byte_end\":831},{\"index\":4,\"byte_start\":831,\"byte_end\":946},{\"index\":5,\"byte_start\":946,\"byte_end\":1152},{\"index\":6,\"byte_start\":1152,\"byte_end\":1408},{\"index\":7,\"byte_start\":1408,\"byte_end\":1751},{\"index\":8,\"byte_start\":1751,\"byte_end\":1927},{\"index\":9,\"byte_start\":1927,\"byte_end\":1977},{\"index\":10,\"byte_start\":1977,\"byte_end\":2102},{\"index\":11,\"byte_start\":2102,\"byte_end\":2364},{\"index\":12,\"byte_start\":2364,\"byte_end\":2432}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":65},{\"index\":1,\"byte_start\":65,\"byte_end\":205},{\"index\":2,\"byte_start\":205,\"byte_end\":356}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[1,2]\n1|E|0.90|[1,2]\n2|E|0.85|[1,2]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255679,
+    "id": "chatcmpl-dTmeUpGIGxZYStt7FUtCii9J0gWi5lZt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1105.555,
+      "predicted_n": 45,
+      "predicted_per_second": 40.70353804197891,
+      "predicted_per_token_ms": 24.56788888888889,
+      "prompt_ms": 868.684,
+      "prompt_n": 944,
+      "prompt_per_second": 1086.701263059985,
+      "prompt_per_token_ms": 0.9202161016949152
+    },
+    "usage": {
+      "completion_tokens": 45,
+      "prompt_tokens": 944,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 989
+    }
+  },
+  "source_cluster_id": "sha256:e3601a0d46485161cadd071e858a1e79977b563ead6af774940cff33fe3e09aa",
+  "started_monotonic_ns": 916585326496855,
+  "status": "completed",
+  "unit_id": "sha256:a3d69df1147952d6aa1540d6b689c3d88fc7c23345a5d21b18f8552949935181"
+}

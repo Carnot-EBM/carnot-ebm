@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:c929d446c654365a0b473e3cb8a380368c5bf1fc84060673f345b99e74023fb6",
+  "ended_monotonic_ns": 916911425168506,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Prince Harry is \\\"On Top Of the world\\\" and has stopped using his \\\"Distress signals\\\"\\nAccording to a body language specialist, Prince Harry was \\\"his most relaxed self\\\" at the US Grand Prix because he was \\\"on top of the world\\\" and wanted to showcase \\\"who he really is\\\".\\nThey claimed that the Duke of Sussex didn't exhibit any symptoms of anxiety or stress and instead appeared \\\"elated\\\" and \\\"completely natural\\\".\\nFollowing an analysis of Harry's most recent engagement, body language expert Darren Stanton came to the conclusion that, although the prince frequently indicates that he is experiencing \\\"pressure\\\" by putting his hands in his pockets, on this occasion he was communicating that he felt \\\"free\\\" as he was observed \\\"mucking in\\\" and \\\"letting himself go\\\".\\nStanton, speaking on behalf of Betfair Casino, stated: \\\"Prince Harry appears to be at his best at ease when he is at the Grand Prix.\\n\\\"He is welcoming everyone in with open arms.\\n\\\"Even though he is alone, he is happy and doesn't mind being self-sufficient.\\n\\\"He is expressing to everyone how joyful, pleased, and authentic he feels. Harry is entirely natural; he's not under any pressure or tension. It indicates that he enjoys getting his hands dirty and letting go.\\\"\\nThe expert went on to say that because the monarch wasn't trying to hide his feelings, he appeared to be happier than he had been in a long time.\\n\\\"Harry will put his hands in his pockets or twiddle his ring finger to attempt to mask how he is truly feeling when he is stressed.\\n\\\"It's a distress signal, and he has used this frequently on engagements, but, here, Harry is a man feeling on top of the world, but also very calm in this environment,\\\" Stanton said.\\nThe Duke, he continued, appeared to be experiencing his actual self, one in which \\\"he can let go and he doesn't want to hide any of that.\\\"\\nHe clarified that Harry gave the impression of wanting to be \\\"open and honest\\\" and share his life with others.\\n\\\"He's prepared to get involved and show people who he really is deep down\\\", Stanton stated.\",\"answer\":\"Body Language Specialist Darren Stanton analyzed Prince Harry's behavior at the US Grand Prix and claims that he appears to be more relaxed and comfortable than he has in a while. Harry frequently uses his hands in his pockets as a distress signal, but he did not do so at this event, indicating that he felt at ease and enjoyed showing off his true self. Stanton believes that Harry wants to be open and honest with people, and he is willing to engage with them without any pretenses.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":266},{\"index\":1,\"byte_start\":266,\"byte_end\":408},{\"index\":2,\"byte_start\":408,\"byte_end\":759},{\"index\":3,\"byte_start\":759,\"byte_end\":892},{\"index\":4,\"byte_start\":892,\"byte_end\":937},{\"index\":5,\"byte_start\":937,\"byte_end\":1015},{\"index\":6,\"byte_start\":1015,\"byte_end\":1090},{\"index\":7,\"byte_start\":1090,\"byte_end\":1157},{\"index\":8,\"byte_start\":1157,\"byte_end\":1226},{\"index\":9,\"byte_start\":1226,\"byte_end\":1372},{\"index\":10,\"byte_start\":1372,\"byte_end\":1504},{\"index\":11,\"byte_start\":1504,\"byte_end\":1687},{\"index\":12,\"byte_start\":1687,\"byte_end\":1826},{\"index\":13,\"byte_start\":1826,\"byte_end\":1937},{\"index\":14,\"byte_start\":1937,\"byte_end\":2028}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":180},{\"index\":1,\"byte_start\":180,\"byte_end\":356},{\"index\":2,\"byte_start\":356,\"byte_end\":485}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 979,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Prince Harry is \\\"On Top Of the world\\\" and has stopped using his \\\"Distress signals\\\"\\nAccording to a body language specialist, Prince Harry was \\\"his most relaxed self\\\" at the US Grand Prix because he was \\\"on top of the world\\\" and wanted to showcase \\\"who he really is\\\".\\nThey claimed that the Duke of Sussex didn't exhibit any symptoms of anxiety or stress and instead appeared \\\"elated\\\" and \\\"completely natural\\\".\\nFollowing an analysis of Harry's most recent engagement, body language expert Darren Stanton came to the conclusion that, although the prince frequently indicates that he is experiencing \\\"pressure\\\" by putting his hands in his pockets, on this occasion he was communicating that he felt \\\"free\\\" as he was observed \\\"mucking in\\\" and \\\"letting himself go\\\".\\nStanton, speaking on behalf of Betfair Casino, stated: \\\"Prince Harry appears to be at his best at ease when he is at the Grand Prix.\\n\\\"He is welcoming everyone in with open arms.\\n\\\"Even though he is alone, he is happy and doesn't mind being self-sufficient.\\n\\\"He is expressing to everyone how joyful, pleased, and authentic he feels. Harry is entirely natural; he's not under any pressure or tension. It indicates that he enjoys getting his hands dirty and letting go.\\\"\\nThe expert went on to say that because the monarch wasn't trying to hide his feelings, he appeared to be happier than he had been in a long time.\\n\\\"Harry will put his hands in his pockets or twiddle his ring finger to attempt to mask how he is truly feeling when he is stressed.\\n\\\"It's a distress signal, and he has used this frequently on engagements, but, here, Harry is a man feeling on top of the world, but also very calm in this environment,\\\" Stanton said.\\nThe Duke, he continued, appeared to be experiencing his actual self, one in which \\\"he can let go and he doesn't want to hide any of that.\\\"\\nHe clarified that Harry gave the impression of wanting to be \\\"open and honest\\\" and share his life with others.\\n\\\"He's prepared to get involved and show people who he really is deep down\\\", Stanton stated.\",\"answer\":\"Body Language Specialist Darren Stanton analyzed Prince Harry's behavior at the US Grand Prix and claims that he appears to be more relaxed and comfortable than he has in a while. Harry frequently uses his hands in his pockets as a distress signal, but he did not do so at this event, indicating that he felt at ease and enjoyed showing off his true self. Stanton believes that Harry wants to be open and honest with people, and he is willing to engage with them without any pretenses.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":266},{\"index\":1,\"byte_start\":266,\"byte_end\":408},{\"index\":2,\"byte_start\":408,\"byte_end\":759},{\"index\":3,\"byte_start\":759,\"byte_end\":892},{\"index\":4,\"byte_start\":892,\"byte_end\":937},{\"index\":5,\"byte_start\":937,\"byte_end\":1015},{\"index\":6,\"byte_start\":1015,\"byte_end\":1090},{\"index\":7,\"byte_start\":1090,\"byte_end\":1157},{\"index\":8,\"byte_start\":1157,\"byte_end\":1226},{\"index\":9,\"byte_start\":1226,\"byte_end\":1372},{\"index\":10,\"byte_start\":1372,\"byte_end\":1504},{\"index\":11,\"byte_start\":1504,\"byte_end\":1687},{\"index\":12,\"byte_start\":1687,\"byte_end\":1826},{\"index\":13,\"byte_start\":1826,\"byte_end\":1937},{\"index\":14,\"byte_start\":1937,\"byte_end\":2028}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":180},{\"index\":1,\"byte_start\":180,\"byte_end\":356},{\"index\":2,\"byte_start\":356,\"byte_end\":485}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "input_tokens": 967,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Prince Harry is \\\"On Top Of the world\\\" and has stopped using his \\\"Distress signals\\\"\\nAccording to a body language specialist, Prince Harry was \\\"his most relaxed self\\\" at the US Grand Prix because he was \\\"on top of the world\\\" and wanted to showcase \\\"who he really is\\\".\\nThey claimed that the Duke of Sussex didn't exhibit any symptoms of anxiety or stress and instead appeared \\\"elated\\\" and \\\"completely natural\\\".\\nFollowing an analysis of Harry's most recent engagement, body language expert Darren Stanton came to the conclusion that, although the prince frequently indicates that he is experiencing \\\"pressure\\\" by putting his hands in his pockets, on this occasion he was communicating that he felt \\\"free\\\" as he was observed \\\"mucking in\\\" and \\\"letting himself go\\\".\\nStanton, speaking on behalf of Betfair Casino, stated: \\\"Prince Harry appears to be at his best at ease when he is at the Grand Prix.\\n\\\"He is welcoming everyone in with open arms.\\n\\\"Even though he is alone, he is happy and doesn't mind being self-sufficient.\\n\\\"He is expressing to everyone how joyful, pleased, and authentic he feels. Harry is entirely natural; he's not under any pressure or tension. It indicates that he enjoys getting his hands dirty and letting go.\\\"\\nThe expert went on to say that because the monarch wasn't trying to hide his feelings, he appeared to be happier than he had been in a long time.\\n\\\"Harry will put his hands in his pockets or twiddle his ring finger to attempt to mask how he is truly feeling when he is stressed.\\n\\\"It's a distress signal, and he has used this frequently on engagements, but, here, Harry is a man feeling on top of the world, but also very calm in this environment,\\\" Stanton said.\\nThe Duke, he continued, appeared to be experiencing his actual self, one in which \\\"he can let go and he doesn't want to hide any of that.\\\"\\nHe clarified that Harry gave the impression of wanting to be \\\"open and honest\\\" and share his life with others.\\n\\\"He's prepared to get involved and show people who he really is deep down\\\", Stanton stated.\",\"answer\":\"Body Language Specialist Darren Stanton analyzed Prince Harry's behavior at the US Grand Prix and claims that he appears to be more relaxed and comfortable than he has in a while. Harry frequently uses his hands in his pockets as a distress signal, but he did not do so at this event, indicating that he felt at ease and enjoyed showing off his true self. Stanton believes that Harry wants to be open and honest with people, and he is willing to engage with them without any pretenses.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":266},{\"index\":1,\"byte_start\":266,\"byte_end\":408},{\"index\":2,\"byte_start\":408,\"byte_end\":759},{\"index\":3,\"byte_start\":759,\"byte_end\":892},{\"index\":4,\"byte_start\":892,\"byte_end\":937},{\"index\":5,\"byte_start\":937,\"byte_end\":1015},{\"index\":6,\"byte_start\":1015,\"byte_end\":1090},{\"index\":7,\"byte_start\":1090,\"byte_end\":1157},{\"index\":8,\"byte_start\":1157,\"byte_end\":1226},{\"index\":9,\"byte_start\":1226,\"byte_end\":1372},{\"index\":10,\"byte_start\":1372,\"byte_end\":1504},{\"index\":11,\"byte_start\":1504,\"byte_end\":1687},{\"index\":12,\"byte_start\":1687,\"byte_end\":1826},{\"index\":13,\"byte_start\":1826,\"byte_end\":1937},{\"index\":14,\"byte_start\":1937,\"byte_end\":2028}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":180},{\"index\":1,\"byte_start\":180,\"byte_end\":356},{\"index\":2,\"byte_start\":356,\"byte_end\":485}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,2]\n1|E|0.95|[2,9]\n2|E|0.95|[13,14]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256003,
+    "id": "chatcmpl-NVRHJFgsC7c6zpwC3WPbaIILzQ6klqiM",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1158.117,
+      "predicted_n": 47,
+      "predicted_per_second": 40.58311897675278,
+      "predicted_per_token_ms": 24.640787234042552,
+      "prompt_ms": 929.824,
+      "prompt_n": 940,
+      "prompt_per_second": 1010.9440066077021,
+      "prompt_per_token_ms": 0.9891744680851063
+    },
+    "usage": {
+      "completion_tokens": 47,
+      "prompt_tokens": 979,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1026
+    }
+  },
+  "source_cluster_id": "sha256:44417ef15151c503bd5e0958bcec4b8320f1f085730ec3864200c10e075babe4",
+  "started_monotonic_ns": 916909180125643,
+  "status": "completed",
+  "unit_id": "sha256:83794664596f68282651089bc20e3d84bbe9ac89cb2d7a33d9b5372baffa70a1"
+}

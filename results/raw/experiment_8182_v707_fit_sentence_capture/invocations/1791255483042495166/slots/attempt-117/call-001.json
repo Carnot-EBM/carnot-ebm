@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:dc5664634a088616ac7efa0cd126fe1dec5e2c7637ed0a1a6f83aec698f01db8",
+  "ended_monotonic_ns": 916748549315494,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:(Panama City, Florida - FL, USA) 1  Panama City's history dates from when its first residents arrived some 13,000 years ago during the last ice age. The ancient shell midden (an archaeological site comprising mainly mollusk shells) in Oaks By The Bay Park contains some of the few surviving landmarks from Panama City's earliest residents.\\\\n\\\\npassage 2:Panama City Beach Tourism: Best of Panama City Beach. Panama City Beach, Florida. Panama City Beach, with its trademark white sand and warm Gulf waters, attracts everyone from spring breakers to retirees, singles to families. As a result, the city offers a range of activities for all ages and interests.\\\\n\\\\npassage 3:Check it out HERE. J.E. Churchwell moved to the Panama City Beach area in the 1920's. He purchased land from a Mr. Sharpless and Mr. Brown in the 1930's that was already named Long Beach Resort. In the 1940's his nephew, Guy Churchwell, moved to Long Beach Resort from Holmes Co., FL. His family back in Holmes Co. questioned why he would want to buy all that sand that couldn't be farmed! Guy Churchwell became the Mayor of Long Beach Resort until the City of Panama City Beach was incorporated in the 1970's.\\\\n\\\\n\\\",\\\"question\\\":\\\"history of panama city beach, fl\\\"}\",\"answer\":\"Based on the provided passages, here is what can be gathered about the history of Panama City Beach, Florida:\\n\\n1. The area now known as Panama City Beach has been inhabited since the last ice age, with evidence of early human presence found in the form of an ancient shell midden.\\n2. Panama City Beach has a long history of attracting visitors, dating back to the early 20th century when it was already known as a popular destination for spring breakers and retirees.\\n3. The area was originally named Long Beach Resort, and was owned by the Churchwell family in the mid-20th century. One of the family members, Guy Churchwell, became the mayor of the area before it was incorporated into the City of Panama City Beach in the 1970s.\\n\\nTherefore, the main historical events related to the area now known as Panama City Beach are:\\n\\n* Early human settlement dating back thousands of years\\n* Development as a tourist destination in the early 20th century\\n* Name change to Panama City Beach in the 1970s\\n\\nUnable to answer based on given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":172},{\"index\":1,\"byte_start\":172,\"byte_end\":430},{\"index\":2,\"byte_start\":430,\"byte_end\":458},{\"index\":3,\"byte_start\":458,\"byte_end\":602},{\"index\":4,\"byte_start\":602,\"byte_end\":713},{\"index\":5,\"byte_start\":713,\"byte_end\":718},{\"index\":6,\"byte_start\":718,\"byte_end\":780},{\"index\":7,\"byte_start\":780,\"byte_end\":889},{\"index\":8,\"byte_start\":889,\"byte_end\":979},{\"index\":9,\"byte_start\":979,\"byte_end\":1009},{\"index\":10,\"byte_start\":1009,\"byte_end\":1084},{\"index\":11,\"byte_start\":1084,\"byte_end\":1256}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":281},{\"index\":1,\"byte_start\":281,\"byte_end\":468},{\"index\":2,\"byte_start\":468,\"byte_end\":584},{\"index\":3,\"byte_start\":584,\"byte_end\":733},{\"index\":4,\"byte_start\":733,\"byte_end\":1039}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 943,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:(Panama City, Florida - FL, USA) 1  Panama City's history dates from when its first residents arrived some 13,000 years ago during the last ice age. The ancient shell midden (an archaeological site comprising mainly mollusk shells) in Oaks By The Bay Park contains some of the few surviving landmarks from Panama City's earliest residents.\\\\n\\\\npassage 2:Panama City Beach Tourism: Best of Panama City Beach. Panama City Beach, Florida. Panama City Beach, with its trademark white sand and warm Gulf waters, attracts everyone from spring breakers to retirees, singles to families. As a result, the city offers a range of activities for all ages and interests.\\\\n\\\\npassage 3:Check it out HERE. J.E. Churchwell moved to the Panama City Beach area in the 1920's. He purchased land from a Mr. Sharpless and Mr. Brown in the 1930's that was already named Long Beach Resort. In the 1940's his nephew, Guy Churchwell, moved to Long Beach Resort from Holmes Co., FL. His family back in Holmes Co. questioned why he would want to buy all that sand that couldn't be farmed! Guy Churchwell became the Mayor of Long Beach Resort until the City of Panama City Beach was incorporated in the 1970's.\\\\n\\\\n\\\",\\\"question\\\":\\\"history of panama city beach, fl\\\"}\",\"answer\":\"Based on the provided passages, here is what can be gathered about the history of Panama City Beach, Florida:\\n\\n1. The area now known as Panama City Beach has been inhabited since the last ice age, with evidence of early human presence found in the form of an ancient shell midden.\\n2. Panama City Beach has a long history of attracting visitors, dating back to the early 20th century when it was already known as a popular destination for spring breakers and retirees.\\n3. The area was originally named Long Beach Resort, and was owned by the Churchwell family in the mid-20th century. One of the family members, Guy Churchwell, became the mayor of the area before it was incorporated into the City of Panama City Beach in the 1970s.\\n\\nTherefore, the main historical events related to the area now known as Panama City Beach are:\\n\\n* Early human settlement dating back thousands of years\\n* Development as a tourist destination in the early 20th century\\n* Name change to Panama City Beach in the 1970s\\n\\nUnable to answer based on given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":172},{\"index\":1,\"byte_start\":172,\"byte_end\":430},{\"index\":2,\"byte_start\":430,\"byte_end\":458},{\"index\":3,\"byte_start\":458,\"byte_end\":602},{\"index\":4,\"byte_start\":602,\"byte_end\":713},{\"index\":5,\"byte_start\":713,\"byte_end\":718},{\"index\":6,\"byte_start\":718,\"byte_end\":780},{\"index\":7,\"byte_start\":780,\"byte_end\":889},{\"index\":8,\"byte_start\":889,\"byte_end\":979},{\"index\":9,\"byte_start\":979,\"byte_end\":1009},{\"index\":10,\"byte_start\":1009,\"byte_end\":1084},{\"index\":11,\"byte_start\":1084,\"byte_end\":1256}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":281},{\"index\":1,\"byte_start\":281,\"byte_end\":468},{\"index\":2,\"byte_start\":468,\"byte_end\":584},{\"index\":3,\"byte_start\":584,\"byte_end\":733},{\"index\":4,\"byte_start\":733,\"byte_end\":1039}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "input_tokens": 931,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:(Panama City, Florida - FL, USA) 1  Panama City's history dates from when its first residents arrived some 13,000 years ago during the last ice age. The ancient shell midden (an archaeological site comprising mainly mollusk shells) in Oaks By The Bay Park contains some of the few surviving landmarks from Panama City's earliest residents.\\\\n\\\\npassage 2:Panama City Beach Tourism: Best of Panama City Beach. Panama City Beach, Florida. Panama City Beach, with its trademark white sand and warm Gulf waters, attracts everyone from spring breakers to retirees, singles to families. As a result, the city offers a range of activities for all ages and interests.\\\\n\\\\npassage 3:Check it out HERE. J.E. Churchwell moved to the Panama City Beach area in the 1920's. He purchased land from a Mr. Sharpless and Mr. Brown in the 1930's that was already named Long Beach Resort. In the 1940's his nephew, Guy Churchwell, moved to Long Beach Resort from Holmes Co., FL. His family back in Holmes Co. questioned why he would want to buy all that sand that couldn't be farmed! Guy Churchwell became the Mayor of Long Beach Resort until the City of Panama City Beach was incorporated in the 1970's.\\\\n\\\\n\\\",\\\"question\\\":\\\"history of panama city beach, fl\\\"}\",\"answer\":\"Based on the provided passages, here is what can be gathered about the history of Panama City Beach, Florida:\\n\\n1. The area now known as Panama City Beach has been inhabited since the last ice age, with evidence of early human presence found in the form of an ancient shell midden.\\n2. Panama City Beach has a long history of attracting visitors, dating back to the early 20th century when it was already known as a popular destination for spring breakers and retirees.\\n3. The area was originally named Long Beach Resort, and was owned by the Churchwell family in the mid-20th century. One of the family members, Guy Churchwell, became the mayor of the area before it was incorporated into the City of Panama City Beach in the 1970s.\\n\\nTherefore, the main historical events related to the area now known as Panama City Beach are:\\n\\n* Early human settlement dating back thousands of years\\n* Development as a tourist destination in the early 20th century\\n* Name change to Panama City Beach in the 1970s\\n\\nUnable to answer based on given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":172},{\"index\":1,\"byte_start\":172,\"byte_end\":430},{\"index\":2,\"byte_start\":430,\"byte_end\":458},{\"index\":3,\"byte_start\":458,\"byte_end\":602},{\"index\":4,\"byte_start\":602,\"byte_end\":713},{\"index\":5,\"byte_start\":713,\"byte_end\":718},{\"index\":6,\"byte_start\":718,\"byte_end\":780},{\"index\":7,\"byte_start\":780,\"byte_end\":889},{\"index\":8,\"byte_start\":889,\"byte_end\":979},{\"index\":9,\"byte_start\":979,\"byte_end\":1009},{\"index\":10,\"byte_start\":1009,\"byte_end\":1084},{\"index\":11,\"byte_start\":1084,\"byte_end\":1256}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":281},{\"index\":1,\"byte_start\":281,\"byte_end\":468},{\"index\":2,\"byte_start\":468,\"byte_end\":584},{\"index\":3,\"byte_start\":584,\"byte_end\":733},{\"index\":4,\"byte_start\":733,\"byte_end\":1039}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[]\n2|C|0.00|[]\n3|C|0.00|[]\n4|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255840,
+    "id": "chatcmpl-Q65NQjeUuVMnMoHNV4YwB9z12x0Kcjmq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1337.589,
+      "predicted_n": 55,
+      "predicted_per_second": 41.11875920032237,
+      "predicted_per_token_ms": 24.319799999999997,
+      "prompt_ms": 924.113,
+      "prompt_n": 904,
+      "prompt_per_second": 978.2353456774226,
+      "prompt_per_token_ms": 1.0222488938053098
+    },
+    "usage": {
+      "completion_tokens": 55,
+      "prompt_tokens": 943,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 998
+    }
+  },
+  "source_cluster_id": "sha256:8d0586a7acfdbb55e20662a0f47851d55a0b54ffd974f9c1ce1b4654b4d043d7",
+  "started_monotonic_ns": 916746114578409,
+  "status": "completed",
+  "unit_id": "sha256:9101e15e9c6e87e10a7133be18ea2f237280d43ffa45024ea3cb5f11f3e55727"
+}

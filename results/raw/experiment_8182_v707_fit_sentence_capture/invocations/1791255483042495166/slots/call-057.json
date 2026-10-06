@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:76c84f17bcdb5980dddeeb512395ef20703d91ddc0fe5c678f4fdea0eaa8b5fb",
+  "condition": "original",
+  "ended_monotonic_ns": 916622961052311,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Rome (CNN)Italy is coping with a rising wave of desperate migrants from Africa and Middle East hoping to make it to Europe. From Friday to Monday, a total of 8,480 migrants were rescued, according to the Italian coast guard, which said it received on Monday -- alone -- SOS calls from 20 boats in distress. On Tuesday, a spokesman with Save the Children told CNN the group fears 400 migrants could be missing, citing testimony from survivors who said their ship carrying 550 people capsized in the Mediterranean Sea about 80 miles off the Libyan coast. The Italian coast guard, however, told CNN that while it is taking the report seriously, it cannot confirm such an incident and has not yet found evidence at sea to indicate a migrant boat carrying approximately 550 has capsized with 145 rescued. An operation that included boats and planes did not find any survivors, nor bodies, nor any evidence to indicate a particular boat capsized, Coast Guard official Filippo Marini said. There has been a recent upsurge in migrant boats crossing the Mediterranean into Italy and an increase in rescues performed by the Italian Coast Guard to aid migrant boats. Why migrants are dying trying to reach Italy. According to the International Organization for Migration, Italy registered more than 10,000 migrants arriving in the first three months of 2015, and about 2,000 were rescued at sea during the first weekend of April in the Channel of Sicily. Most migrants recorded this year come from countries in West Africa as well as Somalia and Syria, the IOM said. They use Libya as a country of transit. At least 480 migrants have died while crossing the Mediterranean since the beginning of the year, often because of bad weather and overcrowded vessels used by smugglers, the IOM said. Sometimes the captains and crews abandon the ships, leaving passengers to fend for themselves. Last week: 978 migrants rescued in one day in Mediterranean Sea. CNN's Ralph Ellis contributed to this report.\\n\",\"answer\":\"A total of 8,480 migrants were rescued off the coast of Italy from Friday to Monday, according to the Italian coast guard. The coast guard also received SOS calls from 20 boats in distress on Monday. However, 'Save the Children' fears that 400 migrants could be missing after a ship carrying 550 people capsized in the Mediterranean Sea. The Italian coast guard is taking the report seriously, though it has found no evidence to confirm the incident.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":124},{\"index\":1,\"byte_start\":124,\"byte_end\":307},{\"index\":2,\"byte_start\":307,\"byte_end\":553},{\"index\":3,\"byte_start\":553,\"byte_end\":800},{\"index\":4,\"byte_start\":800,\"byte_end\":983},{\"index\":5,\"byte_start\":983,\"byte_end\":1156},{\"index\":6,\"byte_start\":1156,\"byte_end\":1202},{\"index\":7,\"byte_start\":1202,\"byte_end\":1444},{\"index\":8,\"byte_start\":1444,\"byte_end\":1556},{\"index\":9,\"byte_start\":1556,\"byte_end\":1596},{\"index\":10,\"byte_start\":1596,\"byte_end\":1780},{\"index\":11,\"byte_start\":1780,\"byte_end\":1875},{\"index\":12,\"byte_start\":1875,\"byte_end\":1940},{\"index\":13,\"byte_start\":1940,\"byte_end\":1986}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":123},{\"index\":1,\"byte_start\":123,\"byte_end\":200},{\"index\":2,\"byte_start\":200,\"byte_end\":338},{\"index\":3,\"byte_start\":338,\"byte_end\":450}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 950,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Rome (CNN)Italy is coping with a rising wave of desperate migrants from Africa and Middle East hoping to make it to Europe. From Friday to Monday, a total of 8,480 migrants were rescued, according to the Italian coast guard, which said it received on Monday -- alone -- SOS calls from 20 boats in distress. On Tuesday, a spokesman with Save the Children told CNN the group fears 400 migrants could be missing, citing testimony from survivors who said their ship carrying 550 people capsized in the Mediterranean Sea about 80 miles off the Libyan coast. The Italian coast guard, however, told CNN that while it is taking the report seriously, it cannot confirm such an incident and has not yet found evidence at sea to indicate a migrant boat carrying approximately 550 has capsized with 145 rescued. An operation that included boats and planes did not find any survivors, nor bodies, nor any evidence to indicate a particular boat capsized, Coast Guard official Filippo Marini said. There has been a recent upsurge in migrant boats crossing the Mediterranean into Italy and an increase in rescues performed by the Italian Coast Guard to aid migrant boats. Why migrants are dying trying to reach Italy. According to the International Organization for Migration, Italy registered more than 10,000 migrants arriving in the first three months of 2015, and about 2,000 were rescued at sea during the first weekend of April in the Channel of Sicily. Most migrants recorded this year come from countries in West Africa as well as Somalia and Syria, the IOM said. They use Libya as a country of transit. At least 480 migrants have died while crossing the Mediterranean since the beginning of the year, often because of bad weather and overcrowded vessels used by smugglers, the IOM said. Sometimes the captains and crews abandon the ships, leaving passengers to fend for themselves. Last week: 978 migrants rescued in one day in Mediterranean Sea. CNN's Ralph Ellis contributed to this report.\\n\",\"answer\":\"A total of 8,480 migrants were rescued off the coast of Italy from Friday to Monday, according to the Italian coast guard. The coast guard also received SOS calls from 20 boats in distress on Monday. However, 'Save the Children' fears that 400 migrants could be missing after a ship carrying 550 people capsized in the Mediterranean Sea. The Italian coast guard is taking the report seriously, though it has found no evidence to confirm the incident.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":124},{\"index\":1,\"byte_start\":124,\"byte_end\":307},{\"index\":2,\"byte_start\":307,\"byte_end\":553},{\"index\":3,\"byte_start\":553,\"byte_end\":800},{\"index\":4,\"byte_start\":800,\"byte_end\":983},{\"index\":5,\"byte_start\":983,\"byte_end\":1156},{\"index\":6,\"byte_start\":1156,\"byte_end\":1202},{\"index\":7,\"byte_start\":1202,\"byte_end\":1444},{\"index\":8,\"byte_start\":1444,\"byte_end\":1556},{\"index\":9,\"byte_start\":1556,\"byte_end\":1596},{\"index\":10,\"byte_start\":1596,\"byte_end\":1780},{\"index\":11,\"byte_start\":1780,\"byte_end\":1875},{\"index\":12,\"byte_start\":1875,\"byte_end\":1940},{\"index\":13,\"byte_start\":1940,\"byte_end\":1986}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":123},{\"index\":1,\"byte_start\":123,\"byte_end\":200},{\"index\":2,\"byte_start\":200,\"byte_end\":338},{\"index\":3,\"byte_start\":338,\"byte_end\":450}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "input_tokens": 938,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Rome (CNN)Italy is coping with a rising wave of desperate migrants from Africa and Middle East hoping to make it to Europe. From Friday to Monday, a total of 8,480 migrants were rescued, according to the Italian coast guard, which said it received on Monday -- alone -- SOS calls from 20 boats in distress. On Tuesday, a spokesman with Save the Children told CNN the group fears 400 migrants could be missing, citing testimony from survivors who said their ship carrying 550 people capsized in the Mediterranean Sea about 80 miles off the Libyan coast. The Italian coast guard, however, told CNN that while it is taking the report seriously, it cannot confirm such an incident and has not yet found evidence at sea to indicate a migrant boat carrying approximately 550 has capsized with 145 rescued. An operation that included boats and planes did not find any survivors, nor bodies, nor any evidence to indicate a particular boat capsized, Coast Guard official Filippo Marini said. There has been a recent upsurge in migrant boats crossing the Mediterranean into Italy and an increase in rescues performed by the Italian Coast Guard to aid migrant boats. Why migrants are dying trying to reach Italy. According to the International Organization for Migration, Italy registered more than 10,000 migrants arriving in the first three months of 2015, and about 2,000 were rescued at sea during the first weekend of April in the Channel of Sicily. Most migrants recorded this year come from countries in West Africa as well as Somalia and Syria, the IOM said. They use Libya as a country of transit. At least 480 migrants have died while crossing the Mediterranean since the beginning of the year, often because of bad weather and overcrowded vessels used by smugglers, the IOM said. Sometimes the captains and crews abandon the ships, leaving passengers to fend for themselves. Last week: 978 migrants rescued in one day in Mediterranean Sea. CNN's Ralph Ellis contributed to this report.\\n\",\"answer\":\"A total of 8,480 migrants were rescued off the coast of Italy from Friday to Monday, according to the Italian coast guard. The coast guard also received SOS calls from 20 boats in distress on Monday. However, 'Save the Children' fears that 400 migrants could be missing after a ship carrying 550 people capsized in the Mediterranean Sea. The Italian coast guard is taking the report seriously, though it has found no evidence to confirm the incident.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":124},{\"index\":1,\"byte_start\":124,\"byte_end\":307},{\"index\":2,\"byte_start\":307,\"byte_end\":553},{\"index\":3,\"byte_start\":553,\"byte_end\":800},{\"index\":4,\"byte_start\":800,\"byte_end\":983},{\"index\":5,\"byte_start\":983,\"byte_end\":1156},{\"index\":6,\"byte_start\":1156,\"byte_end\":1202},{\"index\":7,\"byte_start\":1202,\"byte_end\":1444},{\"index\":8,\"byte_start\":1444,\"byte_end\":1556},{\"index\":9,\"byte_start\":1556,\"byte_end\":1596},{\"index\":10,\"byte_start\":1596,\"byte_end\":1780},{\"index\":11,\"byte_start\":1780,\"byte_end\":1875},{\"index\":12,\"byte_start\":1875,\"byte_end\":1940},{\"index\":13,\"byte_start\":1940,\"byte_end\":1986}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":123},{\"index\":1,\"byte_start\":123,\"byte_end\":200},{\"index\":2,\"byte_start\":200,\"byte_end\":338},{\"index\":3,\"byte_start\":338,\"byte_end\":450}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[1]\n1|C|0.95|[1]\n2|C|0.90|[2]\n3|C|0.90|[3]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255714,
+    "id": "chatcmpl-LwJOeaYBkDOR43QsM2iez8g5lcNMFuHp",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1262.79,
+      "predicted_n": 52,
+      "predicted_per_second": 41.17865995137751,
+      "predicted_per_token_ms": 24.284423076923076,
+      "prompt_ms": 923.357,
+      "prompt_n": 911,
+      "prompt_per_second": 986.6173105310297,
+      "prompt_per_token_ms": 1.0135642151481887
+    },
+    "usage": {
+      "completion_tokens": 52,
+      "prompt_tokens": 950,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1002
+    }
+  },
+  "source_cluster_id": "sha256:b238b4948ef876cd15749d1c8c35c94b40fd6ef5ff2444a70c22516066c8c96b",
+  "started_monotonic_ns": 916620618971796,
+  "status": "completed",
+  "unit_id": "sha256:04562c1460950beef1e2020e134e4bc88924f31722d39a3888917178f86125c1"
+}

@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:a5cb02f029888da07490bf5f350dc27694a540941a153af6c87d5a34bc490d13",
+  "condition": "original",
+  "ended_monotonic_ns": 916546794857063,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r8 \"\\n\" r9\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nr9 ::= \"9|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"3631 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Japanese, Sushi Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Sun Sushi\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 02:54:36\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is a local secret :) Whenever the suhsi cravings kick in this is our first choice. This last time I've ordered the spicy tuna on crispy rice and six step salmon dinner. Overall great quality and delicious!\\\"},{\\\"review_date\\\":\\\"2022-01-19 02:54:20\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Really great quality sushi!! I love coming here whenever I'm in the area. The spicy tuna on crispy rice is amazing. And their tea mugs are really cute.\\\"},{\\\"review_date\\\":\\\"2022-01-03 23:51:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Some of the best sushi I've had in a decade. Go sit at the bar, drink some sake, and get the six step salmon plate.\\\\n\\\\n10/10 coming back again.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sun Sushi is a popular restaurant located in Santa Barbara, California. It serves Japanese cuisine with a focus on sushi bars. The restaurant is open seven days a week, from 17:00 to 21:00 on weekdays and from 17:00 to 22:00 on weekends. Customers can make reservations, enjoy outdoor seating, take out food, and group dining options. The restaurant does not offer WiFi or valet parking, but there is street parking available.\\n\\nAccording to customer reviews, Sun Sushi offers high-quality sushi with delicious flavors. The spicy tuna on crispy rice is a particular favorite among customers, along with the six-step salmon dinner. The restaurant also has cute tea mugs that add to the overall experience. Many customers appreciate the casual ambiance and the friendly staff. Overall, Sun Sushi is a great choice for anyone looking for fresh and tasty sushi in Santa Barbara.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":878},{\"index\":1,\"byte_start\":878,\"byte_end\":964},{\"index\":2,\"byte_start\":964,\"byte_end\":1103},{\"index\":3,\"byte_start\":1103,\"byte_end\":1148},{\"index\":4,\"byte_start\":1148,\"byte_end\":1190},{\"index\":5,\"byte_start\":1190,\"byte_end\":1344},{\"index\":6,\"byte_start\":1344,\"byte_end\":1459}],\"answer_sentence_indices\":[8,9],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":72},{\"index\":1,\"byte_start\":72,\"byte_end\":127},{\"index\":2,\"byte_start\":127,\"byte_end\":238},{\"index\":3,\"byte_start\":238,\"byte_end\":335},{\"index\":4,\"byte_start\":335,\"byte_end\":428},{\"index\":5,\"byte_start\":428,\"byte_end\":519},{\"index\":6,\"byte_start\":519,\"byte_end\":630},{\"index\":7,\"byte_start\":630,\"byte_end\":704},{\"index\":8,\"byte_start\":704,\"byte_end\":774},{\"index\":9,\"byte_start\":774,\"byte_end\":873}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 1055,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"3631 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Japanese, Sushi Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Sun Sushi\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 02:54:36\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is a local secret :) Whenever the suhsi cravings kick in this is our first choice. This last time I've ordered the spicy tuna on crispy rice and six step salmon dinner. Overall great quality and delicious!\\\"},{\\\"review_date\\\":\\\"2022-01-19 02:54:20\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Really great quality sushi!! I love coming here whenever I'm in the area. The spicy tuna on crispy rice is amazing. And their tea mugs are really cute.\\\"},{\\\"review_date\\\":\\\"2022-01-03 23:51:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Some of the best sushi I've had in a decade. Go sit at the bar, drink some sake, and get the six step salmon plate.\\\\n\\\\n10/10 coming back again.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sun Sushi is a popular restaurant located in Santa Barbara, California. It serves Japanese cuisine with a focus on sushi bars. The restaurant is open seven days a week, from 17:00 to 21:00 on weekdays and from 17:00 to 22:00 on weekends. Customers can make reservations, enjoy outdoor seating, take out food, and group dining options. The restaurant does not offer WiFi or valet parking, but there is street parking available.\\n\\nAccording to customer reviews, Sun Sushi offers high-quality sushi with delicious flavors. The spicy tuna on crispy rice is a particular favorite among customers, along with the six-step salmon dinner. The restaurant also has cute tea mugs that add to the overall experience. Many customers appreciate the casual ambiance and the friendly staff. Overall, Sun Sushi is a great choice for anyone looking for fresh and tasty sushi in Santa Barbara.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":878},{\"index\":1,\"byte_start\":878,\"byte_end\":964},{\"index\":2,\"byte_start\":964,\"byte_end\":1103},{\"index\":3,\"byte_start\":1103,\"byte_end\":1148},{\"index\":4,\"byte_start\":1148,\"byte_end\":1190},{\"index\":5,\"byte_start\":1190,\"byte_end\":1344},{\"index\":6,\"byte_start\":1344,\"byte_end\":1459}],\"answer_sentence_indices\":[8,9],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":72},{\"index\":1,\"byte_start\":72,\"byte_end\":127},{\"index\":2,\"byte_start\":127,\"byte_end\":238},{\"index\":3,\"byte_start\":238,\"byte_end\":335},{\"index\":4,\"byte_start\":335,\"byte_end\":428},{\"index\":5,\"byte_start\":428,\"byte_end\":519},{\"index\":6,\"byte_start\":519,\"byte_end\":630},{\"index\":7,\"byte_start\":630,\"byte_end\":704},{\"index\":8,\"byte_start\":704,\"byte_end\":774},{\"index\":9,\"byte_start\":774,\"byte_end\":873}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r8 \"\\n\" r9\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nr9 ::= \"9|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "input_tokens": 1043,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"3631 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Japanese, Sushi Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Sun Sushi\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 02:54:36\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is a local secret :) Whenever the suhsi cravings kick in this is our first choice. This last time I've ordered the spicy tuna on crispy rice and six step salmon dinner. Overall great quality and delicious!\\\"},{\\\"review_date\\\":\\\"2022-01-19 02:54:20\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Really great quality sushi!! I love coming here whenever I'm in the area. The spicy tuna on crispy rice is amazing. And their tea mugs are really cute.\\\"},{\\\"review_date\\\":\\\"2022-01-03 23:51:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Some of the best sushi I've had in a decade. Go sit at the bar, drink some sake, and get the six step salmon plate.\\\\n\\\\n10/10 coming back again.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sun Sushi is a popular restaurant located in Santa Barbara, California. It serves Japanese cuisine with a focus on sushi bars. The restaurant is open seven days a week, from 17:00 to 21:00 on weekdays and from 17:00 to 22:00 on weekends. Customers can make reservations, enjoy outdoor seating, take out food, and group dining options. The restaurant does not offer WiFi or valet parking, but there is street parking available.\\n\\nAccording to customer reviews, Sun Sushi offers high-quality sushi with delicious flavors. The spicy tuna on crispy rice is a particular favorite among customers, along with the six-step salmon dinner. The restaurant also has cute tea mugs that add to the overall experience. Many customers appreciate the casual ambiance and the friendly staff. Overall, Sun Sushi is a great choice for anyone looking for fresh and tasty sushi in Santa Barbara.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":878},{\"index\":1,\"byte_start\":878,\"byte_end\":964},{\"index\":2,\"byte_start\":964,\"byte_end\":1103},{\"index\":3,\"byte_start\":1103,\"byte_end\":1148},{\"index\":4,\"byte_start\":1148,\"byte_end\":1190},{\"index\":5,\"byte_start\":1190,\"byte_end\":1344},{\"index\":6,\"byte_start\":1344,\"byte_end\":1459}],\"answer_sentence_indices\":[8,9],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":72},{\"index\":1,\"byte_start\":72,\"byte_end\":127},{\"index\":2,\"byte_start\":127,\"byte_end\":238},{\"index\":3,\"byte_start\":238,\"byte_end\":335},{\"index\":4,\"byte_start\":335,\"byte_end\":428},{\"index\":5,\"byte_start\":428,\"byte_end\":519},{\"index\":6,\"byte_start\":519,\"byte_end\":630},{\"index\":7,\"byte_start\":630,\"byte_end\":704},{\"index\":8,\"byte_start\":704,\"byte_end\":774},{\"index\":9,\"byte_start\":774,\"byte_end\":873}]}",
+    "request_index": 1,
+    "sentence_indices": [
+      8,
+      9
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "8|C|0.95|[]\n9|C|0.90|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255638,
+    "id": "chatcmpl-zNxGuVxhNV5MjzxLyg5dKnV7wCt7Inyt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 551,
+      "predicted_ms": 530.415,
+      "predicted_n": 22,
+      "predicted_per_second": 41.47695672256629,
+      "predicted_per_token_ms": 24.109772727272727,
+      "prompt_ms": 532.103,
+      "prompt_n": 504,
+      "prompt_per_second": 947.1850374833446,
+      "prompt_per_token_ms": 1.0557599206349206
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1055,
+      "prompt_tokens_details": {
+        "cached_tokens": 551
+      },
+      "total_tokens": 1077
+    }
+  },
+  "source_cluster_id": "sha256:ca002d78fd1938796dbaddd11f28ce5aede42ebe08dfcc00a36f86c77e52932c",
+  "started_monotonic_ns": 916545693696930,
+  "status": "completed",
+  "unit_id": "sha256:ee9eb636b40f26373171395332ea7d4858874853fa7e4019318968a1ff0a1ba7"
+}

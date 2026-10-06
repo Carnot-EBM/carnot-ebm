@@ -1,0 +1,761 @@
+{
+  "rows": [
+    {
+      "arm": "grammar",
+      "cache_key": "sha256:7a0819a39bef31e163dea8350cad08fb7a29d0ecc20b20d1e3c09414086cd94e",
+      "condition": "original",
+      "ended_monotonic_ns": 914685330371349,
+      "exclusion_reason": null,
+      "historical": true,
+      "identity": {
+        "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+        "fixture": false,
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "reasoning_interface": {
+          "enable_thinking": false
+        },
+        "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "payload": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+        "max_tokens": 256,
+        "messages": [
+          {
+            "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Fruit flies can enter a household or business on a piece of fruit or vegetable from a grocery store or through an open door or window in the kitchen. Keeping your house or business clean and sanitized and throwing away overripe and rotting fruits and vegetables will help ensure that fruit flies do not invade your space.hile it is nearly impossible to prevent house flies from entering your home or business, there are a few things you can do to help prevent them from multiplying. The first and most important thing that you can do is keep your home or business clean.\\\\n\\\\npassage 2:Method 12 of 12: Luring flies away from the house. 1. Try to discourage flies from seeing your house as inviting in the first place. Place traps outdoors and give them a playground outside by making them a delicious blood and bone feasting zone: 1  Purchase a bag of blood and bone from your local nursery or garden center.2  Pour some into a resealable large plastic bag.3  Seal.ethod 12 of 12: Luring flies away from the house. 1. Try to discourage flies from seeing your house as inviting in the first place. Place traps outdoors and give them a playground outside by making them a delicious blood and bone feasting zone: 1  Purchase a bag of blood and bone from your local nursery or garden center.\\\\n\\\\npassage 3:Keeping a room free of uneaten food and other trash will keep flies from being attracted to an area. Also keep garbage cans and dumpsters as far away from windows and homes as possible. Place a sticky trap near a window to capture any stray flies that do get into a home.Hang the sticky trap in a window sill or near the window. Flies will get stuck on the trap, and the dead flies and trap can be replaced as needed.eeping a room free of uneaten food and other trash will keep flies from being attracted to an area. Also keep garbage cans and dumpsters as far away from windows and homes as possible. Place a sticky trap near a window to capture any stray flies that do get into a home.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to stop flies coming through the window\\\"}\",\"answer\":\"Based on the given passages, here's a brief answer to the question \\\"How to stop flies coming through the window\\\":\\n\\nTo stop flies from coming through the window, try the following methods:\\n\\n1. Keep your house or business clean and sanitized, and throw away overripe and rotting fruits and vegetables.\\n2. Place traps outdoors and create a delicious blood and bone feasting zone to lure flies away from the house.\\n3. Keep a room free of uneaten food and other trash, and keep garbage cans and dumpsters as far away from windows and homes as possible.\\n4. Hang a sticky trap near a window to capture any stray flies that do get into a home.\\n\\nIf these methods do not work, consider using window screens or repairing any torn screens to prevent flies from entering through the window. Additionally, check for any other entry points in the home, such as open doors or vents, and seal them to prevent flies from entering.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":173},{\"index\":1,\"byte_start\":173,\"byte_end\":506},{\"index\":2,\"byte_start\":506,\"byte_end\":658},{\"index\":3,\"byte_start\":658,\"byte_end\":740},{\"index\":4,\"byte_start\":740,\"byte_end\":1037},{\"index\":5,\"byte_start\":1037,\"byte_end\":1119},{\"index\":6,\"byte_start\":1119,\"byte_end\":1424},{\"index\":7,\"byte_start\":1424,\"byte_end\":1509},{\"index\":8,\"byte_start\":1509,\"byte_end\":1652},{\"index\":9,\"byte_start\":1652,\"byte_end\":1840},{\"index\":10,\"byte_start\":1840,\"byte_end\":1925},{\"index\":11,\"byte_start\":1925,\"byte_end\":2073}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":300},{\"index\":1,\"byte_start\":300,\"byte_end\":411},{\"index\":2,\"byte_start\":411,\"byte_end\":548},{\"index\":3,\"byte_start\":548,\"byte_end\":637},{\"index\":4,\"byte_start\":637,\"byte_end\":778},{\"index\":5,\"byte_start\":778,\"byte_end\":912}]}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 70781,
+        "stream": false,
+        "temperature": 0
+      },
+      "provenance_task": "exp8181-sentence-transport-canary",
+      "rendered_input_tokens": 1086,
+      "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Fruit flies can enter a household or business on a piece of fruit or vegetable from a grocery store or through an open door or window in the kitchen. Keeping your house or business clean and sanitized and throwing away overripe and rotting fruits and vegetables will help ensure that fruit flies do not invade your space.hile it is nearly impossible to prevent house flies from entering your home or business, there are a few things you can do to help prevent them from multiplying. The first and most important thing that you can do is keep your home or business clean.\\\\n\\\\npassage 2:Method 12 of 12: Luring flies away from the house. 1. Try to discourage flies from seeing your house as inviting in the first place. Place traps outdoors and give them a playground outside by making them a delicious blood and bone feasting zone: 1  Purchase a bag of blood and bone from your local nursery or garden center.2  Pour some into a resealable large plastic bag.3  Seal.ethod 12 of 12: Luring flies away from the house. 1. Try to discourage flies from seeing your house as inviting in the first place. Place traps outdoors and give them a playground outside by making them a delicious blood and bone feasting zone: 1  Purchase a bag of blood and bone from your local nursery or garden center.\\\\n\\\\npassage 3:Keeping a room free of uneaten food and other trash will keep flies from being attracted to an area. Also keep garbage cans and dumpsters as far away from windows and homes as possible. Place a sticky trap near a window to capture any stray flies that do get into a home.Hang the sticky trap in a window sill or near the window. Flies will get stuck on the trap, and the dead flies and trap can be replaced as needed.eeping a room free of uneaten food and other trash will keep flies from being attracted to an area. Also keep garbage cans and dumpsters as far away from windows and homes as possible. Place a sticky trap near a window to capture any stray flies that do get into a home.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to stop flies coming through the window\\\"}\",\"answer\":\"Based on the given passages, here's a brief answer to the question \\\"How to stop flies coming through the window\\\":\\n\\nTo stop flies from coming through the window, try the following methods:\\n\\n1. Keep your house or business clean and sanitized, and throw away overripe and rotting fruits and vegetables.\\n2. Place traps outdoors and create a delicious blood and bone feasting zone to lure flies away from the house.\\n3. Keep a room free of uneaten food and other trash, and keep garbage cans and dumpsters as far away from windows and homes as possible.\\n4. Hang a sticky trap near a window to capture any stray flies that do get into a home.\\n\\nIf these methods do not work, consider using window screens or repairing any torn screens to prevent flies from entering through the window. Additionally, check for any other entry points in the home, such as open doors or vents, and seal them to prevent flies from entering.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":173},{\"index\":1,\"byte_start\":173,\"byte_end\":506},{\"index\":2,\"byte_start\":506,\"byte_end\":658},{\"index\":3,\"byte_start\":658,\"byte_end\":740},{\"index\":4,\"byte_start\":740,\"byte_end\":1037},{\"index\":5,\"byte_start\":1037,\"byte_end\":1119},{\"index\":6,\"byte_start\":1119,\"byte_end\":1424},{\"index\":7,\"byte_start\":1424,\"byte_end\":1509},{\"index\":8,\"byte_start\":1509,\"byte_end\":1652},{\"index\":9,\"byte_start\":1652,\"byte_end\":1840},{\"index\":10,\"byte_start\":1840,\"byte_end\":1925},{\"index\":11,\"byte_start\":1925,\"byte_end\":2073}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":300},{\"index\":1,\"byte_start\":300,\"byte_end\":411},{\"index\":2,\"byte_start\":411,\"byte_end\":548},{\"index\":3,\"byte_start\":548,\"byte_end\":637},{\"index\":4,\"byte_start\":637,\"byte_end\":778},{\"index\":5,\"byte_start\":778,\"byte_end\":912}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "request": {
+        "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+        "input_tokens": 1074,
+        "maximum_output_tokens": 256,
+        "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Fruit flies can enter a household or business on a piece of fruit or vegetable from a grocery store or through an open door or window in the kitchen. Keeping your house or business clean and sanitized and throwing away overripe and rotting fruits and vegetables will help ensure that fruit flies do not invade your space.hile it is nearly impossible to prevent house flies from entering your home or business, there are a few things you can do to help prevent them from multiplying. The first and most important thing that you can do is keep your home or business clean.\\\\n\\\\npassage 2:Method 12 of 12: Luring flies away from the house. 1. Try to discourage flies from seeing your house as inviting in the first place. Place traps outdoors and give them a playground outside by making them a delicious blood and bone feasting zone: 1  Purchase a bag of blood and bone from your local nursery or garden center.2  Pour some into a resealable large plastic bag.3  Seal.ethod 12 of 12: Luring flies away from the house. 1. Try to discourage flies from seeing your house as inviting in the first place. Place traps outdoors and give them a playground outside by making them a delicious blood and bone feasting zone: 1  Purchase a bag of blood and bone from your local nursery or garden center.\\\\n\\\\npassage 3:Keeping a room free of uneaten food and other trash will keep flies from being attracted to an area. Also keep garbage cans and dumpsters as far away from windows and homes as possible. Place a sticky trap near a window to capture any stray flies that do get into a home.Hang the sticky trap in a window sill or near the window. Flies will get stuck on the trap, and the dead flies and trap can be replaced as needed.eeping a room free of uneaten food and other trash will keep flies from being attracted to an area. Also keep garbage cans and dumpsters as far away from windows and homes as possible. Place a sticky trap near a window to capture any stray flies that do get into a home.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to stop flies coming through the window\\\"}\",\"answer\":\"Based on the given passages, here's a brief answer to the question \\\"How to stop flies coming through the window\\\":\\n\\nTo stop flies from coming through the window, try the following methods:\\n\\n1. Keep your house or business clean and sanitized, and throw away overripe and rotting fruits and vegetables.\\n2. Place traps outdoors and create a delicious blood and bone feasting zone to lure flies away from the house.\\n3. Keep a room free of uneaten food and other trash, and keep garbage cans and dumpsters as far away from windows and homes as possible.\\n4. Hang a sticky trap near a window to capture any stray flies that do get into a home.\\n\\nIf these methods do not work, consider using window screens or repairing any torn screens to prevent flies from entering through the window. Additionally, check for any other entry points in the home, such as open doors or vents, and seal them to prevent flies from entering.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":173},{\"index\":1,\"byte_start\":173,\"byte_end\":506},{\"index\":2,\"byte_start\":506,\"byte_end\":658},{\"index\":3,\"byte_start\":658,\"byte_end\":740},{\"index\":4,\"byte_start\":740,\"byte_end\":1037},{\"index\":5,\"byte_start\":1037,\"byte_end\":1119},{\"index\":6,\"byte_start\":1119,\"byte_end\":1424},{\"index\":7,\"byte_start\":1424,\"byte_end\":1509},{\"index\":8,\"byte_start\":1509,\"byte_end\":1652},{\"index\":9,\"byte_start\":1652,\"byte_end\":1840},{\"index\":10,\"byte_start\":1840,\"byte_end\":1925},{\"index\":11,\"byte_start\":1925,\"byte_end\":2073}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":300},{\"index\":1,\"byte_start\":300,\"byte_end\":411},{\"index\":2,\"byte_start\":411,\"byte_end\":548},{\"index\":3,\"byte_start\":548,\"byte_end\":637},{\"index\":4,\"byte_start\":637,\"byte_end\":778},{\"index\":5,\"byte_start\":778,\"byte_end\":912}]}",
+        "request_index": 0,
+        "sentence_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "token_count_measured": true
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "0|C|0.95|[]\n1|C|0.90|[0,1]\n2|C|0.95|[1]\n3|C|0.95|[2,3]\n4|C|0.95|[4,5]\n5|B|0.00|[]",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1791253777,
+        "id": "chatcmpl-Prm2tOj198KYcVlDHCnAiy34VCPOkJuG",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 1082,
+          "predicted_ms": 1843.13,
+          "predicted_n": 76,
+          "predicted_per_second": 41.23420485804039,
+          "predicted_per_token_ms": 24.25171052631579,
+          "prompt_ms": 103.342,
+          "prompt_n": 4,
+          "prompt_per_second": 38.706431073522864,
+          "prompt_per_token_ms": 25.8355
+        },
+        "usage": {
+          "completion_tokens": 76,
+          "prompt_tokens": 1086,
+          "prompt_tokens_details": {
+            "cached_tokens": 1082
+          },
+          "total_tokens": 1162
+        }
+      },
+      "source_cluster_id": "sha256:2bafa81b856aa98ea3543d8455f436b8571ed954ae017f05edca2d20dc44dc37",
+      "started_monotonic_ns": 914683357173883,
+      "status": "completed",
+      "unit_id": "sha256:afbc53c67c23b61cb44d181f4198309ab17782044b25dad1c2529100148c9c9c"
+    },
+    {
+      "arm": "grammar",
+      "cache_key": "sha256:d435320b5275a90f494d7adee7b03f3591861f198420cc9a50ae9db917b25231",
+      "condition": "original",
+      "ended_monotonic_ns": 916496076109401,
+      "exclusion_reason": null,
+      "historical": false,
+      "identity": {
+        "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+        "fixture": false,
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "reasoning_interface": {
+          "enable_thinking": false
+        },
+        "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "payload": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+        "max_tokens": 256,
+        "messages": [
+          {
+            "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-13:30\\\",\\\"Sunday\\\":\\\"7:30-13:30\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Tuesday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine\u2019s American Bakery & Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:31:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very nice place for breakfast close to Stearns Wharf. And if you like French toast, try the Kahula Banana! Wow! Amazing. \\\\n\\\\nService is excellent! Order at the bakery counter and your order will be served at your table. Indoor and outdoor seating. Good coffee too!\\\\n\\\\nThis is the breakfast place!\\\"},{\\\"review_date\\\":\\\"2022-01-19 03:51:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome location and great food. Customer service is top notch   and food comes out quick.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the espresso chocolate chip scone and it was perfect! The breakfast looked delicious. The service was quick and great. Would recommend! Lovely seating looking out to the beach.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Jeannine\u2019s American Bakery & Restaurant is located on 1 State Street in Santa Barbara, California. It belongs to several categories including Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, and Coffee & Tea. The business operates from Monday to Sunday with hours varying slightly each day. Customers can park their vehicles on the street or in a nearby lot, but valet parking is not available. There are no reservations required for this restaurant, and both indoor and outdoor seating options are available. WiFi is free, and takeout is also offered. \\n\\nThe restaurant has received positive reviews from its customers. One customer praised the Kahula Banana French toast as \\\"amazing\\\" and noted that the service was excellent. Another customer commended the location and the food quality, while a third customer appreciated the fast service and the lovely seating area. Overall, Jeannine\u2019s American Bakery & Restaurant seems like a popular spot for breakfast with good food, service, and ambiance.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":775},{\"index\":1,\"byte_start\":775,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":833},{\"index\":3,\"byte_start\":833,\"byte_end\":842},{\"index\":4,\"byte_start\":842,\"byte_end\":868},{\"index\":5,\"byte_start\":868,\"byte_end\":941},{\"index\":6,\"byte_start\":941,\"byte_end\":969},{\"index\":7,\"byte_start\":969,\"byte_end\":1124},{\"index\":8,\"byte_start\":1124,\"byte_end\":1319},{\"index\":9,\"byte_start\":1319,\"byte_end\":1351},{\"index\":10,\"byte_start\":1351,\"byte_end\":1384},{\"index\":11,\"byte_start\":1384,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1458}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":101},{\"index\":1,\"byte_start\":101,\"byte_end\":220},{\"index\":2,\"byte_start\":220,\"byte_end\":302},{\"index\":3,\"byte_start\":302,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":521},{\"index\":5,\"byte_start\":521,\"byte_end\":566},{\"index\":6,\"byte_start\":566,\"byte_end\":631},{\"index\":7,\"byte_start\":631,\"byte_end\":738},{\"index\":8,\"byte_start\":738,\"byte_end\":881},{\"index\":9,\"byte_start\":881,\"byte_end\":1010}]}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 70781,
+        "stream": false,
+        "temperature": 0
+      },
+      "provenance_task": "exp8182-fit-sentence-capture",
+      "rendered_input_tokens": 1180,
+      "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-13:30\\\",\\\"Sunday\\\":\\\"7:30-13:30\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Tuesday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine\u2019s American Bakery & Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:31:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very nice place for breakfast close to Stearns Wharf. And if you like French toast, try the Kahula Banana! Wow! Amazing. \\\\n\\\\nService is excellent! Order at the bakery counter and your order will be served at your table. Indoor and outdoor seating. Good coffee too!\\\\n\\\\nThis is the breakfast place!\\\"},{\\\"review_date\\\":\\\"2022-01-19 03:51:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome location and great food. Customer service is top notch   and food comes out quick.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the espresso chocolate chip scone and it was perfect! The breakfast looked delicious. The service was quick and great. Would recommend! Lovely seating looking out to the beach.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Jeannine\u2019s American Bakery & Restaurant is located on 1 State Street in Santa Barbara, California. It belongs to several categories including Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, and Coffee & Tea. The business operates from Monday to Sunday with hours varying slightly each day. Customers can park their vehicles on the street or in a nearby lot, but valet parking is not available. There are no reservations required for this restaurant, and both indoor and outdoor seating options are available. WiFi is free, and takeout is also offered. \\n\\nThe restaurant has received positive reviews from its customers. One customer praised the Kahula Banana French toast as \\\"amazing\\\" and noted that the service was excellent. Another customer commended the location and the food quality, while a third customer appreciated the fast service and the lovely seating area. Overall, Jeannine\u2019s American Bakery & Restaurant seems like a popular spot for breakfast with good food, service, and ambiance.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":775},{\"index\":1,\"byte_start\":775,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":833},{\"index\":3,\"byte_start\":833,\"byte_end\":842},{\"index\":4,\"byte_start\":842,\"byte_end\":868},{\"index\":5,\"byte_start\":868,\"byte_end\":941},{\"index\":6,\"byte_start\":941,\"byte_end\":969},{\"index\":7,\"byte_start\":969,\"byte_end\":1124},{\"index\":8,\"byte_start\":1124,\"byte_end\":1319},{\"index\":9,\"byte_start\":1319,\"byte_end\":1351},{\"index\":10,\"byte_start\":1351,\"byte_end\":1384},{\"index\":11,\"byte_start\":1384,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1458}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":101},{\"index\":1,\"byte_start\":101,\"byte_end\":220},{\"index\":2,\"byte_start\":220,\"byte_end\":302},{\"index\":3,\"byte_start\":302,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":521},{\"index\":5,\"byte_start\":521,\"byte_end\":566},{\"index\":6,\"byte_start\":566,\"byte_end\":631},{\"index\":7,\"byte_start\":631,\"byte_end\":738},{\"index\":8,\"byte_start\":738,\"byte_end\":881},{\"index\":9,\"byte_start\":881,\"byte_end\":1010}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "request": {
+        "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+        "input_tokens": 1168,
+        "maximum_output_tokens": 256,
+        "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-13:30\\\",\\\"Sunday\\\":\\\"7:30-13:30\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Tuesday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine\u2019s American Bakery & Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:31:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very nice place for breakfast close to Stearns Wharf. And if you like French toast, try the Kahula Banana! Wow! Amazing. \\\\n\\\\nService is excellent! Order at the bakery counter and your order will be served at your table. Indoor and outdoor seating. Good coffee too!\\\\n\\\\nThis is the breakfast place!\\\"},{\\\"review_date\\\":\\\"2022-01-19 03:51:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome location and great food. Customer service is top notch   and food comes out quick.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the espresso chocolate chip scone and it was perfect! The breakfast looked delicious. The service was quick and great. Would recommend! Lovely seating looking out to the beach.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Jeannine\u2019s American Bakery & Restaurant is located on 1 State Street in Santa Barbara, California. It belongs to several categories including Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, and Coffee & Tea. The business operates from Monday to Sunday with hours varying slightly each day. Customers can park their vehicles on the street or in a nearby lot, but valet parking is not available. There are no reservations required for this restaurant, and both indoor and outdoor seating options are available. WiFi is free, and takeout is also offered. \\n\\nThe restaurant has received positive reviews from its customers. One customer praised the Kahula Banana French toast as \\\"amazing\\\" and noted that the service was excellent. Another customer commended the location and the food quality, while a third customer appreciated the fast service and the lovely seating area. Overall, Jeannine\u2019s American Bakery & Restaurant seems like a popular spot for breakfast with good food, service, and ambiance.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":775},{\"index\":1,\"byte_start\":775,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":833},{\"index\":3,\"byte_start\":833,\"byte_end\":842},{\"index\":4,\"byte_start\":842,\"byte_end\":868},{\"index\":5,\"byte_start\":868,\"byte_end\":941},{\"index\":6,\"byte_start\":941,\"byte_end\":969},{\"index\":7,\"byte_start\":969,\"byte_end\":1124},{\"index\":8,\"byte_start\":1124,\"byte_end\":1319},{\"index\":9,\"byte_start\":1319,\"byte_end\":1351},{\"index\":10,\"byte_start\":1351,\"byte_end\":1384},{\"index\":11,\"byte_start\":1384,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1458}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":101},{\"index\":1,\"byte_start\":101,\"byte_end\":220},{\"index\":2,\"byte_start\":220,\"byte_end\":302},{\"index\":3,\"byte_start\":302,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":521},{\"index\":5,\"byte_start\":521,\"byte_end\":566},{\"index\":6,\"byte_start\":566,\"byte_end\":631},{\"index\":7,\"byte_start\":631,\"byte_end\":738},{\"index\":8,\"byte_start\":738,\"byte_end\":881},{\"index\":9,\"byte_start\":881,\"byte_end\":1010}]}",
+        "request_index": 0,
+        "sentence_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "token_count_measured": true
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "0|C|1.00|[]\n1|C|1.00|[]\n2|B|0.00|[]\n3|B|0.00|[]\n4|B|0.00|[]\n5|C|1.00|[]\n6|B|0.00|[]\n7|C|1.00|[]",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1791255587,
+        "id": "chatcmpl-vjEsEGIgKwl3vL2BGoXkHqCWMj1PB8c8",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 2119.389,
+          "predicted_n": 88,
+          "predicted_per_second": 41.52140074332744,
+          "predicted_per_token_ms": 24.08396590909091,
+          "prompt_ms": 1265.296,
+          "prompt_n": 1180,
+          "prompt_per_second": 932.5881058661372,
+          "prompt_per_token_ms": 1.0722847457627118
+        },
+        "usage": {
+          "completion_tokens": 88,
+          "prompt_tokens": 1180,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 1268
+        }
+      },
+      "source_cluster_id": "sha256:91cf0828a4c2382e6f6438f2ae2c0ce2e7d44404e8b03aed160eb2e3595ef4b5",
+      "started_monotonic_ns": 916492641022428,
+      "status": "completed",
+      "unit_id": "sha256:1a68ac2fa07b48f6222675d2fa4d96cbc276e196b10f31d0e483e54aa92f2526"
+    },
+    {
+      "arm": "grammar",
+      "cache_key": "sha256:60ddec5926c7a6b71a1dd773ce9e23815278551878cc40f36a44e6f74119a964",
+      "condition": "original",
+      "ended_monotonic_ns": 916497176893749,
+      "exclusion_reason": null,
+      "historical": false,
+      "identity": {
+        "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+        "fixture": false,
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "reasoning_interface": {
+          "enable_thinking": false
+        },
+        "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "payload": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= r8 \"\\n\" r9\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nr9 ::= \"9|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+        "max_tokens": 256,
+        "messages": [
+          {
+            "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-13:30\\\",\\\"Sunday\\\":\\\"7:30-13:30\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Tuesday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine\u2019s American Bakery & Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:31:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very nice place for breakfast close to Stearns Wharf. And if you like French toast, try the Kahula Banana! Wow! Amazing. \\\\n\\\\nService is excellent! Order at the bakery counter and your order will be served at your table. Indoor and outdoor seating. Good coffee too!\\\\n\\\\nThis is the breakfast place!\\\"},{\\\"review_date\\\":\\\"2022-01-19 03:51:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome location and great food. Customer service is top notch   and food comes out quick.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the espresso chocolate chip scone and it was perfect! The breakfast looked delicious. The service was quick and great. Would recommend! Lovely seating looking out to the beach.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Jeannine\u2019s American Bakery & Restaurant is located on 1 State Street in Santa Barbara, California. It belongs to several categories including Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, and Coffee & Tea. The business operates from Monday to Sunday with hours varying slightly each day. Customers can park their vehicles on the street or in a nearby lot, but valet parking is not available. There are no reservations required for this restaurant, and both indoor and outdoor seating options are available. WiFi is free, and takeout is also offered. \\n\\nThe restaurant has received positive reviews from its customers. One customer praised the Kahula Banana French toast as \\\"amazing\\\" and noted that the service was excellent. Another customer commended the location and the food quality, while a third customer appreciated the fast service and the lovely seating area. Overall, Jeannine\u2019s American Bakery & Restaurant seems like a popular spot for breakfast with good food, service, and ambiance.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":775},{\"index\":1,\"byte_start\":775,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":833},{\"index\":3,\"byte_start\":833,\"byte_end\":842},{\"index\":4,\"byte_start\":842,\"byte_end\":868},{\"index\":5,\"byte_start\":868,\"byte_end\":941},{\"index\":6,\"byte_start\":941,\"byte_end\":969},{\"index\":7,\"byte_start\":969,\"byte_end\":1124},{\"index\":8,\"byte_start\":1124,\"byte_end\":1319},{\"index\":9,\"byte_start\":1319,\"byte_end\":1351},{\"index\":10,\"byte_start\":1351,\"byte_end\":1384},{\"index\":11,\"byte_start\":1384,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1458}],\"answer_sentence_indices\":[8,9],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":101},{\"index\":1,\"byte_start\":101,\"byte_end\":220},{\"index\":2,\"byte_start\":220,\"byte_end\":302},{\"index\":3,\"byte_start\":302,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":521},{\"index\":5,\"byte_start\":521,\"byte_end\":566},{\"index\":6,\"byte_start\":566,\"byte_end\":631},{\"index\":7,\"byte_start\":631,\"byte_end\":738},{\"index\":8,\"byte_start\":738,\"byte_end\":881},{\"index\":9,\"byte_start\":881,\"byte_end\":1010}]}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 70781,
+        "stream": false,
+        "temperature": 0
+      },
+      "provenance_task": "exp8182-fit-sentence-capture",
+      "rendered_input_tokens": 1168,
+      "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-13:30\\\",\\\"Sunday\\\":\\\"7:30-13:30\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Tuesday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine\u2019s American Bakery & Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:31:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very nice place for breakfast close to Stearns Wharf. And if you like French toast, try the Kahula Banana! Wow! Amazing. \\\\n\\\\nService is excellent! Order at the bakery counter and your order will be served at your table. Indoor and outdoor seating. Good coffee too!\\\\n\\\\nThis is the breakfast place!\\\"},{\\\"review_date\\\":\\\"2022-01-19 03:51:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome location and great food. Customer service is top notch   and food comes out quick.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the espresso chocolate chip scone and it was perfect! The breakfast looked delicious. The service was quick and great. Would recommend! Lovely seating looking out to the beach.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Jeannine\u2019s American Bakery & Restaurant is located on 1 State Street in Santa Barbara, California. It belongs to several categories including Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, and Coffee & Tea. The business operates from Monday to Sunday with hours varying slightly each day. Customers can park their vehicles on the street or in a nearby lot, but valet parking is not available. There are no reservations required for this restaurant, and both indoor and outdoor seating options are available. WiFi is free, and takeout is also offered. \\n\\nThe restaurant has received positive reviews from its customers. One customer praised the Kahula Banana French toast as \\\"amazing\\\" and noted that the service was excellent. Another customer commended the location and the food quality, while a third customer appreciated the fast service and the lovely seating area. Overall, Jeannine\u2019s American Bakery & Restaurant seems like a popular spot for breakfast with good food, service, and ambiance.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":775},{\"index\":1,\"byte_start\":775,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":833},{\"index\":3,\"byte_start\":833,\"byte_end\":842},{\"index\":4,\"byte_start\":842,\"byte_end\":868},{\"index\":5,\"byte_start\":868,\"byte_end\":941},{\"index\":6,\"byte_start\":941,\"byte_end\":969},{\"index\":7,\"byte_start\":969,\"byte_end\":1124},{\"index\":8,\"byte_start\":1124,\"byte_end\":1319},{\"index\":9,\"byte_start\":1319,\"byte_end\":1351},{\"index\":10,\"byte_start\":1351,\"byte_end\":1384},{\"index\":11,\"byte_start\":1384,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1458}],\"answer_sentence_indices\":[8,9],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":101},{\"index\":1,\"byte_start\":101,\"byte_end\":220},{\"index\":2,\"byte_start\":220,\"byte_end\":302},{\"index\":3,\"byte_start\":302,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":521},{\"index\":5,\"byte_start\":521,\"byte_end\":566},{\"index\":6,\"byte_start\":566,\"byte_end\":631},{\"index\":7,\"byte_start\":631,\"byte_end\":738},{\"index\":8,\"byte_start\":738,\"byte_end\":881},{\"index\":9,\"byte_start\":881,\"byte_end\":1010}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "request": {
+        "grammar": "root ::= r8 \"\\n\" r9\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nr9 ::= \"9|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+        "input_tokens": 1156,
+        "maximum_output_tokens": 256,
+        "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-13:30\\\",\\\"Sunday\\\":\\\"7:30-13:30\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Tuesday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine\u2019s American Bakery & Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:31:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very nice place for breakfast close to Stearns Wharf. And if you like French toast, try the Kahula Banana! Wow! Amazing. \\\\n\\\\nService is excellent! Order at the bakery counter and your order will be served at your table. Indoor and outdoor seating. Good coffee too!\\\\n\\\\nThis is the breakfast place!\\\"},{\\\"review_date\\\":\\\"2022-01-19 03:51:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome location and great food. Customer service is top notch   and food comes out quick.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the espresso chocolate chip scone and it was perfect! The breakfast looked delicious. The service was quick and great. Would recommend! Lovely seating looking out to the beach.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Jeannine\u2019s American Bakery & Restaurant is located on 1 State Street in Santa Barbara, California. It belongs to several categories including Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, and Coffee & Tea. The business operates from Monday to Sunday with hours varying slightly each day. Customers can park their vehicles on the street or in a nearby lot, but valet parking is not available. There are no reservations required for this restaurant, and both indoor and outdoor seating options are available. WiFi is free, and takeout is also offered. \\n\\nThe restaurant has received positive reviews from its customers. One customer praised the Kahula Banana French toast as \\\"amazing\\\" and noted that the service was excellent. Another customer commended the location and the food quality, while a third customer appreciated the fast service and the lovely seating area. Overall, Jeannine\u2019s American Bakery & Restaurant seems like a popular spot for breakfast with good food, service, and ambiance.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":775},{\"index\":1,\"byte_start\":775,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":833},{\"index\":3,\"byte_start\":833,\"byte_end\":842},{\"index\":4,\"byte_start\":842,\"byte_end\":868},{\"index\":5,\"byte_start\":868,\"byte_end\":941},{\"index\":6,\"byte_start\":941,\"byte_end\":969},{\"index\":7,\"byte_start\":969,\"byte_end\":1124},{\"index\":8,\"byte_start\":1124,\"byte_end\":1319},{\"index\":9,\"byte_start\":1319,\"byte_end\":1351},{\"index\":10,\"byte_start\":1351,\"byte_end\":1384},{\"index\":11,\"byte_start\":1384,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1458}],\"answer_sentence_indices\":[8,9],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":101},{\"index\":1,\"byte_start\":101,\"byte_end\":220},{\"index\":2,\"byte_start\":220,\"byte_end\":302},{\"index\":3,\"byte_start\":302,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":521},{\"index\":5,\"byte_start\":521,\"byte_end\":566},{\"index\":6,\"byte_start\":566,\"byte_end\":631},{\"index\":7,\"byte_start\":631,\"byte_end\":738},{\"index\":8,\"byte_start\":738,\"byte_end\":881},{\"index\":9,\"byte_start\":881,\"byte_end\":1010}]}",
+        "request_index": 1,
+        "sentence_indices": [
+          8,
+          9
+        ],
+        "token_count_measured": true
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "8|C|0.00|[]\n9|C|0.00|[]",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1791255588,
+        "id": "chatcmpl-fIJL3j2RV0asYsdyW63jviaUTYUEplqa",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 664,
+          "predicted_ms": 526.169,
+          "predicted_n": 22,
+          "predicted_per_second": 41.811661272328855,
+          "predicted_per_token_ms": 23.916772727272726,
+          "prompt_ms": 524.026,
+          "prompt_n": 504,
+          "prompt_per_second": 961.7843389450143,
+          "prompt_per_token_ms": 1.039734126984127
+        },
+        "usage": {
+          "completion_tokens": 22,
+          "prompt_tokens": 1168,
+          "prompt_tokens_details": {
+            "cached_tokens": 664
+          },
+          "total_tokens": 1190
+        }
+      },
+      "source_cluster_id": "sha256:91cf0828a4c2382e6f6438f2ae2c0ce2e7d44404e8b03aed160eb2e3595ef4b5",
+      "started_monotonic_ns": 916496080830385,
+      "status": "completed",
+      "unit_id": "sha256:1a68ac2fa07b48f6222675d2fa4d96cbc276e196b10f31d0e483e54aa92f2526"
+    },
+    {
+      "arm": "grammar",
+      "cache_key": "sha256:9b740540d016e28efb5d4a992860a7816d9470bad9e43ceb4fb70e1b6df504b7",
+      "condition": "original",
+      "ended_monotonic_ns": 916500449394601,
+      "exclusion_reason": null,
+      "historical": false,
+      "identity": {
+        "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+        "fixture": false,
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "reasoning_interface": {
+          "enable_thinking": false
+        },
+        "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "payload": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+        "max_tokens": 256,
+        "messages": [
+          {
+            "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The two-toed sloth is slightly bigger than the three-toed sloth, though they share many of the same features. They are about the size of a medium-sized dog at around 23 to 27 inches (58 to 68 cm) and 17.5 to 18.75 pounds (about 8 kilograms).he two-toed sloth is slightly bigger than the three-toed sloth, though they share many of the same features. They are about the size of a medium-sized dog at around 23 to 27 inches (58 to 68 cm) and 17.5 to 18.75 pounds (about 8 kilograms).\\\\n\\\\npassage 2:1 Two-toed and three-toed sloths were formerly placed in the same family but the two genera have profound behavioral and anatomical differences and are believed to come from two different fossil lineages. 2  They are now placed in separate families. 3  2-toed is larger, faster, and nocturnal. Long limbs \u2014 forelegs only slightly longer than hind legs (3-toed sloth's forelegs are 35% longer than hind legs). 2  Two-toed sloths have hands with two functioning fingers with sharp claws 76 - 102 mm (3 - 4 inches). 3  Three-toed sloths have three fingers on their hands. 4  Three claws on hind limbs.\\\\n\\\\npassage 3:1 Besides the fact that one has two toes on its forelimbs and the other three, they have different numbers of vertebrae (three-toed ones have nine; two-toed ones have six or seven). 2  Also, Three-toed sloths have a small tail and its forelegs are substantially longer than the rear ones.ifference Between Two and Three Toed Sloths: 1  Besides the fact that one has two toes on its forelimbs and the other three, they have different numbers of vertebrae (three-toed ones have nine; two-toed ones have six or seven).\\\\n\\\\n\\\",\\\"question\\\":\\\"what makes the two toed sloth different\\\"}\",\"answer\":\"Based on the provided passages, the main differences between the two-toed sloth (Choloepus didactylus) and the three-toed sloth (Bradypus variegatus) are:\\n\\n1. Number of toes on the front limbs: The two-toed sloth has two toes on each front limb, while the three-toed sloth has three toes.\\n2. Size: The two-toed sloth is generally smaller than the three-toed sloth, with a length of around 23-27 inches (58-68 cm) and a weight of around 17.5-18.75 pounds (about 8 kilograms), compared to the three-toed sloth's length of around 30-40 inches (76-102 cm) and weight of around 20-30 pounds (around 9-14 kilograms).\\n3. Limb structure: The two-toed sloth has longer limbs overall, with the forelegs being slightly longer than the hind legs, while the three-toed sloth has shorter forelegs that are 35% longer than the hind legs.\\n4. Hand structure: The two-toed sloth has hands with two functioning fingers and sharp claws, while the three-toed sloth has three fingers on its hands.\\n5. Vertebral count: The two-toed sloth has six or seven vertebrae in its body, while the three-toed sloth has nine vertebrae.\\n6. Tail length: The three-toed sloth has a smaller tail than the two-toed sloth.\\n7. Forelimb length: The three-toed sloth has substantially longer forelegs than the rear legs, while the two-toed sloth has more balanced proportions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":133},{\"index\":1,\"byte_start\":133,\"byte_end\":373},{\"index\":2,\"byte_start\":373,\"byte_end\":723},{\"index\":3,\"byte_start\":723,\"byte_end\":768},{\"index\":4,\"byte_start\":768,\"byte_end\":812},{\"index\":5,\"byte_start\":812,\"byte_end\":929},{\"index\":6,\"byte_start\":929,\"byte_end\":1033},{\"index\":7,\"byte_start\":1033,\"byte_end\":1089},{\"index\":8,\"byte_start\":1089,\"byte_end\":1314},{\"index\":9,\"byte_start\":1314,\"byte_end\":1706}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":289},{\"index\":1,\"byte_start\":289,\"byte_end\":611},{\"index\":2,\"byte_start\":611,\"byte_end\":823},{\"index\":3,\"byte_start\":823,\"byte_end\":976},{\"index\":4,\"byte_start\":976,\"byte_end\":1102},{\"index\":5,\"byte_start\":1102,\"byte_end\":1183},{\"index\":6,\"byte_start\":1183,\"byte_end\":1333}]}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 70781,
+        "stream": false,
+        "temperature": 0
+      },
+      "provenance_task": "exp8182-fit-sentence-capture",
+      "rendered_input_tokens": 1255,
+      "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The two-toed sloth is slightly bigger than the three-toed sloth, though they share many of the same features. They are about the size of a medium-sized dog at around 23 to 27 inches (58 to 68 cm) and 17.5 to 18.75 pounds (about 8 kilograms).he two-toed sloth is slightly bigger than the three-toed sloth, though they share many of the same features. They are about the size of a medium-sized dog at around 23 to 27 inches (58 to 68 cm) and 17.5 to 18.75 pounds (about 8 kilograms).\\\\n\\\\npassage 2:1 Two-toed and three-toed sloths were formerly placed in the same family but the two genera have profound behavioral and anatomical differences and are believed to come from two different fossil lineages. 2  They are now placed in separate families. 3  2-toed is larger, faster, and nocturnal. Long limbs \u2014 forelegs only slightly longer than hind legs (3-toed sloth's forelegs are 35% longer than hind legs). 2  Two-toed sloths have hands with two functioning fingers with sharp claws 76 - 102 mm (3 - 4 inches). 3  Three-toed sloths have three fingers on their hands. 4  Three claws on hind limbs.\\\\n\\\\npassage 3:1 Besides the fact that one has two toes on its forelimbs and the other three, they have different numbers of vertebrae (three-toed ones have nine; two-toed ones have six or seven). 2  Also, Three-toed sloths have a small tail and its forelegs are substantially longer than the rear ones.ifference Between Two and Three Toed Sloths: 1  Besides the fact that one has two toes on its forelimbs and the other three, they have different numbers of vertebrae (three-toed ones have nine; two-toed ones have six or seven).\\\\n\\\\n\\\",\\\"question\\\":\\\"what makes the two toed sloth different\\\"}\",\"answer\":\"Based on the provided passages, the main differences between the two-toed sloth (Choloepus didactylus) and the three-toed sloth (Bradypus variegatus) are:\\n\\n1. Number of toes on the front limbs: The two-toed sloth has two toes on each front limb, while the three-toed sloth has three toes.\\n2. Size: The two-toed sloth is generally smaller than the three-toed sloth, with a length of around 23-27 inches (58-68 cm) and a weight of around 17.5-18.75 pounds (about 8 kilograms), compared to the three-toed sloth's length of around 30-40 inches (76-102 cm) and weight of around 20-30 pounds (around 9-14 kilograms).\\n3. Limb structure: The two-toed sloth has longer limbs overall, with the forelegs being slightly longer than the hind legs, while the three-toed sloth has shorter forelegs that are 35% longer than the hind legs.\\n4. Hand structure: The two-toed sloth has hands with two functioning fingers and sharp claws, while the three-toed sloth has three fingers on its hands.\\n5. Vertebral count: The two-toed sloth has six or seven vertebrae in its body, while the three-toed sloth has nine vertebrae.\\n6. Tail length: The three-toed sloth has a smaller tail than the two-toed sloth.\\n7. Forelimb length: The three-toed sloth has substantially longer forelegs than the rear legs, while the two-toed sloth has more balanced proportions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":133},{\"index\":1,\"byte_start\":133,\"byte_end\":373},{\"index\":2,\"byte_start\":373,\"byte_end\":723},{\"index\":3,\"byte_start\":723,\"byte_end\":768},{\"index\":4,\"byte_start\":768,\"byte_end\":812},{\"index\":5,\"byte_start\":812,\"byte_end\":929},{\"index\":6,\"byte_start\":929,\"byte_end\":1033},{\"index\":7,\"byte_start\":1033,\"byte_end\":1089},{\"index\":8,\"byte_start\":1089,\"byte_end\":1314},{\"index\":9,\"byte_start\":1314,\"byte_end\":1706}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":289},{\"index\":1,\"byte_start\":289,\"byte_end\":611},{\"index\":2,\"byte_start\":611,\"byte_end\":823},{\"index\":3,\"byte_start\":823,\"byte_end\":976},{\"index\":4,\"byte_start\":976,\"byte_end\":1102},{\"index\":5,\"byte_start\":1102,\"byte_end\":1183},{\"index\":6,\"byte_start\":1183,\"byte_end\":1333}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "request": {
+        "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+        "input_tokens": 1243,
+        "maximum_output_tokens": 256,
+        "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The two-toed sloth is slightly bigger than the three-toed sloth, though they share many of the same features. They are about the size of a medium-sized dog at around 23 to 27 inches (58 to 68 cm) and 17.5 to 18.75 pounds (about 8 kilograms).he two-toed sloth is slightly bigger than the three-toed sloth, though they share many of the same features. They are about the size of a medium-sized dog at around 23 to 27 inches (58 to 68 cm) and 17.5 to 18.75 pounds (about 8 kilograms).\\\\n\\\\npassage 2:1 Two-toed and three-toed sloths were formerly placed in the same family but the two genera have profound behavioral and anatomical differences and are believed to come from two different fossil lineages. 2  They are now placed in separate families. 3  2-toed is larger, faster, and nocturnal. Long limbs \u2014 forelegs only slightly longer than hind legs (3-toed sloth's forelegs are 35% longer than hind legs). 2  Two-toed sloths have hands with two functioning fingers with sharp claws 76 - 102 mm (3 - 4 inches). 3  Three-toed sloths have three fingers on their hands. 4  Three claws on hind limbs.\\\\n\\\\npassage 3:1 Besides the fact that one has two toes on its forelimbs and the other three, they have different numbers of vertebrae (three-toed ones have nine; two-toed ones have six or seven). 2  Also, Three-toed sloths have a small tail and its forelegs are substantially longer than the rear ones.ifference Between Two and Three Toed Sloths: 1  Besides the fact that one has two toes on its forelimbs and the other three, they have different numbers of vertebrae (three-toed ones have nine; two-toed ones have six or seven).\\\\n\\\\n\\\",\\\"question\\\":\\\"what makes the two toed sloth different\\\"}\",\"answer\":\"Based on the provided passages, the main differences between the two-toed sloth (Choloepus didactylus) and the three-toed sloth (Bradypus variegatus) are:\\n\\n1. Number of toes on the front limbs: The two-toed sloth has two toes on each front limb, while the three-toed sloth has three toes.\\n2. Size: The two-toed sloth is generally smaller than the three-toed sloth, with a length of around 23-27 inches (58-68 cm) and a weight of around 17.5-18.75 pounds (about 8 kilograms), compared to the three-toed sloth's length of around 30-40 inches (76-102 cm) and weight of around 20-30 pounds (around 9-14 kilograms).\\n3. Limb structure: The two-toed sloth has longer limbs overall, with the forelegs being slightly longer than the hind legs, while the three-toed sloth has shorter forelegs that are 35% longer than the hind legs.\\n4. Hand structure: The two-toed sloth has hands with two functioning fingers and sharp claws, while the three-toed sloth has three fingers on its hands.\\n5. Vertebral count: The two-toed sloth has six or seven vertebrae in its body, while the three-toed sloth has nine vertebrae.\\n6. Tail length: The three-toed sloth has a smaller tail than the two-toed sloth.\\n7. Forelimb length: The three-toed sloth has substantially longer forelegs than the rear legs, while the two-toed sloth has more balanced proportions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":133},{\"index\":1,\"byte_start\":133,\"byte_end\":373},{\"index\":2,\"byte_start\":373,\"byte_end\":723},{\"index\":3,\"byte_start\":723,\"byte_end\":768},{\"index\":4,\"byte_start\":768,\"byte_end\":812},{\"index\":5,\"byte_start\":812,\"byte_end\":929},{\"index\":6,\"byte_start\":929,\"byte_end\":1033},{\"index\":7,\"byte_start\":1033,\"byte_end\":1089},{\"index\":8,\"byte_start\":1089,\"byte_end\":1314},{\"index\":9,\"byte_start\":1314,\"byte_end\":1706}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":289},{\"index\":1,\"byte_start\":289,\"byte_end\":611},{\"index\":2,\"byte_start\":611,\"byte_end\":823},{\"index\":3,\"byte_start\":823,\"byte_end\":976},{\"index\":4,\"byte_start\":976,\"byte_end\":1102},{\"index\":5,\"byte_start\":1102,\"byte_end\":1183},{\"index\":6,\"byte_start\":1183,\"byte_end\":1333}]}",
+        "request_index": 0,
+        "sentence_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "token_count_measured": true
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "0|C|0.00|[]\n1|B|0.00|[0,1]\n2|B|0.00|[2]\n3|B|0.00|[2]\n4|B|0.00|[2]\n5|B|0.00|[3]\n6|B|0.00|[3]",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1791255592,
+        "id": "chatcmpl-dOreO32AG4meK0fsHlMRkv51zRInkttA",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 2050.489,
+          "predicted_n": 85,
+          "predicted_per_second": 41.45352645149523,
+          "predicted_per_token_ms": 24.1234,
+          "prompt_ms": 1065.624,
+          "prompt_n": 1255,
+          "prompt_per_second": 1177.7137151565655,
+          "prompt_per_token_ms": 0.8491027888446215
+        },
+        "usage": {
+          "completion_tokens": 85,
+          "prompt_tokens": 1255,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 1340
+        }
+      },
+      "source_cluster_id": "sha256:511582318bd1904dc5ed7ec7437bf7d1041875d4b1ab29bb6f8cbf84d081ef0a",
+      "started_monotonic_ns": 916497178666267,
+      "status": "completed",
+      "unit_id": "sha256:15502b3bb03d762de685e8f5db2fd2cf267c5ef0f3ae63ca8fdbf1965e289c00"
+    },
+    {
+      "arm": "grammar",
+      "cache_key": "sha256:aedad465bf07bab664dcfeff0336887f7870fd3852cfacc95c94462c698597ca",
+      "condition": "original",
+      "ended_monotonic_ns": 916503513883095,
+      "exclusion_reason": null,
+      "historical": false,
+      "identity": {
+        "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+        "fixture": false,
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "reasoning_interface": {
+          "enable_thinking": false
+        },
+        "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "payload": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+        "max_tokens": 256,
+        "messages": [
+          {
+            "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"3375 Foothill Rd, Ste 6333\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Caterers, Restaurants, Mexican, Event Planning & Services, Food, Tacos, Bartenders, Food Delivery Services\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-17:0\\\",\\\"Monday\\\":\\\"8:0-17:0\\\",\\\"Saturday\\\":\\\"9:0-14:0\\\",\\\"Sunday\\\":\\\"9:0-14:0\\\",\\\"Thursday\\\":\\\"8:0-17:0\\\",\\\"Tuesday\\\":\\\"8:0-17:0\\\",\\\"Wednesday\\\":\\\"8:0-17:0\\\"},\\\"name\\\":\\\"Rasta Taco Catering\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-10-17 02:27:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Absolutely wonderful way to spice up any event! Mario and his crew knock it out of the park!  The margarita truck added such a fun atmosphere to my party! Highly recommend the cucumber jalapeno margarita!  I would book this for any future event here!  Thank you Rasta Rita!\\\"},{\\\"review_date\\\":\\\"2018-07-12 16:42:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Rasta Rita was used for a military event and was such a hit! Mario is super friendly to work with and is always willing to help out.  The truck was so fun and the drinks were delicious! Everyone at our event had such a fun time interacting with the truck and sipping the yummy margaritas.  What an amazing concept!  We are using the truck again this year as it has been such a hot item!!\\\"},{\\\"review_date\\\":\\\"2017-07-31 03:14:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Mario was freaking amazing !!!! He was so charismatic and instinctful !! He's defiantly a one man show !! I would refer him for any event !! He bartender my friend Pilar wedding and did a amazing job !!!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Rasta Taco Catering is a highly-rated business located at 3375 Foothill Rd, Ste 6333 in Carpinteria, California. It offers a variety of services including catering, event planning, food delivery, and bartending, with a specific focus on Mexican cuisine. Its business hours are from 8:00 am to 5:00 pm on weekdays, and 9:00 am to 2:00 pm on weekends. Customers rave about the business's ability to enhance events with their services. Notable mentions include a margarita truck that adds a fun atmosphere to parties and a charismatic staff member named Mario. It has been noted that Rasta Taco Catering is a hit at military events and weddings. The business also offers street parking and outdoor seating to its customers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":786},{\"index\":1,\"byte_start\":786,\"byte_end\":832},{\"index\":2,\"byte_start\":832,\"byte_end\":893},{\"index\":3,\"byte_start\":893,\"byte_end\":944},{\"index\":4,\"byte_start\":944,\"byte_end\":990},{\"index\":5,\"byte_start\":990,\"byte_end\":1146},{\"index\":6,\"byte_start\":1146,\"byte_end\":1219},{\"index\":7,\"byte_start\":1219,\"byte_end\":1271},{\"index\":8,\"byte_start\":1271,\"byte_end\":1375},{\"index\":9,\"byte_start\":1375,\"byte_end\":1401},{\"index\":10,\"byte_start\":1401,\"byte_end\":1578},{\"index\":11,\"byte_start\":1578,\"byte_end\":1619},{\"index\":12,\"byte_start\":1619,\"byte_end\":1652},{\"index\":13,\"byte_start\":1652,\"byte_end\":1687},{\"index\":14,\"byte_start\":1687,\"byte_end\":1766}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":113},{\"index\":1,\"byte_start\":113,\"byte_end\":254},{\"index\":2,\"byte_start\":254,\"byte_end\":350},{\"index\":3,\"byte_start\":350,\"byte_end\":433},{\"index\":4,\"byte_start\":433,\"byte_end\":558},{\"index\":5,\"byte_start\":558,\"byte_end\":643},{\"index\":6,\"byte_start\":643,\"byte_end\":720}]}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 70781,
+        "stream": false,
+        "temperature": 0
+      },
+      "provenance_task": "exp8182-fit-sentence-capture",
+      "rendered_input_tokens": 1207,
+      "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"3375 Foothill Rd, Ste 6333\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Caterers, Restaurants, Mexican, Event Planning & Services, Food, Tacos, Bartenders, Food Delivery Services\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-17:0\\\",\\\"Monday\\\":\\\"8:0-17:0\\\",\\\"Saturday\\\":\\\"9:0-14:0\\\",\\\"Sunday\\\":\\\"9:0-14:0\\\",\\\"Thursday\\\":\\\"8:0-17:0\\\",\\\"Tuesday\\\":\\\"8:0-17:0\\\",\\\"Wednesday\\\":\\\"8:0-17:0\\\"},\\\"name\\\":\\\"Rasta Taco Catering\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-10-17 02:27:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Absolutely wonderful way to spice up any event! Mario and his crew knock it out of the park!  The margarita truck added such a fun atmosphere to my party! Highly recommend the cucumber jalapeno margarita!  I would book this for any future event here!  Thank you Rasta Rita!\\\"},{\\\"review_date\\\":\\\"2018-07-12 16:42:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Rasta Rita was used for a military event and was such a hit! Mario is super friendly to work with and is always willing to help out.  The truck was so fun and the drinks were delicious! Everyone at our event had such a fun time interacting with the truck and sipping the yummy margaritas.  What an amazing concept!  We are using the truck again this year as it has been such a hot item!!\\\"},{\\\"review_date\\\":\\\"2017-07-31 03:14:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Mario was freaking amazing !!!! He was so charismatic and instinctful !! He's defiantly a one man show !! I would refer him for any event !! He bartender my friend Pilar wedding and did a amazing job !!!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Rasta Taco Catering is a highly-rated business located at 3375 Foothill Rd, Ste 6333 in Carpinteria, California. It offers a variety of services including catering, event planning, food delivery, and bartending, with a specific focus on Mexican cuisine. Its business hours are from 8:00 am to 5:00 pm on weekdays, and 9:00 am to 2:00 pm on weekends. Customers rave about the business's ability to enhance events with their services. Notable mentions include a margarita truck that adds a fun atmosphere to parties and a charismatic staff member named Mario. It has been noted that Rasta Taco Catering is a hit at military events and weddings. The business also offers street parking and outdoor seating to its customers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":786},{\"index\":1,\"byte_start\":786,\"byte_end\":832},{\"index\":2,\"byte_start\":832,\"byte_end\":893},{\"index\":3,\"byte_start\":893,\"byte_end\":944},{\"index\":4,\"byte_start\":944,\"byte_end\":990},{\"index\":5,\"byte_start\":990,\"byte_end\":1146},{\"index\":6,\"byte_start\":1146,\"byte_end\":1219},{\"index\":7,\"byte_start\":1219,\"byte_end\":1271},{\"index\":8,\"byte_start\":1271,\"byte_end\":1375},{\"index\":9,\"byte_start\":1375,\"byte_end\":1401},{\"index\":10,\"byte_start\":1401,\"byte_end\":1578},{\"index\":11,\"byte_start\":1578,\"byte_end\":1619},{\"index\":12,\"byte_start\":1619,\"byte_end\":1652},{\"index\":13,\"byte_start\":1652,\"byte_end\":1687},{\"index\":14,\"byte_start\":1687,\"byte_end\":1766}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":113},{\"index\":1,\"byte_start\":113,\"byte_end\":254},{\"index\":2,\"byte_start\":254,\"byte_end\":350},{\"index\":3,\"byte_start\":350,\"byte_end\":433},{\"index\":4,\"byte_start\":433,\"byte_end\":558},{\"index\":5,\"byte_start\":558,\"byte_end\":643},{\"index\":6,\"byte_start\":643,\"byte_end\":720}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "request": {
+        "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+        "input_tokens": 1195,
+        "maximum_output_tokens": 256,
+        "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"3375 Foothill Rd, Ste 6333\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Caterers, Restaurants, Mexican, Event Planning & Services, Food, Tacos, Bartenders, Food Delivery Services\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-17:0\\\",\\\"Monday\\\":\\\"8:0-17:0\\\",\\\"Saturday\\\":\\\"9:0-14:0\\\",\\\"Sunday\\\":\\\"9:0-14:0\\\",\\\"Thursday\\\":\\\"8:0-17:0\\\",\\\"Tuesday\\\":\\\"8:0-17:0\\\",\\\"Wednesday\\\":\\\"8:0-17:0\\\"},\\\"name\\\":\\\"Rasta Taco Catering\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-10-17 02:27:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Absolutely wonderful way to spice up any event! Mario and his crew knock it out of the park!  The margarita truck added such a fun atmosphere to my party! Highly recommend the cucumber jalapeno margarita!  I would book this for any future event here!  Thank you Rasta Rita!\\\"},{\\\"review_date\\\":\\\"2018-07-12 16:42:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Rasta Rita was used for a military event and was such a hit! Mario is super friendly to work with and is always willing to help out.  The truck was so fun and the drinks were delicious! Everyone at our event had such a fun time interacting with the truck and sipping the yummy margaritas.  What an amazing concept!  We are using the truck again this year as it has been such a hot item!!\\\"},{\\\"review_date\\\":\\\"2017-07-31 03:14:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Mario was freaking amazing !!!! He was so charismatic and instinctful !! He's defiantly a one man show !! I would refer him for any event !! He bartender my friend Pilar wedding and did a amazing job !!!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Rasta Taco Catering is a highly-rated business located at 3375 Foothill Rd, Ste 6333 in Carpinteria, California. It offers a variety of services including catering, event planning, food delivery, and bartending, with a specific focus on Mexican cuisine. Its business hours are from 8:00 am to 5:00 pm on weekdays, and 9:00 am to 2:00 pm on weekends. Customers rave about the business's ability to enhance events with their services. Notable mentions include a margarita truck that adds a fun atmosphere to parties and a charismatic staff member named Mario. It has been noted that Rasta Taco Catering is a hit at military events and weddings. The business also offers street parking and outdoor seating to its customers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":786},{\"index\":1,\"byte_start\":786,\"byte_end\":832},{\"index\":2,\"byte_start\":832,\"byte_end\":893},{\"index\":3,\"byte_start\":893,\"byte_end\":944},{\"index\":4,\"byte_start\":944,\"byte_end\":990},{\"index\":5,\"byte_start\":990,\"byte_end\":1146},{\"index\":6,\"byte_start\":1146,\"byte_end\":1219},{\"index\":7,\"byte_start\":1219,\"byte_end\":1271},{\"index\":8,\"byte_start\":1271,\"byte_end\":1375},{\"index\":9,\"byte_start\":1375,\"byte_end\":1401},{\"index\":10,\"byte_start\":1401,\"byte_end\":1578},{\"index\":11,\"byte_start\":1578,\"byte_end\":1619},{\"index\":12,\"byte_start\":1619,\"byte_end\":1652},{\"index\":13,\"byte_start\":1652,\"byte_end\":1687},{\"index\":14,\"byte_start\":1687,\"byte_end\":1766}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":113},{\"index\":1,\"byte_start\":113,\"byte_end\":254},{\"index\":2,\"byte_start\":254,\"byte_end\":350},{\"index\":3,\"byte_start\":350,\"byte_end\":433},{\"index\":4,\"byte_start\":433,\"byte_end\":558},{\"index\":5,\"byte_start\":558,\"byte_end\":643},{\"index\":6,\"byte_start\":643,\"byte_end\":720}]}",
+        "request_index": 0,
+        "sentence_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "token_count_measured": true
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]\n4|E|1.00|[]\n5|E|1.00|[]\n6|E|1.00|[]",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1791255595,
+        "id": "chatcmpl-77SflbUww207i7PaaRJ4KH0iSO6Nd6LN",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 1857.026,
+          "predicted_n": 77,
+          "predicted_per_second": 41.46414751328199,
+          "predicted_per_token_ms": 24.11722077922078,
+          "prompt_ms": 1033.677,
+          "prompt_n": 1207,
+          "prompt_per_second": 1167.6761696351957,
+          "prompt_per_token_ms": 0.8564018227009113
+        },
+        "usage": {
+          "completion_tokens": 77,
+          "prompt_tokens": 1207,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 1284
+        }
+      },
+      "source_cluster_id": "sha256:cf6f88df625edc1733365cade2aeba2f217e2fa57319a9defe6bba03892b7766",
+      "started_monotonic_ns": 916500453409590,
+      "status": "completed",
+      "unit_id": "sha256:77758793354fb575a7ed4a111a761910889fb97fe88db6b6d9407ff0ca3446d5"
+    },
+    {
+      "arm": "grammar",
+      "cache_key": "sha256:689b4f3b3df1a5df9e7856b387988d17999f1cd577a74cb141c2871d9f4e5e6b",
+      "condition": "original",
+      "ended_monotonic_ns": 916506669759991,
+      "exclusion_reason": null,
+      "historical": false,
+      "identity": {
+        "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+        "fixture": false,
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "reasoning_interface": {
+          "enable_thinking": false
+        },
+        "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "payload": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+        "max_tokens": 256,
+        "messages": [
+          {
+            "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Honey can produce hydrogen peroxide and kill bacteria by dehydrating it. It can be used to treat sore gums, ulcers and other problems inside the mouth.  Use a q-tip to apply a small amount of 100% pure honey to sore areas inside your mouth. Do this three times a day for five days.\\\\n\\\\npassage 2:Soothe sore gums with chamomile tea. Put one tea bag of chamomile in a cup of boiling water. Allow to to steep for five minutes and cool slightly before drinking. Swish the tea around your mouth to sooth your gums before swallowing.\\\\n\\\\npassage 3:Apply aloe vera on sore gums. Aloe vera can be directly applied to red and inflamed gum tissues. It can also be used to cure viral oral lesions, ulcers, and gum abscesses. After brushing your teeth, apply a small amount of natural aloe vera gel directly to the inflamed gums.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to soothe mouth sore caused from biting gums\\\"}\",\"answer\":\"Three methods can be used to soothe a mouth sore from biting gums. First, you can apply a small amount of 100% pure honey to the sore area three times a day for five days using a q-tip. Honey has antibacterial properties that can help treat sore gums and ulcers. Second, you can drink chamomile tea. After steeping the tea for five minutes, cool it slightly and swish it around your mouth before swallowing. Finally, you can apply aloe vera gel directly to the inflamed gum after brushing your teeth. Aloe vera can help cure inflamed gum tissues, oral lesions, and gum abscesses.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":98},{\"index\":1,\"byte_start\":98,\"byte_end\":178},{\"index\":2,\"byte_start\":178,\"byte_end\":266},{\"index\":3,\"byte_start\":266,\"byte_end\":357},{\"index\":4,\"byte_start\":357,\"byte_end\":413},{\"index\":5,\"byte_start\":413,\"byte_end\":483},{\"index\":6,\"byte_start\":483,\"byte_end\":596},{\"index\":7,\"byte_start\":596,\"byte_end\":663},{\"index\":8,\"byte_start\":663,\"byte_end\":738},{\"index\":9,\"byte_start\":738,\"byte_end\":909}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":67},{\"index\":1,\"byte_start\":67,\"byte_end\":186},{\"index\":2,\"byte_start\":186,\"byte_end\":263},{\"index\":3,\"byte_start\":263,\"byte_end\":300},{\"index\":4,\"byte_start\":300,\"byte_end\":408},{\"index\":5,\"byte_start\":408,\"byte_end\":501},{\"index\":6,\"byte_start\":501,\"byte_end\":579}]}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 70781,
+        "stream": false,
+        "temperature": 0
+      },
+      "provenance_task": "exp8182-fit-sentence-capture",
+      "rendered_input_tokens": 751,
+      "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Honey can produce hydrogen peroxide and kill bacteria by dehydrating it. It can be used to treat sore gums, ulcers and other problems inside the mouth.  Use a q-tip to apply a small amount of 100% pure honey to sore areas inside your mouth. Do this three times a day for five days.\\\\n\\\\npassage 2:Soothe sore gums with chamomile tea. Put one tea bag of chamomile in a cup of boiling water. Allow to to steep for five minutes and cool slightly before drinking. Swish the tea around your mouth to sooth your gums before swallowing.\\\\n\\\\npassage 3:Apply aloe vera on sore gums. Aloe vera can be directly applied to red and inflamed gum tissues. It can also be used to cure viral oral lesions, ulcers, and gum abscesses. After brushing your teeth, apply a small amount of natural aloe vera gel directly to the inflamed gums.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to soothe mouth sore caused from biting gums\\\"}\",\"answer\":\"Three methods can be used to soothe a mouth sore from biting gums. First, you can apply a small amount of 100% pure honey to the sore area three times a day for five days using a q-tip. Honey has antibacterial properties that can help treat sore gums and ulcers. Second, you can drink chamomile tea. After steeping the tea for five minutes, cool it slightly and swish it around your mouth before swallowing. Finally, you can apply aloe vera gel directly to the inflamed gum after brushing your teeth. Aloe vera can help cure inflamed gum tissues, oral lesions, and gum abscesses.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":98},{\"index\":1,\"byte_start\":98,\"byte_end\":178},{\"index\":2,\"byte_start\":178,\"byte_end\":266},{\"index\":3,\"byte_start\":266,\"byte_end\":357},{\"index\":4,\"byte_start\":357,\"byte_end\":413},{\"index\":5,\"byte_start\":413,\"byte_end\":483},{\"index\":6,\"byte_start\":483,\"byte_end\":596},{\"index\":7,\"byte_start\":596,\"byte_end\":663},{\"index\":8,\"byte_start\":663,\"byte_end\":738},{\"index\":9,\"byte_start\":738,\"byte_end\":909}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":67},{\"index\":1,\"byte_start\":67,\"byte_end\":186},{\"index\":2,\"byte_start\":186,\"byte_end\":263},{\"index\":3,\"byte_start\":263,\"byte_end\":300},{\"index\":4,\"byte_start\":300,\"byte_end\":408},{\"index\":5,\"byte_start\":408,\"byte_end\":501},{\"index\":6,\"byte_start\":501,\"byte_end\":579}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "request": {
+        "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+        "input_tokens": 739,
+        "maximum_output_tokens": 256,
+        "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Honey can produce hydrogen peroxide and kill bacteria by dehydrating it. It can be used to treat sore gums, ulcers and other problems inside the mouth.  Use a q-tip to apply a small amount of 100% pure honey to sore areas inside your mouth. Do this three times a day for five days.\\\\n\\\\npassage 2:Soothe sore gums with chamomile tea. Put one tea bag of chamomile in a cup of boiling water. Allow to to steep for five minutes and cool slightly before drinking. Swish the tea around your mouth to sooth your gums before swallowing.\\\\n\\\\npassage 3:Apply aloe vera on sore gums. Aloe vera can be directly applied to red and inflamed gum tissues. It can also be used to cure viral oral lesions, ulcers, and gum abscesses. After brushing your teeth, apply a small amount of natural aloe vera gel directly to the inflamed gums.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to soothe mouth sore caused from biting gums\\\"}\",\"answer\":\"Three methods can be used to soothe a mouth sore from biting gums. First, you can apply a small amount of 100% pure honey to the sore area three times a day for five days using a q-tip. Honey has antibacterial properties that can help treat sore gums and ulcers. Second, you can drink chamomile tea. After steeping the tea for five minutes, cool it slightly and swish it around your mouth before swallowing. Finally, you can apply aloe vera gel directly to the inflamed gum after brushing your teeth. Aloe vera can help cure inflamed gum tissues, oral lesions, and gum abscesses.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":98},{\"index\":1,\"byte_start\":98,\"byte_end\":178},{\"index\":2,\"byte_start\":178,\"byte_end\":266},{\"index\":3,\"byte_start\":266,\"byte_end\":357},{\"index\":4,\"byte_start\":357,\"byte_end\":413},{\"index\":5,\"byte_start\":413,\"byte_end\":483},{\"index\":6,\"byte_start\":483,\"byte_end\":596},{\"index\":7,\"byte_start\":596,\"byte_end\":663},{\"index\":8,\"byte_start\":663,\"byte_end\":738},{\"index\":9,\"byte_start\":738,\"byte_end\":909}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":67},{\"index\":1,\"byte_start\":67,\"byte_end\":186},{\"index\":2,\"byte_start\":186,\"byte_end\":263},{\"index\":3,\"byte_start\":263,\"byte_end\":300},{\"index\":4,\"byte_start\":300,\"byte_end\":408},{\"index\":5,\"byte_start\":408,\"byte_end\":501},{\"index\":6,\"byte_start\":501,\"byte_end\":579}]}",
+        "request_index": 0,
+        "sentence_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "token_count_measured": true
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "0|E|1.00|[]\n1|E|1.00|[0,1]\n2|E|1.00|[0,1]\n3|E|1.00|[2,3]\n4|E|1.00|[2,3]\n5|E|1.00|[4,5]\n6|E|1.00|[4,5]",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1791255598,
+        "id": "chatcmpl-RyZq2ZD3ZXiH9q7ExEV3z0smx9vK4YvQ",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 2289.915,
+          "predicted_n": 95,
+          "predicted_per_second": 41.48625604007135,
+          "predicted_per_token_ms": 24.10436842105263,
+          "prompt_ms": 703.815,
+          "prompt_n": 751,
+          "prompt_per_second": 1067.0417652366032,
+          "prompt_per_token_ms": 0.9371704394141146
+        },
+        "usage": {
+          "completion_tokens": 95,
+          "prompt_tokens": 751,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 846
+        }
+      },
+      "source_cluster_id": "sha256:d6f02bb02b501aba2df7bf173cf2e30e11d3f0ffadc033a51f5c230e44f33004",
+      "started_monotonic_ns": 916503518574633,
+      "status": "completed",
+      "unit_id": "sha256:de933dc47053ac40f475a4abadf1993d3c03ba18bc8432b2d74f32fe1de15ea0"
+    },
+    {
+      "arm": "grammar",
+      "cache_key": "sha256:bd15694509596155ac55e4b82c8dfa8139e9eece0ddd0b0230871ab457d4e23b",
+      "condition": "original",
+      "ended_monotonic_ns": 916507961756757,
+      "exclusion_reason": null,
+      "historical": false,
+      "identity": {
+        "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+        "fixture": false,
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "reasoning_interface": {
+          "enable_thinking": false
+        },
+        "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "payload": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+        "max_tokens": 256,
+        "messages": [
+          {
+            "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Singulars [edit]. Every singular noun ends in-a, -o, or-e; with very few exceptions, the nouns that end in-o are masculine and the nouns that end in-a are feminine (-e is generally masculine but not always).\\\\n\\\\npassage 2:Hi! that's time to learn how to recognize feminine words from masculine one. An evidence of the gender is the article. We put: 1  il/lo /for the masculine words such as: il prezz o, il bar, lo zain o, lo zuccher o. 2  la for the feminine words such as: la piazz a, la stazion e, la casa.\\\\n\\\\npassage 3:Nouns, i.e. the words for people, things, places and ideas, are all either masculine (m.) or feminine (f.) in Italian. It is important to know whether a noun is masculine or feminine because there are m. and f. words for a and the, and m. and f.\\\\n\\\\n\\\",\\\"question\\\":\\\"is pasta masculine or feminine in italian\\\"}\",\"answer\":\"Based on the given passages, pasta is a feminine noun in Italian. Passage 2 states that the article \\\"la\\\" is used before feminine words, and since pasta is a feminine word, it would be referred to as \\\"la pasta\\\".\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":41},{\"index\":1,\"byte_start\":41,\"byte_end\":248},{\"index\":2,\"byte_start\":248,\"byte_end\":321},{\"index\":3,\"byte_start\":321,\"byte_end\":363},{\"index\":4,\"byte_start\":363,\"byte_end\":459},{\"index\":5,\"byte_start\":459,\"byte_end\":635},{\"index\":6,\"byte_start\":635,\"byte_end\":652},{\"index\":7,\"byte_start\":652,\"byte_end\":664},{\"index\":8,\"byte_start\":664,\"byte_end\":749},{\"index\":9,\"byte_start\":749,\"byte_end\":756},{\"index\":10,\"byte_start\":756,\"byte_end\":784},{\"index\":11,\"byte_start\":784,\"byte_end\":851}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":66},{\"index\":1,\"byte_start\":66,\"byte_end\":210}]}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 70781,
+        "stream": false,
+        "temperature": 0
+      },
+      "provenance_task": "exp8182-fit-sentence-capture",
+      "rendered_input_tokens": 611,
+      "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Singulars [edit]. Every singular noun ends in-a, -o, or-e; with very few exceptions, the nouns that end in-o are masculine and the nouns that end in-a are feminine (-e is generally masculine but not always).\\\\n\\\\npassage 2:Hi! that's time to learn how to recognize feminine words from masculine one. An evidence of the gender is the article. We put: 1  il/lo /for the masculine words such as: il prezz o, il bar, lo zain o, lo zuccher o. 2  la for the feminine words such as: la piazz a, la stazion e, la casa.\\\\n\\\\npassage 3:Nouns, i.e. the words for people, things, places and ideas, are all either masculine (m.) or feminine (f.) in Italian. It is important to know whether a noun is masculine or feminine because there are m. and f. words for a and the, and m. and f.\\\\n\\\\n\\\",\\\"question\\\":\\\"is pasta masculine or feminine in italian\\\"}\",\"answer\":\"Based on the given passages, pasta is a feminine noun in Italian. Passage 2 states that the article \\\"la\\\" is used before feminine words, and since pasta is a feminine word, it would be referred to as \\\"la pasta\\\".\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":41},{\"index\":1,\"byte_start\":41,\"byte_end\":248},{\"index\":2,\"byte_start\":248,\"byte_end\":321},{\"index\":3,\"byte_start\":321,\"byte_end\":363},{\"index\":4,\"byte_start\":363,\"byte_end\":459},{\"index\":5,\"byte_start\":459,\"byte_end\":635},{\"index\":6,\"byte_start\":635,\"byte_end\":652},{\"index\":7,\"byte_start\":652,\"byte_end\":664},{\"index\":8,\"byte_start\":664,\"byte_end\":749},{\"index\":9,\"byte_start\":749,\"byte_end\":756},{\"index\":10,\"byte_start\":756,\"byte_end\":784},{\"index\":11,\"byte_start\":784,\"byte_end\":851}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":66},{\"index\":1,\"byte_start\":66,\"byte_end\":210}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "request": {
+        "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+        "input_tokens": 599,
+        "maximum_output_tokens": 256,
+        "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Singulars [edit]. Every singular noun ends in-a, -o, or-e; with very few exceptions, the nouns that end in-o are masculine and the nouns that end in-a are feminine (-e is generally masculine but not always).\\\\n\\\\npassage 2:Hi! that's time to learn how to recognize feminine words from masculine one. An evidence of the gender is the article. We put: 1  il/lo /for the masculine words such as: il prezz o, il bar, lo zain o, lo zuccher o. 2  la for the feminine words such as: la piazz a, la stazion e, la casa.\\\\n\\\\npassage 3:Nouns, i.e. the words for people, things, places and ideas, are all either masculine (m.) or feminine (f.) in Italian. It is important to know whether a noun is masculine or feminine because there are m. and f. words for a and the, and m. and f.\\\\n\\\\n\\\",\\\"question\\\":\\\"is pasta masculine or feminine in italian\\\"}\",\"answer\":\"Based on the given passages, pasta is a feminine noun in Italian. Passage 2 states that the article \\\"la\\\" is used before feminine words, and since pasta is a feminine word, it would be referred to as \\\"la pasta\\\".\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":41},{\"index\":1,\"byte_start\":41,\"byte_end\":248},{\"index\":2,\"byte_start\":248,\"byte_end\":321},{\"index\":3,\"byte_start\":321,\"byte_end\":363},{\"index\":4,\"byte_start\":363,\"byte_end\":459},{\"index\":5,\"byte_start\":459,\"byte_end\":635},{\"index\":6,\"byte_start\":635,\"byte_end\":652},{\"index\":7,\"byte_start\":652,\"byte_end\":664},{\"index\":8,\"byte_start\":664,\"byte_end\":749},{\"index\":9,\"byte_start\":749,\"byte_end\":756},{\"index\":10,\"byte_start\":756,\"byte_end\":784},{\"index\":11,\"byte_start\":784,\"byte_end\":851}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":66},{\"index\":1,\"byte_start\":66,\"byte_end\":210}]}",
+        "request_index": 0,
+        "sentence_indices": [
+          0,
+          1
+        ],
+        "token_count_measured": true
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "0|C|0.00|[]\n1|C|0.00|[]",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1791255599,
+        "id": "chatcmpl-bFzYmCWDVjV687EnmNnEo1H51M0vgyXO",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 527.134,
+          "predicted_n": 22,
+          "predicted_per_second": 41.735118584648305,
+          "predicted_per_token_ms": 23.960636363636365,
+          "prompt_ms": 604.362,
+          "prompt_n": 611,
+          "prompt_per_second": 1010.9834834089503,
+          "prompt_per_token_ms": 0.9891358428805237
+        },
+        "usage": {
+          "completion_tokens": 22,
+          "prompt_tokens": 611,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 633
+        }
+      },
+      "source_cluster_id": "sha256:9a17d890820157662eed680a2da12f4b7dae91841d118f5891ccdd7fa5cbd6c6",
+      "started_monotonic_ns": 916506671557957,
+      "status": "completed",
+      "unit_id": "sha256:b5fcb3991e84b73d1e8191aa70c37dbad8c44ddbc61ad39e9e83458b30e2f25e"
+    },
+    {
+      "arm": "grammar",
+      "cache_key": "sha256:f651d329a47dc1be9756ee23fb81ea7c4fed075b70e609dcd9a62f679012e286",
+      "condition": "original",
+      "ended_monotonic_ns": 916510560590439,
+      "exclusion_reason": null,
+      "historical": false,
+      "identity": {
+        "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+        "fixture": false,
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "reasoning_interface": {
+          "enable_thinking": false
+        },
+        "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "payload": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+        "max_tokens": 256,
+        "messages": [
+          {
+            "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"2840 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Pizza, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-21:0\\\",\\\"Monday\\\":\\\"12:0-21:0\\\",\\\"Saturday\\\":\\\"12:0-21:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Nicky D's Wood fired Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-07-21 17:37:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Excellent wood fired pizza. I ordered the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil and Tomato. Perfect!\\\"},{\\\"review_date\\\":\\\"2018-06-03 02:28:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The best pizza money can buy IN Santa Barbara hands down .. I met Nicky D he is always there on weekends great guy to talk 2 ..\\\"},{\\\"review_date\\\":\\\"2018-05-12 03:42:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We just ate dinner here tonight! I Yelped pizza's nearby since we are from San Diego and I am so glad we found this place!!! It was sooooo good! Really good cheese and great flavor!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"\\\"Nicky D's Wood fired Pizza\\\" is a highly-rated local business located at 2840 De La Vina St, Santa Barbara, CA. The restaurant specializes in serving pizza and is open every day from 12:00 to 21:00. They do not offer WiFi or outdoor seating, but they do provide parking lots for customers. They also offer take-out options and are suitable for groups. The restaurant's atmosphere is casual. Customers have praised the quality of their wood-fired pizza, with specific mention of the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil, and Tomato. Customers have also mentioned the friendly service provided by the owner, Nicky D, who is often present at the restaurant, especially on weekends.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":825},{\"index\":1,\"byte_start\":825,\"byte_end\":932},{\"index\":2,\"byte_start\":932,\"byte_end\":1074},{\"index\":3,\"byte_start\":1074,\"byte_end\":1248},{\"index\":4,\"byte_start\":1248,\"byte_end\":1340},{\"index\":5,\"byte_start\":1340,\"byte_end\":1360},{\"index\":6,\"byte_start\":1360,\"byte_end\":1413}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":112},{\"index\":1,\"byte_start\":112,\"byte_end\":290},{\"index\":2,\"byte_start\":290,\"byte_end\":352},{\"index\":3,\"byte_start\":352,\"byte_end\":391},{\"index\":4,\"byte_start\":391,\"byte_end\":576},{\"index\":5,\"byte_start\":576,\"byte_end\":722}]}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 70781,
+        "stream": false,
+        "temperature": 0
+      },
+      "provenance_task": "exp8182-fit-sentence-capture",
+      "rendered_input_tokens": 964,
+      "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"2840 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Pizza, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-21:0\\\",\\\"Monday\\\":\\\"12:0-21:0\\\",\\\"Saturday\\\":\\\"12:0-21:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Nicky D's Wood fired Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-07-21 17:37:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Excellent wood fired pizza. I ordered the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil and Tomato. Perfect!\\\"},{\\\"review_date\\\":\\\"2018-06-03 02:28:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The best pizza money can buy IN Santa Barbara hands down .. I met Nicky D he is always there on weekends great guy to talk 2 ..\\\"},{\\\"review_date\\\":\\\"2018-05-12 03:42:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We just ate dinner here tonight! I Yelped pizza's nearby since we are from San Diego and I am so glad we found this place!!! It was sooooo good! Really good cheese and great flavor!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"\\\"Nicky D's Wood fired Pizza\\\" is a highly-rated local business located at 2840 De La Vina St, Santa Barbara, CA. The restaurant specializes in serving pizza and is open every day from 12:00 to 21:00. They do not offer WiFi or outdoor seating, but they do provide parking lots for customers. They also offer take-out options and are suitable for groups. The restaurant's atmosphere is casual. Customers have praised the quality of their wood-fired pizza, with specific mention of the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil, and Tomato. Customers have also mentioned the friendly service provided by the owner, Nicky D, who is often present at the restaurant, especially on weekends.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":825},{\"index\":1,\"byte_start\":825,\"byte_end\":932},{\"index\":2,\"byte_start\":932,\"byte_end\":1074},{\"index\":3,\"byte_start\":1074,\"byte_end\":1248},{\"index\":4,\"byte_start\":1248,\"byte_end\":1340},{\"index\":5,\"byte_start\":1340,\"byte_end\":1360},{\"index\":6,\"byte_start\":1360,\"byte_end\":1413}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":112},{\"index\":1,\"byte_start\":112,\"byte_end\":290},{\"index\":2,\"byte_start\":290,\"byte_end\":352},{\"index\":3,\"byte_start\":352,\"byte_end\":391},{\"index\":4,\"byte_start\":391,\"byte_end\":576},{\"index\":5,\"byte_start\":576,\"byte_end\":722}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "request": {
+        "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+        "input_tokens": 952,
+        "maximum_output_tokens": 256,
+        "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"2840 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Pizza, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-21:0\\\",\\\"Monday\\\":\\\"12:0-21:0\\\",\\\"Saturday\\\":\\\"12:0-21:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Nicky D's Wood fired Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-07-21 17:37:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Excellent wood fired pizza. I ordered the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil and Tomato. Perfect!\\\"},{\\\"review_date\\\":\\\"2018-06-03 02:28:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The best pizza money can buy IN Santa Barbara hands down .. I met Nicky D he is always there on weekends great guy to talk 2 ..\\\"},{\\\"review_date\\\":\\\"2018-05-12 03:42:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We just ate dinner here tonight! I Yelped pizza's nearby since we are from San Diego and I am so glad we found this place!!! It was sooooo good! Really good cheese and great flavor!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"\\\"Nicky D's Wood fired Pizza\\\" is a highly-rated local business located at 2840 De La Vina St, Santa Barbara, CA. The restaurant specializes in serving pizza and is open every day from 12:00 to 21:00. They do not offer WiFi or outdoor seating, but they do provide parking lots for customers. They also offer take-out options and are suitable for groups. The restaurant's atmosphere is casual. Customers have praised the quality of their wood-fired pizza, with specific mention of the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil, and Tomato. Customers have also mentioned the friendly service provided by the owner, Nicky D, who is often present at the restaurant, especially on weekends.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":825},{\"index\":1,\"byte_start\":825,\"byte_end\":932},{\"index\":2,\"byte_start\":932,\"byte_end\":1074},{\"index\":3,\"byte_start\":1074,\"byte_end\":1248},{\"index\":4,\"byte_start\":1248,\"byte_end\":1340},{\"index\":5,\"byte_start\":1340,\"byte_end\":1360},{\"index\":6,\"byte_start\":1360,\"byte_end\":1413}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":112},{\"index\":1,\"byte_start\":112,\"byte_end\":290},{\"index\":2,\"byte_start\":290,\"byte_end\":352},{\"index\":3,\"byte_start\":352,\"byte_end\":391},{\"index\":4,\"byte_start\":391,\"byte_end\":576},{\"index\":5,\"byte_start\":576,\"byte_end\":722}]}",
+        "request_index": 0,
+        "sentence_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "token_count_measured": true
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]\n4|E|1.00|[]\n5|E|1.00|[]",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1791255602,
+        "id": "chatcmpl-ncsniBrIOxWSqj4vBp8SK7gFszvkC6yy",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 1595.58,
+          "predicted_n": 66,
+          "predicted_per_second": 41.36426879253939,
+          "predicted_per_token_ms": 24.175454545454546,
+          "prompt_ms": 855.329,
+          "prompt_n": 964,
+          "prompt_per_second": 1127.0516958971343,
+          "prompt_per_token_ms": 0.8872707468879667
+        },
+        "usage": {
+          "completion_tokens": 66,
+          "prompt_tokens": 964,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 1030
+        }
+      },
+      "source_cluster_id": "sha256:12c288a6fc13915988b0d7d7783a79b051ef0a997089ec9ad04e6d499f3763bd",
+      "started_monotonic_ns": 916507966288705,
+      "status": "completed",
+      "unit_id": "sha256:d2f4d75824dbe2944cf209c67379115b39f5b03f2d484498b5372a279d6a76ab"
+    }
+  ]
+}

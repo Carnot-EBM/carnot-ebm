@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:2a7b374940bf22c5461f2c3b2707a61f773e31bf36fe9ff9c82d7f7ee87d16d9",
+  "ended_monotonic_ns": 917035683193597,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:6. OVEN BAKED PORK CHOPS WITH STUFFING. Place pork chops in greased shallow ... with foil and bake in a 350 F oven for 1 hour ... vegetable juice, and you will have your whole meal complete. Serves 4.VEN BAKED PORK CHOPS WITH STUFFING. Place pork chops in greased shallow ... with foil and bake in a 350 F oven for 1 hour ... vegetable juice, and you will have your whole meal complete. Serves 4.\\\\n\\\\npassage 2:You would follow the same directions you \u2026 would use for a regular oven. Set the temperature the same, and place a few on the baking sheet that comes with the toaster oven. To prevent a crispy bottom of the cookie, use a silicone mat and cut to the size of your toaster oven baking tray.he time for cooking can depend on the thickness of the meat but normally the average time is about half an hour. If you like to eat a plain baked pork chop, you can season the meat with freshly ground pepper and salt before baking.\\\\n\\\\npassage 3:Pork chops should be baked for 45 minutes, in a convection oven, at  a temperature of 325A\u00b0. 325\u00e2 pork chops should not be considered  done until the internal temperature is \u2026 a minimum OF\u00b0. 165a 165\u00e26 people found. this usefulhe time for cooking can depend on the thickness of the meat but normally the average time is about half an hour. If you like to eat a plain baked pork chop, you can season the meat with freshly ground pepper and salt before baking.\\\\n\\\\n\\\",\\\"question\\\":\\\"can you cook pork chops in a toaster oven\\\"}\",\"answer\":\"Based on the given passages, it appears that pork chops can be cooked in a toaster oven. Passage 2 states that you can use a toaster oven to cook pork chops by setting the temperature the same as a regular oven and placing them on a baking sheet. The cooking time may vary depending on the thickness of the meat, but on average, it takes about half an hour. Passage 3 also mentions that pork chops should be baked for 45 minutes in a convection oven at 325\u00b0F, which suggests that a toaster oven can be used as well. Therefore, it is possible to cook pork chops in a toaster oven.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":63},{\"index\":1,\"byte_start\":63,\"byte_end\":103},{\"index\":2,\"byte_start\":103,\"byte_end\":153},{\"index\":3,\"byte_start\":153,\"byte_end\":214},{\"index\":4,\"byte_start\":214,\"byte_end\":259},{\"index\":5,\"byte_start\":259,\"byte_end\":299},{\"index\":6,\"byte_start\":299,\"byte_end\":349},{\"index\":7,\"byte_start\":349,\"byte_end\":410},{\"index\":8,\"byte_start\":410,\"byte_end\":508},{\"index\":9,\"byte_start\":508,\"byte_end\":608},{\"index\":10,\"byte_start\":608,\"byte_end\":835},{\"index\":11,\"byte_start\":835,\"byte_end\":1061},{\"index\":12,\"byte_start\":1061,\"byte_end\":1163},{\"index\":13,\"byte_start\":1163,\"byte_end\":1189},{\"index\":14,\"byte_start\":1189,\"byte_end\":1313},{\"index\":15,\"byte_start\":1313,\"byte_end\":1492}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":89},{\"index\":1,\"byte_start\":89,\"byte_end\":247},{\"index\":2,\"byte_start\":247,\"byte_end\":358},{\"index\":3,\"byte_start\":358,\"byte_end\":517},{\"index\":4,\"byte_start\":517,\"byte_end\":580}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 980,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:6. OVEN BAKED PORK CHOPS WITH STUFFING. Place pork chops in greased shallow ... with foil and bake in a 350 F oven for 1 hour ... vegetable juice, and you will have your whole meal complete. Serves 4.VEN BAKED PORK CHOPS WITH STUFFING. Place pork chops in greased shallow ... with foil and bake in a 350 F oven for 1 hour ... vegetable juice, and you will have your whole meal complete. Serves 4.\\\\n\\\\npassage 2:You would follow the same directions you \u2026 would use for a regular oven. Set the temperature the same, and place a few on the baking sheet that comes with the toaster oven. To prevent a crispy bottom of the cookie, use a silicone mat and cut to the size of your toaster oven baking tray.he time for cooking can depend on the thickness of the meat but normally the average time is about half an hour. If you like to eat a plain baked pork chop, you can season the meat with freshly ground pepper and salt before baking.\\\\n\\\\npassage 3:Pork chops should be baked for 45 minutes, in a convection oven, at  a temperature of 325A\u00b0. 325\u00e2 pork chops should not be considered  done until the internal temperature is \u2026 a minimum OF\u00b0. 165a 165\u00e26 people found. this usefulhe time for cooking can depend on the thickness of the meat but normally the average time is about half an hour. If you like to eat a plain baked pork chop, you can season the meat with freshly ground pepper and salt before baking.\\\\n\\\\n\\\",\\\"question\\\":\\\"can you cook pork chops in a toaster oven\\\"}\",\"answer\":\"Based on the given passages, it appears that pork chops can be cooked in a toaster oven. Passage 2 states that you can use a toaster oven to cook pork chops by setting the temperature the same as a regular oven and placing them on a baking sheet. The cooking time may vary depending on the thickness of the meat, but on average, it takes about half an hour. Passage 3 also mentions that pork chops should be baked for 45 minutes in a convection oven at 325\u00b0F, which suggests that a toaster oven can be used as well. Therefore, it is possible to cook pork chops in a toaster oven.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":63},{\"index\":1,\"byte_start\":63,\"byte_end\":103},{\"index\":2,\"byte_start\":103,\"byte_end\":153},{\"index\":3,\"byte_start\":153,\"byte_end\":214},{\"index\":4,\"byte_start\":214,\"byte_end\":259},{\"index\":5,\"byte_start\":259,\"byte_end\":299},{\"index\":6,\"byte_start\":299,\"byte_end\":349},{\"index\":7,\"byte_start\":349,\"byte_end\":410},{\"index\":8,\"byte_start\":410,\"byte_end\":508},{\"index\":9,\"byte_start\":508,\"byte_end\":608},{\"index\":10,\"byte_start\":608,\"byte_end\":835},{\"index\":11,\"byte_start\":835,\"byte_end\":1061},{\"index\":12,\"byte_start\":1061,\"byte_end\":1163},{\"index\":13,\"byte_start\":1163,\"byte_end\":1189},{\"index\":14,\"byte_start\":1189,\"byte_end\":1313},{\"index\":15,\"byte_start\":1313,\"byte_end\":1492}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":89},{\"index\":1,\"byte_start\":89,\"byte_end\":247},{\"index\":2,\"byte_start\":247,\"byte_end\":358},{\"index\":3,\"byte_start\":358,\"byte_end\":517},{\"index\":4,\"byte_start\":517,\"byte_end\":580}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "input_tokens": 968,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:6. OVEN BAKED PORK CHOPS WITH STUFFING. Place pork chops in greased shallow ... with foil and bake in a 350 F oven for 1 hour ... vegetable juice, and you will have your whole meal complete. Serves 4.VEN BAKED PORK CHOPS WITH STUFFING. Place pork chops in greased shallow ... with foil and bake in a 350 F oven for 1 hour ... vegetable juice, and you will have your whole meal complete. Serves 4.\\\\n\\\\npassage 2:You would follow the same directions you \u2026 would use for a regular oven. Set the temperature the same, and place a few on the baking sheet that comes with the toaster oven. To prevent a crispy bottom of the cookie, use a silicone mat and cut to the size of your toaster oven baking tray.he time for cooking can depend on the thickness of the meat but normally the average time is about half an hour. If you like to eat a plain baked pork chop, you can season the meat with freshly ground pepper and salt before baking.\\\\n\\\\npassage 3:Pork chops should be baked for 45 minutes, in a convection oven, at  a temperature of 325A\u00b0. 325\u00e2 pork chops should not be considered  done until the internal temperature is \u2026 a minimum OF\u00b0. 165a 165\u00e26 people found. this usefulhe time for cooking can depend on the thickness of the meat but normally the average time is about half an hour. If you like to eat a plain baked pork chop, you can season the meat with freshly ground pepper and salt before baking.\\\\n\\\\n\\\",\\\"question\\\":\\\"can you cook pork chops in a toaster oven\\\"}\",\"answer\":\"Based on the given passages, it appears that pork chops can be cooked in a toaster oven. Passage 2 states that you can use a toaster oven to cook pork chops by setting the temperature the same as a regular oven and placing them on a baking sheet. The cooking time may vary depending on the thickness of the meat, but on average, it takes about half an hour. Passage 3 also mentions that pork chops should be baked for 45 minutes in a convection oven at 325\u00b0F, which suggests that a toaster oven can be used as well. Therefore, it is possible to cook pork chops in a toaster oven.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":63},{\"index\":1,\"byte_start\":63,\"byte_end\":103},{\"index\":2,\"byte_start\":103,\"byte_end\":153},{\"index\":3,\"byte_start\":153,\"byte_end\":214},{\"index\":4,\"byte_start\":214,\"byte_end\":259},{\"index\":5,\"byte_start\":259,\"byte_end\":299},{\"index\":6,\"byte_start\":299,\"byte_end\":349},{\"index\":7,\"byte_start\":349,\"byte_end\":410},{\"index\":8,\"byte_start\":410,\"byte_end\":508},{\"index\":9,\"byte_start\":508,\"byte_end\":608},{\"index\":10,\"byte_start\":608,\"byte_end\":835},{\"index\":11,\"byte_start\":835,\"byte_end\":1061},{\"index\":12,\"byte_start\":1061,\"byte_end\":1163},{\"index\":13,\"byte_start\":1163,\"byte_end\":1189},{\"index\":14,\"byte_start\":1189,\"byte_end\":1313},{\"index\":15,\"byte_start\":1313,\"byte_end\":1492}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":89},{\"index\":1,\"byte_start\":89,\"byte_end\":247},{\"index\":2,\"byte_start\":247,\"byte_end\":358},{\"index\":3,\"byte_start\":358,\"byte_end\":517},{\"index\":4,\"byte_start\":517,\"byte_end\":580}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.90|[10,11]\n1|C|0.85|[10,11]\n2|C|0.80|[11,12]\n3|C|0.75|[13,14]\n4|C|0.85|[10,11]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256127,
+    "id": "chatcmpl-lT7XAkQFiHWmwFWHb5K5V4U8Nu0JvARY",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 2071.966,
+      "predicted_n": 85,
+      "predicted_per_second": 41.0238391942725,
+      "predicted_per_token_ms": 24.376070588235294,
+      "prompt_ms": 927.271,
+      "prompt_n": 941,
+      "prompt_per_second": 1014.8058118931791,
+      "prompt_per_token_ms": 0.9854102019128587
+    },
+    "usage": {
+      "completion_tokens": 85,
+      "prompt_tokens": 980,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1065
+    }
+  },
+  "source_cluster_id": "sha256:347de667ad662df666754c6ae0e38e51ae6324dde215c91578762a67c23d3263",
+  "started_monotonic_ns": 917032528510221,
+  "status": "completed",
+  "unit_id": "sha256:b9cccdb9de23c1aeadec7a7c5994afdc65af1093d98efe8d0f1aea03acc9b5db"
+}

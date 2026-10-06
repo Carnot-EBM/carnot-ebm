@@ -1,0 +1,96 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:0e853d1b71dc9a203877de4466f445cf7cf5787b35ade58c43fce9eff4003f25",
+  "condition": "original",
+  "ended_monotonic_ns": 916716186708899,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Report Abuse. Depends on how the drive was wiped. If everything was just deleted or a quick format was done, then the files are still there. Just the pointer to them are gone. A recovery program such as the free recuva from http://recuva.com may recover them.If the hard drive was wiped with a wipe program that overwrites everything, then they are gone.If the hard drive has been wiped and then reused by having Windows reinstalled, then the files are most likely overwritten and gone.f the deleted files are on a memory card or USB memory stick, just don\u2019t save any new files to it. One of the easiest ways to see if you can recover deleted files is to try some file recovery software.\\\\n\\\\npassage 2:Wipe your drive and reinstall Windows 7. Windows 7 doesn\u2019t have this wiping feature built-in. If you just reinstall Windows 7 on your PC using a Windows 7 installer disc or your PC\u2019s recovery feature, your drive won\u2019t be wiped. Deleted files could theoretically be recovered from your drive.DBAN's scary warning isn't lying: Nuke is in the name for a reason.indows 7 doesn\u2019t have this wiping feature built-in. If you just reinstall Windows 7 on your PC using a Windows 7 installer disc or your PC\u2019s recovery feature, your drive won\u2019t be wiped. Deleted files could theoretically be recovered from your drive. DBAN's scary warning isn't lying: Nuke is in the name for a reason.\\\\n\\\\npassage 3:When you delete a file from such a drive, the drive just marks the file\u2019s data as deleted. Until it\u2019s overwritten in the future, people can scan the drive and recover the marked-as-deleted data. Internal solid-state drives: Solid-state drives use a feature called TRIM.When you delete a file from a solid-state drive, the operating system informs the drive that the file was deleted.indows 7 doesn\u2019t have this wiping feature built-in. If you just reinstall Windows 7 on your PC using a Windows 7 installer disc or your PC\u2019s recovery feature, your drive won\u2019t be wiped. Deleted files could theoretically be recovered from your drive. DBAN's scary warning isn't lying: Nuke is in the name for a reason.\\\\n\\\\n\\\",\\\"question\\\":\\\"recovering files from a wiped hard drive\\\"}\",\"answer\":\"Based on the provided passages, it is possible to recover files from a wiped hard drive, depending on how the drive was wiped. If the drive was only deleted or quickly formatted, then recovery programs like Recuva may be able to recover the files. However, if the drive was wiped with a program that overwrites everything, then the files are likely gone forever. Additionally, if the drive has been reused and Windows has been reinstalled, then the files may be overwritten and unrecoverable.\\n\\nIt is important to note that internal solid-state drives (SSDs) use a feature called TRIM, which helps to recover marked-as-deleted data until it is overwritten in the future. Therefore, it may be more difficult to recover files from an SSD than from a traditional hard drive.\\n\\nUnable to answer based on given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":37},{\"index\":1,\"byte_start\":37,\"byte_end\":73},{\"index\":2,\"byte_start\":73,\"byte_end\":164},{\"index\":3,\"byte_start\":164,\"byte_end\":199},{\"index\":4,\"byte_start\":199,\"byte_end\":610},{\"index\":5,\"byte_start\":610,\"byte_end\":822},{\"index\":6,\"byte_start\":822,\"byte_end\":960},{\"index\":7,\"byte_start\":960,\"byte_end\":1144},{\"index\":8,\"byte_start\":1144,\"byte_end\":1282},{\"index\":9,\"byte_start\":1282,\"byte_end\":1346},{\"index\":10,\"byte_start\":1346,\"byte_end\":1520},{\"index\":11,\"byte_start\":1520,\"byte_end\":1626},{\"index\":12,\"byte_start\":1626,\"byte_end\":1868},{\"index\":13,\"byte_start\":1868,\"byte_end\":2006},{\"index\":14,\"byte_start\":2006,\"byte_end\":2070},{\"index\":15,\"byte_start\":2070,\"byte_end\":2197}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":127},{\"index\":1,\"byte_start\":127,\"byte_end\":248},{\"index\":2,\"byte_start\":248,\"byte_end\":363},{\"index\":3,\"byte_start\":363,\"byte_end\":494},{\"index\":4,\"byte_start\":494,\"byte_end\":670},{\"index\":5,\"byte_start\":670,\"byte_end\":772},{\"index\":6,\"byte_start\":772,\"byte_end\":813}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 1180,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Report Abuse. Depends on how the drive was wiped. If everything was just deleted or a quick format was done, then the files are still there. Just the pointer to them are gone. A recovery program such as the free recuva from http://recuva.com may recover them.If the hard drive was wiped with a wipe program that overwrites everything, then they are gone.If the hard drive has been wiped and then reused by having Windows reinstalled, then the files are most likely overwritten and gone.f the deleted files are on a memory card or USB memory stick, just don\u2019t save any new files to it. One of the easiest ways to see if you can recover deleted files is to try some file recovery software.\\\\n\\\\npassage 2:Wipe your drive and reinstall Windows 7. Windows 7 doesn\u2019t have this wiping feature built-in. If you just reinstall Windows 7 on your PC using a Windows 7 installer disc or your PC\u2019s recovery feature, your drive won\u2019t be wiped. Deleted files could theoretically be recovered from your drive.DBAN's scary warning isn't lying: Nuke is in the name for a reason.indows 7 doesn\u2019t have this wiping feature built-in. If you just reinstall Windows 7 on your PC using a Windows 7 installer disc or your PC\u2019s recovery feature, your drive won\u2019t be wiped. Deleted files could theoretically be recovered from your drive. DBAN's scary warning isn't lying: Nuke is in the name for a reason.\\\\n\\\\npassage 3:When you delete a file from such a drive, the drive just marks the file\u2019s data as deleted. Until it\u2019s overwritten in the future, people can scan the drive and recover the marked-as-deleted data. Internal solid-state drives: Solid-state drives use a feature called TRIM.When you delete a file from a solid-state drive, the operating system informs the drive that the file was deleted.indows 7 doesn\u2019t have this wiping feature built-in. If you just reinstall Windows 7 on your PC using a Windows 7 installer disc or your PC\u2019s recovery feature, your drive won\u2019t be wiped. Deleted files could theoretically be recovered from your drive. DBAN's scary warning isn't lying: Nuke is in the name for a reason.\\\\n\\\\n\\\",\\\"question\\\":\\\"recovering files from a wiped hard drive\\\"}\",\"answer\":\"Based on the provided passages, it is possible to recover files from a wiped hard drive, depending on how the drive was wiped. If the drive was only deleted or quickly formatted, then recovery programs like Recuva may be able to recover the files. However, if the drive was wiped with a program that overwrites everything, then the files are likely gone forever. Additionally, if the drive has been reused and Windows has been reinstalled, then the files may be overwritten and unrecoverable.\\n\\nIt is important to note that internal solid-state drives (SSDs) use a feature called TRIM, which helps to recover marked-as-deleted data until it is overwritten in the future. Therefore, it may be more difficult to recover files from an SSD than from a traditional hard drive.\\n\\nUnable to answer based on given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":37},{\"index\":1,\"byte_start\":37,\"byte_end\":73},{\"index\":2,\"byte_start\":73,\"byte_end\":164},{\"index\":3,\"byte_start\":164,\"byte_end\":199},{\"index\":4,\"byte_start\":199,\"byte_end\":610},{\"index\":5,\"byte_start\":610,\"byte_end\":822},{\"index\":6,\"byte_start\":822,\"byte_end\":960},{\"index\":7,\"byte_start\":960,\"byte_end\":1144},{\"index\":8,\"byte_start\":1144,\"byte_end\":1282},{\"index\":9,\"byte_start\":1282,\"byte_end\":1346},{\"index\":10,\"byte_start\":1346,\"byte_end\":1520},{\"index\":11,\"byte_start\":1520,\"byte_end\":1626},{\"index\":12,\"byte_start\":1626,\"byte_end\":1868},{\"index\":13,\"byte_start\":1868,\"byte_end\":2006},{\"index\":14,\"byte_start\":2006,\"byte_end\":2070},{\"index\":15,\"byte_start\":2070,\"byte_end\":2197}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":127},{\"index\":1,\"byte_start\":127,\"byte_end\":248},{\"index\":2,\"byte_start\":248,\"byte_end\":363},{\"index\":3,\"byte_start\":363,\"byte_end\":494},{\"index\":4,\"byte_start\":494,\"byte_end\":670},{\"index\":5,\"byte_start\":670,\"byte_end\":772},{\"index\":6,\"byte_start\":772,\"byte_end\":813}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "input_tokens": 1168,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Report Abuse. Depends on how the drive was wiped. If everything was just deleted or a quick format was done, then the files are still there. Just the pointer to them are gone. A recovery program such as the free recuva from http://recuva.com may recover them.If the hard drive was wiped with a wipe program that overwrites everything, then they are gone.If the hard drive has been wiped and then reused by having Windows reinstalled, then the files are most likely overwritten and gone.f the deleted files are on a memory card or USB memory stick, just don\u2019t save any new files to it. One of the easiest ways to see if you can recover deleted files is to try some file recovery software.\\\\n\\\\npassage 2:Wipe your drive and reinstall Windows 7. Windows 7 doesn\u2019t have this wiping feature built-in. If you just reinstall Windows 7 on your PC using a Windows 7 installer disc or your PC\u2019s recovery feature, your drive won\u2019t be wiped. Deleted files could theoretically be recovered from your drive.DBAN's scary warning isn't lying: Nuke is in the name for a reason.indows 7 doesn\u2019t have this wiping feature built-in. If you just reinstall Windows 7 on your PC using a Windows 7 installer disc or your PC\u2019s recovery feature, your drive won\u2019t be wiped. Deleted files could theoretically be recovered from your drive. DBAN's scary warning isn't lying: Nuke is in the name for a reason.\\\\n\\\\npassage 3:When you delete a file from such a drive, the drive just marks the file\u2019s data as deleted. Until it\u2019s overwritten in the future, people can scan the drive and recover the marked-as-deleted data. Internal solid-state drives: Solid-state drives use a feature called TRIM.When you delete a file from a solid-state drive, the operating system informs the drive that the file was deleted.indows 7 doesn\u2019t have this wiping feature built-in. If you just reinstall Windows 7 on your PC using a Windows 7 installer disc or your PC\u2019s recovery feature, your drive won\u2019t be wiped. Deleted files could theoretically be recovered from your drive. DBAN's scary warning isn't lying: Nuke is in the name for a reason.\\\\n\\\\n\\\",\\\"question\\\":\\\"recovering files from a wiped hard drive\\\"}\",\"answer\":\"Based on the provided passages, it is possible to recover files from a wiped hard drive, depending on how the drive was wiped. If the drive was only deleted or quickly formatted, then recovery programs like Recuva may be able to recover the files. However, if the drive was wiped with a program that overwrites everything, then the files are likely gone forever. Additionally, if the drive has been reused and Windows has been reinstalled, then the files may be overwritten and unrecoverable.\\n\\nIt is important to note that internal solid-state drives (SSDs) use a feature called TRIM, which helps to recover marked-as-deleted data until it is overwritten in the future. Therefore, it may be more difficult to recover files from an SSD than from a traditional hard drive.\\n\\nUnable to answer based on given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":37},{\"index\":1,\"byte_start\":37,\"byte_end\":73},{\"index\":2,\"byte_start\":73,\"byte_end\":164},{\"index\":3,\"byte_start\":164,\"byte_end\":199},{\"index\":4,\"byte_start\":199,\"byte_end\":610},{\"index\":5,\"byte_start\":610,\"byte_end\":822},{\"index\":6,\"byte_start\":822,\"byte_end\":960},{\"index\":7,\"byte_start\":960,\"byte_end\":1144},{\"index\":8,\"byte_start\":1144,\"byte_end\":1282},{\"index\":9,\"byte_start\":1282,\"byte_end\":1346},{\"index\":10,\"byte_start\":1346,\"byte_end\":1520},{\"index\":11,\"byte_start\":1520,\"byte_end\":1626},{\"index\":12,\"byte_start\":1626,\"byte_end\":1868},{\"index\":13,\"byte_start\":1868,\"byte_end\":2006},{\"index\":14,\"byte_start\":2006,\"byte_end\":2070},{\"index\":15,\"byte_start\":2070,\"byte_end\":2197}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":127},{\"index\":1,\"byte_start\":127,\"byte_end\":248},{\"index\":2,\"byte_start\":248,\"byte_end\":363},{\"index\":3,\"byte_start\":363,\"byte_end\":494},{\"index\":4,\"byte_start\":494,\"byte_end\":670},{\"index\":5,\"byte_start\":670,\"byte_end\":772},{\"index\":6,\"byte_start\":772,\"byte_end\":813}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,1]\n1|E|0.90|[0,1]\n2|E|0.95|[0,1]\n3|E|0.90|[0,1]\n4|E|0.95|[0,1]\n5|C|0.85|[]\n6|B|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255807,
+    "id": "chatcmpl-qhSfMolcIrNbPLtW18ZAU9qVSWEdB8vl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 2378.362,
+      "predicted_n": 97,
+      "predicted_per_second": 40.78437176510557,
+      "predicted_per_token_ms": 24.51919587628866,
+      "prompt_ms": 1079.986,
+      "prompt_n": 1141,
+      "prompt_per_second": 1056.4951767893288,
+      "prompt_per_token_ms": 0.9465258545135846
+    },
+    "usage": {
+      "completion_tokens": 97,
+      "prompt_tokens": 1180,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1277
+    }
+  },
+  "source_cluster_id": "sha256:c7fb3575d6664db588dc213757a582b5e5f43a56d59f1b92e52ccff6c3e351b6",
+  "started_monotonic_ns": 916712476977645,
+  "status": "completed",
+  "unit_id": "sha256:c26bba9daf6ba2c40f8473539f8e9150fdce8c4e58924abae8555c201d57ac29"
+}

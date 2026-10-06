@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:aab0eb980a775590822ce6dde16e4d177c706a7a420f44e67e1a839675da8482",
+  "ended_monotonic_ns": 916520280588674,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:More recently they have become symbolic of sinister things. A snake ring worn on the first finger suggests this is an egotistical person and they are using the snake to enhance their status. A snake ring on the second finger suggests this is a materialistic person and they are using the snake to enhance their wealth.\\\\n\\\\npassage 2:(Laughs) Snakes, I think many times we have spoken why snakes, and what is the significance of a snake. Fundamentally, one aspect of this is that it is the symbolism for the Kundalini because of its nature, and its similarity with that of a snake in terms of movement and stillness.\\\\n\\\\npassage 3:A snake ring on the third finger suggests this is an emotional person and they are using the snake to mitigate their emotions. A snake ring on the fourth (little) finger, suggests this is a person with sexual inhibitions and they are using the snake to either hide or overcome this problem.\\\\n\\\\n\\\",\\\"question\\\":\\\"what does a snake ring symbolize\\\"}\",\"answer\":\"Based on the given passages, a snake ring can symbolize various things depending on the finger it is worn on. On the first finger, it suggests an egotistical person using the snake to enhance their status. On the second finger, it suggests a materialistic person using the snake to enhance their wealth. On the third finger, it suggests an emotional person using the snake to mitigate their emotions. On the fourth finger, it suggests a person with sexual inhibitions using the snake to either hide or overcome this problem.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":83},{\"index\":1,\"byte_start\":83,\"byte_end\":214},{\"index\":2,\"byte_start\":214,\"byte_end\":459},{\"index\":3,\"byte_start\":459,\"byte_end\":778},{\"index\":4,\"byte_start\":778,\"byte_end\":993}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":110},{\"index\":1,\"byte_start\":110,\"byte_end\":206},{\"index\":2,\"byte_start\":206,\"byte_end\":304},{\"index\":3,\"byte_start\":304,\"byte_end\":401},{\"index\":4,\"byte_start\":401,\"byte_end\":524}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 588,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:More recently they have become symbolic of sinister things. A snake ring worn on the first finger suggests this is an egotistical person and they are using the snake to enhance their status. A snake ring on the second finger suggests this is a materialistic person and they are using the snake to enhance their wealth.\\\\n\\\\npassage 2:(Laughs) Snakes, I think many times we have spoken why snakes, and what is the significance of a snake. Fundamentally, one aspect of this is that it is the symbolism for the Kundalini because of its nature, and its similarity with that of a snake in terms of movement and stillness.\\\\n\\\\npassage 3:A snake ring on the third finger suggests this is an emotional person and they are using the snake to mitigate their emotions. A snake ring on the fourth (little) finger, suggests this is a person with sexual inhibitions and they are using the snake to either hide or overcome this problem.\\\\n\\\\n\\\",\\\"question\\\":\\\"what does a snake ring symbolize\\\"}\",\"answer\":\"Based on the given passages, a snake ring can symbolize various things depending on the finger it is worn on. On the first finger, it suggests an egotistical person using the snake to enhance their status. On the second finger, it suggests a materialistic person using the snake to enhance their wealth. On the third finger, it suggests an emotional person using the snake to mitigate their emotions. On the fourth finger, it suggests a person with sexual inhibitions using the snake to either hide or overcome this problem.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":83},{\"index\":1,\"byte_start\":83,\"byte_end\":214},{\"index\":2,\"byte_start\":214,\"byte_end\":459},{\"index\":3,\"byte_start\":459,\"byte_end\":778},{\"index\":4,\"byte_start\":778,\"byte_end\":993}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":110},{\"index\":1,\"byte_start\":110,\"byte_end\":206},{\"index\":2,\"byte_start\":206,\"byte_end\":304},{\"index\":3,\"byte_start\":304,\"byte_end\":401},{\"index\":4,\"byte_start\":401,\"byte_end\":524}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\"\n",
+    "input_tokens": 576,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:More recently they have become symbolic of sinister things. A snake ring worn on the first finger suggests this is an egotistical person and they are using the snake to enhance their status. A snake ring on the second finger suggests this is a materialistic person and they are using the snake to enhance their wealth.\\\\n\\\\npassage 2:(Laughs) Snakes, I think many times we have spoken why snakes, and what is the significance of a snake. Fundamentally, one aspect of this is that it is the symbolism for the Kundalini because of its nature, and its similarity with that of a snake in terms of movement and stillness.\\\\n\\\\npassage 3:A snake ring on the third finger suggests this is an emotional person and they are using the snake to mitigate their emotions. A snake ring on the fourth (little) finger, suggests this is a person with sexual inhibitions and they are using the snake to either hide or overcome this problem.\\\\n\\\\n\\\",\\\"question\\\":\\\"what does a snake ring symbolize\\\"}\",\"answer\":\"Based on the given passages, a snake ring can symbolize various things depending on the finger it is worn on. On the first finger, it suggests an egotistical person using the snake to enhance their status. On the second finger, it suggests a materialistic person using the snake to enhance their wealth. On the third finger, it suggests an emotional person using the snake to mitigate their emotions. On the fourth finger, it suggests a person with sexual inhibitions using the snake to either hide or overcome this problem.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":83},{\"index\":1,\"byte_start\":83,\"byte_end\":214},{\"index\":2,\"byte_start\":214,\"byte_end\":459},{\"index\":3,\"byte_start\":459,\"byte_end\":778},{\"index\":4,\"byte_start\":778,\"byte_end\":993}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":110},{\"index\":1,\"byte_start\":110,\"byte_end\":206},{\"index\":2,\"byte_start\":206,\"byte_end\":304},{\"index\":3,\"byte_start\":304,\"byte_end\":401},{\"index\":4,\"byte_start\":401,\"byte_end\":524}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[]\n2|C|0.00|[]\n3|C|0.00|[]\n4|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255612,
+    "id": "chatcmpl-eP3cIlH5g0uSXczvqr8cnZXTxknssP8Y",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1323.635,
+      "predicted_n": 55,
+      "predicted_per_second": 41.55224061013799,
+      "predicted_per_token_ms": 24.06609090909091,
+      "prompt_ms": 597.35,
+      "prompt_n": 588,
+      "prompt_per_second": 984.3475349460115,
+      "prompt_per_token_ms": 1.0159013605442178
+    },
+    "usage": {
+      "completion_tokens": 55,
+      "prompt_tokens": 588,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 643
+    }
+  },
+  "source_cluster_id": "sha256:d24b9a3e609ce915d7902c9bb9eba0e5d9088e1d2e0239377a0e1d372bb7e366",
+  "started_monotonic_ns": 916518188233671,
+  "status": "completed",
+  "unit_id": "sha256:1b0a2fedf0eaf67566bf1336e1c5ec446d3c81752bbc752b1788f6bf5be535e7"
+}

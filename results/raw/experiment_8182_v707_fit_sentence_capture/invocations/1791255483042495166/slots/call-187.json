@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:86fa5ae4b2b6c30ec5851536e5386dd76ba799c71b222f8d7ff8f9031b85b408",
+  "condition": "original",
+  "ended_monotonic_ns": 916921647099016,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r8\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Use short strokes going in the same direction. 2  Try not to go back and forth. 3  Use a small screwdriver to press the spline into the corners as necessary. 4  As you press the spline into the frame it will make the screen taught. 5  Once installed, trim the excess screen material with scissors or a utility knife.\\\\n\\\\npassage 2:To use the screen or spline installation tool, follow these steps: 1  Using the concave wheel of the installation tool, seat the vinyl retainer spline into the channel by starting in a corner. 2  Use short strokes going in the same direction. 3  Use a small screwdriver to press the spline into the corners as necessary. 4  As you press the spline into the 5  ... O\\\\n\\\\npassage 3:Fasteners should be snug, but not so tight that the base strip bends. Put a screw no more that 2 inches from the end of each base strip. Do not leave base strips exposed to direct sunlight. STEP 2: Roll screen into base.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to use a screen installation tool\\\"}\",\"answer\":\"Based on the given passages, here are the steps to use a screen installation tool:\\n\\n1. Start by seating the vinyl retainer spline into the channel using the concave wheel of the installation tool, beginning in a corner.\\n2. Use short strokes going in the same direction to press the spline into the frame.\\n3. Use a small screwdriver to press the spline into the corners as necessary.\\n4. As you press the spline into the frame, it will make the screen taut.\\n5. Trim the excess screen material with scissors or a utility knife.\\n\\nTherefore, the answer is:\\n\\n1. Seat the vinyl retainer spline into the channel using the concave wheel of the installation tool, starting in a corner.\\n2. Use short strokes going in the same direction to press the spline into the frame.\\n3. Use a small screwdriver to press the spline into the corners as necessary.\\n4. Trim the excess screen material with scissors or a utility knife.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":72},{\"index\":1,\"byte_start\":72,\"byte_end\":105},{\"index\":2,\"byte_start\":105,\"byte_end\":183},{\"index\":3,\"byte_start\":183,\"byte_end\":257},{\"index\":4,\"byte_start\":257,\"byte_end\":548},{\"index\":5,\"byte_start\":548,\"byte_end\":598},{\"index\":6,\"byte_start\":598,\"byte_end\":676},{\"index\":7,\"byte_start\":676,\"byte_end\":719},{\"index\":8,\"byte_start\":719,\"byte_end\":804},{\"index\":9,\"byte_start\":804,\"byte_end\":871},{\"index\":10,\"byte_start\":871,\"byte_end\":924},{\"index\":11,\"byte_start\":924,\"byte_end\":1011}],\"answer_sentence_indices\":[8],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":220},{\"index\":1,\"byte_start\":220,\"byte_end\":305},{\"index\":2,\"byte_start\":305,\"byte_end\":383},{\"index\":3,\"byte_start\":383,\"byte_end\":456},{\"index\":4,\"byte_start\":456,\"byte_end\":526},{\"index\":5,\"byte_start\":526,\"byte_end\":676},{\"index\":6,\"byte_start\":676,\"byte_end\":761},{\"index\":7,\"byte_start\":761,\"byte_end\":839},{\"index\":8,\"byte_start\":839,\"byte_end\":907}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 914,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Use short strokes going in the same direction. 2  Try not to go back and forth. 3  Use a small screwdriver to press the spline into the corners as necessary. 4  As you press the spline into the frame it will make the screen taught. 5  Once installed, trim the excess screen material with scissors or a utility knife.\\\\n\\\\npassage 2:To use the screen or spline installation tool, follow these steps: 1  Using the concave wheel of the installation tool, seat the vinyl retainer spline into the channel by starting in a corner. 2  Use short strokes going in the same direction. 3  Use a small screwdriver to press the spline into the corners as necessary. 4  As you press the spline into the 5  ... O\\\\n\\\\npassage 3:Fasteners should be snug, but not so tight that the base strip bends. Put a screw no more that 2 inches from the end of each base strip. Do not leave base strips exposed to direct sunlight. STEP 2: Roll screen into base.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to use a screen installation tool\\\"}\",\"answer\":\"Based on the given passages, here are the steps to use a screen installation tool:\\n\\n1. Start by seating the vinyl retainer spline into the channel using the concave wheel of the installation tool, beginning in a corner.\\n2. Use short strokes going in the same direction to press the spline into the frame.\\n3. Use a small screwdriver to press the spline into the corners as necessary.\\n4. As you press the spline into the frame, it will make the screen taut.\\n5. Trim the excess screen material with scissors or a utility knife.\\n\\nTherefore, the answer is:\\n\\n1. Seat the vinyl retainer spline into the channel using the concave wheel of the installation tool, starting in a corner.\\n2. Use short strokes going in the same direction to press the spline into the frame.\\n3. Use a small screwdriver to press the spline into the corners as necessary.\\n4. Trim the excess screen material with scissors or a utility knife.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":72},{\"index\":1,\"byte_start\":72,\"byte_end\":105},{\"index\":2,\"byte_start\":105,\"byte_end\":183},{\"index\":3,\"byte_start\":183,\"byte_end\":257},{\"index\":4,\"byte_start\":257,\"byte_end\":548},{\"index\":5,\"byte_start\":548,\"byte_end\":598},{\"index\":6,\"byte_start\":598,\"byte_end\":676},{\"index\":7,\"byte_start\":676,\"byte_end\":719},{\"index\":8,\"byte_start\":719,\"byte_end\":804},{\"index\":9,\"byte_start\":804,\"byte_end\":871},{\"index\":10,\"byte_start\":871,\"byte_end\":924},{\"index\":11,\"byte_start\":924,\"byte_end\":1011}],\"answer_sentence_indices\":[8],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":220},{\"index\":1,\"byte_start\":220,\"byte_end\":305},{\"index\":2,\"byte_start\":305,\"byte_end\":383},{\"index\":3,\"byte_start\":383,\"byte_end\":456},{\"index\":4,\"byte_start\":456,\"byte_end\":526},{\"index\":5,\"byte_start\":526,\"byte_end\":676},{\"index\":6,\"byte_start\":676,\"byte_end\":761},{\"index\":7,\"byte_start\":761,\"byte_end\":839},{\"index\":8,\"byte_start\":839,\"byte_end\":907}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r8\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "input_tokens": 902,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Use short strokes going in the same direction. 2  Try not to go back and forth. 3  Use a small screwdriver to press the spline into the corners as necessary. 4  As you press the spline into the frame it will make the screen taught. 5  Once installed, trim the excess screen material with scissors or a utility knife.\\\\n\\\\npassage 2:To use the screen or spline installation tool, follow these steps: 1  Using the concave wheel of the installation tool, seat the vinyl retainer spline into the channel by starting in a corner. 2  Use short strokes going in the same direction. 3  Use a small screwdriver to press the spline into the corners as necessary. 4  As you press the spline into the 5  ... O\\\\n\\\\npassage 3:Fasteners should be snug, but not so tight that the base strip bends. Put a screw no more that 2 inches from the end of each base strip. Do not leave base strips exposed to direct sunlight. STEP 2: Roll screen into base.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to use a screen installation tool\\\"}\",\"answer\":\"Based on the given passages, here are the steps to use a screen installation tool:\\n\\n1. Start by seating the vinyl retainer spline into the channel using the concave wheel of the installation tool, beginning in a corner.\\n2. Use short strokes going in the same direction to press the spline into the frame.\\n3. Use a small screwdriver to press the spline into the corners as necessary.\\n4. As you press the spline into the frame, it will make the screen taut.\\n5. Trim the excess screen material with scissors or a utility knife.\\n\\nTherefore, the answer is:\\n\\n1. Seat the vinyl retainer spline into the channel using the concave wheel of the installation tool, starting in a corner.\\n2. Use short strokes going in the same direction to press the spline into the frame.\\n3. Use a small screwdriver to press the spline into the corners as necessary.\\n4. Trim the excess screen material with scissors or a utility knife.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":72},{\"index\":1,\"byte_start\":72,\"byte_end\":105},{\"index\":2,\"byte_start\":105,\"byte_end\":183},{\"index\":3,\"byte_start\":183,\"byte_end\":257},{\"index\":4,\"byte_start\":257,\"byte_end\":548},{\"index\":5,\"byte_start\":548,\"byte_end\":598},{\"index\":6,\"byte_start\":598,\"byte_end\":676},{\"index\":7,\"byte_start\":676,\"byte_end\":719},{\"index\":8,\"byte_start\":719,\"byte_end\":804},{\"index\":9,\"byte_start\":804,\"byte_end\":871},{\"index\":10,\"byte_start\":871,\"byte_end\":924},{\"index\":11,\"byte_start\":924,\"byte_end\":1011}],\"answer_sentence_indices\":[8],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":220},{\"index\":1,\"byte_start\":220,\"byte_end\":305},{\"index\":2,\"byte_start\":305,\"byte_end\":383},{\"index\":3,\"byte_start\":383,\"byte_end\":456},{\"index\":4,\"byte_start\":456,\"byte_end\":526},{\"index\":5,\"byte_start\":526,\"byte_end\":676},{\"index\":6,\"byte_start\":676,\"byte_end\":761},{\"index\":7,\"byte_start\":761,\"byte_end\":839},{\"index\":8,\"byte_start\":839,\"byte_end\":907}]}",
+    "request_index": 1,
+    "sentence_indices": [
+      8
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "8|E|1.00|[4,5]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256013,
+    "id": "chatcmpl-m9qwrOxK7OzfdJPEQNWEOXxQDvY2d2tL",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 412,
+      "predicted_ms": 360.894,
+      "predicted_n": 15,
+      "predicted_per_second": 41.563450763936224,
+      "predicted_per_token_ms": 24.0596,
+      "prompt_ms": 536.261,
+      "prompt_n": 502,
+      "prompt_per_second": 936.111333846765,
+      "prompt_per_token_ms": 1.0682490039840637
+    },
+    "usage": {
+      "completion_tokens": 15,
+      "prompt_tokens": 914,
+      "prompt_tokens_details": {
+        "cached_tokens": 412
+      },
+      "total_tokens": 929
+    }
+  },
+  "source_cluster_id": "sha256:2a7128d4db917b84824bf374250e6f592a85431eddb9f4f901539d1e39c19e13",
+  "started_monotonic_ns": 916920724228095,
+  "status": "completed",
+  "unit_id": "sha256:2c76ad8640ea8daeb7d3e107a42ab6f3b7db6a1b9b72dad2abf1733661f877b0"
+}

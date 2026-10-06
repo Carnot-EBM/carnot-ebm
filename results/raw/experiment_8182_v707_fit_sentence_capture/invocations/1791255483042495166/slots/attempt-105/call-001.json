@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:cc3e563317bdf7e759968bf094d9208bc76f9820ba3194a8fc3b140487b7a295",
+  "ended_monotonic_ns": 916721902970789,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"6530 Seville Rd, Ste 103\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Comfort Food, Bubble Tea, Restaurants, Tea Rooms, Asian Fusion, Coffee & Tea, Food\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"13:0-18:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"13:0-18:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Mojo Asian Fusion Caf\u00e9\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-10 02:22:47\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Terrible food but good drinks. Wasn't able to try any of the tapas because their fryer was broken but I got the chicken teriyaki and honey bbq pork rice bowls with cloudy jasmine milk tea and Hokkaido milk tea with cheese foam. The chicken teriyaki was super dry even though it was dark meat and the honey bbq pork was super fatty with not much flavor. The rice was mushy and gross, you can tell a lot about how good an Asian restaurant is by how good their rice is. And in this case, both the entree and the rice was awful. However, if you're just going for drinks, it's not bad! But I won't be returning especially since Kaiju is MUCH better.\\\"},{\\\"review_date\\\":\\\"2021-08-25 01:21:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Love love love Mojo! Get the popcorn chicken, IT IS A MUST. The customer service is also always great. Justin and Boxi have never failed to make you feel welcome and are always ready with recommendations!\\\"},{\\\"review_date\\\":\\\"2021-08-12 05:32:12\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Let me start off by saying this was my first boba place, I didn't like boba at first but after my girlfriend converting me into a boba diva I went back to discover that it's actually not all that bad. I always get the jasmine milk tea which is good the boba is only ok, but the wonder Is in the chicken dear god it had me seeing colors like in ratatouille.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Mojo Asian Fusion Caf\u00e9 is a popular eatery located in the heart of Isla Vista, CA, offering a diverse menu of comfort food, bubble tea, and Asian fusion dishes. With a cozy and inviting atmosphere, the caf\u00e9 is well-known for its delicious popcorn chicken and exceptional customer service. The menu offers a variety of options, including rice bowls, noodles, and soups, as well as a range of teas and coffee. While some customers have reported mixed experiences with the food, the caf\u00e9 consistently receives high praise for its tasty drinks and friendly staff. With a 4.0-star rating and positive reviews, Mojo Asian Fusion Caf\u00e9 is a great spot for anyone looking for a casual and relaxed dining experience.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":892},{\"index\":1,\"byte_start\":892,\"byte_end\":1089},{\"index\":2,\"byte_start\":1089,\"byte_end\":1214},{\"index\":3,\"byte_start\":1214,\"byte_end\":1328},{\"index\":4,\"byte_start\":1328,\"byte_end\":1386},{\"index\":5,\"byte_start\":1386,\"byte_end\":1442},{\"index\":6,\"byte_start\":1442,\"byte_end\":1600},{\"index\":7,\"byte_start\":1600,\"byte_end\":1639},{\"index\":8,\"byte_start\":1639,\"byte_end\":1682},{\"index\":9,\"byte_start\":1682,\"byte_end\":2058},{\"index\":10,\"byte_start\":2058,\"byte_end\":2230}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":162},{\"index\":1,\"byte_start\":162,\"byte_end\":291},{\"index\":2,\"byte_start\":291,\"byte_end\":410},{\"index\":3,\"byte_start\":410,\"byte_end\":563},{\"index\":4,\"byte_start\":563,\"byte_end\":710}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1195,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"6530 Seville Rd, Ste 103\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Comfort Food, Bubble Tea, Restaurants, Tea Rooms, Asian Fusion, Coffee & Tea, Food\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"13:0-18:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"13:0-18:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Mojo Asian Fusion Caf\u00e9\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-10 02:22:47\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Terrible food but good drinks. Wasn't able to try any of the tapas because their fryer was broken but I got the chicken teriyaki and honey bbq pork rice bowls with cloudy jasmine milk tea and Hokkaido milk tea with cheese foam. The chicken teriyaki was super dry even though it was dark meat and the honey bbq pork was super fatty with not much flavor. The rice was mushy and gross, you can tell a lot about how good an Asian restaurant is by how good their rice is. And in this case, both the entree and the rice was awful. However, if you're just going for drinks, it's not bad! But I won't be returning especially since Kaiju is MUCH better.\\\"},{\\\"review_date\\\":\\\"2021-08-25 01:21:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Love love love Mojo! Get the popcorn chicken, IT IS A MUST. The customer service is also always great. Justin and Boxi have never failed to make you feel welcome and are always ready with recommendations!\\\"},{\\\"review_date\\\":\\\"2021-08-12 05:32:12\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Let me start off by saying this was my first boba place, I didn't like boba at first but after my girlfriend converting me into a boba diva I went back to discover that it's actually not all that bad. I always get the jasmine milk tea which is good the boba is only ok, but the wonder Is in the chicken dear god it had me seeing colors like in ratatouille.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Mojo Asian Fusion Caf\u00e9 is a popular eatery located in the heart of Isla Vista, CA, offering a diverse menu of comfort food, bubble tea, and Asian fusion dishes. With a cozy and inviting atmosphere, the caf\u00e9 is well-known for its delicious popcorn chicken and exceptional customer service. The menu offers a variety of options, including rice bowls, noodles, and soups, as well as a range of teas and coffee. While some customers have reported mixed experiences with the food, the caf\u00e9 consistently receives high praise for its tasty drinks and friendly staff. With a 4.0-star rating and positive reviews, Mojo Asian Fusion Caf\u00e9 is a great spot for anyone looking for a casual and relaxed dining experience.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":892},{\"index\":1,\"byte_start\":892,\"byte_end\":1089},{\"index\":2,\"byte_start\":1089,\"byte_end\":1214},{\"index\":3,\"byte_start\":1214,\"byte_end\":1328},{\"index\":4,\"byte_start\":1328,\"byte_end\":1386},{\"index\":5,\"byte_start\":1386,\"byte_end\":1442},{\"index\":6,\"byte_start\":1442,\"byte_end\":1600},{\"index\":7,\"byte_start\":1600,\"byte_end\":1639},{\"index\":8,\"byte_start\":1639,\"byte_end\":1682},{\"index\":9,\"byte_start\":1682,\"byte_end\":2058},{\"index\":10,\"byte_start\":2058,\"byte_end\":2230}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":162},{\"index\":1,\"byte_start\":162,\"byte_end\":291},{\"index\":2,\"byte_start\":291,\"byte_end\":410},{\"index\":3,\"byte_start\":410,\"byte_end\":563},{\"index\":4,\"byte_start\":563,\"byte_end\":710}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\"\n",
+    "input_tokens": 1183,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"6530 Seville Rd, Ste 103\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Comfort Food, Bubble Tea, Restaurants, Tea Rooms, Asian Fusion, Coffee & Tea, Food\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"13:0-18:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"13:0-18:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Mojo Asian Fusion Caf\u00e9\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-10 02:22:47\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Terrible food but good drinks. Wasn't able to try any of the tapas because their fryer was broken but I got the chicken teriyaki and honey bbq pork rice bowls with cloudy jasmine milk tea and Hokkaido milk tea with cheese foam. The chicken teriyaki was super dry even though it was dark meat and the honey bbq pork was super fatty with not much flavor. The rice was mushy and gross, you can tell a lot about how good an Asian restaurant is by how good their rice is. And in this case, both the entree and the rice was awful. However, if you're just going for drinks, it's not bad! But I won't be returning especially since Kaiju is MUCH better.\\\"},{\\\"review_date\\\":\\\"2021-08-25 01:21:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Love love love Mojo! Get the popcorn chicken, IT IS A MUST. The customer service is also always great. Justin and Boxi have never failed to make you feel welcome and are always ready with recommendations!\\\"},{\\\"review_date\\\":\\\"2021-08-12 05:32:12\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Let me start off by saying this was my first boba place, I didn't like boba at first but after my girlfriend converting me into a boba diva I went back to discover that it's actually not all that bad. I always get the jasmine milk tea which is good the boba is only ok, but the wonder Is in the chicken dear god it had me seeing colors like in ratatouille.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Mojo Asian Fusion Caf\u00e9 is a popular eatery located in the heart of Isla Vista, CA, offering a diverse menu of comfort food, bubble tea, and Asian fusion dishes. With a cozy and inviting atmosphere, the caf\u00e9 is well-known for its delicious popcorn chicken and exceptional customer service. The menu offers a variety of options, including rice bowls, noodles, and soups, as well as a range of teas and coffee. While some customers have reported mixed experiences with the food, the caf\u00e9 consistently receives high praise for its tasty drinks and friendly staff. With a 4.0-star rating and positive reviews, Mojo Asian Fusion Caf\u00e9 is a great spot for anyone looking for a casual and relaxed dining experience.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":892},{\"index\":1,\"byte_start\":892,\"byte_end\":1089},{\"index\":2,\"byte_start\":1089,\"byte_end\":1214},{\"index\":3,\"byte_start\":1214,\"byte_end\":1328},{\"index\":4,\"byte_start\":1328,\"byte_end\":1386},{\"index\":5,\"byte_start\":1386,\"byte_end\":1442},{\"index\":6,\"byte_start\":1442,\"byte_end\":1600},{\"index\":7,\"byte_start\":1600,\"byte_end\":1639},{\"index\":8,\"byte_start\":1639,\"byte_end\":1682},{\"index\":9,\"byte_start\":1682,\"byte_end\":2058},{\"index\":10,\"byte_start\":2058,\"byte_end\":2230}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":162},{\"index\":1,\"byte_start\":162,\"byte_end\":291},{\"index\":2,\"byte_start\":291,\"byte_end\":410},{\"index\":3,\"byte_start\":410,\"byte_end\":563},{\"index\":4,\"byte_start\":563,\"byte_end\":710}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[]\n1|C|0.85|[9,10]\n2|B|0.30|[9,10]\n3|C|0.80|[9,10]\n4|C|0.90|[9,10]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255813,
+    "id": "chatcmpl-Lh15fYdZlsiAycly8r7DsV8DIc2WQMaj",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1725.348,
+      "predicted_n": 71,
+      "predicted_per_second": 41.151118498992666,
+      "predicted_per_token_ms": 24.300676056338027,
+      "prompt_ms": 1083.194,
+      "prompt_n": 1156,
+      "prompt_per_second": 1067.2141832395675,
+      "prompt_per_token_ms": 0.9370190311418685
+    },
+    "usage": {
+      "completion_tokens": 71,
+      "prompt_tokens": 1195,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1266
+    }
+  },
+  "source_cluster_id": "sha256:6f179c95d2c7e9717a68a1e735e6e3e41b3bf779d9a99d20ac8f65faf726e13f",
+  "started_monotonic_ns": 916718944008340,
+  "status": "completed",
+  "unit_id": "sha256:631f48b63ee153afafe42b202b0707fb94e8ec71f27de05babd71567c19bebed"
+}

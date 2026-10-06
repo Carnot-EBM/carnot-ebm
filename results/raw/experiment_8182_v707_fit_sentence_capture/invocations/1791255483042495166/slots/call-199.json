@@ -1,0 +1,97 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:f592372bd4b1381af07bec077a188ec9803ca81e9463c2c03924e33dc4f20dba",
+  "condition": "original",
+  "ended_monotonic_ns": 916957209747995,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"905 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Pakistani, Restaurants, Indian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-23:0\\\",\\\"Monday\\\":\\\"11:30-22:0\\\",\\\"Saturday\\\":\\\"11:30-23:0\\\",\\\"Sunday\\\":\\\"11:30-23:0\\\",\\\"Thursday\\\":\\\"11:30-22:0\\\",\\\"Tuesday\\\":\\\"11:30-22:0\\\",\\\"Wednesday\\\":\\\"11:30-22:0\\\"},\\\"name\\\":\\\"The Taj Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2011-08-14 09:19:26\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great Chicken Tika Masala and even better service! I recommend this place to anyone in SB.\\\"},{\\\"review_date\\\":\\\"2011-05-16 19:57:02\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I really can't express enough joy about this place being closed.  If you read my original review you'll see what a terrible time we had with the manager and the wait staff. \\\\n\\\\nReally..no matter how good the food of a place may be..it will always be soured if the customer service provided by the staff is...pardon my bluntness here...utter crap.  This place turned me and the wife off East Indian food for years.  \\\\n\\\\nClosing couldn't have happened to a worse place.. in my opinion.  If it does re-open, I hope its under new ownership who value their customers needs and desires and are cognizant that we have placed like Yelp to express our pleasure or displeasure at the experiences we receive.\\\"},{\\\"review_date\\\":\\\"2011-02-24 05:34:42\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"worst service ever received- the food is not worth suffering through this aweful service!! server never asked us how our food was-didnt refill water-seemed annoyed and frustrated he was at work- you could receive better service at mcdonalds and i am not kidding at all- obviously based on other reviews this was not just a fluke-apparently this resteraunt does not care about its customers and is fine allowing lazy people to work there and give horrible service and expect everyone just to pay and keep coming- the place should shut down and reopen under new management who know how to run a resteraunt and hire adequate employees! sucks!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"The Taj Cafe is a Pakistani and Indian restaurant located in Santa Barbara, CA. According to its structured data, the restaurant has a 2.5-star rating based on 3 customer reviews. The reviews suggest that the restaurant has a great Chicken Tika Masala dish, but the service can be inconsistent, with some customers experiencing poor service and others having a positive experience. One reviewer even mentioned that the service was so bad that it soured their experience with East Indian food for years. The restaurant's hours of operation are from 11:30 AM to 10:00 PM or 11:00 PM, depending on the day of the week. It offers takeout and reservations, but does not have outdoor seating or WiFi. The restaurant's attributes also include validated parking, but do not include valet parking or a garage. Overall, the Taj Cafe seems to have some strengths in its food offerings, but may have some areas for improvement in terms of customer service.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":708},{\"index\":1,\"byte_start\":708,\"byte_end\":887},{\"index\":2,\"byte_start\":887,\"byte_end\":994},{\"index\":3,\"byte_start\":994,\"byte_end\":1169},{\"index\":4,\"byte_start\":1169,\"byte_end\":1236},{\"index\":5,\"byte_start\":1236,\"byte_end\":1290},{\"index\":6,\"byte_start\":1290,\"byte_end\":1306},{\"index\":7,\"byte_start\":1306,\"byte_end\":1683},{\"index\":8,\"byte_start\":1683,\"byte_end\":2225},{\"index\":9,\"byte_start\":2225,\"byte_end\":2248}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":80},{\"index\":1,\"byte_start\":80,\"byte_end\":180},{\"index\":2,\"byte_start\":180,\"byte_end\":382},{\"index\":3,\"byte_start\":382,\"byte_end\":503},{\"index\":4,\"byte_start\":503,\"byte_end\":616},{\"index\":5,\"byte_start\":616,\"byte_end\":695},{\"index\":6,\"byte_start\":695,\"byte_end\":801},{\"index\":7,\"byte_start\":801,\"byte_end\":944}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 1260,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"905 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Pakistani, Restaurants, Indian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-23:0\\\",\\\"Monday\\\":\\\"11:30-22:0\\\",\\\"Saturday\\\":\\\"11:30-23:0\\\",\\\"Sunday\\\":\\\"11:30-23:0\\\",\\\"Thursday\\\":\\\"11:30-22:0\\\",\\\"Tuesday\\\":\\\"11:30-22:0\\\",\\\"Wednesday\\\":\\\"11:30-22:0\\\"},\\\"name\\\":\\\"The Taj Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2011-08-14 09:19:26\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great Chicken Tika Masala and even better service! I recommend this place to anyone in SB.\\\"},{\\\"review_date\\\":\\\"2011-05-16 19:57:02\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I really can't express enough joy about this place being closed.  If you read my original review you'll see what a terrible time we had with the manager and the wait staff. \\\\n\\\\nReally..no matter how good the food of a place may be..it will always be soured if the customer service provided by the staff is...pardon my bluntness here...utter crap.  This place turned me and the wife off East Indian food for years.  \\\\n\\\\nClosing couldn't have happened to a worse place.. in my opinion.  If it does re-open, I hope its under new ownership who value their customers needs and desires and are cognizant that we have placed like Yelp to express our pleasure or displeasure at the experiences we receive.\\\"},{\\\"review_date\\\":\\\"2011-02-24 05:34:42\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"worst service ever received- the food is not worth suffering through this aweful service!! server never asked us how our food was-didnt refill water-seemed annoyed and frustrated he was at work- you could receive better service at mcdonalds and i am not kidding at all- obviously based on other reviews this was not just a fluke-apparently this resteraunt does not care about its customers and is fine allowing lazy people to work there and give horrible service and expect everyone just to pay and keep coming- the place should shut down and reopen under new management who know how to run a resteraunt and hire adequate employees! sucks!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"The Taj Cafe is a Pakistani and Indian restaurant located in Santa Barbara, CA. According to its structured data, the restaurant has a 2.5-star rating based on 3 customer reviews. The reviews suggest that the restaurant has a great Chicken Tika Masala dish, but the service can be inconsistent, with some customers experiencing poor service and others having a positive experience. One reviewer even mentioned that the service was so bad that it soured their experience with East Indian food for years. The restaurant's hours of operation are from 11:30 AM to 10:00 PM or 11:00 PM, depending on the day of the week. It offers takeout and reservations, but does not have outdoor seating or WiFi. The restaurant's attributes also include validated parking, but do not include valet parking or a garage. Overall, the Taj Cafe seems to have some strengths in its food offerings, but may have some areas for improvement in terms of customer service.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":708},{\"index\":1,\"byte_start\":708,\"byte_end\":887},{\"index\":2,\"byte_start\":887,\"byte_end\":994},{\"index\":3,\"byte_start\":994,\"byte_end\":1169},{\"index\":4,\"byte_start\":1169,\"byte_end\":1236},{\"index\":5,\"byte_start\":1236,\"byte_end\":1290},{\"index\":6,\"byte_start\":1290,\"byte_end\":1306},{\"index\":7,\"byte_start\":1306,\"byte_end\":1683},{\"index\":8,\"byte_start\":1683,\"byte_end\":2225},{\"index\":9,\"byte_start\":2225,\"byte_end\":2248}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":80},{\"index\":1,\"byte_start\":80,\"byte_end\":180},{\"index\":2,\"byte_start\":180,\"byte_end\":382},{\"index\":3,\"byte_start\":382,\"byte_end\":503},{\"index\":4,\"byte_start\":503,\"byte_end\":616},{\"index\":5,\"byte_start\":616,\"byte_end\":695},{\"index\":6,\"byte_start\":695,\"byte_end\":801},{\"index\":7,\"byte_start\":801,\"byte_end\":944}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+    "input_tokens": 1248,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"905 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Pakistani, Restaurants, Indian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-23:0\\\",\\\"Monday\\\":\\\"11:30-22:0\\\",\\\"Saturday\\\":\\\"11:30-23:0\\\",\\\"Sunday\\\":\\\"11:30-23:0\\\",\\\"Thursday\\\":\\\"11:30-22:0\\\",\\\"Tuesday\\\":\\\"11:30-22:0\\\",\\\"Wednesday\\\":\\\"11:30-22:0\\\"},\\\"name\\\":\\\"The Taj Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2011-08-14 09:19:26\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great Chicken Tika Masala and even better service! I recommend this place to anyone in SB.\\\"},{\\\"review_date\\\":\\\"2011-05-16 19:57:02\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I really can't express enough joy about this place being closed.  If you read my original review you'll see what a terrible time we had with the manager and the wait staff. \\\\n\\\\nReally..no matter how good the food of a place may be..it will always be soured if the customer service provided by the staff is...pardon my bluntness here...utter crap.  This place turned me and the wife off East Indian food for years.  \\\\n\\\\nClosing couldn't have happened to a worse place.. in my opinion.  If it does re-open, I hope its under new ownership who value their customers needs and desires and are cognizant that we have placed like Yelp to express our pleasure or displeasure at the experiences we receive.\\\"},{\\\"review_date\\\":\\\"2011-02-24 05:34:42\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"worst service ever received- the food is not worth suffering through this aweful service!! server never asked us how our food was-didnt refill water-seemed annoyed and frustrated he was at work- you could receive better service at mcdonalds and i am not kidding at all- obviously based on other reviews this was not just a fluke-apparently this resteraunt does not care about its customers and is fine allowing lazy people to work there and give horrible service and expect everyone just to pay and keep coming- the place should shut down and reopen under new management who know how to run a resteraunt and hire adequate employees! sucks!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"The Taj Cafe is a Pakistani and Indian restaurant located in Santa Barbara, CA. According to its structured data, the restaurant has a 2.5-star rating based on 3 customer reviews. The reviews suggest that the restaurant has a great Chicken Tika Masala dish, but the service can be inconsistent, with some customers experiencing poor service and others having a positive experience. One reviewer even mentioned that the service was so bad that it soured their experience with East Indian food for years. The restaurant's hours of operation are from 11:30 AM to 10:00 PM or 11:00 PM, depending on the day of the week. It offers takeout and reservations, but does not have outdoor seating or WiFi. The restaurant's attributes also include validated parking, but do not include valet parking or a garage. Overall, the Taj Cafe seems to have some strengths in its food offerings, but may have some areas for improvement in terms of customer service.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":708},{\"index\":1,\"byte_start\":708,\"byte_end\":887},{\"index\":2,\"byte_start\":887,\"byte_end\":994},{\"index\":3,\"byte_start\":994,\"byte_end\":1169},{\"index\":4,\"byte_start\":1169,\"byte_end\":1236},{\"index\":5,\"byte_start\":1236,\"byte_end\":1290},{\"index\":6,\"byte_start\":1290,\"byte_end\":1306},{\"index\":7,\"byte_start\":1306,\"byte_end\":1683},{\"index\":8,\"byte_start\":1683,\"byte_end\":2225},{\"index\":9,\"byte_start\":2225,\"byte_end\":2248}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":80},{\"index\":1,\"byte_start\":80,\"byte_end\":180},{\"index\":2,\"byte_start\":180,\"byte_end\":382},{\"index\":3,\"byte_start\":382,\"byte_end\":503},{\"index\":4,\"byte_start\":503,\"byte_end\":616},{\"index\":5,\"byte_start\":616,\"byte_end\":695},{\"index\":6,\"byte_start\":695,\"byte_end\":801},{\"index\":7,\"byte_start\":801,\"byte_end\":944}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[]\n1|E|0.95|[]\n2|E|0.90|[0,7]\n3|E|0.90|[7,8]\n4|E|0.95|[8]\n5|E|0.95|[0]\n6|C|0.95|[0]\n7|E|0.90|[0,7]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256048,
+    "id": "chatcmpl-8Qn2Nzu10qHgFXpSFpaqjgXMlTc7WQzI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 2466.997,
+      "predicted_n": 100,
+      "predicted_per_second": 40.535112122146884,
+      "predicted_per_token_ms": 24.66997,
+      "prompt_ms": 1141.669,
+      "prompt_n": 1221,
+      "prompt_per_second": 1069.486865282319,
+      "prompt_per_token_ms": 0.935027846027846
+    },
+    "usage": {
+      "completion_tokens": 100,
+      "prompt_tokens": 1260,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1360
+    }
+  },
+  "source_cluster_id": "sha256:34ddb21e96eed0a836f862423a22482a90142976759f22eff9b2d50aae1da4ad",
+  "started_monotonic_ns": 916953453550134,
+  "status": "completed",
+  "unit_id": "sha256:6f52f140f2ce3c06bb83c3949330f66d7d07cbe55c17b33e8910d5f4813cc1c6"
+}

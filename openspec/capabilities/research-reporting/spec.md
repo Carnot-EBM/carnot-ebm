@@ -93862,3 +93862,27 @@ from outside the checkout without PYTHONPATH. Rehashed row/headline mutation
 fails independent replay. Completed logs enter immutable custody with argv,
 expected/actual exit, duration and hash. Unmodified adversarial verifier and
 strict row lint SHALL pass before a qualified primary becomes reader-visible.
+
+## REQ-REPORT-8182: Publish fixed fit and tune sentence capture
+
+Authenticate Exp8181 transport_canary_ready_score == 1 and its complete frozen
+identity before model calls. Preserve 128 fit and 64 tune slots, original masks,
+historical clocks, failed receipts and full source/answer bytes. Main capture
+permits at most384 calls minus authenticated reuse, plus16 fixed diagnostics.
+Capture readiness and trainability are separate. Trainability requires96 fit,
+48 tune and12 original labels per class per role. No fitting, reserved evaluation,
+generator weight updates or independent benefit claim occurs in this task.
+Owned checks must exit normally, with100 percent added statement coverage,
+before primary_publication exposes checked bytes. External gates terminate
+complete_blocked_<check>; owned validation failure disqualifies and zeros readiness.
+The conductor owns ops and traceability reconciliation.
+
+### SCENARIO-REPORT-8182-CUSTODY
+
+Private E2E-015/019 ingestion, missing input, exact cache identity, wrong source,
+missing sentence, tamper and cold replay run outside the checkout without
+PYTHONPATH. Hash-bound primitive calls independently reproduce every headline.
+Validation argv freeze before measurement; sealed logs are never overwritten.
+Implementation: `python/carnot/verify/fit_sentence_capture_8182.py`, thin
+`scripts/experiments/experiment_8182_v707_fit_sentence_capture.py` and private
+`tests/python/test_fit_sentence_capture_8182.py`.

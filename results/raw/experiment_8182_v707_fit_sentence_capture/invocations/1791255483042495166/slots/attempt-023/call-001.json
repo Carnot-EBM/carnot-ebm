@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:b7a19d3ab791d45b20de8bf44375e36367ecc020688b7bc23d14451d503c19bc",
+  "ended_monotonic_ns": 916551199925255,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The greatest price differences were seen in meats and proteins, in which healthy versions of the foods cost about 30 cents more per serving, and 47 cents more per 200 calories, on average, than less healthy versions. Healthy diets, like the Mediterranean diet, cost $1.48 more per day, or $1.54 more per 2,000 calories, than less healthy diets. When the researchers considered only studies conducted in the United States, the results were similar: healthy diets cost $1.49 more per day, and $1.79 more per 2,000 calories. Reducing food cost\\\\n\\\\npassage 2:Papers of particular interest, published recently, have been highlighted as: \u2022 Of importance \u2022\u2022 Of major importance. 1  1. \u2022\u2022 Hiza HAB et al. Diet quality of Americans differs by age, sex, race/ethnicity, income, and education level.\\\\n\\\\npassage 3:One important feature of a healthy diet is that its benefits often occur in the distant future, while its costs (e.g., perceived inferior taste) occur immediately. Uncertainty about the future [55], impatience, and future discounting [56] all increase the psychological costs of healthy eating.\\\\n\\\\n\\\",\\\"question\\\":\\\"cost of eating healthy in us\\\"}\",\"answer\":\"Based on the given passages, it is difficult to provide an accurate response to this question. The passages discuss the difference in cost between healthy and less healthy diets, but they do not specifically mention the cost of eating healthy in the United States. Additionally, the passages focus on the difference in cost per serving or per calorie, rather than the total cost of eating healthy for a day or a week. Therefore, I am unable to provide a definitive answer to this question based on the given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":240},{\"index\":1,\"byte_start\":240,\"byte_end\":368},{\"index\":2,\"byte_start\":368,\"byte_end\":545},{\"index\":3,\"byte_start\":545,\"byte_end\":700},{\"index\":4,\"byte_start\":700,\"byte_end\":729},{\"index\":5,\"byte_start\":729,\"byte_end\":998},{\"index\":6,\"byte_start\":998,\"byte_end\":1176}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":95},{\"index\":1,\"byte_start\":95,\"byte_end\":265},{\"index\":2,\"byte_start\":265,\"byte_end\":418},{\"index\":3,\"byte_start\":418,\"byte_end\":517}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 670,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The greatest price differences were seen in meats and proteins, in which healthy versions of the foods cost about 30 cents more per serving, and 47 cents more per 200 calories, on average, than less healthy versions. Healthy diets, like the Mediterranean diet, cost $1.48 more per day, or $1.54 more per 2,000 calories, than less healthy diets. When the researchers considered only studies conducted in the United States, the results were similar: healthy diets cost $1.49 more per day, and $1.79 more per 2,000 calories. Reducing food cost\\\\n\\\\npassage 2:Papers of particular interest, published recently, have been highlighted as: \u2022 Of importance \u2022\u2022 Of major importance. 1  1. \u2022\u2022 Hiza HAB et al. Diet quality of Americans differs by age, sex, race/ethnicity, income, and education level.\\\\n\\\\npassage 3:One important feature of a healthy diet is that its benefits often occur in the distant future, while its costs (e.g., perceived inferior taste) occur immediately. Uncertainty about the future [55], impatience, and future discounting [56] all increase the psychological costs of healthy eating.\\\\n\\\\n\\\",\\\"question\\\":\\\"cost of eating healthy in us\\\"}\",\"answer\":\"Based on the given passages, it is difficult to provide an accurate response to this question. The passages discuss the difference in cost between healthy and less healthy diets, but they do not specifically mention the cost of eating healthy in the United States. Additionally, the passages focus on the difference in cost per serving or per calorie, rather than the total cost of eating healthy for a day or a week. Therefore, I am unable to provide a definitive answer to this question based on the given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":240},{\"index\":1,\"byte_start\":240,\"byte_end\":368},{\"index\":2,\"byte_start\":368,\"byte_end\":545},{\"index\":3,\"byte_start\":545,\"byte_end\":700},{\"index\":4,\"byte_start\":700,\"byte_end\":729},{\"index\":5,\"byte_start\":729,\"byte_end\":998},{\"index\":6,\"byte_start\":998,\"byte_end\":1176}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":95},{\"index\":1,\"byte_start\":95,\"byte_end\":265},{\"index\":2,\"byte_start\":265,\"byte_end\":418},{\"index\":3,\"byte_start\":418,\"byte_end\":517}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "input_tokens": 658,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The greatest price differences were seen in meats and proteins, in which healthy versions of the foods cost about 30 cents more per serving, and 47 cents more per 200 calories, on average, than less healthy versions. Healthy diets, like the Mediterranean diet, cost $1.48 more per day, or $1.54 more per 2,000 calories, than less healthy diets. When the researchers considered only studies conducted in the United States, the results were similar: healthy diets cost $1.49 more per day, and $1.79 more per 2,000 calories. Reducing food cost\\\\n\\\\npassage 2:Papers of particular interest, published recently, have been highlighted as: \u2022 Of importance \u2022\u2022 Of major importance. 1  1. \u2022\u2022 Hiza HAB et al. Diet quality of Americans differs by age, sex, race/ethnicity, income, and education level.\\\\n\\\\npassage 3:One important feature of a healthy diet is that its benefits often occur in the distant future, while its costs (e.g., perceived inferior taste) occur immediately. Uncertainty about the future [55], impatience, and future discounting [56] all increase the psychological costs of healthy eating.\\\\n\\\\n\\\",\\\"question\\\":\\\"cost of eating healthy in us\\\"}\",\"answer\":\"Based on the given passages, it is difficult to provide an accurate response to this question. The passages discuss the difference in cost between healthy and less healthy diets, but they do not specifically mention the cost of eating healthy in the United States. Additionally, the passages focus on the difference in cost per serving or per calorie, rather than the total cost of eating healthy for a day or a week. Therefore, I am unable to provide a definitive answer to this question based on the given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":240},{\"index\":1,\"byte_start\":240,\"byte_end\":368},{\"index\":2,\"byte_start\":368,\"byte_end\":545},{\"index\":3,\"byte_start\":545,\"byte_end\":700},{\"index\":4,\"byte_start\":700,\"byte_end\":729},{\"index\":5,\"byte_start\":729,\"byte_end\":998},{\"index\":6,\"byte_start\":998,\"byte_end\":1176}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":95},{\"index\":1,\"byte_start\":95,\"byte_end\":265},{\"index\":2,\"byte_start\":265,\"byte_end\":418},{\"index\":3,\"byte_start\":418,\"byte_end\":517}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[]\n2|C|0.00|[]\n3|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255642,
+    "id": "chatcmpl-0euCGl9NekVbzMNygXzmWX1okP3eCvb1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1061.257,
+      "predicted_n": 44,
+      "predicted_per_second": 41.460268342164056,
+      "predicted_per_token_ms": 24.119477272727273,
+      "prompt_ms": 659.806,
+      "prompt_n": 670,
+      "prompt_per_second": 1015.449995907888,
+      "prompt_per_token_ms": 0.9847850746268657
+    },
+    "usage": {
+      "completion_tokens": 44,
+      "prompt_tokens": 670,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 714
+    }
+  },
+  "source_cluster_id": "sha256:3bb495f78f4ee46930a9c1f0e60433ef163143f00b9e8e0db446ea660f56386a",
+  "started_monotonic_ns": 916549345786757,
+  "status": "completed",
+  "unit_id": "sha256:c607985efdff0748f2ef74149b8988ba41be5c8ed1d08b79f4220693b0a9eff5"
+}

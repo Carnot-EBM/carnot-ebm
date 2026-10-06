@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:95890badb005f636bc923c42c1dcc7e44b4309d0ae74eee974a7a7ded4ef17c2",
+  "ended_monotonic_ns": 916705963183561,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"At least 21 people were killed during a shipwreck off the northern coast of Haiti, the country's civil protection directorate told CNN on Thursday. A small boat carrying about 50 migrants left from the area of Le Borgne, west of Cap-Haitien, on Wednesday night. It began to sail toward the island of Providenciales in the Turks and Caicos when it was caught in bad weather, civil protection spokesman Joseph Edgar Celestin said. The vessel hit a reef and sank as it tried to return to shore near Le Borgne. Rescuers, most of them volunteers from the town of Le Borgne and surrounding communities, were dispatched to the scene  and rescued at least 12 people, Celestin said. The search for survivors is ongoing, Celestin added. So far, 11 victims -- eight men and three women -- have been identified, Celestin said. Haiti's government urged migrants not to board clandestine ships and condemned those organizing these illegal journeys.\\n\",\"answer\":\"At least 21 people died in a shipwreck off the coast of Haiti after a small boat carrying 50 migrants capsized during a dangerous journey. Rescuers saved 12 people, but 11 victims have been identified, including 8 men and 3 women. The Haitian government warns against illegal migration and condemns those who organize such journeys.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":148},{\"index\":1,\"byte_start\":148,\"byte_end\":262},{\"index\":2,\"byte_start\":262,\"byte_end\":429},{\"index\":3,\"byte_start\":429,\"byte_end\":507},{\"index\":4,\"byte_start\":507,\"byte_end\":674},{\"index\":5,\"byte_start\":674,\"byte_end\":727},{\"index\":6,\"byte_start\":727,\"byte_end\":815},{\"index\":7,\"byte_start\":815,\"byte_end\":935}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":139},{\"index\":1,\"byte_start\":139,\"byte_end\":231},{\"index\":2,\"byte_start\":231,\"byte_end\":332}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 557,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"At least 21 people were killed during a shipwreck off the northern coast of Haiti, the country's civil protection directorate told CNN on Thursday. A small boat carrying about 50 migrants left from the area of Le Borgne, west of Cap-Haitien, on Wednesday night. It began to sail toward the island of Providenciales in the Turks and Caicos when it was caught in bad weather, civil protection spokesman Joseph Edgar Celestin said. The vessel hit a reef and sank as it tried to return to shore near Le Borgne. Rescuers, most of them volunteers from the town of Le Borgne and surrounding communities, were dispatched to the scene  and rescued at least 12 people, Celestin said. The search for survivors is ongoing, Celestin added. So far, 11 victims -- eight men and three women -- have been identified, Celestin said. Haiti's government urged migrants not to board clandestine ships and condemned those organizing these illegal journeys.\\n\",\"answer\":\"At least 21 people died in a shipwreck off the coast of Haiti after a small boat carrying 50 migrants capsized during a dangerous journey. Rescuers saved 12 people, but 11 victims have been identified, including 8 men and 3 women. The Haitian government warns against illegal migration and condemns those who organize such journeys.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":148},{\"index\":1,\"byte_start\":148,\"byte_end\":262},{\"index\":2,\"byte_start\":262,\"byte_end\":429},{\"index\":3,\"byte_start\":429,\"byte_end\":507},{\"index\":4,\"byte_start\":507,\"byte_end\":674},{\"index\":5,\"byte_start\":674,\"byte_end\":727},{\"index\":6,\"byte_start\":727,\"byte_end\":815},{\"index\":7,\"byte_start\":815,\"byte_end\":935}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":139},{\"index\":1,\"byte_start\":139,\"byte_end\":231},{\"index\":2,\"byte_start\":231,\"byte_end\":332}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "input_tokens": 545,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"At least 21 people were killed during a shipwreck off the northern coast of Haiti, the country's civil protection directorate told CNN on Thursday. A small boat carrying about 50 migrants left from the area of Le Borgne, west of Cap-Haitien, on Wednesday night. It began to sail toward the island of Providenciales in the Turks and Caicos when it was caught in bad weather, civil protection spokesman Joseph Edgar Celestin said. The vessel hit a reef and sank as it tried to return to shore near Le Borgne. Rescuers, most of them volunteers from the town of Le Borgne and surrounding communities, were dispatched to the scene  and rescued at least 12 people, Celestin said. The search for survivors is ongoing, Celestin added. So far, 11 victims -- eight men and three women -- have been identified, Celestin said. Haiti's government urged migrants not to board clandestine ships and condemned those organizing these illegal journeys.\\n\",\"answer\":\"At least 21 people died in a shipwreck off the coast of Haiti after a small boat carrying 50 migrants capsized during a dangerous journey. Rescuers saved 12 people, but 11 victims have been identified, including 8 men and 3 women. The Haitian government warns against illegal migration and condemns those who organize such journeys.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":148},{\"index\":1,\"byte_start\":148,\"byte_end\":262},{\"index\":2,\"byte_start\":262,\"byte_end\":429},{\"index\":3,\"byte_start\":429,\"byte_end\":507},{\"index\":4,\"byte_start\":507,\"byte_end\":674},{\"index\":5,\"byte_start\":674,\"byte_end\":727},{\"index\":6,\"byte_start\":727,\"byte_end\":815},{\"index\":7,\"byte_start\":815,\"byte_end\":935}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":139},{\"index\":1,\"byte_start\":139,\"byte_end\":231},{\"index\":2,\"byte_start\":231,\"byte_end\":332}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[0,1]\n1|C|0.90|[4,6]\n2|C|0.95|[7]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255797,
+    "id": "chatcmpl-rW7SSlXojfiIQzk2ldcsk7mu9kCffw4Q",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1056.208,
+      "predicted_n": 43,
+      "predicted_per_second": 40.71167800281763,
+      "predicted_per_token_ms": 24.56297674418605,
+      "prompt_ms": 563.111,
+      "prompt_n": 518,
+      "prompt_per_second": 919.8896842718399,
+      "prompt_per_token_ms": 1.0870868725868725
+    },
+    "usage": {
+      "completion_tokens": 43,
+      "prompt_tokens": 557,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 600
+    }
+  },
+  "source_cluster_id": "sha256:ce966144b2adf4277c0ba5767fce8899cf2ac9227d907c3776a8027aded70873",
+  "started_monotonic_ns": 916704164154957,
+  "status": "completed",
+  "unit_id": "sha256:f9dccbf94392c1e157d5ba8a328ef86c4bf10eb90638a926ef665fff044656a0"
+}

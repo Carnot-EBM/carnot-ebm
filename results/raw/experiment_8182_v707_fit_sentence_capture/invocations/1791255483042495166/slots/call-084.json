@@ -1,0 +1,95 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:af2db45a52d3d30f8ca22eba0cffb63943242a736d93571e8d26c71f954fa717",
+  "condition": "original",
+  "ended_monotonic_ns": 916679550951471,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Millions Wasted by Arizona Agency on Luxury CEO Super Bowl Trips; AG Asked to Investigate\\nArizona Attorney General Kris Mayes has been asked to investigate the possibility of significant wasted money from a state agency that reportedly spent millions on luxury trips for CEOs to the Super Bowl.\\nThe attorney general is being asked to review whether or not the gifts violated the state constitution's prohibition on state agencies giving gifts to businesses, citing the agency's failure to properly ensure the gifts created opportunities for growth in Arizona.\\nLuxury Trips to Super Bowl and Waste Management Open Given to CEOs\\nAccording to a newly released report, auditors from the state of Arizona are asking Attorney General Kris Mayes to open an investigation into the Arizona Commerce Authority (ACA) after the state agency reportedly gave millions of dollars worth of luxury trips to CEOs, possibly in violation of the state constitution.\\nThe ACA reportedly paid for around $2.1 million worth of luxury trips to Super Bowl LVII and the Waste Management Open to CEOs under the guise of attempting to sway the businesses into providing either expansion in Arizona or moving their companies to the state.\\nThe CEOs got essentially every expense covered during their trips to the Super Bowl, with luxuries ranging from hotel rooms and transportation to food, alcohol, and high-value seats at the Super Bowl.\\nThe ACA has said that the organized CEO forums are designed to lure businesses to the state, as well as provide education to them about the opportunities presented in Arizona.\\nHowever, auditors are concerned about whether or not the gifts violate Article 9, Section 7 of the Arizona Constitution, which prohibits the government and government agencies from providing such gifts without the expectation of investment.\\nAnd thus far, the ACA has reportedly been unable to provide documentation that the forums created any new jobs in the state.\\n\u201cThe ACA\u2019s lack of documentation to show that it verified businesses met job and capital investment requirements before approving tax credits and distributing grant monies increases the risk of fraud and waste of public monies,\u201d auditors said, per AZ Mirror. \u201cSpecifically, businesses could submit fraudulent employment and wage information, thereby making the ACA more susceptible to fraud and waste of public monies.\u201d\\nAttorney General Mayes' office says that they have begun investigating the matter.\\nAt DailyNewsNow we bring you the latest news from the West Coast and around the country, covering a wide range of topics from politics and campaign news to entertainment and local interest stories. Please feel free to share the story with friends and join the conversation in the comments below!\",\"answer\":\"The Arizona Commerce Authority (ACA) is under investigation for allegedly spending millions on luxury trips to the Super Bowl for CEOs. The state agency reportedly paid $2.1 million for CEOs to attend the Super Bowl LVII and the Waste Management Open, with expenses including hotel rooms, transportation, food, alcohol, and high-value seats. The ACA claims that these trips were meant to attract businesses to Arizona and educate them about opportunities in the state. However, auditors are concerned that these gifts may violate the state constitution's prohibition on state agencies giving gifts to businesses without expecting investment. The ACA has also failed to provide documentation showing that the forums created new jobs. The Attorney General's office has initiated an investigation into the matter.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":295},{\"index\":1,\"byte_start\":295,\"byte_end\":560},{\"index\":2,\"byte_start\":560,\"byte_end\":945},{\"index\":3,\"byte_start\":945,\"byte_end\":1208},{\"index\":4,\"byte_start\":1208,\"byte_end\":1409},{\"index\":5,\"byte_start\":1409,\"byte_end\":1585},{\"index\":6,\"byte_start\":1585,\"byte_end\":1826},{\"index\":7,\"byte_start\":1826,\"byte_end\":1951},{\"index\":8,\"byte_start\":1951,\"byte_end\":2216},{\"index\":9,\"byte_start\":2216,\"byte_end\":2381},{\"index\":10,\"byte_start\":2381,\"byte_end\":2464},{\"index\":11,\"byte_start\":2464,\"byte_end\":2662},{\"index\":12,\"byte_start\":2662,\"byte_end\":2759}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":136},{\"index\":1,\"byte_start\":136,\"byte_end\":342},{\"index\":2,\"byte_start\":342,\"byte_end\":469},{\"index\":3,\"byte_start\":469,\"byte_end\":642},{\"index\":4,\"byte_start\":642,\"byte_end\":733},{\"index\":5,\"byte_start\":733,\"byte_end\":810}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 1103,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Millions Wasted by Arizona Agency on Luxury CEO Super Bowl Trips; AG Asked to Investigate\\nArizona Attorney General Kris Mayes has been asked to investigate the possibility of significant wasted money from a state agency that reportedly spent millions on luxury trips for CEOs to the Super Bowl.\\nThe attorney general is being asked to review whether or not the gifts violated the state constitution's prohibition on state agencies giving gifts to businesses, citing the agency's failure to properly ensure the gifts created opportunities for growth in Arizona.\\nLuxury Trips to Super Bowl and Waste Management Open Given to CEOs\\nAccording to a newly released report, auditors from the state of Arizona are asking Attorney General Kris Mayes to open an investigation into the Arizona Commerce Authority (ACA) after the state agency reportedly gave millions of dollars worth of luxury trips to CEOs, possibly in violation of the state constitution.\\nThe ACA reportedly paid for around $2.1 million worth of luxury trips to Super Bowl LVII and the Waste Management Open to CEOs under the guise of attempting to sway the businesses into providing either expansion in Arizona or moving their companies to the state.\\nThe CEOs got essentially every expense covered during their trips to the Super Bowl, with luxuries ranging from hotel rooms and transportation to food, alcohol, and high-value seats at the Super Bowl.\\nThe ACA has said that the organized CEO forums are designed to lure businesses to the state, as well as provide education to them about the opportunities presented in Arizona.\\nHowever, auditors are concerned about whether or not the gifts violate Article 9, Section 7 of the Arizona Constitution, which prohibits the government and government agencies from providing such gifts without the expectation of investment.\\nAnd thus far, the ACA has reportedly been unable to provide documentation that the forums created any new jobs in the state.\\n\u201cThe ACA\u2019s lack of documentation to show that it verified businesses met job and capital investment requirements before approving tax credits and distributing grant monies increases the risk of fraud and waste of public monies,\u201d auditors said, per AZ Mirror. \u201cSpecifically, businesses could submit fraudulent employment and wage information, thereby making the ACA more susceptible to fraud and waste of public monies.\u201d\\nAttorney General Mayes' office says that they have begun investigating the matter.\\nAt DailyNewsNow we bring you the latest news from the West Coast and around the country, covering a wide range of topics from politics and campaign news to entertainment and local interest stories. Please feel free to share the story with friends and join the conversation in the comments below!\",\"answer\":\"The Arizona Commerce Authority (ACA) is under investigation for allegedly spending millions on luxury trips to the Super Bowl for CEOs. The state agency reportedly paid $2.1 million for CEOs to attend the Super Bowl LVII and the Waste Management Open, with expenses including hotel rooms, transportation, food, alcohol, and high-value seats. The ACA claims that these trips were meant to attract businesses to Arizona and educate them about opportunities in the state. However, auditors are concerned that these gifts may violate the state constitution's prohibition on state agencies giving gifts to businesses without expecting investment. The ACA has also failed to provide documentation showing that the forums created new jobs. The Attorney General's office has initiated an investigation into the matter.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":295},{\"index\":1,\"byte_start\":295,\"byte_end\":560},{\"index\":2,\"byte_start\":560,\"byte_end\":945},{\"index\":3,\"byte_start\":945,\"byte_end\":1208},{\"index\":4,\"byte_start\":1208,\"byte_end\":1409},{\"index\":5,\"byte_start\":1409,\"byte_end\":1585},{\"index\":6,\"byte_start\":1585,\"byte_end\":1826},{\"index\":7,\"byte_start\":1826,\"byte_end\":1951},{\"index\":8,\"byte_start\":1951,\"byte_end\":2216},{\"index\":9,\"byte_start\":2216,\"byte_end\":2381},{\"index\":10,\"byte_start\":2381,\"byte_end\":2464},{\"index\":11,\"byte_start\":2464,\"byte_end\":2662},{\"index\":12,\"byte_start\":2662,\"byte_end\":2759}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":136},{\"index\":1,\"byte_start\":136,\"byte_end\":342},{\"index\":2,\"byte_start\":342,\"byte_end\":469},{\"index\":3,\"byte_start\":469,\"byte_end\":642},{\"index\":4,\"byte_start\":642,\"byte_end\":733},{\"index\":5,\"byte_start\":733,\"byte_end\":810}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "input_tokens": 1091,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Millions Wasted by Arizona Agency on Luxury CEO Super Bowl Trips; AG Asked to Investigate\\nArizona Attorney General Kris Mayes has been asked to investigate the possibility of significant wasted money from a state agency that reportedly spent millions on luxury trips for CEOs to the Super Bowl.\\nThe attorney general is being asked to review whether or not the gifts violated the state constitution's prohibition on state agencies giving gifts to businesses, citing the agency's failure to properly ensure the gifts created opportunities for growth in Arizona.\\nLuxury Trips to Super Bowl and Waste Management Open Given to CEOs\\nAccording to a newly released report, auditors from the state of Arizona are asking Attorney General Kris Mayes to open an investigation into the Arizona Commerce Authority (ACA) after the state agency reportedly gave millions of dollars worth of luxury trips to CEOs, possibly in violation of the state constitution.\\nThe ACA reportedly paid for around $2.1 million worth of luxury trips to Super Bowl LVII and the Waste Management Open to CEOs under the guise of attempting to sway the businesses into providing either expansion in Arizona or moving their companies to the state.\\nThe CEOs got essentially every expense covered during their trips to the Super Bowl, with luxuries ranging from hotel rooms and transportation to food, alcohol, and high-value seats at the Super Bowl.\\nThe ACA has said that the organized CEO forums are designed to lure businesses to the state, as well as provide education to them about the opportunities presented in Arizona.\\nHowever, auditors are concerned about whether or not the gifts violate Article 9, Section 7 of the Arizona Constitution, which prohibits the government and government agencies from providing such gifts without the expectation of investment.\\nAnd thus far, the ACA has reportedly been unable to provide documentation that the forums created any new jobs in the state.\\n\u201cThe ACA\u2019s lack of documentation to show that it verified businesses met job and capital investment requirements before approving tax credits and distributing grant monies increases the risk of fraud and waste of public monies,\u201d auditors said, per AZ Mirror. \u201cSpecifically, businesses could submit fraudulent employment and wage information, thereby making the ACA more susceptible to fraud and waste of public monies.\u201d\\nAttorney General Mayes' office says that they have begun investigating the matter.\\nAt DailyNewsNow we bring you the latest news from the West Coast and around the country, covering a wide range of topics from politics and campaign news to entertainment and local interest stories. Please feel free to share the story with friends and join the conversation in the comments below!\",\"answer\":\"The Arizona Commerce Authority (ACA) is under investigation for allegedly spending millions on luxury trips to the Super Bowl for CEOs. The state agency reportedly paid $2.1 million for CEOs to attend the Super Bowl LVII and the Waste Management Open, with expenses including hotel rooms, transportation, food, alcohol, and high-value seats. The ACA claims that these trips were meant to attract businesses to Arizona and educate them about opportunities in the state. However, auditors are concerned that these gifts may violate the state constitution's prohibition on state agencies giving gifts to businesses without expecting investment. The ACA has also failed to provide documentation showing that the forums created new jobs. The Attorney General's office has initiated an investigation into the matter.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":295},{\"index\":1,\"byte_start\":295,\"byte_end\":560},{\"index\":2,\"byte_start\":560,\"byte_end\":945},{\"index\":3,\"byte_start\":945,\"byte_end\":1208},{\"index\":4,\"byte_start\":1208,\"byte_end\":1409},{\"index\":5,\"byte_start\":1409,\"byte_end\":1585},{\"index\":6,\"byte_start\":1585,\"byte_end\":1826},{\"index\":7,\"byte_start\":1826,\"byte_end\":1951},{\"index\":8,\"byte_start\":1951,\"byte_end\":2216},{\"index\":9,\"byte_start\":2216,\"byte_end\":2381},{\"index\":10,\"byte_start\":2381,\"byte_end\":2464},{\"index\":11,\"byte_start\":2464,\"byte_end\":2662},{\"index\":12,\"byte_start\":2662,\"byte_end\":2759}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":136},{\"index\":1,\"byte_start\":136,\"byte_end\":342},{\"index\":2,\"byte_start\":342,\"byte_end\":469},{\"index\":3,\"byte_start\":469,\"byte_end\":642},{\"index\":4,\"byte_start\":642,\"byte_end\":733},{\"index\":5,\"byte_start\":733,\"byte_end\":810}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[0,2]\n1|E|1.00|[3,4]\n2|E|1.00|[5]\n3|E|1.00|[6,7]\n4|E|1.00|[8]\n5|E|1.00|[10]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255771,
+    "id": "chatcmpl-8LyC6bxXNMMdeX3FGtBc4CXjmLCCQbZl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 2079.399,
+      "predicted_n": 85,
+      "predicted_per_second": 40.87719576666142,
+      "predicted_per_token_ms": 24.463517647058822,
+      "prompt_ms": 1026.892,
+      "prompt_n": 1064,
+      "prompt_per_second": 1036.1362246467982,
+      "prompt_per_token_ms": 0.965124060150376
+    },
+    "usage": {
+      "completion_tokens": 85,
+      "prompt_tokens": 1103,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1188
+    }
+  },
+  "source_cluster_id": "sha256:1b9743e90c455019afeef7fd16fa3dda85cf244f344e6b9dbcde3c144c4da985",
+  "started_monotonic_ns": 916676311644673,
+  "status": "completed",
+  "unit_id": "sha256:64a672a778e058c57e22700a0a5fc8d327d7ddecac551a57409db15f07ca6c91"
+}

@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:504cbe2447a48dfaa7888bd724ed0f690c4bd2e77db35ec0b54462af08948095",
+  "ended_monotonic_ns": 917051991658081,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r8 \"\\n\" r9 \"\\n\" r10\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nr9 ::= \"9|\" relation \"|\" probability \"|\" refs\nr10 ::= \"10|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Click Dell Factory Image Restore, then click Next.. Click Yes, Reformat Hard Drive and Restore System Software to Factory Condition, then Next to wipe the hard drive and restore the OS. Step 6. Click Finish to restart the computer.\\\\n\\\\npassage 2:Step 5. Click the Yes, reformat hard drive and restore system software to factory condition option and click Next to wipe the hard drive on your Dell laptop. Click Finish once the restoration is complete to restart your computer.\\\\n\\\\npassage 3:Step 5. Click the Yes, reformat hard drive and restore system software to factory condition option and click Next to wipe the hard drive on your Dell laptop.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to wipe a dell computer clean\\\"}\",\"answer\":\"Sure! Here's how to wipe a Dell computer clean based on the given passages:\\n\\n1. Click Dell Factory Image Restore.\\n2. Click Yes, Reformat Hard Drive and Restore System Software to Factory Condition.\\n3. Click Next.\\n4. Click Finish to restart the computer.\\n\\nSo, the steps to wipe a Dell computer clean are:\\n\\n1. Click Dell Factory Image Restore.\\n2. Click Yes, Reformat Hard Drive and Restore System Software to Factory Condition.\\n3. Click Next.\\n4. Click Finish to restart the computer.\\n\\nI hope this helps! Let me know if you have any further questions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":75},{\"index\":1,\"byte_start\":75,\"byte_end\":209},{\"index\":2,\"byte_start\":209,\"byte_end\":426},{\"index\":3,\"byte_start\":426,\"byte_end\":721}],\"answer_sentence_indices\":[8,9,10],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":114},{\"index\":2,\"byte_start\":114,\"byte_end\":198},{\"index\":3,\"byte_start\":198,\"byte_end\":213},{\"index\":4,\"byte_start\":213,\"byte_end\":255},{\"index\":5,\"byte_start\":255,\"byte_end\":342},{\"index\":6,\"byte_start\":342,\"byte_end\":426},{\"index\":7,\"byte_start\":426,\"byte_end\":441},{\"index\":8,\"byte_start\":441,\"byte_end\":483},{\"index\":9,\"byte_start\":483,\"byte_end\":502},{\"index\":10,\"byte_start\":502,\"byte_end\":548}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 647,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Click Dell Factory Image Restore, then click Next.. Click Yes, Reformat Hard Drive and Restore System Software to Factory Condition, then Next to wipe the hard drive and restore the OS. Step 6. Click Finish to restart the computer.\\\\n\\\\npassage 2:Step 5. Click the Yes, reformat hard drive and restore system software to factory condition option and click Next to wipe the hard drive on your Dell laptop. Click Finish once the restoration is complete to restart your computer.\\\\n\\\\npassage 3:Step 5. Click the Yes, reformat hard drive and restore system software to factory condition option and click Next to wipe the hard drive on your Dell laptop.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to wipe a dell computer clean\\\"}\",\"answer\":\"Sure! Here's how to wipe a Dell computer clean based on the given passages:\\n\\n1. Click Dell Factory Image Restore.\\n2. Click Yes, Reformat Hard Drive and Restore System Software to Factory Condition.\\n3. Click Next.\\n4. Click Finish to restart the computer.\\n\\nSo, the steps to wipe a Dell computer clean are:\\n\\n1. Click Dell Factory Image Restore.\\n2. Click Yes, Reformat Hard Drive and Restore System Software to Factory Condition.\\n3. Click Next.\\n4. Click Finish to restart the computer.\\n\\nI hope this helps! Let me know if you have any further questions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":75},{\"index\":1,\"byte_start\":75,\"byte_end\":209},{\"index\":2,\"byte_start\":209,\"byte_end\":426},{\"index\":3,\"byte_start\":426,\"byte_end\":721}],\"answer_sentence_indices\":[8,9,10],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":114},{\"index\":2,\"byte_start\":114,\"byte_end\":198},{\"index\":3,\"byte_start\":198,\"byte_end\":213},{\"index\":4,\"byte_start\":213,\"byte_end\":255},{\"index\":5,\"byte_start\":255,\"byte_end\":342},{\"index\":6,\"byte_start\":342,\"byte_end\":426},{\"index\":7,\"byte_start\":426,\"byte_end\":441},{\"index\":8,\"byte_start\":441,\"byte_end\":483},{\"index\":9,\"byte_start\":483,\"byte_end\":502},{\"index\":10,\"byte_start\":502,\"byte_end\":548}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r8 \"\\n\" r9 \"\\n\" r10\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nr9 ::= \"9|\" relation \"|\" probability \"|\" refs\nr10 ::= \"10|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\"\n",
+    "input_tokens": 635,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Click Dell Factory Image Restore, then click Next.. Click Yes, Reformat Hard Drive and Restore System Software to Factory Condition, then Next to wipe the hard drive and restore the OS. Step 6. Click Finish to restart the computer.\\\\n\\\\npassage 2:Step 5. Click the Yes, reformat hard drive and restore system software to factory condition option and click Next to wipe the hard drive on your Dell laptop. Click Finish once the restoration is complete to restart your computer.\\\\n\\\\npassage 3:Step 5. Click the Yes, reformat hard drive and restore system software to factory condition option and click Next to wipe the hard drive on your Dell laptop.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to wipe a dell computer clean\\\"}\",\"answer\":\"Sure! Here's how to wipe a Dell computer clean based on the given passages:\\n\\n1. Click Dell Factory Image Restore.\\n2. Click Yes, Reformat Hard Drive and Restore System Software to Factory Condition.\\n3. Click Next.\\n4. Click Finish to restart the computer.\\n\\nSo, the steps to wipe a Dell computer clean are:\\n\\n1. Click Dell Factory Image Restore.\\n2. Click Yes, Reformat Hard Drive and Restore System Software to Factory Condition.\\n3. Click Next.\\n4. Click Finish to restart the computer.\\n\\nI hope this helps! Let me know if you have any further questions.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":75},{\"index\":1,\"byte_start\":75,\"byte_end\":209},{\"index\":2,\"byte_start\":209,\"byte_end\":426},{\"index\":3,\"byte_start\":426,\"byte_end\":721}],\"answer_sentence_indices\":[8,9,10],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":114},{\"index\":2,\"byte_start\":114,\"byte_end\":198},{\"index\":3,\"byte_start\":198,\"byte_end\":213},{\"index\":4,\"byte_start\":213,\"byte_end\":255},{\"index\":5,\"byte_start\":255,\"byte_end\":342},{\"index\":6,\"byte_start\":342,\"byte_end\":426},{\"index\":7,\"byte_start\":426,\"byte_end\":441},{\"index\":8,\"byte_start\":441,\"byte_end\":483},{\"index\":9,\"byte_start\":483,\"byte_end\":502},{\"index\":10,\"byte_start\":502,\"byte_end\":548}]}",
+    "request_index": 1,
+    "sentence_indices": [
+      8,
+      9,
+      10
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "8|E|1.00|[]\n9|E|1.00|[]\n10|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256143,
+    "id": "chatcmpl-TYVfVu0IYXL2w38pHVlleRyttJXS0KwR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 821.48,
+      "predicted_n": 34,
+      "predicted_per_second": 41.38871305448702,
+      "predicted_per_token_ms": 24.161176470588234,
+      "prompt_ms": 621.441,
+      "prompt_n": 608,
+      "prompt_per_second": 978.3712371729576,
+      "prompt_per_token_ms": 1.022106907894737
+    },
+    "usage": {
+      "completion_tokens": 34,
+      "prompt_tokens": 647,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 681
+    }
+  },
+  "source_cluster_id": "sha256:d1a050c3a13e08027041e5b4206f852765ec0b3e4f6569bd9750577c99840842",
+  "started_monotonic_ns": 917050523956278,
+  "status": "completed",
+  "unit_id": "sha256:0d91cf908e0a7f934d40dcd7822213ec41d2fb16c86e4c6a7e6edf9bf3db9196"
+}

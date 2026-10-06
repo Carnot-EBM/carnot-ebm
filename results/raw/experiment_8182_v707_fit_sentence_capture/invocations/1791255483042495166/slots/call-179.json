@@ -1,0 +1,97 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:dc7f2778939f76317271b4e66c9a67d1b152c777bcd357d781edf387fe42aeb9",
+  "condition": "original",
+  "ended_monotonic_ns": 916902473464735,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Use the minimum amount of detergent and/or bleach when you are washing clothes or dishes. Use only phosphate free soaps and detergents. 1  Minimize the use of pesticides, herbicides, fertilizers. 2  DO NOT dispose of these chemicals, motor oil, or other automotive fluids into the sanitary sewer or storm sewer systems.O NOT dispose of household chemicals or cleaning agents down the sink or toilet. Simsbury has a Hazardous Waste Collection day usually from 8:00 a.m to 1:00 p.m. at Henry James School. Connecticut Resource Recovery Authority lists all collection dates.\\\\n\\\\npassage 2:Use water wisely. Do not keep the tap running when not in use. Also, you can reduce the amount of water you use in washing and bathing. If we all do this, we can significantly prevent water shortages and reduce the amount of dirty water that needs treatment.Do not throw chemicals, oils, paints and medicines down the sink drain, or the toilet. In many cities, your local environment office can help with the disposal of medicines and chemicals.f we all do this, we can significantly prevent water shortages and reduce the amount of dirty water that needs treatment. Do not throw chemicals, oils, paints and medicines down the sink drain, or the toilet. In many cities, your local environment office can help with the disposal of medicines and chemicals.\\\\n\\\\npassage 3:If you want to help keep our waters clean, there are many things you can do to help. You can prevent water pollution of nearby rivers and lakes as well as groundwater and drinking water by following some simple guidelines in your everyday life. 1  Conserve water by turning off the tap when running water is not necessary.ou can prevent water pollution of nearby rivers and lakes as well as groundwater and drinking water by following some simple guidelines in your everyday life. 1  Conserve water by turning off the tap when running water is not necessary.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to help with water pollution\\\"}\",\"answer\":\"Based on the provided passages, here are some ways to help with water pollution:\\n\\n1. Use the minimum amount of detergent and/or bleach when washing clothes or dishes, and use only phosphate-free soaps and detergents (Passage 1).\\n2. Reduce the use of pesticides, herbicides, and fertilizers (Passage 1).\\n3. Dispose of household chemicals and cleaning agents properly, and avoid throwing them down the sink or toilet (Passage 1).\\n4. Use water wisely and turn off the tap when it's not in use (Passage 2).\\n5. Reduce the amount of water used in washing and bathing (Passage 2).\\n6. Avoid throwing chemicals, oils, paints, and medicines down the sink drain or toilet (Passage 2).\\n7. Participate in hazardous waste collection days (Passage 1).\\n8. Conserve water by turning off the tap when running water is not necessary (Passage 3).\\n\\nOverall, the key to helping with water pollution is to be mindful of how we use water and chemicals in our daily lives, and to take steps to reduce our impact on the environment.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":113},{\"index\":1,\"byte_start\":113,\"byte_end\":159},{\"index\":2,\"byte_start\":159,\"byte_end\":219},{\"index\":3,\"byte_start\":219,\"byte_end\":423},{\"index\":4,\"byte_start\":423,\"byte_end\":504},{\"index\":5,\"byte_start\":504,\"byte_end\":527},{\"index\":6,\"byte_start\":527,\"byte_end\":626},{\"index\":7,\"byte_start\":626,\"byte_end\":671},{\"index\":8,\"byte_start\":671,\"byte_end\":744},{\"index\":9,\"byte_start\":744,\"byte_end\":953},{\"index\":10,\"byte_start\":953,\"byte_end\":1175},{\"index\":11,\"byte_start\":1175,\"byte_end\":1262},{\"index\":12,\"byte_start\":1262,\"byte_end\":1461},{\"index\":13,\"byte_start\":1461,\"byte_end\":1621},{\"index\":14,\"byte_start\":1621,\"byte_end\":1857},{\"index\":15,\"byte_start\":1857,\"byte_end\":1986}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":229},{\"index\":1,\"byte_start\":229,\"byte_end\":303},{\"index\":2,\"byte_start\":303,\"byte_end\":428},{\"index\":3,\"byte_start\":428,\"byte_end\":503},{\"index\":4,\"byte_start\":503,\"byte_end\":574},{\"index\":5,\"byte_start\":574,\"byte_end\":674},{\"index\":6,\"byte_start\":674,\"byte_end\":737},{\"index\":7,\"byte_start\":737,\"byte_end\":828},{\"index\":8,\"byte_start\":828,\"byte_end\":1006}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 1226,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Use the minimum amount of detergent and/or bleach when you are washing clothes or dishes. Use only phosphate free soaps and detergents. 1  Minimize the use of pesticides, herbicides, fertilizers. 2  DO NOT dispose of these chemicals, motor oil, or other automotive fluids into the sanitary sewer or storm sewer systems.O NOT dispose of household chemicals or cleaning agents down the sink or toilet. Simsbury has a Hazardous Waste Collection day usually from 8:00 a.m to 1:00 p.m. at Henry James School. Connecticut Resource Recovery Authority lists all collection dates.\\\\n\\\\npassage 2:Use water wisely. Do not keep the tap running when not in use. Also, you can reduce the amount of water you use in washing and bathing. If we all do this, we can significantly prevent water shortages and reduce the amount of dirty water that needs treatment.Do not throw chemicals, oils, paints and medicines down the sink drain, or the toilet. In many cities, your local environment office can help with the disposal of medicines and chemicals.f we all do this, we can significantly prevent water shortages and reduce the amount of dirty water that needs treatment. Do not throw chemicals, oils, paints and medicines down the sink drain, or the toilet. In many cities, your local environment office can help with the disposal of medicines and chemicals.\\\\n\\\\npassage 3:If you want to help keep our waters clean, there are many things you can do to help. You can prevent water pollution of nearby rivers and lakes as well as groundwater and drinking water by following some simple guidelines in your everyday life. 1  Conserve water by turning off the tap when running water is not necessary.ou can prevent water pollution of nearby rivers and lakes as well as groundwater and drinking water by following some simple guidelines in your everyday life. 1  Conserve water by turning off the tap when running water is not necessary.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to help with water pollution\\\"}\",\"answer\":\"Based on the provided passages, here are some ways to help with water pollution:\\n\\n1. Use the minimum amount of detergent and/or bleach when washing clothes or dishes, and use only phosphate-free soaps and detergents (Passage 1).\\n2. Reduce the use of pesticides, herbicides, and fertilizers (Passage 1).\\n3. Dispose of household chemicals and cleaning agents properly, and avoid throwing them down the sink or toilet (Passage 1).\\n4. Use water wisely and turn off the tap when it's not in use (Passage 2).\\n5. Reduce the amount of water used in washing and bathing (Passage 2).\\n6. Avoid throwing chemicals, oils, paints, and medicines down the sink drain or toilet (Passage 2).\\n7. Participate in hazardous waste collection days (Passage 1).\\n8. Conserve water by turning off the tap when running water is not necessary (Passage 3).\\n\\nOverall, the key to helping with water pollution is to be mindful of how we use water and chemicals in our daily lives, and to take steps to reduce our impact on the environment.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":113},{\"index\":1,\"byte_start\":113,\"byte_end\":159},{\"index\":2,\"byte_start\":159,\"byte_end\":219},{\"index\":3,\"byte_start\":219,\"byte_end\":423},{\"index\":4,\"byte_start\":423,\"byte_end\":504},{\"index\":5,\"byte_start\":504,\"byte_end\":527},{\"index\":6,\"byte_start\":527,\"byte_end\":626},{\"index\":7,\"byte_start\":626,\"byte_end\":671},{\"index\":8,\"byte_start\":671,\"byte_end\":744},{\"index\":9,\"byte_start\":744,\"byte_end\":953},{\"index\":10,\"byte_start\":953,\"byte_end\":1175},{\"index\":11,\"byte_start\":1175,\"byte_end\":1262},{\"index\":12,\"byte_start\":1262,\"byte_end\":1461},{\"index\":13,\"byte_start\":1461,\"byte_end\":1621},{\"index\":14,\"byte_start\":1621,\"byte_end\":1857},{\"index\":15,\"byte_start\":1857,\"byte_end\":1986}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":229},{\"index\":1,\"byte_start\":229,\"byte_end\":303},{\"index\":2,\"byte_start\":303,\"byte_end\":428},{\"index\":3,\"byte_start\":428,\"byte_end\":503},{\"index\":4,\"byte_start\":503,\"byte_end\":574},{\"index\":5,\"byte_start\":574,\"byte_end\":674},{\"index\":6,\"byte_start\":674,\"byte_end\":737},{\"index\":7,\"byte_start\":737,\"byte_end\":828},{\"index\":8,\"byte_start\":828,\"byte_end\":1006}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "input_tokens": 1214,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Use the minimum amount of detergent and/or bleach when you are washing clothes or dishes. Use only phosphate free soaps and detergents. 1  Minimize the use of pesticides, herbicides, fertilizers. 2  DO NOT dispose of these chemicals, motor oil, or other automotive fluids into the sanitary sewer or storm sewer systems.O NOT dispose of household chemicals or cleaning agents down the sink or toilet. Simsbury has a Hazardous Waste Collection day usually from 8:00 a.m to 1:00 p.m. at Henry James School. Connecticut Resource Recovery Authority lists all collection dates.\\\\n\\\\npassage 2:Use water wisely. Do not keep the tap running when not in use. Also, you can reduce the amount of water you use in washing and bathing. If we all do this, we can significantly prevent water shortages and reduce the amount of dirty water that needs treatment.Do not throw chemicals, oils, paints and medicines down the sink drain, or the toilet. In many cities, your local environment office can help with the disposal of medicines and chemicals.f we all do this, we can significantly prevent water shortages and reduce the amount of dirty water that needs treatment. Do not throw chemicals, oils, paints and medicines down the sink drain, or the toilet. In many cities, your local environment office can help with the disposal of medicines and chemicals.\\\\n\\\\npassage 3:If you want to help keep our waters clean, there are many things you can do to help. You can prevent water pollution of nearby rivers and lakes as well as groundwater and drinking water by following some simple guidelines in your everyday life. 1  Conserve water by turning off the tap when running water is not necessary.ou can prevent water pollution of nearby rivers and lakes as well as groundwater and drinking water by following some simple guidelines in your everyday life. 1  Conserve water by turning off the tap when running water is not necessary.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to help with water pollution\\\"}\",\"answer\":\"Based on the provided passages, here are some ways to help with water pollution:\\n\\n1. Use the minimum amount of detergent and/or bleach when washing clothes or dishes, and use only phosphate-free soaps and detergents (Passage 1).\\n2. Reduce the use of pesticides, herbicides, and fertilizers (Passage 1).\\n3. Dispose of household chemicals and cleaning agents properly, and avoid throwing them down the sink or toilet (Passage 1).\\n4. Use water wisely and turn off the tap when it's not in use (Passage 2).\\n5. Reduce the amount of water used in washing and bathing (Passage 2).\\n6. Avoid throwing chemicals, oils, paints, and medicines down the sink drain or toilet (Passage 2).\\n7. Participate in hazardous waste collection days (Passage 1).\\n8. Conserve water by turning off the tap when running water is not necessary (Passage 3).\\n\\nOverall, the key to helping with water pollution is to be mindful of how we use water and chemicals in our daily lives, and to take steps to reduce our impact on the environment.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":113},{\"index\":1,\"byte_start\":113,\"byte_end\":159},{\"index\":2,\"byte_start\":159,\"byte_end\":219},{\"index\":3,\"byte_start\":219,\"byte_end\":423},{\"index\":4,\"byte_start\":423,\"byte_end\":504},{\"index\":5,\"byte_start\":504,\"byte_end\":527},{\"index\":6,\"byte_start\":527,\"byte_end\":626},{\"index\":7,\"byte_start\":626,\"byte_end\":671},{\"index\":8,\"byte_start\":671,\"byte_end\":744},{\"index\":9,\"byte_start\":744,\"byte_end\":953},{\"index\":10,\"byte_start\":953,\"byte_end\":1175},{\"index\":11,\"byte_start\":1175,\"byte_end\":1262},{\"index\":12,\"byte_start\":1262,\"byte_end\":1461},{\"index\":13,\"byte_start\":1461,\"byte_end\":1621},{\"index\":14,\"byte_start\":1621,\"byte_end\":1857},{\"index\":15,\"byte_start\":1857,\"byte_end\":1986}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":229},{\"index\":1,\"byte_start\":229,\"byte_end\":303},{\"index\":2,\"byte_start\":303,\"byte_end\":428},{\"index\":3,\"byte_start\":428,\"byte_end\":503},{\"index\":4,\"byte_start\":503,\"byte_end\":574},{\"index\":5,\"byte_start\":574,\"byte_end\":674},{\"index\":6,\"byte_start\":674,\"byte_end\":737},{\"index\":7,\"byte_start\":737,\"byte_end\":828},{\"index\":8,\"byte_start\":828,\"byte_end\":1006}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[]\n1|E|0.95|[]\n2|E|0.95|[]\n3|E|0.95|[]\n4|E|0.95|[]\n5|E|0.95|[]\n6|E|0.95|[]\n7|E|0.95|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255994,
+    "id": "chatcmpl-bCkHkQ1LZ64IKlpQo7HJuxGRU7XWokd1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 2162.246,
+      "predicted_n": 88,
+      "predicted_per_second": 40.6984219186901,
+      "predicted_per_token_ms": 24.570977272727273,
+      "prompt_ms": 1110.174,
+      "prompt_n": 1187,
+      "prompt_per_second": 1069.2017647684056,
+      "prompt_per_token_ms": 0.9352771693344566
+    },
+    "usage": {
+      "completion_tokens": 88,
+      "prompt_tokens": 1226,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1314
+    }
+  },
+  "source_cluster_id": "sha256:ff4a65eebbba499cc0b45409674387f27ecf9884cc5ea0e5307e647a58fa415d",
+  "started_monotonic_ns": 916899068606803,
+  "status": "completed",
+  "unit_id": "sha256:b1808b3b889a004edb6d0a08eb99aed613f9168a5bafe55efbe88b8a9e086493"
+}

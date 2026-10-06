@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:a869477b0d9fc3becfbe3ed016cbaf8abb56668adfd0ebf87251bbdf1afc36ca",
+  "ended_monotonic_ns": 916953449584389,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Orchids do not grow in soil. Soil does not allow enough air to flow around orchid roots. There are many materials which can anchor orchid roots while still permitting air to move around them. Ground tree bark and moss are two of the most common.They are often combined with perlite, vermiculite, or charcoal to keep the mix open and permit air flow. Remove the orchid from its pot and clean off the potting media-Water the plant to soften the roots. 2  Give the pot a firm bang against a solid surface. 3  Gently pull out the plant, and remove as much of the potting media from the roots as possible. 4  Rinse away any remaining bark or moss.\\\\n\\\\npassage 2:Charcoal is added to orchid mix with the intention of keeping the mix sweet and to filter impurities. The particle size of this charcoal is perfect for the majority of orchid mixes and a little goes a long way. This medium charcoal is an ingredient in many orchid mixes.The particle size of this charcoal can very from 1/2 to 1 inch. Charcoal is not finely graded and some smaller and larger pieces may be mixed in.his medium charcoal is an ingredient in many orchid mixes. The particle size of this charcoal can very from 1/2 to 1 inch. Charcoal is not finely graded and some smaller and larger pieces may be mixed in.\\\\n\\\\npassage 3:Welcome to Orchidaceous Supplies. Orchidaceous Supplies offers an extensive range of orchid supplies. We are the Australian importer of Kiwi Orchid Bark. You can browse our complete range of products, from the many orchid pots, plant clips, bark, charcoal, to a rainbow of colours in labels and lots, lots more.Our website works with many of the products listed as having variations.ou can browse our complete range of products, from the many orchid pots, plant clips, bark, charcoal, to a rainbow of colours in labels and lots, lots more.\\\\n\\\\n\\\",\\\"question\\\":\\\"orchid bark with charcoal\\\"}\",\"answer\":\"Based on the given passages, it is mentioned that charcoal can be added to orchid mix to keep the mix sweet and filter impurities. The particle size of this charcoal is appropriate for most orchid mixes, ranging from 1/2 to 1 inch. It is also mentioned that charcoal is not finely graded and some smaller and larger pieces may be mixed in. However, there is no specific mention of using charcoal along with orchid bark for the purpose of growing orchids. Therefore, based on the given passages, it cannot be confirmed whether orchid bark with charcoal is used for growing orchids.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":52},{\"index\":1,\"byte_start\":52,\"byte_end\":112},{\"index\":2,\"byte_start\":112,\"byte_end\":215},{\"index\":3,\"byte_start\":215,\"byte_end\":373},{\"index\":4,\"byte_start\":373,\"byte_end\":473},{\"index\":5,\"byte_start\":473,\"byte_end\":526},{\"index\":6,\"byte_start\":526,\"byte_end\":624},{\"index\":7,\"byte_start\":624,\"byte_end\":781},{\"index\":8,\"byte_start\":781,\"byte_end\":890},{\"index\":9,\"byte_start\":890,\"byte_end\":1013},{\"index\":10,\"byte_start\":1013,\"byte_end\":1153},{\"index\":11,\"byte_start\":1153,\"byte_end\":1217},{\"index\":12,\"byte_start\":1217,\"byte_end\":1346},{\"index\":13,\"byte_start\":1346,\"byte_end\":1414},{\"index\":14,\"byte_start\":1414,\"byte_end\":1466},{\"index\":15,\"byte_start\":1466,\"byte_end\":1896}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":131},{\"index\":1,\"byte_start\":131,\"byte_end\":232},{\"index\":2,\"byte_start\":232,\"byte_end\":340},{\"index\":3,\"byte_start\":340,\"byte_end\":455},{\"index\":4,\"byte_start\":455,\"byte_end\":580}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1043,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Orchids do not grow in soil. Soil does not allow enough air to flow around orchid roots. There are many materials which can anchor orchid roots while still permitting air to move around them. Ground tree bark and moss are two of the most common.They are often combined with perlite, vermiculite, or charcoal to keep the mix open and permit air flow. Remove the orchid from its pot and clean off the potting media-Water the plant to soften the roots. 2  Give the pot a firm bang against a solid surface. 3  Gently pull out the plant, and remove as much of the potting media from the roots as possible. 4  Rinse away any remaining bark or moss.\\\\n\\\\npassage 2:Charcoal is added to orchid mix with the intention of keeping the mix sweet and to filter impurities. The particle size of this charcoal is perfect for the majority of orchid mixes and a little goes a long way. This medium charcoal is an ingredient in many orchid mixes.The particle size of this charcoal can very from 1/2 to 1 inch. Charcoal is not finely graded and some smaller and larger pieces may be mixed in.his medium charcoal is an ingredient in many orchid mixes. The particle size of this charcoal can very from 1/2 to 1 inch. Charcoal is not finely graded and some smaller and larger pieces may be mixed in.\\\\n\\\\npassage 3:Welcome to Orchidaceous Supplies. Orchidaceous Supplies offers an extensive range of orchid supplies. We are the Australian importer of Kiwi Orchid Bark. You can browse our complete range of products, from the many orchid pots, plant clips, bark, charcoal, to a rainbow of colours in labels and lots, lots more.Our website works with many of the products listed as having variations.ou can browse our complete range of products, from the many orchid pots, plant clips, bark, charcoal, to a rainbow of colours in labels and lots, lots more.\\\\n\\\\n\\\",\\\"question\\\":\\\"orchid bark with charcoal\\\"}\",\"answer\":\"Based on the given passages, it is mentioned that charcoal can be added to orchid mix to keep the mix sweet and filter impurities. The particle size of this charcoal is appropriate for most orchid mixes, ranging from 1/2 to 1 inch. It is also mentioned that charcoal is not finely graded and some smaller and larger pieces may be mixed in. However, there is no specific mention of using charcoal along with orchid bark for the purpose of growing orchids. Therefore, based on the given passages, it cannot be confirmed whether orchid bark with charcoal is used for growing orchids.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":52},{\"index\":1,\"byte_start\":52,\"byte_end\":112},{\"index\":2,\"byte_start\":112,\"byte_end\":215},{\"index\":3,\"byte_start\":215,\"byte_end\":373},{\"index\":4,\"byte_start\":373,\"byte_end\":473},{\"index\":5,\"byte_start\":473,\"byte_end\":526},{\"index\":6,\"byte_start\":526,\"byte_end\":624},{\"index\":7,\"byte_start\":624,\"byte_end\":781},{\"index\":8,\"byte_start\":781,\"byte_end\":890},{\"index\":9,\"byte_start\":890,\"byte_end\":1013},{\"index\":10,\"byte_start\":1013,\"byte_end\":1153},{\"index\":11,\"byte_start\":1153,\"byte_end\":1217},{\"index\":12,\"byte_start\":1217,\"byte_end\":1346},{\"index\":13,\"byte_start\":1346,\"byte_end\":1414},{\"index\":14,\"byte_start\":1414,\"byte_end\":1466},{\"index\":15,\"byte_start\":1466,\"byte_end\":1896}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":131},{\"index\":1,\"byte_start\":131,\"byte_end\":232},{\"index\":2,\"byte_start\":232,\"byte_end\":340},{\"index\":3,\"byte_start\":340,\"byte_end\":455},{\"index\":4,\"byte_start\":455,\"byte_end\":580}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "input_tokens": 1031,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Orchids do not grow in soil. Soil does not allow enough air to flow around orchid roots. There are many materials which can anchor orchid roots while still permitting air to move around them. Ground tree bark and moss are two of the most common.They are often combined with perlite, vermiculite, or charcoal to keep the mix open and permit air flow. Remove the orchid from its pot and clean off the potting media-Water the plant to soften the roots. 2  Give the pot a firm bang against a solid surface. 3  Gently pull out the plant, and remove as much of the potting media from the roots as possible. 4  Rinse away any remaining bark or moss.\\\\n\\\\npassage 2:Charcoal is added to orchid mix with the intention of keeping the mix sweet and to filter impurities. The particle size of this charcoal is perfect for the majority of orchid mixes and a little goes a long way. This medium charcoal is an ingredient in many orchid mixes.The particle size of this charcoal can very from 1/2 to 1 inch. Charcoal is not finely graded and some smaller and larger pieces may be mixed in.his medium charcoal is an ingredient in many orchid mixes. The particle size of this charcoal can very from 1/2 to 1 inch. Charcoal is not finely graded and some smaller and larger pieces may be mixed in.\\\\n\\\\npassage 3:Welcome to Orchidaceous Supplies. Orchidaceous Supplies offers an extensive range of orchid supplies. We are the Australian importer of Kiwi Orchid Bark. You can browse our complete range of products, from the many orchid pots, plant clips, bark, charcoal, to a rainbow of colours in labels and lots, lots more.Our website works with many of the products listed as having variations.ou can browse our complete range of products, from the many orchid pots, plant clips, bark, charcoal, to a rainbow of colours in labels and lots, lots more.\\\\n\\\\n\\\",\\\"question\\\":\\\"orchid bark with charcoal\\\"}\",\"answer\":\"Based on the given passages, it is mentioned that charcoal can be added to orchid mix to keep the mix sweet and filter impurities. The particle size of this charcoal is appropriate for most orchid mixes, ranging from 1/2 to 1 inch. It is also mentioned that charcoal is not finely graded and some smaller and larger pieces may be mixed in. However, there is no specific mention of using charcoal along with orchid bark for the purpose of growing orchids. Therefore, based on the given passages, it cannot be confirmed whether orchid bark with charcoal is used for growing orchids.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":52},{\"index\":1,\"byte_start\":52,\"byte_end\":112},{\"index\":2,\"byte_start\":112,\"byte_end\":215},{\"index\":3,\"byte_start\":215,\"byte_end\":373},{\"index\":4,\"byte_start\":373,\"byte_end\":473},{\"index\":5,\"byte_start\":473,\"byte_end\":526},{\"index\":6,\"byte_start\":526,\"byte_end\":624},{\"index\":7,\"byte_start\":624,\"byte_end\":781},{\"index\":8,\"byte_start\":781,\"byte_end\":890},{\"index\":9,\"byte_start\":890,\"byte_end\":1013},{\"index\":10,\"byte_start\":1013,\"byte_end\":1153},{\"index\":11,\"byte_start\":1153,\"byte_end\":1217},{\"index\":12,\"byte_start\":1217,\"byte_end\":1346},{\"index\":13,\"byte_start\":1346,\"byte_end\":1414},{\"index\":14,\"byte_start\":1414,\"byte_end\":1466},{\"index\":15,\"byte_start\":1466,\"byte_end\":1896}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":131},{\"index\":1,\"byte_start\":131,\"byte_end\":232},{\"index\":2,\"byte_start\":232,\"byte_end\":340},{\"index\":3,\"byte_start\":340,\"byte_end\":455},{\"index\":4,\"byte_start\":455,\"byte_end\":580}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.85|[]\n1|C|0.85|[1]\n2|C|0.85|[1]\n3|C|0.85|[1]\n4|B|0.90|[0,1]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256045,
+    "id": "chatcmpl-0GMLNPgVBDLqRLBChc6sHyH0C4oImb0B",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1482.62,
+      "predicted_n": 61,
+      "predicted_per_second": 41.14338131146214,
+      "predicted_per_token_ms": 24.305245901639342,
+      "prompt_ms": 968.789,
+      "prompt_n": 1004,
+      "prompt_per_second": 1036.3453755152052,
+      "prompt_per_token_ms": 0.9649292828685259
+    },
+    "usage": {
+      "completion_tokens": 61,
+      "prompt_tokens": 1043,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1104
+    }
+  },
+  "source_cluster_id": "sha256:9f8b06c6bcb60c2152bded1e7757e981cd818150ecc52bee755b1303305377a6",
+  "started_monotonic_ns": 916950837389515,
+  "status": "completed",
+  "unit_id": "sha256:cb7c830ec7d26e655189799de91bb5016ced9c1a4718988580e15b3e04098bc8"
+}

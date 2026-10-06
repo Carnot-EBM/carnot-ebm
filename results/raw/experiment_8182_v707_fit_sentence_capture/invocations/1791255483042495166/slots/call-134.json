@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:d63745b9f30e0b0f7394ce0610ae0f4a942dc23e54ca419ee20c18cb9803011b",
+  "condition": "original",
+  "ended_monotonic_ns": 916795507556967,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"For those wondering if we would ever hear from the Bluth family again, the answer would appear to be yes. \\\"Arrested Development\\\" executive producer Brian Grazer said the show will return for a fifth season of 17 episodes. The Hollywood mogul was interviewed on Bill Simmons' podcast recently, and let it drop that fans can expect more of the quirky comedy. Netflix had no comment for CNN when asked to verify his statements. The fourth season was streamed exclusively on Netflix in 2013, after Fox canceled the show several years before. Despite critical acclaim, the series never had big ratings, but has a devoted fan base, who often quote from the show. It was not yet known if the full cast, including Jason Bateman, Michael Cera and Will Arnett, will return for the season.\\n\",\"answer\":\"\\\"Arrested Development\\\" executive producer Brian Grazer confirmed that the show will return for a fifth season of 17 episodes. Netflix has not yet confirmed if the full cast will return.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":106},{\"index\":1,\"byte_start\":106,\"byte_end\":222},{\"index\":2,\"byte_start\":222,\"byte_end\":357},{\"index\":3,\"byte_start\":357,\"byte_end\":425},{\"index\":4,\"byte_start\":425,\"byte_end\":538},{\"index\":5,\"byte_start\":538,\"byte_end\":657},{\"index\":6,\"byte_start\":657,\"byte_end\":779}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":126},{\"index\":1,\"byte_start\":126,\"byte_end\":185}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 444,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"For those wondering if we would ever hear from the Bluth family again, the answer would appear to be yes. \\\"Arrested Development\\\" executive producer Brian Grazer said the show will return for a fifth season of 17 episodes. The Hollywood mogul was interviewed on Bill Simmons' podcast recently, and let it drop that fans can expect more of the quirky comedy. Netflix had no comment for CNN when asked to verify his statements. The fourth season was streamed exclusively on Netflix in 2013, after Fox canceled the show several years before. Despite critical acclaim, the series never had big ratings, but has a devoted fan base, who often quote from the show. It was not yet known if the full cast, including Jason Bateman, Michael Cera and Will Arnett, will return for the season.\\n\",\"answer\":\"\\\"Arrested Development\\\" executive producer Brian Grazer confirmed that the show will return for a fifth season of 17 episodes. Netflix has not yet confirmed if the full cast will return.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":106},{\"index\":1,\"byte_start\":106,\"byte_end\":222},{\"index\":2,\"byte_start\":222,\"byte_end\":357},{\"index\":3,\"byte_start\":357,\"byte_end\":425},{\"index\":4,\"byte_start\":425,\"byte_end\":538},{\"index\":5,\"byte_start\":538,\"byte_end\":657},{\"index\":6,\"byte_start\":657,\"byte_end\":779}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":126},{\"index\":1,\"byte_start\":126,\"byte_end\":185}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "input_tokens": 432,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"For those wondering if we would ever hear from the Bluth family again, the answer would appear to be yes. \\\"Arrested Development\\\" executive producer Brian Grazer said the show will return for a fifth season of 17 episodes. The Hollywood mogul was interviewed on Bill Simmons' podcast recently, and let it drop that fans can expect more of the quirky comedy. Netflix had no comment for CNN when asked to verify his statements. The fourth season was streamed exclusively on Netflix in 2013, after Fox canceled the show several years before. Despite critical acclaim, the series never had big ratings, but has a devoted fan base, who often quote from the show. It was not yet known if the full cast, including Jason Bateman, Michael Cera and Will Arnett, will return for the season.\\n\",\"answer\":\"\\\"Arrested Development\\\" executive producer Brian Grazer confirmed that the show will return for a fifth season of 17 episodes. Netflix has not yet confirmed if the full cast will return.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":106},{\"index\":1,\"byte_start\":106,\"byte_end\":222},{\"index\":2,\"byte_start\":222,\"byte_end\":357},{\"index\":3,\"byte_start\":357,\"byte_end\":425},{\"index\":4,\"byte_start\":425,\"byte_end\":538},{\"index\":5,\"byte_start\":538,\"byte_end\":657},{\"index\":6,\"byte_start\":657,\"byte_end\":779}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":126},{\"index\":1,\"byte_start\":126,\"byte_end\":185}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[1]\n1|C|0.95|[3,6]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255887,
+    "id": "chatcmpl-7LGHKCRl1igMQnB9lujKtuFmjOFoJhKC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 691.744,
+      "predicted_n": 28,
+      "predicted_per_second": 40.477402044687054,
+      "predicted_per_token_ms": 24.705142857142857,
+      "prompt_ms": 489.968,
+      "prompt_n": 405,
+      "prompt_per_second": 826.5845932795612,
+      "prompt_per_token_ms": 1.2097975308641975
+    },
+    "usage": {
+      "completion_tokens": 28,
+      "prompt_tokens": 444,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 472
+    }
+  },
+  "source_cluster_id": "sha256:d91beecc09f74ccce4a431ce2fbe627c8bd71f9ac47d44eaa03d2c9641529f53",
+  "started_monotonic_ns": 916794173902449,
+  "status": "completed",
+  "unit_id": "sha256:0fc1673c47a825d53160d8b47637a1ca9ece5c797ac1ee5122e18cff1a20116f"
+}

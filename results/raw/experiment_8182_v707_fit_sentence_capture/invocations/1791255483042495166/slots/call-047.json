@@ -1,0 +1,96 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:7f512ad9e1ca2411ff1793998d2a9bb44fabf6c0cb1124afa590be7f2230333a",
+  "condition": "original",
+  "ended_monotonic_ns": 916602482074751,
+  "exclusion_reason": null,
+  "historical": false,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"3891 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Sandwiches, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Jack's Bistro & Bagels\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-10-01 15:45:34\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love Jacks. The cinnamon raisin bagel is the best\\\"},{\\\"review_date\\\":\\\"2015-08-07 17:06:30\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very personable staff!!! Nikki is a wonderful asset to the restaurant!! Excellent food!! We thought we were going in for just coffee and left with our bellies pleasantly full:) and a to go box!!! C u next year.....\\\"},{\\\"review_date\\\":\\\"2012-12-14 02:43:14\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Got to get the Jalape\u00f1o and cheddar bagel.  Delicious\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"\\\"Jack's Bistro & Bagels\\\" is a local business situated at 3891 State St, Santa Barbara, CA. It falls under the categories of Restaurants, Sandwiches, and Breakfast & Brunch. The business has a rating of 3.5 stars. Based on customer reviews, the restaurant is particularly known for its bagels, with particular praise for its cinnamon raisin bagel and jalape\u00f1o and cheddar bagel. The customers also appreciate the personable staff, mentioning Nikki as a wonderful asset to the restaurant. They also commend the food quality, stating that they came in for just coffee but left with their bellies pleasantly full and even a to-go box. The restaurant does not offer outdoor seating and information about business hours, parking, Wi-Fi, take-out service, suitability for groups, music, and ambience is not provided.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":466},{\"index\":1,\"byte_start\":466,\"byte_end\":602},{\"index\":2,\"byte_start\":602,\"byte_end\":649},{\"index\":3,\"byte_start\":649,\"byte_end\":666},{\"index\":4,\"byte_start\":666,\"byte_end\":773},{\"index\":5,\"byte_start\":773,\"byte_end\":910},{\"index\":6,\"byte_start\":910,\"byte_end\":936}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":91},{\"index\":1,\"byte_start\":91,\"byte_end\":173},{\"index\":2,\"byte_start\":173,\"byte_end\":213},{\"index\":3,\"byte_start\":213,\"byte_end\":379},{\"index\":4,\"byte_start\":379,\"byte_end\":488},{\"index\":5,\"byte_start\":488,\"byte_end\":632},{\"index\":6,\"byte_start\":632,\"byte_end\":810}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "provenance_task": "exp8182-fit-sentence-capture",
+  "rendered_input_tokens": 805,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"3891 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Sandwiches, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Jack's Bistro & Bagels\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-10-01 15:45:34\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love Jacks. The cinnamon raisin bagel is the best\\\"},{\\\"review_date\\\":\\\"2015-08-07 17:06:30\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very personable staff!!! Nikki is a wonderful asset to the restaurant!! Excellent food!! We thought we were going in for just coffee and left with our bellies pleasantly full:) and a to go box!!! C u next year.....\\\"},{\\\"review_date\\\":\\\"2012-12-14 02:43:14\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Got to get the Jalape\u00f1o and cheddar bagel.  Delicious\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"\\\"Jack's Bistro & Bagels\\\" is a local business situated at 3891 State St, Santa Barbara, CA. It falls under the categories of Restaurants, Sandwiches, and Breakfast & Brunch. The business has a rating of 3.5 stars. Based on customer reviews, the restaurant is particularly known for its bagels, with particular praise for its cinnamon raisin bagel and jalape\u00f1o and cheddar bagel. The customers also appreciate the personable staff, mentioning Nikki as a wonderful asset to the restaurant. They also commend the food quality, stating that they came in for just coffee but left with their bellies pleasantly full and even a to-go box. The restaurant does not offer outdoor seating and information about business hours, parking, Wi-Fi, take-out service, suitability for groups, music, and ambience is not provided.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":466},{\"index\":1,\"byte_start\":466,\"byte_end\":602},{\"index\":2,\"byte_start\":602,\"byte_end\":649},{\"index\":3,\"byte_start\":649,\"byte_end\":666},{\"index\":4,\"byte_start\":666,\"byte_end\":773},{\"index\":5,\"byte_start\":773,\"byte_end\":910},{\"index\":6,\"byte_start\":910,\"byte_end\":936}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":91},{\"index\":1,\"byte_start\":91,\"byte_end\":173},{\"index\":2,\"byte_start\":173,\"byte_end\":213},{\"index\":3,\"byte_start\":213,\"byte_end\":379},{\"index\":4,\"byte_start\":379,\"byte_end\":488},{\"index\":5,\"byte_start\":488,\"byte_end\":632},{\"index\":6,\"byte_start\":632,\"byte_end\":810}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "input_tokens": 793,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"3891 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Sandwiches, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Jack's Bistro & Bagels\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-10-01 15:45:34\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love Jacks. The cinnamon raisin bagel is the best\\\"},{\\\"review_date\\\":\\\"2015-08-07 17:06:30\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very personable staff!!! Nikki is a wonderful asset to the restaurant!! Excellent food!! We thought we were going in for just coffee and left with our bellies pleasantly full:) and a to go box!!! C u next year.....\\\"},{\\\"review_date\\\":\\\"2012-12-14 02:43:14\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Got to get the Jalape\u00f1o and cheddar bagel.  Delicious\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"\\\"Jack's Bistro & Bagels\\\" is a local business situated at 3891 State St, Santa Barbara, CA. It falls under the categories of Restaurants, Sandwiches, and Breakfast & Brunch. The business has a rating of 3.5 stars. Based on customer reviews, the restaurant is particularly known for its bagels, with particular praise for its cinnamon raisin bagel and jalape\u00f1o and cheddar bagel. The customers also appreciate the personable staff, mentioning Nikki as a wonderful asset to the restaurant. They also commend the food quality, stating that they came in for just coffee but left with their bellies pleasantly full and even a to-go box. The restaurant does not offer outdoor seating and information about business hours, parking, Wi-Fi, take-out service, suitability for groups, music, and ambience is not provided.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":466},{\"index\":1,\"byte_start\":466,\"byte_end\":602},{\"index\":2,\"byte_start\":602,\"byte_end\":649},{\"index\":3,\"byte_start\":649,\"byte_end\":666},{\"index\":4,\"byte_start\":666,\"byte_end\":773},{\"index\":5,\"byte_start\":773,\"byte_end\":910},{\"index\":6,\"byte_start\":910,\"byte_end\":936}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":91},{\"index\":1,\"byte_start\":91,\"byte_end\":173},{\"index\":2,\"byte_start\":173,\"byte_end\":213},{\"index\":3,\"byte_start\":213,\"byte_end\":379},{\"index\":4,\"byte_start\":379,\"byte_end\":488},{\"index\":5,\"byte_start\":488,\"byte_end\":632},{\"index\":6,\"byte_start\":632,\"byte_end\":810}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]\n4|E|1.00|[]\n5|E|1.00|[]\n6|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255694,
+    "id": "chatcmpl-Nm77NOSVN8tjKKRbPVrdiCbToXBTdT6I",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1868.946,
+      "predicted_n": 77,
+      "predicted_per_second": 41.199692232948415,
+      "predicted_per_token_ms": 24.272025974025972,
+      "prompt_ms": 781.305,
+      "prompt_n": 805,
+      "prompt_per_second": 1030.327464946468,
+      "prompt_per_token_ms": 0.9705652173913043
+    },
+    "usage": {
+      "completion_tokens": 77,
+      "prompt_tokens": 805,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 882
+    }
+  },
+  "source_cluster_id": "sha256:9781df9e0ba7424f43f584a8584b93834e39cd721549d7f74088689a878decca",
+  "started_monotonic_ns": 916599692023216,
+  "status": "completed",
+  "unit_id": "sha256:913bc60ee1ca7f45decee84d8d093ce33a8d31e21d4b1994a73e30cd323baac2"
+}

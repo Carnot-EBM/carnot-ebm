@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:4f9b7a30cf5f5321f1e95c1e7201c2664fa5ad1f84c71e3b1ae5e8813cdf71f2",
+  "ended_monotonic_ns": 916965950703017,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"FBI Top 10 Most Wanted fugitive wanted on serious charges in Texas, reward offered for information\\nOne of the fugitives on the FBI's Top 10 Most Wanted is wanted on multiple charges in Texas, per officials from the department.\\nAccording to the FBI, on May 11, 2012, a couple from Texas exchanged marriage vows and celebrated with a reception shortly after. Less than 48 hours later, per officials, the 26-year-old bride, Estrella Carrera, was tragically discovered in her apartment's bathtub, still in her wedding attire, having succumbed to fatal stab wounds.\\nThe FBI has formally accused her newlywed, now 41-year-old Arnaldo Jiminez, of being responsible for this terrible crime. According to investigators, Jiminez allegedly stabbed Estrella while they were in his black four-door Maserati, and then he moved her lifeless body to the bathtub in her Burbank, Illinois apartment.\\nThe FBI's pursuit of evidence in this case began with their focus on Jiminez's movements. Officials stated that they discovered that on May 12, his cellphone signal was traced to various locations, spanning from Chicago to Southern Illinois, Memphis, Tennessee, and finally culminating in Arkansas, all within a single day. The following day, his cell phone was registered in Houston, Texas, and eventually traced to Hidalgo, Mexico, according to investigators.\\nDuring the same year, law enforcement arrested Jiminez's brother on drug-related charges, which led to the discovery of Arnaldo's Maserati stored in the garage, according to a statement from the FBI. Traces of blood were found inside the vehicle, further supporting the theory that Jiminez may have committed the crime in the car before moving the body to the bathtub, per FBI officials.\\nInvestigators stated they suspect that Jiminez's brother might have driven him to Mexico in the same vehicle and left him there. Since the night of the wedding, Jiminez has managed to elude authorities and remains unaccounted for. FBI officials believe he is likely in hiding in Mexico, specifically in the Santiago Papasquiaro area or in Reynosa, Tamaulipas.\\nA $250,000 reward is being offered for information leading to Jimenez's arrest, per officials.\\nFBI officials also stated that Jimenez should be considered armed and dangerous. If you have any information concerning this person, please call 1-800-CALL-FBI or contact your nearest American Embassy or Consulate.\",\"answer\":\"The FBI has added Arnaldo Jiminez, a 41-year-old man, to its Top 10 Most Wanted list due to serious charges in Texas. He is accused of stabbing his newlywed wife, Estrella Carrera, to death in her Baton Rouge apartment two years ago. A $250,000 reward is being offered for information leading to his arrest, and the FBI considers him armed and dangerous.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":227},{\"index\":1,\"byte_start\":227,\"byte_end\":357},{\"index\":2,\"byte_start\":357,\"byte_end\":561},{\"index\":3,\"byte_start\":561,\"byte_end\":683},{\"index\":4,\"byte_start\":683,\"byte_end\":882},{\"index\":5,\"byte_start\":882,\"byte_end\":972},{\"index\":6,\"byte_start\":972,\"byte_end\":1206},{\"index\":7,\"byte_start\":1206,\"byte_end\":1344},{\"index\":8,\"byte_start\":1344,\"byte_end\":1544},{\"index\":9,\"byte_start\":1544,\"byte_end\":1732},{\"index\":10,\"byte_start\":1732,\"byte_end\":1861},{\"index\":11,\"byte_start\":1861,\"byte_end\":1963},{\"index\":12,\"byte_start\":1963,\"byte_end\":2092},{\"index\":13,\"byte_start\":2092,\"byte_end\":2187},{\"index\":14,\"byte_start\":2187,\"byte_end\":2268},{\"index\":15,\"byte_start\":2268,\"byte_end\":2401}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":118},{\"index\":1,\"byte_start\":118,\"byte_end\":234},{\"index\":2,\"byte_start\":234,\"byte_end\":354}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1052,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"FBI Top 10 Most Wanted fugitive wanted on serious charges in Texas, reward offered for information\\nOne of the fugitives on the FBI's Top 10 Most Wanted is wanted on multiple charges in Texas, per officials from the department.\\nAccording to the FBI, on May 11, 2012, a couple from Texas exchanged marriage vows and celebrated with a reception shortly after. Less than 48 hours later, per officials, the 26-year-old bride, Estrella Carrera, was tragically discovered in her apartment's bathtub, still in her wedding attire, having succumbed to fatal stab wounds.\\nThe FBI has formally accused her newlywed, now 41-year-old Arnaldo Jiminez, of being responsible for this terrible crime. According to investigators, Jiminez allegedly stabbed Estrella while they were in his black four-door Maserati, and then he moved her lifeless body to the bathtub in her Burbank, Illinois apartment.\\nThe FBI's pursuit of evidence in this case began with their focus on Jiminez's movements. Officials stated that they discovered that on May 12, his cellphone signal was traced to various locations, spanning from Chicago to Southern Illinois, Memphis, Tennessee, and finally culminating in Arkansas, all within a single day. The following day, his cell phone was registered in Houston, Texas, and eventually traced to Hidalgo, Mexico, according to investigators.\\nDuring the same year, law enforcement arrested Jiminez's brother on drug-related charges, which led to the discovery of Arnaldo's Maserati stored in the garage, according to a statement from the FBI. Traces of blood were found inside the vehicle, further supporting the theory that Jiminez may have committed the crime in the car before moving the body to the bathtub, per FBI officials.\\nInvestigators stated they suspect that Jiminez's brother might have driven him to Mexico in the same vehicle and left him there. Since the night of the wedding, Jiminez has managed to elude authorities and remains unaccounted for. FBI officials believe he is likely in hiding in Mexico, specifically in the Santiago Papasquiaro area or in Reynosa, Tamaulipas.\\nA $250,000 reward is being offered for information leading to Jimenez's arrest, per officials.\\nFBI officials also stated that Jimenez should be considered armed and dangerous. If you have any information concerning this person, please call 1-800-CALL-FBI or contact your nearest American Embassy or Consulate.\",\"answer\":\"The FBI has added Arnaldo Jiminez, a 41-year-old man, to its Top 10 Most Wanted list due to serious charges in Texas. He is accused of stabbing his newlywed wife, Estrella Carrera, to death in her Baton Rouge apartment two years ago. A $250,000 reward is being offered for information leading to his arrest, and the FBI considers him armed and dangerous.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":227},{\"index\":1,\"byte_start\":227,\"byte_end\":357},{\"index\":2,\"byte_start\":357,\"byte_end\":561},{\"index\":3,\"byte_start\":561,\"byte_end\":683},{\"index\":4,\"byte_start\":683,\"byte_end\":882},{\"index\":5,\"byte_start\":882,\"byte_end\":972},{\"index\":6,\"byte_start\":972,\"byte_end\":1206},{\"index\":7,\"byte_start\":1206,\"byte_end\":1344},{\"index\":8,\"byte_start\":1344,\"byte_end\":1544},{\"index\":9,\"byte_start\":1544,\"byte_end\":1732},{\"index\":10,\"byte_start\":1732,\"byte_end\":1861},{\"index\":11,\"byte_start\":1861,\"byte_end\":1963},{\"index\":12,\"byte_start\":1963,\"byte_end\":2092},{\"index\":13,\"byte_start\":2092,\"byte_end\":2187},{\"index\":14,\"byte_start\":2187,\"byte_end\":2268},{\"index\":15,\"byte_start\":2268,\"byte_end\":2401}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":118},{\"index\":1,\"byte_start\":118,\"byte_end\":234},{\"index\":2,\"byte_start\":234,\"byte_end\":354}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "input_tokens": 1040,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"FBI Top 10 Most Wanted fugitive wanted on serious charges in Texas, reward offered for information\\nOne of the fugitives on the FBI's Top 10 Most Wanted is wanted on multiple charges in Texas, per officials from the department.\\nAccording to the FBI, on May 11, 2012, a couple from Texas exchanged marriage vows and celebrated with a reception shortly after. Less than 48 hours later, per officials, the 26-year-old bride, Estrella Carrera, was tragically discovered in her apartment's bathtub, still in her wedding attire, having succumbed to fatal stab wounds.\\nThe FBI has formally accused her newlywed, now 41-year-old Arnaldo Jiminez, of being responsible for this terrible crime. According to investigators, Jiminez allegedly stabbed Estrella while they were in his black four-door Maserati, and then he moved her lifeless body to the bathtub in her Burbank, Illinois apartment.\\nThe FBI's pursuit of evidence in this case began with their focus on Jiminez's movements. Officials stated that they discovered that on May 12, his cellphone signal was traced to various locations, spanning from Chicago to Southern Illinois, Memphis, Tennessee, and finally culminating in Arkansas, all within a single day. The following day, his cell phone was registered in Houston, Texas, and eventually traced to Hidalgo, Mexico, according to investigators.\\nDuring the same year, law enforcement arrested Jiminez's brother on drug-related charges, which led to the discovery of Arnaldo's Maserati stored in the garage, according to a statement from the FBI. Traces of blood were found inside the vehicle, further supporting the theory that Jiminez may have committed the crime in the car before moving the body to the bathtub, per FBI officials.\\nInvestigators stated they suspect that Jiminez's brother might have driven him to Mexico in the same vehicle and left him there. Since the night of the wedding, Jiminez has managed to elude authorities and remains unaccounted for. FBI officials believe he is likely in hiding in Mexico, specifically in the Santiago Papasquiaro area or in Reynosa, Tamaulipas.\\nA $250,000 reward is being offered for information leading to Jimenez's arrest, per officials.\\nFBI officials also stated that Jimenez should be considered armed and dangerous. If you have any information concerning this person, please call 1-800-CALL-FBI or contact your nearest American Embassy or Consulate.\",\"answer\":\"The FBI has added Arnaldo Jiminez, a 41-year-old man, to its Top 10 Most Wanted list due to serious charges in Texas. He is accused of stabbing his newlywed wife, Estrella Carrera, to death in her Baton Rouge apartment two years ago. A $250,000 reward is being offered for information leading to his arrest, and the FBI considers him armed and dangerous.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":227},{\"index\":1,\"byte_start\":227,\"byte_end\":357},{\"index\":2,\"byte_start\":357,\"byte_end\":561},{\"index\":3,\"byte_start\":561,\"byte_end\":683},{\"index\":4,\"byte_start\":683,\"byte_end\":882},{\"index\":5,\"byte_start\":882,\"byte_end\":972},{\"index\":6,\"byte_start\":972,\"byte_end\":1206},{\"index\":7,\"byte_start\":1206,\"byte_end\":1344},{\"index\":8,\"byte_start\":1344,\"byte_end\":1544},{\"index\":9,\"byte_start\":1544,\"byte_end\":1732},{\"index\":10,\"byte_start\":1732,\"byte_end\":1861},{\"index\":11,\"byte_start\":1861,\"byte_end\":1963},{\"index\":12,\"byte_start\":1963,\"byte_end\":2092},{\"index\":13,\"byte_start\":2092,\"byte_end\":2187},{\"index\":14,\"byte_start\":2187,\"byte_end\":2268},{\"index\":15,\"byte_start\":2268,\"byte_end\":2401}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":118},{\"index\":1,\"byte_start\":118,\"byte_end\":234},{\"index\":2,\"byte_start\":234,\"byte_end\":354}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.90|[]\n1|B|0.10|[2,3]\n2|C|0.95|[10,15]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256057,
+    "id": "chatcmpl-Kvg312kaLFWmggfGWMfdSDdz9n2XdNAK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 995.871,
+      "predicted_n": 41,
+      "predicted_per_second": 41.1699908923947,
+      "predicted_per_token_ms": 24.289536585365852,
+      "prompt_ms": 967.257,
+      "prompt_n": 1013,
+      "prompt_per_second": 1047.2914644194875,
+      "prompt_per_token_ms": 0.9548440276406712
+    },
+    "usage": {
+      "completion_tokens": 41,
+      "prompt_tokens": 1052,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1093
+    }
+  },
+  "source_cluster_id": "sha256:42c4e13401d050060cae9a7ca70ec1b4ad818e9401e2209993416c62c90dabb0",
+  "started_monotonic_ns": 916963813421730,
+  "status": "completed",
+  "unit_id": "sha256:f172e69bccdcf5e4b10cfd8a14fe9a9d4923103cd30450cfb66b8b446a8b90d5"
+}

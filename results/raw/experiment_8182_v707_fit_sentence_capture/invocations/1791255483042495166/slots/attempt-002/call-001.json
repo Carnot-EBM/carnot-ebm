@@ -1,0 +1,88 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:60ddec5926c7a6b71a1dd773ce9e23815278551878cc40f36a44e6f74119a964",
+  "ended_monotonic_ns": 916497176893749,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r8 \"\\n\" r9\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nr9 ::= \"9|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-13:30\\\",\\\"Sunday\\\":\\\"7:30-13:30\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Tuesday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine\u2019s American Bakery & Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:31:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very nice place for breakfast close to Stearns Wharf. And if you like French toast, try the Kahula Banana! Wow! Amazing. \\\\n\\\\nService is excellent! Order at the bakery counter and your order will be served at your table. Indoor and outdoor seating. Good coffee too!\\\\n\\\\nThis is the breakfast place!\\\"},{\\\"review_date\\\":\\\"2022-01-19 03:51:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome location and great food. Customer service is top notch   and food comes out quick.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the espresso chocolate chip scone and it was perfect! The breakfast looked delicious. The service was quick and great. Would recommend! Lovely seating looking out to the beach.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Jeannine\u2019s American Bakery & Restaurant is located on 1 State Street in Santa Barbara, California. It belongs to several categories including Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, and Coffee & Tea. The business operates from Monday to Sunday with hours varying slightly each day. Customers can park their vehicles on the street or in a nearby lot, but valet parking is not available. There are no reservations required for this restaurant, and both indoor and outdoor seating options are available. WiFi is free, and takeout is also offered. \\n\\nThe restaurant has received positive reviews from its customers. One customer praised the Kahula Banana French toast as \\\"amazing\\\" and noted that the service was excellent. Another customer commended the location and the food quality, while a third customer appreciated the fast service and the lovely seating area. Overall, Jeannine\u2019s American Bakery & Restaurant seems like a popular spot for breakfast with good food, service, and ambiance.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":775},{\"index\":1,\"byte_start\":775,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":833},{\"index\":3,\"byte_start\":833,\"byte_end\":842},{\"index\":4,\"byte_start\":842,\"byte_end\":868},{\"index\":5,\"byte_start\":868,\"byte_end\":941},{\"index\":6,\"byte_start\":941,\"byte_end\":969},{\"index\":7,\"byte_start\":969,\"byte_end\":1124},{\"index\":8,\"byte_start\":1124,\"byte_end\":1319},{\"index\":9,\"byte_start\":1319,\"byte_end\":1351},{\"index\":10,\"byte_start\":1351,\"byte_end\":1384},{\"index\":11,\"byte_start\":1384,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1458}],\"answer_sentence_indices\":[8,9],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":101},{\"index\":1,\"byte_start\":101,\"byte_end\":220},{\"index\":2,\"byte_start\":220,\"byte_end\":302},{\"index\":3,\"byte_start\":302,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":521},{\"index\":5,\"byte_start\":521,\"byte_end\":566},{\"index\":6,\"byte_start\":566,\"byte_end\":631},{\"index\":7,\"byte_start\":631,\"byte_end\":738},{\"index\":8,\"byte_start\":738,\"byte_end\":881},{\"index\":9,\"byte_start\":881,\"byte_end\":1010}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1168,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-13:30\\\",\\\"Sunday\\\":\\\"7:30-13:30\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Tuesday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine\u2019s American Bakery & Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:31:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very nice place for breakfast close to Stearns Wharf. And if you like French toast, try the Kahula Banana! Wow! Amazing. \\\\n\\\\nService is excellent! Order at the bakery counter and your order will be served at your table. Indoor and outdoor seating. Good coffee too!\\\\n\\\\nThis is the breakfast place!\\\"},{\\\"review_date\\\":\\\"2022-01-19 03:51:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome location and great food. Customer service is top notch   and food comes out quick.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the espresso chocolate chip scone and it was perfect! The breakfast looked delicious. The service was quick and great. Would recommend! Lovely seating looking out to the beach.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Jeannine\u2019s American Bakery & Restaurant is located on 1 State Street in Santa Barbara, California. It belongs to several categories including Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, and Coffee & Tea. The business operates from Monday to Sunday with hours varying slightly each day. Customers can park their vehicles on the street or in a nearby lot, but valet parking is not available. There are no reservations required for this restaurant, and both indoor and outdoor seating options are available. WiFi is free, and takeout is also offered. \\n\\nThe restaurant has received positive reviews from its customers. One customer praised the Kahula Banana French toast as \\\"amazing\\\" and noted that the service was excellent. Another customer commended the location and the food quality, while a third customer appreciated the fast service and the lovely seating area. Overall, Jeannine\u2019s American Bakery & Restaurant seems like a popular spot for breakfast with good food, service, and ambiance.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":775},{\"index\":1,\"byte_start\":775,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":833},{\"index\":3,\"byte_start\":833,\"byte_end\":842},{\"index\":4,\"byte_start\":842,\"byte_end\":868},{\"index\":5,\"byte_start\":868,\"byte_end\":941},{\"index\":6,\"byte_start\":941,\"byte_end\":969},{\"index\":7,\"byte_start\":969,\"byte_end\":1124},{\"index\":8,\"byte_start\":1124,\"byte_end\":1319},{\"index\":9,\"byte_start\":1319,\"byte_end\":1351},{\"index\":10,\"byte_start\":1351,\"byte_end\":1384},{\"index\":11,\"byte_start\":1384,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1458}],\"answer_sentence_indices\":[8,9],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":101},{\"index\":1,\"byte_start\":101,\"byte_end\":220},{\"index\":2,\"byte_start\":220,\"byte_end\":302},{\"index\":3,\"byte_start\":302,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":521},{\"index\":5,\"byte_start\":521,\"byte_end\":566},{\"index\":6,\"byte_start\":566,\"byte_end\":631},{\"index\":7,\"byte_start\":631,\"byte_end\":738},{\"index\":8,\"byte_start\":738,\"byte_end\":881},{\"index\":9,\"byte_start\":881,\"byte_end\":1010}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r8 \"\\n\" r9\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nr9 ::= \"9|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "input_tokens": 1156,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-13:30\\\",\\\"Sunday\\\":\\\"7:30-13:30\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Tuesday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine\u2019s American Bakery & Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:31:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very nice place for breakfast close to Stearns Wharf. And if you like French toast, try the Kahula Banana! Wow! Amazing. \\\\n\\\\nService is excellent! Order at the bakery counter and your order will be served at your table. Indoor and outdoor seating. Good coffee too!\\\\n\\\\nThis is the breakfast place!\\\"},{\\\"review_date\\\":\\\"2022-01-19 03:51:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome location and great food. Customer service is top notch   and food comes out quick.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I ordered the espresso chocolate chip scone and it was perfect! The breakfast looked delicious. The service was quick and great. Would recommend! Lovely seating looking out to the beach.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Jeannine\u2019s American Bakery & Restaurant is located on 1 State Street in Santa Barbara, California. It belongs to several categories including Food, Bakeries, Restaurants, Patisserie/Cake Shop, Cafes, and Coffee & Tea. The business operates from Monday to Sunday with hours varying slightly each day. Customers can park their vehicles on the street or in a nearby lot, but valet parking is not available. There are no reservations required for this restaurant, and both indoor and outdoor seating options are available. WiFi is free, and takeout is also offered. \\n\\nThe restaurant has received positive reviews from its customers. One customer praised the Kahula Banana French toast as \\\"amazing\\\" and noted that the service was excellent. Another customer commended the location and the food quality, while a third customer appreciated the fast service and the lovely seating area. Overall, Jeannine\u2019s American Bakery & Restaurant seems like a popular spot for breakfast with good food, service, and ambiance.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":775},{\"index\":1,\"byte_start\":775,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":833},{\"index\":3,\"byte_start\":833,\"byte_end\":842},{\"index\":4,\"byte_start\":842,\"byte_end\":868},{\"index\":5,\"byte_start\":868,\"byte_end\":941},{\"index\":6,\"byte_start\":941,\"byte_end\":969},{\"index\":7,\"byte_start\":969,\"byte_end\":1124},{\"index\":8,\"byte_start\":1124,\"byte_end\":1319},{\"index\":9,\"byte_start\":1319,\"byte_end\":1351},{\"index\":10,\"byte_start\":1351,\"byte_end\":1384},{\"index\":11,\"byte_start\":1384,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1458}],\"answer_sentence_indices\":[8,9],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":101},{\"index\":1,\"byte_start\":101,\"byte_end\":220},{\"index\":2,\"byte_start\":220,\"byte_end\":302},{\"index\":3,\"byte_start\":302,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":521},{\"index\":5,\"byte_start\":521,\"byte_end\":566},{\"index\":6,\"byte_start\":566,\"byte_end\":631},{\"index\":7,\"byte_start\":631,\"byte_end\":738},{\"index\":8,\"byte_start\":738,\"byte_end\":881},{\"index\":9,\"byte_start\":881,\"byte_end\":1010}]}",
+    "request_index": 1,
+    "sentence_indices": [
+      8,
+      9
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "8|C|0.00|[]\n9|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255588,
+    "id": "chatcmpl-fIJL3j2RV0asYsdyW63jviaUTYUEplqa",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 664,
+      "predicted_ms": 526.169,
+      "predicted_n": 22,
+      "predicted_per_second": 41.811661272328855,
+      "predicted_per_token_ms": 23.916772727272726,
+      "prompt_ms": 524.026,
+      "prompt_n": 504,
+      "prompt_per_second": 961.7843389450143,
+      "prompt_per_token_ms": 1.039734126984127
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1168,
+      "prompt_tokens_details": {
+        "cached_tokens": 664
+      },
+      "total_tokens": 1190
+    }
+  },
+  "source_cluster_id": "sha256:91cf0828a4c2382e6f6438f2ae2c0ce2e7d44404e8b03aed160eb2e3595ef4b5",
+  "started_monotonic_ns": 916496080830385,
+  "status": "completed",
+  "unit_id": "sha256:1a68ac2fa07b48f6222675d2fa4d96cbc276e196b10f31d0e483e54aa92f2526"
+}

@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:aaf267abdca489198ed4901cb797024f02d4edd054fbbf78db1b9994e5767323",
+  "ended_monotonic_ns": 916899065430149,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Salmonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.almonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.\\\\n\\\\npassage 2:Salmonella bacteria are rod-shaped, non spore-forming motile microbes that can be found in poultry, pigs, cows, pets, and many wild animals.There are more than 2,000 different serotypes of the bacteria, but it's Salmonella Enteritidis and Salmonella Typhimurium that cause more than 50% of human infections.almonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.\\\\n\\\\npassage 3:Physical. Salmonella bacteria are rod-shaped gram-negative bacteria. Gram-negative bacteria do not retain the crystal violet dye used in the gram staining method due to the fact that they have cell walls that are thin.Gram-negative bacteria are often harmful to a host, which is the case for many of the Salmonella bacteria.Salmonella bacteria are between 2 and 5 micrometers long and 0.7 to 1.5 micrometers in diameter. They have flagella, which are tail-like projections made of proteins that help the bacteria to move.ram-negative bacteria do not retain the crystal violet dye used in the gram staining method due to the fact that they have cell walls that are thin. Gram-negative bacteria are often harmful to a host, which is the case for many of the Salmonella bacteria.\\\\n\\\\n\\\",\\\"question\\\":\\\"salmonella bacteria characteristics\\\"}\",\"answer\":\"Salmonella bacteria are rod-shaped, non spore-forming, motile microbes. They have thin cell walls and are gram-negative. They are between 2 and 5 micrometers long and 0.7 to 1.5 micrometers in diameter. They have flagella, which are tail-like projections made of proteins that help the bacteria to move. There are more than 2,000 different serotypes of Salmonella, but Salmonella Enteritidis and Salmonella Typhimurium cause more than 50% of human infections.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":94},{\"index\":1,\"byte_start\":94,\"byte_end\":244},{\"index\":2,\"byte_start\":244,\"byte_end\":715},{\"index\":3,\"byte_start\":715,\"byte_end\":819},{\"index\":4,\"byte_start\":819,\"byte_end\":878},{\"index\":5,\"byte_start\":878,\"byte_end\":1230},{\"index\":6,\"byte_start\":1230,\"byte_end\":1479},{\"index\":7,\"byte_start\":1479,\"byte_end\":1640}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":72},{\"index\":1,\"byte_start\":72,\"byte_end\":121},{\"index\":2,\"byte_start\":121,\"byte_end\":203},{\"index\":3,\"byte_start\":203,\"byte_end\":304},{\"index\":4,\"byte_start\":304,\"byte_end\":459}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 799,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Salmonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.almonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.\\\\n\\\\npassage 2:Salmonella bacteria are rod-shaped, non spore-forming motile microbes that can be found in poultry, pigs, cows, pets, and many wild animals.There are more than 2,000 different serotypes of the bacteria, but it's Salmonella Enteritidis and Salmonella Typhimurium that cause more than 50% of human infections.almonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.\\\\n\\\\npassage 3:Physical. Salmonella bacteria are rod-shaped gram-negative bacteria. Gram-negative bacteria do not retain the crystal violet dye used in the gram staining method due to the fact that they have cell walls that are thin.Gram-negative bacteria are often harmful to a host, which is the case for many of the Salmonella bacteria.Salmonella bacteria are between 2 and 5 micrometers long and 0.7 to 1.5 micrometers in diameter. They have flagella, which are tail-like projections made of proteins that help the bacteria to move.ram-negative bacteria do not retain the crystal violet dye used in the gram staining method due to the fact that they have cell walls that are thin. Gram-negative bacteria are often harmful to a host, which is the case for many of the Salmonella bacteria.\\\\n\\\\n\\\",\\\"question\\\":\\\"salmonella bacteria characteristics\\\"}\",\"answer\":\"Salmonella bacteria are rod-shaped, non spore-forming, motile microbes. They have thin cell walls and are gram-negative. They are between 2 and 5 micrometers long and 0.7 to 1.5 micrometers in diameter. They have flagella, which are tail-like projections made of proteins that help the bacteria to move. There are more than 2,000 different serotypes of Salmonella, but Salmonella Enteritidis and Salmonella Typhimurium cause more than 50% of human infections.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":94},{\"index\":1,\"byte_start\":94,\"byte_end\":244},{\"index\":2,\"byte_start\":244,\"byte_end\":715},{\"index\":3,\"byte_start\":715,\"byte_end\":819},{\"index\":4,\"byte_start\":819,\"byte_end\":878},{\"index\":5,\"byte_start\":878,\"byte_end\":1230},{\"index\":6,\"byte_start\":1230,\"byte_end\":1479},{\"index\":7,\"byte_start\":1479,\"byte_end\":1640}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":72},{\"index\":1,\"byte_start\":72,\"byte_end\":121},{\"index\":2,\"byte_start\":121,\"byte_end\":203},{\"index\":3,\"byte_start\":203,\"byte_end\":304},{\"index\":4,\"byte_start\":304,\"byte_end\":459}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "input_tokens": 787,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Salmonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.almonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.\\\\n\\\\npassage 2:Salmonella bacteria are rod-shaped, non spore-forming motile microbes that can be found in poultry, pigs, cows, pets, and many wild animals.There are more than 2,000 different serotypes of the bacteria, but it's Salmonella Enteritidis and Salmonella Typhimurium that cause more than 50% of human infections.almonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.\\\\n\\\\npassage 3:Physical. Salmonella bacteria are rod-shaped gram-negative bacteria. Gram-negative bacteria do not retain the crystal violet dye used in the gram staining method due to the fact that they have cell walls that are thin.Gram-negative bacteria are often harmful to a host, which is the case for many of the Salmonella bacteria.Salmonella bacteria are between 2 and 5 micrometers long and 0.7 to 1.5 micrometers in diameter. They have flagella, which are tail-like projections made of proteins that help the bacteria to move.ram-negative bacteria do not retain the crystal violet dye used in the gram staining method due to the fact that they have cell walls that are thin. Gram-negative bacteria are often harmful to a host, which is the case for many of the Salmonella bacteria.\\\\n\\\\n\\\",\\\"question\\\":\\\"salmonella bacteria characteristics\\\"}\",\"answer\":\"Salmonella bacteria are rod-shaped, non spore-forming, motile microbes. They have thin cell walls and are gram-negative. They are between 2 and 5 micrometers long and 0.7 to 1.5 micrometers in diameter. They have flagella, which are tail-like projections made of proteins that help the bacteria to move. There are more than 2,000 different serotypes of Salmonella, but Salmonella Enteritidis and Salmonella Typhimurium cause more than 50% of human infections.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":94},{\"index\":1,\"byte_start\":94,\"byte_end\":244},{\"index\":2,\"byte_start\":244,\"byte_end\":715},{\"index\":3,\"byte_start\":715,\"byte_end\":819},{\"index\":4,\"byte_start\":819,\"byte_end\":878},{\"index\":5,\"byte_start\":878,\"byte_end\":1230},{\"index\":6,\"byte_start\":1230,\"byte_end\":1479},{\"index\":7,\"byte_start\":1479,\"byte_end\":1640}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":72},{\"index\":1,\"byte_start\":72,\"byte_end\":121},{\"index\":2,\"byte_start\":121,\"byte_end\":203},{\"index\":3,\"byte_start\":203,\"byte_end\":304},{\"index\":4,\"byte_start\":304,\"byte_end\":459}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[1]\n1|E|1.00|[2]\n2|E|1.00|[2]\n3|E|1.00|[2]\n4|E|1.00|[1]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255990,
+    "id": "chatcmpl-tgFyqssrBmQRpjrmskMHPgD84gkQl2Nj",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1577.806,
+      "predicted_n": 65,
+      "predicted_per_second": 41.196446204412965,
+      "predicted_per_token_ms": 24.273938461538464,
+      "prompt_ms": 728.883,
+      "prompt_n": 760,
+      "prompt_per_second": 1042.6913510124396,
+      "prompt_per_token_ms": 0.9590565789473685
+    },
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 799,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 864
+    }
+  },
+  "source_cluster_id": "sha256:2628158ff35d36de95df39f8ddc2f417a74dc38ded52f1229a8f244d783ec0ac",
+  "started_monotonic_ns": 916896634557565,
+  "status": "completed",
+  "unit_id": "sha256:ab24356a340d4a85c8efaef0722cb70b0d15b39604a1258a5b9e0c9250ea14e1"
+}

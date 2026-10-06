@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:c1bc51c699687e48f7e168a80e402075474b9cfd95fa5832c990da4bc6561d1d",
+  "ended_monotonic_ns": 916696188661266,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The easiest way is to export music to the computer using iTunes. Go to My Music and copy everything to PC. Then use a free app to transfer music to your Android wirelessly. I've used this way to transfer hundreds of songs.\\\\n\\\\npassage 2:Once you have identified your iTunes music that's transferable to your Android phone, just connect the phone to your computer via USB. You'll see a message in the phone's notification area saying that you're connected via USB and it'll ask if you want to mount the storage for use by your computer.\\\\n\\\\npassage 3:Manually selecting songs for transfer to your Android phone. 1  On the doubleTwist window, click Music under Library. 2  Select a song from the list. 3  You can select one song, select multiple songs, or select all songs from a single album.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i get my music from itunes to my android\\\"}\",\"answer\":\"Based on the provided passages, here are the steps to transfer music from iTunes to an Android device:\\n\\n1. Export music from iTunes to the computer using the \\\"My Music\\\" section (as stated in passage 1).\\n2. Connect the Android device to the computer via USB (as described in passage 2).\\n3. Manually select songs for transfer to the Android device using the doubleTwist software (as outlined in passage 3).\\n\\nTo clarify, once you have exported your music from iTunes to the computer, you will need to use a third-party software such as doubleTwist to transfer the selected songs to your Android device wirelessly. Please note that this method may not work for all types of music files, and some may require additional formatting or conversion before they can be transferred successfully.\\n\\nUnable to answer based on given passages. The passages do not provide specific instructions on how to transfer music from iTunes to an Android device without using a third-party software.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":88},{\"index\":1,\"byte_start\":88,\"byte_end\":130},{\"index\":2,\"byte_start\":130,\"byte_end\":196},{\"index\":3,\"byte_start\":196,\"byte_end\":394},{\"index\":4,\"byte_start\":394,\"byte_end\":632},{\"index\":5,\"byte_start\":632,\"byte_end\":689},{\"index\":6,\"byte_start\":689,\"byte_end\":721},{\"index\":7,\"byte_start\":721,\"byte_end\":879}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":203},{\"index\":1,\"byte_start\":203,\"byte_end\":286},{\"index\":2,\"byte_start\":286,\"byte_end\":406},{\"index\":3,\"byte_start\":406,\"byte_end\":611},{\"index\":4,\"byte_start\":611,\"byte_end\":786},{\"index\":5,\"byte_start\":786,\"byte_end\":828},{\"index\":6,\"byte_start\":828,\"byte_end\":973}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 767,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The easiest way is to export music to the computer using iTunes. Go to My Music and copy everything to PC. Then use a free app to transfer music to your Android wirelessly. I've used this way to transfer hundreds of songs.\\\\n\\\\npassage 2:Once you have identified your iTunes music that's transferable to your Android phone, just connect the phone to your computer via USB. You'll see a message in the phone's notification area saying that you're connected via USB and it'll ask if you want to mount the storage for use by your computer.\\\\n\\\\npassage 3:Manually selecting songs for transfer to your Android phone. 1  On the doubleTwist window, click Music under Library. 2  Select a song from the list. 3  You can select one song, select multiple songs, or select all songs from a single album.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i get my music from itunes to my android\\\"}\",\"answer\":\"Based on the provided passages, here are the steps to transfer music from iTunes to an Android device:\\n\\n1. Export music from iTunes to the computer using the \\\"My Music\\\" section (as stated in passage 1).\\n2. Connect the Android device to the computer via USB (as described in passage 2).\\n3. Manually select songs for transfer to the Android device using the doubleTwist software (as outlined in passage 3).\\n\\nTo clarify, once you have exported your music from iTunes to the computer, you will need to use a third-party software such as doubleTwist to transfer the selected songs to your Android device wirelessly. Please note that this method may not work for all types of music files, and some may require additional formatting or conversion before they can be transferred successfully.\\n\\nUnable to answer based on given passages. The passages do not provide specific instructions on how to transfer music from iTunes to an Android device without using a third-party software.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":88},{\"index\":1,\"byte_start\":88,\"byte_end\":130},{\"index\":2,\"byte_start\":130,\"byte_end\":196},{\"index\":3,\"byte_start\":196,\"byte_end\":394},{\"index\":4,\"byte_start\":394,\"byte_end\":632},{\"index\":5,\"byte_start\":632,\"byte_end\":689},{\"index\":6,\"byte_start\":689,\"byte_end\":721},{\"index\":7,\"byte_start\":721,\"byte_end\":879}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":203},{\"index\":1,\"byte_start\":203,\"byte_end\":286},{\"index\":2,\"byte_start\":286,\"byte_end\":406},{\"index\":3,\"byte_start\":406,\"byte_end\":611},{\"index\":4,\"byte_start\":611,\"byte_end\":786},{\"index\":5,\"byte_start\":786,\"byte_end\":828},{\"index\":6,\"byte_start\":828,\"byte_end\":973}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "input_tokens": 755,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The easiest way is to export music to the computer using iTunes. Go to My Music and copy everything to PC. Then use a free app to transfer music to your Android wirelessly. I've used this way to transfer hundreds of songs.\\\\n\\\\npassage 2:Once you have identified your iTunes music that's transferable to your Android phone, just connect the phone to your computer via USB. You'll see a message in the phone's notification area saying that you're connected via USB and it'll ask if you want to mount the storage for use by your computer.\\\\n\\\\npassage 3:Manually selecting songs for transfer to your Android phone. 1  On the doubleTwist window, click Music under Library. 2  Select a song from the list. 3  You can select one song, select multiple songs, or select all songs from a single album.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i get my music from itunes to my android\\\"}\",\"answer\":\"Based on the provided passages, here are the steps to transfer music from iTunes to an Android device:\\n\\n1. Export music from iTunes to the computer using the \\\"My Music\\\" section (as stated in passage 1).\\n2. Connect the Android device to the computer via USB (as described in passage 2).\\n3. Manually select songs for transfer to the Android device using the doubleTwist software (as outlined in passage 3).\\n\\nTo clarify, once you have exported your music from iTunes to the computer, you will need to use a third-party software such as doubleTwist to transfer the selected songs to your Android device wirelessly. Please note that this method may not work for all types of music files, and some may require additional formatting or conversion before they can be transferred successfully.\\n\\nUnable to answer based on given passages. The passages do not provide specific instructions on how to transfer music from iTunes to an Android device without using a third-party software.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":88},{\"index\":1,\"byte_start\":88,\"byte_end\":130},{\"index\":2,\"byte_start\":130,\"byte_end\":196},{\"index\":3,\"byte_start\":196,\"byte_end\":394},{\"index\":4,\"byte_start\":394,\"byte_end\":632},{\"index\":5,\"byte_start\":632,\"byte_end\":689},{\"index\":6,\"byte_start\":689,\"byte_end\":721},{\"index\":7,\"byte_start\":721,\"byte_end\":879}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":203},{\"index\":1,\"byte_start\":203,\"byte_end\":286},{\"index\":2,\"byte_start\":286,\"byte_end\":406},{\"index\":3,\"byte_start\":406,\"byte_end\":611},{\"index\":4,\"byte_start\":611,\"byte_end\":786},{\"index\":5,\"byte_start\":786,\"byte_end\":828},{\"index\":6,\"byte_start\":828,\"byte_end\":973}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[]\n2|C|0.00|[]\n3|C|0.00|[]\n4|C|0.00|[]\n5|C|0.00|[]\n6|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791255787,
+    "id": "chatcmpl-5rEZ6hwxJvchvUQNyWdxEMJ7x3YZd1Yi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 1872.644,
+      "predicted_n": 77,
+      "predicted_per_second": 41.11833322297244,
+      "predicted_per_token_ms": 24.320051948051947,
+      "prompt_ms": 708.788,
+      "prompt_n": 728,
+      "prompt_per_second": 1027.1054250354125,
+      "prompt_per_token_ms": 0.9736098901098901
+    },
+    "usage": {
+      "completion_tokens": 77,
+      "prompt_tokens": 767,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 844
+    }
+  },
+  "source_cluster_id": "sha256:f1ca5a86dfbb71a7af24e2b00f9e8f481538e890db32c5a9e048e81f38901166",
+  "started_monotonic_ns": 916693407768903,
+  "status": "completed",
+  "unit_id": "sha256:3f746e3f11185ccc09bbbbf1551ff3aaa3cd132af6b67f4f52faa837a005f09f"
+}

@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:1f58b372f8b6f7ff6540cb48d44ab5dc29850e88bcb16e3ad1aac6752eda63f3",
+  "ended_monotonic_ns": 916933104280595,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\" | \"20\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 PREHEAT oven to 250F. Place steaks on a rack over a baking sheet. 2  Rub with 1 tbsp oil and season with salt and pepper. 3  Roast steaks in the centre of the oven for about 20 minutes for medium-rare. 4  Remove from oven.HEAT oil in a medium skillet over high heat. Add steaks and sear until deep brown and crisp, about 3 minutes a side. Hold the steak on their sides and cook the edges for 1 min per side.Remove to rack and let rest for 10 min.oast steaks in the centre of the oven for about 20 minutes for medium-rare. Remove from oven. HEAT oil in a medium skillet over high heat. Add steaks and sear until deep brown and crisp, about 3 minutes a side.\\\\n\\\\npassage 2:Preheat grill to medium-high. Remove steak from marinade and discard marinade. Season steak with salt and pepper and grill over medium-high heat until cooked to medium-rare, about 6 minutes per side.Let steak rest for 10 minutes, loosely covered with aluminum foil, before slicing.Meanwhile, warm tortillas on the grill. Slice the steak on the bias into thin slices.reheat grill to medium-high. Remove steak from marinade and discard marinade. Season steak with salt and pepper and grill over medium-high heat until cooked to medium-rare, about 6 minutes per side.\\\\n\\\\npassage 3:No problem grill indoors with your Grill Pan. Just be sure to let your grill pan get very, very hot before cooking. Yes you can use a regular cast iron pan. Start with high quality steaks, choice grade or better like a center cut, be it a filet, rib eye, or strip steak.With marbling, the white ribbons of fat running through the beef.ust be sure to let your grill pan get very, very hot before cooking. Yes you can use a regular cast iron pan. Start with high quality steaks, choice grade or better like a center cut, be it a filet, rib eye, or strip steak. With marbling, the white ribbons of fat running through the beef.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook flank steak indoors\\\"}\",\"answer\":\"Based on the given passages, here's how to cook flank steak indoors:\\n\\n1. Preheat the oven to 250\u00b0F (200\u00b0C).\\n2. Season the flank steak with salt and pepper.\\n3. Place the steak on a rack over a baking sheet.\\n4. Roast the steak in the center of the oven for about 20 minutes, or until it reaches medium-rare.\\n5. Remove the steak from the oven and heat oil in a medium skillet over high heat.\\n6. Add the steak to the skillet and sear until it's deep brown and crisp, about 3 minutes per side.\\n7. Hold the steak on its sides and cook the edges for 1 minute per side.\\n8. Return the steak to the rack and let it rest for 10 minutes.\\n9. Slice the steak against the grain and serve.\\n\\nSo, the answer is: Preheat oven to 250\u00b0F, season the steak, place it on a rack, roast in the oven, sear in a skillet, and rest before slicing and serving.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":47},{\"index\":1,\"byte_start\":47,\"byte_end\":91},{\"index\":2,\"byte_start\":91,\"byte_end\":147},{\"index\":3,\"byte_start\":147,\"byte_end\":227},{\"index\":4,\"byte_start\":227,\"byte_end\":292},{\"index\":5,\"byte_start\":292,\"byte_end\":364},{\"index\":6,\"byte_start\":364,\"byte_end\":547},{\"index\":7,\"byte_start\":547,\"byte_end\":565},{\"index\":8,\"byte_start\":565,\"byte_end\":610},{\"index\":9,\"byte_start\":610,\"byte_end\":725},{\"index\":10,\"byte_start\":725,\"byte_end\":774},{\"index\":11,\"byte_start\":774,\"byte_end\":1016},{\"index\":12,\"byte_start\":1016,\"byte_end\":1090},{\"index\":13,\"byte_start\":1090,\"byte_end\":1139},{\"index\":14,\"byte_start\":1139,\"byte_end\":1319},{\"index\":15,\"byte_start\":1319,\"byte_end\":1389},{\"index\":16,\"byte_start\":1389,\"byte_end\":1430},{\"index\":17,\"byte_start\":1430,\"byte_end\":1677},{\"index\":18,\"byte_start\":1677,\"byte_end\":1718},{\"index\":19,\"byte_start\":1718,\"byte_end\":1832},{\"index\":20,\"byte_start\":1832,\"byte_end\":1948}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":110},{\"index\":1,\"byte_start\":110,\"byte_end\":158},{\"index\":2,\"byte_start\":158,\"byte_end\":208},{\"index\":3,\"byte_start\":208,\"byte_end\":308},{\"index\":4,\"byte_start\":308,\"byte_end\":391},{\"index\":5,\"byte_start\":391,\"byte_end\":491},{\"index\":6,\"byte_start\":491,\"byte_end\":564},{\"index\":7,\"byte_start\":564,\"byte_end\":628},{\"index\":8,\"byte_start\":628,\"byte_end\":677},{\"index\":9,\"byte_start\":677,\"byte_end\":832}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1395,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 PREHEAT oven to 250F. Place steaks on a rack over a baking sheet. 2  Rub with 1 tbsp oil and season with salt and pepper. 3  Roast steaks in the centre of the oven for about 20 minutes for medium-rare. 4  Remove from oven.HEAT oil in a medium skillet over high heat. Add steaks and sear until deep brown and crisp, about 3 minutes a side. Hold the steak on their sides and cook the edges for 1 min per side.Remove to rack and let rest for 10 min.oast steaks in the centre of the oven for about 20 minutes for medium-rare. Remove from oven. HEAT oil in a medium skillet over high heat. Add steaks and sear until deep brown and crisp, about 3 minutes a side.\\\\n\\\\npassage 2:Preheat grill to medium-high. Remove steak from marinade and discard marinade. Season steak with salt and pepper and grill over medium-high heat until cooked to medium-rare, about 6 minutes per side.Let steak rest for 10 minutes, loosely covered with aluminum foil, before slicing.Meanwhile, warm tortillas on the grill. Slice the steak on the bias into thin slices.reheat grill to medium-high. Remove steak from marinade and discard marinade. Season steak with salt and pepper and grill over medium-high heat until cooked to medium-rare, about 6 minutes per side.\\\\n\\\\npassage 3:No problem grill indoors with your Grill Pan. Just be sure to let your grill pan get very, very hot before cooking. Yes you can use a regular cast iron pan. Start with high quality steaks, choice grade or better like a center cut, be it a filet, rib eye, or strip steak.With marbling, the white ribbons of fat running through the beef.ust be sure to let your grill pan get very, very hot before cooking. Yes you can use a regular cast iron pan. Start with high quality steaks, choice grade or better like a center cut, be it a filet, rib eye, or strip steak. With marbling, the white ribbons of fat running through the beef.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook flank steak indoors\\\"}\",\"answer\":\"Based on the given passages, here's how to cook flank steak indoors:\\n\\n1. Preheat the oven to 250\u00b0F (200\u00b0C).\\n2. Season the flank steak with salt and pepper.\\n3. Place the steak on a rack over a baking sheet.\\n4. Roast the steak in the center of the oven for about 20 minutes, or until it reaches medium-rare.\\n5. Remove the steak from the oven and heat oil in a medium skillet over high heat.\\n6. Add the steak to the skillet and sear until it's deep brown and crisp, about 3 minutes per side.\\n7. Hold the steak on its sides and cook the edges for 1 minute per side.\\n8. Return the steak to the rack and let it rest for 10 minutes.\\n9. Slice the steak against the grain and serve.\\n\\nSo, the answer is: Preheat oven to 250\u00b0F, season the steak, place it on a rack, roast in the oven, sear in a skillet, and rest before slicing and serving.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":47},{\"index\":1,\"byte_start\":47,\"byte_end\":91},{\"index\":2,\"byte_start\":91,\"byte_end\":147},{\"index\":3,\"byte_start\":147,\"byte_end\":227},{\"index\":4,\"byte_start\":227,\"byte_end\":292},{\"index\":5,\"byte_start\":292,\"byte_end\":364},{\"index\":6,\"byte_start\":364,\"byte_end\":547},{\"index\":7,\"byte_start\":547,\"byte_end\":565},{\"index\":8,\"byte_start\":565,\"byte_end\":610},{\"index\":9,\"byte_start\":610,\"byte_end\":725},{\"index\":10,\"byte_start\":725,\"byte_end\":774},{\"index\":11,\"byte_start\":774,\"byte_end\":1016},{\"index\":12,\"byte_start\":1016,\"byte_end\":1090},{\"index\":13,\"byte_start\":1090,\"byte_end\":1139},{\"index\":14,\"byte_start\":1139,\"byte_end\":1319},{\"index\":15,\"byte_start\":1319,\"byte_end\":1389},{\"index\":16,\"byte_start\":1389,\"byte_end\":1430},{\"index\":17,\"byte_start\":1430,\"byte_end\":1677},{\"index\":18,\"byte_start\":1677,\"byte_end\":1718},{\"index\":19,\"byte_start\":1718,\"byte_end\":1832},{\"index\":20,\"byte_start\":1832,\"byte_end\":1948}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":110},{\"index\":1,\"byte_start\":110,\"byte_end\":158},{\"index\":2,\"byte_start\":158,\"byte_end\":208},{\"index\":3,\"byte_start\":208,\"byte_end\":308},{\"index\":4,\"byte_start\":308,\"byte_end\":391},{\"index\":5,\"byte_start\":391,\"byte_end\":491},{\"index\":6,\"byte_start\":491,\"byte_end\":564},{\"index\":7,\"byte_start\":564,\"byte_end\":628},{\"index\":8,\"byte_start\":628,\"byte_end\":677},{\"index\":9,\"byte_start\":677,\"byte_end\":832}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\" | \"20\"\n",
+    "input_tokens": 1383,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 PREHEAT oven to 250F. Place steaks on a rack over a baking sheet. 2  Rub with 1 tbsp oil and season with salt and pepper. 3  Roast steaks in the centre of the oven for about 20 minutes for medium-rare. 4  Remove from oven.HEAT oil in a medium skillet over high heat. Add steaks and sear until deep brown and crisp, about 3 minutes a side. Hold the steak on their sides and cook the edges for 1 min per side.Remove to rack and let rest for 10 min.oast steaks in the centre of the oven for about 20 minutes for medium-rare. Remove from oven. HEAT oil in a medium skillet over high heat. Add steaks and sear until deep brown and crisp, about 3 minutes a side.\\\\n\\\\npassage 2:Preheat grill to medium-high. Remove steak from marinade and discard marinade. Season steak with salt and pepper and grill over medium-high heat until cooked to medium-rare, about 6 minutes per side.Let steak rest for 10 minutes, loosely covered with aluminum foil, before slicing.Meanwhile, warm tortillas on the grill. Slice the steak on the bias into thin slices.reheat grill to medium-high. Remove steak from marinade and discard marinade. Season steak with salt and pepper and grill over medium-high heat until cooked to medium-rare, about 6 minutes per side.\\\\n\\\\npassage 3:No problem grill indoors with your Grill Pan. Just be sure to let your grill pan get very, very hot before cooking. Yes you can use a regular cast iron pan. Start with high quality steaks, choice grade or better like a center cut, be it a filet, rib eye, or strip steak.With marbling, the white ribbons of fat running through the beef.ust be sure to let your grill pan get very, very hot before cooking. Yes you can use a regular cast iron pan. Start with high quality steaks, choice grade or better like a center cut, be it a filet, rib eye, or strip steak. With marbling, the white ribbons of fat running through the beef.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook flank steak indoors\\\"}\",\"answer\":\"Based on the given passages, here's how to cook flank steak indoors:\\n\\n1. Preheat the oven to 250\u00b0F (200\u00b0C).\\n2. Season the flank steak with salt and pepper.\\n3. Place the steak on a rack over a baking sheet.\\n4. Roast the steak in the center of the oven for about 20 minutes, or until it reaches medium-rare.\\n5. Remove the steak from the oven and heat oil in a medium skillet over high heat.\\n6. Add the steak to the skillet and sear until it's deep brown and crisp, about 3 minutes per side.\\n7. Hold the steak on its sides and cook the edges for 1 minute per side.\\n8. Return the steak to the rack and let it rest for 10 minutes.\\n9. Slice the steak against the grain and serve.\\n\\nSo, the answer is: Preheat oven to 250\u00b0F, season the steak, place it on a rack, roast in the oven, sear in a skillet, and rest before slicing and serving.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":47},{\"index\":1,\"byte_start\":47,\"byte_end\":91},{\"index\":2,\"byte_start\":91,\"byte_end\":147},{\"index\":3,\"byte_start\":147,\"byte_end\":227},{\"index\":4,\"byte_start\":227,\"byte_end\":292},{\"index\":5,\"byte_start\":292,\"byte_end\":364},{\"index\":6,\"byte_start\":364,\"byte_end\":547},{\"index\":7,\"byte_start\":547,\"byte_end\":565},{\"index\":8,\"byte_start\":565,\"byte_end\":610},{\"index\":9,\"byte_start\":610,\"byte_end\":725},{\"index\":10,\"byte_start\":725,\"byte_end\":774},{\"index\":11,\"byte_start\":774,\"byte_end\":1016},{\"index\":12,\"byte_start\":1016,\"byte_end\":1090},{\"index\":13,\"byte_start\":1090,\"byte_end\":1139},{\"index\":14,\"byte_start\":1139,\"byte_end\":1319},{\"index\":15,\"byte_start\":1319,\"byte_end\":1389},{\"index\":16,\"byte_start\":1389,\"byte_end\":1430},{\"index\":17,\"byte_start\":1430,\"byte_end\":1677},{\"index\":18,\"byte_start\":1677,\"byte_end\":1718},{\"index\":19,\"byte_start\":1718,\"byte_end\":1832},{\"index\":20,\"byte_start\":1832,\"byte_end\":1948}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":110},{\"index\":1,\"byte_start\":110,\"byte_end\":158},{\"index\":2,\"byte_start\":158,\"byte_end\":208},{\"index\":3,\"byte_start\":208,\"byte_end\":308},{\"index\":4,\"byte_start\":308,\"byte_end\":391},{\"index\":5,\"byte_start\":391,\"byte_end\":491},{\"index\":6,\"byte_start\":491,\"byte_end\":564},{\"index\":7,\"byte_start\":564,\"byte_end\":628},{\"index\":8,\"byte_start\":628,\"byte_end\":677},{\"index\":9,\"byte_start\":677,\"byte_end\":832}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[]\n1|E|0.95|[]\n2|E|0.95|[]\n3|E|0.95|[]\n4|E|0.95|[]\n5|E|0.95|[]\n6|E|0.95|[]\n7|E|0.95|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791256024,
+    "id": "chatcmpl-XNDciVaiMsaOhiQSfZ0S8GI2ZZzTNWkS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 39,
+      "predicted_ms": 2144.471,
+      "predicted_n": 88,
+      "predicted_per_second": 41.03576126699778,
+      "predicted_per_token_ms": 24.368988636363635,
+      "prompt_ms": 1235.515,
+      "prompt_n": 1356,
+      "prompt_per_second": 1097.5180390363532,
+      "prompt_per_token_ms": 0.911146755162242
+    },
+    "usage": {
+      "completion_tokens": 88,
+      "prompt_tokens": 1395,
+      "prompt_tokens_details": {
+        "cached_tokens": 39
+      },
+      "total_tokens": 1483
+    }
+  },
+  "source_cluster_id": "sha256:ba3eebedc1c696110b4b3e9c531bea82f2eaad40d7e60adf573cb33fc48f3c10",
+  "started_monotonic_ns": 916929574026125,
+  "status": "completed",
+  "unit_id": "sha256:9ec33dd63bee805507dd4e3b2a4cb2f53e70e64acdc2fd8aedf618b14ec90c21"
+}
