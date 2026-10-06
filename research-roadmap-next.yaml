@@ -1,0 +1,708 @@
+milestone: 2026.10.708
+milestone_title: Selective energy decisions, qualified continual calibration, and
+  observed request costs
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+- id: exp8192-contract-custody
+  title: Bind thirteen tasks and preserve all fourteen V707 dispositions
+  phase: 1
+  track: infra
+  priority: high
+  requires_gpu: false
+  max_turns: 100
+  estimated_wall_time_min: 25
+  per_unit_rows: true
+  milestone: 2026.10.708
+  deliverable: results/experiment_8192_v708_contract_custody.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on: []
+  prior_failures:
+  - experiment_id: exp8178-contract-custody
+    verdict: complete_blocked_sha256
+    addressed_by: Use immutable current authorities and durable completed logs; explicitly isolate old hash failures
+      from the new contract readiness.
+    retire_if_same_verdict: true
+  model: opus
+  prompt: |-
+    CONTEXT:
+    Work in {project_root} on {date}. V707 produced twelve primary artifacts and two gate skips. Its current contract passed. Historical hash failures persisted; Exp8180 failed owned validation. Administrative readiness must remain separate from scientific readiness.
+    EXISTING CODE TO READ FIRST:
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; python/carnot/reporting/v685_authority_lifecycle.py; python/carnot/reporting/roadmap_contract.py; python/carnot/reporting/v707_contract_custody.py; results/experiment_8178_v707_contract_custody.json; results/experiment_8191_v707_capstone.json; research-roadmap.yaml; openspec/change-proposals/research-roadmap-v707-preserved-20261006.md; ops/conductor-log.md
+    TASK:
+    Bind thirteen tasks and preserve all fourteen V707 dispositions. Deliver results/experiment_8192_v708_contract_custody.json, primitive evidence under results/raw/experiment_8192_v708_contract_custody/, and runnable scripts/experiments/experiment_8192_v708_contract_custody.py.
+    CONCRETE STEPS:
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess. Use PYTHONUNBUFFERED=1 and print(..., flush=True). Inside long loops and child waits, report actual completed/pending counts at least every 60 seconds. Keep every silence gap below 600 seconds. Poll tools for at most 60 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between writes. Never pad duration or invent activity.
+    2. PRECONDITIONS: Check input paths, byte hashes, gate operands, runtime and private writable storage before measurement. Use scripts/summarize_artifact.py before inspecting primitive rows. Preserve historical failures and primaries. A missing, retired or blocked external prerequisite yields complete_blocked_<check>, verdict_class=blocked and gate_check_summary with the failed check and actual value. Only unfinished owned work can use partial.
+    3. Extend relevant REQ-* and SCENARIO-* before implementation. Write failing tests first. Reuse qualified modules through a thin CLI. Keep test fixtures outside results/ in private temporary directories. Preserve existing assertions. Exercise direct script execution outside the checkout without PYTHONPATH. Read old methods from immutable versioned bytes, not mutable vNEXT headings.
+    4. Load no LLM. Set MODEL_SPECS=[] and inference_substrate_class=no_model_load. Use aggregation_from_upstream_artifacts for reductions or verifier_ensemble_against_cached_candidates for head fitting. Separate imported Qwen provenance from zero current calls. Declare trained_head_specs for every small trained head.
+    5. Bind exactly 13 tasks Exp8192 through Exp8204. Check the visible table, full JSON contract and canonical full-task digest through the existing authority reader. Before activation, validate a private activated copy. During execution, use activated authority if staged YAML moved. Never edit the active roadmap.
+    6. Freeze current authority bytes and completed validation logs into content-addressed custody. Keep contract_ready_score separate from historical_evidence_ready_score. Preserve V707 hash failures; new snapshots cannot repair old provenance. Later spec edits must not invalidate the saved current authority.
+    7. Resolve all fourteen V707 dispositions by exact deliverable paths and conductor records. Exp8186 and Exp8187 have gate skips, not scientific nulls. Preserve Exp8180 as disqualified even though its constructed learnable fixture passed. Do not import the capstone recommendation that changes NFR-01: the PRD threshold remains 10x.
+    8. Freeze the prior-scope ledger and research mapping. Mark every old cohort as exposed development. Record all attached-board obligations. Test E2E-018 staged, activated, staged-absent, prompt-tamper and post-snapshot mutation paths. A valid new contract must stay readable while a separate historical mismatch remains visible.
+    9. Freeze owned validation argv before measurement. Give pytest selectors only to pytest; static tools receive file paths. Run scoped pytest, 100% changed-code statement coverage, Ruff check/format, strict mypy and explicit-path spec coverage. Run the applicable private E2E success, missing-input, tamper and cold-replay cases. Record argv, expected/actual exit, duration and log hash. Every required check must exit normally. Record unrelated repository health separately. Copy completed logs into durable immutable custody. Never overwrite a sealed log. Rust changes also require scoped cargo test/fmt/clippy, actual loaded-binding parity and E2E-003/004.
+    10. Save primitive rows and source/code/config hashes. Recompute headline numbers independently. Run unmodified adversarial_verify.py and strict verdict_row_consistency_lint.py with progress during waits. Publish through primary_publication after owned checks pass. Owned validation failure disqualifies and zeros readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve operator-curated pages. Do not activate roadmaps or publish externally.
+    REQUIRED ARTIFACT FIELDS:
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Principle: only unfinished owned work retries.
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score: 0, generalized_learning_benefit_score: 0. Principle: exposed development and oracle fixtures cannot establish independent benefit.
+    - required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path, preconditions_checked. Principle: execution readiness requires normal owned validation.
+    - gate_check_summary: check/upstream/path/hash/artifact_field/op/expected/observed/passed. Principle: every blocked result names its failed operand.
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, trained_head_specs, model_invocation_counts, call_ledger, cited_upstream_artifacts: experiment_id/fields_imported/sha256. Principle: current execution differs from imported model provenance.
+    - rows: unit_id/source_cluster_id/arm/condition/metric/numerator/denominator/status/exclusion_reason. Principle: each comparison can be independently reduced.
+    - intended_count, eligible_count, independent_count, completed_count, excluded_count, censored_count, failed_count, sample_size_budget. Principle: repeated requests, seeds and sentences are not independent sources.
+    - run_date, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, raw_shard_hashes, code_config_hashes, phase_spans, acceptance_gates, field_principles. Principle: claims bind to measured work and frozen thresholds.
+    - contract_ready_score: 0|1, historical_evidence_ready_score: 0|1, canonical_tasks_sha256, task_dispositions, immutable_authority_paths, historical_hash_failures, prior_scope_ledger, literature_mapping. Principle: scheduling success cannot qualify failed historical evidence.
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8192_v708_contract_custody.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp8193-learning-qualification
+  title: Qualify calibrated memory through measured hard-exit coverage and cold replay
+  phase: 1
+  track: infra
+  priority: high
+  requires_gpu: false
+  max_turns: 100
+  estimated_wall_time_min: 40
+  per_unit_rows: true
+  milestone: 2026.10.708
+  deliverable: results/experiment_8193_v708_learning_qualification.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on: []
+  prior_failures:
+  - experiment_id: exp8180-calibrated-memory-methods
+    verdict: complete_disqualified_owned_validation
+    addressed_by: Exercise and combine actual hard-exit child coverage for the two missed statements before any
+      natural trajectory; retain the same numerical protocol.
+    retire_if_same_verdict: true
+  model: opus
+  prompt: |-
+    CONTEXT:
+    Work in {project_root} on {date}. Exp8180 recorded 384/386 covered statements. Lines 291-292 in calibrated_memory_methods_8180.py were missed in the coverage-save branch before os._exit. Its learnable fixture installed at slot140 and changed57 later decisions, but it was correctly disqualified. Natural calibrated learning was never tested.
+    EXISTING CODE TO READ FIRST:
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; python/carnot/verify/calibrated_memory_methods_8180.py; python/carnot/reporting/calibrated_memory_execution_8180.py; tests/python/test_calibrated_memory_methods_8180.py; results/experiment_8180_v707_calibrated_memory_methods.json; python/carnot/verify/released_feedback_learning_8171.py; openspec/change-proposals/v707-calibrated-memory-protocol.json; results/experiment_8165_v706_learning_qualification.json
+    TASK:
+    Qualify calibrated memory through measured hard-exit coverage and cold replay. Deliver results/experiment_8193_v708_learning_qualification.json, primitive evidence under results/raw/experiment_8193_v708_learning_qualification/, and runnable scripts/experiments/experiment_8193_v708_learning_qualification.py.
+    CONCRETE STEPS:
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess. Use PYTHONUNBUFFERED=1 and print(..., flush=True). Inside long loops and child waits, report actual completed/pending counts at least every 60 seconds. Keep every silence gap below 600 seconds. Poll tools for at most 60 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between writes. Never pad duration or invent activity.
+    2. PRECONDITIONS: Check input paths, byte hashes, gate operands, runtime and private writable storage before measurement. Use scripts/summarize_artifact.py before inspecting primitive rows. Preserve historical failures and primaries. A missing, retired or blocked external prerequisite yields complete_blocked_<check>, verdict_class=blocked and gate_check_summary with the failed check and actual value. Only unfinished owned work can use partial.
+    3. Extend relevant REQ-* and SCENARIO-* before implementation. Write failing tests first. Reuse qualified modules through a thin CLI. Keep test fixtures outside results/ in private temporary directories. Preserve existing assertions. Exercise direct script execution outside the checkout without PYTHONPATH. Read old methods from immutable versioned bytes, not mutable vNEXT headings.
+    4. Load no LLM. Set MODEL_SPECS=[] and inference_substrate_class=no_model_load. Use aggregation_from_upstream_artifacts for reductions or verifier_ensemble_against_cached_candidates for head fitting. Separate imported Qwen provenance from zero current calls. Declare trained_head_specs for every small trained head.
+    5. Read the failed coverage receipt and reproduce the real covered-child hard-exit route in private storage. Add a targeted regression that starts coverage inside the actual child, reaches active.save(), exits73, resumes, and combines its measured coverage. Do not lower the100% threshold, exclude statements or replace the child with a mock.
+    6. Preserve the V707 numerical protocol byte-for-byte. Qualify the existing bounded convex optimizer, scalar objective parity, projected-gradient tolerance1e-6, overflow handling, causal admission and restart. Publish new validation evidence under Exp8193; do not rewrite Exp8180 or relabel its failed receipt.
+    7. Revalidate source custody and delayed stream independently from the new selective-decision branch. Emit stream_input_ready_score only if all256 original stream slots,64 retention slots, source identities, missing masks and release roles reconstruct. Keep labels evaluator-only until their release. Read primitives through qualified readers; do not trust disqualified Exp8180 readiness.
+    8. Use E2E-016 plus the direct private seed-child route. Require learnable fixture installation by208, at least32 later changed decisions, objective parity1e-8 and exact restart state. Keep no-signal controls and no invented natural benefit. Fixture success is circular_positive. Set calibrated_memory_ready_score only after every owned check passes normally.
+    9. Freeze owned validation argv before measurement. Give pytest selectors only to pytest; static tools receive file paths. Run scoped pytest, 100% changed-code statement coverage, Ruff check/format, strict mypy and explicit-path spec coverage. Run the applicable private E2E success, missing-input, tamper and cold-replay cases. Record argv, expected/actual exit, duration and log hash. Every required check must exit normally. Record unrelated repository health separately. Copy completed logs into durable immutable custody. Never overwrite a sealed log. Rust changes also require scoped cargo test/fmt/clippy, actual loaded-binding parity and E2E-003/004.
+    10. Save primitive rows and source/code/config hashes. Recompute headline numbers independently. Run unmodified adversarial_verify.py and strict verdict_row_consistency_lint.py with progress during waits. Publish through primary_publication after owned checks pass. Owned validation failure disqualifies and zeros readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve operator-curated pages. Do not activate roadmaps or publish externally.
+    REQUIRED ARTIFACT FIELDS:
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Principle: only unfinished owned work retries.
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score: 0, generalized_learning_benefit_score: 0. Principle: exposed development and oracle fixtures cannot establish independent benefit.
+    - required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path, preconditions_checked. Principle: execution readiness requires normal owned validation.
+    - gate_check_summary: check/upstream/path/hash/artifact_field/op/expected/observed/passed. Principle: every blocked result names its failed operand.
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, trained_head_specs, model_invocation_counts, call_ledger, cited_upstream_artifacts: experiment_id/fields_imported/sha256. Principle: current execution differs from imported model provenance.
+    - rows: unit_id/source_cluster_id/arm/condition/metric/numerator/denominator/status/exclusion_reason. Principle: each comparison can be independently reduced.
+    - intended_count, eligible_count, independent_count, completed_count, excluded_count, censored_count, failed_count, sample_size_budget. Principle: repeated requests, seeds and sentences are not independent sources.
+    - run_date, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, raw_shard_hashes, code_config_hashes, phase_spans, acceptance_gates, field_principles. Principle: claims bind to measured work and frozen thresholds.
+    - calibrated_memory_ready_score: 0|1, stream_input_ready_score: 0|1, coverage_statement_counts, measured_child_coverage, protocol_sha256, fixture_rows, input_manifest, restart_parity. Principle: a measured validation repair enables the unchanged scientific hypothesis without laundering the old failure.
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8193_v708_learning_qualification.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp8194-selective-methods
+  title: Freeze class-conditional escalation and train calibration without reserved-label selection
+  phase: 1
+  track: science
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 40
+  per_unit_rows: true
+  milestone: 2026.10.708
+  deliverable: results/experiment_8194_v708_selective_methods.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on: []
+  prior_failures:
+  - experiment_id: exp8185-sentence-decision-audit
+    verdict: complete_null_sentence_decision_null
+    addressed_by: Replace point decisions with separately calibrated class-conditional prediction sets; preserve
+      exposed labels, original costs and original safety gate.
+    retire_if_same_verdict: true
+  prompt: |-
+    CONTEXT:
+    Work in {project_root} on {date}. Exp8185 found mean all-slot cost gain -0.01953125 and two extra false accepts. Sentence transport is ready; point decisions were unsafe relative to the frozen radial control. Test a prediction-set decision rule on the existing evidence before buying another extraction run. This is exposed development research.
+    EXISTING CODE TO READ FIRST:
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; research-references.md; research-studying.md; python/carnot/verify/sentence_energy_8183.py; python/carnot/verify/sentence_energy_fit_8183.py; python/carnot/verify/sentence_decision_audit_8185.py; results/experiment_8182_v707_fit_sentence_capture.json; results/experiment_8185_v707_sentence_decision_audit.json; openspec/change-proposals/v707-sentence-transport-protocol.json
+    TASK:
+    Freeze class-conditional escalation and train calibration without reserved-label selection. Deliver results/experiment_8194_v708_selective_methods.json, primitive evidence under results/raw/experiment_8194_v708_selective_methods/, and runnable scripts/experiments/experiment_8194_v708_selective_methods.py.
+    CONCRETE STEPS:
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess. Use PYTHONUNBUFFERED=1 and print(..., flush=True). Inside long loops and child waits, report actual completed/pending counts at least every 60 seconds. Keep every silence gap below 600 seconds. Poll tools for at most 60 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between writes. Never pad duration or invent activity.
+    2. PRECONDITIONS: Check input paths, byte hashes, gate operands, runtime and private writable storage before measurement. Use scripts/summarize_artifact.py before inspecting primitive rows. Preserve historical failures and primaries. A missing, retired or blocked external prerequisite yields complete_blocked_<check>, verdict_class=blocked and gate_check_summary with the failed check and actual value. Only unfinished owned work can use partial.
+    3. Extend relevant REQ-* and SCENARIO-* before implementation. Write failing tests first. Reuse qualified modules through a thin CLI. Keep test fixtures outside results/ in private temporary directories. Preserve existing assertions. Exercise direct script execution outside the checkout without PYTHONPATH. Read old methods from immutable versioned bytes, not mutable vNEXT headings.
+    4. Load no LLM. Set MODEL_SPECS=[] and inference_substrate_class=no_model_load. Use aggregation_from_upstream_artifacts for reductions or verifier_ensemble_against_cached_candidates for head fitting. Separate imported Qwen provenance from zero current calls. Declare trained_head_specs for every small trained head.
+    5. Ingest the V708 scan: energy-conformal classification and its author code, Continual Calibration, delayed ACI, KAC and KANtize. Run one focused low-concurrency source check. Record method equations, assumptions and source URLs. Mark ingested leads in research-studying.md. Do not invoke a large research fan-out or add external code as a dependency.
+    6. Freeze openspec/change-proposals/v708-selective-decision-protocol.json. Keep128 original fit,64 tune and128 reserved source slots and original target labels. Sort fit sources by SHA256 of source_id plus literal v708-fit-role: first96 are head-fit, remaining32 temperature-fit. The64 tune sources are calibration-only. Save IDs before accessing reserved row-level labels. Historical exposure remains declared; no fresh or prospective guarantee.
+    7. Train the existing local_evidence_radial16 and the original radial16 feature control on the same head-fit sources. Freeze existing center construction, numerical features and regularization from8183. Fit one positive scalar temperature per head on the32 temperature sources, bounded[0.25,4]. Keep an exact probability-equivalent logistic arm and the frozen V707 strongest comparator. The64 calibration labels never fit weights or temperatures.
+    8. Let y=1 mean unsupported and p1 the trained probability. Define class score A_y=1-p_y. For each class use alpha=0.05 and the ceil((n_y+1)*0.95)-th ordered calibration score. If the index exceeds n_y, use infinity. Include labels whose score is <= their class threshold. Singleton{0}=accept; singleton{1}=reject; empty or two-label set=escalate. Missing evidence always escalates. Do not replace conditional error with error among accepted examples.
+    9. Freeze arms local_set, local_point, radial_set, radial_point, frozen_v707_radial, equivalent_logistic_set and always_escalate. Point arms use the original typed-cost matrix and its Bayes thresholds. H1 is local_set versus frozen_v707_radial across all128 reserved slots. Other contrasts explain wrapper versus feature effects and are secondary. Retain alpha=.025 for H1 and alpha=.025 for the separate H2 learning test.
+    10. Require at least72 head-fit sources,24 temperature sources with8/class,48 calibration sources with20/class, and96 complete reserved pairs with12/class. Check role support now; do not lower gates later. Use10000 source bootstrap draws with at least9500 valid. H1 needs lower one-sided97.5% cost gain>.02, five improved sources, zero extra false accepts and Brier increase<=.01. Report class coverage, singleton coverage and error among accepts separately.
+    11. Qualify finite-sample quantiles with exact scalar-reference fixtures, ties, empty classes, n<19, missing evidence, swapped labels and evaluator-label leakage. Test common-logit-shift invariance and energy/logistic parity. Do not attach free-energy scaling to arbitrary binary logits. CP theory needs exchangeability, which exposed development does not establish. Use private E2E-015/019 boundary tests.
+    12. Freeze owned validation argv before measurement. Give pytest selectors only to pytest; static tools receive file paths. Run scoped pytest, 100% changed-code statement coverage, Ruff check/format, strict mypy and explicit-path spec coverage. Run the applicable private E2E success, missing-input, tamper and cold-replay cases. Record argv, expected/actual exit, duration and log hash. Every required check must exit normally. Record unrelated repository health separately. Copy completed logs into durable immutable custody. Never overwrite a sealed log. Rust changes also require scoped cargo test/fmt/clippy, actual loaded-binding parity and E2E-003/004.
+    13. Save primitive rows and source/code/config hashes. Recompute headline numbers independently. Run unmodified adversarial_verify.py and strict verdict_row_consistency_lint.py with progress during waits. Publish through primary_publication after owned checks pass. Owned validation failure disqualifies and zeros readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve operator-curated pages. Do not activate roadmaps or publish externally.
+    REQUIRED ARTIFACT FIELDS:
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Principle: only unfinished owned work retries.
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score: 0, generalized_learning_benefit_score: 0. Principle: exposed development and oracle fixtures cannot establish independent benefit.
+    - required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path, preconditions_checked. Principle: execution readiness requires normal owned validation.
+    - gate_check_summary: check/upstream/path/hash/artifact_field/op/expected/observed/passed. Principle: every blocked result names its failed operand.
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, trained_head_specs, model_invocation_counts, call_ledger, cited_upstream_artifacts: experiment_id/fields_imported/sha256. Principle: current execution differs from imported model provenance.
+    - rows: unit_id/source_cluster_id/arm/condition/metric/numerator/denominator/status/exclusion_reason. Principle: each comparison can be independently reduced.
+    - intended_count, eligible_count, independent_count, completed_count, excluded_count, censored_count, failed_count, sample_size_budget. Principle: repeated requests, seeds and sentences are not independent sources.
+    - run_date, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, raw_shard_hashes, code_config_hashes, phase_spans, acceptance_gates, field_principles. Principle: claims bind to measured work and frozen thresholds.
+    - selective_protocol_ready_score: 0|1, protocol_path, protocol_sha256, role_manifest, class_support_by_role, H1, theory_assumptions, finite_sample_fixture_rows, literature_mapping. Principle: frozen roles and quantiles prevent calibration from becoming evaluation-label tuning.
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8194_v708_selective_methods.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp8195-selective-energy-fit
+  title: Train small energy heads with separate temperature and set calibration
+  phase: 2
+  track: science
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 40
+  per_unit_rows: true
+  milestone: 2026.10.708
+  deliverable: results/experiment_8195_v708_selective_energy_fit.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on:
+  - upstream: exp8194-selective-methods
+    artifact_field: selective_protocol_ready_score
+    op: ==
+    value: 1
+  prior_failures:
+  - experiment_id: exp8183-sentence-energy-fit
+    verdict: complete_null_sentence_energy_fit
+    addressed_by: Fit on disjoint head/temperature roles and use class-conditional calibration instead of the old
+      point-decision rule; keep equal-information controls.
+    retire_if_same_verdict: true
+  prompt: |-
+    CONTEXT:
+    Work in {project_root} on {date}. The selective protocol fixes source roles and all thresholds. Reuse authenticated live Qwen sentence evidence. There are zero current generator calls. Better prediction sets would be a decision-policy result, not proof that energy notation outperforms probability-equivalent logistic scoring.
+    EXISTING CODE TO READ FIRST:
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; python/carnot/verify/sentence_energy_8183.py; python/carnot/verify/sentence_energy_fit_8183.py; results/experiment_8182_v707_fit_sentence_capture.json; results/experiment_8183_v707_sentence_energy_fit.json; results/experiment_8194_v708_selective_methods.json; openspec/change-proposals/v708-selective-decision-protocol.json
+    TASK:
+    Train small energy heads with separate temperature and set calibration. Deliver results/experiment_8195_v708_selective_energy_fit.json, primitive evidence under results/raw/experiment_8195_v708_selective_energy_fit/, and runnable scripts/experiments/experiment_8195_v708_selective_energy_fit.py.
+    CONCRETE STEPS:
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess. Use PYTHONUNBUFFERED=1 and print(..., flush=True). Inside long loops and child waits, report actual completed/pending counts at least every 60 seconds. Keep every silence gap below 600 seconds. Poll tools for at most 60 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between writes. Never pad duration or invent activity.
+    2. PRECONDITIONS: Check input paths, byte hashes, gate operands, runtime and private writable storage before measurement. Use scripts/summarize_artifact.py before inspecting primitive rows. Preserve historical failures and primaries. A missing, retired or blocked external prerequisite yields complete_blocked_<check>, verdict_class=blocked and gate_check_summary with the failed check and actual value. Only unfinished owned work can use partial.
+    3. Extend relevant REQ-* and SCENARIO-* before implementation. Write failing tests first. Reuse qualified modules through a thin CLI. Keep test fixtures outside results/ in private temporary directories. Preserve existing assertions. Exercise direct script execution outside the checkout without PYTHONPATH. Read old methods from immutable versioned bytes, not mutable vNEXT headings.
+    4. Load no LLM. Set MODEL_SPECS=[] and inference_substrate_class=no_model_load. Use aggregation_from_upstream_artifacts for reductions or verifier_ensemble_against_cached_candidates for head fitting. Separate imported Qwen provenance from zero current calls. Declare trained_head_specs for every small trained head.
+    5. Require selective_protocol_ready_score=1 from Exp8194 and passing terminal readers for all imported evidence. Materialize only the fit and calibration roles. Verify source grouping and historical exposure. Keep the reserved feature and label files unopened.
+    6. Fit local and control radial16 heads on the frozen96-source role using the registered objective, centers and deterministic seed. Preserve at most16 centers and all failed source masks. Use only the32-source temperature role for temperature fitting. Then compute separate per-class quantiles on the64-source calibration role, with the exact finite-sample infinity convention.
+    7. Write a self-contained frozen_heads.json containing feature order, centers, weights, normalizers, temperatures, typed costs, thresholds and source hashes. Freeze treatment and all controls. Log fit convergence, training/calibration class counts, Brier, log loss, set size and singleton coverage per source. Never select alpha, head or comparator using reserved results.
+    8. Run shuffled-fit-label and no-signal fixtures as diagnostics only. Require exact energy/logistic probability and decision parity within1e-10. Verify common-logit-shift invariance. Use E2E-015/019 evaluator-label rejection and cold replay. Set selective_fit_ready_score for qualified execution and support, even if every natural prediction escalates. A null benefit must not prevent its downstream audit.
+    9. Freeze owned validation argv before measurement. Give pytest selectors only to pytest; static tools receive file paths. Run scoped pytest, 100% changed-code statement coverage, Ruff check/format, strict mypy and explicit-path spec coverage. Run the applicable private E2E success, missing-input, tamper and cold-replay cases. Record argv, expected/actual exit, duration and log hash. Every required check must exit normally. Record unrelated repository health separately. Copy completed logs into durable immutable custody. Never overwrite a sealed log. Rust changes also require scoped cargo test/fmt/clippy, actual loaded-binding parity and E2E-003/004.
+    10. Save primitive rows and source/code/config hashes. Recompute headline numbers independently. Run unmodified adversarial_verify.py and strict verdict_row_consistency_lint.py with progress during waits. Publish through primary_publication after owned checks pass. Owned validation failure disqualifies and zeros readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve operator-curated pages. Do not activate roadmaps or publish externally.
+    REQUIRED ARTIFACT FIELDS:
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Principle: only unfinished owned work retries.
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score: 0, generalized_learning_benefit_score: 0. Principle: exposed development and oracle fixtures cannot establish independent benefit.
+    - required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path, preconditions_checked. Principle: execution readiness requires normal owned validation.
+    - gate_check_summary: check/upstream/path/hash/artifact_field/op/expected/observed/passed. Principle: every blocked result names its failed operand.
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, trained_head_specs, model_invocation_counts, call_ledger, cited_upstream_artifacts: experiment_id/fields_imported/sha256. Principle: current execution differs from imported model provenance.
+    - rows: unit_id/source_cluster_id/arm/condition/metric/numerator/denominator/status/exclusion_reason. Principle: each comparison can be independently reduced.
+    - intended_count, eligible_count, independent_count, completed_count, excluded_count, censored_count, failed_count, sample_size_budget. Principle: repeated requests, seeds and sentences are not independent sources.
+    - run_date, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, raw_shard_hashes, code_config_hashes, phase_spans, acceptance_gates, field_principles. Principle: claims bind to measured work and frozen thresholds.
+    - selective_fit_ready_score: 0|1, frozen_heads_path, frozen_heads_sha256, fit_rows, temperature_rows, calibration_rows, quantile_rows, equivalent_logistic_parity, support_sufficient. Principle: execution and calibration support gate evaluation; a favorable scientific result does not.
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8195_v708_selective_energy_fit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp8196-selective-sealed-evaluation
+  title: Seal selective decisions on every original reserved source
+  phase: 2
+  track: science
+  priority: high
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 25
+  per_unit_rows: true
+  milestone: 2026.10.708
+  deliverable: results/experiment_8196_v708_selective_sealed_evaluation.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on:
+  - upstream: exp8195-selective-energy-fit
+    artifact_field: selective_fit_ready_score
+    op: ==
+    value: 1
+  prior_failures:
+  - experiment_id: exp8184-reserved-sentence-capture
+    verdict: complete_null_reserved_sentence_capture
+    addressed_by: Evaluate a newly frozen prediction-set policy over authenticated existing features; no repeated
+      extraction or reset of historical exposure.
+    retire_if_same_verdict: true
+  model: gpt-6.1-sol
+  agent_type: codex
+  prompt: |-
+    CONTEXT:
+    Work in {project_root} on {date}. The128 reserved slots were already evaluated in V707. This is a registered development extension with fresh sealed predictions, not a new unexposed cohort. Reuse Qwen feature bytes with their original call clocks and charge no new model work.
+    EXISTING CODE TO READ FIRST:
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; python/carnot/verify/reserved_sentence_capture_8184.py; python/carnot/verify/sentence_decision_audit_8185.py; results/experiment_8184_v707_reserved_sentence_capture.json; results/experiment_8195_v708_selective_energy_fit.json; openspec/change-proposals/v708-selective-decision-protocol.json
+    TASK:
+    Seal selective decisions on every original reserved source. Deliver results/experiment_8196_v708_selective_sealed_evaluation.json, primitive evidence under results/raw/experiment_8196_v708_selective_sealed_evaluation/, and runnable scripts/experiments/experiment_8196_v708_selective_sealed_evaluation.py.
+    CONCRETE STEPS:
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess. Use PYTHONUNBUFFERED=1 and print(..., flush=True). Inside long loops and child waits, report actual completed/pending counts at least every 60 seconds. Keep every silence gap below 600 seconds. Poll tools for at most 60 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between writes. Never pad duration or invent activity.
+    2. PRECONDITIONS: Check input paths, byte hashes, gate operands, runtime and private writable storage before measurement. Use scripts/summarize_artifact.py before inspecting primitive rows. Preserve historical failures and primaries. A missing, retired or blocked external prerequisite yields complete_blocked_<check>, verdict_class=blocked and gate_check_summary with the failed check and actual value. Only unfinished owned work can use partial.
+    3. Extend relevant REQ-* and SCENARIO-* before implementation. Write failing tests first. Reuse qualified modules through a thin CLI. Keep test fixtures outside results/ in private temporary directories. Preserve existing assertions. Exercise direct script execution outside the checkout without PYTHONPATH. Read old methods from immutable versioned bytes, not mutable vNEXT headings.
+    4. Load no LLM. Set MODEL_SPECS=[] and inference_substrate_class=no_model_load. Use aggregation_from_upstream_artifacts for reductions or verifier_ensemble_against_cached_candidates for head fitting. Separate imported Qwen provenance from zero current calls. Declare trained_head_specs for every small trained head.
+    5. Require selective_fit_ready_score=1. Verify the frozen head digest and the original reserved feature/call manifest. Read feature-only views, not reserved labels. Do not repair missing predictions with human annotations or regenerate only difficult cases.
+    6. Apply every frozen arm to all128 original slots. Preserve the original missing masks. Missing/partial evidence escalates for every arm. Emit per-source probabilities, both class thresholds, label-set membership, typed decision and original source hash. Preserve the prior comparator from authentic source rows; reject an unmatched source join.
+    7. Seal prediction rows, source roles and head bytes before the evaluator opens labels. Keep complete-pair support separate from all-slot outcomes. A completed sealing task can be ready with low support; the audit must record insufficient support as a null rather than disappear.
+    8. Exercise cold reconstruction, source permutation, modified head, missing feature and injected evaluator-label cases. Verify energy/logistic decisions exactly agree. Use private E2E-015/019. No independent-generalization or current-inference claim is allowed.
+    9. Freeze owned validation argv before measurement. Give pytest selectors only to pytest; static tools receive file paths. Run scoped pytest, 100% changed-code statement coverage, Ruff check/format, strict mypy and explicit-path spec coverage. Run the applicable private E2E success, missing-input, tamper and cold-replay cases. Record argv, expected/actual exit, duration and log hash. Every required check must exit normally. Record unrelated repository health separately. Copy completed logs into durable immutable custody. Never overwrite a sealed log. Rust changes also require scoped cargo test/fmt/clippy, actual loaded-binding parity and E2E-003/004.
+    10. Save primitive rows and source/code/config hashes. Recompute headline numbers independently. Run unmodified adversarial_verify.py and strict verdict_row_consistency_lint.py with progress during waits. Publish through primary_publication after owned checks pass. Owned validation failure disqualifies and zeros readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve operator-curated pages. Do not activate roadmaps or publish externally.
+    REQUIRED ARTIFACT FIELDS:
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Principle: only unfinished owned work retries.
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score: 0, generalized_learning_benefit_score: 0. Principle: exposed development and oracle fixtures cannot establish independent benefit.
+    - required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path, preconditions_checked. Principle: execution readiness requires normal owned validation.
+    - gate_check_summary: check/upstream/path/hash/artifact_field/op/expected/observed/passed. Principle: every blocked result names its failed operand.
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, trained_head_specs, model_invocation_counts, call_ledger, cited_upstream_artifacts: experiment_id/fields_imported/sha256. Principle: current execution differs from imported model provenance.
+    - rows: unit_id/source_cluster_id/arm/condition/metric/numerator/denominator/status/exclusion_reason. Principle: each comparison can be independently reduced.
+    - intended_count, eligible_count, independent_count, completed_count, excluded_count, censored_count, failed_count, sample_size_budget. Principle: repeated requests, seeds and sentences are not independent sources.
+    - run_date, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, raw_shard_hashes, code_config_hashes, phase_spans, acceptance_gates, field_principles. Principle: claims bind to measured work and frozen thresholds.
+    - sealed_evaluation_ready_score: 0|1, predictions_path, predictions_sha256, seal_receipt, role_manifest_sha256, frozen_heads_sha256, missing_slot_rows, paired_source_ids. Principle: evaluation outcomes cannot select or silently repair predictions.
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8196_v708_selective_sealed_evaluation.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp8197-selective-decision-audit
+  title: Audit safe decision utility and calibration on all intended slots
+  phase: 2
+  track: science
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 30
+  per_unit_rows: true
+  milestone: 2026.10.708
+  deliverable: results/experiment_8197_v708_selective_decision_audit.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on:
+  - upstream: exp8196-selective-sealed-evaluation
+    artifact_field: sealed_evaluation_ready_score
+    op: ==
+    value: 1
+  prior_failures:
+  - experiment_id: exp8185-sentence-decision-audit
+    verdict: complete_null_sentence_decision_null
+    addressed_by: Audit separately calibrated prediction sets and source-level selective risk; preserve original
+      masks and require the same cost/safety threshold.
+    retire_if_same_verdict: true
+  prompt: |-
+    CONTEXT:
+    Work in {project_root} on {date}. V707 local evidence had97 complete sources,14 improved sources, two extra false accepts and a negative mean all-slot gain. V708 tests whether separate set calibration can produce useful safer decisions. Historical exposure prevents an independent generalization claim.
+    EXISTING CODE TO READ FIRST:
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; python/carnot/verify/sentence_decision_audit_8185.py; results/experiment_8185_v707_sentence_decision_audit.json; results/experiment_8196_v708_selective_sealed_evaluation.json; results/experiment_8195_v708_selective_energy_fit.json; openspec/change-proposals/v708-selective-decision-protocol.json
+    TASK:
+    Audit safe decision utility and calibration on all intended slots. Deliver results/experiment_8197_v708_selective_decision_audit.json, primitive evidence under results/raw/experiment_8197_v708_selective_decision_audit/, and runnable scripts/experiments/experiment_8197_v708_selective_decision_audit.py.
+    CONCRETE STEPS:
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess. Use PYTHONUNBUFFERED=1 and print(..., flush=True). Inside long loops and child waits, report actual completed/pending counts at least every 60 seconds. Keep every silence gap below 600 seconds. Poll tools for at most 60 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between writes. Never pad duration or invent activity.
+    2. PRECONDITIONS: Check input paths, byte hashes, gate operands, runtime and private writable storage before measurement. Use scripts/summarize_artifact.py before inspecting primitive rows. Preserve historical failures and primaries. A missing, retired or blocked external prerequisite yields complete_blocked_<check>, verdict_class=blocked and gate_check_summary with the failed check and actual value. Only unfinished owned work can use partial.
+    3. Extend relevant REQ-* and SCENARIO-* before implementation. Write failing tests first. Reuse qualified modules through a thin CLI. Keep test fixtures outside results/ in private temporary directories. Preserve existing assertions. Exercise direct script execution outside the checkout without PYTHONPATH. Read old methods from immutable versioned bytes, not mutable vNEXT headings.
+    4. Load no LLM. Set MODEL_SPECS=[] and inference_substrate_class=no_model_load. Use aggregation_from_upstream_artifacts for reductions or verifier_ensemble_against_cached_candidates for head fitting. Separate imported Qwen provenance from zero current calls. Declare trained_head_specs for every small trained head.
+    5. Require sealed_evaluation_ready_score=1. Verify sealed predictions before opening evaluator labels. Independently reconstruct every cost from the original matrix and source-level labels. Report intended, complete, missing, excluded and per-class counts. Sentences are not independent trials.
+    6. Test frozen H1 on all128 slots with missing evidence escalated. Require96 complete pairs and12/class. Run10000 paired source bootstrap draws, at least9500 valid. Pass only if lower one-sided97.5% cost gain>.02, at least five improved sources, no extra false accepts and Brier increase<=.01. Report a qualified null if support or any scientific gate fails.
+    7. Report local_set versus local_point, radial_set versus radial_point, local_set versus radial_set, and always-escalate comparisons as secondary. Compute class coverage, singleton coverage, false accept count, error conditional on unsupported sources and error among accepted outputs with distinct denominators. Include exact binomial intervals. Do not convert the chosen alpha into an empirical safety guarantee.
+    8. Reconstruct exact logistic equivalence and common-logit-shift controls. If benefit is only abstention or calibration, say so. All-escalate cannot pass H1 against a stronger cost control. Retain the original V707 null. Use private E2E-019 aggregate-tamper and cold-replay tests. Emit audit readiness separately from h1_development_signal_score.
+    9. Freeze owned validation argv before measurement. Give pytest selectors only to pytest; static tools receive file paths. Run scoped pytest, 100% changed-code statement coverage, Ruff check/format, strict mypy and explicit-path spec coverage. Run the applicable private E2E success, missing-input, tamper and cold-replay cases. Record argv, expected/actual exit, duration and log hash. Every required check must exit normally. Record unrelated repository health separately. Copy completed logs into durable immutable custody. Never overwrite a sealed log. Rust changes also require scoped cargo test/fmt/clippy, actual loaded-binding parity and E2E-003/004.
+    10. Save primitive rows and source/code/config hashes. Recompute headline numbers independently. Run unmodified adversarial_verify.py and strict verdict_row_consistency_lint.py with progress during waits. Publish through primary_publication after owned checks pass. Owned validation failure disqualifies and zeros readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve operator-curated pages. Do not activate roadmaps or publish externally.
+    REQUIRED ARTIFACT FIELDS:
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Principle: only unfinished owned work retries.
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score: 0, generalized_learning_benefit_score: 0. Principle: exposed development and oracle fixtures cannot establish independent benefit.
+    - required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path, preconditions_checked. Principle: execution readiness requires normal owned validation.
+    - gate_check_summary: check/upstream/path/hash/artifact_field/op/expected/observed/passed. Principle: every blocked result names its failed operand.
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, trained_head_specs, model_invocation_counts, call_ledger, cited_upstream_artifacts: experiment_id/fields_imported/sha256. Principle: current execution differs from imported model provenance.
+    - rows: unit_id/source_cluster_id/arm/condition/metric/numerator/denominator/status/exclusion_reason. Principle: each comparison can be independently reduced.
+    - intended_count, eligible_count, independent_count, completed_count, excluded_count, censored_count, failed_count, sample_size_budget. Principle: repeated requests, seeds and sentences are not independent sources.
+    - run_date, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, raw_shard_hashes, code_config_hashes, phase_spans, acceptance_gates, field_principles. Principle: claims bind to measured work and frozen thresholds.
+    - selective_audit_ready_score: 0|1, h1_development_signal_score: 0|1, acceptance_operands, paired_intervals, all_slot_metrics, complete_case_metrics, class_coverage_rows, secondary_comparisons, equivalent_logistic_parity. Principle: the primary all-slot safety and utility result cannot be replaced by a favorable secondary metric.
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8197_v708_selective_decision_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp8198-calibrated-online-memory
+  title: Run qualified continuous energy learning on causally released feedback
+  phase: 3
+  track: science
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 50
+  per_unit_rows: true
+  milestone: 2026.10.708
+  deliverable: results/experiment_8198_v708_calibrated_online_memory.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on:
+  - upstream: exp8193-learning-qualification
+    artifact_field: calibrated_memory_ready_score
+    op: ==
+    value: 1
+  - upstream: exp8193-learning-qualification
+    artifact_field: stream_input_ready_score
+    op: ==
+    value: 1
+  prior_failures:
+  - experiment_id: exp8180-calibrated-memory-methods
+    verdict: complete_disqualified_owned_validation
+    addressed_by: Depend on independent repaired qualification8193; keep the natural trajectory separate from method
+      fixture validation.
+    retire_if_same_verdict: true
+  - experiment_id: exp8172-learning-benefit-audit
+    verdict: complete_null_no_later_typed_cost_benefit
+    addressed_by: Test learned bounded base calibration and converged fits instead of the saturated fixed offset
+      with four-step residual updates.
+    retire_if_same_verdict: true
+  prompt: |-
+    CONTEXT:
+    Work in {project_root} on {date}. V707 calibrated natural learning was gate-skipped because its method artifact was disqualified. Exp8193 now independently qualifies the unchanged optimizer and stream custody. V706 had useful admission timing but zero typed-decision changes. This task tests the calibrated base mechanism on natural cached sources for the first qualified run.
+    EXISTING CODE TO READ FIRST:
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; python/carnot/verify/calibrated_memory_methods_8180.py; python/carnot/verify/released_feedback_learning_8171.py; results/experiment_8193_v708_learning_qualification.json; results/experiment_8171_v706_released_feedback_learning.json; results/experiment_8172_v706_learning_benefit_audit.json; openspec/change-proposals/v707-calibrated-memory-protocol.json
+    TASK:
+    Run qualified continuous energy learning on causally released feedback. Deliver results/experiment_8198_v708_calibrated_online_memory.json, primitive evidence under results/raw/experiment_8198_v708_calibrated_online_memory/, and runnable scripts/experiments/experiment_8198_v708_calibrated_online_memory.py.
+    CONCRETE STEPS:
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess. Use PYTHONUNBUFFERED=1 and print(..., flush=True). Inside long loops and child waits, report actual completed/pending counts at least every 60 seconds. Keep every silence gap below 600 seconds. Poll tools for at most 60 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between writes. Never pad duration or invent activity.
+    2. PRECONDITIONS: Check input paths, byte hashes, gate operands, runtime and private writable storage before measurement. Use scripts/summarize_artifact.py before inspecting primitive rows. Preserve historical failures and primaries. A missing, retired or blocked external prerequisite yields complete_blocked_<check>, verdict_class=blocked and gate_check_summary with the failed check and actual value. Only unfinished owned work can use partial.
+    3. Extend relevant REQ-* and SCENARIO-* before implementation. Write failing tests first. Reuse qualified modules through a thin CLI. Keep test fixtures outside results/ in private temporary directories. Preserve existing assertions. Exercise direct script execution outside the checkout without PYTHONPATH. Read old methods from immutable versioned bytes, not mutable vNEXT headings.
+    4. Load no LLM. Set MODEL_SPECS=[] and inference_substrate_class=no_model_load. Use aggregation_from_upstream_artifacts for reductions or verifier_ensemble_against_cached_candidates for head fitting. Separate imported Qwen provenance from zero current calls. Declare trained_head_specs for every small trained head.
+    5. Require both calibrated_memory_ready_score=1 and stream_input_ready_score=1 from8193. Import its independently checked primitives rather than readiness from8180. Preserve all256 stream slots,64 retention slots and missing masks. This is causal online algorithm execution over exposed historical data, not prospective live-data collection.
+    6. Execute the frozen five arms and20 seeds. The score is a*logit(clip(p_Qwen,1e-6,1-1e-6))+b+w.phi. Bounds: a[0,2], b[-8,8], w[-4,4]. Fit newest64 released update-only rows with mean log loss plus.005*sum(w*w)+.005*(a-1)^2. Use deterministic L-BFGS-B max200 iterations, projected-gradient tolerance1e-6. Reject nonconverged candidates before admission.
+    7. Preserve delay20, capacity32, opportunities64/144, expiry144/224 and modulo4 roles. Candidate parameters commit before twelve strictly later one-use admission labels. Interpolate a,b,w jointly under the old safety grid; never fit on admission labels. Grow16 to24 centers with four per opportunity. Calibration_only retains16 centers. This arm name does not mean a zero-feature temperature-only model.
+    8. Durably save issued predictions, pending releases, source roles, selected centers, optimizer/convergence state, consumed labels, admissions and RNG before each update. Record probability changes separately from changed typed decisions and later source exposure. Keep the V707 delay/memory semantics; do not tune the schedule after observing outcomes.
+    9. Seal final heads and all retention predictions before reading retention labels. Exercise a genuine hard exit and resume at a pending-feedback boundary. Compare the entire event/state/prediction trace with an uninterrupted seed. Use E2E-016. Emit learning_trajectory_ready_score for valid complete execution regardless of benefit; the independent audit decides H2.
+    10. Freeze owned validation argv before measurement. Give pytest selectors only to pytest; static tools receive file paths. Run scoped pytest, 100% changed-code statement coverage, Ruff check/format, strict mypy and explicit-path spec coverage. Run the applicable private E2E success, missing-input, tamper and cold-replay cases. Record argv, expected/actual exit, duration and log hash. Every required check must exit normally. Record unrelated repository health separately. Copy completed logs into durable immutable custody. Never overwrite a sealed log. Rust changes also require scoped cargo test/fmt/clippy, actual loaded-binding parity and E2E-003/004.
+    11. Save primitive rows and source/code/config hashes. Recompute headline numbers independently. Run unmodified adversarial_verify.py and strict verdict_row_consistency_lint.py with progress during waits. Publish through primary_publication after owned checks pass. Owned validation failure disqualifies and zeros readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve operator-curated pages. Do not activate roadmaps or publish externally.
+    REQUIRED ARTIFACT FIELDS:
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Principle: only unfinished owned work retries.
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score: 0, generalized_learning_benefit_score: 0. Principle: exposed development and oracle fixtures cannot establish independent benefit.
+    - required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path, preconditions_checked. Principle: execution readiness requires normal owned validation.
+    - gate_check_summary: check/upstream/path/hash/artifact_field/op/expected/observed/passed. Principle: every blocked result names its failed operand.
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, trained_head_specs, model_invocation_counts, call_ledger, cited_upstream_artifacts: experiment_id/fields_imported/sha256. Principle: current execution differs from imported model provenance.
+    - rows: unit_id/source_cluster_id/arm/condition/metric/numerator/denominator/status/exclusion_reason. Principle: each comparison can be independently reduced.
+    - intended_count, eligible_count, independent_count, completed_count, excluded_count, censored_count, failed_count, sample_size_budget. Principle: repeated requests, seeds and sentences are not independent sources.
+    - run_date, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, raw_shard_hashes, code_config_hashes, phase_spans, acceptance_gates, field_principles. Principle: claims bind to measured work and frozen thresholds.
+    - learning_trajectory_ready_score: 0|1, trajectory_path, trajectory_sha256, issued_prediction_rows, release_rows, admission_rows, convergence_rows, retention_prediction_seal, restart_rows, maximum_centers, actual_update_costs. Principle: only released feedback may change a later prediction, and changed probabilities alone are not learning benefit.
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8198_v708_calibrated_online_memory.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp8199-learning-benefit-audit
+  title: Measure later structural learning benefit retention and restart parity
+  phase: 3
+  track: science
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 35
+  per_unit_rows: true
+  milestone: 2026.10.708
+  deliverable: results/experiment_8199_v708_learning_benefit_audit.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on:
+  - upstream: exp8198-calibrated-online-memory
+    artifact_field: learning_trajectory_ready_score
+    op: ==
+    value: 1
+  prior_failures:
+  - experiment_id: exp8172-learning-benefit-audit
+    verdict: complete_null_no_later_typed_cost_benefit
+    addressed_by: Audit the newly qualified learned-base trajectory and distinguish shared calibration from additional
+      center-growth benefit.
+    retire_if_same_verdict: true
+  prompt: |-
+    CONTEXT:
+    Work in {project_root} on {date}. Qualification is not learning benefit. The primary comparison isolates error-selected new centers beyond shared base calibration. The stream and retention labels remain historically exposed development evidence, even when this run enforces causal release.
+    EXISTING CODE TO READ FIRST:
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; python/carnot/verify/learning_benefit_audit_8172.py; results/experiment_8172_v706_learning_benefit_audit.json; results/experiment_8198_v708_calibrated_online_memory.json; openspec/change-proposals/v707-calibrated-memory-protocol.json; research-references.md
+    TASK:
+    Measure later structural learning benefit retention and restart parity. Deliver results/experiment_8199_v708_learning_benefit_audit.json, primitive evidence under results/raw/experiment_8199_v708_learning_benefit_audit/, and runnable scripts/experiments/experiment_8199_v708_learning_benefit_audit.py.
+    CONCRETE STEPS:
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess. Use PYTHONUNBUFFERED=1 and print(..., flush=True). Inside long loops and child waits, report actual completed/pending counts at least every 60 seconds. Keep every silence gap below 600 seconds. Poll tools for at most 60 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between writes. Never pad duration or invent activity.
+    2. PRECONDITIONS: Check input paths, byte hashes, gate operands, runtime and private writable storage before measurement. Use scripts/summarize_artifact.py before inspecting primitive rows. Preserve historical failures and primaries. A missing, retired or blocked external prerequisite yields complete_blocked_<check>, verdict_class=blocked and gate_check_summary with the failed check and actual value. Only unfinished owned work can use partial.
+    3. Extend relevant REQ-* and SCENARIO-* before implementation. Write failing tests first. Reuse qualified modules through a thin CLI. Keep test fixtures outside results/ in private temporary directories. Preserve existing assertions. Exercise direct script execution outside the checkout without PYTHONPATH. Read old methods from immutable versioned bytes, not mutable vNEXT headings.
+    4. Load no LLM. Set MODEL_SPECS=[] and inference_substrate_class=no_model_load. Use aggregation_from_upstream_artifacts for reductions or verifier_ensemble_against_cached_candidates for head fitting. Separate imported Qwen provenance from zero current calls. Declare trained_head_specs for every small trained head.
+    5. Require learning_trajectory_ready_score=1. Reconstruct predictions from issuing-state hashes and causal release/admission events. Detect reused admission labels, future labels, lost pending events, silently shifted original slots and changed baseline probabilities. Any leakage disqualifies, regardless of the aggregate gain.
+    6. Evaluate H2 calibrated_error_center versus calibrated_fixed_center. Require128 eligible later original sources,8/class and8 original-slot blocks. Average seeds within source. Use moving blocks16 with sensitivity8/32,10000 draws and at least9500 valid. Require lower one-sided97.5% cost gain>.02, five improved sources, zero extra false accepts, Brier increase<=.01 and cost no more than.02 above each other control.
+    7. Separately compare calibration_only with frozen_qwen_offset and compare center growth with calibration_only. Shared calibration improvement is not structural memory improvement. Retention requires48 sources with8/class, cost increase<=.02, Brier increase<=.01 and no extra false accepts versus the initial head. Do not tune heads or admission after retention labels open.
+    8. Require exact restart state/prediction parity and zero lost eligible feedback. Report install slots, remaining later exposure, class support and decision movement. Use source blocks, not seed counts, for uncertainty. Audit learning operations and stored state for the later hardware task. Run E2E-016 reconstruction and aggregate-tamper negatives. A finished null is terminal; absent external input is blocked.
+    9. Freeze owned validation argv before measurement. Give pytest selectors only to pytest; static tools receive file paths. Run scoped pytest, 100% changed-code statement coverage, Ruff check/format, strict mypy and explicit-path spec coverage. Run the applicable private E2E success, missing-input, tamper and cold-replay cases. Record argv, expected/actual exit, duration and log hash. Every required check must exit normally. Record unrelated repository health separately. Copy completed logs into durable immutable custody. Never overwrite a sealed log. Rust changes also require scoped cargo test/fmt/clippy, actual loaded-binding parity and E2E-003/004.
+    10. Save primitive rows and source/code/config hashes. Recompute headline numbers independently. Run unmodified adversarial_verify.py and strict verdict_row_consistency_lint.py with progress during waits. Publish through primary_publication after owned checks pass. Owned validation failure disqualifies and zeros readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve operator-curated pages. Do not activate roadmaps or publish externally.
+    REQUIRED ARTIFACT FIELDS:
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Principle: only unfinished owned work retries.
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score: 0, generalized_learning_benefit_score: 0. Principle: exposed development and oracle fixtures cannot establish independent benefit.
+    - required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path, preconditions_checked. Principle: execution readiness requires normal owned validation.
+    - gate_check_summary: check/upstream/path/hash/artifact_field/op/expected/observed/passed. Principle: every blocked result names its failed operand.
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, trained_head_specs, model_invocation_counts, call_ledger, cited_upstream_artifacts: experiment_id/fields_imported/sha256. Principle: current execution differs from imported model provenance.
+    - rows: unit_id/source_cluster_id/arm/condition/metric/numerator/denominator/status/exclusion_reason. Principle: each comparison can be independently reduced.
+    - intended_count, eligible_count, independent_count, completed_count, excluded_count, censored_count, failed_count, sample_size_budget. Principle: repeated requests, seeds and sentences are not independent sources.
+    - run_date, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, raw_shard_hashes, code_config_hashes, phase_spans, acceptance_gates, field_principles. Principle: claims bind to measured work and frozen thresholds.
+    - learning_audit_ready_score: 0|1, h2_development_signal_score: 0|1, calibration_only_effect, structural_memory_effect, paired_block_intervals, retention_rows, replay_parity, acceptance_operands, update_workload_rows. Principle: useful later decisions and preserved retention distinguish learning from calibrated probability movement.
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8199_v708_learning_benefit_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp8200-request-trace-census
+  title: Freeze an observed request sequence without injected exact repeats
+  phase: 3
+  track: deployment
+  priority: high
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 25
+  per_unit_rows: true
+  milestone: 2026.10.708
+  deliverable: results/experiment_8200_v708_request_trace_census.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on: []
+  prior_failures:
+  - experiment_id: exp8188-exact-request-service
+    verdict: complete_positive_exact_request_service
+    addressed_by: Replace the forced-repeat schedule with authenticated ordinary research request order; measure
+      actual identity frequency before paying for a replay benchmark.
+    retire_if_same_verdict: true
+  model: gpt-6.1-sol
+  agent_type: codex
+  prompt: |-
+    CONTEXT:
+    Work in {project_root} on {date}. Exp8188 measured a conditional exact-repeat speed ratio8.4089 with lower95=7.2968 across24 sources. measured_repeat_frequency was null and NFR-01 was false. A constructed repeat schedule cannot establish ordinary service demand.
+    EXISTING CODE TO READ FIRST:
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; python/carnot/verify/exact_request_8188.py; python/carnot/reporting/exact_request_execution_8188.py; results/experiment_8188_v707_exact_request_service.json; results/experiment_8174_v706_complete_request_cost.json; ops/conductor-log.md; scripts/summarize_artifact.py
+    TASK:
+    Freeze an observed request sequence without injected exact repeats. Deliver results/experiment_8200_v708_request_trace_census.json, primitive evidence under results/raw/experiment_8200_v708_request_trace_census/, and runnable scripts/experiments/experiment_8200_v708_request_trace_census.py.
+    CONCRETE STEPS:
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess. Use PYTHONUNBUFFERED=1 and print(..., flush=True). Inside long loops and child waits, report actual completed/pending counts at least every 60 seconds. Keep every silence gap below 600 seconds. Poll tools for at most 60 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between writes. Never pad duration or invent activity.
+    2. PRECONDITIONS: Check input paths, byte hashes, gate operands, runtime and private writable storage before measurement. Use scripts/summarize_artifact.py before inspecting primitive rows. Preserve historical failures and primaries. A missing, retired or blocked external prerequisite yields complete_blocked_<check>, verdict_class=blocked and gate_check_summary with the failed check and actual value. Only unfinished owned work can use partial.
+    3. Extend relevant REQ-* and SCENARIO-* before implementation. Write failing tests first. Reuse qualified modules through a thin CLI. Keep test fixtures outside results/ in private temporary directories. Preserve existing assertions. Exercise direct script execution outside the checkout without PYTHONPATH. Read old methods from immutable versioned bytes, not mutable vNEXT headings.
+    4. Load no LLM. Set MODEL_SPECS=[] and inference_substrate_class=no_model_load. Use aggregation_from_upstream_artifacts for reductions or verifier_ensemble_against_cached_candidates for head fitting. Separate imported Qwen provenance from zero current calls. Declare trained_head_specs for every small trained head.
+    5. Freeze a read-only inventory of authenticated completed model call ledgers from milestones701 through707. Use exact result paths from their task authorities. Retain the original issue timestamps, request bytes, model/runtime identities and intended conditions. Missing timestamps or request bodies are unavailable records, not invented chronological slots.
+    6. Create a deterministic research-workload sequence from first-attempt original-source requests. Exclude deliberately duplicated arms, restart/retry calls, warmups and designed hit/invalidation calls. Sort by authenticated issue time with call_id as tie-break. Select the last96 eligible requests, preserving order and session boundaries. Never select for cache hits or replace seeds to manufacture identity matches.
+    7. Apply Exp8188 exact identity, including source/answer bytes, prompt, template, grammar, tokenizer, GGUF, quantization, seed, sampling, runtime and schema versions. Compute both exact hits under original identities and request-shape duplicates. A repeated source with a different seed/runtime is a miss. Report repeat frequency and reuse distance with all exclusions and provenance.
+    8. Freeze trace.json before any new cost measurement. Require96 fully reconstructable requests,24 independent source clusters and a single qualified request schema supported by the existing service. If absent, emit blocked with the actual deficit and no benchmark gate. Do not synthesize demand. A zero-hit trace that meets support remains ready and should be benchmarked.
+    9. Keep research_workload and deployment_workload scopes separate. There is no authenticated production-demand sample here. Freeze a second replay identity that maps every call to the current pinned runtime while retaining request content, order and seeds. Report how that mapping changes hits. It is a replay scenario, not observed exact production reuse. Validate private E2E-015/019 chronology, identity and exclusion cases.
+    10. Freeze owned validation argv before measurement. Give pytest selectors only to pytest; static tools receive file paths. Run scoped pytest, 100% changed-code statement coverage, Ruff check/format, strict mypy and explicit-path spec coverage. Run the applicable private E2E success, missing-input, tamper and cold-replay cases. Record argv, expected/actual exit, duration and log hash. Every required check must exit normally. Record unrelated repository health separately. Copy completed logs into durable immutable custody. Never overwrite a sealed log. Rust changes also require scoped cargo test/fmt/clippy, actual loaded-binding parity and E2E-003/004.
+    11. Save primitive rows and source/code/config hashes. Recompute headline numbers independently. Run unmodified adversarial_verify.py and strict verdict_row_consistency_lint.py with progress during waits. Publish through primary_publication after owned checks pass. Owned validation failure disqualifies and zeros readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve operator-curated pages. Do not activate roadmaps or publish externally.
+    REQUIRED ARTIFACT FIELDS:
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Principle: only unfinished owned work retries.
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score: 0, generalized_learning_benefit_score: 0. Principle: exposed development and oracle fixtures cannot establish independent benefit.
+    - required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path, preconditions_checked. Principle: execution readiness requires normal owned validation.
+    - gate_check_summary: check/upstream/path/hash/artifact_field/op/expected/observed/passed. Principle: every blocked result names its failed operand.
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, trained_head_specs, model_invocation_counts, call_ledger, cited_upstream_artifacts: experiment_id/fields_imported/sha256. Principle: current execution differs from imported model provenance.
+    - rows: unit_id/source_cluster_id/arm/condition/metric/numerator/denominator/status/exclusion_reason. Principle: each comparison can be independently reduced.
+    - intended_count, eligible_count, independent_count, completed_count, excluded_count, censored_count, failed_count, sample_size_budget. Principle: repeated requests, seeds and sentences are not independent sources.
+    - run_date, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, raw_shard_hashes, code_config_hashes, phase_spans, acceptance_gates, field_principles. Principle: claims bind to measured work and frozen thresholds.
+    - request_trace_ready_score: 0|1, trace_path, trace_sha256, inventory_rows, exclusion_rows, original_exact_repeat_frequency, replay_exact_repeat_frequency, reuse_distance_rows, identity_mapping_rows, workload_scope. Principle: observed demand and controlled runtime replay are different estimands.
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8200_v708_request_trace_census.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp8201-observed-service-cost
+  title: Measure cold-inclusive Python and Rust costs on the frozen request trace
+  phase: 3
+  track: deployment
+  priority: high
+  requires_gpu: true
+  max_turns: 50
+  estimated_wall_time_min: 65
+  per_unit_rows: true
+  milestone: 2026.10.708
+  deliverable: results/experiment_8201_v708_observed_service_cost.json
+  inference_substrate_class: model_bounded_generation
+  MODEL_SPECS:
+  - unsloth/Qwen3.8-27B-GGUF
+  gated_on:
+  - upstream: exp8200-request-trace-census
+    artifact_field: request_trace_ready_score
+    op: ==
+    value: 1
+  prior_failures:
+  - experiment_id: exp8188-exact-request-service
+    verdict: complete_positive_exact_request_service
+    addressed_by: Measure a frozen ordinary research trace including cold misses and startup; separate result reuse
+      from the Python/Rust effect instead of extrapolating forced hits.
+    retire_if_same_verdict: true
+  model: gpt-6.1-sol
+  agent_type: codex
+  prompt: |-
+    CONTEXT:
+    Work in {project_root} on {date}. The request census fixes observed research order and a separately labeled current-runtime replay. The benchmark includes misses and startup. It tests complete native service and exact reuse as separate effects. NFR-01 remains a10x Python/native throughput requirement.
+    EXISTING CODE TO READ FIRST:
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; python/carnot/verify/exact_request_8188.py; python/carnot/reporting/exact_request_execution_8188.py; python/carnot/verify/complete_request_8174.py; results/experiment_8200_v708_request_trace_census.json; results/experiment_8188_v707_exact_request_service.json; python/carnot/verify/reserved_sentence_capture_8184.py; python/carnot/inference/sota_models.py
+    TASK:
+    Measure cold-inclusive Python and Rust costs on the frozen request trace. Deliver results/experiment_8201_v708_observed_service_cost.json, primitive evidence under results/raw/experiment_8201_v708_observed_service_cost/, and runnable scripts/experiments/experiment_8201_v708_observed_service_cost.py.
+    CONCRETE STEPS:
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess. Use PYTHONUNBUFFERED=1 and print(..., flush=True). Inside long loops and child waits, report actual completed/pending counts at least every 60 seconds. Keep every silence gap below 600 seconds. Poll tools for at most 60 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between writes. Never pad duration or invent activity.
+    2. PRECONDITIONS: Check input paths, byte hashes, gate operands, runtime and private writable storage before measurement. Use scripts/summarize_artifact.py before inspecting primitive rows. Preserve historical failures and primaries. A missing, retired or blocked external prerequisite yields complete_blocked_<check>, verdict_class=blocked and gate_check_summary with the failed check and actual value. Only unfinished owned work can use partial.
+    3. Extend relevant REQ-* and SCENARIO-* before implementation. Write failing tests first. Reuse qualified modules through a thin CLI. Keep test fixtures outside results/ in private temporary directories. Preserve existing assertions. Exercise direct script execution outside the checkout without PYTHONPATH. Read old methods from immutable versioned bytes, not mutable vNEXT headings.
+    4. Before any model call, resolve cached_current_model() for unsloth/Qwen3.8-27B-GGUF. Check the GGUF hash, embedded tokenizer, llama.cpp CUDA build, GPU lease and actual offload. A missing resource blocks; no small-model or simulated fallback. Set MODEL_SPECS=[unsloth/Qwen3.8-27B-GGUF], inference_substrate=live_llm_inference and inference_substrate_class=model_bounded_generation, floor 10 seconds. Record actual invocation counts and raw outputs. A fixed token budget is bounded generation regardless of cohort size. Freeze generator weights. Stop new calls by 3000 seconds; retain checkpoints and finish within 4800 seconds.
+    5. Require request_trace_ready_score=1 from8200 before loading Qwen. Verify96 fixed requests and24 source clusters. Use the qualified parser for the frozen request schema. Preserve input text and original bounded output limits, at most256 tokens. Oversized or unsupported requests are censored, not silently shortened. Freeze four arms: Python/no reuse, Rust/no reuse, Python/exact reuse and Rust/exact reuse.
+    6. Run all arms from separate empty durable stores with the actual loaded PyO3 extension. Preserve request order and session boundaries within every arm. Randomize arm execution order by a frozen seed. Use the same pinned Qwen runtime and request seeds. Limit generation to384 main calls plus two declared warmups. Disable hidden result reuse and prompt-cache shortcuts outside the declared arm. Record every hit, miss and generation.
+    7. Measure queue, model startup, acquisition, parsing, identity hashing, lookup, native/Python evaluation, durable commit, recovery and complete request latency separately. Include one measured startup per arm in cold-inclusive totals, even when the benchmark physically shares a loaded model. Label that allocation; retain its actual measured load duration separately. Report steady-state separately. Never divide a kernel timer into full-service time and call it a measured speedup.
+    8. Require identical frozen decisions and receipt semantics across Python/Rust. Record raw-response differences from repeated seeded calls; byte parity is not assumed. A mismatch disqualifies the relevant equivalence comparison. Exercise crash-after-write, invalidation and corrupt-cache rejection on private fixtures. Keep their forced-repeat counts out of observed repeat frequency.
+    9. Report separate contrasts: cached versus uncached for each implementation; Python versus Rust for each cache policy. Use10000 paired source-cluster bootstrap draws and at least9500 valid draws. Require24 independent clusters,96 complete matched request slots and zero semantic mismatch for comparative qualification. A speed benefit needs lower95>1; NFR-01 requires lower95>=10 for the complete Python/Rust comparison. Never count cache versus no-cache as Rust speedup.
+    10. Use E2E-003/004 and direct CLI recovery/cold replay. Persist per-request rows including failures and unfinished slots. A zero-hit or no-benefit result is an honest null. Extrapolations to deployment demand stay scenarios. Stop new calls by3000 seconds, retain completed work, and finish owned validation within4800 seconds.
+    11. Freeze owned validation argv before measurement. Give pytest selectors only to pytest; static tools receive file paths. Run scoped pytest, 100% changed-code statement coverage, Ruff check/format, strict mypy and explicit-path spec coverage. Run the applicable private E2E success, missing-input, tamper and cold-replay cases. Record argv, expected/actual exit, duration and log hash. Every required check must exit normally. Record unrelated repository health separately. Copy completed logs into durable immutable custody. Never overwrite a sealed log. Rust changes also require scoped cargo test/fmt/clippy, actual loaded-binding parity and E2E-003/004.
+    12. Save primitive rows and source/code/config hashes. Recompute headline numbers independently. Run unmodified adversarial_verify.py and strict verdict_row_consistency_lint.py with progress during waits. Publish through primary_publication after owned checks pass. Owned validation failure disqualifies and zeros readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve operator-curated pages. Do not activate roadmaps or publish externally.
+    REQUIRED ARTIFACT FIELDS:
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Principle: only unfinished owned work retries.
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score: 0, generalized_learning_benefit_score: 0. Principle: exposed development and oracle fixtures cannot establish independent benefit.
+    - required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path, preconditions_checked. Principle: execution readiness requires normal owned validation.
+    - gate_check_summary: check/upstream/path/hash/artifact_field/op/expected/observed/passed. Principle: every blocked result names its failed operand.
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, trained_head_specs, model_invocation_counts, call_ledger, cited_upstream_artifacts: experiment_id/fields_imported/sha256. Principle: current execution differs from imported model provenance.
+    - rows: unit_id/source_cluster_id/arm/condition/metric/numerator/denominator/status/exclusion_reason. Principle: each comparison can be independently reduced.
+    - intended_count, eligible_count, independent_count, completed_count, excluded_count, censored_count, failed_count, sample_size_budget. Principle: repeated requests, seeds and sentences are not independent sources.
+    - run_date, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, raw_shard_hashes, code_config_hashes, phase_spans, acceptance_gates, field_principles. Principle: claims bind to measured work and frozen thresholds.
+    - observed_service_ready_score: 0|1, equivalent_behavior_score: 0|1, request_rows, component_cost_rows, arm_order, startup_allocation, paired_speed_intervals, original_exact_repeat_frequency, replay_exact_repeat_frequency, workload_scope, nfr01_met, incomplete_slots, gpu_receipts. Principle: complete measured boundaries and matched request demand determine service value.
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8201_v708_observed_service_cost.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp8202-arc-supervisor-frontier
+  title: Inspect only new authenticated supervisor outcomes for transferable arm selection
+  phase: 4
+  track: arc
+  priority: high
+  requires_gpu: false
+  max_turns: 20
+  estimated_wall_time_min: 10
+  per_unit_rows: true
+  milestone: 2026.10.708
+  deliverable: results/experiment_8202_v708_arc_supervisor_frontier.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on: []
+  prior_failures:
+  - experiment_id: exp8189-arc-supervisor-frontier
+    verdict: complete_null_no_new_outcomes
+    addressed_by: Use the already qualified reader and a changed authenticated event frontier only; an unchanged
+      frontier takes the bounded no-work path allowed by the standing floor.
+    retire_if_same_verdict: true
+  prompt: |-
+    CONTEXT:
+    Work in {project_root} on {date}. V707 qualified the supervisor reader and found zero new outcomes. The standing ARC generalization floor permits a no-firings result without manufacturing a new game run. This task advances the authenticated event frontier and makes recommendations only when evidence changes.
+    EXISTING CODE TO READ FIRST:
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; python/carnot/reporting/arc_supervisor_v707_frontier.py; results/experiment_8189_v707_arc_supervisor_frontier.json; python/carnot/agentic/arc_competition_agent.py; python/carnot/agentic/arc_solver_kit.py; ops/arc_solve_registry.yaml; ops/arc_live_agent_state.json
+    TASK:
+    Inspect only new authenticated supervisor outcomes for transferable arm selection. Deliver results/experiment_8202_v708_arc_supervisor_frontier.json, primitive evidence under results/raw/experiment_8202_v708_arc_supervisor_frontier/, and runnable scripts/experiments/experiment_8202_v708_arc_supervisor_frontier.py.
+    CONCRETE STEPS:
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess. Use PYTHONUNBUFFERED=1 and print(..., flush=True). Inside long loops and child waits, report actual completed/pending counts at least every 60 seconds. Keep every silence gap below 600 seconds. Poll tools for at most 60 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between writes. Never pad duration or invent activity.
+    2. PRECONDITIONS: Check input paths, byte hashes, gate operands, runtime and private writable storage before measurement. Use scripts/summarize_artifact.py before inspecting primitive rows. Preserve historical failures and primaries. A missing, retired or blocked external prerequisite yields complete_blocked_<check>, verdict_class=blocked and gate_check_summary with the failed check and actual value. Only unfinished owned work can use partial.
+    3. Extend relevant REQ-* and SCENARIO-* before implementation. Write failing tests first. Reuse qualified modules through a thin CLI. Keep test fixtures outside results/ in private temporary directories. Preserve existing assertions. Exercise direct script execution outside the checkout without PYTHONPATH. Read old methods from immutable versioned bytes, not mutable vNEXT headings.
+    4. Load no LLM. Set MODEL_SPECS=[] and inference_substrate_class=no_model_load. Use aggregation_from_upstream_artifacts for reductions or verifier_ensemble_against_cached_candidates for head fitting. Separate imported Qwen provenance from zero current calls. Declare trained_head_specs for every small trained head.
+    5. Run the registry precheck first. Reuse the already qualified supervisor reader. Inspect only receipts after the saved event frontier, using authenticated issue/event identities rather than current file mtimes. Do not repeat scans of unchanged receipt bytes or create another version of the reader without a failing conformance case.
+    6. If the frontier is unchanged or carries zero resolved redirects, publish complete_null_no_new_outcomes promptly with the exact frontier hashes. This satisfies the standing floor. Do not run games, generate proposals, change arm priorities or invent transfer evidence to fill the slot.
+    7. For actual new outcomes, report per-game and per-arm fired, helped, resolved_by_levelup, actions_to_levelup and stagnations_unredirected. Require30 resolved outcomes across5 games before an arm recommendation. A transfer claim additionally requires matched within-game and held-game evidence. These observational rows alone cannot establish a causal win.
+    8. Propose only selection changes over the existing curated arm table. Name any general method gap with supporting receipt IDs. Do not hand-build a GameAdapter, inspect hidden game source, run offline ground-truth BFS or re-solve a registered level. Preserve solve_provenance on imported level evidence; never create new solve credit. Use the private E2E-017 empty-ledger, tamper and cold-replay checks.
+    9. Freeze owned validation argv before measurement. Give pytest selectors only to pytest; static tools receive file paths. Run scoped pytest, 100% changed-code statement coverage, Ruff check/format, strict mypy and explicit-path spec coverage. Run the applicable private E2E success, missing-input, tamper and cold-replay cases. Record argv, expected/actual exit, duration and log hash. Every required check must exit normally. Record unrelated repository health separately. Copy completed logs into durable immutable custody. Never overwrite a sealed log. Rust changes also require scoped cargo test/fmt/clippy, actual loaded-binding parity and E2E-003/004.
+    10. Save primitive rows and source/code/config hashes. Recompute headline numbers independently. Run unmodified adversarial_verify.py and strict verdict_row_consistency_lint.py with progress during waits. Publish through primary_publication after owned checks pass. Owned validation failure disqualifies and zeros readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve operator-curated pages. Do not activate roadmaps or publish externally.
+    REQUIRED ARTIFACT FIELDS:
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Principle: only unfinished owned work retries.
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score: 0, generalized_learning_benefit_score: 0. Principle: exposed development and oracle fixtures cannot establish independent benefit.
+    - required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path, preconditions_checked. Principle: execution readiness requires normal owned validation.
+    - gate_check_summary: check/upstream/path/hash/artifact_field/op/expected/observed/passed. Principle: every blocked result names its failed operand.
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, trained_head_specs, model_invocation_counts, call_ledger, cited_upstream_artifacts: experiment_id/fields_imported/sha256. Principle: current execution differs from imported model provenance.
+    - rows: unit_id/source_cluster_id/arm/condition/metric/numerator/denominator/status/exclusion_reason. Principle: each comparison can be independently reduced.
+    - intended_count, eligible_count, independent_count, completed_count, excluded_count, censored_count, failed_count, sample_size_budget. Principle: repeated requests, seeds and sentences are not independent sources.
+    - run_date, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, raw_shard_hashes, code_config_hashes, phase_spans, acceptance_gates, field_principles. Principle: claims bind to measured work and frozen thresholds.
+    - arc_evidence_ready_score: 0|1, new_outcome_count, event_frontier, frontier_hashes, per_game_results, arm_recommendations, registry_precheck, solve_provenance: live_agent_self_discovery | development_proxy | outer_loop_re, new_level_solves_claimed: false. Principle: only reachable live-agent evidence can support generalization or solve claims.
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8202_v708_arc_supervisor_frontier.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp8203-hardware-decision-boundary
+  title: Bound selective and learning workloads while preserving each board obligation
+  phase: 4
+  track: hardware
+  priority: high
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 30
+  per_unit_rows: true
+  milestone: 2026.10.708
+  deliverable: results/experiment_8203_v708_hardware_decision_boundary.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on: []
+  prior_failures:
+  - experiment_id: exp8190-hardware-service-boundary
+    verdict: complete_null_hardware_service_boundary
+    addressed_by: Add prediction-set boundary precision and qualified learned-base operations; use observed trace
+      costs when available, while retaining unchanged physical blockers separately.
+    retire_if_same_verdict: true
+  prompt: |-
+    CONTEXT:
+    Work in {project_root} on {date}. V707 exact-repeat gains did not establish100x whole-workload hardware potential. V708 adds set membership and possibly qualified calibrated memory. Hardware work must use these actual operations, with separate KV260, PolarFire and GateMate evidence scopes.
+    EXISTING CODE TO READ FIRST:
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; results/experiment_8190_v707_hardware_service_boundary.json; results/experiment_8195_v708_selective_energy_fit.json; results/experiment_8198_v708_calibrated_online_memory.json; results/experiment_8201_v708_observed_service_cost.json; research-hardware-wishlist.md; python/carnot/reporting/v707_capstone_evidence.py; research-references.md
+    TASK:
+    Bound selective and learning workloads while preserving each board obligation. Deliver results/experiment_8203_v708_hardware_decision_boundary.json, primitive evidence under results/raw/experiment_8203_v708_hardware_decision_boundary/, and runnable scripts/experiments/experiment_8203_v708_hardware_decision_boundary.py.
+    CONCRETE STEPS:
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess. Use PYTHONUNBUFFERED=1 and print(..., flush=True). Inside long loops and child waits, report actual completed/pending counts at least every 60 seconds. Keep every silence gap below 600 seconds. Poll tools for at most 60 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between writes. Never pad duration or invent activity.
+    2. PRECONDITIONS: Check input paths, byte hashes, gate operands, runtime and private writable storage before measurement. Use scripts/summarize_artifact.py before inspecting primitive rows. Preserve historical failures and primaries. A missing, retired or blocked external prerequisite yields complete_blocked_<check>, verdict_class=blocked and gate_check_summary with the failed check and actual value. Only unfinished owned work can use partial.
+    3. Extend relevant REQ-* and SCENARIO-* before implementation. Write failing tests first. Reuse qualified modules through a thin CLI. Keep test fixtures outside results/ in private temporary directories. Preserve existing assertions. Exercise direct script execution outside the checkout without PYTHONPATH. Read old methods from immutable versioned bytes, not mutable vNEXT headings.
+    4. Load no LLM. Set MODEL_SPECS=[] and inference_substrate_class=no_model_load. Use aggregation_from_upstream_artifacts for reductions or verifier_ensemble_against_cached_candidates for head fitting. Separate imported Qwen provenance from zero current calls. Declare trained_head_specs for every small trained head.
+    5. Run unconditionally. Resolve each source branch independently through terminal readers. A missing selective or learning branch must not hide measured service data or board obligations. Missing external evidence stays blocked by branch. Load no model and do not probe unchanged hardware availability.
+    6. On each available frozen head, compare float64 reference, float32 and signed fixed16 with scale frozen from training-domain bounds. Retain exact reference quantile thresholds. Include probability and threshold roundoff in an interval bound; route uncertain membership and out-of-domain features back to float64. Quantile or head recalibration on evaluation labels is forbidden.
+    7. Measure probability error, set membership, typed-decision disagreement, fallback frequency and operation counts per source. Require zero final decision mismatches on measured rows for software parity. State the bounded domain and unsupported exponent/spline operations. KANtize lookup ideas do not make a radial kernel natively supported by an Ising board.
+    8. Reduce available complete-service timings into acquisition, orchestration, arithmetic, transfer/readout and durable storage. Compute1/(1-f) only from the removable arithmetic fraction. A100x complete-workload target requires f>=.99 even with infinite arithmetic speed. Mixed timers yield optimistic bounds only. Use observed research reuse frequency; absence of deployment demand forbids a deployment claim.
+    9. Preserve separate authenticated board rows: KV260 fabric scope with k_max<=5; PolarFire Linux CPU-only dispatch; GateMate blocked by unchanged0xffffffff JTAG evidence. Name source transcript, byte hash, workload, timestamp and exact reopen condition for each. New physical/JTAG evidence can justify a future probe, but no flashing or hardware integration is scheduled here. NPU/TSU remain unqualified. No purchase is authorized.
+    10. Publish a hardware decision per learning tier: CPU counter/update, durable radial memory, future batched predictor and deferred structure change. If100x cannot be supported, identify the acquisition/storage redesign needed instead of reporting a kernel projection as delivered speed. Use scalar precision fixtures and cold reconstruction; retained board transcripts must remain independently verifiable.
+    11. Freeze owned validation argv before measurement. Give pytest selectors only to pytest; static tools receive file paths. Run scoped pytest, 100% changed-code statement coverage, Ruff check/format, strict mypy and explicit-path spec coverage. Run the applicable private E2E success, missing-input, tamper and cold-replay cases. Record argv, expected/actual exit, duration and log hash. Every required check must exit normally. Record unrelated repository health separately. Copy completed logs into durable immutable custody. Never overwrite a sealed log. Rust changes also require scoped cargo test/fmt/clippy, actual loaded-binding parity and E2E-003/004.
+    12. Save primitive rows and source/code/config hashes. Recompute headline numbers independently. Run unmodified adversarial_verify.py and strict verdict_row_consistency_lint.py with progress during waits. Publish through primary_publication after owned checks pass. Owned validation failure disqualifies and zeros readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve operator-curated pages. Do not activate roadmaps or publish externally.
+    REQUIRED ARTIFACT FIELDS:
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Principle: only unfinished owned work retries.
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score: 0, generalized_learning_benefit_score: 0. Principle: exposed development and oracle fixtures cannot establish independent benefit.
+    - required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path, preconditions_checked. Principle: execution readiness requires normal owned validation.
+    - gate_check_summary: check/upstream/path/hash/artifact_field/op/expected/observed/passed. Principle: every blocked result names its failed operand.
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, trained_head_specs, model_invocation_counts, call_ledger, cited_upstream_artifacts: experiment_id/fields_imported/sha256. Principle: current execution differs from imported model provenance.
+    - rows: unit_id/source_cluster_id/arm/condition/metric/numerator/denominator/status/exclusion_reason. Principle: each comparison can be independently reduced.
+    - intended_count, eligible_count, independent_count, completed_count, excluded_count, censored_count, failed_count, sample_size_budget. Principle: repeated requests, seeds and sentences are not independent sources.
+    - run_date, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, raw_shard_hashes, code_config_hashes, phase_spans, acceptance_gates, field_principles. Principle: claims bind to measured work and frozen thresholds.
+    - hardware_boundary_ready_score: 0|1, branch_readiness, precision_rows, interval_bound_domain, fallback_cost_rows, workload_rows, amdahl_bounds, board_rows, reopen_conditions, hardware_spending_decision, current_device_execution_count: 0. Principle: software bounds and historical board custody are not current device measurements.
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8203_v708_hardware_decision_boundary.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+- id: exp8204-capstone
+  title: Reconcile thirteen outcomes and decide verification learning and deployment gaps
+  phase: 4
+  track: synthesis
+  priority: high
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 30
+  per_unit_rows: true
+  milestone: 2026.10.708
+  deliverable: results/experiment_8204_v708_capstone.json
+  inference_substrate_class: no_model_load
+  MODEL_SPECS: []
+  gated_on: []
+  prior_failures:
+  - experiment_id: exp8191-capstone
+    verdict: complete_blocked_required_checks_passed
+    addressed_by: Separate repaired current qualification and independent branches from prior owned failures; always
+      reduce all thirteen actual dispositions without retrying unchanged external blocks.
+    retire_if_same_verdict: true
+  prompt: |-
+    CONTEXT:
+    Work in {project_root} on {date}. The milestone tests safer source decisions, the first qualified calibrated natural trajectory, and realistic research request costs. Any branch may finish null or blocked. The capstone must still run once and retain the distinction between administrative completeness and scientific progress.
+    EXISTING CODE TO READ FIRST:
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; python/carnot/reporting/v707_capstone.py; python/carnot/reporting/v707_capstone_science.py; python/carnot/reporting/v685_authority_lifecycle.py; results/experiment_8191_v707_capstone.json; results/experiment_8192_v708_contract_custody.json; scripts/publication_gate.py; ops/north-star.md; research-roadmap.yaml; research-roadmap-next.yaml; ops/conductor-log.md
+    TASK:
+    Reconcile thirteen outcomes and decide verification learning and deployment gaps. Deliver results/experiment_8204_v708_capstone.json, primitive evidence under results/raw/experiment_8204_v708_capstone/, and runnable scripts/experiments/experiment_8204_v708_capstone.py.
+    CONCRETE STEPS:
+    1. Emit a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess. Use PYTHONUNBUFFERED=1 and print(..., flush=True). Inside long loops and child waits, report actual completed/pending counts at least every 60 seconds. Keep every silence gap below 600 seconds. Poll tools for at most 60 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between writes. Never pad duration or invent activity.
+    2. PRECONDITIONS: Check input paths, byte hashes, gate operands, runtime and private writable storage before measurement. Use scripts/summarize_artifact.py before inspecting primitive rows. Preserve historical failures and primaries. A missing, retired or blocked external prerequisite yields complete_blocked_<check>, verdict_class=blocked and gate_check_summary with the failed check and actual value. Only unfinished owned work can use partial.
+    3. Extend relevant REQ-* and SCENARIO-* before implementation. Write failing tests first. Reuse qualified modules through a thin CLI. Keep test fixtures outside results/ in private temporary directories. Preserve existing assertions. Exercise direct script execution outside the checkout without PYTHONPATH. Read old methods from immutable versioned bytes, not mutable vNEXT headings.
+    4. Load no LLM. Set MODEL_SPECS=[] and inference_substrate_class=no_model_load. Use aggregation_from_upstream_artifacts for reductions or verifier_ensemble_against_cached_candidates for head fitting. Separate imported Qwen provenance from zero current calls. Declare trained_head_specs for every small trained head.
+    5. Use frozen V708 authority to enumerate exactly13 tasks Exp8192 through Exp8204. Match every visible contract row, complete task JSON and canonical digest. Read all available primaries and actual gate skips. Missing primaries have execution dispositions, not invented scientific verdicts. Resolve stage movement through the existing authority lifecycle.
+    6. Independently reduce H1 and H2 from primitive source rows. Preserve alpha=.025 per hypothesis with no transfer when a branch is blocked. Separate selective-policy utility, equivalent-logistic parity, shared calibration and center-growth benefit. All historical cohorts remain exposed development; both independent and generalized-learning scores stay0.
+    7. Recompute observed-trace repeat frequency, complete-service Python/Rust ratios and separate cache effects. Keep research workload scope explicit. NFR-01 closure requires a qualified complete-service10x ratio, not conditional hits or lower95>1. Preserve board-specific blockers and hardware projections without upgrading them to measurements.
+    8. Report all three PRD gap decisions with evidence paths and exact unmet operands. Source safety or learning success on exposed data authorizes at most a later independent validation proposal. It does not close a general verifier moat. If the new selective policy is null, retire that exact exposed-data continuation rather than rescheduling unchanged capture or thresholds.
+    9. Apply same-verdict retirement to matching mechanism scopes with all prior entries preserved. Distinguish a standing no-change ARC inventory from a failed scientific rerun. Read the September28 oracle-distinct corrigendum. Compute stable G1-G4 with scripts/publication_gate.py --json. Preserve its FoVer scope; paper_ready does not certify these new hypotheses.
+    10. Use private E2E-018 authority mutation and cold-replay cases. Save source comparisons, current/historical hash failures, branch dispositions and literature-to-result mapping. Missing or retired upstreams cause terminal blocked, never partial. Only unfinished owned capstone work can retry. Reconcile specs, traceability and ops without changing curated publication prose.
+    11. Freeze owned validation argv before measurement. Give pytest selectors only to pytest; static tools receive file paths. Run scoped pytest, 100% changed-code statement coverage, Ruff check/format, strict mypy and explicit-path spec coverage. Run the applicable private E2E success, missing-input, tamper and cold-replay cases. Record argv, expected/actual exit, duration and log hash. Every required check must exit normally. Record unrelated repository health separately. Copy completed logs into durable immutable custody. Never overwrite a sealed log. Rust changes also require scoped cargo test/fmt/clippy, actual loaded-binding parity and E2E-003/004.
+    12. Save primitive rows and source/code/config hashes. Recompute headline numbers independently. Run unmodified adversarial_verify.py and strict verdict_row_consistency_lint.py with progress during waits. Publish through primary_publication after owned checks pass. Owned validation failure disqualifies and zeros readiness. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve operator-curated pages. Do not activate roadmaps or publish externally.
+    REQUIRED ARTIFACT FIELDS:
+    - honest_verdict: complete_*; verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Principle: only unfinished owned work retries.
+    - verifier_is_oracle, claim_scope, exposure_scope, independent_generalization_score: 0, generalized_learning_benefit_score: 0. Principle: exposed development and oracle fixtures cannot establish independent benefit.
+    - required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path, preconditions_checked. Principle: execution readiness requires normal owned validation.
+    - gate_check_summary: check/upstream/path/hash/artifact_field/op/expected/observed/passed. Principle: every blocked result names its failed operand.
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, trained_head_specs, model_invocation_counts, call_ledger, cited_upstream_artifacts: experiment_id/fields_imported/sha256. Principle: current execution differs from imported model provenance.
+    - rows: unit_id/source_cluster_id/arm/condition/metric/numerator/denominator/status/exclusion_reason. Principle: each comparison can be independently reduced.
+    - intended_count, eligible_count, independent_count, completed_count, excluded_count, censored_count, failed_count, sample_size_budget. Principle: repeated requests, seeds and sentences are not independent sources.
+    - run_date, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, raw_shard_hashes, code_config_hashes, phase_spans, acceptance_gates, field_principles. Principle: claims bind to measured work and frozen thresholds.
+    - capstone_execution_ready_score: 0|1, science_ready_score: 0|1, task_dispositions, H1, H2, gap_decisions, retirement_decisions, service_evidence_scope, board_obligations, G1, G2, G3, G4, paper_ready, unmet_gates, literature_mapping. Principle: each final claim retains its evidence scope and failed operands.
+    Run command: cd {project_root} && PYTHONUNBUFFERED=1 JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8204_v708_capstone.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.

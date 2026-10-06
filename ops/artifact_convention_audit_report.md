@@ -9,32 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 2 |
-| CANNOT_DETERMINE | 6 |
+| CHECKABLE | 3 |
+| CANNOT_DETERMINE | 5 |
 
-## experiment_8168_sentence_energy_fit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked at the pre-gate layer because upstream dependency `exp8167-fit-sentence-capture` failed the requirement `fit_trainable_score == 1` with an observed value of 0.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8171_v706_released_feedback_learning.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8172_v706_learning_benefit_audit.json
+## experiment_8183_v707_sentence_energy_fit.json
 
 **CHECKABLE**
 
@@ -42,7 +20,7 @@ reviewer call failed
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Hypothesis H2 (error-center versus fixed-public-center) failed to demonstrate an advantage over the control arm, reporting an honest null with `h2_passed: false` and zero gain.
+no claim
 
 ## WHAT IS MISSING
 nothing
@@ -50,31 +28,63 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8173_v706_service_validation.json
+## experiment_8184_v707_reserved_sentence_capture.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8174_v706_complete_request_cost.json
+## experiment_8185_v707_sentence_decision_audit.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8175_v706_arc_supervisor_delta.json
+## experiment_8186_calibrated_online_memory.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Experiment 8186 was blocked from running at the conductor pre-gate because upstream dependency `exp8180-calibrated-memory-methods` failed its prerequisite gate checks.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8188_v707_exact_request_service.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8176_v706_hardware_workload_boundary.json
+## experiment_8189_v707_arc_supervisor_frontier.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+no claim
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8190_v707_hardware_service_boundary.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8177_v706_capstone.json
+## experiment_8191_v707_capstone.json
 
 **CANNOT_DETERMINE**
 

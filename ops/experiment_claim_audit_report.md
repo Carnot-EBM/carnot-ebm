@@ -11,11 +11,87 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 3 |
+| CLAIM_SUPPORTED | 4 |
 | NO_CLAIM | 1 |
-| CANNOT_DETERMINE | 4 |
+| CANNOT_DETERMINE | 3 |
 
-## experiment_8168_sentence_energy_fit.json
+## experiment_8183_v707_sentence_energy_fit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Calibrated sentence energy fitting produces a complete null result with zero independent generalization and no demonstrated learning benefit over comparator or ablation baselines.
+
+## WHAT WOULD REFUTE IT
+An observation of a strictly positive generalization score (`independent_generalization_score > 0` or `generalized_learning_benefit_score > 0`), or out-of-sample performance where `local_evidence_radial16` achieves a lower typed decision cost than the `local_feature_ablation` control on held-out evaluation clusters.
+
+## WAS THAT CHECKED
+Yes. Performance was evaluated across cross-validation folds on held-out clusters (`held_source_ids` in `fit_fold_rows`), benchmarked against baseline arms (`local_max` and `local_feature_ablation` in `frozen_thresholds` and `calibration_receipts`), and both generalization metrics were evaluated and recorded as `0`, with the ablation baseline tying the candidate model at a `typed_cost` of `0.265625`.
+
+## EVIDENCE
+- `"honest_verdict"`: `"complete_null_sentence_energy_fit"`
+- `"verdict_class"`: `"null"`
+- `"independent_generalization_score"`: `0`
+- `"generalized_learning_benefit_score"`: `0`
+- `"claim_scope"`: `"sealed calibrated source energy decisions; exposed fit/tune only; reserved H1 untested"`
+- `"comparator_id"`: `"radial16"`
+- `"arm"`: `"local_evidence_radial16"`
+- `"arm"`: `"local_feature_ablation"`
+- `"typed_cost"`: `0.265625`
+- `"verifier_is_oracle"`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8184_v707_reserved_sentence_capture.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_8185_v707_sentence_decision_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The candidate sentence decision policy `local_evidence_radial16` fails the acceptance gates against baseline `radial16`, yielding a complete null decision audit verdict (`complete_null_sentence_decision_null`).
+
+## WHAT WOULD REFUTE IT
+The null claim would be refuted by observed data where `local_evidence_radial16` achieved a strictly positive lower-bound cost gain exceeding `0.02` at the 97.5% one-sided confidence level while incurring `0` extra false accepts relative to `radial16`, thereby satisfying all acceptance gates and yielding `safety_passed` as true.
+
+## WAS THAT CHECKED
+Yes. It was checked across all 128 intended slots (and 97 complete cases) evaluated via 10,000 bootstrap draws in `acceptance_operands`, `all_slot_metrics`, `paired_intervals`, and `acceptance_gates`.
+
+## EVIDENCE
+- `"honest_verdict"`: `"complete_null_sentence_decision_null"`
+- `"verdict_class"`: `"null"`
+- `"safety_passed"`: `false`
+- `"extra_false_accepts"`: `2`
+- `"maximum_extra_false_accepts"`: `0`
+- `"lower_cost_gain"`: `-0.13671875`
+- `"minimum_gain_exclusive"`: `0.02`
+- `"lower_one_sided_975"`: `-0.13671875`
+- `"mean_gain"`: `-0.01953125`
+- `"cost"`: `0.37109375` (for `"arm"`: `"local_evidence_radial16"`)
+- `"cost"`: `0.3515625` (for `"arm"`: `"radial16"`)
+- `"primary_denominator"`: `"all_intended_slots"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8186_calibrated_online_memory.json
 
 **NO_CLAIM**
 
@@ -26,29 +102,22 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-An observation showing that the upstream gate condition was satisfied, that the experiment actually executed rather than terminating at pre-flight check, or any empirical performance claim resulting from the run. Because this artifact is an execution gate receipt recording a blocked run, no empirical or comparative claim is made to refute.
+Any comparative experimental results, execution metrics, or downstream performance data within the artifact demonstrating that the experiment actually executed despite the gate failure.
 
 ## WAS THAT CHECKED
-No; the experiment was blocked at `conductor_pre_gate` prior to execution, so no experimental trials or comparative evaluations were run.
+No; execution was halted at the pre-gate validation layer before any experimental condition or hypothesis could be evaluated.
 
 ## EVIDENCE
-`schema`
-`blocked_gate_check_v1`
-`status`
-`blocked`
-`duration_s`
-`0.0`
-`honest_verdict`
-`blocked_gate_check_failed`
-`blocked_at_layer`
-`conductor_pre_gate`
-`gate_check_summary`
-`gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8167-fit-sentence-capture.fit_trainable_score (actual=0 == expected=1)`
+`schema`: `blocked_gate_check_v1`
+`status`: `blocked`
+`honest_verdict`: `blocked_gate_check_failed`
+`duration_s`: `0.0`
+`blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8171_v706_released_feedback_learning.json
+## experiment_8188_v707_exact_request_service.json
 
 **CANNOT_DETERMINE**
 
@@ -60,7 +129,7 @@ provider: openai
 approval: never
 sandbox: workspace-write
 
-## experiment_8172_v706_learning_benefit_audit.json
+## experiment_8189_v707_arc_supervisor_frontier.json
 
 **CLAIM_SUPPORTED**
 
@@ -68,43 +137,30 @@ sandbox: workspace-write
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Online learning with error-center updates confers no later typed cost benefit over the fixed-public-center baseline on later stream slots (`complete_null_no_later_typed_cost_benefit`).
+No new authenticated ARC supervisor outcomes, firings, or level solves were observed beyond the upstream frontier cutoff.
 
 ## WHAT WOULD REFUTE IT
-The headline null claim would be refuted by a statistically significant, non-zero typed cost reduction for `error_center` over `fixed_public_center` on the later stream slots—concretely, an observation where `paired_gain_interval` yields a `lower_bound` ≥ `0.02` (`gain_lower_bound_minimum`), `improved_sources` ≥ `5` (`beneficial_sources_minimum`), or `h2_passed` evaluates to `true`.
+The observation of any authenticated new supervisor event rows, firings, or level solves past the upstream cutoff timestamp (`2026-10-05T21:51:37.962846+00:00`), non-zero outcome reduction from the empty ledger control, or positive control failure indicating that the reduction reader is blind to genuine progress.
 
 ## WAS THAT CHECKED
-Yes. Refutation was given a real opportunity to occur: headroom was present (`available_typed_cost_headroom` of `0.6265822784810127`), detector sensitivity was verified by a passing positive control (`positive_control`), and 158 independent completed sources were evaluated across multiple moving-block bootstrap resamples (`paired_intervals` at block lengths 8, 16, and 32) in `audit_statistics` and `reductions`.
+Yes; the reader verified 156 upstream preconditions, executed negative controls in `historical_required_failures` confirming corrupt records fail, ran positive control fixtures in `reader_conformance_rows` confirming that genuine progress is accepted (`supported_progress_accepted: true`), evaluated `empty_ledger_control`, and scanned the upstream receipt frontier after the cutoff timestamp, detecting zero new outcomes (`new_outcome_count: 0`).
 
 ## EVIDENCE
-- `"honest_verdict": "complete_null_no_later_typed_cost_benefit"`
-- `"h2_passed": false`
-- `"improved_sources": 0`
-- `"available_typed_cost_headroom": 0.6265822784810127`
-- `"other_control_cost_advantage": 0.0`
-- `"lower_bound": 0.0`
-- `"mean_gain": 0.0`
-- `"support_sufficient": true`
-- `"completed_count": 158`
-- `"gain_lower_bound_minimum": 0.02`
-- `"beneficial_sources_minimum": 5`
+- `"honest_verdict"`: `"complete_null_no_new_outcomes"`
+- `"no_new_outcomes"`: `true`
+- `"causal_benefit_claimed"`: `false`
+- `"new_outcome_count"`: `0`
+- `"new_firing_count"`: `0`
+- `"new_level_solves_claimed"`: `0`
+- `"new_solve_claim"`: `false`
+- `"fixture_rejected"`: `true`
+- `"supported_progress_accepted"`: `true`
+- `"claim_scope"`: `"exposed_development_reader_conformance_and_observational_frontier"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8173_v706_service_validation.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
-
-## experiment_8174_v706_complete_request_cost.json
+## experiment_8190_v707_hardware_service_boundary.json
 
 **CLAIM_SUPPORTED**
 
@@ -112,75 +168,40 @@ sandbox: workspace-write
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Native atomic batching fails to achieve the NFR01 speedup threshold (lower 95% bound >= 10x) over Python durable batching for complete request latency, resulting in an honest null.
+Hardware acceleration provides no whole-workload service benefit over software execution (with Amdahl outer speedup ceilings bounded below 1.0022x across conditions), justifying the decision to defer hardware spending.
 
 ## WHAT WOULD REFUTE IT
-Observing a statistically significant paired speedup ratio with `lower95 >= 10` (`nfr01_met: true`) while preserving behavioral equivalence (`equivalent_behavior_score: 1`).
+A measured arithmetic fraction approaching the required 0.99 threshold, an Amdahl speedup ceiling substantially exceeding 1.0x toward the 100x target, or an authenticated board deployment exhibiting actual execution and whole-service latency reduction.
 
 ## WAS THAT CHECKED
-Yes; checked across 24 independent source pairs (48 completed requests) under live GPU inference with 10,000 bootstrap resamples in `paired_speed_intervals` and evaluated against `nfr01_lower95`.
+Yes. In `amdahl_bounds` and `rows`, 288 completed requests across four conditions (`cold_miss`, `exact_repeat`, `forced_refresh`, `changed_source`) were decomposed into constituent latencies, demonstrating that non-accelerable overhead accounts for >99.7% of total runtime and bounding maximum potential speedup to at most 1.00213x; additionally, `board_rows` audited five hardware platforms and confirmed zero active, compatible execution.
 
 ## EVIDENCE
-- `"honest_verdict": "complete_null_complete_request_cost"`
-- `"verdict_class": "null"`
-- `"nfr01_met": false`
-- `"nfr01_lower95": 10`
-- `"estimate": 1.0798600220763859`
-- `"lower95": 0.6999568606412714`
-- `"upper95": 1.6827817162346008`
-- `"completed_count": 48`
-- `"independent_count": 24`
-- `"equivalent_behavior_score": 1`
-- `"claim_scope": "Independent complete durable requests; descriptive pipeline timing when outputs or decisions differ; no model quality or learning claim"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8175_v706_arc_supervisor_delta.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
-
-## experiment_8176_v706_hardware_workload_boundary.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Hardware arithmetic acceleration is bounded to an Amdahl outer ceiling of ≤ 1.014x speedup because retained non-arithmetic work dominates total latency, blocking hardware acceleration without a whole-workload redesign.
-
-## WHAT WOULD REFUTE IT
-Observing an execution arm where retained non-arithmetic work is low enough to yield an Amdahl outer ceiling approaching the 100x target (i.e., arithmetic fraction ≥ 0.99 or retained work fraction ≤ 0.01), or observing actual hardware execution with measured whole-service latency reduction and terminal criteria met on attached boards.
-
-## WAS THAT CHECKED
-Yes. Amdahl outer ceilings and retained overhead components (including durable fsync, queue wait, and lifecycle times) were profiled across 3,808 rows over five execution arms in `amdahl_bounds`, `workload_rows`, and `rows`, and physical hardware execution criteria were explicitly evaluated in `board_rows`.
-
-## EVIDENCE
-- `honest_verdict`: `complete_blocked_composition_replay_ready_score`
-- `verdict_class`: `blocked`
-- `claim_scope`: `Durable host batch and composed request software ceilings; historical board custody only`
-- `measured_bottleneck`: `Retained acquisition and queue dominate complete requests; durable storage dominates host batches.`
-- `whole_workload_redesign_required`: `true`
-- `outer_ceiling`: `1.0138852476394273`
-- `outer_ceiling`: `1.0000273149555816`
-- `scoring_envelope_fraction`: `0.003088606764739793`
-- `terminal_criterion_met`: `false`
+- `honest_verdict`: `complete_null_hardware_service_boundary`
+- `hardware_spending_decision`: `defer: no measured whole-workload hardware benefit`
+- `claim_scope`: `Independent cold, hit and invalidation software ceilings; historical board custody only`
+- `target_speedup`: `100`
+- `required_arithmetic_fraction_for_100x`: `0.99`
+- `outer_ceiling`: `1.0002748073696213`
+- `outer_ceiling`: `1.0021319989821222`
+- `outer_ceiling`: `1.0002795251631347`
+- `outer_ceiling`: `1.000283194465957`
+- `retained_ns`: `43014021117`
+- `total_ns`: `43025841687`
+- `retained_ns`: `4897856935`
+- `total_ns`: `4908299161`
+- `retained_ns`: `39015768304`
+- `total_ns`: `39026674193`
+- `retained_ns`: `40295229504`
+- `total_ns`: `40306640890`
 - `acquisition_relevance`: `defer: no measured board whole-service benefit`
 - `current_hardware_execution`: `false`
+- `measured_bottleneck`: `Acquisition on misses/invalidation and durable storage/acknowledgement on cache hits.`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8177_v706_capstone.json
+## experiment_8191_v707_capstone.json
 
 **CANNOT_DETERMINE**
 

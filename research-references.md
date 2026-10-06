@@ -50658,3 +50658,95 @@ Use the existing CUDA runtime and CPU/Rust small heads. No purchase follows.
 Retain separate KV260 fabric, PolarFire CPU-only and GateMate JTAG boundaries.
 Exact-request reuse is a conditional service experiment; repeat frequency must
 be measured or explicitly hypothetical. It is not a new hardware speed claim.
+## 2026-10-06 — V708 planning scan, recorded before milestone design
+
+V707 qualified sentence transport. Its source decision audit found a mean
+typed-cost gain of -0.01953125 across 128 intended slots, with two extra false
+accepts. The calibrated memory prototype failed owned coverage: 384 of 386
+statements ran. These findings separate a decision-policy question from an
+execution qualification problem. The scan below informed the next design.
+
+### Methods worth testing
+
+- **Softmax is not Enough (for Adaptive Conformal Classification)**,
+  [ICLR 2026 paper](https://openreview.net/pdf?id=zCwTMRtASZ) and
+  [author implementation](https://github.com/navidattar/Energy-Based-Conformal-Classification).
+  Search-indexed paper text describes energy-adjusted nonconformity scores and
+  class-conditional calibration. Direct OpenReview access hit a browser challenge;
+  the author repository was readable and identifies its ICLR 2026 presentation.
+  Adapt the simpler class-conditional prediction-set baseline first. Map singleton
+  sets to accept/reject, and ambiguous or empty sets to escalation. Preserve an
+  equivalent logistic control. Arbitrary common logit shifts must not create a
+  semantic signal. Do not import image-classification results as text evidence.
+- **Continual Calibration: Coverage Can Collapse Before Accuracy in Lifelong
+  LLM Fine-Tuning**, [arXiv:2604.23987](https://arxiv.org/abs/2604.23987),
+  submitted April 27, 2026. The authors distinguish accuracy retention from
+  coverage retention and study separate calibration buffers. Adapt the measurement
+  discipline to Carnot's small online head. Keep retention labels separate from
+  training and admission. This does not authorize generator fine-tuning.
+- **Adaptive Conformal Inference Under Delayed Feedback: Coverage Guarantees
+  and a Delay-to-Memory Diagnostic**,
+  [arXiv:2609.07251](https://arxiv.org/abs/2609.07251).
+  The delay/memory distinction motivates explicit issue, release and admission
+  clocks. A replay with historically exposed labels cannot inherit prospective
+  coverage guarantees. Preserve the existing delay and pending-state protocol.
+- **KAC: Kolmogorov-Arnold Classifier for Continual Learning**,
+  [arXiv:2503.21076](https://arxiv.org/abs/2503.21076), March 27, 2025.
+  Its radial classifier motivates the existing bounded center memory. Compare
+  error-selected growth with fixed, random and calibration-only controls. Local
+  support alone is not evidence of retained knowledge or useful later decisions.
+- **KANtize: Exploring Low-bit Quantization of Kolmogorov-Arnold Networks for
+  Efficient Inference**, [arXiv:2603.17230](https://arxiv.org/abs/2603.17230),
+  March 18, 2026, and **Ultrafast On-Chip Online Learning via Spline Locality**,
+  [arXiv:2602.02056](https://arxiv.org/abs/2602.02056).
+  Lookup tables and local updates motivate a precision/decision-margin audit.
+  Test complete operations, storage and transfer costs. Their accelerators are
+  not Carnot's KV260, and splines are not interchangeable with radial kernels.
+
+### All requested primary topics checked
+
+| Topic | Primary source checked | Planning consequence |
+|---|---|---|
+| EBM reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092) | Train small conditional energies; no foundation-model scaling claim. |
+| ARM/EBM equivalence | [2512.15605v4](https://arxiv.org/abs/2512.15605v4), revised May 25, 2026 | Probability-equivalent energy and logistic arms must agree. |
+| Neural constraints | [NSVIF, 2601.17789](https://arxiv.org/abs/2601.17789) | Logical constraint satisfaction cannot certify incorrect semantic extraction. |
+| Ising in ML | [Neural Ising Machines, 2602.00302](https://arxiv.org/abs/2602.00302) | Learned update dynamics remain a separate sampler question; do not add a sampler sweep to fix decision errors. |
+| Hallucination verification | [RT4CHART, 2603.27752](https://arxiv.org/abs/2603.27752) | Preserve full sentence/source evidence; distinguish better transport from better decisions. |
+| KAN | KAC and KANtize above | Equal-capacity controls, retention and numerical decision stability. |
+| Energy-guided generation | [ETS, 2601.21484v3](https://arxiv.org/abs/2601.21484v3), revised May 19, 2026 | Defer steering until the verifier has safe measured utility. |
+| Hardware sampling | [FPGA/Ising co-design, 2602.15985](https://arxiv.org/abs/2602.15985) | Include decomposition, communication and readout in acceleration bounds. |
+| Online learning | Continual Calibration and delayed ACI above | Separate optimizer qualification, useful later decisions and retention. |
+
+### Secondary channels and access limits
+
+- **OpenReview:** searched 2026 EBM/verification and energy-conformal work.
+  The conformal paper above is the actionable lead. Browser challenges prevented
+  direct forum review; search excerpts and author code are separate evidence.
+- **Extropic:** checked the [writing index](https://extropic.ai/writing) and
+  [Z1T article](https://extropic.ai/writing/z1t/). The index exposed little text.
+  Z1T describes a hybrid TSU/FPGA system. Vendor projections establish neither
+  local device access nor whole-service speed on Carnot workloads.
+- **Semantic Scholar:** attempted both Graph API citation endpoints for
+  ARXIV:2507.02092 and ARXIV:2512.15605. Both returned tool errors. Title searches
+  did not provide a verified citing-paper inventory. Citation coverage is incomplete.
+- **Hugging Face Papers:** checked RT4CHART and discovered
+  [OpenHalDet, 2606.06959](https://huggingface.co/papers/2606.06959) and
+  [SIRIN, 2608.00033](https://huggingface.co/papers/2608.00033).
+  These are leads for later evaluation interoperability. Their discovery pages
+  are not evidence of a new local corpus or detector benefit.
+- **GitHub:** checked [Python Trending](https://github.com/trending/python?since=monthly)
+  and [Rust Trending](https://github.com/trending/rust?since=monthly).
+  Responses were crawled about three weeks earlier, so no current ranking claim
+  follows. Inspected the conformal author repository instead. Its code provides
+  a method reference, not a dependency added to this project.
+- **Logical Intelligence:** checked its [site](https://logicalintelligence.com/)
+  and [Kona page](https://logicalintelligence.com/kona). The pages describe latent
+  reasoning and verification. No reproducible new training recipe or local Kona
+  access was established by this inspection.
+- **Fresh-data caution:** [FaithBench's NAACL 2025 publication](https://aclanthology.org/2025.naacl-short.38/)
+  and [official data](https://github.com/vectara/FaithBench) are useful human-label
+  resources, but Carnot already referenced FaithBench in V653–V657. Downloading
+  it again does not establish an unexposed evaluation cohort.
+
+These are method adaptations and deferred leads. No external accuracy or speed
+number is a Carnot result. The next design must state its exposure limits.
