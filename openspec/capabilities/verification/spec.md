@@ -50208,3 +50208,40 @@ absent versus zero readiness and primitive/aggregate tampering after rehash.
 Reconstruct genuine hard-exit/resume equality and future-label mutation invariance
 from sealed primitive logs. Missing external operands are terminal blocked; failed
 owned arithmetic or validation is disqualified. Exposed data earn zero generalization.
+
+## REQ-VERIFY-8213: Record prospective requests before inference
+
+The invocation-local versioned journal SHALL fsync an issue envelope before
+calling the actual generate(payload) boundary. Record UTC and monotonic clocks,
+issue sequence, request/parent/retry identities, original source and answer bytes,
+condition, payload prompt bytes, model/GGUF/template/runtime identity and every
+decoding parameter including seed. A separate immutable event records completion,
+error or censoring. Semantic equality excludes event clocks and IDs only.
+
+### SCENARIO-VERIFY-8213-JOURNAL
+
+Restart after issue preserves a pending request until explicit censoring. Reject
+duplicate IDs, partial JSONL tails, hash drift, invalid event order and semantic
+changes. A local scripted HTTP peer proves durable issue-before-generation,
+transport errors and non-generation exclusion. Fixtures are never Qwen measures.
+
+### SCENARIO-VERIFY-8213-SCHEDULE
+
+Seal24 distinct fit source identities from authenticated Exp8182 by ascending
+source_cluster_id before opening current outcomes or timing. Retain original
+source/answer bytes and condition; choose the first sentence by original index.
+Use max_tokens128, seed7098213 and one transport attempt without cache repeats.
+
+### SCENARIO-VERIFY-8213-JOIN
+
+Join fixture requests to existing Python score and loaded RustRadial8105.design
+signatures and durable Store.commit by request ID and semantic hash. Preserve
+startup, encode, lookup, inference, score, commit/fsync and readout clocks. Keep
+nested clocks inside their enclosing span and sum only disjoint spans. Freeze
+code and service configuration for Exp8214 without new model calls.
+
+Implementation for REQ-VERIFY-8213: `python/carnot/verify/request_recorder_8213.py`
+records the boundary; `python/carnot/verify/recorder_fixtures_8213.py` qualifies
+scripted HTTP and existing Python/Rust joins. The sixteen focused cases in
+`tests/python/test_prospective_request_recorder_8213.py` pass with100 percent
+coverage of the three owned modules and direct CLI, including child statements.

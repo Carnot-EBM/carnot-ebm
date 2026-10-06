@@ -309,3 +309,12 @@ checkout without `PYTHONPATH`: valid private evidence passes and rehashed
 aggregate tampering fails. Natural cached evidence retains all 128 slots;
 failed owned validation disqualifies. Combine unit and real CLI coverage and
 require 100 percent statements in the two audit modules and direct CLI.
+
+### E2E-022: Exp8213 scripted prospective request boundary (CPU)
+
+Spec refs: REQ-VERIFY-8213, REQ-REPORT-8213 and SCENARIO-REPORT-8213-CLI.
+Run `pytest -n 0 -o addopts= --no-cov -q tests/python/test_prospective_request_recorder_8213.py`.
+Private CLI and fresh-process replay must qualify a scripted HTTP peer, reject
+partial tails, duplicate IDs, template/seed/hash drift and rehashed tampering,
+retain pending issues across restart, and join real Python/Rust services. No
+fixture response is a Qwen measurement. Also run private E2E-015 and E2E-019.

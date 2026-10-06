@@ -94519,3 +94519,30 @@ newly owned statements, scoped Ruff/format/strict mypy, explicit-file spec cover
 affected consumers and E2E-015/019. Run the full Python health command once and
 preserve unrelated repository failures separately. Run unchanged adversarial and
 strict verdict-row validators on the private candidate before atomic publication.
+
+## REQ-REPORT-8213: Publish qualified prospective recorder evidence
+
+Publish Exp8213 only after frozen owned tests, real CLI/replay,100 percent owned
+statement coverage, scoped Ruff/format/strict mypy/spec checks, affected readers
+and private E2E-015/019. Record one bounded full Python suite separately, retaining
+unrelated failures. Owned failures disqualify and missing required resources block
+with exact path/hash/field/operator/expected/observed operands. Declare no_model_load,
+MODEL_SPECS=[], zero calls, designed_research_requests and no deployment demand.
+Oracle fixture success is circular_positive and generalization scores remain zero.
+
+### SCENARIO-REPORT-8213-CLI
+
+Private CLI paths exercise successful fixture qualification, missing inputs,
+wrong dates, protected fixture outputs and rehashed primitive/aggregate tampering.
+Fresh-process replay and unchanged terminal/adversarial/strict-row validators
+inspect a private candidate before atomic primary publication. Freeze literal
+commands, exits, full stdout/stderr hashes, clocks and source/code/config bytes.
+Do not modify historical primary artifacts, conductor or active roadmap.
+
+Implementation for REQ-REPORT-8213: `python/carnot/reporting/recorder_execution_8213.py`
+freezes commands and publishes through the unchanged primary publication helper.
+The executable runner is
+`scripts/experiments/experiment_8213_v709_prospective_request_recorder.py`.
+Owned lint/format/strict types/spec checks and private E2E-015/019 pass. A single
+full-suite receipt is recorded separately. Ops/status/traceability reconciliation
+belongs to the conductor under the task's explicit final instruction.
