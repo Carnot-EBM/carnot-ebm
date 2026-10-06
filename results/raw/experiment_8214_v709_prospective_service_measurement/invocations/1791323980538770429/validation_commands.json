@@ -1,0 +1,279 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.verify.prospective_service_8214",
+        "carnot.reporting.prospective_service_execution_8214"
+      ],
+      "name": "worktree_imports",
+      "scope": "changed_modules",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8214-validation-nfunjai5/focused",
+        "tests/python/test_prospective_service_measurement_8214.py",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "explicit_tests",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8214-validation-nfunjai5/coverage.ini",
+        "--data-file=/tmp/carnot-8214-validation-nfunjai5/.coverage",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8214-validation-nfunjai5/coverage",
+        "tests/python/test_prospective_service_measurement_8214.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "explicit_tests_and_changed_modules",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8214-validation-nfunjai5/.coverage",
+        "/tmp/carnot-8214-validation-nfunjai5"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8214-validation-nfunjai5/.coverage",
+        "--include=*/python/carnot/verify/prospective_service_8214.py,*/python/carnot/reporting/prospective_service_execution_8214.py,*/scripts/experiments/experiment_8214_v709_prospective_service_measurement.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "changed_modules",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/prospective_service_8214.py",
+        "python/carnot/reporting/prospective_service_execution_8214.py",
+        "scripts/experiments/experiment_8214_v709_prospective_service_measurement.py",
+        "tests/python/test_prospective_service_measurement_8214.py"
+      ],
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/prospective_service_8214.py",
+        "python/carnot/reporting/prospective_service_execution_8214.py",
+        "scripts/experiments/experiment_8214_v709_prospective_service_measurement.py",
+        "tests/python/test_prospective_service_measurement_8214.py"
+      ],
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/verify/prospective_service_8214.py",
+        "python/carnot/reporting/prospective_service_execution_8214.py",
+        "--strict",
+        "--follow-imports=silent"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_prospective_service_measurement_8214.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8214-validation-nfunjai5/e2e015",
+        "tests/python/test_source_boundary_7852.py",
+        "-q"
+      ],
+      "name": "e2e015",
+      "scope": "private_e2e",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8214-validation-nfunjai5/e2e019",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "e2e019",
+      "scope": "private_e2e",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8214-validation-nfunjai5/affected_consumers",
+        "tests/python/test_primary_publication_7928.py",
+        "-q"
+      ],
+      "name": "affected_consumers",
+      "scope": "private_e2e",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8214-validation-nfunjai5/recorder",
+        "tests/python/test_prospective_request_recorder_8213.py",
+        "-q"
+      ],
+      "name": "recorder_replay_e2e003_004",
+      "scope": "private_e2e",
+      "timeout_s": 180
+    }
+  ],
+  "frozen_before_measurement": true,
+  "measurement_config": {
+    "cache_enabled": false,
+    "call_timeout_s": 120,
+    "deadline_s": 3600,
+    "duration_floor_s": 10,
+    "max_tokens": 128,
+    "requests": 24,
+    "seed": 7098213
+  },
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "name": "repository_health_once",
+    "scope": "repository_health_not_owned",
+    "timeout_s": 600
+  },
+  "resources": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "from llama_cpp import llama_cpp; print(llama_cpp.llama_supports_gpu_offload()); raise SystemExit(not llama_cpp.llama_supports_gpu_offload())"
+      ],
+      "name": "cuda_backend",
+      "scope": "preconditions",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "rustc",
+        "--version"
+      ],
+      "name": "rust_toolchain",
+      "scope": "preconditions",
+      "timeout_s": 10
+    },
+    {
+      "argv": [
+        "cargo",
+        "--version"
+      ],
+      "name": "cargo_toolchain",
+      "scope": "preconditions",
+      "timeout_s": 10
+    }
+  ],
+  "terminal": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8214_v709_prospective_service_measurement.py",
+        "--cold-replay",
+        "/tmp/carnot-8214-validation-nfunjai5/experiment_8214_v709_prospective_service_measurement.json"
+      ],
+      "name": "cold_replay",
+      "scope": "terminal",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-8214-validation-nfunjai5/experiment_8214_v709_prospective_service_measurement.json"
+      ],
+      "name": "adversarial",
+      "scope": "terminal",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-8214-validation-nfunjai5/experiment_8214_v709_prospective_service_measurement.json"
+      ],
+      "name": "strict_rows",
+      "scope": "terminal",
+      "timeout_s": 60
+    }
+  ]
+}

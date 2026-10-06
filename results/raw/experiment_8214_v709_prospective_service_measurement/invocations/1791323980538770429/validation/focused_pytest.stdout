@@ -1,0 +1,38 @@
+............F                                                            [100%]
+=================================== FAILURES ===================================
+___________________ test_unavailable_recorder_configuration ____________________
+
+data = {'checks': [{'artifact_field': 'fit_roster_exists', 'check': 'fit_roster_exists', 'expected': True, 'hash': 'sha256:6f...e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169', 'reasoning_interface': {'enable_thinking': False}, ...}, ...}
+tmp_path = PosixPath('/tmp/carnot-8214-validation-nfunjai5/focused/test_unavailable_recorder_conf0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fecb456c2c0>
+
+    def test_unavailable_recorder_configuration(data, tmp_path, monkeypatch):
+        """REQ-REPORT-8214: missing and zero recorder readiness remain different operands."""
+        root = tmp_path / "root"
+        primary = root / "results/experiment_8213_v709_prospective_request_recorder.json"
+        primary.parent.mkdir(parents=True)
+        original = deepcopy(data)
+        original["input_path"] = str(tmp_path / "input.json")
+        monkeypatch.setattr(e.qualified, "inputs", lambda *args: deepcopy(original))
+        for observed in (None, 0):
+            primary.write_text(json.dumps(dict(request_recorder_ready_score=observed)))
+            value = e.inputs(root, tmp_path / "raw")
+            assert not value["ready"]
+>           assert (
+                next(c for c in value["checks"] if c["check"] == "request_recorder_ready_score")[
+                    "observed"
+                ]
+                == observed
+            )
+E           assert 1 == None
+
+tests/python/test_prospective_service_measurement_8214.py:277: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_prospective_service_measurement_8214.py::test_unavailable_recorder_configuration
+1 failed, 12 passed, 1 warning in 60.74s (0:01:00)

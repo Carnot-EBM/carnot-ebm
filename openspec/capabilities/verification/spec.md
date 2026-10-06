@@ -50245,3 +50245,23 @@ records the boundary; `python/carnot/verify/recorder_fixtures_8213.py` qualifies
 scripted HTTP and existing Python/Rust joins. The sixteen focused cases in
 `tests/python/test_prospective_request_recorder_8213.py` pass with100 percent
 coverage of the three owned modules and direct CLI, including child statements.
+## REQ-VERIFY-8214: Measure the prospective bounded service schedule
+
+Execute the authenticated Exp8213 schedule once in its frozen 24-source order.
+Require the pinned Qwen3.8 Q4_K_M hash, embedded template, CUDA offload, an owned
+GPU lease, adequate free VRAM and the existing loaded Rust extension before
+generation. Use the qualified owned process supervisor, 128 output tokens,
+120-second calls and a 3600-second measurement deadline. Fsync each issue before
+generation. Retain errors, truncation and unstarted slots with their actual costs.
+For valid completions use matched fresh Python/Rust durable service stores and
+seeded branch order. Measure conversion, pending state, scoring, commit/fsync and
+readout; require probability, action and reopened state parity.
+
+### SCENARIO-VERIFY-8214-MEASUREMENT
+
+Tests exercise successful matched pairs, malformed and truncated completions,
+generation failure, total deadline censoring, parity failure and source support.
+Only at least20 distinct complete pairs permit the paired latency interval.
+Startup is charged once per complete workload. Both arms are charged the same
+actual acquisition plus their own downstream work. Include all-slot wall time
+and storage overhead; report a measured Amdahl ceiling without deployment claims.

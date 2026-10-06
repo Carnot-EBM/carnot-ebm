@@ -94546,3 +94546,25 @@ The executable runner is
 Owned lint/format/strict types/spec checks and private E2E-015/019 pass. A single
 full-suite receipt is recorded separately. Ops/status/traceability reconciliation
 belongs to the conductor under the task's explicit final instruction.
+## REQ-REPORT-8214: Publish current prospective service evidence
+
+Freeze exact validation commands before measurement. Require tests first,100%
+new statement coverage including CLI children, scoped Ruff/format/strict mypy,
+explicit-file spec coverage, affected readers, loaded native E2E-003/004,
+E2E-015/019 and recorder replay. Keep one full Python suite health receipt
+separate. Reuse the unchanged primary publisher and terminal auditors after
+fresh-process primitive replay. Preserve hashes, clocks, literal argv and exits.
+Missing resources are terminal blocked with exact operands; owned failures are
+disqualified. Fixtures earn zero live calls. Keep model_bounded_generation's
+10-second measured floor distinct from model load. Keep generalization scores
+zero, deployment_demand_observed=false, measured_repeat_frequency=null and
+nfr01_met=false. Historical primaries, conductor and active roadmap are immutable.
+The conductor owns ops/changelog/status/traceability reconciliation for this task.
+
+### SCENARIO-REPORT-8214-CLI
+
+Private real CLI paths cover fixture measurement, blocked operands, date rejection,
+cold replay, primitive/hash/aggregate tampering and protected output rejection.
+Every attempted or missing slot remains in the denominator. Failed owned checks
+forbid readiness and positive classification. Validate private candidate bytes
+before atomic publication of Exp8214 and preserve bound validator receipts.
