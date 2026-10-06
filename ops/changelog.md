@@ -21490,3 +21490,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-06: Bind fourteen tasks with immutable evidence and separate historical failures (⚠️ Blocked) — honest_verdict=complete_blocked_sha256; results/experiment_8178_v707_contract_custody.json
 - 2026-10-06: Freeze bounded evidence records that preserve every input sentence (⚠️ Research Finding) — honest_verdict=complete_null_sentence_protocol_frozen; results/experiment_8179_v707_sentence_transport_methods.json
 - 2026-10-06: Qualify learned base calibration before testing new energy centers (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8180_v707_calibrated_memory_methods.json
+- 2026-10-06: Test bounded Qwen evidence transport before scaling capture (✅ Complete) — honest_verdict=complete_positive_sentence_transport_canary; results/experiment_8181_v707_sentence_transport_canary.json
