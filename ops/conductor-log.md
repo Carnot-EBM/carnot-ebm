@@ -19648,3 +19648,4 @@ code |
 | 2026-10-06 10:29 UTC | Freeze class-conditional escalation and train cali | OK | 89 passed, 1 warning in 31.81s |
 | 2026-10-06 10:55 UTC | Train small energy heads with separate temperature | OK | 85 passed, 1 warning in 39.83s |
 | 2026-10-06 11:22 UTC | Seal selective decisions on every original reserve | OK | 86 passed, 1 warning in 30.54s |
+| 2026-10-06 11:51 UTC | Audit safe decision utility and calibration on all | OK | 86 passed, 1 warning in 32.72s |
