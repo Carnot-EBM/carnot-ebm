@@ -94445,3 +94445,43 @@ consumers and E2E-015/019. Freeze full-suite health separately and run it once.
 Owned failure forbids positive readiness. Cold-replay and unchanged terminal,
 adversarial and strict-row validators SHALL pass on the private candidate
 before atomic publication. Sealing readiness does not claim scientific benefit.
+## REQ-REPORT-8210: Publish authenticated restricted audit evidence
+
+Freeze owned commands before measurement. Reuse bounded supervision, template
+normalization and atomic primary publication. Preserve exact exits, complete
+stream hashes, clocks and source/code/config hashes. Missing required operands
+block dependent measurement with exact gate evidence; optional historical
+context remains a disposition. Failed owned validation disqualifies. A validated
+negative audit has action_audit_ready_score1 and verdict_class=null.
+
+### SCENARIO-REPORT-8210-CLI
+
+Real private CLI tests SHALL execute success, external blocking, date rejection
+and fresh-process replay. Row, original-label, permission-mask and denominator
+mutations SHALL fail replay even with a recomputed outer checksum. Measure100%
+new Python statements, including real child statements, scoped Ruff/format,
+strict mypy, explicit-file spec coverage, affected consumers and E2E-015/019.
+Run full Python health once and retain unrelated failures separately. Validate
+the private candidate with unchanged terminal validators before publication.
+Conductor owns ops/status/changelog/traceability reconciliation.
+
+Implementation: `restricted_decision_audit_8210.py` reuses the qualified bounded
+runner and unchanged terminal publication validator. Its direct experiment CLI
+retains no-model declarations, original evidence custody and separate health
+receipts. The conductor owns the remaining ops and traceability updates.
+
+### SCENARIO-REPORT-8210-MANIFEST
+
+Calling the audit manifest directly SHALL freeze Exp8210's own test, coverage,
+lint and type-check paths and its direct CLI for terminal cold replay. The
+manifest SHALL work without runner-installed module overrides and restore
+upstream module bindings after construction. The frozen cold-replay command
+SHALL accept a valid private audit and reject rehashed aggregate tampering.
+
+Implementation: the audit manifest binds its own CLI through the upstream
+adapter. The standalone frozen-command regression passes alongside all original
+tests. All 160 affected tests and 14 required commands pass; combined unit and
+real CLI coverage is 254/254 statements without exclusions. Private natural
+replay and unchanged terminal validators qualify a ready null audit. E2E-021
+and the repair evidence are recorded in ops and traceability; the prior full-suite
+timeout and existing global spec gaps remain separate diagnostic results.

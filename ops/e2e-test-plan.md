@@ -1,6 +1,6 @@
 # Carnot — E2E Test Plan
 
-**Last Updated:** 2026-09-29
+**Last Updated:** 2026-10-06
 
 ## E2E Test Strategy
 
@@ -297,3 +297,15 @@ predictions saved before release, and measured save/flush/exit statements.
 The same tests exercise private CLI publication, external blocking, date
 rejection, cold replay and rehashed tamper rejection. Combine only invocation
 unit/child shards and require100 percent newly owned statements.
+
+### E2E-021: Exp8210 frozen audit replay CLI (CPU)
+
+Spec refs: REQ-REPORT-8210, SCENARIO-REPORT-8210-CLI and
+SCENARIO-REPORT-8210-MANIFEST. Run
+`pytest -n 0 -o addopts= --no-cov -q tests/python/test_restricted_decision_audit_8210.py`.
+The standalone manifest must freeze the audit's own CLI and owned paths, then
+restore upstream bindings. Execute its frozen replay command from outside the
+checkout without `PYTHONPATH`: valid private evidence passes and rehashed
+aggregate tampering fails. Natural cached evidence retains all 128 slots;
+failed owned validation disqualifies. Combine unit and real CLI coverage and
+require 100 percent statements in the two audit modules and direct CLI.

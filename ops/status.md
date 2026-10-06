@@ -1,5 +1,28 @@
 # Carnot — Operational Status
 
+## 2026-10-06 — Exp8210 frozen replay repair
+
+The standalone restricted audit manifest now binds Exp8210's CLI through the
+upstream manifest adapter. Its frozen terminal replay previously invoked
+Exp8208 and rejected valid audit evidence. A new regression executes the frozen
+command outside the checkout, checks owned validation scope and restored module
+bindings, and rejects rehashed aggregate tampering. All original test and helper
+definitions remain unchanged; `scripts/research_conductor.py` is byte-identical
+to the pre-repair snapshot.
+
+All 160 affected tests pass: seven audit tests, 55 consumer/E2E-015/019 tests,
+and 98 core/upstream/fix-erasure checks. Unit and real CLI coverage measures
+254/254 owned statements with no exclusions. All 14 required measurement,
+validation and terminal commands pass, including Ruff, formatting, strict mypy,
+scoped spec coverage and E2E-021. The private natural candidate passes cold
+replay, adversarial verification and strict row lint with readiness 1 and a null
+verdict, retaining 97 complete, 30 failed and one excluded source slot.
+
+Evidence is retained under `/tmp/carnot-8210-fix-validation/`. The earlier
+180-second full-suite timeout remains a failed diagnostic; global spec checking
+still reports 1,142 existing traceability gaps. These affected-suite results do
+not establish a repository-wide pass.
+
 ## 2026-10-06 — V709 consumer readiness repair
 
 Authenticated historical terminal failures now qualify their documented reader

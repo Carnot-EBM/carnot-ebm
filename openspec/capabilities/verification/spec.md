@@ -50132,3 +50132,29 @@ Reject modified heads, duplicate/replaced sources or slots, malformed features,
 target-bearing nested fields and changed baseline predictions. Missing external
 operands block dependent scoring with exact path/hash/field/expected/observed
 evidence. Owned scoring or validation failures disqualify and readiness is zero.
+## REQ-VERIFY-8210: Independently audit restricted decision utility
+
+Authenticate Exp8209 sealed_action_ready_score == 1, prediction hashes and
+within-invocation access order before original human annotation access. Join by
+original source and response identity; recompute targets and frozen action costs.
+Keep all128 slots, including missing escalation costs, and separate complete
+pairs. Test only registered H1:10000 paired source-cluster draws, alpha.025,
+96 complete sources,12/class,9500 valid draws, lower gain bound>.02 against the
+tune-selected matched simple control,5 improved sources,no extra false accepts,
+Brier increase<=.01 and original-baseline cost increase<=.02.
+
+### SCENARIO-VERIFY-8210-REDUCTION
+
+Private tests SHALL cover independent original-label joins, changed identity,
+labels, masks, costs, denominators, support failure, positive controls, identical
+arms and all-escalate nulls. Report policy-versus-original separately from energy
+increment. Equivalent logistic SHALL tie. Accepted coverage and conditional error
+use their own denominators and exact intervals; subset counts imply no population
+safety guarantee. Exposed data earn zero generalization; unchanged local_set
+retirement and historical null evidence remain preserved.
+
+Implementation: `restricted_decision_rule_8210.py` reconstructs human targets,
+costs, paired source intervals and every H1 operand. The seven focused tests in
+`test_restricted_decision_audit_8210.py` include natural evidence, positive and
+null controls, missing slots, cold rejection of rehashed primitive mutations and
+the standalone frozen terminal command's exact audit identity.

@@ -19,7 +19,21 @@ exclusion tests, private E2E-018 CLI checks and scoped test/spec traceability.
 The active milestone and conductor are unchanged; execution remains unstaged
 in the sense of activation, while the next-roadmap files are ready for review.
 
-**Last Updated:** 2026-10-03
+**Last Updated:** 2026-10-06
+**Operational Note:** REQ-REPORT-8210, SCENARIO-REPORT-8210-MANIFEST and
+REQ-VERIFY-8210 map to the restricted decision audit/rule modules, Exp8210 CLI,
+and `tests/python/test_restricted_decision_audit_8210.py`. The manifest adapter
+now freezes this audit's terminal CLI, including when called without runner
+overrides. Its added regression exercises the actual frozen replay command
+outside the checkout and verifies owned scope, restored upstream bindings and
+rehashed-tamper rejection. Every original test/helper definition is unchanged.
+All 160 affected tests and 14 required commands pass; combined unit and actual
+CLI coverage is 254/254 statements without exclusions. Ruff, format, strict
+mypy, scoped spec checking and E2E-015/019/021 pass. The private natural candidate
+passes cold replay and unchanged adversarial/strict-row validators with readiness
+1, a null verdict and 97/30/1 complete/failed/excluded source slots.
+Evidence: `/tmp/carnot-8210-fix-validation/`. The prior failed full-suite timeout
+and 1,142 global traceability gaps remain separate; conductor source is unchanged.
 **Operational Note:** REQ-REPORT-8084, REQ-VERIFY-8084 and
 SCENARIO-REPORT-8084-WORKER-OUTPUT map to
 `python/carnot/experiment_8084_v700_fresh_cohort_methods.py`,

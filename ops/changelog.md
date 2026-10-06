@@ -1,5 +1,23 @@
 # Carnot — Changelog
 
+## 2026-10-06 — Repair Exp8210 frozen terminal replay
+
+- Bind the audit CLI through the upstream manifest adapter so standalone
+  validation invokes Exp8210. Add a real frozen-command regression for valid
+  replay, rehashed tampering, owned-file scope and module-binding restoration.
+- Preserve every original test/helper definition and the conductor source.
+  All 160 affected tests pass, including E2E-015/019/021 and fix-erasure checks.
+  Combined unit/CLI coverage measures 254/254 statements without exclusions.
+- All 14 required commands pass, including scoped lint, formatting, strict mypy,
+  spec coverage and the private natural candidate's three terminal validators.
+  Audit readiness is 1 with a null verdict and the original 128-slot accounting.
+- Reconcile reporting/verification specs, traceability and E2E instructions.
+  Preserve the previous full-suite timeout and 1,142 existing global spec gaps.
+  Evidence: `/tmp/carnot-8210-fix-validation/`.
+- Retire the coverage run's unattributed mutation marker after verifying it
+  records this repair's authorized E2E-plan edit. Preserve both the authored
+  documentation and an archived marker with its disposition in validation scratch.
+
 ## 2026-10-06 — Repair V709 consumer qualification
 
 - Preserve authenticated historical terminal failures while qualifying their
