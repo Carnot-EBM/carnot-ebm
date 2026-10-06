@@ -1,0 +1,62 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.707",
+  "generated_at": "2026-10-06T07:25:40Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 42.5,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Collect qualified sentence evidence on fixed fit and tune sources",
+      "duration_minutes": 11.87,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Seal reserved source predictions from frozen evidence heads",
+      "duration_minutes": 9.26,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure exact-request reuse including cold acquisition invalidation and recovery",
+      "duration_minutes": 5.81,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Test bounded Qwen evidence transport before scaling capture",
+      "duration_minutes": 5.16,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Inspect new live supervisor outcomes for transferable arm selection",
+      "duration_minutes": 4.68,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.707 completed 12 experiments (4 compute-bound, 8 synthesis-only) across 42.5 total wall-time minutes (averaging 4 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was concentrated in compute-bound task 'Collect qualified sentence evidence on fixed fit and tune sources' (11.87 minutes), followed by compute-bound tasks 'Seal reserved source predictions from frozen evidence heads' (9.26 minutes), 'Measure exact-request reuse including cold acquisition invalidation and recovery' (5.81 minutes), and 'Test bounded Qwen evidence transport before scaling capture' (5.16 minutes), alongside synthesis task 'Inspect new live supervisor outcomes for transferable arm selection' (4.68 minutes). Point-in-time GPU monitor polling observed 0% utilization across both NVIDIA GeForce RTX 3090 GPUs with 4MB memory allocated outside active runs, and gpu_idle_on_compute_bound_tasks is recorded as false as no compute-bound idle anomalies or multi-model parallel dispatch requirements were present.",
+  "bottlenecks_identified": [
+    "Compute-bound execution accounted for the majority of milestone latency, consuming 32.10 of the 42.5 total wall-time minutes (75.5%) across four tasks led by 'Collect qualified sentence evidence on fixed fit and tune sources' (11.87 minutes) and 'Seal reserved source predictions from frozen evidence heads' (9.26 minutes).",
+    "The top two slowest tasks ('Collect qualified sentence evidence on fixed fit and tune sources' and 'Seal reserved source predictions from frozen evidence heads') combined for 21.13 minutes (49.7% of milestone wall time), showing significant latency concentration in evidence collection and prediction sealing.",
+    "The top five slowest experiments combined for 36.78 minutes (86.5% of total milestone wall time), leaving the remaining seven synthesis-only experiments to complete in just 5.72 aggregate minutes.",
+    "Milestone timing relied on disk-mtime fallback reconstruction due to zero commits found on the live git-log path, leaving intra-task sub-phases (sentence evidence collection, prediction sealing, request reuse measurement, and Qwen evidence transport testing) uninstrumented without granular telemetry.",
+    "Static GPU monitor polling provides only point-in-time snapshots (0% utilization, 4MB allocated across both RTX 3090 GPUs) rather than continuous execution-window telemetry during active compute-bound runs."
+  ],
+  "improvements_suggested": [
+    "Profile and optimize sentence evidence collection in 'Collect qualified sentence evidence on fixed fit and tune sources' (11.87 minutes) to reduce fit and tune data extraction latency.",
+    "Optimize prediction sealing and freeze checks in 'Seal reserved source predictions from frozen evidence heads' (9.26 minutes) to streamline head evaluation and artifact emission.",
+    "Instrument experiment runners with granular intra-task sub-phase timers to isolate latency across model acquisition, request dispatch, inference passes, and receipt serialization.",
+    "Emit synchronous start and finish lifecycle timestamps directly into task result receipts during conductor execution to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Deploy continuous in-flight accelerator telemetry sampling during compute-bound execution windows to dynamically measure GPU utilization and memory bandwidth.",
+    "Enforce DualGPURunner orchestration strictly for concurrent workloads executing two or more distinct models in parallel, avoiding misapplication to single-model Qwen tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile and optimize sentence evidence collection in 'Collect qualified sentence evidence on fixed fit and tune sources' (which accounted for 11.87 minutes of milestone wall time).",
+    "Instrument experiment runners with granular intra-task sub-phase timers to isolate evidence collection, prediction sealing, request reuse measurement, and artifact serialization latency.",
+    "Persist structured start and finish lifecycle timestamps directly into experiment receipt artifacts to replace disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.707 completed 12 experiments (4 compute-bound, 8 synthesis-only) in 42.5 wall-time minutes, heavily concentrated in compute-bound sentence evidence collection (11.87 minutes) and prediction sealing (9.26 minutes). Point-in-time GPU monitor polling observed 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs, and gpu_idle_on_compute_bound_tasks is false as the compute-bound tasks did not involve multi-model parallel execution. Highest-leverage operational gains lie in profiling sentence evidence collection latency and instrumenting granular intra-task phase timers, with estimated time savings set to 0% pending empirical phase telemetry."
+}

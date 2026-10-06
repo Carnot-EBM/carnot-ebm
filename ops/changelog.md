@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-06 — Operational retrospective for milestone 2026.10.707
+
+- Wrote `results/operational_retro_2026_10_707.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.707`. Authoritative disk-mtime fallback data records 12 experiments completed (4 compute-bound, 8 synthesis-only) across 42.5 total wall-time minutes (average 4 minutes per experiment).
+- Execution wall time was led by compute-bound task 'Collect qualified sentence evidence on fixed fit and tune sources' (11.87 minutes), followed by compute-bound tasks 'Seal reserved source predictions from frozen evidence heads' (9.26 minutes), 'Measure exact-request reuse including cold acquisition invalidation and recovery' (5.81 minutes), and 'Test bounded Qwen evidence transport before scaling capture' (5.16 minutes), alongside synthesis task 'Inspect new live supervisor outcomes for transferable arm selection' (4.68 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs; `gpu_idle_on_compute_bound_tasks` is false as no compute-bound idle anomalies or multi-model parallel dispatch requirements were present.
+- Recommended operational improvements: profile sentence evidence collection latency, instrument experiment runners with intra-task sub-phase timers, and persist structured lifecycle timestamps directly into result receipts.
+
 ## 2026-10-05 — Operational retrospective for milestone 2026.10.706
 
 - Wrote `results/operational_retro_2026_10_706.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.706`. Authoritative disk-mtime fallback data records 11 experiments completed (2 compute-bound, 9 synthesis-only) across 143.2 total wall-time minutes (average 13 minutes per experiment).
