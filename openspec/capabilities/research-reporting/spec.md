@@ -2,6 +2,19 @@
 
 # Research Reporting Capability Specification
 
+## Planned continuation — V709 (2026-10-06)
+
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml` define thirteen planned tasks, Exp8205–Exp8217.
+Their table, complete JSON task contract and canonical digest use the existing
+REQ-REPORT-7837 and REQ-REPORT-7891-V685 authority semantics. Planning changes
+no runtime behavior and marks none of the new experiment capabilities implemented.
+Each task must add its specific REQ/SCENARIO entries before implementation.
+
+The planned readers distinguish current authority, historical provenance,
+qualified negative science and absent external inputs. The existing verdict
+enum, gate diagnostics, row consistency and publication checks remain required.
+
 ## REQ-REPORT-8196: Publish sealed cached decisions with normal owned checks
 
 Load no LLM. Declare empty MODEL_SPECS, no_model_load, zero current calls and

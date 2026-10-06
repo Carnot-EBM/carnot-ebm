@@ -1,5 +1,24 @@
 # Carnot — Traceability Matrix
 
+## Planned V709 research mapping — 2026-10-06
+
+The staged milestone contains exactly thirteen tasks, Exp8205–Exp8217; see
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. These are plans, not implemented requirements.
+
+| PRD requirement | Planned tasks | Existing capability anchor |
+|---|---|---|
+| FR-06, FR-12 | Exp8207–Exp8210 | verification/spec.md; calibrated source decisions |
+| FR-11 | Exp8206, Exp8211–Exp8212 | verification/spec.md; causal memory and recovery |
+| FR-05, FR-08, NFR-01 | Exp8213–Exp8214, Exp8216 | verification/spec.md; Python/Rust service accounting |
+| FR-09, FR-10 | Exp8205, Exp8217 and every task's validation | research-reporting/spec.md; REQ-REPORT-7837, REQ-REPORT-7891-V685 |
+| ARC generalization standing floor | Exp8215 | arc-world-model-trust-energy/spec.md; REQ-ARC-WMTE-6640 |
+
+The planning verification uses the existing contract/authority readers, gate and
+exclusion tests, private E2E-018 CLI checks and scoped test/spec traceability.
+The active milestone and conductor are unchanged; execution remains unstaged
+in the sense of activation, while the next-roadmap files are ready for review.
+
 **Last Updated:** 2026-10-03
 **Operational Note:** REQ-REPORT-8084, REQ-VERIFY-8084 and
 SCENARIO-REPORT-8084-WORKER-OUTPUT map to

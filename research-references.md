@@ -50750,3 +50750,103 @@ execution qualification problem. The scan below informed the next design.
 
 These are method adaptations and deferred leads. No external accuracy or speed
 number is a Carnot result. The next design must state its exposure limits.
+
+## 2026-10-06 — V709 planning research, recorded before experiment design
+
+The V708 source audit found a cost increase of 0.11328125 and two extra false
+accepts for `local_set` on 128 intended development slots. Its frozen comparator
+accepted four sources, all correct; it rejected eight correct sources and
+escalated nine incorrect complete sources. A new policy therefore has measured
+headroom in reject/escalate choices without expanding the accepted set. This is
+a planning inference from local rows, not a result from the papers below.
+
+### Promising methods and their limits
+
+- **Judge, Retrieve, or Abstain: Uncertainty-Guarded LLM Judging with Provable
+  Risk Guarantees**, [arXiv:2608.17994](https://arxiv.org/abs/2608.17994),
+  August 18, 2026; abstract lists COLM 2026 acceptance.
+  [Full method](https://arxiv.org/html/2608.17994v1) calibrates accepted-verdict
+  risk using binomial upper bounds and selective escalation. Its appendix
+  corrects threshold-search multiplicity. Useful adaptation: separate probability
+  training, action cost, and acceptance permission. Freeze thresholds before
+  evaluation; use independent calibration or simultaneous bounds for searches.
+  Repeatedly exposed Carnot sources cannot support a new finite-sample population
+  guarantee. A subset of baseline accepts bounds the *count* of false accepts
+  relative to that baseline, not the error rate among remaining accepts.
+- **Cost-Saving LLM Cascades with Early Abstention**,
+  [arXiv:2502.09054v2](https://arxiv.org/abs/2502.09054), revised March 29, 2025.
+  [Full paper](https://arxiv.org/html/2502.09054v2) treats error, execution cost
+  and abstention jointly. Adapt its explicit action-cost accounting to Carnot's
+  small conditional energy head. Keep escalation as an unresolved action with a
+  stated cost, not a free correct answer. No multi-model cascade is required.
+- **Catastrophic Forgetting in Kolmogorov-Arnold Networks**,
+  [arXiv:2511.12828](https://arxiv.org/abs/2511.12828), November 16, 2025;
+  abstract lists AAAI 2026 acceptance. It relates forgetting to activation overlap
+  and data dimension and finds locality insufficient in harder settings.
+  Pair the existing radial memory with independent retention measurements and
+  support-overlap diagnostics. Do not tune on retention labels.
+- **KAC: Kolmogorov-Arnold Classifier for Continual Learning**,
+  [arXiv:2503.21076](https://arxiv.org/abs/2503.21076) and
+  [author code](https://github.com/Ethanhuhuhu/KAC), checked again.
+  Radial classifiers remain a feasible small-memory substrate. Compare learned
+  center growth against shared base calibration and fixed/random centers; the
+  experiment must isolate the incremental value of memory.
+- **Pre-Generation Hallucination Detection via Soft-Target Attention Probing**,
+  [arXiv:2606.21917](https://arxiv.org/abs/2606.21917), June 20, 2026.
+  Predicting per-prompt error probability is an alternative to judging one sample.
+  Deferred: estimating soft targets requires multiple independent generations and
+  a new feature path; it does not repair the current decision or receipt failures.
+- **Learning Symbolic Constraint Representations from Examples**,
+  [arXiv:2609.12267](https://arxiv.org/abs/2609.12267), September 10, 2026.
+  Neural oracle responses feed symbolic constraint acquisition. Keep as a later
+  Tier-4 lead: consistency of recovered constraints does not establish semantic
+  truth of the learned oracle. No new symbolic-oracle claim follows here.
+
+### Remaining requested primary topics
+
+| Topic | Primary source checked | Consequence |
+|---|---|---|
+| EBM reasoning | [EBT 2507.02092](https://arxiv.org/abs/2507.02092), [ICLR 2026 proceedings](https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html) | Small conditional energies are feasible; foundation-model scaling remains outside this milestone. |
+| ARM/EBM equivalence | [2512.15605v4](https://arxiv.org/abs/2512.15605), May 25, 2026 revision | Retain equivalent logistic probabilities; renaming logits as energy creates no advantage. |
+| Ising learning | [Neural Ising Machines 2602.00302](https://arxiv.org/abs/2602.00302) | Sampler dynamics are a separate question from action selection. |
+| Guided generation | [ETS 2601.21484](https://arxiv.org/abs/2601.21484) and [2507.07731](https://arxiv.org/abs/2507.07731) | Defer generation steering until safe detector utility; the latter concerns vision-language models. |
+| Hardware sampling | [FPGA–ASIC co-design 2602.15985](https://arxiv.org/abs/2602.15985) | Account for transfer, host work and readout; hardware kernel figures are not whole-service figures. |
+
+### Secondary sources searched and access limits
+
+- **OpenReview:** searched ICLR 2026 energy and verification papers; EBT appeared
+  in indexed conference text and official ICLR proceedings. Direct PDF requests
+  for EBT and [TraceDet](https://openreview.net/pdf?id=4puxTouUSV) encountered
+  browser challenges. TraceDet's [arXiv record](https://arxiv.org/abs/2510.01274)
+  concerns diffusion decoding traces, which are unavailable in the mandated
+  autoregressive GGUF path. No adaptation is scheduled.
+- **Semantic Scholar:** requested Graph API citation lists for both
+  `ARXIV:2507.02092` and `ARXIV:2512.15605`; both were inaccessible through the
+  browser tool. Exact-ID searches did not establish an authenticated citing-paper
+  inventory. Citation coverage remains incomplete; no citation count is claimed.
+- **Hugging Face Papers:** searched hallucination detection and TraceDet. Direct
+  pages for the new abstention papers and TraceDet failed; the
+  [ARM/EBM page](https://huggingface.co/papers/2512.15605) was indexed. Discovery
+  pages and model-generated summaries are not empirical evidence.
+- **GitHub Trending:** checked [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). The returned pages
+  were crawled three weeks earlier. No current trending EBM repository is claimed;
+  KAC's author implementation was inspected as a concrete method reference.
+- **Extropic:** checked [Writing](https://extropic.ai/writing),
+  [Z1T](https://extropic.ai/writing/z1t/) and
+  [thermodynamic research agents](https://extropic.ai/writing/baby-thermo-rsi/).
+  Sparse hardware mappings and the Torx/Thermalizers/THRML stack are useful future
+  leads. Vendor training results and projected efficiency do not establish local
+  TSU access or justify omitting host, storage, transfer and acquisition costs.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  Its public page describes constraint enforcement beneath AI systems. No new
+  reproducible training protocol or accessible local implementation was established.
+
+### Execution prerequisite discovered locally
+
+Coverage.py 7.14.1 is installed and implements `patch = _exit`. Its
+[official configuration reference](https://coverage.readthedocs.io/en/latest/config.html#run-patch)
+documents saving coverage before the original hard exit. This is a concrete
+replacement for V708's unmeasured `sys.setprofile` callback. Qualify it using a
+real exit status and resumed pending-state equality; do not mock the crash or
+edit coverage counts. This is tooling evidence, not a learning result.

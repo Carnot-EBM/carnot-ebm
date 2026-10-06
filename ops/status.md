@@ -1,5 +1,19 @@
 # Carnot — Operational Status
 
+## 2026-10-06 — V709 research plan staged
+
+Milestone `2026.10.709` proposes thirteen tasks, Exp8205–Exp8217, across four
+phases. The design and complete execution contract are in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. V708's original design is preserved separately.
+
+The plan tests acceptance-constrained energy decisions, delayed-feedback memory
+after a changed hard-exit qualification mechanism, and prospective request/service
+accounting. ARC receipt authority and separate KV260, PolarFire and GateMate
+obligations remain included. Reused cohorts remain exposed development; no new
+scientific result, deployment speedup or hardware access is claimed by planning.
+The active roadmap and conductor source are unchanged; nothing is activated.
+
 **Last Updated:** 2026-10-03
 
 ## 2026-10-03 — Exp8084 seal worker output repair

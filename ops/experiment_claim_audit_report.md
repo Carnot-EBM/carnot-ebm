@@ -11,42 +11,11 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 4 |
-| NO_CLAIM | 1 |
+| CLAIM_SUPPORTED | 2 |
+| NO_CLAIM | 3 |
 | CANNOT_DETERMINE | 3 |
 
-## experiment_8183_v707_sentence_energy_fit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Calibrated sentence energy fitting produces a complete null result with zero independent generalization and no demonstrated learning benefit over comparator or ablation baselines.
-
-## WHAT WOULD REFUTE IT
-An observation of a strictly positive generalization score (`independent_generalization_score > 0` or `generalized_learning_benefit_score > 0`), or out-of-sample performance where `local_evidence_radial16` achieves a lower typed decision cost than the `local_feature_ablation` control on held-out evaluation clusters.
-
-## WAS THAT CHECKED
-Yes. Performance was evaluated across cross-validation folds on held-out clusters (`held_source_ids` in `fit_fold_rows`), benchmarked against baseline arms (`local_max` and `local_feature_ablation` in `frozen_thresholds` and `calibration_receipts`), and both generalization metrics were evaluated and recorded as `0`, with the ablation baseline tying the candidate model at a `typed_cost` of `0.265625`.
-
-## EVIDENCE
-- `"honest_verdict"`: `"complete_null_sentence_energy_fit"`
-- `"verdict_class"`: `"null"`
-- `"independent_generalization_score"`: `0`
-- `"generalized_learning_benefit_score"`: `0`
-- `"claim_scope"`: `"sealed calibrated source energy decisions; exposed fit/tune only; reserved H1 untested"`
-- `"comparator_id"`: `"radial16"`
-- `"arm"`: `"local_evidence_radial16"`
-- `"arm"`: `"local_feature_ablation"`
-- `"typed_cost"`: `0.265625`
-- `"verifier_is_oracle"`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8184_v707_reserved_sentence_capture.json
+## experiment_8196_v708_selective_sealed_evaluation.json
 
 **CANNOT_DETERMINE**
 
@@ -58,7 +27,7 @@ provider: openai
 approval: never
 sandbox: workspace-write
 
-## experiment_8185_v707_sentence_decision_audit.json
+## experiment_8197_v708_selective_decision_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -66,32 +35,35 @@ sandbox: workspace-write
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The candidate sentence decision policy `local_evidence_radial16` fails the acceptance gates against baseline `radial16`, yielding a complete null decision audit verdict (`complete_null_sentence_decision_null`).
+The local set decision method fails to demonstrate selective utility or energy-specific benefit over the frozen radial baseline, resulting in a complete null verdict.
 
 ## WHAT WOULD REFUTE IT
-The null claim would be refuted by observed data where `local_evidence_radial16` achieved a strictly positive lower-bound cost gain exceeding `0.02` at the 97.5% one-sided confidence level while incurring `0` extra false accepts relative to `radial16`, thereby satisfying all acceptance gates and yielding `safety_passed` as true.
+A statistically significant positive cost gain over `frozen_v707_radial` satisfying the pre-registered acceptance gates (specifically, bootstrap one-sided 97.5% lower cost gain > 0.02, zero extra false accepts, and Brier increase <= 0.01), or any performance difference demonstrating an energy-specific advantage over `equivalent_logistic_set`.
 
 ## WAS THAT CHECKED
-Yes. It was checked across all 128 intended slots (and 97 complete cases) evaluated via 10,000 bootstrap draws in `acceptance_operands`, `all_slot_metrics`, `paired_intervals`, and `acceptance_gates`.
+Yes. Checked under `H1`, `acceptance_operands`, `paired_intervals`, `complete_case_metrics`, and `equivalent_logistic_parity` across 128 slots (97 completed pairs) with 10,000 paired bootstrap resamples.
 
 ## EVIDENCE
-- `"honest_verdict"`: `"complete_null_sentence_decision_null"`
-- `"verdict_class"`: `"null"`
-- `"safety_passed"`: `false`
-- `"extra_false_accepts"`: `2`
-- `"maximum_extra_false_accepts"`: `0`
-- `"lower_cost_gain"`: `-0.13671875`
-- `"minimum_gain_exclusive"`: `0.02`
-- `"lower_one_sided_975"`: `-0.13671875`
-- `"mean_gain"`: `-0.01953125`
-- `"cost"`: `0.37109375` (for `"arm"`: `"local_evidence_radial16"`)
-- `"cost"`: `0.3515625` (for `"arm"`: `"radial16"`)
-- `"primary_denominator"`: `"all_intended_slots"`
+- `"honest_verdict": "complete_null_selective_decision_null"`
+- `"claim_scope": "All-slot selective utility on exposed development sources; no energy-specific or independent benefit"`
+- `"attribution": "Any wrapper benefit is abstention or calibration; logistic equivalence rules out energy-specific evidence."`
+- `"comparator": "frozen_v707_radial"`
+- `"treatment": "local_set"`
+- `"passed": false`
+- `"lower_cost_gain": -0.234375`
+- `"minimum_gain_exclusive": 0.02`
+- `"extra_false_accepts": 2`
+- `"maximum_extra_false_accepts": 0`
+- `"mean_gain": -0.11328125`
+- `"equivalent_logistic_parity"`
+- `"passed": true`
+- `"generalized_learning_benefit_score": 0`
+- `"h1_development_signal_score": 0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8186_calibrated_online_memory.json
+## experiment_8198_calibrated_online_memory.json
 
 **NO_CLAIM**
 
@@ -102,22 +74,31 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Any comparative experimental results, execution metrics, or downstream performance data within the artifact demonstrating that the experiment actually executed despite the gate failure.
+Because this artifact makes no empirical or comparative performance claim, there is no scientific hypothesis to refute; refutation of its execution state would require artifact records showing that upstream requirements passed (`passed` is true or `actual` equals `expected`) while marking the run as blocked, or execution proceeding past the gate.
 
 ## WAS THAT CHECKED
-No; execution was halted at the pre-gate validation layer before any experimental condition or hypothesis could be evaluated.
+No empirical test was run because execution halted prior to execution; gate conditions were checked against the upstream artifact in `gates_evaluated` and both failed.
 
 ## EVIDENCE
-`schema`: `blocked_gate_check_v1`
-`status`: `blocked`
-`honest_verdict`: `blocked_gate_check_failed`
-`duration_s`: `0.0`
-`blocked_at_layer`: `conductor_pre_gate`
+`"schema"`
+`"blocked_gate_check_v1"`
+`"status"`
+`"blocked"`
+`"duration_s"`
+`0.0`
+`"honest_verdict"`
+`"blocked_gate_check_failed"`
+`"blocked_reason"`
+`"actual=0 == expected=1"`
+`"gate_check_summary"`
+`"gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8193-learning-qualification.calibrated_memory_ready_score (actual=0 == expected=1)"`
+`"blocked_at_layer"`
+`"conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8188_v707_exact_request_service.json
+## experiment_8200_v708_request_trace_census.json
 
 **CANNOT_DETERMINE**
 
@@ -129,38 +110,66 @@ provider: openai
 approval: never
 sandbox: workspace-write
 
-## experiment_8189_v707_arc_supervisor_frontier.json
+## experiment_8201_observed_service_cost.json
 
-**CLAIM_SUPPORTED**
+**NO_CLAIM**
 
 ## VERDICT
-CLAIM_SUPPORTED
+NO_CLAIM
 
 ## THE HEADLINE CLAIM
-No new authenticated ARC supervisor outcomes, firings, or level solves were observed beyond the upstream frontier cutoff.
+no claim
 
 ## WHAT WOULD REFUTE IT
-The observation of any authenticated new supervisor event rows, firings, or level solves past the upstream cutoff timestamp (`2026-10-05T21:51:37.962846+00:00`), non-zero outcome reduction from the empty ledger control, or positive control failure indicating that the reduction reader is blind to genuine progress.
+None; the artifact makes no empirical or comparative claim, functioning strictly as an execution receipt recording a blocked pre-flight gate check.
 
 ## WAS THAT CHECKED
-Yes; the reader verified 156 upstream preconditions, executed negative controls in `historical_required_failures` confirming corrupt records fail, ran positive control fixtures in `reader_conformance_rows` confirming that genuine progress is accepted (`supported_progress_accepted: true`), evaluated `empty_ledger_control`, and scanned the upstream receipt frontier after the cutoff timestamp, detecting zero new outcomes (`new_outcome_count: 0`).
+No; the experiment was blocked at the pre-gate phase and never executed.
 
 ## EVIDENCE
-- `"honest_verdict"`: `"complete_null_no_new_outcomes"`
-- `"no_new_outcomes"`: `true`
+`"status": "blocked"`
+`"honest_verdict": "blocked_gate_check_failed"`
+`"schema": "blocked_gate_check_v1"`
+`"blocked_at_layer": "conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8202_v708_arc_supervisor_frontier.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Because this artifact is a receipt inventory and frontier aggregation run that was blocked at an acceptance gate, it asserts no comparative, causal, or performance claims. If a positive claim regarding supervisor efficacy or level solves had been made, refutation would require observing zero improvement over an unredirected baseline across held-out games under live model execution.
+
+## WAS THAT CHECKED
+No. The run was halted at an acceptance gate check (`authenticate_live_state_is_file`), executed zero model invocations, conducted zero live game runs, and evaluated no competing arms.
+
+## EVIDENCE
+- `"honest_verdict"`: `"complete_blocked_authenticate_live_state_is_file"`
 - `"causal_benefit_claimed"`: `false`
-- `"new_outcome_count"`: `0`
-- `"new_firing_count"`: `0`
-- `"new_level_solves_claimed"`: `0`
 - `"new_solve_claim"`: `false`
-- `"fixture_rejected"`: `true`
-- `"supported_progress_accepted"`: `true`
-- `"claim_scope"`: `"exposed_development_reader_conformance_and_observational_frontier"`
+- `"new_level_solves_claimed"`: `false`
+- `"no_new_outcomes"`: `true`
+- `"arm_outcomes"`: `{}`
+- `"inference_substrate"`: `"aggregation_from_upstream_artifacts"`
+- `"inference_substrate_class"`: `"no_model_load"`
+- `"current_model_invocation_count"`: `0`
+- `"current_game_runs"`: `0`
+- `"scientific_benefit"`: `null`
+- `"check"`: `"authenticate_live_state_is_file"`
+- `"passed"`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8190_v707_hardware_service_boundary.json
+## experiment_8203_v708_hardware_decision_boundary.json
 
 **CLAIM_SUPPORTED**
 
@@ -168,40 +177,34 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Hardware acceleration provides no whole-workload service benefit over software execution (with Amdahl outer speedup ceilings bounded below 1.0022x across conditions), justifying the decision to defer hardware spending.
+Hardware acceleration purchase and integration should be deferred because Amdahl's law bounds complete-workload speedup to at most ~1.002x (failing the 100x threshold) while candidate hardware targets remain blocked or exhibit no measured whole-service benefit.
 
 ## WHAT WOULD REFUTE IT
-A measured arithmetic fraction approaching the required 0.99 threshold, an Amdahl speedup ceiling substantially exceeding 1.0x toward the 100x target, or an authenticated board deployment exhibiting actual execution and whole-service latency reduction.
+An Amdahl bound showing an optimistic speedup ceiling of at least 100x (`supports_100x: true`, requiring the accelerated portion to constitute at least 99% of total service latency), or any candidate board meeting its terminal qualification criteria (`terminal_criterion_met: true`) with measured whole-service latency reduction over the CPU baseline.
 
 ## WAS THAT CHECKED
-Yes. In `amdahl_bounds` and `rows`, 288 completed requests across four conditions (`cold_miss`, `exact_repeat`, `forced_refresh`, `changed_source`) were decomposed into constituent latencies, demonstrating that non-accelerable overhead accounts for >99.7% of total runtime and bounding maximum potential speedup to at most 1.00213x; additionally, `board_rows` audited five hardware platforms and confirmed zero active, compatible execution.
+Yes. Amdahl speedup limits were evaluated in `amdahl_bounds` across 96 qualified runs spanning 4 operational conditions (`changed_source`, `cold_miss`, `exact_repeat`, `forced_refresh` detailed in `workload_rows`), and candidate hardware continuity was evaluated in `board_rows` across five platforms (`KV260`, `PolarFire`, `GateMate`, `NPU`, `TSU`).
 
 ## EVIDENCE
-- `honest_verdict`: `complete_null_hardware_service_boundary`
-- `hardware_spending_decision`: `defer: no measured whole-workload hardware benefit`
-- `claim_scope`: `Independent cold, hit and invalidation software ceilings; historical board custody only`
-- `target_speedup`: `100`
-- `required_arithmetic_fraction_for_100x`: `0.99`
-- `outer_ceiling`: `1.0002748073696213`
-- `outer_ceiling`: `1.0021319989821222`
-- `outer_ceiling`: `1.0002795251631347`
-- `outer_ceiling`: `1.000283194465957`
-- `retained_ns`: `43014021117`
-- `total_ns`: `43025841687`
-- `retained_ns`: `4897856935`
-- `total_ns`: `4908299161`
-- `retained_ns`: `39015768304`
-- `total_ns`: `39026674193`
-- `retained_ns`: `40295229504`
-- `total_ns`: `40306640890`
-- `acquisition_relevance`: `defer: no measured board whole-service benefit`
-- `current_hardware_execution`: `false`
-- `measured_bottleneck`: `Acquisition on misses/invalidation and durable storage/acknowledgement on cache hits.`
+`hardware_spending_decision`: `"defer; no purchase authorized; no100x complete-workload evidence"`
+`honest_verdict`: `"complete_blocked_exists"`
+`verdict_class`: `"blocked"`
+`required_arithmetic_fraction_for_100x`: `0.99`
+`supports_100x`: `false`
+`optimistic_ceiling`: `1.000283194465957`
+`optimistic_ceiling`: `1.0002748073696213`
+`optimistic_ceiling`: `1.0021319989821222`
+`optimistic_ceiling`: `1.0002795251631347`
+`required_redesign`: `"Reduce original acquisition and durable commit costs; kernel acceleration alone cannot deliver100x."`
+`terminal_criterion_met`: `false`
+`acquisition_relevance`: `"defer: no measured board whole-service benefit"`
+`blocker`: `"0xffffffff"`
+`status`: `"blocked_authenticated_access"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8191_v707_capstone.json
+## experiment_8204_v708_capstone.json
 
 **CANNOT_DETERMINE**
 

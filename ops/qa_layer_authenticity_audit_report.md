@@ -19,7 +19,7 @@ Scanned 20 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21):
 
 ---
 
-## adversarial_verify.py::_typed_field_values
+## adversarial_verify.py::_has_positive_metric_pair
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -30,7 +30,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_iter_real_fields
+## adversarial_verify.py::_top_level_field_name_text
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -41,7 +41,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_path_has_marker
+## adversarial_verify.py::_has_first_party_qd_result_field
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -52,7 +52,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_is_arc_generation_or_exploration_artifact
+## adversarial_verify.py::_claims_qd_energy_fitness_generation_win
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -63,7 +63,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_max_positive_real_field
+## adversarial_verify.py::check_qd_random_mutation_ablation_overclaim
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -74,7 +74,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_has_nontrivial_lever_run
+## adversarial_verify.py::_claims_value_routing_live_claim
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -85,7 +85,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_archive_zero_reasons
+## adversarial_verify.py::check_value_routing_cost_control_overclaim
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -96,7 +96,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_pool_degenerate_reasons
+## adversarial_verify.py::_numeric_leaf_values
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -107,7 +107,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_shape_dims
+## adversarial_verify.py::_bool_leaf_values
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -118,7 +118,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_grid_shape_degenerate_reasons
+## adversarial_verify.py::_max_real_field_number
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -129,7 +129,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_scorer_diagnostics_error_reasons
+## adversarial_verify.py::_real_field_has_true
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -140,7 +140,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_has_positive_online_training_evidence
+## adversarial_verify.py::_has_positive_multilevel_solve_rate
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -151,7 +151,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_online_arm_metric_items
+## adversarial_verify.py::_harness_target_levels
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -162,7 +162,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_byte_identical_online_arm_reason
+## adversarial_verify.py::_harness_break_at_first_win
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -173,7 +173,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_has_positive_probe_exercise_evidence
+## adversarial_verify.py::_has_fixed_multilevel_metric_harness
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -184,7 +184,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_declared_but_unrun_probe_reasons
+## adversarial_verify.py::_nontrivial_subgoal_decomposition
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -195,7 +195,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_has_nondegenerate_lever_evidence
+## adversarial_verify.py::_has_nontrivial_subgoal_decomposition
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -206,7 +206,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_zero_lever_delta_reasons
+## adversarial_verify.py::_real_field_all_true
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -217,7 +217,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_lever_exercise_severity
+## adversarial_verify.py::check_subgoal_search_decomposition_overclaim
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -228,7 +228,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_has_positive_top_level_metric
+## adversarial_verify.py::_claims_generation_coverage_up
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------

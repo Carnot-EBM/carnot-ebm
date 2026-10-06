@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-10-06 — Plan milestone 2026.10.709
+
+- Added the next thirteen-task roadmap, Exp8205–Exp8217, and rewrote its matching
+  design with architecture, four phases, exact complete task contract, dependencies,
+  statistical gates, hardware requirements and explicit prior-failure changes.
+- Recorded a fresh primary/secondary literature scan in `research-references.md`
+  before designing tasks. Documented Semantic Scholar/OpenReview access limits.
+- Preserved V708's design. The next plan addresses failed action selection,
+  hard-exit coverage, missing request fields and consumer/ARC authority defects;
+  it retains continual learning and all attached-board obligations.
+- Planning only: no experiments activated, no active-roadmap or conductor edits,
+  and no push.
+
 ## 2026-10-06 — Operational retrospective for milestone 2026.10.708
 
 - Wrote `results/operational_retro_2026_10_708.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.708`. Authoritative disk-mtime fallback data records 10 experiments completed (1 compute-bound, 9 synthesis-only) across 25.0 total wall-time minutes (average 3 minutes per experiment).
