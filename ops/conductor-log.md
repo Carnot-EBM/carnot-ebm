@@ -19653,3 +19653,4 @@ code |
 | 2026-10-06 11:56 UTC | Measure later structural learning benefit retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8198-calibrated-online-memory) |
 | 2026-10-06 12:40 UTC | Freeze an observed request sequence without inject | OK | 99 passed, 1 warning in 32.71s |
 | 2026-10-06 12:43 UTC | Measure cold-inclusive Python and Rust costs on th | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8200-request-trace-census.request_trace_ready_score (actual=0 == expected=1) |
+| 2026-10-06 13:01 UTC | Inspect only new authenticated supervisor outcomes | OK | 88 passed, 1 warning in 25.41s |
