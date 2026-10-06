@@ -94305,3 +94305,49 @@ blocked capstone can be administratively ready without scientific progress.
 Implementation: `python/carnot/reporting/v708_capstone.py`,
 `v708_capstone_inputs.py`, `v708_capstone_science.py` and the Exp8204 thin CLI.
 Tests: `tests/python/test_v708_capstone_8204.py`.
+
+## REQ-REPORT-8205: V709 authority and consumer qualification
+
+Bind thirteen tasks with the existing parameterized authority parser, first_id
+8205 and count13. Snapshot the full design, each observed YAML, manifest and
+finished V708 conductor archive. Report staging readiness separately; absent
+staging is acceptable only after the activated full task digest matches design.
+Compare visible order and fields, complete JSON including prompts and gates,
+and canonical SHA256 independently. Retain ten V708 primaries, three gate skips,
+all original required-check and hash failures. No current administrative result
+repairs historical science. Load no model, declare MODEL_SPECS=[] and zero calls.
+Use exact saved mapping/list shapes to reproduce the V708 reader failure, then
+adapt only documented schemas and reject malformed entries. Invoke actual
+terminal readers, preserving failed operands. Publish a byte-bound receipt only
+after fresh-process primitive replay and unchanged terminal auditors.
+
+### SCENARIO-REPORT-8205-AUTHORITY
+
+Private authority controls reject count, order, title, prompt, gate spelling and
+digest mutations. Matching activation accepts consumed staging; staged readiness
+remains a separate observation. Current qualification never removes old failures.
+
+### SCENARIO-REPORT-8205-CONSUMER
+
+Saved mapping hashes reproduce TypeError in the old list consumer. Mapping-v1
+and reference-list-v1 adapters validate entries. Missing, altered and malformed
+terminal receipts fail through real readers. A conductor gate skip remains a
+skip with exact failed operands and earns no scientific qualification.
+
+An authenticated historical terminal report with `passed=false` SHALL retain
+its failed scientific disposition while still qualifying its documented reader
+schema. Invalid-receipt controls SHALL require an authentication or schema error,
+so a valid historical failure cannot make a control pass merely by returning
+`passed=false`. Missing or malformed historical bindings do not qualify readers.
+The complete current design contract SHALL retain literal brace escaping in
+active prompt bytes and its exact digest; escaping does not relax prompt checks.
+
+Implementation: `python/carnot/reporting/v709_qualification.py` reuses the
+parameterized authority parser and real byte-bound terminal reader. The
+Exp8205 executable publishes through the existing atomic primary publisher.
+Tests: `tests/python/test_v709_qualification_8205.py`.
+
+The reader controls distinguish failed authenticated reports from invalid
+bindings. Regression coverage preserves a historical `passed=false` report
+and still qualifies the current reader. The design JSON and canonical digest
+include the active roadmap's escaped literal braces without changing that YAML.

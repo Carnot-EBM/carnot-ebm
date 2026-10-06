@@ -1,0 +1,272 @@
+{
+  "child_controls": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-c",
+        "/dev/null",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/tmp/carnot8205-invocation-6vma3xn4/child_controls/tiny_pass.py",
+        "--basetemp=/tmp/carnot8205-invocation-6vma3xn4/child_controls/tiny_pass_temp"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "tiny_pass",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-c",
+        "/dev/null",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/tmp/carnot8205-invocation-6vma3xn4/child_controls/tiny_fail.py",
+        "--basetemp=/tmp/carnot8205-invocation-6vma3xn4/child_controls/tiny_fail_temp"
+      ],
+      "deadline": 180,
+      "expected": 1,
+      "name": "tiny_fail",
+      "scope": "owned"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.reporting.v709_qualification",
+        "carnot.reporting.v709_execution",
+        "carnot.reporting.v709_runner"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "worktree_imports",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8205-invocation-6vma3xn4/pytest/focused",
+        "tests/python/test_v709_qualification_8205.py",
+        "-q"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "focused_pytest",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot8205-invocation-6vma3xn4/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_v709_qualification_8205.py",
+        "--basetemp=/tmp/carnot8205-invocation-6vma3xn4/covered"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "changed_module_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot8205-invocation-6vma3xn4/coverage.ini"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "changed_module_coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v709_qualification.py",
+        "python/carnot/reporting/v709_execution.py",
+        "python/carnot/reporting/v709_runner.py",
+        "scripts/experiments/experiment_8205_v709_contract_consumer_qualification.py",
+        "tests/python/test_v709_qualification_8205.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v709_qualification.py",
+        "python/carnot/reporting/v709_execution.py",
+        "python/carnot/reporting/v709_runner.py",
+        "scripts/experiments/experiment_8205_v709_contract_consumer_qualification.py",
+        "tests/python/test_v709_qualification_8205.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=skip",
+        "python/carnot/reporting/v709_qualification.py",
+        "python/carnot/reporting/v709_execution.py",
+        "python/carnot/reporting/v709_runner.py",
+        "scripts/experiments/experiment_8205_v709_contract_consumer_qualification.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "changed_module_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_v709_qualification_8205.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "scoped_spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot8205-invocation-6vma3xn4/coverage.ini",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot8205-invocation-6vma3xn4/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "--basetemp=/tmp/carnot8205-invocation-6vma3xn4/consumers"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "consumers_E2E018",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "full_python_suite",
+      "scope": "repository_health"
+    }
+  ],
+  "frozen_before_measurement_ns": 964076498081134,
+  "owned": [
+    "python/carnot/reporting/v709_qualification.py",
+    "python/carnot/reporting/v709_execution.py",
+    "python/carnot/reporting/v709_runner.py",
+    "scripts/experiments/experiment_8205_v709_contract_consumer_qualification.py"
+  ],
+  "precondition_command": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-c",
+      "import json,sys,os,pytest,coverage,yaml; from pathlib import Path; p=Path(sys.executable).parent; tools={n:os.access(p/n,os.X_OK) for n in ['python','pytest','coverage','ruff','mypy']}; print(json.dumps({'python':sys.version,'executable':sys.executable,'pytest':pytest.__version__,'coverage':coverage.__version__,'yaml':yaml.__version__,'tools':tools})); raise SystemExit(int(not all(tools.values())))"
+    ],
+    "deadline": 30,
+    "expected": 0,
+    "name": "environment_preconditions",
+    "scope": "preconditions"
+  },
+  "runtime": {
+    "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "mode": "0o700",
+    "private_parent": "/tmp/carnot8205-invocation-6vma3xn4",
+    "python": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]",
+    "writable": true
+  },
+  "terminal_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8205_v709_contract_consumer_qualification.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8205_v709_contract_consumer_qualification/terminal_candidate.json"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "cold_replay",
+      "scope": "terminal"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8205_v709_contract_consumer_qualification/terminal_candidate.json"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "adversarial_verify",
+      "scope": "terminal"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8205_v709_contract_consumer_qualification/terminal_candidate.json"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "strict_rows",
+      "scope": "terminal"
+    }
+  ]
+}

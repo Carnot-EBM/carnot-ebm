@@ -1,5 +1,26 @@
 # Carnot — Operational Status
 
+## 2026-10-06 — V709 consumer readiness repair
+
+Authenticated historical terminal failures now qualify their documented reader
+schema while retaining failed scientific dispositions. Invalid receipt controls
+require real authentication or schema errors. The design's full task JSON and
+digest now match the active prompts' escaped literal braces; active-roadmap
+edits are preserved.
+
+All 26 V709 tests pass with 372/372 covered statements across the three modules
+and direct CLI. The 91 publication/gate/V708 capstone/fix-erasure/private E2E-018
+checks and 81 conductor core checks pass. Scoped Ruff, format, strict mypy and
+spec coverage pass. Validation logs and coverage are retained under
+`/tmp/carnot-8205-fix-validation/`.
+
+The full Python health diagnostic timed out during collection at its frozen
+180-second deadline. Global spec coverage retains 1,142 existing traceability
+gaps; these scoped results do not establish a repository-wide pass. All original
+test assertions and `scripts/research_conductor.py` remain unchanged.
+Final reconciliation passes documentation freshness and reports only those
+existing global traceability gaps. The mutation interlock passes.
+
 ## 2026-10-06 — V709 research plan staged
 
 Milestone `2026.10.709` proposes thirteen tasks, Exp8205–Exp8217, across four
@@ -14,7 +35,7 @@ obligations remain included. Reused cohorts remain exposed development; no new
 scientific result, deployment speedup or hardware access is claimed by planning.
 The active roadmap and conductor source are unchanged; nothing is activated.
 
-**Last Updated:** 2026-10-03
+**Last Updated:** 2026-10-06
 
 ## 2026-10-03 — Exp8084 seal worker output repair
 

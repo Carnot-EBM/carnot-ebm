@@ -3718,3 +3718,17 @@ training, hardware run, experiment activation or external publication occurs her
 | REQ-REPORT-8153 / SCENARIO-REPORT-8153 | Scaffolding | Exp8153: honest_verdict=complete_null_fit_evidence_capture; byte-bound publication and cold replay; source transport claim only; [artifact](../results/experiment_8153_v705_fit_evidence_capture.json) |
 | REQ-VERIFY-8167 / SCENARIO-VERIFY-8167-TRANSPORT / SCENARIO-VERIFY-8167-REPLAY | Scaffolding | Exp8167: honest_verdict=complete_null_fit_sentence_capture; 0/192 completed sources; capture readiness/trainability=0; [artifact](../results/experiment_8167_v706_fit_sentence_capture.json) |
 | REQ-REPORT-8167 / SCENARIO-REPORT-8167-CLI | Scaffolding | Exp8167: honest_verdict=complete_null_fit_sentence_capture; checked publication and cold replay; no measured learning or generalization benefit; [artifact](../results/experiment_8167_v706_fit_sentence_capture.json) |
+
+## 2026-10-06 — V709 consumer readiness repair
+
+| Requirement / Scenario | Implementation | Regression evidence |
+|---|---|---|
+| REQ-REPORT-8205 / SCENARIO-REPORT-8205-CONSUMER | Authenticate historical terminal schemas separately from their failed scientific verdicts; invalid controls require real reader errors | `test_authenticated_failed_history_qualifies_reader` preserves a bound `passed=false` report and qualifies the current reader through actual children |
+| REQ-REPORT-8205 / SCENARIO-REPORT-8205-AUTHORITY | Reconcile the complete design JSON and SHA256 with the active prompts' escaped literal braces | `test_live_prompt_braces_match_exact_design` requires exact full-task equality; active-roadmap edits are preserved |
+| REQ-VERIFY-8205 / SCENARIO-VERIFY-8205-CHILD | Retain all original private CLI, child lifetime, negative receipt and cold replay controls | Original tests remain unchanged; affected consumer and private E2E-018 checks run with durable logs under `/tmp/carnot-8205-fix-validation/` |
+
+Verification: 26 owned tests; 372/372 statements including direct CLI; 91
+consumer/fix-erasure/private E2E-018 tests; 81 conductor core tests; scoped Ruff,
+formatting, strict mypy and spec coverage pass. The bounded full-suite diagnostic
+hit its 180-second collection deadline; global spec coverage retains 1,142
+existing gaps. Validation evidence is in `/tmp/carnot-8205-fix-validation/`.

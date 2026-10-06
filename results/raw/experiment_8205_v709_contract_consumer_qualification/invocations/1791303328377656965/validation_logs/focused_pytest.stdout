@@ -1,0 +1,63 @@
+.......................F                                                 [100%]
+=================================== FAILURES ===================================
+___________________ test_external_precondition_child_failure ___________________
+
+tmp_path = PosixPath('/tmp/carnot8205-invocation-kt7wkw8p/pytest/focused/test_external_precondition_chi0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f948676df70>
+
+    def test_external_precondition_child_failure(tmp_path, monkeypatch):
+        """REQ-VERIFY-8205: a real prerequisite failure blocks all dependent children."""
+        from carnot.reporting import v709_runner as run
+    
+        def missing():
+            return dict(
+                name="environment_preconditions",
+                argv=[
+                    sys.executable,
+                    "-c",
+                    "import sys; print('missing prerequisite',file=sys.stderr); raise SystemExit(3)",
+                ],
+                deadline=30,
+                expected=0,
+                scope="preconditions",
+            )
+    
+        monkeypatch.setattr(run, "precondition_command", missing)
+        output = tmp_path / "experiment_8205_blocked.json"
+>       assert run.main(["--private-fixture", "--output", str(output)]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7f94f239bf60>(['--private-fixture', '--output', '/tmp/carnot8205-invocation-kt7wkw8p/pytest/focused/test_external_precondition_chi0/experiment_8205_blocked.json'])
+E        +    where <function main at 0x7f94f239bf60> = <module 'carnot.reporting.v709_runner' from '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v709_runner.py'>.main
+
+tests/python/test_v709_qualification_8205.py:371: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=start completed=0 pending=1
+[exp8205] phase=validation completed=0 pending=1
+[exp8205] phase=before_subprocess_environment_preconditions completed=0 pending=1
+[exp8205] phase=after_subprocess_environment_preconditions completed=1 pending=0
+[exp8205] phase=validation_complete completed=1 pending=0
+[exp8205] phase=measurement_before completed=0 pending=13
+[exp8205] phase=preconditions_before completed=0 pending=21
+[exp8205] phase=preconditions_after completed=21 pending=0
+[exp8205] phase=measurement_after completed=0 pending=0
+[exp8205] phase=publication_before completed=13 pending=1
+[exp8205] phase=validation completed=0 pending=3
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=2
+[exp8205] phase=before_subprocess_adversarial_verify completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial_verify completed=1 pending=0
+[exp8205] phase=validation completed=2 pending=1
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=validation_complete completed=3 pending=0
+{"passed": false, "error": "candidate_rejected"}
+=============================== warnings summary ===============================
+tests/python/test_v709_qualification_8205.py::test_cli_replay_and_tamper
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v709_qualification_8205.py::test_external_precondition_child_failure
+1 failed, 23 passed, 1 warning in 145.71s (0:02:25)

@@ -49958,3 +49958,35 @@ The qualified selective null survives blocked learning and request census.
 Missing scientific evidence is blocked, never an invented null or partial.
 Private positive controls cannot earn natural credit. Rehashed aggregate tamper
 and primitive drift fail replay; administrative readiness stays separate.
+
+## REQ-VERIFY-8205: Invocation-owned V709 child workspace
+
+Keep an invocation-owned private parent above all pytest basetemp children for
+all child lifetimes. Freeze literal commands before measurement; retain actual
+stdout and stderr bytes, hashes, exit codes and clocks. Use bounded process groups
+and heartbeat intervals at most60 seconds. Execute tiny passing and failing
+pytest children. Require focused tests,100% newly added Python statement coverage
+including real CLI children, Ruff check/format, strict mypy, owned-file spec
+coverage and private E2E-018 authority checks. Run full Python health once and
+report its unrelated failures separately without claiming global green. Owned
+check failure disqualifies readiness. Conductor owns ops and traceability updates.
+
+### SCENARIO-VERIFY-8205-CHILD
+
+A real tmp_path pytest child passes with its retained parent; assertion failure
+keeps nonzero exit and durable logs. Deadline cleanup kills the child's process
+group. Private direct CLI success, blocked input and tampered cold replay execute
+outside checkout. No test writes protected historical results.
+
+Implementation: `python/carnot/reporting/v709_execution.py` retains process-group
+and separate-stream receipts; `v709_runner.py` freezes the complete command plan
+and retains every immediate basetemp parent. The Exp8205 tests execute private
+CLI publication, tiny passing/failing pytest children and rehashed replay controls.
+
+Repair validation: all 26 V709 tests pass with measured 372/372 statement
+coverage across the three modules and thin CLI. All 91 affected consumer,
+fix-erasure and private E2E-018 checks and 81 conductor core checks pass. Scoped
+Ruff, formatting, strict mypy and spec traceability pass. The frozen full-suite
+health diagnostic timed out during collection at 180 seconds; global spec
+coverage retains 1,142 existing gaps. Logs and coverage are retained under
+`/tmp/carnot-8205-fix-validation/`; no repository-wide pass is claimed.

@@ -1,5 +1,22 @@
 # Carnot — Changelog
 
+## 2026-10-06 — Repair V709 consumer qualification
+
+- Preserve authenticated historical terminal failures while qualifying their
+  reader schemas. Negative receipt controls require actual reader errors.
+- Reconcile the complete design contract and digest with literal brace escaping
+  already present in the active roadmap, preserving those edits.
+- Add two regressions without changing original tests. The V709 suite passes
+  26 tests and measures 372/372 covered statements, including direct CLI and
+  cold replay. All 91 affected consumer/private E2E-018 checks and 81 conductor
+  core checks pass; scoped Ruff, format, strict mypy and spec coverage pass.
+- Retain the bounded full-suite collection timeout and 1,142 existing global
+  spec traceability gaps separately. Evidence: `/tmp/carnot-8205-fix-validation/`.
+  `scripts/research_conductor.py` remains unchanged.
+- Archived and retired the coverage run's unattributed traceability marker after
+  verifying it records this repair's authorized documentation edit. Authored
+  documentation is preserved; the mutation interlock passes.
+
 ## 2026-10-06 — Plan milestone 2026.10.709
 
 - Added the next thirteen-task roadmap, Exp8205–Exp8217, and rewrote its matching
