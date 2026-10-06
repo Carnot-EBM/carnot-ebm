@@ -19626,3 +19626,4 @@ code |
 | 2026-10-06 00:06 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_arc_live_search_win age-week 1: OPEN 7 days: SILE |
 | 2026-10-06 00:06 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_measured_arc_live_metric age-week 1: OPEN 7 days: SI |
 | 2026-10-06 00:10 UTC | Milestone 2026.10.707 activated | OK | 14 tasks queued |
+| 2026-10-06 00:35 UTC | Bind fourteen tasks with immutable evidence and se | OK | 88 passed, 1 warning in 29.56s |
