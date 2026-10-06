@@ -49559,3 +49559,25 @@ All192 original slots retain completed/failed/censored/excluded distinctions.
 Insufficient support produces a terminal null without invented feature rows.
 Implementation and private tests: `python/carnot/verify/fit_sentence_capture_8182.py`
 and `tests/python/test_fit_sentence_capture_8182.py`.
+
+## REQ-VERIFY-8183: Train source-matched sentence energy decisions
+
+Exp8183 SHALL require authenticated Exp8182 fit_trainable_score=1 and frozen
+Exp8179 protocol bytes. Read only original fit/tune targets and features, retain
+all original slot masks, reject future roles, duplicate sources, gold-derived
+features, degenerate local signals and missing historical arms. Reuse qualified
+V705 radial16 geometry, four fit folds and the frozen ridge grid with exactly
+sixteen registered features. Fit affine calibration and typed decision thresholds
+on tune only under the immutable cost matrix. Preserve original scalar_span,
+linear12 and radial16 weights, information and predictions. Add local_max and a
+twelve-feature radial ablation as secondary controls. Select the comparator from
+original V705 tune costs with listed-order ties, before reserved capture. Seal
+weights, calibration, thresholds, equivalent logistic coefficients and prediction
+code. Energy/logistic parity earns no scientific advantage.
+
+### SCENARIO-VERIFY-8183: Private leakage and head custody
+
+Private fixtures SHALL exercise role leakage, duplicate sources, gold-derived
+features, degenerate features, missing arms, input/model hash tamper and cold
+replay. Missing external operands block; owned failures disqualify. A converged
+null fit may be ready for a later reserved comparison.

@@ -1,0 +1,713 @@
+{
+  "config": {
+    "calibration_initial": [
+      0.0,
+      1.0
+    ],
+    "calibration_ridge": 0.0001,
+    "centers": 16,
+    "costs": {
+      "correct": 0,
+      "escalate": 0.5,
+      "false_accept": 5,
+      "false_reject": 1
+    },
+    "degree": 3,
+    "endpoint_multiplicity": 4,
+    "feature_count": 16,
+    "folds": 4,
+    "max_iterations": 256,
+    "padding": 1e-08,
+    "policy_tie_tolerance": 1e-12,
+    "probability_clip": [
+      1e-06,
+      0.999999
+    ],
+    "quantiles": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "ridges": [
+      0.0001,
+      0.001,
+      0.01,
+      0.1,
+      1.0
+    ],
+    "seed": 70783,
+    "tie_rule": "escalate",
+    "total_seconds": 600
+  },
+  "prediction_code_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8183_v707_sentence_energy_fit/invocations/1791257680224248771/prediction_code/f279611a1e5dccacd8c4d4b9e8c7a2e9b6aa707b94bb49168e3d0a086d695ac5-sentence_energy_fit_8183.py",
+      "sha256": "sha256:f279611a1e5dccacd8c4d4b9e8c7a2e9b6aa707b94bb49168e3d0a086d695ac5"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8183_v707_sentence_energy_fit/invocations/1791257680224248771/prediction_code/dd40334dc8e6d750292d91e6e4695ffb1208ce9584a4ee5a96d6208e50ee9575-sentence_energy_8183.py",
+      "sha256": "sha256:dd40334dc8e6d750292d91e6e4695ffb1208ce9584a4ee5a96d6208e50ee9575"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8183_v707_sentence_energy_fit/invocations/1791257680224248771/prediction_code/34e3d78f025f4ce7eba02a9fe475830645c155a7f1a92909c41b17c0239fe093-experiment_8183_v707_sentence_energy_fit.py",
+      "sha256": "sha256:34e3d78f025f4ce7eba02a9fe475830645c155a7f1a92909c41b17c0239fe093"
+    }
+  ],
+  "protocol": {
+    "H1": {
+      "brier_increase_maximum": 0.01,
+      "candidates": [
+        "scalar_span",
+        "linear12",
+        "radial16"
+      ],
+      "comparison": "local_evidence_radial16 versus strongest V705 control selected on tune only",
+      "complete_denominators": true,
+      "cost_gain_lower_bound_exclusive": 0.02,
+      "extra_false_accepts_maximum": 0,
+      "improved_sources_minimum": 5,
+      "minimum_per_class": 12,
+      "minimum_sources": 96,
+      "original_tune_costs": {
+        "linear12": 0.4140625,
+        "radial16": 0.3359375,
+        "scalar_span": 0.3515625
+      },
+      "selected_control": "radial16",
+      "selection": "minimum mean typed cost over all64 original tune slots; missing escalates; ties listed order"
+    },
+    "H2": {
+      "H2_analysis": {
+        "alpha": 0.025,
+        "blocks": [
+          16,
+          8,
+          32
+        ],
+        "comparison": "error_center versus fixed_public_center; seed means within source",
+        "draws": 10000,
+        "natural_outcomes_opened_in_8152": false,
+        "seed": 7048144,
+        "valid_minimum": 9500
+      },
+      "delayed_memory": {
+        "admission": "commit candidate first, then next12 unused admission rows released strictly later; at least2/class",
+        "admission_deadline": "issue, release and admit before expiry at144 or224; no expiry at128",
+        "admission_guard": "largest passing step: no extra false accepts; cost/Brier no worse than incumbent; cost<=frozen offset+.02, Brier<=frozen offset+.01",
+        "arms": [
+          "error_center",
+          "fixed_public_center",
+          "random_past_center",
+          "frozen_qwen_offset"
+        ],
+        "centers_per_opportunity": 4,
+        "compute_budget_seconds": 1200,
+        "duplicate_centers": "report duplicates/effective rank, never substitute",
+        "durable_state": [
+          "pending_events",
+          "issuing_state_hashes",
+          "centers",
+          "coefficients",
+          "optimizer_step",
+          "rng_state",
+          "consumed_update_ids",
+          "used_admission_ids",
+          "baseline_hashes",
+          "original_slot_mask"
+        ],
+        "error_centers": "released update rows with immutable frozen-offset issued errors",
+        "evaluation_slots": [
+          65,
+          256
+        ],
+        "event_order": [
+          "issue_prediction",
+          "durable_commit",
+          "release_feedback",
+          "admit_once",
+          "durable_update",
+          "defer_candidate",
+          "commit_candidate",
+          "select_future_admission"
+        ],
+        "expiry_slots": [
+          144,
+          224
+        ],
+        "feedback_delay_slots": 20,
+        "fit_capture_required": false,
+        "fitted_head_required": false,
+        "fixed_centers": "next4 reserved public centers indexed by zero-based opportunity number",
+        "geometry": "first64 original public stream slots only; available public values, no labels, no fit/tune data",
+        "initial_centers": 16,
+        "intercept_penalized": false,
+        "learning_rate": 0.05,
+        "maximum_centers": 24,
+        "minimum_warmup_public_sources": 28,
+        "opportunities": [
+          64,
+          144
+        ],
+        "overflow": "oldest evicted, feedback permanently lost, lossless claim disqualified",
+        "pending_capacity": 32,
+        "prerequisites": [
+          "methods_ready_score",
+          "stream_input_ready_score"
+        ],
+        "random_centers": "seeded label-blind released past update rows",
+        "rejected_update": "retain old coefficients, keep installed zero-weight centers",
+        "retention": "commit all final heads and retention predictions before evaluator labels open",
+        "ridge": 0.01,
+        "roles": "SHA256(source_id) modulo4: bucket0 admission-only, all others update-only",
+        "sgd_steps_per_update": 4,
+        "shared_eligibility": "newest64 released update rows, at least16 and at least4 frozen-offset issued errors",
+        "start": "historical Qwen logit offset plus exactly zero residual",
+        "step_grid": [
+          1,
+          0.5,
+          0.25,
+          0.125
+        ],
+        "warmup_slots": [
+          1,
+          64
+        ],
+        "width": "median positive scaled warmup pair distance, fallback1"
+      },
+      "fixture_gate": {
+        "credit": "circular_positive_only",
+        "install_by": 208,
+        "usable_changed_later_minimum": 32
+      },
+      "frozen_date": "20261005",
+      "historical_protocol_path": "openspec/change-proposals/v702-methods-and-stream-protocol.md",
+      "historical_protocol_sha256": "sha256:3bfd25c6ab5b11ff18c6cd8cffa97a2200d3b77187669b80570f9e8864ee1f2a",
+      "method_map": [
+        {
+          "arxiv": "2602.02634",
+          "limit": "Convex reduction and drift regret bounds do not apply to nonlinear radial SGD",
+          "methods_section": "3,5",
+          "url": "https://arxiv.org/html/2602.02634v1",
+          "use": "Order issue and delayed observation events; measure remaining horizon"
+        },
+        {
+          "arxiv": "2606.11711",
+          "limit": "Oldest eviction is not the randomized importance-weighted scheduler; no regret guarantee",
+          "methods_section": "4 Algorithm1",
+          "url": "https://arxiv.org/html/2606.11711v1",
+          "use": "Finite tracked pending capacity with explicit permanent feedback loss"
+        },
+        {
+          "arxiv": "2503.21076",
+          "limit": "KAC channel-wise Gaussian classifier differs from multivariate Euclidean residual heads; no forgetting guarantee",
+          "methods_section": "3.3,3.4",
+          "url": "https://arxiv.org/html/2503.21076v1",
+          "use": "Gaussian local capacity with equal center budgets and independent retention"
+        },
+        {
+          "arxiv": "2605.03534",
+          "limit": "Binary historical labels are not three-way evidence sufficiency; no semantic verification claim",
+          "methods_section": "III,IV",
+          "url": "https://arxiv.org/html/2605.03534v1",
+          "use": "Separate source evidence, confidence and selective decision risk"
+        }
+      ],
+      "protocol_id": "v705-admission-horizon-8152",
+      "statistical_plan": {
+        "H1_resampling": "paired source bootstrap",
+        "H1_support": {
+          "complete": 96,
+          "per_class": 12
+        },
+        "H2_resampling": "average seeds per source, moving original-slot blocks with missing masks",
+        "H2_support": {
+          "complete": 128,
+          "nonoverlapping_blocks": 8,
+          "per_class": 8
+        },
+        "beneficial_sources_minimum": 5,
+        "brier_increase_maximum": 0.01,
+        "draws": 10000,
+        "extra_false_accepts_maximum": 0,
+        "gain_lower_bound_minimum": 0.02,
+        "hypotheses": [
+          "H1 radial versus additive on128 reserved evaluation slots",
+          "H2 error-center versus fixed-public-center on192 later stream slots"
+        ],
+        "multiplicity": "Bonferroni family alpha=.05 across exactly2 hypotheses: one-sided alpha=.025 each",
+        "one_sided_confidence": 0.975,
+        "other_control_cost_increase_maximum": 0.02,
+        "precision": "descriptive finite-source intervals; no rare-event or lifelong-safety claim",
+        "primary_block": 16,
+        "retention": {
+          "brier_increase": 0.01,
+          "complete": 48,
+          "cost_increase": 0.02,
+          "extra_false_accepts": 0,
+          "per_class": 8
+        },
+        "seeds": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "sensitivity_blocks": [
+          8,
+          32
+        ],
+        "unit": "original source_cluster; seeds and duplicates add zero independent units",
+        "valid_minimum": 9500
+      },
+      "trained_head_specs": {
+        "arms": [
+          "error_center",
+          "fixed_public_center",
+          "random_past_center"
+        ],
+        "centers_per_opportunity": 4,
+        "coefficient_bound": 4,
+        "gradient_norm": 1,
+        "initial_centers": 16,
+        "kind": "small_Gaussian_residual",
+        "learning_rate": 0.05,
+        "maximum_centers": 24,
+        "ridge": 0.01,
+        "seeds": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "steps": 4
+      }
+    },
+    "H2_protocol": {
+      "path": "openspec/change-proposals/v705-admission-horizon-protocol.json",
+      "sha256": "sha256:ff18d138210428fe9b13c256d17ab49762882e1e3fc80ee70aa6e53f42eb19fb"
+    },
+    "canary": {
+      "arm_order": [
+        {
+          "arms": [
+            "grammar",
+            "unconstrained"
+          ],
+          "unit_id": "sha256:0c7391a2e79e8965e9303e59f7255d975880b1f136e9ec70cfa77d86224ef909"
+        },
+        {
+          "arms": [
+            "unconstrained",
+            "grammar"
+          ],
+          "unit_id": "sha256:dac53a96785a29310cbf4539f4f0355e36a0f9f30c6d37fbdb180e568225964f"
+        },
+        {
+          "arms": [
+            "grammar",
+            "unconstrained"
+          ],
+          "unit_id": "sha256:045d46cf6f214f15e6fd054a47c406a0081c41df5ac11d1bfca7a1e2f0fe4c2b"
+        },
+        {
+          "arms": [
+            "unconstrained",
+            "grammar"
+          ],
+          "unit_id": "sha256:6dd436f897bcb4660b555fc6124d19ebf516e90a2191b6e48c54ef9b3330c665"
+        },
+        {
+          "arms": [
+            "grammar",
+            "unconstrained"
+          ],
+          "unit_id": "sha256:8602fb7ae92d508802f1ffe44eb765fdce10b20e723829209e5ea3a60305a823"
+        },
+        {
+          "arms": [
+            "unconstrained",
+            "grammar"
+          ],
+          "unit_id": "sha256:bfeced756a445efbfbd6a8fb4c6a4cb0b43914196e29f7d79da266df1ba2734f"
+        },
+        {
+          "arms": [
+            "grammar",
+            "unconstrained"
+          ],
+          "unit_id": "sha256:07b2aeaa3eb502f350f1d9873d744e8d7ff48defc546f36c55ed8807f1496662"
+        },
+        {
+          "arms": [
+            "unconstrained",
+            "grammar"
+          ],
+          "unit_id": "sha256:31a968d4eb904704a08e1be75f0fadd16406e58e15d4e804a32127186a19c978"
+        },
+        {
+          "arms": [
+            "grammar",
+            "unconstrained"
+          ],
+          "unit_id": "sha256:3d4e62dd6ac1944e8aa4d203e26a79417a186045dd860665b75900b6bcfaccff"
+        },
+        {
+          "arms": [
+            "unconstrained",
+            "grammar"
+          ],
+          "unit_id": "sha256:98f145275f9bce0975ff56567cebad99f500231c48c99a3746d814e48317134f"
+        },
+        {
+          "arms": [
+            "grammar",
+            "unconstrained"
+          ],
+          "unit_id": "sha256:43186f6e989434cfc7eec12b1f94cb2ab7a8def140b22d227d543b57b406b9ef"
+        },
+        {
+          "arms": [
+            "unconstrained",
+            "grammar"
+          ],
+          "unit_id": "sha256:afbc53c67c23b61cb44d181f4198309ab17782044b25dad1c2529100148c9c9c"
+        },
+        {
+          "arms": [
+            "grammar",
+            "unconstrained"
+          ],
+          "unit_id": "sha256:ee4bcb14d6e706c4670532336ab48988f3c95e34de3e527adde85745fd01a9f7"
+        },
+        {
+          "arms": [
+            "unconstrained",
+            "grammar"
+          ],
+          "unit_id": "sha256:992e0c08d195cb88df19454fdb9a28aa51d8ac4d2c45c4c4fed343eadc3c925c"
+        },
+        {
+          "arms": [
+            "grammar",
+            "unconstrained"
+          ],
+          "unit_id": "sha256:e084a0c097d84135e1847b2d95928ae5362fa59ccc3e1322042399583111039f"
+        },
+        {
+          "arms": [
+            "unconstrained",
+            "grammar"
+          ],
+          "unit_id": "sha256:3cd07cc9b62e6c79d5419aad1d177e4e9478462143c799da8be688a950eda3a9"
+        },
+        {
+          "arms": [
+            "grammar",
+            "unconstrained"
+          ],
+          "unit_id": "sha256:7d3f7c11c5099341fb0feb022290515c4f92b2488c9aec9d694ac2b9f12d06c9"
+        },
+        {
+          "arms": [
+            "unconstrained",
+            "grammar"
+          ],
+          "unit_id": "sha256:86bfc4f68578cf2d0f0cccb9f96105ef04298cd8b3e40f1cbfac1e0b53c23ab5"
+        },
+        {
+          "arms": [
+            "grammar",
+            "unconstrained"
+          ],
+          "unit_id": "sha256:b4d1a35bc9b251059b5471c31384c4ae9fc7a2314fa37b51fbd66a23faeab5e2"
+        },
+        {
+          "arms": [
+            "unconstrained",
+            "grammar"
+          ],
+          "unit_id": "sha256:c177c8194ab40ce99df3c76c2d2e3f63441bfb7c1fcf0baddac8fafca4149f52"
+        },
+        {
+          "arms": [
+            "grammar",
+            "unconstrained"
+          ],
+          "unit_id": "sha256:ac33278fc699791c926c8c560d3d213d99db7206960e175e2a3ef84b7fcd43c1"
+        },
+        {
+          "arms": [
+            "unconstrained",
+            "grammar"
+          ],
+          "unit_id": "sha256:e742891bf984517b833938244f0b9d5f85c5c9467bcb6c5f2343597f419e6840"
+        },
+        {
+          "arms": [
+            "grammar",
+            "unconstrained"
+          ],
+          "unit_id": "sha256:9d2ff877db31379de65eef15881e2000aa03cb2378a3df3966ed939bc8e9e305"
+        },
+        {
+          "arms": [
+            "unconstrained",
+            "grammar"
+          ],
+          "unit_id": "sha256:f00a2e4d6124f5edd00f2c8c248f7cd9146ef81b3a76c808f40e50818957a72e"
+        }
+      ],
+      "bins": [
+        {
+          "high": 4,
+          "low": 1,
+          "source_ids": [
+            "sha256:0c7391a2e79e8965e9303e59f7255d975880b1f136e9ec70cfa77d86224ef909",
+            "sha256:dac53a96785a29310cbf4539f4f0355e36a0f9f30c6d37fbdb180e568225964f",
+            "sha256:045d46cf6f214f15e6fd054a47c406a0081c41df5ac11d1bfca7a1e2f0fe4c2b",
+            "sha256:6dd436f897bcb4660b555fc6124d19ebf516e90a2191b6e48c54ef9b3330c665",
+            "sha256:8602fb7ae92d508802f1ffe44eb765fdce10b20e723829209e5ea3a60305a823",
+            "sha256:bfeced756a445efbfbd6a8fb4c6a4cb0b43914196e29f7d79da266df1ba2734f"
+          ]
+        },
+        {
+          "high": 8,
+          "low": 5,
+          "source_ids": [
+            "sha256:07b2aeaa3eb502f350f1d9873d744e8d7ff48defc546f36c55ed8807f1496662",
+            "sha256:31a968d4eb904704a08e1be75f0fadd16406e58e15d4e804a32127186a19c978",
+            "sha256:3d4e62dd6ac1944e8aa4d203e26a79417a186045dd860665b75900b6bcfaccff",
+            "sha256:98f145275f9bce0975ff56567cebad99f500231c48c99a3746d814e48317134f",
+            "sha256:43186f6e989434cfc7eec12b1f94cb2ab7a8def140b22d227d543b57b406b9ef",
+            "sha256:afbc53c67c23b61cb44d181f4198309ab17782044b25dad1c2529100148c9c9c"
+          ]
+        },
+        {
+          "high": 12,
+          "low": 9,
+          "source_ids": [
+            "sha256:ee4bcb14d6e706c4670532336ab48988f3c95e34de3e527adde85745fd01a9f7",
+            "sha256:992e0c08d195cb88df19454fdb9a28aa51d8ac4d2c45c4c4fed343eadc3c925c",
+            "sha256:e084a0c097d84135e1847b2d95928ae5362fa59ccc3e1322042399583111039f",
+            "sha256:3cd07cc9b62e6c79d5419aad1d177e4e9478462143c799da8be688a950eda3a9",
+            "sha256:7d3f7c11c5099341fb0feb022290515c4f92b2488c9aec9d694ac2b9f12d06c9",
+            "sha256:86bfc4f68578cf2d0f0cccb9f96105ef04298cd8b3e40f1cbfac1e0b53c23ab5"
+          ]
+        },
+        {
+          "high": 16,
+          "low": 13,
+          "source_ids": [
+            "sha256:b4d1a35bc9b251059b5471c31384c4ae9fc7a2314fa37b51fbd66a23faeab5e2",
+            "sha256:c177c8194ab40ce99df3c76c2d2e3f63441bfb7c1fcf0baddac8fafca4149f52",
+            "sha256:ac33278fc699791c926c8c560d3d213d99db7206960e175e2a3ef84b7fcd43c1",
+            "sha256:e742891bf984517b833938244f0b9d5f85c5c9467bcb6c5f2343597f419e6840",
+            "sha256:9d2ff877db31379de65eef15881e2000aa03cb2378a3df3966ed939bc8e9e305",
+            "sha256:f00a2e4d6124f5edd00f2c8c248f7cd9146ef81b3a76c808f40e50818957a72e"
+          ]
+        }
+      ],
+      "capture_task": "exp8181-sentence-transport-canary",
+      "measured_in_8179": false,
+      "minimum_complete_grammar_sources": 22,
+      "paired_prompt_identical": true,
+      "selection": "six per complete-answer sentence-count bin, SHA256(unit_id) order, no labels",
+      "source_denominator": 24,
+      "source_ids": [
+        "sha256:0c7391a2e79e8965e9303e59f7255d975880b1f136e9ec70cfa77d86224ef909",
+        "sha256:dac53a96785a29310cbf4539f4f0355e36a0f9f30c6d37fbdb180e568225964f",
+        "sha256:045d46cf6f214f15e6fd054a47c406a0081c41df5ac11d1bfca7a1e2f0fe4c2b",
+        "sha256:6dd436f897bcb4660b555fc6124d19ebf516e90a2191b6e48c54ef9b3330c665",
+        "sha256:8602fb7ae92d508802f1ffe44eb765fdce10b20e723829209e5ea3a60305a823",
+        "sha256:bfeced756a445efbfbd6a8fb4c6a4cb0b43914196e29f7d79da266df1ba2734f",
+        "sha256:07b2aeaa3eb502f350f1d9873d744e8d7ff48defc546f36c55ed8807f1496662",
+        "sha256:31a968d4eb904704a08e1be75f0fadd16406e58e15d4e804a32127186a19c978",
+        "sha256:3d4e62dd6ac1944e8aa4d203e26a79417a186045dd860665b75900b6bcfaccff",
+        "sha256:98f145275f9bce0975ff56567cebad99f500231c48c99a3746d814e48317134f",
+        "sha256:43186f6e989434cfc7eec12b1f94cb2ab7a8def140b22d227d543b57b406b9ef",
+        "sha256:afbc53c67c23b61cb44d181f4198309ab17782044b25dad1c2529100148c9c9c",
+        "sha256:ee4bcb14d6e706c4670532336ab48988f3c95e34de3e527adde85745fd01a9f7",
+        "sha256:992e0c08d195cb88df19454fdb9a28aa51d8ac4d2c45c4c4fed343eadc3c925c",
+        "sha256:e084a0c097d84135e1847b2d95928ae5362fa59ccc3e1322042399583111039f",
+        "sha256:3cd07cc9b62e6c79d5419aad1d177e4e9478462143c799da8be688a950eda3a9",
+        "sha256:7d3f7c11c5099341fb0feb022290515c4f92b2488c9aec9d694ac2b9f12d06c9",
+        "sha256:86bfc4f68578cf2d0f0cccb9f96105ef04298cd8b3e40f1cbfac1e0b53c23ab5",
+        "sha256:b4d1a35bc9b251059b5471c31384c4ae9fc7a2314fa37b51fbd66a23faeab5e2",
+        "sha256:c177c8194ab40ce99df3c76c2d2e3f63441bfb7c1fcf0baddac8fafca4149f52",
+        "sha256:ac33278fc699791c926c8c560d3d213d99db7206960e175e2a3ef84b7fcd43c1",
+        "sha256:e742891bf984517b833938244f0b9d5f85c5c9467bcb6c5f2343597f419e6840",
+        "sha256:9d2ff877db31379de65eef15881e2000aa03cb2378a3df3966ed939bc8e9e305",
+        "sha256:f00a2e4d6124f5edd00f2c8c248f7cd9146ef81b3a76c808f40e50818957a72e"
+      ],
+      "structural_loss_increase_maximum": 0,
+      "valid_references_on_every_accepted_record": true
+    },
+    "controls": [
+      "scalar_span",
+      "linear12",
+      "radial16",
+      "local_max_probability",
+      "zero_local_feature_ablation",
+      "equivalent_logistic"
+    ],
+    "current_MODEL_SPECS": [],
+    "decision_costs": {
+      "correct": 0,
+      "escalate": 0.5,
+      "false_accept": 5,
+      "false_reject": 1
+    },
+    "exposure_scope": "exposed_development_within_run_disjoint",
+    "features": [
+      "holistic_logit",
+      "overlap_mean",
+      "overlap_maximum",
+      "negation_mismatch_mean",
+      "negation_mismatch_maximum",
+      "numeric_mismatch_mean",
+      "numeric_mismatch_maximum",
+      "uncovered_fraction_mean",
+      "uncovered_fraction_maximum",
+      "span_logit",
+      "quote_validity",
+      "quote_source_byte_ratio",
+      "local_unsupported_mean",
+      "local_unsupported_max",
+      "local_contradicted_fraction",
+      "local_baseless_fraction"
+    ],
+    "frozen_date": "20261006",
+    "head": {
+      "architecture_sweep": false,
+      "calibration": "tune only affine logit, ridge .0001",
+      "centers": 16,
+      "centers_selection": "fit only; SHA256 first center, farthest-first with hash ties",
+      "energy": "E0=0,E1=-z; exp(-E1)/(exp(-E0)+exp(-E1))=sigmoid(z)",
+      "feature_count": 16,
+      "kind": "Gibbs_scale_Gaussian_radial_energy",
+      "normalization": "fit only",
+      "planned_only": true,
+      "thresholds": "tune only, minimum typed cost, ties escalate",
+      "weights": "fit-only four source folds, V705 ridges [.0001,.001,.01,.1,1], max256 iterations",
+      "width": "median positive fit scaled pair distance, fallback1"
+    },
+    "human_targets": "original answer-level labels in original roles only; altered sources receive null; no new human labels",
+    "method_map": [
+      {
+        "limit": "token masking certifies syntax only; this is not a GreatGramma reproduction",
+        "method": "GreatGramma",
+        "url": "https://arxiv.org/html/2502.05111v2",
+        "use": "per-request finite grammar and tokenizer-aligned length preflight"
+      },
+      {
+        "limit": "format can alter predictions; transport success grants no correctness",
+        "method": "Lost in Space",
+        "url": "https://arxiv.org/html/2502.14969v2",
+        "use": "freeze identical prompt and compare grammar against unconstrained output"
+      },
+      {
+        "limit": "mechanical addresses and predicted relations remain features; original answer labels stay gold",
+        "method": "RT4CHART",
+        "url": "https://arxiv.org/html/2603.27752v2",
+        "use": "retain local claims and source evidence addresses"
+      },
+      {
+        "limit": "no unbounded whitespace or repeat rule",
+        "method": "llama.cpp GBNF",
+        "url": "https://github.com/ggml-org/llama.cpp/blob/master/grammars/README.md",
+        "use": "literal ordered records with finite source-index alternatives"
+      }
+    ],
+    "method_to_task_note": "Exp8179 freezes lossless indexed transport and tokenizer bounds. Exp8181 measures paired syntax completeness. Later H1 retains original labels, sixteen features and typed costs. None establishes independent generalization on previously exposed sources.",
+    "output_schema": {
+      "probability": "0.00 through1.00, exactly two fractional digits",
+      "record": "sentence_index|relation|p_unsupported|[source_indices]",
+      "references": "zero, one or two existing source segment indices",
+      "relation": [
+        "E",
+        "C",
+        "B"
+      ],
+      "semantic_gold": false,
+      "separator": "single LF, no terminal LF"
+    },
+    "partition": {
+      "abbreviations": [
+        "mr",
+        "mrs",
+        "ms",
+        "dr",
+        "prof",
+        "sr",
+        "jr",
+        "st",
+        "vs",
+        "etc",
+        "e.g",
+        "i.e",
+        "u.s",
+        "u.k"
+      ],
+      "rule": "Scan terminal punctuation followed by whitespace or EOF; suppress decimal, initials, known abbreviations and numbered list markers; attach inter-sentence whitespace to the preceding sentence; preserve headers and qualifiers; incomplete terminal tail escalates"
+    },
+    "protocol_id": "v707-sentence-transport-8179",
+    "request": {
+      "full_answer": true,
+      "full_source": true,
+      "maximum_input_tokens": 6000,
+      "maximum_output_tokens": 256,
+      "maximum_requests_per_source": 2,
+      "maximum_sentences": 8,
+      "missing_local": "whole_source_escalation",
+      "over_limit": "whole_source_escalation"
+    },
+    "roles": {
+      "evaluation": 128,
+      "fit": 128,
+      "tune": 64
+    },
+    "statistical_plan": {
+      "confidence": 0.975,
+      "draws": 10000,
+      "exposure": "descriptive exposed development; no independent generalization",
+      "family_alpha": 0.05,
+      "one_sided_alpha": 0.025,
+      "resampling": "paired source bootstrap; all original slot masks retained",
+      "seed": 70666,
+      "unit": "original source_cluster",
+      "valid_minimum": 9500
+    }
+  }
+}

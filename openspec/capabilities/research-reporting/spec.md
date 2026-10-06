@@ -93886,3 +93886,27 @@ Validation argv freeze before measurement; sealed logs are never overwritten.
 Implementation: `python/carnot/verify/fit_sentence_capture_8182.py`, thin
 `scripts/experiments/experiment_8182_v707_fit_sentence_capture.py` and private
 `tests/python/test_fit_sentence_capture_8182.py`.
+
+## REQ-REPORT-8183: Publish calibrated sentence head custody
+
+Exp8183 SHALL load no LLM and publish through primary_publication only after
+normal owned validation. Declare MODEL_SPECS=[], zero current calls and trained
+CPU heads separately from imported model provenance. Freeze validation argv before
+measurement; retain per-source fitting/calibration/prediction primitives, exact
+hashes and immutable logs. Required scoped tests, 100 percent new statement
+coverage, Ruff, strict mypy, explicit-path spec coverage and private E2E-015/019
+success/missing/tamper/cold replay SHALL run. Run the full Python suite once as
+repository health and report unrelated failures separately. Run unmodified
+adversarial verification and strict row lint before publication. Exposed fit/tune
+work earns zero independent generalization and zero generalized benefit. Report
+complete_null for a valid sealed fit, complete_blocked_<operand> for external
+blocks, and complete_disqualified_owned_validation for owned failures.
+
+### SCENARIO-REPORT-8183: Direct CPU CLI and independent reduction
+
+The script SHALL run outside the checkout without PYTHONPATH, refuse private
+fixtures under results/, reproduce headlines from primitive typed costs and
+reject changed input, code, head, log or aggregate bytes during cold replay.
+Implementation: python/carnot/verify/sentence_energy_fit_8183.py and
+python/carnot/verify/sentence_energy_8183.py; thin experiment_8183 CLI and
+private tests/python/test_sentence_energy_fit_8183.py.
