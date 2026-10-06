@@ -19649,3 +19649,5 @@ code |
 | 2026-10-06 10:55 UTC | Train small energy heads with separate temperature | OK | 85 passed, 1 warning in 39.83s |
 | 2026-10-06 11:22 UTC | Seal selective decisions on every original reserve | OK | 86 passed, 1 warning in 30.54s |
 | 2026-10-06 11:51 UTC | Audit safe decision utility and calibration on all | OK | 86 passed, 1 warning in 32.72s |
+| 2026-10-06 11:54 UTC | Run qualified continuous energy learning on causal | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8193-learning-qualification.calibrated_memory_ready_score (actual=0 == expected=1) |
+| 2026-10-06 11:56 UTC | Measure later structural learning benefit retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8198-calibrated-online-memory) |
