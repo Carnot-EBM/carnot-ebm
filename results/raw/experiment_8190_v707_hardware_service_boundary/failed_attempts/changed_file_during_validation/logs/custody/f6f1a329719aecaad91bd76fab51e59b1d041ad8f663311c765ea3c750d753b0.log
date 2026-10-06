@@ -1,0 +1,46 @@
+........F.........                                                       [100%]
+=================================== FAILURES ===================================
+_________________ test_private_cli_success_missing_tamper_cold _________________
+
+tmp_path = PosixPath('/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0')
+
+    def test_private_cli_success_missing_tamper_cold(tmp_path):
+        """REQ-REPORT-8190: E2E-016 private publication and replay preserve exact bytes."""
+        source, output = tmp_path / "input.json", tmp_path / (cli.NAME + ".json")
+        atomic_json(source, panel())
+        invoke(["--input", str(source), "--output", str(output)], tmp_path)
+>       invoke(["--cold-replay", str(output)], tmp_path)
+
+tests/python/test_hardware_service_8190.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ['--cold-replay', '/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0/experiment_8190_v707_hardware_service_boundary.json']
+tmp_path = PosixPath('/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0')
+expected = 0
+
+    def invoke(args, tmp_path, expected=0):
+        """Use the installed script path so ambient imports cannot hide transport bugs."""
+        env = dict(os.environ, PYTHONUNBUFFERED="1", JAX_PLATFORMS="cpu")
+        env.pop("PYTHONPATH", None)
+        prefix = [str(cli.ROOT / ".venv/bin/python")]
+        if env.get("CARNOT_8190_COVERAGE_CONFIG"):
+            prefix += ["-m", "coverage", "run", "--rcfile=" + env["CARNOT_8190_COVERAGE_CONFIG"]]
+        result = subprocess.run(
+            prefix + [str(cli.ROOT / cli.SCRIPT), *args],
+            cwd=tmp_path,
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+>       assert result.returncode == expected, result.stdout + result.stderr
+E       AssertionError: [exp8190] phase=start completed=0 pending=1 model_loads=0
+E         [exp8190] failed=ValueError:hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_service_inputs_8190.py
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '--rcf...hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_service_inputs_8190.py\n', stderr='').returncode
+
+tests/python/test_hardware_service_8190.py:139: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_hardware_service_8190.py::test_private_cli_success_missing_tamper_cold
+1 failed, 17 passed in 15.20s

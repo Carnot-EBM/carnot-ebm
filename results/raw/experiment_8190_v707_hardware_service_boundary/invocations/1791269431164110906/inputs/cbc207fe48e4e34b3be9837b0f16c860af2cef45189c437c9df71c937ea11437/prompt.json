@@ -1,0 +1,22 @@
+{
+  "cache_prompt": false,
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"Epic Victory: How Cooper Smith a Texas Teenager Clinched $1M and Won Over 60k New Fans\\nROUND ROCK, Texas \\u2014 Local teen, Cooper Smith, alongside his gaming partner, emerged triumphant at the 2023 Fortnite Champion Series Global Championship held in Denmark, bagging a whopping $1 million grand prize. The three-day esports extravaganza, which ran from Oct. 13-15, showcased some of the world's best \\\"Fortnite\\\" players, battling it out in intense duos matchups.\\nThe competition wasn't for the casual gamer; it's a prestigious event that requires players to earn their spot. Cooper explained, \\\"Only those who placed in the top three in one of the three major tournaments this year could qualify for this Denmark championship.\\\" A feat Cooper had already achieved earlier in the year by securing second place in a major, earning him a hefty $95,000.\\nThis global showdown attracted top-tier players from regions worldwide, including Europe, Middle East, Asia, and Oceana. And in this grand coliseum of virtual warfare, Cooper's skills not only earned him the monumental prize money but also a massive surge in online followers. Post-victory, his streaming platforms witnessed a spike of around 60,000 followers.\\nWith his eyes set on a full-time esports career, Cooper decided to pivot from traditional public school to online classes, ensuring he dedicates his full attention to his newfound professional gaming and streaming ventures. \\\"Balancing rigorous gaming training with regular school and sports simply wasn't feasible,\\\" Cooper elaborated.\\nSupport has been a crucial element in Cooper's journey, with his parents playing a pivotal role. Reflecting on his father's influence, Cooper mentioned, \\\"My dad introduced me to the gaming world. He even accompanied me to Denmark for the championship. Witnessing the win was a surreal experience for both of us.\\\"\\nFor this Round Rock champion, the journey has only just begun. Cooper's ambitions are crystal clear: continue his reign in the gaming world, rake in victories, and do what he loves most for as long as he can.\\n\", \"original_answer\": \"Cooper Smith, a teenager from Texas, won the 2023 Fortnite Champion Series Global Championship in Denmark, resulting in a $1 million prize and an additional 60,000 followers on his streaming platforms. The competition attracted top-tier players worldwide. Smith, who had already earned a spot by placing second in a major tournament earlier in the year, is shifting from traditional school to online classes to focus on his esports career. His parents have been pivotal in his journey, particularly his father who introduced him to gaming.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "seed": 7078188,
+  "temperature": 0,
+  "top_p": 1
+}

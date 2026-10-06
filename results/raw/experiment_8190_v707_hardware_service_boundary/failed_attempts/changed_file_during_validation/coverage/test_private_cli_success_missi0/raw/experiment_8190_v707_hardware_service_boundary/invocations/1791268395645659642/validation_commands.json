@@ -1,0 +1,62 @@
+{
+  "commands": [],
+  "config": {
+    "bits": [
+      8,
+      12,
+      16
+    ],
+    "dimensions": 9,
+    "precision": "quantized storage with float64 arithmetic; fixed-point operators unimplemented",
+    "seed": 7078190,
+    "startup_amortization_requests": 96,
+    "target_speedup": 100
+  },
+  "frozen_before_measurement": true,
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "name": "repository_health_once",
+    "scope": "repository_health_not_science_gate",
+    "timeout_s": 1800
+  },
+  "terminal": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8190_v707_hardware_service_boundary.py",
+        "--cold-replay",
+        "/tmp/carnot8190-wg3_nko3/experiment_8190_v707_hardware_service_boundary.json"
+      ],
+      "name": "cold_replay",
+      "scope": "terminal",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot8190-wg3_nko3/experiment_8190_v707_hardware_service_boundary.json"
+      ],
+      "name": "adversarial",
+      "scope": "terminal",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot8190-wg3_nko3/experiment_8190_v707_hardware_service_boundary.json"
+      ],
+      "name": "strict_rows",
+      "scope": "terminal",
+      "timeout_s": 60
+    }
+  ]
+}

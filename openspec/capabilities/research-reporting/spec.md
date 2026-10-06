@@ -94008,3 +94008,35 @@ authority. Exposed fixtures SHALL confer neither independent benefit nor solves.
 Implementation: `python/carnot/reporting/arc_supervisor_v707_frontier.py` and
 `scripts/experiments/experiment_8189_v707_arc_supervisor_frontier.py`.
 Tests: `tests/python/test_arc_supervisor_frontier_8189.py`.
+## REQ-REPORT-8190: Preserve independent reuse and board evidence
+
+Exp8190 SHALL read Exp8188.cached_service_ready_score exactly and authenticate
+its primary, terminal binding, primitive requests, evidence and durable stores.
+Preserve cold_miss, exact_repeat, forced_refresh and changed_source separately.
+Authenticate each original board receipt and transcript using immutable pins.
+Keep KV260 k_max<=5 fabric, PolarFire Linux CPU and GateMate JTAG0xffffffff
+scope, original dates and hashes. Record separate terminal and reopen conditions
+for these boards and NPU/TSU. Do not probe, flash, buy or load an LLM.
+Preserve Exp8174 complete-request primitives as historical context. Exp8173
+composition remains unqualified and outside this estimand. Historical methods
+come from sealed versioned bytes and the hashed upstream service protocol.
+Freeze exact owned validation argv before reduction; require normal scoped
+pytest,100 percent new statement coverage, Ruff check/format, strict mypy,
+explicit-file spec checks and private E2E-015/016 success/block/tamper/cold replay.
+Run full Python tests once as separate repository health. Preserve failed
+receipts and sealed logs. Publish only through primary_publication after
+independent reduction and unchanged adversarial/strict row auditors.
+The conductor owns ops/status.md, ops/changelog.md and _bmad/traceability.md.
+
+### SCENARIO-REPORT-8190-INDEPENDENT
+
+A changed board receipt or missing branch component blocks only its own scope.
+Other qualified branches and boards remain usable. Missing/retired/gate-blocked
+external evidence terminates complete_blocked_<check>. Owned validation failure
+disqualifies and zeros readiness. Private CLI execution outside checkout needs
+no PYTHONPATH. Replay rejects altered headlines, source/code/config and logs.
+
+Implementation: `python/carnot/reporting/hardware_service_inputs_8190.py`,
+`hardware_service_execution_8190.py` and the Exp8190 thin CLI. Private assertions
+in `tests/python/test_hardware_service_8190.py` cover original pins, failed
+readiness, missing primitives, receipt tampering and cold replay.

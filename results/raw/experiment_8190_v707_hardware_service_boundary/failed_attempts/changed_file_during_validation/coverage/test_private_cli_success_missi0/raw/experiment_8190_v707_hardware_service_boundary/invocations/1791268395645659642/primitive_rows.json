@@ -1,0 +1,484 @@
+{
+  "board_rows": [
+    {
+      "blocker": null,
+      "board": "KV260",
+      "current_hardware_execution": false,
+      "current_reachability": "not_probed",
+      "custody_valid": true,
+      "k_max": 5,
+      "processor_class": "fpga_fabric",
+      "reopen_condition": "Useful measured k<=5 workload, authenticated SSH/device fabric receipt and transfer-inclusive timing.",
+      "status": "historical_qualified",
+      "terminal_condition": "Useful measured k<=5 workload, authenticated SSH/device fabric receipt and transfer-inclusive timing.",
+      "terminal_condition_met": false,
+      "terminal_criterion_met": false
+    },
+    {
+      "blocker": null,
+      "board": "PolarFire",
+      "current_hardware_execution": false,
+      "current_reachability": "not_probed",
+      "custody_valid": true,
+      "k_max": null,
+      "processor_class": "linux_cpu",
+      "reopen_condition": "Real authenticated fabric dispatch with compatible operators and complete timing.",
+      "status": "historical_qualified",
+      "terminal_condition": "Real authenticated fabric dispatch with compatible operators and complete timing.",
+      "terminal_condition_met": false,
+      "terminal_criterion_met": false
+    },
+    {
+      "blocker": "0xffffffff",
+      "board": "GateMate",
+      "current_hardware_execution": false,
+      "current_reachability": "not_probed",
+      "custody_valid": true,
+      "k_max": null,
+      "processor_class": "none",
+      "reopen_condition": "Dated physical/JTAG change resolving0xffffffff, then authenticated dispatch and complete timing.",
+      "status": "historical_qualified",
+      "terminal_condition": "Dated physical/JTAG change resolving0xffffffff, then authenticated dispatch and complete timing.",
+      "terminal_condition_met": false,
+      "terminal_criterion_met": false
+    },
+    {
+      "board": "NPU",
+      "current_hardware_execution": false,
+      "current_reachability": "not_probed",
+      "custody_valid": false,
+      "reopen_condition": "Authenticated access, supported radial/exp operators, guarded parity and transfer-inclusive timing.",
+      "status": "blocked_authenticated_access",
+      "terminal_condition": "Authenticated access, supported radial/exp operators, guarded parity and transfer-inclusive timing.",
+      "terminal_condition_met": false
+    },
+    {
+      "board": "TSU",
+      "current_hardware_execution": false,
+      "current_reachability": "not_probed",
+      "custody_valid": false,
+      "reopen_condition": "Authenticated hardware/SDK access, supported operators and local acquisition/storage/transfer/readout timing.",
+      "status": "blocked_authenticated_access",
+      "terminal_condition": "Authenticated hardware/SDK access, supported operators and local acquisition/storage/transfer/readout timing.",
+      "terminal_condition_met": false
+    }
+  ],
+  "rows": [
+    {
+      "arm": "cold_miss",
+      "cold_inclusive_outer_ceiling": 1.10989010989011,
+      "condition": "cold_miss",
+      "current_hardware_execution": false,
+      "denominator": 90,
+      "exact_arithmetic_only_ceiling": null,
+      "exclusion_reason": null,
+      "fixedpoint_arithmetic_executed": false,
+      "measured_arithmetic_fraction": null,
+      "metric": "arithmetic_acceleration_ceiling",
+      "numerator": 100,
+      "outer_ceiling": 1.1111111111111112,
+      "retained_components": {
+        "cache_read_ns": 5,
+        "cache_write_ns": 5,
+        "decision_serialization_ns": 1,
+        "decision_write_ack_ns": 15,
+        "features_ns": 1,
+        "generation_ns": 50,
+        "key_hash_ns": 5,
+        "load_ns": 0,
+        "other_host_and_ack_ns": 7,
+        "parse_ns": 1,
+        "queue_ns": 0
+      },
+      "retained_unknown_components": [
+        "transfer and readout inside native crossing"
+      ],
+      "scoring_envelope_fraction": 0.1,
+      "source_cluster_id": "source",
+      "startup_amortized_ns": 1.0,
+      "status": "completed",
+      "unit_id": "cold_miss",
+      "upstream": "exp8188"
+    },
+    {
+      "arm": "exact_repeat",
+      "cold_inclusive_outer_ceiling": 1.10989010989011,
+      "condition": "exact_repeat",
+      "current_hardware_execution": false,
+      "denominator": 90,
+      "exact_arithmetic_only_ceiling": null,
+      "exclusion_reason": null,
+      "fixedpoint_arithmetic_executed": false,
+      "measured_arithmetic_fraction": null,
+      "metric": "arithmetic_acceleration_ceiling",
+      "numerator": 100,
+      "outer_ceiling": 1.1111111111111112,
+      "retained_components": {
+        "cache_read_ns": 5,
+        "cache_write_ns": 5,
+        "decision_serialization_ns": 1,
+        "decision_write_ack_ns": 15,
+        "features_ns": 1,
+        "generation_ns": 50,
+        "key_hash_ns": 5,
+        "load_ns": 0,
+        "other_host_and_ack_ns": 7,
+        "parse_ns": 1,
+        "queue_ns": 0
+      },
+      "retained_unknown_components": [
+        "transfer and readout inside native crossing"
+      ],
+      "scoring_envelope_fraction": 0.1,
+      "source_cluster_id": "source",
+      "startup_amortized_ns": 1.0,
+      "status": "completed",
+      "unit_id": "exact_repeat",
+      "upstream": "exp8188"
+    },
+    {
+      "arm": "forced_refresh",
+      "cold_inclusive_outer_ceiling": 1.10989010989011,
+      "condition": "forced_refresh",
+      "current_hardware_execution": false,
+      "denominator": 90,
+      "exact_arithmetic_only_ceiling": null,
+      "exclusion_reason": null,
+      "fixedpoint_arithmetic_executed": false,
+      "measured_arithmetic_fraction": null,
+      "metric": "arithmetic_acceleration_ceiling",
+      "numerator": 100,
+      "outer_ceiling": 1.1111111111111112,
+      "retained_components": {
+        "cache_read_ns": 5,
+        "cache_write_ns": 5,
+        "decision_serialization_ns": 1,
+        "decision_write_ack_ns": 15,
+        "features_ns": 1,
+        "generation_ns": 50,
+        "key_hash_ns": 5,
+        "load_ns": 0,
+        "other_host_and_ack_ns": 7,
+        "parse_ns": 1,
+        "queue_ns": 0
+      },
+      "retained_unknown_components": [
+        "transfer and readout inside native crossing"
+      ],
+      "scoring_envelope_fraction": 0.1,
+      "source_cluster_id": "source",
+      "startup_amortized_ns": 1.0,
+      "status": "completed",
+      "unit_id": "forced_refresh",
+      "upstream": "exp8188"
+    },
+    {
+      "arm": "changed_source",
+      "cold_inclusive_outer_ceiling": 1.10989010989011,
+      "condition": "changed_source",
+      "current_hardware_execution": false,
+      "denominator": 90,
+      "exact_arithmetic_only_ceiling": null,
+      "exclusion_reason": null,
+      "fixedpoint_arithmetic_executed": false,
+      "measured_arithmetic_fraction": null,
+      "metric": "arithmetic_acceleration_ceiling",
+      "numerator": 100,
+      "outer_ceiling": 1.1111111111111112,
+      "retained_components": {
+        "cache_read_ns": 5,
+        "cache_write_ns": 5,
+        "decision_serialization_ns": 1,
+        "decision_write_ack_ns": 15,
+        "features_ns": 1,
+        "generation_ns": 50,
+        "key_hash_ns": 5,
+        "load_ns": 0,
+        "other_host_and_ack_ns": 7,
+        "parse_ns": 1,
+        "queue_ns": 0
+      },
+      "retained_unknown_components": [
+        "transfer and readout inside native crossing"
+      ],
+      "scoring_envelope_fraction": 0.1,
+      "source_cluster_id": "source",
+      "startup_amortized_ns": 1.0,
+      "status": "completed",
+      "unit_id": "changed_source",
+      "upstream": "exp8188"
+    },
+    {
+      "action_disagreements": 0,
+      "arithmetic_class": "float64",
+      "arm": "quantized_8",
+      "bits": 8,
+      "center_step": 0.03137254901960784,
+      "clipping_count": 0,
+      "coefficient_step": 0.06274509803921569,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "distance_coordinate_terms": 9,
+      "exclusion_reason": null,
+      "fallback_flags": [
+        true
+      ],
+      "fixedpoint_arithmetic_executed": false,
+      "float64_head_storage_bytes": 88,
+      "frozen_offset_policy": "retain unquantized historical input first-coordinate base logit",
+      "gaussian_exponentials": 1,
+      "issued_actions": [
+        "accept"
+      ],
+      "issued_probabilities": [
+        0.09999999999999998
+      ],
+      "issued_state": "sha256:6789105c5f67111089cca0bf62ee03661433d00058184ca6495693d33faed1c8",
+      "maximum_probability_error": 0.00310939859203907,
+      "metric": "probability_error",
+      "natural_margin": 2.7755575615628914e-17,
+      "numerator": 0.00310939859203907,
+      "outside_domain_count": 0,
+      "packed_head_storage_bytes": 11,
+      "points": 1,
+      "probability_error_bound": 0.01591013820043604,
+      "quantized_kernel_measured": false,
+      "quantized_probabilities": [
+        0.10310939859203905
+      ],
+      "reference_actions": [
+        "accept"
+      ],
+      "reference_probabilities": [
+        0.09999999999999998
+      ],
+      "software_bound_only": true,
+      "source_cluster_id": "source",
+      "source_id": "private_fixture",
+      "status": "completed",
+      "unguarded_action_disagreements": 1,
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b8"
+    },
+    {
+      "action_disagreements": 0,
+      "arithmetic_class": "float64",
+      "arm": "quantized_12",
+      "bits": 12,
+      "center_step": 0.0019536019536019536,
+      "clipping_count": 0,
+      "coefficient_step": 0.003907203907203907,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "distance_coordinate_terms": 9,
+      "exclusion_reason": null,
+      "fallback_flags": [
+        true
+      ],
+      "fixedpoint_arithmetic_executed": false,
+      "float64_head_storage_bytes": 88,
+      "frozen_offset_policy": "retain unquantized historical input first-coordinate base logit",
+      "gaussian_exponentials": 1,
+      "issued_actions": [
+        "accept"
+      ],
+      "issued_probabilities": [
+        0.09999999999999998
+      ],
+      "issued_state": "sha256:6789105c5f67111089cca0bf62ee03661433d00058184ca6495693d33faed1c8",
+      "maximum_probability_error": 0.00019168373809655415,
+      "metric": "probability_error",
+      "natural_margin": 2.7755575615628914e-17,
+      "numerator": 0.00019168373809655415,
+      "outside_domain_count": 0,
+      "packed_head_storage_bytes": 17,
+      "points": 1,
+      "probability_error_bound": 0.0009776690596813682,
+      "quantized_kernel_measured": false,
+      "quantized_probabilities": [
+        0.10019168373809653
+      ],
+      "reference_actions": [
+        "accept"
+      ],
+      "reference_probabilities": [
+        0.09999999999999998
+      ],
+      "software_bound_only": true,
+      "source_cluster_id": "source",
+      "source_id": "private_fixture",
+      "status": "completed",
+      "unguarded_action_disagreements": 1,
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b12"
+    },
+    {
+      "action_disagreements": 0,
+      "arithmetic_class": "float64",
+      "arm": "quantized_16",
+      "bits": 16,
+      "center_step": 0.00012207217517357137,
+      "clipping_count": 0,
+      "coefficient_step": 0.00024414435034714275,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "distance_coordinate_terms": 9,
+      "exclusion_reason": null,
+      "fallback_flags": [
+        true
+      ],
+      "fixedpoint_arithmetic_executed": false,
+      "float64_head_storage_bytes": 88,
+      "frozen_offset_policy": "retain unquantized historical input first-coordinate base logit",
+      "gaussian_exponentials": 1,
+      "issued_actions": [
+        "accept"
+      ],
+      "issued_probabilities": [
+        0.09999999999999998
+      ],
+      "issued_state": "sha256:6789105c5f67111089cca0bf62ee03661433d00058184ca6495693d33faed1c8",
+      "maximum_probability_error": 1.1969917227752647e-05,
+      "metric": "probability_error",
+      "natural_margin": 2.7755575615628914e-17,
+      "numerator": 1.1969917227752647e-05,
+      "outside_domain_count": 0,
+      "packed_head_storage_bytes": 22,
+      "points": 1,
+      "probability_error_bound": 6.103948694439341e-05,
+      "quantized_kernel_measured": false,
+      "quantized_probabilities": [
+        0.10001196991722773
+      ],
+      "reference_actions": [
+        "accept"
+      ],
+      "reference_probabilities": [
+        0.09999999999999998
+      ],
+      "software_bound_only": true,
+      "source_cluster_id": "source",
+      "source_id": "private_fixture",
+      "status": "completed",
+      "unguarded_action_disagreements": 1,
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b16"
+    },
+    {
+      "action_disagreements": 0,
+      "arithmetic_class": "float64",
+      "arm": "float64_fallback",
+      "bits": 64,
+      "center_step": 0.00012207217517357137,
+      "clipping_count": 0,
+      "coefficient_step": 0.00024414435034714275,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "distance_coordinate_terms": 9,
+      "exclusion_reason": null,
+      "fallback_flags": [
+        false
+      ],
+      "fixedpoint_arithmetic_executed": false,
+      "float64_head_storage_bytes": 88,
+      "frozen_offset_policy": "retain unquantized historical input first-coordinate base logit",
+      "gaussian_exponentials": 1,
+      "issued_actions": [
+        "accept"
+      ],
+      "issued_probabilities": [
+        0.09999999999999998
+      ],
+      "issued_state": "sha256:6789105c5f67111089cca0bf62ee03661433d00058184ca6495693d33faed1c8",
+      "maximum_probability_error": 0.0,
+      "metric": "probability_error",
+      "natural_margin": 2.7755575615628914e-17,
+      "numerator": 0.0,
+      "outside_domain_count": 0,
+      "packed_head_storage_bytes": 88,
+      "points": 1,
+      "probability_error_bound": 0.0,
+      "quantized_kernel_measured": false,
+      "quantized_probabilities": [
+        0.09999999999999998
+      ],
+      "reference_actions": [
+        "accept"
+      ],
+      "reference_probabilities": [
+        0.09999999999999998
+      ],
+      "software_bound_only": true,
+      "source_cluster_id": "source",
+      "source_id": "private_fixture",
+      "status": "completed",
+      "unguarded_action_disagreements": 0,
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b64"
+    },
+    {
+      "arm": "quantized_8",
+      "bits": 8,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "exclusion_reason": null,
+      "fallback_requests": 1,
+      "float64_scoring_envelope_ns_per_request": 10.0,
+      "measured_incremental_fallback_ns": null,
+      "metric": "fallback_request_fraction",
+      "numerator": 1,
+      "requests": 1,
+      "scope": "imported float64 readout envelope; incremental fallback unknown",
+      "source_cluster_id": "source",
+      "status": "completed",
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b8"
+    },
+    {
+      "arm": "quantized_12",
+      "bits": 12,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "exclusion_reason": null,
+      "fallback_requests": 1,
+      "float64_scoring_envelope_ns_per_request": 10.0,
+      "measured_incremental_fallback_ns": null,
+      "metric": "fallback_request_fraction",
+      "numerator": 1,
+      "requests": 1,
+      "scope": "imported float64 readout envelope; incremental fallback unknown",
+      "source_cluster_id": "source",
+      "status": "completed",
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b12"
+    },
+    {
+      "arm": "quantized_16",
+      "bits": 16,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "exclusion_reason": null,
+      "fallback_requests": 1,
+      "float64_scoring_envelope_ns_per_request": 10.0,
+      "measured_incremental_fallback_ns": null,
+      "metric": "fallback_request_fraction",
+      "numerator": 1,
+      "requests": 1,
+      "scope": "imported float64 readout envelope; incremental fallback unknown",
+      "source_cluster_id": "source",
+      "status": "completed",
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b16"
+    },
+    {
+      "arm": "float64_fallback",
+      "bits": 64,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "exclusion_reason": null,
+      "fallback_requests": 0,
+      "float64_scoring_envelope_ns_per_request": 10.0,
+      "measured_incremental_fallback_ns": null,
+      "metric": "fallback_request_fraction",
+      "numerator": 0,
+      "requests": 1,
+      "scope": "imported float64 readout envelope; incremental fallback unknown",
+      "source_cluster_id": "source",
+      "status": "completed",
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b64"
+    }
+  ]
+}

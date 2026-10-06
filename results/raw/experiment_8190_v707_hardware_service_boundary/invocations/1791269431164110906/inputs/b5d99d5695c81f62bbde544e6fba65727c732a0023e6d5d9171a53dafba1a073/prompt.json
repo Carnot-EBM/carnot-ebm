@@ -1,0 +1,22 @@
+{
+  "cache_prompt": false,
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+  "max_tokens": 128,
+  "messages": [
+    {
+      "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+      "role": "system"
+    },
+    {
+      "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Collagen supplements contain the amino acids that your skin is missing, which can help moisturize and diminish the appearance of imperfections. Along with helping to moisturize and hydrate dry skin for a more even skin tone, adding collagen supplements can also improve joint and tendon health. Firm and tone skin\\\\n\\\\npassage 2:Collagen is essential for the health and appearance of your skin, and this protein is also necessary to reduce the typical signs of aging. Collagen is an important building block for elasticity, and its ability to reduce the appearance of fine lines and wrinkles. This protein is also necessary to firm sagging skin, and can even help even out your skin tone. Along with helping to keep your skin flawless, collagen can also improve joint and tissue health. While the aging process cannot be avoided, you can improve your health and have flawless skin by adding collagen supplements to your routine.\\\\n\\\\npassage 3:COMMENTS ( 6 and counting 1  ) I know like 10 sure persons that are always paying up to get Their faces and body PAMPERED,, Reply. 2  Very educative. Reply. 3  Wt r the real products which really helps to boost the collagen (for sagging & droopy face) need harbal products or serum, cream or gel\u2026. Reply. 4  I like the information.\\\\n\\\\n\\\",\\\"question\\\":\\\"how does collagen help the skin\\\"}\", \"original_answer\": \"Based on the provided passages, collagen helps the skin in the following ways:\\n\\n1. Moisturizes and hydrates the skin: Collagen supplements contain amino acids that can help to moisturize and hydrate dry skin, resulting in a more even skin tone.\\n2. Reduces the appearance of imperfections: Collagen is important for reducing the appearance of fine lines and wrinkles, and can also help to firm and tone sagging skin.\\n3. Improves joint and tendon health: Collagen supplements can improve joint and tissue health, which can benefit the overall health and appearance of the skin.\\n4. Boosts collagen production: The passages suggest that collagen supplements can help to boost collagen production in the body, which can lead to improved skin health and appearance. However, it is unclear whether this effect is specific to the face or body.\\n\\nOverall, the passages suggest that collagen supplements can have a number of benefits for the skin, including improving hydration, reducing the appearance of imperfections, and improving joint and tendon health. However, further research may be needed to determine the effectiveness of collagen supplements for these purposes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+      "role": "user"
+    }
+  ],
+  "model": "unsloth/Qwen3.8-27B-GGUF",
+  "seed": 7078188,
+  "temperature": 0,
+  "top_p": 1
+}

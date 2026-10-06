@@ -1,0 +1,1424 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gates": {
+    "pure_arithmetic_required": true,
+    "required_arithmetic_fraction_for_100x": 0.99
+  },
+  "amdahl_bounds": [
+    {
+      "arm": "cold_miss",
+      "bound_scope": "optimistic mixed native crossing; pure arithmetic unavailable unless separately measured",
+      "condition": "cold_miss",
+      "exact_arithmetic_only_ceiling": null,
+      "excluded_count": 0,
+      "measured_arithmetic_fraction": null,
+      "outer_ceiling": 1.1111111111111112,
+      "qualified_count": 1,
+      "required_arithmetic_fraction_for_100x": 0.99,
+      "retained_ns": 90,
+      "total_ns": 100,
+      "upstream": "exp8188"
+    },
+    {
+      "arm": "exact_repeat",
+      "bound_scope": "optimistic mixed native crossing; pure arithmetic unavailable unless separately measured",
+      "condition": "exact_repeat",
+      "exact_arithmetic_only_ceiling": null,
+      "excluded_count": 0,
+      "measured_arithmetic_fraction": null,
+      "outer_ceiling": 1.1111111111111112,
+      "qualified_count": 1,
+      "required_arithmetic_fraction_for_100x": 0.99,
+      "retained_ns": 90,
+      "total_ns": 100,
+      "upstream": "exp8188"
+    },
+    {
+      "arm": "forced_refresh",
+      "bound_scope": "optimistic mixed native crossing; pure arithmetic unavailable unless separately measured",
+      "condition": "forced_refresh",
+      "exact_arithmetic_only_ceiling": null,
+      "excluded_count": 0,
+      "measured_arithmetic_fraction": null,
+      "outer_ceiling": 1.1111111111111112,
+      "qualified_count": 1,
+      "required_arithmetic_fraction_for_100x": 0.99,
+      "retained_ns": 90,
+      "total_ns": 100,
+      "upstream": "exp8188"
+    },
+    {
+      "arm": "changed_source",
+      "bound_scope": "optimistic mixed native crossing; pure arithmetic unavailable unless separately measured",
+      "condition": "changed_source",
+      "exact_arithmetic_only_ceiling": null,
+      "excluded_count": 0,
+      "measured_arithmetic_fraction": null,
+      "outer_ceiling": 1.1111111111111112,
+      "qualified_count": 1,
+      "required_arithmetic_fraction_for_100x": 0.99,
+      "retained_ns": 90,
+      "total_ns": 100,
+      "upstream": "exp8188"
+    }
+  ],
+  "board_rows": [
+    {
+      "blocker": null,
+      "board": "KV260",
+      "current_hardware_execution": false,
+      "current_reachability": "not_probed",
+      "custody_valid": true,
+      "k_max": 5,
+      "processor_class": "fpga_fabric",
+      "reopen_condition": "Useful measured k<=5 workload, authenticated SSH/device fabric receipt and transfer-inclusive timing.",
+      "status": "historical_qualified",
+      "terminal_condition": "Useful measured k<=5 workload, authenticated SSH/device fabric receipt and transfer-inclusive timing.",
+      "terminal_condition_met": false,
+      "terminal_criterion_met": false
+    },
+    {
+      "blocker": null,
+      "board": "PolarFire",
+      "current_hardware_execution": false,
+      "current_reachability": "not_probed",
+      "custody_valid": true,
+      "k_max": null,
+      "processor_class": "linux_cpu",
+      "reopen_condition": "Real authenticated fabric dispatch with compatible operators and complete timing.",
+      "status": "historical_qualified",
+      "terminal_condition": "Real authenticated fabric dispatch with compatible operators and complete timing.",
+      "terminal_condition_met": false,
+      "terminal_criterion_met": false
+    },
+    {
+      "blocker": "0xffffffff",
+      "board": "GateMate",
+      "current_hardware_execution": false,
+      "current_reachability": "not_probed",
+      "custody_valid": true,
+      "k_max": null,
+      "processor_class": "none",
+      "reopen_condition": "Dated physical/JTAG change resolving0xffffffff, then authenticated dispatch and complete timing.",
+      "status": "historical_qualified",
+      "terminal_condition": "Dated physical/JTAG change resolving0xffffffff, then authenticated dispatch and complete timing.",
+      "terminal_condition_met": false,
+      "terminal_criterion_met": false
+    },
+    {
+      "board": "NPU",
+      "current_hardware_execution": false,
+      "current_reachability": "not_probed",
+      "custody_valid": false,
+      "reopen_condition": "Authenticated access, supported radial/exp operators, guarded parity and transfer-inclusive timing.",
+      "status": "blocked_authenticated_access",
+      "terminal_condition": "Authenticated access, supported radial/exp operators, guarded parity and transfer-inclusive timing.",
+      "terminal_condition_met": false
+    },
+    {
+      "board": "TSU",
+      "current_hardware_execution": false,
+      "current_reachability": "not_probed",
+      "custody_valid": false,
+      "reopen_condition": "Authenticated hardware/SDK access, supported operators and local acquisition/storage/transfer/readout timing.",
+      "status": "blocked_authenticated_access",
+      "terminal_condition": "Authenticated hardware/SDK access, supported operators and local acquisition/storage/transfer/readout timing.",
+      "terminal_condition_met": false
+    }
+  ],
+  "cache_hit_weighting": "hypothetical only; no deployment traffic",
+  "call_ledger": [],
+  "censored_count": 0,
+  "cited_upstream_artifacts": [],
+  "claim_scope": "Independent cold, hit and invalidation software ceilings; historical board custody only",
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_service_8190.py",
+      "sha256": "sha256:60e3fb5a1126d95d405921e4e92aaa11b3fde45ea5fe78da64791122b81e8686"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_service_inputs_8190.py",
+      "sha256": "sha256:2c6458bcd251dddf4cdca1e4065bb89e55203c5c6ac5c06e7d9f00b5622edbef"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_service_execution_8190.py",
+      "sha256": "sha256:20792b515096d3a23d067af05e26f255210613cd00b99a077429df3c4264eaa0"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8190_v707_hardware_service_boundary.py",
+      "sha256": "sha256:95d2be24a1b34d10bf7575ab96193144cf0b041d43c1a9b7ec2e48b76a0c839f"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_hardware_service_8190.py",
+      "sha256": "sha256:eade2a2c4d9c624c61288191e5480463055199157d7c33d97ae7a337a8c09b01"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_workload_8162.py",
+      "sha256": "sha256:416d845b630e934e25de726db48e2ae829743bc753de34fbeb75b0767937fe0f"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_workload_8148.py",
+      "sha256": "sha256:f71954c7d46f4a975903d7ce76d8fbadb465604a5c3e771cc4db2066fb1d47f4"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/radial_hardware_8108.py",
+      "sha256": "sha256:6f1118b53610ad5c335772228010139d734492baf0d8ae8df55cb1ae59851e75"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_service_8134.py",
+      "sha256": "sha256:5c88ac48bba809504eb3635e5911313bb08271caf200556ecc87f9edc7112038"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py",
+      "sha256": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:e6291ced5d52a50544cc6dcc46870886cdb2149796fc5eb7781e16c9ce42d229"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/precision_fallback_8042.py",
+      "sha256": "sha256:7eb52b4437ad7f8933584431c1bc8284908eb88dd54531064d90f2a19074c893"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/exact_request_8188.py",
+      "sha256": "sha256:9988c1bac365b87b160d175d13ccfd7de037d75676434596b9bffe31d50d8fd2"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_workload_inputs_8176.py",
+      "sha256": "sha256:fa5e52107ab45ef8da27b606c6763e519a2d961c07fd27ca0ff4ab97549f36e7"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_boundary_execution_8176.py",
+      "sha256": "sha256:f2ee451f164b3ef478b572ea0a895b2b9fad6d505f13f8ef6aedce21c440c41d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_feature_8068.py",
+      "sha256": "sha256:fea697c77ff8e6eb69a46f8faf5972ae792ee2803cd8aac1a5b7cd33282c3238"
+    }
+  ],
+  "completed_count": 12,
+  "config": {
+    "bits": [
+      8,
+      12,
+      16
+    ],
+    "dimensions": 9,
+    "precision": "quantized storage with float64 arithmetic; fixed-point operators unimplemented",
+    "seed": 7078190,
+    "startup_amortization_requests": 96,
+    "target_speedup": 100
+  },
+  "duration_s": 2.3767852199962363,
+  "eligible_count": 12,
+  "excluded_count": 0,
+  "experiment_id": 8190,
+  "exposure_scope": "private fixture",
+  "external_context": "Extropic projections do not replace local TSU timing.",
+  "failed_count": 0,
+  "fallback_cost_rows": [
+    {
+      "arm": "quantized_8",
+      "bits": 8,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "exclusion_reason": null,
+      "fallback_requests": 1,
+      "float64_scoring_envelope_ns_per_request": 10.0,
+      "measured_incremental_fallback_ns": null,
+      "metric": "fallback_request_fraction",
+      "numerator": 1,
+      "requests": 1,
+      "scope": "imported float64 readout envelope; incremental fallback unknown",
+      "source_cluster_id": "source",
+      "status": "completed",
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b8"
+    },
+    {
+      "arm": "quantized_12",
+      "bits": 12,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "exclusion_reason": null,
+      "fallback_requests": 1,
+      "float64_scoring_envelope_ns_per_request": 10.0,
+      "measured_incremental_fallback_ns": null,
+      "metric": "fallback_request_fraction",
+      "numerator": 1,
+      "requests": 1,
+      "scope": "imported float64 readout envelope; incremental fallback unknown",
+      "source_cluster_id": "source",
+      "status": "completed",
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b12"
+    },
+    {
+      "arm": "quantized_16",
+      "bits": 16,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "exclusion_reason": null,
+      "fallback_requests": 1,
+      "float64_scoring_envelope_ns_per_request": 10.0,
+      "measured_incremental_fallback_ns": null,
+      "metric": "fallback_request_fraction",
+      "numerator": 1,
+      "requests": 1,
+      "scope": "imported float64 readout envelope; incremental fallback unknown",
+      "source_cluster_id": "source",
+      "status": "completed",
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b16"
+    },
+    {
+      "arm": "float64_fallback",
+      "bits": 64,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "exclusion_reason": null,
+      "fallback_requests": 0,
+      "float64_scoring_envelope_ns_per_request": 10.0,
+      "measured_incremental_fallback_ns": null,
+      "metric": "fallback_request_fraction",
+      "numerator": 0,
+      "requests": 1,
+      "scope": "imported float64 readout envelope; incremental fallback unknown",
+      "source_cluster_id": "source",
+      "status": "completed",
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b64"
+    }
+  ],
+  "field_principles": {
+    "costs": "Mixed timers allow optimistic bounds only",
+    "readiness": "Normal owned exits; board custody differs from service benefit",
+    "rows": "Original source units reconstruct separate branch denominators",
+    "substrate": "Imported model provenance grants zero current calls"
+  },
+  "flagged_adversarial": false,
+  "flashing_executed": false,
+  "gate_check_summary": [
+    {
+      "artifact_field": "cached_service_ready_score",
+      "check": "cached_service_ready_score",
+      "expected": 1,
+      "hash": "private",
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "path": "private",
+      "upstream": "exp8188"
+    },
+    {
+      "artifact_field": "cold_miss.component_cost_consistency",
+      "check": "cold_miss.component_cost_consistency",
+      "expected": true,
+      "hash": "private",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "private",
+      "upstream": "exp8188"
+    },
+    {
+      "artifact_field": "exact_repeat.component_cost_consistency",
+      "check": "exact_repeat.component_cost_consistency",
+      "expected": true,
+      "hash": "private",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "private",
+      "upstream": "exp8188"
+    },
+    {
+      "artifact_field": "forced_refresh.component_cost_consistency",
+      "check": "forced_refresh.component_cost_consistency",
+      "expected": true,
+      "hash": "private",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "private",
+      "upstream": "exp8188"
+    },
+    {
+      "artifact_field": "changed_source.component_cost_consistency",
+      "check": "changed_source.component_cost_consistency",
+      "expected": true,
+      "hash": "private",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "private",
+      "upstream": "exp8188"
+    },
+    {
+      "artifact_field": "board_custody_KV260",
+      "check": "board_custody_KV260",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": null,
+      "upstream": "KV260"
+    },
+    {
+      "artifact_field": "board_custody_PolarFire",
+      "check": "board_custody_PolarFire",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": null,
+      "upstream": "PolarFire"
+    },
+    {
+      "artifact_field": "board_custody_GateMate",
+      "check": "board_custody_GateMate",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": null,
+      "upstream": "GateMate"
+    }
+  ],
+  "generalized_learning_benefit_score": 0,
+  "hardware_boundary_ready_score": 1,
+  "hardware_integration_executed": false,
+  "hardware_spending_decision": "defer: no measured whole-workload hardware benefit",
+  "historical_complete_request_context": {},
+  "historical_composition": {
+    "experiment_id": 8173,
+    "included_in_estimand": false,
+    "qualified": false,
+    "reason": "unavailable historical composition remains outside this reuse workload"
+  },
+  "historical_model_provenance": [],
+  "honest_verdict": "complete_circular_positive_hardware_service_boundary",
+  "independent_count": 0,
+  "independent_generalization_score": 0,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "no_model_load",
+  "intended_count": 12,
+  "measured_bottleneck": "Acquisition on misses/invalidation and durable storage/acknowledgement on cache hits.",
+  "measured_repeat_frequency": null,
+  "measured_workload_bound_ready_score": 1,
+  "model_invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "phase_spans": [
+    {
+      "duration_s": 0.001398214022628963,
+      "phase": "software_reduction"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "cached_service_ready_score",
+      "check": "cached_service_ready_score",
+      "expected": 1,
+      "hash": "private",
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "path": "private",
+      "upstream": "exp8188"
+    },
+    {
+      "artifact_field": "cold_miss.component_cost_consistency",
+      "check": "cold_miss.component_cost_consistency",
+      "expected": true,
+      "hash": "private",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "private",
+      "upstream": "exp8188"
+    },
+    {
+      "artifact_field": "exact_repeat.component_cost_consistency",
+      "check": "exact_repeat.component_cost_consistency",
+      "expected": true,
+      "hash": "private",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "private",
+      "upstream": "exp8188"
+    },
+    {
+      "artifact_field": "forced_refresh.component_cost_consistency",
+      "check": "forced_refresh.component_cost_consistency",
+      "expected": true,
+      "hash": "private",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "private",
+      "upstream": "exp8188"
+    },
+    {
+      "artifact_field": "changed_source.component_cost_consistency",
+      "check": "changed_source.component_cost_consistency",
+      "expected": true,
+      "hash": "private",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "private",
+      "upstream": "exp8188"
+    },
+    {
+      "artifact_field": "board_custody_KV260",
+      "check": "board_custody_KV260",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": null,
+      "upstream": "KV260"
+    },
+    {
+      "artifact_field": "board_custody_PolarFire",
+      "check": "board_custody_PolarFire",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": null,
+      "upstream": "PolarFire"
+    },
+    {
+      "artifact_field": "board_custody_GateMate",
+      "check": "board_custody_GateMate",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": null,
+      "upstream": "GateMate"
+    }
+  ],
+  "purchase_executed": false,
+  "quantization_rows": [
+    {
+      "action_disagreements": 0,
+      "arithmetic_class": "float64",
+      "arm": "quantized_8",
+      "bits": 8,
+      "center_step": 0.03137254901960784,
+      "clipping_count": 0,
+      "coefficient_step": 0.06274509803921569,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "distance_coordinate_terms": 9,
+      "exclusion_reason": null,
+      "fallback_flags": [
+        true
+      ],
+      "fixedpoint_arithmetic_executed": false,
+      "float64_head_storage_bytes": 88,
+      "frozen_offset_policy": "retain unquantized historical input first-coordinate base logit",
+      "gaussian_exponentials": 1,
+      "issued_actions": [
+        "accept"
+      ],
+      "issued_probabilities": [
+        0.09999999999999998
+      ],
+      "issued_state": "sha256:6789105c5f67111089cca0bf62ee03661433d00058184ca6495693d33faed1c8",
+      "maximum_probability_error": 0.00310939859203907,
+      "metric": "probability_error",
+      "natural_margin": 2.7755575615628914e-17,
+      "numerator": 0.00310939859203907,
+      "outside_domain_count": 0,
+      "packed_head_storage_bytes": 11,
+      "points": 1,
+      "probability_error_bound": 0.01591013820043604,
+      "quantized_kernel_measured": false,
+      "quantized_probabilities": [
+        0.10310939859203905
+      ],
+      "reference_actions": [
+        "accept"
+      ],
+      "reference_probabilities": [
+        0.09999999999999998
+      ],
+      "software_bound_only": true,
+      "source_cluster_id": "source",
+      "source_id": "private_fixture",
+      "status": "completed",
+      "unguarded_action_disagreements": 1,
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b8"
+    },
+    {
+      "action_disagreements": 0,
+      "arithmetic_class": "float64",
+      "arm": "quantized_12",
+      "bits": 12,
+      "center_step": 0.0019536019536019536,
+      "clipping_count": 0,
+      "coefficient_step": 0.003907203907203907,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "distance_coordinate_terms": 9,
+      "exclusion_reason": null,
+      "fallback_flags": [
+        true
+      ],
+      "fixedpoint_arithmetic_executed": false,
+      "float64_head_storage_bytes": 88,
+      "frozen_offset_policy": "retain unquantized historical input first-coordinate base logit",
+      "gaussian_exponentials": 1,
+      "issued_actions": [
+        "accept"
+      ],
+      "issued_probabilities": [
+        0.09999999999999998
+      ],
+      "issued_state": "sha256:6789105c5f67111089cca0bf62ee03661433d00058184ca6495693d33faed1c8",
+      "maximum_probability_error": 0.00019168373809655415,
+      "metric": "probability_error",
+      "natural_margin": 2.7755575615628914e-17,
+      "numerator": 0.00019168373809655415,
+      "outside_domain_count": 0,
+      "packed_head_storage_bytes": 17,
+      "points": 1,
+      "probability_error_bound": 0.0009776690596813682,
+      "quantized_kernel_measured": false,
+      "quantized_probabilities": [
+        0.10019168373809653
+      ],
+      "reference_actions": [
+        "accept"
+      ],
+      "reference_probabilities": [
+        0.09999999999999998
+      ],
+      "software_bound_only": true,
+      "source_cluster_id": "source",
+      "source_id": "private_fixture",
+      "status": "completed",
+      "unguarded_action_disagreements": 1,
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b12"
+    },
+    {
+      "action_disagreements": 0,
+      "arithmetic_class": "float64",
+      "arm": "quantized_16",
+      "bits": 16,
+      "center_step": 0.00012207217517357137,
+      "clipping_count": 0,
+      "coefficient_step": 0.00024414435034714275,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "distance_coordinate_terms": 9,
+      "exclusion_reason": null,
+      "fallback_flags": [
+        true
+      ],
+      "fixedpoint_arithmetic_executed": false,
+      "float64_head_storage_bytes": 88,
+      "frozen_offset_policy": "retain unquantized historical input first-coordinate base logit",
+      "gaussian_exponentials": 1,
+      "issued_actions": [
+        "accept"
+      ],
+      "issued_probabilities": [
+        0.09999999999999998
+      ],
+      "issued_state": "sha256:6789105c5f67111089cca0bf62ee03661433d00058184ca6495693d33faed1c8",
+      "maximum_probability_error": 1.1969917227752647e-05,
+      "metric": "probability_error",
+      "natural_margin": 2.7755575615628914e-17,
+      "numerator": 1.1969917227752647e-05,
+      "outside_domain_count": 0,
+      "packed_head_storage_bytes": 22,
+      "points": 1,
+      "probability_error_bound": 6.103948694439341e-05,
+      "quantized_kernel_measured": false,
+      "quantized_probabilities": [
+        0.10001196991722773
+      ],
+      "reference_actions": [
+        "accept"
+      ],
+      "reference_probabilities": [
+        0.09999999999999998
+      ],
+      "software_bound_only": true,
+      "source_cluster_id": "source",
+      "source_id": "private_fixture",
+      "status": "completed",
+      "unguarded_action_disagreements": 1,
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b16"
+    },
+    {
+      "action_disagreements": 0,
+      "arithmetic_class": "float64",
+      "arm": "float64_fallback",
+      "bits": 64,
+      "center_step": 0.00012207217517357137,
+      "clipping_count": 0,
+      "coefficient_step": 0.00024414435034714275,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "distance_coordinate_terms": 9,
+      "exclusion_reason": null,
+      "fallback_flags": [
+        false
+      ],
+      "fixedpoint_arithmetic_executed": false,
+      "float64_head_storage_bytes": 88,
+      "frozen_offset_policy": "retain unquantized historical input first-coordinate base logit",
+      "gaussian_exponentials": 1,
+      "issued_actions": [
+        "accept"
+      ],
+      "issued_probabilities": [
+        0.09999999999999998
+      ],
+      "issued_state": "sha256:6789105c5f67111089cca0bf62ee03661433d00058184ca6495693d33faed1c8",
+      "maximum_probability_error": 0.0,
+      "metric": "probability_error",
+      "natural_margin": 2.7755575615628914e-17,
+      "numerator": 0.0,
+      "outside_domain_count": 0,
+      "packed_head_storage_bytes": 88,
+      "points": 1,
+      "probability_error_bound": 0.0,
+      "quantized_kernel_measured": false,
+      "quantized_probabilities": [
+        0.09999999999999998
+      ],
+      "reference_actions": [
+        "accept"
+      ],
+      "reference_probabilities": [
+        0.09999999999999998
+      ],
+      "software_bound_only": true,
+      "source_cluster_id": "source",
+      "source_id": "private_fixture",
+      "status": "completed",
+      "unguarded_action_disagreements": 0,
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b64"
+    }
+  ],
+  "random_seed": 7078190,
+  "raw_shard_hashes": [
+    {
+      "path": "/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0/raw/experiment_8190_v707_hardware_service_boundary/invocations/1791268395645659642/replay_inputs.json",
+      "sha256": "sha256:ff450a301dbe1fefe9281fe975ee0ffe329345c9312c5eb8a5c2ab4907bfe1da"
+    },
+    {
+      "path": "/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0/raw/experiment_8190_v707_hardware_service_boundary/invocations/1791268395645659642/primitive_rows.json",
+      "sha256": "sha256:82caadef605f64ca7bbd9d3a36da36e64558f0d3dfcf94d2277773561167b798"
+    },
+    {
+      "path": "/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0/raw/experiment_8190_v707_hardware_service_boundary/invocations/1791268395645659642/validation_commands.json",
+      "sha256": "sha256:6c64dc62091a0388018c2c32b2395c62eaa89997399393f640b155796def8fa2"
+    },
+    {
+      "path": "/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0/raw/experiment_8190_v707_hardware_service_boundary/invocations/1791268395645659642/validation_receipts.json",
+      "sha256": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0/raw/experiment_8190_v707_hardware_service_boundary/invocations/1791268395645659642/independent_reduction.json",
+      "sha256": "sha256:5ea07ab18d4c8932ac1b661306c0b92ff37d110269b974f2e8062e17a701a0e0"
+    },
+    {
+      "path": "/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0/raw/experiment_8190_v707_hardware_service_boundary/invocations/1791268395645659642/terminal_1791268395661487515/custody/7f193c6892a090817ee62424fdc3fc139021c22bab6046f22bb50df14fdb10d3.log",
+      "sha256": "sha256:7f193c6892a090817ee62424fdc3fc139021c22bab6046f22bb50df14fdb10d3"
+    },
+    {
+      "path": "/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0/raw/experiment_8190_v707_hardware_service_boundary/invocations/1791268395645659642/terminal_1791268395661487515/custody/d78739926c8c00da85625ef6436e584987df5d0fda66c8b71b9efe7434463770.log",
+      "sha256": "sha256:d78739926c8c00da85625ef6436e584987df5d0fda66c8b71b9efe7434463770"
+    },
+    {
+      "path": "/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0/raw/experiment_8190_v707_hardware_service_boundary/invocations/1791268395645659642/terminal_1791268395661487515/custody/ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+      "sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f"
+    }
+  ],
+  "reopen_conditions": {
+    "GateMate": "Dated physical/JTAG change resolving0xffffffff, then authenticated dispatch and complete timing.",
+    "KV260": "Useful measured k<=5 workload, authenticated SSH/device fabric receipt and transfer-inclusive timing.",
+    "NPU": "Authenticated access, supported radial/exp operators, guarded parity and transfer-inclusive timing.",
+    "PolarFire": "Real authenticated fabric dispatch with compatible operators and complete timing.",
+    "TSU": "Authenticated hardware/SDK access, supported operators and local acquisition/storage/transfer/readout timing."
+  },
+  "replay_input_reference": {
+    "path": "/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0/raw/experiment_8190_v707_hardware_service_boundary/invocations/1791268395645659642/replay_inputs.json",
+    "sha256": "sha256:ff450a301dbe1fefe9281fe975ee0ffe329345c9312c5eb8a5c2ab4907bfe1da"
+  },
+  "repository_health": [],
+  "reproducibility_checksum": "sha256:c6c0ee28af93f860dcadcd1689cb130feaa6631ea70a630191e78e89aebb574a",
+  "required_checks_passed": true,
+  "rows": [
+    {
+      "arm": "cold_miss",
+      "cold_inclusive_outer_ceiling": 1.10989010989011,
+      "condition": "cold_miss",
+      "current_hardware_execution": false,
+      "denominator": 90,
+      "exact_arithmetic_only_ceiling": null,
+      "exclusion_reason": null,
+      "fixedpoint_arithmetic_executed": false,
+      "measured_arithmetic_fraction": null,
+      "metric": "arithmetic_acceleration_ceiling",
+      "numerator": 100,
+      "outer_ceiling": 1.1111111111111112,
+      "retained_components": {
+        "cache_read_ns": 5,
+        "cache_write_ns": 5,
+        "decision_serialization_ns": 1,
+        "decision_write_ack_ns": 15,
+        "features_ns": 1,
+        "generation_ns": 50,
+        "key_hash_ns": 5,
+        "load_ns": 0,
+        "other_host_and_ack_ns": 7,
+        "parse_ns": 1,
+        "queue_ns": 0
+      },
+      "retained_unknown_components": [
+        "transfer and readout inside native crossing"
+      ],
+      "scoring_envelope_fraction": 0.1,
+      "source_cluster_id": "source",
+      "startup_amortized_ns": 1.0,
+      "status": "completed",
+      "unit_id": "cold_miss",
+      "upstream": "exp8188"
+    },
+    {
+      "arm": "exact_repeat",
+      "cold_inclusive_outer_ceiling": 1.10989010989011,
+      "condition": "exact_repeat",
+      "current_hardware_execution": false,
+      "denominator": 90,
+      "exact_arithmetic_only_ceiling": null,
+      "exclusion_reason": null,
+      "fixedpoint_arithmetic_executed": false,
+      "measured_arithmetic_fraction": null,
+      "metric": "arithmetic_acceleration_ceiling",
+      "numerator": 100,
+      "outer_ceiling": 1.1111111111111112,
+      "retained_components": {
+        "cache_read_ns": 5,
+        "cache_write_ns": 5,
+        "decision_serialization_ns": 1,
+        "decision_write_ack_ns": 15,
+        "features_ns": 1,
+        "generation_ns": 50,
+        "key_hash_ns": 5,
+        "load_ns": 0,
+        "other_host_and_ack_ns": 7,
+        "parse_ns": 1,
+        "queue_ns": 0
+      },
+      "retained_unknown_components": [
+        "transfer and readout inside native crossing"
+      ],
+      "scoring_envelope_fraction": 0.1,
+      "source_cluster_id": "source",
+      "startup_amortized_ns": 1.0,
+      "status": "completed",
+      "unit_id": "exact_repeat",
+      "upstream": "exp8188"
+    },
+    {
+      "arm": "forced_refresh",
+      "cold_inclusive_outer_ceiling": 1.10989010989011,
+      "condition": "forced_refresh",
+      "current_hardware_execution": false,
+      "denominator": 90,
+      "exact_arithmetic_only_ceiling": null,
+      "exclusion_reason": null,
+      "fixedpoint_arithmetic_executed": false,
+      "measured_arithmetic_fraction": null,
+      "metric": "arithmetic_acceleration_ceiling",
+      "numerator": 100,
+      "outer_ceiling": 1.1111111111111112,
+      "retained_components": {
+        "cache_read_ns": 5,
+        "cache_write_ns": 5,
+        "decision_serialization_ns": 1,
+        "decision_write_ack_ns": 15,
+        "features_ns": 1,
+        "generation_ns": 50,
+        "key_hash_ns": 5,
+        "load_ns": 0,
+        "other_host_and_ack_ns": 7,
+        "parse_ns": 1,
+        "queue_ns": 0
+      },
+      "retained_unknown_components": [
+        "transfer and readout inside native crossing"
+      ],
+      "scoring_envelope_fraction": 0.1,
+      "source_cluster_id": "source",
+      "startup_amortized_ns": 1.0,
+      "status": "completed",
+      "unit_id": "forced_refresh",
+      "upstream": "exp8188"
+    },
+    {
+      "arm": "changed_source",
+      "cold_inclusive_outer_ceiling": 1.10989010989011,
+      "condition": "changed_source",
+      "current_hardware_execution": false,
+      "denominator": 90,
+      "exact_arithmetic_only_ceiling": null,
+      "exclusion_reason": null,
+      "fixedpoint_arithmetic_executed": false,
+      "measured_arithmetic_fraction": null,
+      "metric": "arithmetic_acceleration_ceiling",
+      "numerator": 100,
+      "outer_ceiling": 1.1111111111111112,
+      "retained_components": {
+        "cache_read_ns": 5,
+        "cache_write_ns": 5,
+        "decision_serialization_ns": 1,
+        "decision_write_ack_ns": 15,
+        "features_ns": 1,
+        "generation_ns": 50,
+        "key_hash_ns": 5,
+        "load_ns": 0,
+        "other_host_and_ack_ns": 7,
+        "parse_ns": 1,
+        "queue_ns": 0
+      },
+      "retained_unknown_components": [
+        "transfer and readout inside native crossing"
+      ],
+      "scoring_envelope_fraction": 0.1,
+      "source_cluster_id": "source",
+      "startup_amortized_ns": 1.0,
+      "status": "completed",
+      "unit_id": "changed_source",
+      "upstream": "exp8188"
+    },
+    {
+      "action_disagreements": 0,
+      "arithmetic_class": "float64",
+      "arm": "quantized_8",
+      "bits": 8,
+      "center_step": 0.03137254901960784,
+      "clipping_count": 0,
+      "coefficient_step": 0.06274509803921569,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "distance_coordinate_terms": 9,
+      "exclusion_reason": null,
+      "fallback_flags": [
+        true
+      ],
+      "fixedpoint_arithmetic_executed": false,
+      "float64_head_storage_bytes": 88,
+      "frozen_offset_policy": "retain unquantized historical input first-coordinate base logit",
+      "gaussian_exponentials": 1,
+      "issued_actions": [
+        "accept"
+      ],
+      "issued_probabilities": [
+        0.09999999999999998
+      ],
+      "issued_state": "sha256:6789105c5f67111089cca0bf62ee03661433d00058184ca6495693d33faed1c8",
+      "maximum_probability_error": 0.00310939859203907,
+      "metric": "probability_error",
+      "natural_margin": 2.7755575615628914e-17,
+      "numerator": 0.00310939859203907,
+      "outside_domain_count": 0,
+      "packed_head_storage_bytes": 11,
+      "points": 1,
+      "probability_error_bound": 0.01591013820043604,
+      "quantized_kernel_measured": false,
+      "quantized_probabilities": [
+        0.10310939859203905
+      ],
+      "reference_actions": [
+        "accept"
+      ],
+      "reference_probabilities": [
+        0.09999999999999998
+      ],
+      "software_bound_only": true,
+      "source_cluster_id": "source",
+      "source_id": "private_fixture",
+      "status": "completed",
+      "unguarded_action_disagreements": 1,
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b8"
+    },
+    {
+      "action_disagreements": 0,
+      "arithmetic_class": "float64",
+      "arm": "quantized_12",
+      "bits": 12,
+      "center_step": 0.0019536019536019536,
+      "clipping_count": 0,
+      "coefficient_step": 0.003907203907203907,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "distance_coordinate_terms": 9,
+      "exclusion_reason": null,
+      "fallback_flags": [
+        true
+      ],
+      "fixedpoint_arithmetic_executed": false,
+      "float64_head_storage_bytes": 88,
+      "frozen_offset_policy": "retain unquantized historical input first-coordinate base logit",
+      "gaussian_exponentials": 1,
+      "issued_actions": [
+        "accept"
+      ],
+      "issued_probabilities": [
+        0.09999999999999998
+      ],
+      "issued_state": "sha256:6789105c5f67111089cca0bf62ee03661433d00058184ca6495693d33faed1c8",
+      "maximum_probability_error": 0.00019168373809655415,
+      "metric": "probability_error",
+      "natural_margin": 2.7755575615628914e-17,
+      "numerator": 0.00019168373809655415,
+      "outside_domain_count": 0,
+      "packed_head_storage_bytes": 17,
+      "points": 1,
+      "probability_error_bound": 0.0009776690596813682,
+      "quantized_kernel_measured": false,
+      "quantized_probabilities": [
+        0.10019168373809653
+      ],
+      "reference_actions": [
+        "accept"
+      ],
+      "reference_probabilities": [
+        0.09999999999999998
+      ],
+      "software_bound_only": true,
+      "source_cluster_id": "source",
+      "source_id": "private_fixture",
+      "status": "completed",
+      "unguarded_action_disagreements": 1,
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b12"
+    },
+    {
+      "action_disagreements": 0,
+      "arithmetic_class": "float64",
+      "arm": "quantized_16",
+      "bits": 16,
+      "center_step": 0.00012207217517357137,
+      "clipping_count": 0,
+      "coefficient_step": 0.00024414435034714275,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "distance_coordinate_terms": 9,
+      "exclusion_reason": null,
+      "fallback_flags": [
+        true
+      ],
+      "fixedpoint_arithmetic_executed": false,
+      "float64_head_storage_bytes": 88,
+      "frozen_offset_policy": "retain unquantized historical input first-coordinate base logit",
+      "gaussian_exponentials": 1,
+      "issued_actions": [
+        "accept"
+      ],
+      "issued_probabilities": [
+        0.09999999999999998
+      ],
+      "issued_state": "sha256:6789105c5f67111089cca0bf62ee03661433d00058184ca6495693d33faed1c8",
+      "maximum_probability_error": 1.1969917227752647e-05,
+      "metric": "probability_error",
+      "natural_margin": 2.7755575615628914e-17,
+      "numerator": 1.1969917227752647e-05,
+      "outside_domain_count": 0,
+      "packed_head_storage_bytes": 22,
+      "points": 1,
+      "probability_error_bound": 6.103948694439341e-05,
+      "quantized_kernel_measured": false,
+      "quantized_probabilities": [
+        0.10001196991722773
+      ],
+      "reference_actions": [
+        "accept"
+      ],
+      "reference_probabilities": [
+        0.09999999999999998
+      ],
+      "software_bound_only": true,
+      "source_cluster_id": "source",
+      "source_id": "private_fixture",
+      "status": "completed",
+      "unguarded_action_disagreements": 1,
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b16"
+    },
+    {
+      "action_disagreements": 0,
+      "arithmetic_class": "float64",
+      "arm": "float64_fallback",
+      "bits": 64,
+      "center_step": 0.00012207217517357137,
+      "clipping_count": 0,
+      "coefficient_step": 0.00024414435034714275,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "distance_coordinate_terms": 9,
+      "exclusion_reason": null,
+      "fallback_flags": [
+        false
+      ],
+      "fixedpoint_arithmetic_executed": false,
+      "float64_head_storage_bytes": 88,
+      "frozen_offset_policy": "retain unquantized historical input first-coordinate base logit",
+      "gaussian_exponentials": 1,
+      "issued_actions": [
+        "accept"
+      ],
+      "issued_probabilities": [
+        0.09999999999999998
+      ],
+      "issued_state": "sha256:6789105c5f67111089cca0bf62ee03661433d00058184ca6495693d33faed1c8",
+      "maximum_probability_error": 0.0,
+      "metric": "probability_error",
+      "natural_margin": 2.7755575615628914e-17,
+      "numerator": 0.0,
+      "outside_domain_count": 0,
+      "packed_head_storage_bytes": 88,
+      "points": 1,
+      "probability_error_bound": 0.0,
+      "quantized_kernel_measured": false,
+      "quantized_probabilities": [
+        0.09999999999999998
+      ],
+      "reference_actions": [
+        "accept"
+      ],
+      "reference_probabilities": [
+        0.09999999999999998
+      ],
+      "software_bound_only": true,
+      "source_cluster_id": "source",
+      "source_id": "private_fixture",
+      "status": "completed",
+      "unguarded_action_disagreements": 0,
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b64"
+    },
+    {
+      "arm": "quantized_8",
+      "bits": 8,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "exclusion_reason": null,
+      "fallback_requests": 1,
+      "float64_scoring_envelope_ns_per_request": 10.0,
+      "measured_incremental_fallback_ns": null,
+      "metric": "fallback_request_fraction",
+      "numerator": 1,
+      "requests": 1,
+      "scope": "imported float64 readout envelope; incremental fallback unknown",
+      "source_cluster_id": "source",
+      "status": "completed",
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b8"
+    },
+    {
+      "arm": "quantized_12",
+      "bits": 12,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "exclusion_reason": null,
+      "fallback_requests": 1,
+      "float64_scoring_envelope_ns_per_request": 10.0,
+      "measured_incremental_fallback_ns": null,
+      "metric": "fallback_request_fraction",
+      "numerator": 1,
+      "requests": 1,
+      "scope": "imported float64 readout envelope; incremental fallback unknown",
+      "source_cluster_id": "source",
+      "status": "completed",
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b12"
+    },
+    {
+      "arm": "quantized_16",
+      "bits": 16,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "exclusion_reason": null,
+      "fallback_requests": 1,
+      "float64_scoring_envelope_ns_per_request": 10.0,
+      "measured_incremental_fallback_ns": null,
+      "metric": "fallback_request_fraction",
+      "numerator": 1,
+      "requests": 1,
+      "scope": "imported float64 readout envelope; incremental fallback unknown",
+      "source_cluster_id": "source",
+      "status": "completed",
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b16"
+    },
+    {
+      "arm": "float64_fallback",
+      "bits": 64,
+      "condition": "storage_precision_float64_arithmetic",
+      "denominator": 1,
+      "exclusion_reason": null,
+      "fallback_requests": 0,
+      "float64_scoring_envelope_ns_per_request": 10.0,
+      "measured_incremental_fallback_ns": null,
+      "metric": "fallback_request_fraction",
+      "numerator": 0,
+      "requests": 1,
+      "scope": "imported float64 readout envelope; incremental fallback unknown",
+      "source_cluster_id": "source",
+      "status": "completed",
+      "unit_id": "sha256:30da5d99ab7f4720ed87e97bddbd48ff2c7ea19d2eefb5a5eba996e7d89bf078:b64"
+    }
+  ],
+  "run_date": "20261006",
+  "sample_size_budget": {
+    "intended": 12,
+    "unit": "original source clusters; branches are dependent repeats"
+  },
+  "schema": "carnot.hardware_service_boundary.v707.v1",
+  "source_artifact_hashes": [],
+  "startup_costs": {
+    "amortization_requests": 96,
+    "charged_once": true,
+    "load_and_warmups_ns": 96
+  },
+  "task_id": "exp8190-hardware-service-boundary",
+  "terminal_validation_sidecar_path": "/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0/raw/experiment_8190_v707_hardware_service_boundary/invocations/1791268395645659642/terminal_validation.json",
+  "trained_head_specs": [],
+  "validation_receipts": [
+    {
+      "actual_exit": 0,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8190_v707_hardware_service_boundary.py --cold-replay /tmp/carnot8190-wg3_nko3/experiment_8190_v707_hardware_service_boundary.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8190_v707_hardware_service_boundary.py",
+        "--cold-replay",
+        "/tmp/carnot8190-wg3_nko3/experiment_8190_v707_hardware_service_boundary.json"
+      ],
+      "duration_s": 1.658655007951893,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0/raw/experiment_8190_v707_hardware_service_boundary/invocations/1791268395645659642/terminal_1791268395661487515/custody/7f193c6892a090817ee62424fdc3fc139021c22bab6046f22bb50df14fdb10d3.log",
+      "log_sha256": "sha256:7f193c6892a090817ee62424fdc3fc139021c22bab6046f22bb50df14fdb10d3",
+      "name": "cold_replay",
+      "normal_exit": true,
+      "output_tail": "[exp8190] phase=start completed=0 pending=1 model_loads=0\n[exp8162] precision_before completed=0 pending=1\n[exp8162] precision completed=1 pending=0\n[exp8162] precision_after completed=1 pending=0\n{\"passed\": true, \"rows_checksum\": \"sha256:c6c0ee28af93f860dcadcd1689cb130feaa6631ea70a630191e78e89aebb574a\"}\n",
+      "passed": true,
+      "scope": "terminal",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json /tmp/carnot8190-wg3_nko3/experiment_8190_v707_hardware_service_boundary.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot8190-wg3_nko3/experiment_8190_v707_hardware_service_boundary.json"
+      ],
+      "duration_s": 0.670254044001922,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0/raw/experiment_8190_v707_hardware_service_boundary/invocations/1791268395645659642/terminal_1791268395661487515/custody/d78739926c8c00da85625ef6436e584987df5d0fda66c8b71b9efe7434463770.log",
+      "log_sha256": "sha256:d78739926c8c00da85625ef6436e584987df5d0fda66c8b71b9efe7434463770",
+      "name": "adversarial",
+      "normal_exit": true,
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/tmp/carnot8190-wg3_nko3/experiment_8190_v707_hardware_service_boundary.json\",\n      \"loaded\": true,\n      \"exp_id\": 8190,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_circular_positive_hardware_service_boundary\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "terminal",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /tmp/carnot8190-wg3_nko3/experiment_8190_v707_hardware_service_boundary.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot8190-wg3_nko3/experiment_8190_v707_hardware_service_boundary.json"
+      ],
+      "duration_s": 0.026588978013023734,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/tmp/carnot8190-owned-db_oedd7/coverage/test_private_cli_success_missi0/raw/experiment_8190_v707_hardware_service_boundary/invocations/1791268395645659642/terminal_1791268395661487515/custody/ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_rows",
+      "normal_exit": true,
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "terminal",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "circular_positive",
+  "verifier_is_oracle": true,
+  "workload_rows": [
+    {
+      "arm": "cold_miss",
+      "cold_inclusive_outer_ceiling": 1.10989010989011,
+      "condition": "cold_miss",
+      "current_hardware_execution": false,
+      "denominator": 90,
+      "exact_arithmetic_only_ceiling": null,
+      "exclusion_reason": null,
+      "fixedpoint_arithmetic_executed": false,
+      "measured_arithmetic_fraction": null,
+      "metric": "arithmetic_acceleration_ceiling",
+      "numerator": 100,
+      "outer_ceiling": 1.1111111111111112,
+      "retained_components": {
+        "cache_read_ns": 5,
+        "cache_write_ns": 5,
+        "decision_serialization_ns": 1,
+        "decision_write_ack_ns": 15,
+        "features_ns": 1,
+        "generation_ns": 50,
+        "key_hash_ns": 5,
+        "load_ns": 0,
+        "other_host_and_ack_ns": 7,
+        "parse_ns": 1,
+        "queue_ns": 0
+      },
+      "retained_unknown_components": [
+        "transfer and readout inside native crossing"
+      ],
+      "scoring_envelope_fraction": 0.1,
+      "source_cluster_id": "source",
+      "startup_amortized_ns": 1.0,
+      "status": "completed",
+      "unit_id": "cold_miss",
+      "upstream": "exp8188"
+    },
+    {
+      "arm": "exact_repeat",
+      "cold_inclusive_outer_ceiling": 1.10989010989011,
+      "condition": "exact_repeat",
+      "current_hardware_execution": false,
+      "denominator": 90,
+      "exact_arithmetic_only_ceiling": null,
+      "exclusion_reason": null,
+      "fixedpoint_arithmetic_executed": false,
+      "measured_arithmetic_fraction": null,
+      "metric": "arithmetic_acceleration_ceiling",
+      "numerator": 100,
+      "outer_ceiling": 1.1111111111111112,
+      "retained_components": {
+        "cache_read_ns": 5,
+        "cache_write_ns": 5,
+        "decision_serialization_ns": 1,
+        "decision_write_ack_ns": 15,
+        "features_ns": 1,
+        "generation_ns": 50,
+        "key_hash_ns": 5,
+        "load_ns": 0,
+        "other_host_and_ack_ns": 7,
+        "parse_ns": 1,
+        "queue_ns": 0
+      },
+      "retained_unknown_components": [
+        "transfer and readout inside native crossing"
+      ],
+      "scoring_envelope_fraction": 0.1,
+      "source_cluster_id": "source",
+      "startup_amortized_ns": 1.0,
+      "status": "completed",
+      "unit_id": "exact_repeat",
+      "upstream": "exp8188"
+    },
+    {
+      "arm": "forced_refresh",
+      "cold_inclusive_outer_ceiling": 1.10989010989011,
+      "condition": "forced_refresh",
+      "current_hardware_execution": false,
+      "denominator": 90,
+      "exact_arithmetic_only_ceiling": null,
+      "exclusion_reason": null,
+      "fixedpoint_arithmetic_executed": false,
+      "measured_arithmetic_fraction": null,
+      "metric": "arithmetic_acceleration_ceiling",
+      "numerator": 100,
+      "outer_ceiling": 1.1111111111111112,
+      "retained_components": {
+        "cache_read_ns": 5,
+        "cache_write_ns": 5,
+        "decision_serialization_ns": 1,
+        "decision_write_ack_ns": 15,
+        "features_ns": 1,
+        "generation_ns": 50,
+        "key_hash_ns": 5,
+        "load_ns": 0,
+        "other_host_and_ack_ns": 7,
+        "parse_ns": 1,
+        "queue_ns": 0
+      },
+      "retained_unknown_components": [
+        "transfer and readout inside native crossing"
+      ],
+      "scoring_envelope_fraction": 0.1,
+      "source_cluster_id": "source",
+      "startup_amortized_ns": 1.0,
+      "status": "completed",
+      "unit_id": "forced_refresh",
+      "upstream": "exp8188"
+    },
+    {
+      "arm": "changed_source",
+      "cold_inclusive_outer_ceiling": 1.10989010989011,
+      "condition": "changed_source",
+      "current_hardware_execution": false,
+      "denominator": 90,
+      "exact_arithmetic_only_ceiling": null,
+      "exclusion_reason": null,
+      "fixedpoint_arithmetic_executed": false,
+      "measured_arithmetic_fraction": null,
+      "metric": "arithmetic_acceleration_ceiling",
+      "numerator": 100,
+      "outer_ceiling": 1.1111111111111112,
+      "retained_components": {
+        "cache_read_ns": 5,
+        "cache_write_ns": 5,
+        "decision_serialization_ns": 1,
+        "decision_write_ack_ns": 15,
+        "features_ns": 1,
+        "generation_ns": 50,
+        "key_hash_ns": 5,
+        "load_ns": 0,
+        "other_host_and_ack_ns": 7,
+        "parse_ns": 1,
+        "queue_ns": 0
+      },
+      "retained_unknown_components": [
+        "transfer and readout inside native crossing"
+      ],
+      "scoring_envelope_fraction": 0.1,
+      "source_cluster_id": "source",
+      "startup_amortized_ns": 1.0,
+      "status": "completed",
+      "unit_id": "changed_source",
+      "upstream": "exp8188"
+    }
+  ]
+}

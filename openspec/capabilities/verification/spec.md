@@ -49688,3 +49688,25 @@ owned result without erasing historical receipts.
 Implementation: `python/carnot/reporting/arc_supervisor_v707_frontier.py` and
 `scripts/experiments/experiment_8189_v707_arc_supervisor_frontier.py`.
 Tests: `tests/python/test_arc_supervisor_frontier_8189.py`.
+## REQ-VERIFY-8190: Bound removable arithmetic after exact-request reuse
+
+Partition complete arrival-to-response cost without timer overlap. Retain
+acquisition, queue, key hashing, durable storage, transfer and readout. Mixed
+native-crossing timers allow only optimistic arithmetic ceilings; independently
+measured pure arithmetic alone permits f and S_max=1/(1-f). A100x complete-workload
+gain requires f>=.99. Charge startup separately and label traffic weights
+hypothetical. Reuse qualified8/12/16-bit storage envelopes and float64 fallback;
+do not measure a new quantized kernel. Fixtures and exposed sources earn zero
+independent generalization and learning benefit. Declare trained small heads,
+empty MODEL_SPECS and zero current calls separately from imported provenance.
+
+### SCENARIO-VERIFY-8190-COST
+
+Private known components reconstruct each branch denominator. Missing components,
+negative residuals, altered receipts and replay tampering fail closed while
+preserving qualified branches. Acquisition/storage bottlenecks defer hardware
+spending. Extropic projections supply no local timing evidence.
+
+Implementation: `python/carnot/reporting/hardware_service_8190.py`. All four
+Exp8188 branches retain24 qualified source units. New statement coverage is100
+percent across the reducer, input loader, execution module and thin CLI.

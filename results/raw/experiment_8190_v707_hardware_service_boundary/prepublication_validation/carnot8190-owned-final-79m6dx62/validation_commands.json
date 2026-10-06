@@ -1,0 +1,179 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.reporting.hardware_service_8190",
+        "carnot.reporting.hardware_service_inputs_8190",
+        "carnot.reporting.hardware_service_execution_8190"
+      ],
+      "name": "worktree_imports",
+      "scope": "changed_modules",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8190-owned-final-79m6dx62/focused",
+        "tests/python/test_hardware_service_8190.py",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "explicit_tests",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot8190-owned-final-79m6dx62/coverage.ini",
+        "--data-file=/tmp/carnot8190-owned-final-79m6dx62/.coverage",
+        "--include=*/reporting/hardware_service_8190.py,*/reporting/hardware_service_inputs_8190.py,*/reporting/hardware_service_execution_8190.py,*/scripts/experiments/experiment_8190_v707_hardware_service_boundary.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8190-owned-final-79m6dx62/coverage",
+        "tests/python/test_hardware_service_8190.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "explicit_tests_and_changed_modules",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot8190-owned-final-79m6dx62/coverage.ini",
+        "/tmp/carnot8190-owned-final-79m6dx62"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned_coverage",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot8190-owned-final-79m6dx62/.coverage",
+        "--include=*/reporting/hardware_service_8190.py,*/reporting/hardware_service_inputs_8190.py,*/reporting/hardware_service_execution_8190.py,*/scripts/experiments/experiment_8190_v707_hardware_service_boundary.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "changed_modules",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/hardware_service_8190.py",
+        "python/carnot/reporting/hardware_service_inputs_8190.py",
+        "python/carnot/reporting/hardware_service_execution_8190.py",
+        "scripts/experiments/experiment_8190_v707_hardware_service_boundary.py",
+        "tests/python/test_hardware_service_8190.py"
+      ],
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/hardware_service_8190.py",
+        "python/carnot/reporting/hardware_service_inputs_8190.py",
+        "python/carnot/reporting/hardware_service_execution_8190.py",
+        "scripts/experiments/experiment_8190_v707_hardware_service_boundary.py",
+        "tests/python/test_hardware_service_8190.py"
+      ],
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/reporting/hardware_service_8190.py",
+        "python/carnot/reporting/hardware_service_inputs_8190.py",
+        "python/carnot/reporting/hardware_service_execution_8190.py",
+        "--strict",
+        "--follow-imports=silent"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_hardware_service_8190.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "name": "E2E_015",
+      "scope": "private_e2e",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot8190-owned-final-79m6dx62/experiment_7868_private.json"
+      ],
+      "name": "E2E_016_fixture",
+      "scope": "private_e2e",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/tmp/carnot8190-owned-final-79m6dx62/experiment_7868_private.json"
+      ],
+      "name": "E2E_016_cold",
+      "scope": "private_e2e",
+      "timeout_s": 900.0
+    }
+  ],
+  "frozen_before_measurement": true
+}
