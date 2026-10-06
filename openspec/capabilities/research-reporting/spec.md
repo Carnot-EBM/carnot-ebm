@@ -94040,3 +94040,29 @@ Implementation: `python/carnot/reporting/hardware_service_inputs_8190.py`,
 `hardware_service_execution_8190.py` and the Exp8190 thin CLI. Private assertions
 in `tests/python/test_hardware_service_8190.py` cover original pins, failed
 readiness, missing primitives, receipt tampering and cold replay.
+## REQ-REPORT-8191: V707 terminal capstone accounting
+
+Bind exactly fourteen tasks Exp8178 through Exp8191 to immutable activated authority.
+Read actual deliverable paths from the complete task contract. Preserve producer
+verdicts, failed receipts, conductor skips and missing primaries separately.
+Historical integrity failures do not invalidate unrelated qualified science.
+External absence is terminal blocked. Only unfinished owned work is partial.
+Load no model. Separate imported model and head provenance from zero current calls.
+Freeze validation argv before measurement. Require normal scoped tests, 100 percent
+added statement coverage, Ruff, strict mypy, explicit spec coverage and private
+E2E-018 success, missing, mixed-disposition, mutation and cold-replay checks.
+Run full Python health once and record unrelated failures separately. Publish
+through primary_publication after unchanged terminal auditors accept the bytes.
+The conductor owns ops and traceability reconciliation. No external publication.
+
+### SCENARIO-REPORT-8191: Private accounting and immutable replay
+
+Private null, blocked, disqualified and missing evidence retains fourteen outcomes.
+A gate skip has no invented producer verdict. The direct CLI runs outside the
+checkout without PYTHONPATH. Replay rejects mutated custody, logs and headlines.
+Owned failure disqualifies and zeros readiness. Sealed logs are never overwritten.
+
+Implementation: `carnot.reporting.v707_capstone`, `v707_capstone_evidence`,
+`v707_capstone_science` and `scripts/experiments/experiment_8191_v707_capstone.py`.
+Traced private tests cover mixed outcomes, immutable authority, external CLI,
+replay mutations, owned failure and completed/pending child wait counts.

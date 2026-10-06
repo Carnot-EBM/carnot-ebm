@@ -49710,3 +49710,28 @@ spending. Extropic projections supply no local timing evidence.
 Implementation: `python/carnot/reporting/hardware_service_8190.py`. All four
 Exp8188 branches retain24 qualified source units. New statement coverage is100
 percent across the reducer, input loader, execution module and thin CLI.
+## REQ-VERIFY-8191: V707 independent branch reductions
+
+Recompute H1 and H2 from qualified source primitives with frozen support, cost,
+missing masks and the fixed Holm family. Transport success is separate from
+decision benefit. Calibration-only effects, center growth, retention and
+independent generalization remain distinct. Exposed data grants zero independent
+generalization. Preserve the September 28 oracle-distinct corrigendum.
+Report FR-06/12, FR-11 and FR-05/08/NFR-01 separately. Keep complete requests,
+conditional exact-repeat savings and hardware ceilings separate. Emit unchanged
+G1/G2/G3/G4, paper_ready and unmet_gates from publication_gate.py --json.
+Authenticate each prior_failures verdict before retiring only its documented
+same scope. A skipped hypothesis remains untested. Each open gap needs a
+falsifiable next action, including fresh independent labels for generalization.
+
+### SCENARIO-VERIFY-8191: Primitive qualification and scope controls
+
+Historical hash failures coexist with a current scheduling-ready contract and
+qualified H1 science. Disqualified calibration cannot supply H2 benefit.
+Missing learning science remains blocked. Primitive and aggregate mutations
+fail replay. Administrative completeness cannot become positive science.
+
+Implementation reuses qualified source decision, exact-request service and
+hardware reducers. The H1 test retains all128 sources,97 complete pairs and31
+missing pairs. H2 execution follows its own learning task. Prior verdicts bind
+to their immutable contract-custody hashes. The three PRD gaps remain separate.

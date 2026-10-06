@@ -1,0 +1,92 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8191_v707_capstone.json",
+  "primary_sha256": "sha256:8cef6f74f5db5d438785d2331ac807701fc6bc6206894e42a769ecabfdc8ec53",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8191_v707_capstone.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8191_v707_capstone/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8191_v707_capstone.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8191_v707_capstone/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8191_v707_capstone.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8191_v707_capstone/terminal_candidate.json"
+        ],
+        "duration_s": 3.3546867850236595,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8191_v707_capstone/terminal_logs/1791270917472511019/cold_replay/00_cold_replay.log",
+        "log_sha256": "sha256:c46af0bf58219dc636bbca463715e22f599a43cf73c566189d7f5600d3a96d5d",
+        "name": "cold_replay",
+        "normal_exit": true,
+        "output_tail": "[exp8191] phase=start completed=0 pending=0\n[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000\n[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0\n[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000\n[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0\n[exp8162] precision_before completed=0 pending=24\n[exp8162] precision completed=16 pending=8\n[exp8162] precision completed=24 pending=0\n[exp8162] precision_after completed=24 pending=0\n[exp8191] phase=before_benchmark_H1_margin completed=0 pending=10000\n[exp8191] phase=after_benchmark_H1_margin completed=10000 pending=0\n{\"passed\": true, \"rows_checksum\": \"sha256:e432754322df0ce9c3f58700184a57e5bad52f5f65a8275250abbf3aadab0eda\"}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8191_v707_capstone/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8191_v707_capstone/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8191_v707_capstone/terminal_candidate.json"
+        ],
+        "duration_s": 7.307654622942209,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8191_v707_capstone/terminal_logs/1791270917472511019/adversarial/00_adversarial.log",
+        "log_sha256": "sha256:750ce95c321ddbe2e5b1c59e41ed99f003945d1e038d654305baa18a13f9c22e",
+        "name": "adversarial",
+        "normal_exit": true,
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8191_v707_capstone/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8191,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_blocked_required_checks_passed\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8191_v707_capstone/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8191_v707_capstone/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8191_v707_capstone/terminal_candidate.json"
+        ],
+        "duration_s": 0.0845175510039553,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8191_v707_capstone/terminal_logs/1791270917472511019/strict_rows/00_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "normal_exit": true,
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}
