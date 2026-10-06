@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:c2feef076517578ee93bf1342ce81b5b664b791ccbd6ddea91a1e5d661ccca6b",
+  "ended_monotonic_ns": 920498192156403,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"501 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":1.5,\\\"categories\\\":\\\"Restaurants, Fast Food, Mexican, Burgers, Tacos, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"0:0-0:0\\\",\\\"Monday\\\":\\\"6:0-2:0\\\",\\\"Saturday\\\":\\\"0:0-0:0\\\",\\\"Sunday\\\":\\\"6:0-2:0\\\",\\\"Thursday\\\":\\\"6:0-2:0\\\",\\\"Tuesday\\\":\\\"6:0-2:0\\\",\\\"Wednesday\\\":\\\"6:0-2:0\\\"},\\\"name\\\":\\\"Jack in the Box\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-25 09:55:47\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This place sucks, every time you come here they have different people and they simply don't care \\\\nIt takes forever to get your order \\\\nSpecially on weekends \\\\nPlease put people that you thrust and have confidence who ever the owner is !!!!!!!!!!\\\"},{\\\"review_date\\\":\\\"2021-07-01 15:27:52\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Waiting for my order in the drive thru and I saw a red sanitation bucket under the ice cream dispenser. I assume they're cleaning it out, so okay, they're not gonna serve it. But what I saw next was the woman scoop out ice cream FROM the same red sanitation bucket. Into two cups, and prep them and serve them with whipped cream and a cherry on top for the guy behind me.\\\\n\\\\nI don't believe that red sanitation bucket is, um...SANITARY. That bucket isn't food grade safe, I assume! I've worked in a couple kitchens before and let me tell you I've never seen food, let alone ice cream, get cleaned out into the red sanitation bucket and then get SERVED. Normally, This bucket is filled with kitchen sanitation liquid, to be changed every four hours with a new towel. I'm very sure I'm never coming back to this place to see this unsanitary practice.\\\"},{\\\"review_date\\\":\\\"2020-12-21 02:58:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Hahahahaha wtf is up with all the reviews!? It's Jack in the box!! Get over it!! Yelp = Karen Culture\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the provided structured data, here is an objective overview of Jack in the Box:\\n\\nJack in the Box is a restaurant located in Santa Barbara, California, offering a variety of dishes including burgers, tacos, breakfast items, and more. The business has received mixed reviews from customers, with some expressing dissatisfaction with the service and cleanliness of the establishment. One reviewer reported seeing a red sanitation bucket being used to store ice cream, which raised concerns about hygiene and food safety. However, another reviewer praised the restaurant's food quality, stating that it was delicious. Overall, Jack in the Box appears to have a mediocre rating, with some areas for improvement identified by customers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":1244},{\"index\":1,\"byte_start\":1244,\"byte_end\":1315},{\"index\":2,\"byte_start\":1315,\"byte_end\":1406},{\"index\":3,\"byte_start\":1406,\"byte_end\":1577},{\"index\":4,\"byte_start\":1577,\"byte_end\":1622},{\"index\":5,\"byte_start\":1622,\"byte_end\":1793},{\"index\":6,\"byte_start\":1793,\"byte_end\":1906},{\"index\":7,\"byte_start\":1906,\"byte_end\":2106},{\"index\":8,\"byte_start\":2106,\"byte_end\":2129},{\"index\":9,\"byte_start\":2129,\"byte_end\":2143},{\"index\":10,\"byte_start\":2143,\"byte_end\":2180}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":242},{\"index\":1,\"byte_start\":242,\"byte_end\":390},{\"index\":2,\"byte_start\":390,\"byte_end\":527},{\"index\":3,\"byte_start\":527,\"byte_end\":623},{\"index\":4,\"byte_start\":623,\"byte_end\":739}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1161,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"501 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":1.5,\\\"categories\\\":\\\"Restaurants, Fast Food, Mexican, Burgers, Tacos, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"0:0-0:0\\\",\\\"Monday\\\":\\\"6:0-2:0\\\",\\\"Saturday\\\":\\\"0:0-0:0\\\",\\\"Sunday\\\":\\\"6:0-2:0\\\",\\\"Thursday\\\":\\\"6:0-2:0\\\",\\\"Tuesday\\\":\\\"6:0-2:0\\\",\\\"Wednesday\\\":\\\"6:0-2:0\\\"},\\\"name\\\":\\\"Jack in the Box\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-25 09:55:47\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This place sucks, every time you come here they have different people and they simply don't care \\\\nIt takes forever to get your order \\\\nSpecially on weekends \\\\nPlease put people that you thrust and have confidence who ever the owner is !!!!!!!!!!\\\"},{\\\"review_date\\\":\\\"2021-07-01 15:27:52\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Waiting for my order in the drive thru and I saw a red sanitation bucket under the ice cream dispenser. I assume they're cleaning it out, so okay, they're not gonna serve it. But what I saw next was the woman scoop out ice cream FROM the same red sanitation bucket. Into two cups, and prep them and serve them with whipped cream and a cherry on top for the guy behind me.\\\\n\\\\nI don't believe that red sanitation bucket is, um...SANITARY. That bucket isn't food grade safe, I assume! I've worked in a couple kitchens before and let me tell you I've never seen food, let alone ice cream, get cleaned out into the red sanitation bucket and then get SERVED. Normally, This bucket is filled with kitchen sanitation liquid, to be changed every four hours with a new towel. I'm very sure I'm never coming back to this place to see this unsanitary practice.\\\"},{\\\"review_date\\\":\\\"2020-12-21 02:58:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Hahahahaha wtf is up with all the reviews!? It's Jack in the box!! Get over it!! Yelp = Karen Culture\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the provided structured data, here is an objective overview of Jack in the Box:\\n\\nJack in the Box is a restaurant located in Santa Barbara, California, offering a variety of dishes including burgers, tacos, breakfast items, and more. The business has received mixed reviews from customers, with some expressing dissatisfaction with the service and cleanliness of the establishment. One reviewer reported seeing a red sanitation bucket being used to store ice cream, which raised concerns about hygiene and food safety. However, another reviewer praised the restaurant's food quality, stating that it was delicious. Overall, Jack in the Box appears to have a mediocre rating, with some areas for improvement identified by customers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":1244},{\"index\":1,\"byte_start\":1244,\"byte_end\":1315},{\"index\":2,\"byte_start\":1315,\"byte_end\":1406},{\"index\":3,\"byte_start\":1406,\"byte_end\":1577},{\"index\":4,\"byte_start\":1577,\"byte_end\":1622},{\"index\":5,\"byte_start\":1622,\"byte_end\":1793},{\"index\":6,\"byte_start\":1793,\"byte_end\":1906},{\"index\":7,\"byte_start\":1906,\"byte_end\":2106},{\"index\":8,\"byte_start\":2106,\"byte_end\":2129},{\"index\":9,\"byte_start\":2129,\"byte_end\":2143},{\"index\":10,\"byte_start\":2143,\"byte_end\":2180}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":242},{\"index\":1,\"byte_start\":242,\"byte_end\":390},{\"index\":2,\"byte_start\":390,\"byte_end\":527},{\"index\":3,\"byte_start\":527,\"byte_end\":623},{\"index\":4,\"byte_start\":623,\"byte_end\":739}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\"\n",
+    "input_tokens": 1149,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"501 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":1.5,\\\"categories\\\":\\\"Restaurants, Fast Food, Mexican, Burgers, Tacos, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"0:0-0:0\\\",\\\"Monday\\\":\\\"6:0-2:0\\\",\\\"Saturday\\\":\\\"0:0-0:0\\\",\\\"Sunday\\\":\\\"6:0-2:0\\\",\\\"Thursday\\\":\\\"6:0-2:0\\\",\\\"Tuesday\\\":\\\"6:0-2:0\\\",\\\"Wednesday\\\":\\\"6:0-2:0\\\"},\\\"name\\\":\\\"Jack in the Box\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-25 09:55:47\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This place sucks, every time you come here they have different people and they simply don't care \\\\nIt takes forever to get your order \\\\nSpecially on weekends \\\\nPlease put people that you thrust and have confidence who ever the owner is !!!!!!!!!!\\\"},{\\\"review_date\\\":\\\"2021-07-01 15:27:52\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Waiting for my order in the drive thru and I saw a red sanitation bucket under the ice cream dispenser. I assume they're cleaning it out, so okay, they're not gonna serve it. But what I saw next was the woman scoop out ice cream FROM the same red sanitation bucket. Into two cups, and prep them and serve them with whipped cream and a cherry on top for the guy behind me.\\\\n\\\\nI don't believe that red sanitation bucket is, um...SANITARY. That bucket isn't food grade safe, I assume! I've worked in a couple kitchens before and let me tell you I've never seen food, let alone ice cream, get cleaned out into the red sanitation bucket and then get SERVED. Normally, This bucket is filled with kitchen sanitation liquid, to be changed every four hours with a new towel. I'm very sure I'm never coming back to this place to see this unsanitary practice.\\\"},{\\\"review_date\\\":\\\"2020-12-21 02:58:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Hahahahaha wtf is up with all the reviews!? It's Jack in the box!! Get over it!! Yelp = Karen Culture\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the provided structured data, here is an objective overview of Jack in the Box:\\n\\nJack in the Box is a restaurant located in Santa Barbara, California, offering a variety of dishes including burgers, tacos, breakfast items, and more. The business has received mixed reviews from customers, with some expressing dissatisfaction with the service and cleanliness of the establishment. One reviewer reported seeing a red sanitation bucket being used to store ice cream, which raised concerns about hygiene and food safety. However, another reviewer praised the restaurant's food quality, stating that it was delicious. Overall, Jack in the Box appears to have a mediocre rating, with some areas for improvement identified by customers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":1244},{\"index\":1,\"byte_start\":1244,\"byte_end\":1315},{\"index\":2,\"byte_start\":1315,\"byte_end\":1406},{\"index\":3,\"byte_start\":1406,\"byte_end\":1577},{\"index\":4,\"byte_start\":1577,\"byte_end\":1622},{\"index\":5,\"byte_start\":1622,\"byte_end\":1793},{\"index\":6,\"byte_start\":1793,\"byte_end\":1906},{\"index\":7,\"byte_start\":1906,\"byte_end\":2106},{\"index\":8,\"byte_start\":2106,\"byte_end\":2129},{\"index\":9,\"byte_start\":2129,\"byte_end\":2143},{\"index\":10,\"byte_start\":2143,\"byte_end\":2180}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":242},{\"index\":1,\"byte_start\":242,\"byte_end\":390},{\"index\":2,\"byte_start\":390,\"byte_end\":527},{\"index\":3,\"byte_start\":527,\"byte_end\":623},{\"index\":4,\"byte_start\":623,\"byte_end\":739}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[]\n1|C|0.90|[]\n2|C|0.85|[]\n3|C|0.80|[]\n4|C|0.75|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259589,
+    "id": "chatcmpl-tSTRy4o511vcugXSAKbXGVhK3S0K4w9w",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1334.909,
+      "predicted_n": 55,
+      "predicted_per_second": 41.201310351492126,
+      "predicted_per_token_ms": 24.271072727272728,
+      "prompt_ms": 1054.675,
+      "prompt_n": 1112,
+      "prompt_per_second": 1054.3532367791026,
+      "prompt_per_token_ms": 0.9484487410071942
+    },
+    "usage": {
+      "completion_tokens": 55,
+      "prompt_tokens": 1161,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1216
+    }
+  },
+  "source_cluster_id": "sha256:6c1a34c870b21a95d6d9b41839f130398157730cecbe42569a011e8280959850",
+  "started_monotonic_ns": 920495655508619,
+  "status": "completed",
+  "unit_id": "sha256:2cdfcc3df1748056b7f353b10b3e4548944ccf92139d02ea2ffe54d8aca7d0dc"
+}

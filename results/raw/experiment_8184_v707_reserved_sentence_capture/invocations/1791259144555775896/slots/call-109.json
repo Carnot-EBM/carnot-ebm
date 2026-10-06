@@ -1,0 +1,92 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:bd7c28ffa816e4fc22ea41ffce69a3ffbb3b4b1834f1451d46cb2dcfbc5de6af",
+  "ended_monotonic_ns": 920470104362699,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"5701 Calle Real\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Chinese, Restaurants, Fast Food\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Pick Up Stix\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2011-08-13 20:44:58\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"If it has to be fast-food Americanized Chinese, I won't even consider Panda Express. But Pick up Stix is the best you can get in under 5 minutes. While their portion sizes tend to be under-whelming, their ingredients and general tastiness is a good compromise to the pig slop served elsewhere. This particular location is usually pretty clean and generally has friendly staff.\\\\n\\\\nIf you are in a hurry, stop by Pick Up Stix for some decent food.\\\"},{\\\"review_date\\\":\\\"2010-02-22 17:55:02\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Went to this place for the first time the other day.  It's sooo good! For a place that cooks fast, it's way better than panda express!  \\\\n\\\\nShrimp fried rice and honey chicken was what I got...and you get your moneys worth! and then they have a dollar menu too, hahaha. They have egg rolls on it, wontons, edamame, dumplings!  The food is bomb!\\\"},{\\\"review_date\\\":\\\"2009-09-16 05:27:21\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Kung Pao Chicken w/ Fried Rice for Mom. Pad Thai Chicken & Shrimp for me. $16 dollars, no drinks. Why did I wander away from my normal order? The pad thai was...ehhhh so-so. Kung Pao was pretty good, Rice was gross. Took 15 mins to get the food and no one was in there. I've had it before when I would have given 4 stars. Won't be rushing back.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the provided structured data, here is an objective overview of Pick Up Stix:\\n\\nPick Up Stix is a Chinese restaurant located in Goleta, California, with a rating of 3.5 out of 5 stars. The restaurant offers a variety of options including Chinese, Fast Food, and Restaurants. While some customers appreciate the convenience and quality of the food, others have complained about the price and service. Reviews mention that the restaurant is clean and has friendly staff, but the portions can be underwhelming and the wait time is relatively long. Customers also note that the food is not as good as other Chinese restaurants they have tried. Despite these drawbacks, many customers still find Pick Up Stix to be a good option for quick and decent food.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":580},{\"index\":1,\"byte_start\":580,\"byte_end\":641},{\"index\":2,\"byte_start\":641,\"byte_end\":789},{\"index\":3,\"byte_start\":789,\"byte_end\":1068},{\"index\":4,\"byte_start\":1068,\"byte_end\":1084},{\"index\":5,\"byte_start\":1084,\"byte_end\":1150},{\"index\":6,\"byte_start\":1150,\"byte_end\":1238},{\"index\":7,\"byte_start\":1238,\"byte_end\":1284},{\"index\":8,\"byte_start\":1284,\"byte_end\":1341},{\"index\":9,\"byte_start\":1341,\"byte_end\":1472},{\"index\":10,\"byte_start\":1472,\"byte_end\":1506},{\"index\":11,\"byte_start\":1506,\"byte_end\":1530},{\"index\":12,\"byte_start\":1530,\"byte_end\":1574},{\"index\":13,\"byte_start\":1574,\"byte_end\":1606},{\"index\":14,\"byte_start\":1606,\"byte_end\":1648},{\"index\":15,\"byte_start\":1648,\"byte_end\":1702},{\"index\":16,\"byte_start\":1702,\"byte_end\":1754},{\"index\":17,\"byte_start\":1754,\"byte_end\":1793}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":192},{\"index\":1,\"byte_start\":192,\"byte_end\":282},{\"index\":2,\"byte_start\":282,\"byte_end\":407},{\"index\":3,\"byte_start\":407,\"byte_end\":552},{\"index\":4,\"byte_start\":552,\"byte_end\":647},{\"index\":5,\"byte_start\":647,\"byte_end\":757}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1232,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"5701 Calle Real\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Chinese, Restaurants, Fast Food\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Pick Up Stix\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2011-08-13 20:44:58\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"If it has to be fast-food Americanized Chinese, I won't even consider Panda Express. But Pick up Stix is the best you can get in under 5 minutes. While their portion sizes tend to be under-whelming, their ingredients and general tastiness is a good compromise to the pig slop served elsewhere. This particular location is usually pretty clean and generally has friendly staff.\\\\n\\\\nIf you are in a hurry, stop by Pick Up Stix for some decent food.\\\"},{\\\"review_date\\\":\\\"2010-02-22 17:55:02\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Went to this place for the first time the other day.  It's sooo good! For a place that cooks fast, it's way better than panda express!  \\\\n\\\\nShrimp fried rice and honey chicken was what I got...and you get your moneys worth! and then they have a dollar menu too, hahaha. They have egg rolls on it, wontons, edamame, dumplings!  The food is bomb!\\\"},{\\\"review_date\\\":\\\"2009-09-16 05:27:21\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Kung Pao Chicken w/ Fried Rice for Mom. Pad Thai Chicken & Shrimp for me. $16 dollars, no drinks. Why did I wander away from my normal order? The pad thai was...ehhhh so-so. Kung Pao was pretty good, Rice was gross. Took 15 mins to get the food and no one was in there. I've had it before when I would have given 4 stars. Won't be rushing back.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the provided structured data, here is an objective overview of Pick Up Stix:\\n\\nPick Up Stix is a Chinese restaurant located in Goleta, California, with a rating of 3.5 out of 5 stars. The restaurant offers a variety of options including Chinese, Fast Food, and Restaurants. While some customers appreciate the convenience and quality of the food, others have complained about the price and service. Reviews mention that the restaurant is clean and has friendly staff, but the portions can be underwhelming and the wait time is relatively long. Customers also note that the food is not as good as other Chinese restaurants they have tried. Despite these drawbacks, many customers still find Pick Up Stix to be a good option for quick and decent food.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":580},{\"index\":1,\"byte_start\":580,\"byte_end\":641},{\"index\":2,\"byte_start\":641,\"byte_end\":789},{\"index\":3,\"byte_start\":789,\"byte_end\":1068},{\"index\":4,\"byte_start\":1068,\"byte_end\":1084},{\"index\":5,\"byte_start\":1084,\"byte_end\":1150},{\"index\":6,\"byte_start\":1150,\"byte_end\":1238},{\"index\":7,\"byte_start\":1238,\"byte_end\":1284},{\"index\":8,\"byte_start\":1284,\"byte_end\":1341},{\"index\":9,\"byte_start\":1341,\"byte_end\":1472},{\"index\":10,\"byte_start\":1472,\"byte_end\":1506},{\"index\":11,\"byte_start\":1506,\"byte_end\":1530},{\"index\":12,\"byte_start\":1530,\"byte_end\":1574},{\"index\":13,\"byte_start\":1574,\"byte_end\":1606},{\"index\":14,\"byte_start\":1606,\"byte_end\":1648},{\"index\":15,\"byte_start\":1648,\"byte_end\":1702},{\"index\":16,\"byte_start\":1702,\"byte_end\":1754},{\"index\":17,\"byte_start\":1754,\"byte_end\":1793}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":192},{\"index\":1,\"byte_start\":192,\"byte_end\":282},{\"index\":2,\"byte_start\":282,\"byte_end\":407},{\"index\":3,\"byte_start\":407,\"byte_end\":552},{\"index\":4,\"byte_start\":552,\"byte_end\":647},{\"index\":5,\"byte_start\":647,\"byte_end\":757}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\"\n",
+    "input_tokens": 1220,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"5701 Calle Real\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Chinese, Restaurants, Fast Food\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Pick Up Stix\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2011-08-13 20:44:58\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"If it has to be fast-food Americanized Chinese, I won't even consider Panda Express. But Pick up Stix is the best you can get in under 5 minutes. While their portion sizes tend to be under-whelming, their ingredients and general tastiness is a good compromise to the pig slop served elsewhere. This particular location is usually pretty clean and generally has friendly staff.\\\\n\\\\nIf you are in a hurry, stop by Pick Up Stix for some decent food.\\\"},{\\\"review_date\\\":\\\"2010-02-22 17:55:02\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Went to this place for the first time the other day.  It's sooo good! For a place that cooks fast, it's way better than panda express!  \\\\n\\\\nShrimp fried rice and honey chicken was what I got...and you get your moneys worth! and then they have a dollar menu too, hahaha. They have egg rolls on it, wontons, edamame, dumplings!  The food is bomb!\\\"},{\\\"review_date\\\":\\\"2009-09-16 05:27:21\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Kung Pao Chicken w/ Fried Rice for Mom. Pad Thai Chicken & Shrimp for me. $16 dollars, no drinks. Why did I wander away from my normal order? The pad thai was...ehhhh so-so. Kung Pao was pretty good, Rice was gross. Took 15 mins to get the food and no one was in there. I've had it before when I would have given 4 stars. Won't be rushing back.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the provided structured data, here is an objective overview of Pick Up Stix:\\n\\nPick Up Stix is a Chinese restaurant located in Goleta, California, with a rating of 3.5 out of 5 stars. The restaurant offers a variety of options including Chinese, Fast Food, and Restaurants. While some customers appreciate the convenience and quality of the food, others have complained about the price and service. Reviews mention that the restaurant is clean and has friendly staff, but the portions can be underwhelming and the wait time is relatively long. Customers also note that the food is not as good as other Chinese restaurants they have tried. Despite these drawbacks, many customers still find Pick Up Stix to be a good option for quick and decent food.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":580},{\"index\":1,\"byte_start\":580,\"byte_end\":641},{\"index\":2,\"byte_start\":641,\"byte_end\":789},{\"index\":3,\"byte_start\":789,\"byte_end\":1068},{\"index\":4,\"byte_start\":1068,\"byte_end\":1084},{\"index\":5,\"byte_start\":1084,\"byte_end\":1150},{\"index\":6,\"byte_start\":1150,\"byte_end\":1238},{\"index\":7,\"byte_start\":1238,\"byte_end\":1284},{\"index\":8,\"byte_start\":1284,\"byte_end\":1341},{\"index\":9,\"byte_start\":1341,\"byte_end\":1472},{\"index\":10,\"byte_start\":1472,\"byte_end\":1506},{\"index\":11,\"byte_start\":1506,\"byte_end\":1530},{\"index\":12,\"byte_start\":1530,\"byte_end\":1574},{\"index\":13,\"byte_start\":1574,\"byte_end\":1606},{\"index\":14,\"byte_start\":1606,\"byte_end\":1648},{\"index\":15,\"byte_start\":1648,\"byte_end\":1702},{\"index\":16,\"byte_start\":1702,\"byte_end\":1754},{\"index\":17,\"byte_start\":1754,\"byte_end\":1793}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":192},{\"index\":1,\"byte_start\":192,\"byte_end\":282},{\"index\":2,\"byte_start\":282,\"byte_end\":407},{\"index\":3,\"byte_start\":407,\"byte_end\":552},{\"index\":4,\"byte_start\":552,\"byte_end\":647},{\"index\":5,\"byte_start\":647,\"byte_end\":757}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[]\n1|E|0.95|[]\n2|E|0.95|[]\n3|E|0.95|[]\n4|E|0.95|[]\n5|E|0.95|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259561,
+    "id": "chatcmpl-iftZeA37BCGcU0wxSsSsT9XGnxy3Gd38",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1612.885,
+      "predicted_n": 66,
+      "predicted_per_second": 40.92046240122514,
+      "predicted_per_token_ms": 24.437651515151515,
+      "prompt_ms": 1110.102,
+      "prompt_n": 1183,
+      "prompt_per_second": 1065.6678395318627,
+      "prompt_per_token_ms": 0.9383786982248521
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 1232,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1298
+    }
+  },
+  "source_cluster_id": "sha256:86bef5a8233dac289bfe28775e866722714bfa9da903004c2ddfe886ec0af141",
+  "started_monotonic_ns": 920467226628571,
+  "status": "completed",
+  "unit_id": "sha256:c31b1a79722d1c38e6e5bb655895e1f803922bee3f6c5d993268021363a50b1f"
+}

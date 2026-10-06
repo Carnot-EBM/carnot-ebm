@@ -1,0 +1,92 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:47e5726e7e1e2c97b66eba1ef56bac0f538e8ee59ca1c922a0ae605342d7a347",
+  "ended_monotonic_ns": 920545218260343,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1816 Cliff Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-20:30\\\",\\\"Saturday\\\":\\\"8:0-20:30\\\",\\\"Sunday\\\":\\\"8:0-14:0\\\",\\\"Thursday\\\":\\\"9:0-20:0\\\",\\\"Tuesday\\\":\\\"9:0-20:0\\\",\\\"Wednesday\\\":\\\"9:0-20:0\\\"},\\\"name\\\":\\\"Rose Cafe No 2\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-07 21:48:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Our favorite Mexican restaurant.  Great food,  service and atmosphere.  Favorite dishes are shrimp quesadilla and enchilada verde, but everything is delicious!\\\"},{\\\"review_date\\\":\\\"2021-10-07 01:36:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Hands down the best Mexican food the Santa Barbara. Food and service are always on point!\\\\n\\\\nMy husband would eat here every day if we lived there. The enchiladas are amazing, make sure to ask for extra sauce as it's good to dip the chips in.\\\\n\\\\nNice to enjoy there outdoor seating and people watching. \\\\n\\\\nHave a margarita and enchilada and you will be thankful.\\\"},{\\\"review_date\\\":\\\"2021-10-03 17:19:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Rose caf\u00e9 is one of my favorite spots in town. They have the best chilaquiles I've ever had and enchiladas and everything on the menu is good   You can't go wrong with anything you order on the menu. The margaritas are really good and the staff is super friendly and I love the outdoor dining area.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the provided structured data, here is an objective overview of Rose Cafe No 2:\\n\\nRose Cafe No 2 is a popular Mexican restaurant located in Santa Barbara, California, with a rating of 3.5 stars. The restaurant offers a cozy and intimate atmosphere, with outdoor seating available. While WiFi is not available, the restaurant does offer takeout services. According to customer reviews, the food and service at Rose Cafe No 2 are consistently excellent, with particular highlights including the shrimp quesadilla, enchilada verde, and chilaquiles. Customers also appreciate the friendly staff and romantic atmosphere. Some reviewers have noted that the restaurant can get busy and noisy, but overall, Rose Cafe No 2 is a great choice for those looking for delicious Mexican cuisine in a relaxed setting.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":790},{\"index\":1,\"byte_start\":790,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":1041},{\"index\":3,\"byte_start\":1041,\"byte_end\":1137},{\"index\":4,\"byte_start\":1137,\"byte_end\":1292},{\"index\":5,\"byte_start\":1292,\"byte_end\":1474},{\"index\":6,\"byte_start\":1474,\"byte_end\":1627},{\"index\":7,\"byte_start\":1627,\"byte_end\":1742}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":202},{\"index\":1,\"byte_start\":202,\"byte_end\":288},{\"index\":2,\"byte_start\":288,\"byte_end\":361},{\"index\":3,\"byte_start\":361,\"byte_end\":553},{\"index\":4,\"byte_start\":553,\"byte_end\":623},{\"index\":5,\"byte_start\":623,\"byte_end\":808}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1045,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1816 Cliff Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-20:30\\\",\\\"Saturday\\\":\\\"8:0-20:30\\\",\\\"Sunday\\\":\\\"8:0-14:0\\\",\\\"Thursday\\\":\\\"9:0-20:0\\\",\\\"Tuesday\\\":\\\"9:0-20:0\\\",\\\"Wednesday\\\":\\\"9:0-20:0\\\"},\\\"name\\\":\\\"Rose Cafe No 2\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-07 21:48:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Our favorite Mexican restaurant.  Great food,  service and atmosphere.  Favorite dishes are shrimp quesadilla and enchilada verde, but everything is delicious!\\\"},{\\\"review_date\\\":\\\"2021-10-07 01:36:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Hands down the best Mexican food the Santa Barbara. Food and service are always on point!\\\\n\\\\nMy husband would eat here every day if we lived there. The enchiladas are amazing, make sure to ask for extra sauce as it's good to dip the chips in.\\\\n\\\\nNice to enjoy there outdoor seating and people watching. \\\\n\\\\nHave a margarita and enchilada and you will be thankful.\\\"},{\\\"review_date\\\":\\\"2021-10-03 17:19:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Rose caf\u00e9 is one of my favorite spots in town. They have the best chilaquiles I've ever had and enchiladas and everything on the menu is good   You can't go wrong with anything you order on the menu. The margaritas are really good and the staff is super friendly and I love the outdoor dining area.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the provided structured data, here is an objective overview of Rose Cafe No 2:\\n\\nRose Cafe No 2 is a popular Mexican restaurant located in Santa Barbara, California, with a rating of 3.5 stars. The restaurant offers a cozy and intimate atmosphere, with outdoor seating available. While WiFi is not available, the restaurant does offer takeout services. According to customer reviews, the food and service at Rose Cafe No 2 are consistently excellent, with particular highlights including the shrimp quesadilla, enchilada verde, and chilaquiles. Customers also appreciate the friendly staff and romantic atmosphere. Some reviewers have noted that the restaurant can get busy and noisy, but overall, Rose Cafe No 2 is a great choice for those looking for delicious Mexican cuisine in a relaxed setting.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":790},{\"index\":1,\"byte_start\":790,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":1041},{\"index\":3,\"byte_start\":1041,\"byte_end\":1137},{\"index\":4,\"byte_start\":1137,\"byte_end\":1292},{\"index\":5,\"byte_start\":1292,\"byte_end\":1474},{\"index\":6,\"byte_start\":1474,\"byte_end\":1627},{\"index\":7,\"byte_start\":1627,\"byte_end\":1742}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":202},{\"index\":1,\"byte_start\":202,\"byte_end\":288},{\"index\":2,\"byte_start\":288,\"byte_end\":361},{\"index\":3,\"byte_start\":361,\"byte_end\":553},{\"index\":4,\"byte_start\":553,\"byte_end\":623},{\"index\":5,\"byte_start\":623,\"byte_end\":808}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "input_tokens": 1033,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1816 Cliff Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-20:30\\\",\\\"Saturday\\\":\\\"8:0-20:30\\\",\\\"Sunday\\\":\\\"8:0-14:0\\\",\\\"Thursday\\\":\\\"9:0-20:0\\\",\\\"Tuesday\\\":\\\"9:0-20:0\\\",\\\"Wednesday\\\":\\\"9:0-20:0\\\"},\\\"name\\\":\\\"Rose Cafe No 2\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-07 21:48:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Our favorite Mexican restaurant.  Great food,  service and atmosphere.  Favorite dishes are shrimp quesadilla and enchilada verde, but everything is delicious!\\\"},{\\\"review_date\\\":\\\"2021-10-07 01:36:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Hands down the best Mexican food the Santa Barbara. Food and service are always on point!\\\\n\\\\nMy husband would eat here every day if we lived there. The enchiladas are amazing, make sure to ask for extra sauce as it's good to dip the chips in.\\\\n\\\\nNice to enjoy there outdoor seating and people watching. \\\\n\\\\nHave a margarita and enchilada and you will be thankful.\\\"},{\\\"review_date\\\":\\\"2021-10-03 17:19:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Rose caf\u00e9 is one of my favorite spots in town. They have the best chilaquiles I've ever had and enchiladas and everything on the menu is good   You can't go wrong with anything you order on the menu. The margaritas are really good and the staff is super friendly and I love the outdoor dining area.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Based on the provided structured data, here is an objective overview of Rose Cafe No 2:\\n\\nRose Cafe No 2 is a popular Mexican restaurant located in Santa Barbara, California, with a rating of 3.5 stars. The restaurant offers a cozy and intimate atmosphere, with outdoor seating available. While WiFi is not available, the restaurant does offer takeout services. According to customer reviews, the food and service at Rose Cafe No 2 are consistently excellent, with particular highlights including the shrimp quesadilla, enchilada verde, and chilaquiles. Customers also appreciate the friendly staff and romantic atmosphere. Some reviewers have noted that the restaurant can get busy and noisy, but overall, Rose Cafe No 2 is a great choice for those looking for delicious Mexican cuisine in a relaxed setting.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":790},{\"index\":1,\"byte_start\":790,\"byte_end\":828},{\"index\":2,\"byte_start\":828,\"byte_end\":1041},{\"index\":3,\"byte_start\":1041,\"byte_end\":1137},{\"index\":4,\"byte_start\":1137,\"byte_end\":1292},{\"index\":5,\"byte_start\":1292,\"byte_end\":1474},{\"index\":6,\"byte_start\":1474,\"byte_end\":1627},{\"index\":7,\"byte_start\":1627,\"byte_end\":1742}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":202},{\"index\":1,\"byte_start\":202,\"byte_end\":288},{\"index\":2,\"byte_start\":288,\"byte_end\":361},{\"index\":3,\"byte_start\":361,\"byte_end\":553},{\"index\":4,\"byte_start\":553,\"byte_end\":623},{\"index\":5,\"byte_start\":623,\"byte_end\":808}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|1.00|[]\n1|C|1.00|[]\n2|C|1.00|[]\n3|C|1.00|[]\n4|C|1.00|[]\n5|C|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259637,
+    "id": "chatcmpl-oS2q5q0I7wPiQigz3ao3DRhzloei9adi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1602.575,
+      "predicted_n": 66,
+      "predicted_per_second": 41.18371995070434,
+      "predicted_per_token_ms": 24.281439393939394,
+      "prompt_ms": 962.067,
+      "prompt_n": 996,
+      "prompt_per_second": 1035.2709322739477,
+      "prompt_per_token_ms": 0.9659307228915662
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 1045,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1111
+    }
+  },
+  "source_cluster_id": "sha256:fb03137003e483f43849afe1c9216b8a8097955dbd04d1e3366c3707c50855ac",
+  "started_monotonic_ns": 920542497867474,
+  "status": "completed",
+  "unit_id": "sha256:5b86fc4947dbb168ec8f9f041abfd2a11db526687423eda89b094e67c8e4bc5c"
+}

@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:fe2453ca00fdb215f817ed31e05df6fdce88b6ff0185d1ec6e99a23a205953e4",
+  "ended_monotonic_ns": 920184922529466,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Sao Paulo, Brazil (CNN)Brazilian police have arrested the treasurer of the ruling Workers' Party, bringing the bribery investigation at the state-run oil company Petrobras a step closer to President Dilma Rousseff. Federal police arrested Joao Vaccari Neto at his home in Sao Paulo on Wednesday morning. Vaccari faces charges of corruption and money laundering as part of the broader probe into corruption at Petrobras. Former executives who have turned state's evidence claim that construction companies paid large sums under the table to Petrobras officials and politicians in order to secure lucrative contracts with the oil giant. Vaccari has denied any wrongdoing and recently told a congressional commission that all donations to his party were legal and were reviewed by electoral authorities. Vaccari is the closest political figure to Rousseff so far implicated in the investigation. Rousseff herself has not been implicated, although she was the chairwoman of Petrobras when much of the alleged corruption took place. Rousseff has insisted she supports the probe and has not in any way interfered with the investigation. Sources quoted in Brazilian media have said investigators are looking at whether some of the bribes went toward Rousseff's election campaigns. Anger over what has ballooned into a multi-million dollar corruption scandal has eroded Rousseff's approval rating and prompted hundreds of thousands of Brazilians to take to the streets in protest. On Sunday, about half a million people participated in demonstrations across the country. But turnout was smaller than a month earlier, when roughly one million people marched in protest, raising questions about how long the demonstrations can last.\\n\",\"answer\":\"Brazilian police arrested the treasurer of the ruling Workers' Party in connection with a bribery investigation at state-owned oil company Petrobras. The politician, Joao Vaccari Neto, faces charges of corruption and money laundering. He is the closest political figure to President Dilma Rousseff to be implicated in the investigation. Protests against the government, fueled by anger over the corruption scandal, have eroded Rousseff's approval rating but it remains uncertain how long they will continue.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":215},{\"index\":1,\"byte_start\":215,\"byte_end\":304},{\"index\":2,\"byte_start\":304,\"byte_end\":420},{\"index\":3,\"byte_start\":420,\"byte_end\":635},{\"index\":4,\"byte_start\":635,\"byte_end\":801},{\"index\":5,\"byte_start\":801,\"byte_end\":893},{\"index\":6,\"byte_start\":893,\"byte_end\":1028},{\"index\":7,\"byte_start\":1028,\"byte_end\":1131},{\"index\":8,\"byte_start\":1131,\"byte_end\":1274},{\"index\":9,\"byte_start\":1274,\"byte_end\":1473},{\"index\":10,\"byte_start\":1473,\"byte_end\":1563},{\"index\":11,\"byte_start\":1563,\"byte_end\":1723}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":150},{\"index\":1,\"byte_start\":150,\"byte_end\":235},{\"index\":2,\"byte_start\":235,\"byte_end\":337},{\"index\":3,\"byte_start\":337,\"byte_end\":507}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 787,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Sao Paulo, Brazil (CNN)Brazilian police have arrested the treasurer of the ruling Workers' Party, bringing the bribery investigation at the state-run oil company Petrobras a step closer to President Dilma Rousseff. Federal police arrested Joao Vaccari Neto at his home in Sao Paulo on Wednesday morning. Vaccari faces charges of corruption and money laundering as part of the broader probe into corruption at Petrobras. Former executives who have turned state's evidence claim that construction companies paid large sums under the table to Petrobras officials and politicians in order to secure lucrative contracts with the oil giant. Vaccari has denied any wrongdoing and recently told a congressional commission that all donations to his party were legal and were reviewed by electoral authorities. Vaccari is the closest political figure to Rousseff so far implicated in the investigation. Rousseff herself has not been implicated, although she was the chairwoman of Petrobras when much of the alleged corruption took place. Rousseff has insisted she supports the probe and has not in any way interfered with the investigation. Sources quoted in Brazilian media have said investigators are looking at whether some of the bribes went toward Rousseff's election campaigns. Anger over what has ballooned into a multi-million dollar corruption scandal has eroded Rousseff's approval rating and prompted hundreds of thousands of Brazilians to take to the streets in protest. On Sunday, about half a million people participated in demonstrations across the country. But turnout was smaller than a month earlier, when roughly one million people marched in protest, raising questions about how long the demonstrations can last.\\n\",\"answer\":\"Brazilian police arrested the treasurer of the ruling Workers' Party in connection with a bribery investigation at state-owned oil company Petrobras. The politician, Joao Vaccari Neto, faces charges of corruption and money laundering. He is the closest political figure to President Dilma Rousseff to be implicated in the investigation. Protests against the government, fueled by anger over the corruption scandal, have eroded Rousseff's approval rating but it remains uncertain how long they will continue.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":215},{\"index\":1,\"byte_start\":215,\"byte_end\":304},{\"index\":2,\"byte_start\":304,\"byte_end\":420},{\"index\":3,\"byte_start\":420,\"byte_end\":635},{\"index\":4,\"byte_start\":635,\"byte_end\":801},{\"index\":5,\"byte_start\":801,\"byte_end\":893},{\"index\":6,\"byte_start\":893,\"byte_end\":1028},{\"index\":7,\"byte_start\":1028,\"byte_end\":1131},{\"index\":8,\"byte_start\":1131,\"byte_end\":1274},{\"index\":9,\"byte_start\":1274,\"byte_end\":1473},{\"index\":10,\"byte_start\":1473,\"byte_end\":1563},{\"index\":11,\"byte_start\":1563,\"byte_end\":1723}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":150},{\"index\":1,\"byte_start\":150,\"byte_end\":235},{\"index\":2,\"byte_start\":235,\"byte_end\":337},{\"index\":3,\"byte_start\":337,\"byte_end\":507}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "input_tokens": 775,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Sao Paulo, Brazil (CNN)Brazilian police have arrested the treasurer of the ruling Workers' Party, bringing the bribery investigation at the state-run oil company Petrobras a step closer to President Dilma Rousseff. Federal police arrested Joao Vaccari Neto at his home in Sao Paulo on Wednesday morning. Vaccari faces charges of corruption and money laundering as part of the broader probe into corruption at Petrobras. Former executives who have turned state's evidence claim that construction companies paid large sums under the table to Petrobras officials and politicians in order to secure lucrative contracts with the oil giant. Vaccari has denied any wrongdoing and recently told a congressional commission that all donations to his party were legal and were reviewed by electoral authorities. Vaccari is the closest political figure to Rousseff so far implicated in the investigation. Rousseff herself has not been implicated, although she was the chairwoman of Petrobras when much of the alleged corruption took place. Rousseff has insisted she supports the probe and has not in any way interfered with the investigation. Sources quoted in Brazilian media have said investigators are looking at whether some of the bribes went toward Rousseff's election campaigns. Anger over what has ballooned into a multi-million dollar corruption scandal has eroded Rousseff's approval rating and prompted hundreds of thousands of Brazilians to take to the streets in protest. On Sunday, about half a million people participated in demonstrations across the country. But turnout was smaller than a month earlier, when roughly one million people marched in protest, raising questions about how long the demonstrations can last.\\n\",\"answer\":\"Brazilian police arrested the treasurer of the ruling Workers' Party in connection with a bribery investigation at state-owned oil company Petrobras. The politician, Joao Vaccari Neto, faces charges of corruption and money laundering. He is the closest political figure to President Dilma Rousseff to be implicated in the investigation. Protests against the government, fueled by anger over the corruption scandal, have eroded Rousseff's approval rating but it remains uncertain how long they will continue.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":215},{\"index\":1,\"byte_start\":215,\"byte_end\":304},{\"index\":2,\"byte_start\":304,\"byte_end\":420},{\"index\":3,\"byte_start\":420,\"byte_end\":635},{\"index\":4,\"byte_start\":635,\"byte_end\":801},{\"index\":5,\"byte_start\":801,\"byte_end\":893},{\"index\":6,\"byte_start\":893,\"byte_end\":1028},{\"index\":7,\"byte_start\":1028,\"byte_end\":1131},{\"index\":8,\"byte_start\":1131,\"byte_end\":1274},{\"index\":9,\"byte_start\":1274,\"byte_end\":1473},{\"index\":10,\"byte_start\":1473,\"byte_end\":1563},{\"index\":11,\"byte_start\":1563,\"byte_end\":1723}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":150},{\"index\":1,\"byte_start\":150,\"byte_end\":235},{\"index\":2,\"byte_start\":235,\"byte_end\":337},{\"index\":3,\"byte_start\":337,\"byte_end\":507}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[0,1]\n1|E|1.00|[2,3]\n2|E|1.00|[5]\n3|E|1.00|[9,11]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259276,
+    "id": "chatcmpl-ppvblqPyuUpFSOQvATp9WmEBWdpdl1Dx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1437.319,
+      "predicted_n": 59,
+      "predicted_per_second": 41.048646820921455,
+      "predicted_per_token_ms": 24.361338983050846,
+      "prompt_ms": 746.25,
+      "prompt_n": 787,
+      "prompt_per_second": 1054.6063651591292,
+      "prompt_per_token_ms": 0.9482210927573063
+    },
+    "usage": {
+      "completion_tokens": 59,
+      "prompt_tokens": 787,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 846
+    }
+  },
+  "source_cluster_id": "sha256:2874c3d07367cbaa139ab9d13607b391e66f773526b960f35e909c7826d9e951",
+  "started_monotonic_ns": 920182575683032,
+  "status": "completed",
+  "unit_id": "sha256:a6b8c3964041b4ded9b3360cb91b6cd768111a7de42f283acfae9fccf5e95326"
+}

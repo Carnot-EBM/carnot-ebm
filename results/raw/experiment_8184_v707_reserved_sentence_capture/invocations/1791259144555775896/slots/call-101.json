@@ -1,0 +1,87 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:728a460715e92a3a4f8c3e827ebd98afd1933ea4f5728e2608db835bb7526b37",
+  "ended_monotonic_ns": 920443279971698,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r8\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Setting Achievable Goals. 1  1. Determine your life goals. Ask yourself some important questions about what you want for your life. 2  2. Break the big picture down into smaller and more specific goals. Consider areas of your life that you either want to change or that you feel you would like to develop with time. 3  3. Write goals for the short term.\\\\n\\\\npassage 2:Setting Achievable Goals. 1  1. Determine your life goals. 2  2. Break the big picture down into smaller and more specific goals. 3  3. Write goals for the short term.  4. Make your goals smaller steps that move you towards larger life 1  goals. 5. Adjust your goals periodically.\\\\n\\\\npassage 3:Personal Success 80/20 Rule. The 80/20 rule is one of the most helpful concepts for life and time management. According to this principle: 20 percent of your activities will account for 80 percent of your results. It can change the way you set goals forever.\\\\n\\\\n\\\",\\\"question\\\":\\\"everything about how to set goals\\\"}\",\"answer\":\"Sure! Here's my answer based on the three provided passages:\\n\\nTo set achievable goals, follow these steps:\\n\\n1. Determine your life goals by asking yourself important questions about what you want for your life (Passage 1).\\n2. Break down the big picture into smaller, more specific goals (Passage 1).\\n3. Write goals for the short-term (Passage 2).\\n4. Make your goals smaller steps that move you towards larger life goals (Passage 2).\\n5. Adjust your goals periodically (Passage 2).\\n\\nAdditionally, keep in mind the 80/20 rule, which states that 20% of your activities will account for 80% of your results (Passage 3). This means that focusing on the most important tasks and activities will lead to the greatest success.\\n\\nUnable to answer based on given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":49},{\"index\":1,\"byte_start\":49,\"byte_end\":82},{\"index\":2,\"byte_start\":82,\"byte_end\":155},{\"index\":3,\"byte_start\":155,\"byte_end\":226},{\"index\":4,\"byte_start\":226,\"byte_end\":339},{\"index\":5,\"byte_start\":339,\"byte_end\":416},{\"index\":6,\"byte_start\":416,\"byte_end\":449},{\"index\":7,\"byte_start\":449,\"byte_end\":520},{\"index\":8,\"byte_start\":520,\"byte_end\":559},{\"index\":9,\"byte_start\":559,\"byte_end\":636},{\"index\":10,\"byte_start\":636,\"byte_end\":713},{\"index\":11,\"byte_start\":713,\"byte_end\":794},{\"index\":12,\"byte_start\":794,\"byte_end\":898},{\"index\":13,\"byte_start\":898,\"byte_end\":995}],\"answer_sentence_indices\":[8],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":223},{\"index\":2,\"byte_start\":223,\"byte_end\":300},{\"index\":3,\"byte_start\":300,\"byte_end\":347},{\"index\":4,\"byte_start\":347,\"byte_end\":433},{\"index\":5,\"byte_start\":433,\"byte_end\":481},{\"index\":6,\"byte_start\":481,\"byte_end\":615},{\"index\":7,\"byte_start\":615,\"byte_end\":719},{\"index\":8,\"byte_start\":719,\"byte_end\":760}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 935,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Setting Achievable Goals. 1  1. Determine your life goals. Ask yourself some important questions about what you want for your life. 2  2. Break the big picture down into smaller and more specific goals. Consider areas of your life that you either want to change or that you feel you would like to develop with time. 3  3. Write goals for the short term.\\\\n\\\\npassage 2:Setting Achievable Goals. 1  1. Determine your life goals. 2  2. Break the big picture down into smaller and more specific goals. 3  3. Write goals for the short term.  4. Make your goals smaller steps that move you towards larger life 1  goals. 5. Adjust your goals periodically.\\\\n\\\\npassage 3:Personal Success 80/20 Rule. The 80/20 rule is one of the most helpful concepts for life and time management. According to this principle: 20 percent of your activities will account for 80 percent of your results. It can change the way you set goals forever.\\\\n\\\\n\\\",\\\"question\\\":\\\"everything about how to set goals\\\"}\",\"answer\":\"Sure! Here's my answer based on the three provided passages:\\n\\nTo set achievable goals, follow these steps:\\n\\n1. Determine your life goals by asking yourself important questions about what you want for your life (Passage 1).\\n2. Break down the big picture into smaller, more specific goals (Passage 1).\\n3. Write goals for the short-term (Passage 2).\\n4. Make your goals smaller steps that move you towards larger life goals (Passage 2).\\n5. Adjust your goals periodically (Passage 2).\\n\\nAdditionally, keep in mind the 80/20 rule, which states that 20% of your activities will account for 80% of your results (Passage 3). This means that focusing on the most important tasks and activities will lead to the greatest success.\\n\\nUnable to answer based on given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":49},{\"index\":1,\"byte_start\":49,\"byte_end\":82},{\"index\":2,\"byte_start\":82,\"byte_end\":155},{\"index\":3,\"byte_start\":155,\"byte_end\":226},{\"index\":4,\"byte_start\":226,\"byte_end\":339},{\"index\":5,\"byte_start\":339,\"byte_end\":416},{\"index\":6,\"byte_start\":416,\"byte_end\":449},{\"index\":7,\"byte_start\":449,\"byte_end\":520},{\"index\":8,\"byte_start\":520,\"byte_end\":559},{\"index\":9,\"byte_start\":559,\"byte_end\":636},{\"index\":10,\"byte_start\":636,\"byte_end\":713},{\"index\":11,\"byte_start\":713,\"byte_end\":794},{\"index\":12,\"byte_start\":794,\"byte_end\":898},{\"index\":13,\"byte_start\":898,\"byte_end\":995}],\"answer_sentence_indices\":[8],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":223},{\"index\":2,\"byte_start\":223,\"byte_end\":300},{\"index\":3,\"byte_start\":300,\"byte_end\":347},{\"index\":4,\"byte_start\":347,\"byte_end\":433},{\"index\":5,\"byte_start\":433,\"byte_end\":481},{\"index\":6,\"byte_start\":481,\"byte_end\":615},{\"index\":7,\"byte_start\":615,\"byte_end\":719},{\"index\":8,\"byte_start\":719,\"byte_end\":760}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r8\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "input_tokens": 923,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Setting Achievable Goals. 1  1. Determine your life goals. Ask yourself some important questions about what you want for your life. 2  2. Break the big picture down into smaller and more specific goals. Consider areas of your life that you either want to change or that you feel you would like to develop with time. 3  3. Write goals for the short term.\\\\n\\\\npassage 2:Setting Achievable Goals. 1  1. Determine your life goals. 2  2. Break the big picture down into smaller and more specific goals. 3  3. Write goals for the short term.  4. Make your goals smaller steps that move you towards larger life 1  goals. 5. Adjust your goals periodically.\\\\n\\\\npassage 3:Personal Success 80/20 Rule. The 80/20 rule is one of the most helpful concepts for life and time management. According to this principle: 20 percent of your activities will account for 80 percent of your results. It can change the way you set goals forever.\\\\n\\\\n\\\",\\\"question\\\":\\\"everything about how to set goals\\\"}\",\"answer\":\"Sure! Here's my answer based on the three provided passages:\\n\\nTo set achievable goals, follow these steps:\\n\\n1. Determine your life goals by asking yourself important questions about what you want for your life (Passage 1).\\n2. Break down the big picture into smaller, more specific goals (Passage 1).\\n3. Write goals for the short-term (Passage 2).\\n4. Make your goals smaller steps that move you towards larger life goals (Passage 2).\\n5. Adjust your goals periodically (Passage 2).\\n\\nAdditionally, keep in mind the 80/20 rule, which states that 20% of your activities will account for 80% of your results (Passage 3). This means that focusing on the most important tasks and activities will lead to the greatest success.\\n\\nUnable to answer based on given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":49},{\"index\":1,\"byte_start\":49,\"byte_end\":82},{\"index\":2,\"byte_start\":82,\"byte_end\":155},{\"index\":3,\"byte_start\":155,\"byte_end\":226},{\"index\":4,\"byte_start\":226,\"byte_end\":339},{\"index\":5,\"byte_start\":339,\"byte_end\":416},{\"index\":6,\"byte_start\":416,\"byte_end\":449},{\"index\":7,\"byte_start\":449,\"byte_end\":520},{\"index\":8,\"byte_start\":520,\"byte_end\":559},{\"index\":9,\"byte_start\":559,\"byte_end\":636},{\"index\":10,\"byte_start\":636,\"byte_end\":713},{\"index\":11,\"byte_start\":713,\"byte_end\":794},{\"index\":12,\"byte_start\":794,\"byte_end\":898},{\"index\":13,\"byte_start\":898,\"byte_end\":995}],\"answer_sentence_indices\":[8],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":223},{\"index\":2,\"byte_start\":223,\"byte_end\":300},{\"index\":3,\"byte_start\":300,\"byte_end\":347},{\"index\":4,\"byte_start\":347,\"byte_end\":433},{\"index\":5,\"byte_start\":433,\"byte_end\":481},{\"index\":6,\"byte_start\":481,\"byte_end\":615},{\"index\":7,\"byte_start\":615,\"byte_end\":719},{\"index\":8,\"byte_start\":719,\"byte_end\":760}]}",
+    "request_index": 1,
+    "sentence_indices": [
+      8
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "8|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259535,
+    "id": "chatcmpl-RDRATpm2W4Dwmecjh5l5gauFg6U78v4n",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 433,
+      "predicted_ms": 266.282,
+      "predicted_n": 11,
+      "predicted_per_second": 41.30958908225115,
+      "predicted_per_token_ms": 24.207454545454542,
+      "prompt_ms": 536.198,
+      "prompt_n": 502,
+      "prompt_per_second": 936.2213212283523,
+      "prompt_per_token_ms": 1.0681235059760956
+    },
+    "usage": {
+      "completion_tokens": 11,
+      "prompt_tokens": 935,
+      "prompt_tokens_details": {
+        "cached_tokens": 433
+      },
+      "total_tokens": 946
+    }
+  },
+  "source_cluster_id": "sha256:30334c61f2a2a627b88ac0f048c4fe72ce34e1a693489e7357fb809576ccf9ea",
+  "started_monotonic_ns": 920442452821276,
+  "status": "completed",
+  "unit_id": "sha256:be60461176517ae50734132c2cec66e9dcee83f387a19ba6c312f4bc2871357f"
+}

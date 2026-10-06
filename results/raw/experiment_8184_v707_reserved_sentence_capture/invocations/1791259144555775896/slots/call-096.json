@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:65b14bccb966f9161f9b54252cb840e5d7b4d8bae1e121020fd4e08050f53e7d",
+  "ended_monotonic_ns": 920430788945523,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Professional skills are skills that graduates need to posses in order to be successful in their professional practice. These skills range from highly specific \u2026 Professional skills are skills that graduates need to posses in order to be successful in their professional practice. These skills range from highly specific ones related to the graduate's field(s) to more general, transferable ones such as communications and ethical practices. When graduates apply for a job, most employers want to know what professional skills they have already, and how willing they are to learn industry and worksite specific skills.\\\\n\\\\npassage 2:4. Professional skills\u2026 \u2022 Skills that graduates need to succeed in professional practice \u2022 These range from highly specific ones related to the graduate\u2019s field(s) to more general, transferable ones such as communications and ethical practices.\\\\n\\\\npassage 3:From the ability to communicate effectively to the willingness to wear multiple hats around the office, employers today seek workers with a variety of the skills. From the ability to communicate effectively to the willingness to wear multiple hats around the office, employers today seek workers with a variety of the skills.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is professional job skills\\\"}\",\"answer\":\"Based on the given passages, professional job skills refer to a set of skills that graduates need in order to be successful in their professional practice. These skills can range from specific skills related to their field of expertise to more general and transferable skills such as effective communication and ethical practices. Employers value candidates who possess a variety of professional skills and are willing to learn industry-specific skills.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":142},{\"index\":1,\"byte_start\":142,\"byte_end\":305},{\"index\":2,\"byte_start\":305,\"byte_end\":466},{\"index\":3,\"byte_start\":466,\"byte_end\":1085},{\"index\":4,\"byte_start\":1085,\"byte_end\":1298}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":156},{\"index\":1,\"byte_start\":156,\"byte_end\":331},{\"index\":2,\"byte_start\":331,\"byte_end\":453}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 549,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Professional skills are skills that graduates need to posses in order to be successful in their professional practice. These skills range from highly specific \u2026 Professional skills are skills that graduates need to posses in order to be successful in their professional practice. These skills range from highly specific ones related to the graduate's field(s) to more general, transferable ones such as communications and ethical practices. When graduates apply for a job, most employers want to know what professional skills they have already, and how willing they are to learn industry and worksite specific skills.\\\\n\\\\npassage 2:4. Professional skills\u2026 \u2022 Skills that graduates need to succeed in professional practice \u2022 These range from highly specific ones related to the graduate\u2019s field(s) to more general, transferable ones such as communications and ethical practices.\\\\n\\\\npassage 3:From the ability to communicate effectively to the willingness to wear multiple hats around the office, employers today seek workers with a variety of the skills. From the ability to communicate effectively to the willingness to wear multiple hats around the office, employers today seek workers with a variety of the skills.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is professional job skills\\\"}\",\"answer\":\"Based on the given passages, professional job skills refer to a set of skills that graduates need in order to be successful in their professional practice. These skills can range from specific skills related to their field of expertise to more general and transferable skills such as effective communication and ethical practices. Employers value candidates who possess a variety of professional skills and are willing to learn industry-specific skills.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":142},{\"index\":1,\"byte_start\":142,\"byte_end\":305},{\"index\":2,\"byte_start\":305,\"byte_end\":466},{\"index\":3,\"byte_start\":466,\"byte_end\":1085},{\"index\":4,\"byte_start\":1085,\"byte_end\":1298}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":156},{\"index\":1,\"byte_start\":156,\"byte_end\":331},{\"index\":2,\"byte_start\":331,\"byte_end\":453}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\"\n",
+    "input_tokens": 537,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Professional skills are skills that graduates need to posses in order to be successful in their professional practice. These skills range from highly specific \u2026 Professional skills are skills that graduates need to posses in order to be successful in their professional practice. These skills range from highly specific ones related to the graduate's field(s) to more general, transferable ones such as communications and ethical practices. When graduates apply for a job, most employers want to know what professional skills they have already, and how willing they are to learn industry and worksite specific skills.\\\\n\\\\npassage 2:4. Professional skills\u2026 \u2022 Skills that graduates need to succeed in professional practice \u2022 These range from highly specific ones related to the graduate\u2019s field(s) to more general, transferable ones such as communications and ethical practices.\\\\n\\\\npassage 3:From the ability to communicate effectively to the willingness to wear multiple hats around the office, employers today seek workers with a variety of the skills. From the ability to communicate effectively to the willingness to wear multiple hats around the office, employers today seek workers with a variety of the skills.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is professional job skills\\\"}\",\"answer\":\"Based on the given passages, professional job skills refer to a set of skills that graduates need in order to be successful in their professional practice. These skills can range from specific skills related to their field of expertise to more general and transferable skills such as effective communication and ethical practices. Employers value candidates who possess a variety of professional skills and are willing to learn industry-specific skills.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":142},{\"index\":1,\"byte_start\":142,\"byte_end\":305},{\"index\":2,\"byte_start\":305,\"byte_end\":466},{\"index\":3,\"byte_start\":466,\"byte_end\":1085},{\"index\":4,\"byte_start\":1085,\"byte_end\":1298}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":156},{\"index\":1,\"byte_start\":156,\"byte_end\":331},{\"index\":2,\"byte_start\":331,\"byte_end\":453}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,1]\n1|E|0.90|[0,1]\n2|E|0.85|[0,2]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259522,
+    "id": "chatcmpl-pUVZKNB3QfQBuPMbsbQPZ1lFOVmdqZHZ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1090.975,
+      "predicted_n": 45,
+      "predicted_per_second": 41.24750796306057,
+      "predicted_per_token_ms": 24.243888888888886,
+      "prompt_ms": 533.81,
+      "prompt_n": 500,
+      "prompt_per_second": 936.662857571046,
+      "prompt_per_token_ms": 1.0676199999999998
+    },
+    "usage": {
+      "completion_tokens": 45,
+      "prompt_tokens": 549,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 594
+    }
+  },
+  "source_cluster_id": "sha256:09f5cbd540f98d9c53cc488fb4a51baf7dc4dfa49f1ad2bb4834eb0276ec7ae8",
+  "started_monotonic_ns": 920429015248334,
+  "status": "completed",
+  "unit_id": "sha256:69baf2a4bbbe720da0f390fa1b3776119be10a0284a2726b3620abe082c5fb3d"
+}

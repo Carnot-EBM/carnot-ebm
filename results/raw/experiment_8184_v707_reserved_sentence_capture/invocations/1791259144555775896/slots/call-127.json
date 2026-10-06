@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:4687feae4861697a933a962d8693b6f3793212d425f26ec8185d4733315339ff",
+  "ended_monotonic_ns": 920519748532315,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Click on the drop-down menu next to Put the computer to sleep: and select a time, ranging from one minute to five hours. If using a laptop, you can select different options for when the computer is running off the battery and when it is plugged in.\\\\n\\\\npassage 2:But you can re-tune your sleep cycle to get better rest and more of it. This is also called the circadian rhythm, and it tells your body when to sleep and wake up. Many of the important things going in your body rely on this sleep-wake cycle.\\\\n\\\\npassage 3:Click the Schedule button on the Energy Saver window to set up a time for the computer to automatically wake up or go to sleep. Tick the box next to Start up or wake and select the time in the field at the right of the window to have the computer turn on at a certain time each day. Tick the box next to the drop-down menu below the Start up option and select either Shut Down or Sleep to set an automatic sleep time.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you adjust sleep setting\\\"}\",\"answer\":\"To adjust sleep settings, click on the drop-down menu next to Put the computer to sleep and select a time, ranging from one minute to five hours. If using a laptop, you can select different options for when the computer is running off the battery and when it is plugged in. Additionally, you can re-tune your sleep cycle by clicking the Schedule button on the Energy Saver window and setting up a time for the computer to automatically wake up or go to sleep. Tick the box next to Start up or wake and select the time in the field at the right of the window to have the computer turn on at a certain time each day. Tick the box next to the drop-down menu below the Start up option and select either Shut Down or Sleep to set an automatic sleep time.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":144},{\"index\":1,\"byte_start\":144,\"byte_end\":357},{\"index\":2,\"byte_start\":357,\"byte_end\":449},{\"index\":3,\"byte_start\":449,\"byte_end\":669},{\"index\":4,\"byte_start\":669,\"byte_end\":824},{\"index\":5,\"byte_start\":824,\"byte_end\":1009}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":146},{\"index\":1,\"byte_start\":146,\"byte_end\":274},{\"index\":2,\"byte_start\":274,\"byte_end\":460},{\"index\":3,\"byte_start\":460,\"byte_end\":615},{\"index\":4,\"byte_start\":615,\"byte_end\":749}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 678,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Click on the drop-down menu next to Put the computer to sleep: and select a time, ranging from one minute to five hours. If using a laptop, you can select different options for when the computer is running off the battery and when it is plugged in.\\\\n\\\\npassage 2:But you can re-tune your sleep cycle to get better rest and more of it. This is also called the circadian rhythm, and it tells your body when to sleep and wake up. Many of the important things going in your body rely on this sleep-wake cycle.\\\\n\\\\npassage 3:Click the Schedule button on the Energy Saver window to set up a time for the computer to automatically wake up or go to sleep. Tick the box next to Start up or wake and select the time in the field at the right of the window to have the computer turn on at a certain time each day. Tick the box next to the drop-down menu below the Start up option and select either Shut Down or Sleep to set an automatic sleep time.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you adjust sleep setting\\\"}\",\"answer\":\"To adjust sleep settings, click on the drop-down menu next to Put the computer to sleep and select a time, ranging from one minute to five hours. If using a laptop, you can select different options for when the computer is running off the battery and when it is plugged in. Additionally, you can re-tune your sleep cycle by clicking the Schedule button on the Energy Saver window and setting up a time for the computer to automatically wake up or go to sleep. Tick the box next to Start up or wake and select the time in the field at the right of the window to have the computer turn on at a certain time each day. Tick the box next to the drop-down menu below the Start up option and select either Shut Down or Sleep to set an automatic sleep time.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":144},{\"index\":1,\"byte_start\":144,\"byte_end\":357},{\"index\":2,\"byte_start\":357,\"byte_end\":449},{\"index\":3,\"byte_start\":449,\"byte_end\":669},{\"index\":4,\"byte_start\":669,\"byte_end\":824},{\"index\":5,\"byte_start\":824,\"byte_end\":1009}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":146},{\"index\":1,\"byte_start\":146,\"byte_end\":274},{\"index\":2,\"byte_start\":274,\"byte_end\":460},{\"index\":3,\"byte_start\":460,\"byte_end\":615},{\"index\":4,\"byte_start\":615,\"byte_end\":749}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\"\n",
+    "input_tokens": 666,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Click on the drop-down menu next to Put the computer to sleep: and select a time, ranging from one minute to five hours. If using a laptop, you can select different options for when the computer is running off the battery and when it is plugged in.\\\\n\\\\npassage 2:But you can re-tune your sleep cycle to get better rest and more of it. This is also called the circadian rhythm, and it tells your body when to sleep and wake up. Many of the important things going in your body rely on this sleep-wake cycle.\\\\n\\\\npassage 3:Click the Schedule button on the Energy Saver window to set up a time for the computer to automatically wake up or go to sleep. Tick the box next to Start up or wake and select the time in the field at the right of the window to have the computer turn on at a certain time each day. Tick the box next to the drop-down menu below the Start up option and select either Shut Down or Sleep to set an automatic sleep time.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you adjust sleep setting\\\"}\",\"answer\":\"To adjust sleep settings, click on the drop-down menu next to Put the computer to sleep and select a time, ranging from one minute to five hours. If using a laptop, you can select different options for when the computer is running off the battery and when it is plugged in. Additionally, you can re-tune your sleep cycle by clicking the Schedule button on the Energy Saver window and setting up a time for the computer to automatically wake up or go to sleep. Tick the box next to Start up or wake and select the time in the field at the right of the window to have the computer turn on at a certain time each day. Tick the box next to the drop-down menu below the Start up option and select either Shut Down or Sleep to set an automatic sleep time.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":144},{\"index\":1,\"byte_start\":144,\"byte_end\":357},{\"index\":2,\"byte_start\":357,\"byte_end\":449},{\"index\":3,\"byte_start\":449,\"byte_end\":669},{\"index\":4,\"byte_start\":669,\"byte_end\":824},{\"index\":5,\"byte_start\":824,\"byte_end\":1009}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":146},{\"index\":1,\"byte_start\":146,\"byte_end\":274},{\"index\":2,\"byte_start\":274,\"byte_end\":460},{\"index\":3,\"byte_start\":460,\"byte_end\":615},{\"index\":4,\"byte_start\":615,\"byte_end\":749}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[0]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]\n4|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259611,
+    "id": "chatcmpl-OB1tPkhN0FokIoWUYnfLjHzR2CgQiBDD",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1380.569,
+      "predicted_n": 57,
+      "predicted_per_second": 41.287324284407376,
+      "predicted_per_token_ms": 24.220508771929826,
+      "prompt_ms": 638.696,
+      "prompt_n": 629,
+      "prompt_per_second": 984.8190688527875,
+      "prompt_per_token_ms": 1.015414944356121
+    },
+    "usage": {
+      "completion_tokens": 57,
+      "prompt_tokens": 678,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 735
+    }
+  },
+  "source_cluster_id": "sha256:a72b3df2bf1950ee24bd0a6506c3cbbef81c674ebb5ce8bedb59fcaff43653a0",
+  "started_monotonic_ns": 920517581261848,
+  "status": "completed",
+  "unit_id": "sha256:cd8249a60b5b820c242027b0d650c33cbaf1fe788e73204bd2124455bed82fbe"
+}

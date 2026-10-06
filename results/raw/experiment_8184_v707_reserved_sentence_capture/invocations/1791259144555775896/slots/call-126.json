@@ -1,0 +1,92 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:618da3d4ddf48767092f4fdbcd4d75561db234398d21fce7bb7cfc53c972a96c",
+  "ended_monotonic_ns": 920517580015206,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1315 Anacapa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Bakeries, Cafes, Coffee & Tea, Food, Desserts, Breakfast & Brunch, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-16:0\\\",\\\"Monday\\\":\\\"8:0-16:0\\\",\\\"Saturday\\\":\\\"8:0-16:0\\\",\\\"Sunday\\\":\\\"8:0-16:0\\\",\\\"Thursday\\\":\\\"8:0-16:0\\\",\\\"Tuesday\\\":\\\"8:0-16:0\\\",\\\"Wednesday\\\":\\\"8:0-16:0\\\"},\\\"name\\\":\\\"Crushcakes & Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-06 21:36:56\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"The food is subpar at best. We looking forward to a nice brunch with my friend and decided to go here after a long time. The potatoes were too hard, the eggs were over cooked; and the Tuna melt was a crime. Not happy!\\\"},{\\\"review_date\\\":\\\"2022-01-04 01:16:00\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Awesome cupcakes! Great flavors; I chose 4 different types, so my family could have an assortment. Compliments all the way around.\\\"},{\\\"review_date\\\":\\\"2021-12-27 17:04:07\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I happened to walk by and saw the sign of \\\\\\\"black lives matter. Can't stop. Won't stop\\\\\\\", which moved me. I got my latte. It was good. The cafe is small but cute.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sure! Here's an objective overview of Crushcakes & Cafe based on the provided structured data:\\n\\nCrushcakes & Cafe is a bakery and cafe located in Santa Barbara, CA that offers a variety of breakfast and brunch items, as well as coffee and tea. According to their structured data, they are open Monday through Sunday from 8am to 4pm and offer outdoor seating, free WiFi, and takeout options. They have a rating of 4.0 stars based on three reviews, with one review praising their cupcakes and another expressing disappointment with the food quality. The cafe has a cozy and casual atmosphere, with complimentary WiFi and outdoor seating available. Overall, Crushcakes & Cafe appears to be a popular spot for breakfast and brunch in Santa Barbara, with a focus on sweet treats and a relaxed atmosphere.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":866},{\"index\":1,\"byte_start\":866,\"byte_end\":959},{\"index\":2,\"byte_start\":959,\"byte_end\":1045},{\"index\":3,\"byte_start\":1045,\"byte_end\":1147},{\"index\":4,\"byte_start\":1147,\"byte_end\":1228},{\"index\":5,\"byte_start\":1228,\"byte_end\":1397},{\"index\":6,\"byte_start\":1397,\"byte_end\":1409},{\"index\":7,\"byte_start\":1409,\"byte_end\":1439},{\"index\":8,\"byte_start\":1439,\"byte_end\":1455},{\"index\":9,\"byte_start\":1455,\"byte_end\":1468},{\"index\":10,\"byte_start\":1468,\"byte_end\":1512}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":244},{\"index\":2,\"byte_start\":244,\"byte_end\":391},{\"index\":3,\"byte_start\":391,\"byte_end\":548},{\"index\":4,\"byte_start\":548,\"byte_end\":646},{\"index\":5,\"byte_start\":646,\"byte_end\":799}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1067,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1315 Anacapa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Bakeries, Cafes, Coffee & Tea, Food, Desserts, Breakfast & Brunch, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-16:0\\\",\\\"Monday\\\":\\\"8:0-16:0\\\",\\\"Saturday\\\":\\\"8:0-16:0\\\",\\\"Sunday\\\":\\\"8:0-16:0\\\",\\\"Thursday\\\":\\\"8:0-16:0\\\",\\\"Tuesday\\\":\\\"8:0-16:0\\\",\\\"Wednesday\\\":\\\"8:0-16:0\\\"},\\\"name\\\":\\\"Crushcakes & Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-06 21:36:56\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"The food is subpar at best. We looking forward to a nice brunch with my friend and decided to go here after a long time. The potatoes were too hard, the eggs were over cooked; and the Tuna melt was a crime. Not happy!\\\"},{\\\"review_date\\\":\\\"2022-01-04 01:16:00\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Awesome cupcakes! Great flavors; I chose 4 different types, so my family could have an assortment. Compliments all the way around.\\\"},{\\\"review_date\\\":\\\"2021-12-27 17:04:07\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I happened to walk by and saw the sign of \\\\\\\"black lives matter. Can't stop. Won't stop\\\\\\\", which moved me. I got my latte. It was good. The cafe is small but cute.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sure! Here's an objective overview of Crushcakes & Cafe based on the provided structured data:\\n\\nCrushcakes & Cafe is a bakery and cafe located in Santa Barbara, CA that offers a variety of breakfast and brunch items, as well as coffee and tea. According to their structured data, they are open Monday through Sunday from 8am to 4pm and offer outdoor seating, free WiFi, and takeout options. They have a rating of 4.0 stars based on three reviews, with one review praising their cupcakes and another expressing disappointment with the food quality. The cafe has a cozy and casual atmosphere, with complimentary WiFi and outdoor seating available. Overall, Crushcakes & Cafe appears to be a popular spot for breakfast and brunch in Santa Barbara, with a focus on sweet treats and a relaxed atmosphere.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":866},{\"index\":1,\"byte_start\":866,\"byte_end\":959},{\"index\":2,\"byte_start\":959,\"byte_end\":1045},{\"index\":3,\"byte_start\":1045,\"byte_end\":1147},{\"index\":4,\"byte_start\":1147,\"byte_end\":1228},{\"index\":5,\"byte_start\":1228,\"byte_end\":1397},{\"index\":6,\"byte_start\":1397,\"byte_end\":1409},{\"index\":7,\"byte_start\":1409,\"byte_end\":1439},{\"index\":8,\"byte_start\":1439,\"byte_end\":1455},{\"index\":9,\"byte_start\":1455,\"byte_end\":1468},{\"index\":10,\"byte_start\":1468,\"byte_end\":1512}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":244},{\"index\":2,\"byte_start\":244,\"byte_end\":391},{\"index\":3,\"byte_start\":391,\"byte_end\":548},{\"index\":4,\"byte_start\":548,\"byte_end\":646},{\"index\":5,\"byte_start\":646,\"byte_end\":799}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\"\n",
+    "input_tokens": 1055,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"1315 Anacapa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Bakeries, Cafes, Coffee & Tea, Food, Desserts, Breakfast & Brunch, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-16:0\\\",\\\"Monday\\\":\\\"8:0-16:0\\\",\\\"Saturday\\\":\\\"8:0-16:0\\\",\\\"Sunday\\\":\\\"8:0-16:0\\\",\\\"Thursday\\\":\\\"8:0-16:0\\\",\\\"Tuesday\\\":\\\"8:0-16:0\\\",\\\"Wednesday\\\":\\\"8:0-16:0\\\"},\\\"name\\\":\\\"Crushcakes & Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-06 21:36:56\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"The food is subpar at best. We looking forward to a nice brunch with my friend and decided to go here after a long time. The potatoes were too hard, the eggs were over cooked; and the Tuna melt was a crime. Not happy!\\\"},{\\\"review_date\\\":\\\"2022-01-04 01:16:00\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Awesome cupcakes! Great flavors; I chose 4 different types, so my family could have an assortment. Compliments all the way around.\\\"},{\\\"review_date\\\":\\\"2021-12-27 17:04:07\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I happened to walk by and saw the sign of \\\\\\\"black lives matter. Can't stop. Won't stop\\\\\\\", which moved me. I got my latte. It was good. The cafe is small but cute.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sure! Here's an objective overview of Crushcakes & Cafe based on the provided structured data:\\n\\nCrushcakes & Cafe is a bakery and cafe located in Santa Barbara, CA that offers a variety of breakfast and brunch items, as well as coffee and tea. According to their structured data, they are open Monday through Sunday from 8am to 4pm and offer outdoor seating, free WiFi, and takeout options. They have a rating of 4.0 stars based on three reviews, with one review praising their cupcakes and another expressing disappointment with the food quality. The cafe has a cozy and casual atmosphere, with complimentary WiFi and outdoor seating available. Overall, Crushcakes & Cafe appears to be a popular spot for breakfast and brunch in Santa Barbara, with a focus on sweet treats and a relaxed atmosphere.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":866},{\"index\":1,\"byte_start\":866,\"byte_end\":959},{\"index\":2,\"byte_start\":959,\"byte_end\":1045},{\"index\":3,\"byte_start\":1045,\"byte_end\":1147},{\"index\":4,\"byte_start\":1147,\"byte_end\":1228},{\"index\":5,\"byte_start\":1228,\"byte_end\":1397},{\"index\":6,\"byte_start\":1397,\"byte_end\":1409},{\"index\":7,\"byte_start\":1409,\"byte_end\":1439},{\"index\":8,\"byte_start\":1439,\"byte_end\":1455},{\"index\":9,\"byte_start\":1455,\"byte_end\":1468},{\"index\":10,\"byte_start\":1468,\"byte_end\":1512}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":244},{\"index\":2,\"byte_start\":244,\"byte_end\":391},{\"index\":3,\"byte_start\":391,\"byte_end\":548},{\"index\":4,\"byte_start\":548,\"byte_end\":646},{\"index\":5,\"byte_start\":646,\"byte_end\":799}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[]\n1|C|0.90|[0,1]\n2|C|0.85|[0,1]\n3|C|0.80|[0,1]\n4|C|0.75|[0,1]\n5|C|0.70|[0,1]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259609,
+    "id": "chatcmpl-yCc1Stqhu8ZXX5jRKOcAB8YdlEJwZ525",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1981.266,
+      "predicted_n": 81,
+      "predicted_per_second": 40.88295059825384,
+      "predicted_per_token_ms": 24.460074074074075,
+      "prompt_ms": 967.13,
+      "prompt_n": 1018,
+      "prompt_per_second": 1052.5989267213301,
+      "prompt_per_token_ms": 0.9500294695481336
+    },
+    "usage": {
+      "completion_tokens": 81,
+      "prompt_tokens": 1067,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1148
+    }
+  },
+  "source_cluster_id": "sha256:cfab5f00a819f0e510cc634e9d893733b99aa57365b8a3fbcaf48f698e80f906",
+  "started_monotonic_ns": 920514478400211,
+  "status": "completed",
+  "unit_id": "sha256:1c6a3554da2909ac1efedbff0d40799bee4e5473599822411d696246a0938d11"
+}

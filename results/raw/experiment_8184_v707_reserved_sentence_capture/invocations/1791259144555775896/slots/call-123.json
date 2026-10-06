@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:8ac7a2592d86b48b8993df710dc2088212f5e1f2a5c53c91a5aa55459c07821b",
+  "ended_monotonic_ns": 920509165752717,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Migrants Rush Border in El Paso - \\\"1,000's\\\" Arrive by Train in Juarez\\nGrowing crowds of migrants are creating problems for authorities at the U.S.-Mexico border between El Paso and Ciudad Juarez. The situation came to a head Tuesday night when hundreds of migrants rushed Mexican authorities who were attempting to hold a large number of them from crossing over into neighboring El Paso. The Univision station in El Paso captured video of the chaos that ensued:\\nAccording to the El Paso Times, a large number of migrants - mostly Venezuelans - managed to get past the Mexican authorities and reach the razor wire on the Texas side of the border.\\nThe State of Texas has been reinforcing El Paso with barbed wire and troops for months as part of its \\\"Operation Lone Star\\\" border security efforts. However, reports of Border Patrol Agents cutting that wire to allow migrants to pass have stirred up a hornet's nest of criticism.\\nAs I explained on NewsBreak three days ago, the actual border is the middle of the Rio Grande - so once migrants reach the razor wire they are already in the U.S. The Border Patrol has a duty to take custody of them at that point - so the migrants that reached the wire in El Paso will likely be allowed to pass. Most are expected to request asylum .\\nThe crisis at the border between the twin cities of El Paso and Ciudad Juarez didn't end with the incident Tuesday night. The El Paso Times describes a tense situation continuing on the Juarez side with Mexican authorities holding back a large crowd of migrants still intent on crossing over into Texas.\\nEl Paso Matters, which has posted a photo of that standoff on x.com/(Twitter) says most of the migrants are arriving by train and intend to head directly to the border based on rumors they are allowed to cross:\\nThe Telemundo television station in El Paso showed video of freight trains arriving in Ciudad Juarez carrying hundreds of migrants - so the crowds at the border could continue to grow:\\nEl Paso ABC affiliate KVIA estimated the arrivals by train in Juares by \\\"the thousands.\\\"\\nWe will update this article as events in Ciudad Juarez/El Paso unfold.\\nWhat are your thoughts about the illegal immigration situation in El Paso?\\nShare your opinions in the comments to this article.\\nWant more stories like this? Be sure to \\\"like\\\" this article and follow me on theNewsbreak app!\\nOther stories by Jack Beaversabout Texas Border issues include:\\nMigrants Plant Foreign Flag on Texas Soil\\nU.S. Soldiers vs. Mexican Cartels? Support for Military Action Grows\\nCartels Shot Texans in Mexico by \\\"Mistake\\\"\\nMake Money Writing For Newsbreak!APPLY HERE\",\"answer\":\"Here is a summary of the news in 113 words:\\n\\nA surge of migrants arrived in Ciudad Juarez by train, with estimates of \\\"thousands\\\" crossing. This comes after a chaotic scene near the US-Mexico border in El Paso, where migrants rushed Mexican authorities and made it to the US side of the border. Despite efforts by Texas to reinforce the area with barbed wire and troop, many migrants are still managing to cross. The Border Patrol is expected to take custody of those who reach the US side, and most will likely request asylum. The situation remains tense and is continuing to unfold.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":196},{\"index\":1,\"byte_start\":196,\"byte_end\":388},{\"index\":2,\"byte_start\":388,\"byte_end\":646},{\"index\":3,\"byte_start\":646,\"byte_end\":795},{\"index\":4,\"byte_start\":795,\"byte_end\":926},{\"index\":5,\"byte_start\":926,\"byte_end\":1239},{\"index\":6,\"byte_start\":1239,\"byte_end\":1277},{\"index\":7,\"byte_start\":1277,\"byte_end\":1399},{\"index\":8,\"byte_start\":1399,\"byte_end\":1581},{\"index\":9,\"byte_start\":1581,\"byte_end\":2066},{\"index\":10,\"byte_start\":2066,\"byte_end\":2137},{\"index\":11,\"byte_start\":2137,\"byte_end\":2212},{\"index\":12,\"byte_start\":2212,\"byte_end\":2265},{\"index\":13,\"byte_start\":2265,\"byte_end\":2294},{\"index\":14,\"byte_start\":2294,\"byte_end\":2360},{\"index\":15,\"byte_start\":2360,\"byte_end\":2501},{\"index\":16,\"byte_start\":2501,\"byte_end\":2621}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":140},{\"index\":1,\"byte_start\":140,\"byte_end\":295},{\"index\":2,\"byte_start\":295,\"byte_end\":413},{\"index\":3,\"byte_start\":413,\"byte_end\":528},{\"index\":4,\"byte_start\":528,\"byte_end\":584}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1189,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Migrants Rush Border in El Paso - \\\"1,000's\\\" Arrive by Train in Juarez\\nGrowing crowds of migrants are creating problems for authorities at the U.S.-Mexico border between El Paso and Ciudad Juarez. The situation came to a head Tuesday night when hundreds of migrants rushed Mexican authorities who were attempting to hold a large number of them from crossing over into neighboring El Paso. The Univision station in El Paso captured video of the chaos that ensued:\\nAccording to the El Paso Times, a large number of migrants - mostly Venezuelans - managed to get past the Mexican authorities and reach the razor wire on the Texas side of the border.\\nThe State of Texas has been reinforcing El Paso with barbed wire and troops for months as part of its \\\"Operation Lone Star\\\" border security efforts. However, reports of Border Patrol Agents cutting that wire to allow migrants to pass have stirred up a hornet's nest of criticism.\\nAs I explained on NewsBreak three days ago, the actual border is the middle of the Rio Grande - so once migrants reach the razor wire they are already in the U.S. The Border Patrol has a duty to take custody of them at that point - so the migrants that reached the wire in El Paso will likely be allowed to pass. Most are expected to request asylum .\\nThe crisis at the border between the twin cities of El Paso and Ciudad Juarez didn't end with the incident Tuesday night. The El Paso Times describes a tense situation continuing on the Juarez side with Mexican authorities holding back a large crowd of migrants still intent on crossing over into Texas.\\nEl Paso Matters, which has posted a photo of that standoff on x.com/(Twitter) says most of the migrants are arriving by train and intend to head directly to the border based on rumors they are allowed to cross:\\nThe Telemundo television station in El Paso showed video of freight trains arriving in Ciudad Juarez carrying hundreds of migrants - so the crowds at the border could continue to grow:\\nEl Paso ABC affiliate KVIA estimated the arrivals by train in Juares by \\\"the thousands.\\\"\\nWe will update this article as events in Ciudad Juarez/El Paso unfold.\\nWhat are your thoughts about the illegal immigration situation in El Paso?\\nShare your opinions in the comments to this article.\\nWant more stories like this? Be sure to \\\"like\\\" this article and follow me on theNewsbreak app!\\nOther stories by Jack Beaversabout Texas Border issues include:\\nMigrants Plant Foreign Flag on Texas Soil\\nU.S. Soldiers vs. Mexican Cartels? Support for Military Action Grows\\nCartels Shot Texans in Mexico by \\\"Mistake\\\"\\nMake Money Writing For Newsbreak!APPLY HERE\",\"answer\":\"Here is a summary of the news in 113 words:\\n\\nA surge of migrants arrived in Ciudad Juarez by train, with estimates of \\\"thousands\\\" crossing. This comes after a chaotic scene near the US-Mexico border in El Paso, where migrants rushed Mexican authorities and made it to the US side of the border. Despite efforts by Texas to reinforce the area with barbed wire and troop, many migrants are still managing to cross. The Border Patrol is expected to take custody of those who reach the US side, and most will likely request asylum. The situation remains tense and is continuing to unfold.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":196},{\"index\":1,\"byte_start\":196,\"byte_end\":388},{\"index\":2,\"byte_start\":388,\"byte_end\":646},{\"index\":3,\"byte_start\":646,\"byte_end\":795},{\"index\":4,\"byte_start\":795,\"byte_end\":926},{\"index\":5,\"byte_start\":926,\"byte_end\":1239},{\"index\":6,\"byte_start\":1239,\"byte_end\":1277},{\"index\":7,\"byte_start\":1277,\"byte_end\":1399},{\"index\":8,\"byte_start\":1399,\"byte_end\":1581},{\"index\":9,\"byte_start\":1581,\"byte_end\":2066},{\"index\":10,\"byte_start\":2066,\"byte_end\":2137},{\"index\":11,\"byte_start\":2137,\"byte_end\":2212},{\"index\":12,\"byte_start\":2212,\"byte_end\":2265},{\"index\":13,\"byte_start\":2265,\"byte_end\":2294},{\"index\":14,\"byte_start\":2294,\"byte_end\":2360},{\"index\":15,\"byte_start\":2360,\"byte_end\":2501},{\"index\":16,\"byte_start\":2501,\"byte_end\":2621}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":140},{\"index\":1,\"byte_start\":140,\"byte_end\":295},{\"index\":2,\"byte_start\":295,\"byte_end\":413},{\"index\":3,\"byte_start\":413,\"byte_end\":528},{\"index\":4,\"byte_start\":528,\"byte_end\":584}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+    "input_tokens": 1177,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Migrants Rush Border in El Paso - \\\"1,000's\\\" Arrive by Train in Juarez\\nGrowing crowds of migrants are creating problems for authorities at the U.S.-Mexico border between El Paso and Ciudad Juarez. The situation came to a head Tuesday night when hundreds of migrants rushed Mexican authorities who were attempting to hold a large number of them from crossing over into neighboring El Paso. The Univision station in El Paso captured video of the chaos that ensued:\\nAccording to the El Paso Times, a large number of migrants - mostly Venezuelans - managed to get past the Mexican authorities and reach the razor wire on the Texas side of the border.\\nThe State of Texas has been reinforcing El Paso with barbed wire and troops for months as part of its \\\"Operation Lone Star\\\" border security efforts. However, reports of Border Patrol Agents cutting that wire to allow migrants to pass have stirred up a hornet's nest of criticism.\\nAs I explained on NewsBreak three days ago, the actual border is the middle of the Rio Grande - so once migrants reach the razor wire they are already in the U.S. The Border Patrol has a duty to take custody of them at that point - so the migrants that reached the wire in El Paso will likely be allowed to pass. Most are expected to request asylum .\\nThe crisis at the border between the twin cities of El Paso and Ciudad Juarez didn't end with the incident Tuesday night. The El Paso Times describes a tense situation continuing on the Juarez side with Mexican authorities holding back a large crowd of migrants still intent on crossing over into Texas.\\nEl Paso Matters, which has posted a photo of that standoff on x.com/(Twitter) says most of the migrants are arriving by train and intend to head directly to the border based on rumors they are allowed to cross:\\nThe Telemundo television station in El Paso showed video of freight trains arriving in Ciudad Juarez carrying hundreds of migrants - so the crowds at the border could continue to grow:\\nEl Paso ABC affiliate KVIA estimated the arrivals by train in Juares by \\\"the thousands.\\\"\\nWe will update this article as events in Ciudad Juarez/El Paso unfold.\\nWhat are your thoughts about the illegal immigration situation in El Paso?\\nShare your opinions in the comments to this article.\\nWant more stories like this? Be sure to \\\"like\\\" this article and follow me on theNewsbreak app!\\nOther stories by Jack Beaversabout Texas Border issues include:\\nMigrants Plant Foreign Flag on Texas Soil\\nU.S. Soldiers vs. Mexican Cartels? Support for Military Action Grows\\nCartels Shot Texans in Mexico by \\\"Mistake\\\"\\nMake Money Writing For Newsbreak!APPLY HERE\",\"answer\":\"Here is a summary of the news in 113 words:\\n\\nA surge of migrants arrived in Ciudad Juarez by train, with estimates of \\\"thousands\\\" crossing. This comes after a chaotic scene near the US-Mexico border in El Paso, where migrants rushed Mexican authorities and made it to the US side of the border. Despite efforts by Texas to reinforce the area with barbed wire and troop, many migrants are still managing to cross. The Border Patrol is expected to take custody of those who reach the US side, and most will likely request asylum. The situation remains tense and is continuing to unfold.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":196},{\"index\":1,\"byte_start\":196,\"byte_end\":388},{\"index\":2,\"byte_start\":388,\"byte_end\":646},{\"index\":3,\"byte_start\":646,\"byte_end\":795},{\"index\":4,\"byte_start\":795,\"byte_end\":926},{\"index\":5,\"byte_start\":926,\"byte_end\":1239},{\"index\":6,\"byte_start\":1239,\"byte_end\":1277},{\"index\":7,\"byte_start\":1277,\"byte_end\":1399},{\"index\":8,\"byte_start\":1399,\"byte_end\":1581},{\"index\":9,\"byte_start\":1581,\"byte_end\":2066},{\"index\":10,\"byte_start\":2066,\"byte_end\":2137},{\"index\":11,\"byte_start\":2137,\"byte_end\":2212},{\"index\":12,\"byte_start\":2212,\"byte_end\":2265},{\"index\":13,\"byte_start\":2265,\"byte_end\":2294},{\"index\":14,\"byte_start\":2294,\"byte_end\":2360},{\"index\":15,\"byte_start\":2360,\"byte_end\":2501},{\"index\":16,\"byte_start\":2501,\"byte_end\":2621}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":140},{\"index\":1,\"byte_start\":140,\"byte_end\":295},{\"index\":2,\"byte_start\":295,\"byte_end\":413},{\"index\":3,\"byte_start\":413,\"byte_end\":528},{\"index\":4,\"byte_start\":528,\"byte_end\":584}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,1]\n1|E|0.90|[2,3]\n2|E|0.85|[4,5]\n3|E|0.90|[5,6]\n4|E|0.80|[7,8]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259600,
+    "id": "chatcmpl-VvxMg7uPvGtaCkrAHnVHO5cg1wShsf8M",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1839.603,
+      "predicted_n": 75,
+      "predicted_per_second": 40.76966606381921,
+      "predicted_per_token_ms": 24.52804,
+      "prompt_ms": 1068.736,
+      "prompt_n": 1140,
+      "prompt_per_second": 1066.6806395592548,
+      "prompt_per_token_ms": 0.9374877192982457
+    },
+    "usage": {
+      "completion_tokens": 75,
+      "prompt_tokens": 1189,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1264
+    }
+  },
+  "source_cluster_id": "sha256:18d65ea9c5b5179fb87f738fe4b62203f07653200e3db50e0513da9239ca02e5",
+  "started_monotonic_ns": 920506103927730,
+  "status": "completed",
+  "unit_id": "sha256:8cb9c489459eed511b095402ba8a4b1dcf54334e1ab343ef4548865b02b122ab"
+}

@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:990b1ce61fbb141d90ab813032cc80fec19c415d24fe5cb467cffcb0130d0316",
+  "ended_monotonic_ns": 920429014158407,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"US deports 100+ Migrants to Venezuela\\nThe Biden administration conducted its first deportation flight to Venezuela in years, sending over 100 Venezuelans back to their home country. The Department of Homeland Security made the decision to resume direct repatriations in an effort to discourage illegal border crossings, following an agreement with Venezuelan authorities to accept the return of their nationals. Corey Price, an acting executive associate director for Immigration and Customs Enforcement, stated that there would be several more flights in the coming days and weeks.\\nThe migrants on the flight had illegally entered the US between ports of entry and were prioritized based on recent arrivals and criminal history. Since President Biden took office, nearly half a million Venezuelans have illegally crossed the southwest border, with a peak of over 34,000 arrests in April. To address this, Biden extended temporary protected status to around 472,000 Venezuelan migrants, allowing them to live and work legally in the US. However, those who have not applied for TPS and have deportation orders could still face removal. Immigration attorneys are advising eligible Venezuelans to apply for TPS promptly to avoid deportation.\\nThe Biden administration's decision to conduct its first deportation flight to Venezuela in years is aimed at discouraging illegal border crossings and addressing the influx of Venezuelan migrants entering the US. With an agreement in place with Venezuelan authorities to accept repatriations, the Department of Homeland Security made the move to resume direct deportations. Corey Price, acting executive associate director for Immigration and Customs Enforcement, revealed that several more flights would be scheduled in the coming days and weeks.\\nThe individuals on the deportation flight had entered the US illegally between ports of entry, and were chosen based on factors such as recent arrival and criminal history. The number of Venezuelans crossing the southwest border illegally has reached a staggering half a million since President Biden took office. Meanwhile, in an effort to provide relief to Venezuelan migrants, Biden extended temporary protected status to approximately 472,000 individuals, granting them legal rights to live and work in the US. However, those who haven't applied for TPS and have deportation orders may still face removal. Immigration attorneys are strongly advising eligible Venezuelans to promptly apply for TPS to avoid deportation and secure legal status in the country.\\nSource:\\nhttps://nypost.com/2023/10/18/over-100-migrants-deported-to-venezuela-as-repatriation-flights-resume/\",\"answer\":\"The Biden administration resumed direct repatriation flights to Venezuela, sending over 100 migrants back to their home country. The migrants had entered the US illegally and were prioritized based on recent arrivals and criminal history. Since President Biden took office, nearly half a million Venezuelans have illegally crossed the southwest border. Biden extended temporary protected status to around 472,000 Venezuelan migrants, but those who haven't applied for TPS and have deportation orders may still face removal.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":182},{\"index\":1,\"byte_start\":182,\"byte_end\":412},{\"index\":2,\"byte_start\":412,\"byte_end\":583},{\"index\":3,\"byte_start\":583,\"byte_end\":730},{\"index\":4,\"byte_start\":730,\"byte_end\":889},{\"index\":5,\"byte_start\":889,\"byte_end\":1037},{\"index\":6,\"byte_start\":1037,\"byte_end\":1135},{\"index\":7,\"byte_start\":1135,\"byte_end\":1239},{\"index\":8,\"byte_start\":1239,\"byte_end\":1453},{\"index\":9,\"byte_start\":1453,\"byte_end\":1614},{\"index\":10,\"byte_start\":1614,\"byte_end\":1788},{\"index\":11,\"byte_start\":1788,\"byte_end\":1961},{\"index\":12,\"byte_start\":1961,\"byte_end\":2102},{\"index\":13,\"byte_start\":2102,\"byte_end\":2303},{\"index\":14,\"byte_start\":2303,\"byte_end\":2398},{\"index\":15,\"byte_start\":2398,\"byte_end\":2550},{\"index\":16,\"byte_start\":2550,\"byte_end\":2659}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":129},{\"index\":1,\"byte_start\":129,\"byte_end\":239},{\"index\":2,\"byte_start\":239,\"byte_end\":353},{\"index\":3,\"byte_start\":353,\"byte_end\":523}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1092,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"US deports 100+ Migrants to Venezuela\\nThe Biden administration conducted its first deportation flight to Venezuela in years, sending over 100 Venezuelans back to their home country. The Department of Homeland Security made the decision to resume direct repatriations in an effort to discourage illegal border crossings, following an agreement with Venezuelan authorities to accept the return of their nationals. Corey Price, an acting executive associate director for Immigration and Customs Enforcement, stated that there would be several more flights in the coming days and weeks.\\nThe migrants on the flight had illegally entered the US between ports of entry and were prioritized based on recent arrivals and criminal history. Since President Biden took office, nearly half a million Venezuelans have illegally crossed the southwest border, with a peak of over 34,000 arrests in April. To address this, Biden extended temporary protected status to around 472,000 Venezuelan migrants, allowing them to live and work legally in the US. However, those who have not applied for TPS and have deportation orders could still face removal. Immigration attorneys are advising eligible Venezuelans to apply for TPS promptly to avoid deportation.\\nThe Biden administration's decision to conduct its first deportation flight to Venezuela in years is aimed at discouraging illegal border crossings and addressing the influx of Venezuelan migrants entering the US. With an agreement in place with Venezuelan authorities to accept repatriations, the Department of Homeland Security made the move to resume direct deportations. Corey Price, acting executive associate director for Immigration and Customs Enforcement, revealed that several more flights would be scheduled in the coming days and weeks.\\nThe individuals on the deportation flight had entered the US illegally between ports of entry, and were chosen based on factors such as recent arrival and criminal history. The number of Venezuelans crossing the southwest border illegally has reached a staggering half a million since President Biden took office. Meanwhile, in an effort to provide relief to Venezuelan migrants, Biden extended temporary protected status to approximately 472,000 individuals, granting them legal rights to live and work in the US. However, those who haven't applied for TPS and have deportation orders may still face removal. Immigration attorneys are strongly advising eligible Venezuelans to promptly apply for TPS to avoid deportation and secure legal status in the country.\\nSource:\\nhttps://nypost.com/2023/10/18/over-100-migrants-deported-to-venezuela-as-repatriation-flights-resume/\",\"answer\":\"The Biden administration resumed direct repatriation flights to Venezuela, sending over 100 migrants back to their home country. The migrants had entered the US illegally and were prioritized based on recent arrivals and criminal history. Since President Biden took office, nearly half a million Venezuelans have illegally crossed the southwest border. Biden extended temporary protected status to around 472,000 Venezuelan migrants, but those who haven't applied for TPS and have deportation orders may still face removal.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":182},{\"index\":1,\"byte_start\":182,\"byte_end\":412},{\"index\":2,\"byte_start\":412,\"byte_end\":583},{\"index\":3,\"byte_start\":583,\"byte_end\":730},{\"index\":4,\"byte_start\":730,\"byte_end\":889},{\"index\":5,\"byte_start\":889,\"byte_end\":1037},{\"index\":6,\"byte_start\":1037,\"byte_end\":1135},{\"index\":7,\"byte_start\":1135,\"byte_end\":1239},{\"index\":8,\"byte_start\":1239,\"byte_end\":1453},{\"index\":9,\"byte_start\":1453,\"byte_end\":1614},{\"index\":10,\"byte_start\":1614,\"byte_end\":1788},{\"index\":11,\"byte_start\":1788,\"byte_end\":1961},{\"index\":12,\"byte_start\":1961,\"byte_end\":2102},{\"index\":13,\"byte_start\":2102,\"byte_end\":2303},{\"index\":14,\"byte_start\":2303,\"byte_end\":2398},{\"index\":15,\"byte_start\":2398,\"byte_end\":2550},{\"index\":16,\"byte_start\":2550,\"byte_end\":2659}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":129},{\"index\":1,\"byte_start\":129,\"byte_end\":239},{\"index\":2,\"byte_start\":239,\"byte_end\":353},{\"index\":3,\"byte_start\":353,\"byte_end\":523}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+    "input_tokens": 1080,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"US deports 100+ Migrants to Venezuela\\nThe Biden administration conducted its first deportation flight to Venezuela in years, sending over 100 Venezuelans back to their home country. The Department of Homeland Security made the decision to resume direct repatriations in an effort to discourage illegal border crossings, following an agreement with Venezuelan authorities to accept the return of their nationals. Corey Price, an acting executive associate director for Immigration and Customs Enforcement, stated that there would be several more flights in the coming days and weeks.\\nThe migrants on the flight had illegally entered the US between ports of entry and were prioritized based on recent arrivals and criminal history. Since President Biden took office, nearly half a million Venezuelans have illegally crossed the southwest border, with a peak of over 34,000 arrests in April. To address this, Biden extended temporary protected status to around 472,000 Venezuelan migrants, allowing them to live and work legally in the US. However, those who have not applied for TPS and have deportation orders could still face removal. Immigration attorneys are advising eligible Venezuelans to apply for TPS promptly to avoid deportation.\\nThe Biden administration's decision to conduct its first deportation flight to Venezuela in years is aimed at discouraging illegal border crossings and addressing the influx of Venezuelan migrants entering the US. With an agreement in place with Venezuelan authorities to accept repatriations, the Department of Homeland Security made the move to resume direct deportations. Corey Price, acting executive associate director for Immigration and Customs Enforcement, revealed that several more flights would be scheduled in the coming days and weeks.\\nThe individuals on the deportation flight had entered the US illegally between ports of entry, and were chosen based on factors such as recent arrival and criminal history. The number of Venezuelans crossing the southwest border illegally has reached a staggering half a million since President Biden took office. Meanwhile, in an effort to provide relief to Venezuelan migrants, Biden extended temporary protected status to approximately 472,000 individuals, granting them legal rights to live and work in the US. However, those who haven't applied for TPS and have deportation orders may still face removal. Immigration attorneys are strongly advising eligible Venezuelans to promptly apply for TPS to avoid deportation and secure legal status in the country.\\nSource:\\nhttps://nypost.com/2023/10/18/over-100-migrants-deported-to-venezuela-as-repatriation-flights-resume/\",\"answer\":\"The Biden administration resumed direct repatriation flights to Venezuela, sending over 100 migrants back to their home country. The migrants had entered the US illegally and were prioritized based on recent arrivals and criminal history. Since President Biden took office, nearly half a million Venezuelans have illegally crossed the southwest border. Biden extended temporary protected status to around 472,000 Venezuelan migrants, but those who haven't applied for TPS and have deportation orders may still face removal.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":182},{\"index\":1,\"byte_start\":182,\"byte_end\":412},{\"index\":2,\"byte_start\":412,\"byte_end\":583},{\"index\":3,\"byte_start\":583,\"byte_end\":730},{\"index\":4,\"byte_start\":730,\"byte_end\":889},{\"index\":5,\"byte_start\":889,\"byte_end\":1037},{\"index\":6,\"byte_start\":1037,\"byte_end\":1135},{\"index\":7,\"byte_start\":1135,\"byte_end\":1239},{\"index\":8,\"byte_start\":1239,\"byte_end\":1453},{\"index\":9,\"byte_start\":1453,\"byte_end\":1614},{\"index\":10,\"byte_start\":1614,\"byte_end\":1788},{\"index\":11,\"byte_start\":1788,\"byte_end\":1961},{\"index\":12,\"byte_start\":1961,\"byte_end\":2102},{\"index\":13,\"byte_start\":2102,\"byte_end\":2303},{\"index\":14,\"byte_start\":2303,\"byte_end\":2398},{\"index\":15,\"byte_start\":2398,\"byte_end\":2550},{\"index\":16,\"byte_start\":2550,\"byte_end\":2659}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":129},{\"index\":1,\"byte_start\":129,\"byte_end\":239},{\"index\":2,\"byte_start\":239,\"byte_end\":353},{\"index\":3,\"byte_start\":353,\"byte_end\":523}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259520,
+    "id": "chatcmpl-oDQLOnVqZu2xrU6MPVVkh3zxhuclM5oK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1069.014,
+      "predicted_n": 44,
+      "predicted_per_second": 41.15942354356444,
+      "predicted_per_token_ms": 24.295772727272723,
+      "prompt_ms": 1015.763,
+      "prompt_n": 1043,
+      "prompt_per_second": 1026.8143257826873,
+      "prompt_per_token_ms": 0.9738859060402685
+    },
+    "usage": {
+      "completion_tokens": 44,
+      "prompt_tokens": 1092,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1136
+    }
+  },
+  "source_cluster_id": "sha256:7366d82e8abfdade3f44069f065eaa6f386511ae3345dd34c316a3c2d54ac7d5",
+  "started_monotonic_ns": 920426786418986,
+  "status": "completed",
+  "unit_id": "sha256:06fa491f54e9d2467ed6abb02d743f05602c660f013c98f4ababf7232aac782b"
+}

@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:037f6affbe77bc3c3f7be803a4e39bb861b67a6d2a1125dfcc01460792dd0427",
+  "ended_monotonic_ns": 920339237692311,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Transplanting Tips for Container Tomatoes. * A 5-gallon container is perfect for the tomato and easy to move if needed. * Clay pots tend to dry out quickly unless they are glazed or painted. * Drill multiple 1/4 inch holes in the bottom of the tomato container. Don\u2019t try to get by with just one drainage hole. * Place 2 to 3 inches of gravel in the bottom for drainage. * Fill the container about 3/4 full with bagged potting soil to start. As the container tomato baby grows bigger, add fresh soil to the top to support the growing stem. * Plant 3 or 4 marigolds with each tomato to help keep bugs away. * Container tomatoes should receive full sun (about 8 hours a day).\\\\n\\\\npassage 2:The hotter the temperature and the smaller the container, the more watering you will have to do. Mulch can help conserve soil moisture. While you are checking your containers for water, keep an eye out for insects and diseases. The same pests bother tomatoes whether you grow the plants in the ground or in containers.\\\\n\\\\npassage 3:To avoid damaging the plants put the supports in the containers before you plant the seedlings. Fill each container three-quarters full. Plant each seedling so the soil is just below the first set of true leaves, which are the leaves that look like tomato leaves. Firm the soil around each plant, then water thoroughly.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to grow healthy tomatoes in a container\\\"}\",\"answer\":\"To grow healthy tomatoes in a container, follow these tips:\\n\\n* Choose a container that is at least 5 gallons in size, such as a clay pot or a plastic container, but make sure it is well-draining to prevent overwatering.\\n* Add 2-3 inches of gravel to the bottom of the container for drainage.\\n* Fill the container about 3/4 full with bagged potting soil to start.\\n* Plant 3-4 marigold seedlings with each tomato seedling to keep pests away.\\n* Plant tomato seedlings so that the soil is just below the first set of true leaves.\\n* Water thoroughly after planting.\\n* Keep container tomatoes in full sun (about 8 hours a day).\\n* Check containers regularly for water and pests, and use mulch to conserve soil moisture.\\n\\nIt's important to note that growing tomatoes in containers can be challenging due to the limited space and potential overwatering. Be sure to monitor the moisture levels and take steps to avoid root rot. Additionally, consider using a container that is specifically designed for tomato plants, such as a grow-through pot or a hanging basket, to give the plants more room to grow and better air circulation.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":66},{\"index\":1,\"byte_start\":66,\"byte_end\":143},{\"index\":2,\"byte_start\":143,\"byte_end\":214},{\"index\":3,\"byte_start\":214,\"byte_end\":285},{\"index\":4,\"byte_start\":285,\"byte_end\":336},{\"index\":5,\"byte_start\":336,\"byte_end\":396},{\"index\":6,\"byte_start\":396,\"byte_end\":467},{\"index\":7,\"byte_start\":467,\"byte_end\":565},{\"index\":8,\"byte_start\":565,\"byte_end\":631},{\"index\":9,\"byte_start\":631,\"byte_end\":809},{\"index\":10,\"byte_start\":809,\"byte_end\":848},{\"index\":11,\"byte_start\":848,\"byte_end\":940},{\"index\":12,\"byte_start\":940,\"byte_end\":1140},{\"index\":13,\"byte_start\":1140,\"byte_end\":1181},{\"index\":14,\"byte_start\":1181,\"byte_end\":1308},{\"index\":15,\"byte_start\":1308,\"byte_end\":1426}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":220},{\"index\":1,\"byte_start\":220,\"byte_end\":292},{\"index\":2,\"byte_start\":292,\"byte_end\":363},{\"index\":3,\"byte_start\":363,\"byte_end\":440},{\"index\":4,\"byte_start\":440,\"byte_end\":526},{\"index\":5,\"byte_start\":526,\"byte_end\":561},{\"index\":6,\"byte_start\":561,\"byte_end\":622},{\"index\":7,\"byte_start\":622,\"byte_end\":714},{\"index\":8,\"byte_start\":714,\"byte_end\":845},{\"index\":9,\"byte_start\":845,\"byte_end\":918},{\"index\":10,\"byte_start\":918,\"byte_end\":1120}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1168,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Transplanting Tips for Container Tomatoes. * A 5-gallon container is perfect for the tomato and easy to move if needed. * Clay pots tend to dry out quickly unless they are glazed or painted. * Drill multiple 1/4 inch holes in the bottom of the tomato container. Don\u2019t try to get by with just one drainage hole. * Place 2 to 3 inches of gravel in the bottom for drainage. * Fill the container about 3/4 full with bagged potting soil to start. As the container tomato baby grows bigger, add fresh soil to the top to support the growing stem. * Plant 3 or 4 marigolds with each tomato to help keep bugs away. * Container tomatoes should receive full sun (about 8 hours a day).\\\\n\\\\npassage 2:The hotter the temperature and the smaller the container, the more watering you will have to do. Mulch can help conserve soil moisture. While you are checking your containers for water, keep an eye out for insects and diseases. The same pests bother tomatoes whether you grow the plants in the ground or in containers.\\\\n\\\\npassage 3:To avoid damaging the plants put the supports in the containers before you plant the seedlings. Fill each container three-quarters full. Plant each seedling so the soil is just below the first set of true leaves, which are the leaves that look like tomato leaves. Firm the soil around each plant, then water thoroughly.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to grow healthy tomatoes in a container\\\"}\",\"answer\":\"To grow healthy tomatoes in a container, follow these tips:\\n\\n* Choose a container that is at least 5 gallons in size, such as a clay pot or a plastic container, but make sure it is well-draining to prevent overwatering.\\n* Add 2-3 inches of gravel to the bottom of the container for drainage.\\n* Fill the container about 3/4 full with bagged potting soil to start.\\n* Plant 3-4 marigold seedlings with each tomato seedling to keep pests away.\\n* Plant tomato seedlings so that the soil is just below the first set of true leaves.\\n* Water thoroughly after planting.\\n* Keep container tomatoes in full sun (about 8 hours a day).\\n* Check containers regularly for water and pests, and use mulch to conserve soil moisture.\\n\\nIt's important to note that growing tomatoes in containers can be challenging due to the limited space and potential overwatering. Be sure to monitor the moisture levels and take steps to avoid root rot. Additionally, consider using a container that is specifically designed for tomato plants, such as a grow-through pot or a hanging basket, to give the plants more room to grow and better air circulation.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":66},{\"index\":1,\"byte_start\":66,\"byte_end\":143},{\"index\":2,\"byte_start\":143,\"byte_end\":214},{\"index\":3,\"byte_start\":214,\"byte_end\":285},{\"index\":4,\"byte_start\":285,\"byte_end\":336},{\"index\":5,\"byte_start\":336,\"byte_end\":396},{\"index\":6,\"byte_start\":396,\"byte_end\":467},{\"index\":7,\"byte_start\":467,\"byte_end\":565},{\"index\":8,\"byte_start\":565,\"byte_end\":631},{\"index\":9,\"byte_start\":631,\"byte_end\":809},{\"index\":10,\"byte_start\":809,\"byte_end\":848},{\"index\":11,\"byte_start\":848,\"byte_end\":940},{\"index\":12,\"byte_start\":940,\"byte_end\":1140},{\"index\":13,\"byte_start\":1140,\"byte_end\":1181},{\"index\":14,\"byte_start\":1181,\"byte_end\":1308},{\"index\":15,\"byte_start\":1308,\"byte_end\":1426}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":220},{\"index\":1,\"byte_start\":220,\"byte_end\":292},{\"index\":2,\"byte_start\":292,\"byte_end\":363},{\"index\":3,\"byte_start\":363,\"byte_end\":440},{\"index\":4,\"byte_start\":440,\"byte_end\":526},{\"index\":5,\"byte_start\":526,\"byte_end\":561},{\"index\":6,\"byte_start\":561,\"byte_end\":622},{\"index\":7,\"byte_start\":622,\"byte_end\":714},{\"index\":8,\"byte_start\":714,\"byte_end\":845},{\"index\":9,\"byte_start\":845,\"byte_end\":918},{\"index\":10,\"byte_start\":918,\"byte_end\":1120}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "input_tokens": 1156,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Transplanting Tips for Container Tomatoes. * A 5-gallon container is perfect for the tomato and easy to move if needed. * Clay pots tend to dry out quickly unless they are glazed or painted. * Drill multiple 1/4 inch holes in the bottom of the tomato container. Don\u2019t try to get by with just one drainage hole. * Place 2 to 3 inches of gravel in the bottom for drainage. * Fill the container about 3/4 full with bagged potting soil to start. As the container tomato baby grows bigger, add fresh soil to the top to support the growing stem. * Plant 3 or 4 marigolds with each tomato to help keep bugs away. * Container tomatoes should receive full sun (about 8 hours a day).\\\\n\\\\npassage 2:The hotter the temperature and the smaller the container, the more watering you will have to do. Mulch can help conserve soil moisture. While you are checking your containers for water, keep an eye out for insects and diseases. The same pests bother tomatoes whether you grow the plants in the ground or in containers.\\\\n\\\\npassage 3:To avoid damaging the plants put the supports in the containers before you plant the seedlings. Fill each container three-quarters full. Plant each seedling so the soil is just below the first set of true leaves, which are the leaves that look like tomato leaves. Firm the soil around each plant, then water thoroughly.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to grow healthy tomatoes in a container\\\"}\",\"answer\":\"To grow healthy tomatoes in a container, follow these tips:\\n\\n* Choose a container that is at least 5 gallons in size, such as a clay pot or a plastic container, but make sure it is well-draining to prevent overwatering.\\n* Add 2-3 inches of gravel to the bottom of the container for drainage.\\n* Fill the container about 3/4 full with bagged potting soil to start.\\n* Plant 3-4 marigold seedlings with each tomato seedling to keep pests away.\\n* Plant tomato seedlings so that the soil is just below the first set of true leaves.\\n* Water thoroughly after planting.\\n* Keep container tomatoes in full sun (about 8 hours a day).\\n* Check containers regularly for water and pests, and use mulch to conserve soil moisture.\\n\\nIt's important to note that growing tomatoes in containers can be challenging due to the limited space and potential overwatering. Be sure to monitor the moisture levels and take steps to avoid root rot. Additionally, consider using a container that is specifically designed for tomato plants, such as a grow-through pot or a hanging basket, to give the plants more room to grow and better air circulation.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":66},{\"index\":1,\"byte_start\":66,\"byte_end\":143},{\"index\":2,\"byte_start\":143,\"byte_end\":214},{\"index\":3,\"byte_start\":214,\"byte_end\":285},{\"index\":4,\"byte_start\":285,\"byte_end\":336},{\"index\":5,\"byte_start\":336,\"byte_end\":396},{\"index\":6,\"byte_start\":396,\"byte_end\":467},{\"index\":7,\"byte_start\":467,\"byte_end\":565},{\"index\":8,\"byte_start\":565,\"byte_end\":631},{\"index\":9,\"byte_start\":631,\"byte_end\":809},{\"index\":10,\"byte_start\":809,\"byte_end\":848},{\"index\":11,\"byte_start\":848,\"byte_end\":940},{\"index\":12,\"byte_start\":940,\"byte_end\":1140},{\"index\":13,\"byte_start\":1140,\"byte_end\":1181},{\"index\":14,\"byte_start\":1181,\"byte_end\":1308},{\"index\":15,\"byte_start\":1308,\"byte_end\":1426}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":220},{\"index\":1,\"byte_start\":220,\"byte_end\":292},{\"index\":2,\"byte_start\":292,\"byte_end\":363},{\"index\":3,\"byte_start\":363,\"byte_end\":440},{\"index\":4,\"byte_start\":440,\"byte_end\":526},{\"index\":5,\"byte_start\":526,\"byte_end\":561},{\"index\":6,\"byte_start\":561,\"byte_end\":622},{\"index\":7,\"byte_start\":622,\"byte_end\":714},{\"index\":8,\"byte_start\":714,\"byte_end\":845},{\"index\":9,\"byte_start\":845,\"byte_end\":918},{\"index\":10,\"byte_start\":918,\"byte_end\":1120}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[]\n1|C|0.90|[0,1]\n2|C|0.95|[3]\n3|C|0.95|[4]\n4|C|0.95|[5]\n5|C|0.95|[12]\n6|C|0.95|[6]\n7|C|0.90|[9,10]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259431,
+    "id": "chatcmpl-6u8iOdnZAC0Pf5Sgxjy4Mv4A7F2aNlNz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2474.28,
+      "predicted_n": 101,
+      "predicted_per_second": 40.81995570428569,
+      "predicted_per_token_ms": 24.49782178217822,
+      "prompt_ms": 1043.651,
+      "prompt_n": 1168,
+      "prompt_per_second": 1119.14806769696,
+      "prompt_per_token_ms": 0.8935368150684933
+    },
+    "usage": {
+      "completion_tokens": 101,
+      "prompt_tokens": 1168,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1269
+    }
+  },
+  "source_cluster_id": "sha256:d0a652817fdb9e4f5d1ff79614d343ae4b3b13d9e02ed85b99d130c630d41b6f",
+  "started_monotonic_ns": 920335588647195,
+  "status": "completed",
+  "unit_id": "sha256:1fab0422f19e7a85e3db54cb62107761261dc19754b761db3d88bc5c1414fe4e"
+}

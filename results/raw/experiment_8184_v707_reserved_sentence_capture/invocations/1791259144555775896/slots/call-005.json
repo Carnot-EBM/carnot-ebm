@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:77e38b02eacddaa3c3f3da61b82f238cb2bc6a5f7c508126c60d261e5a9c50b9",
+  "ended_monotonic_ns": 920173717078020,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:In a chemical peel, a chemical solution is applied to the skin and allowed to soak in. Over the next 1 to 14 days, depending on how deeply the chemical penetrated the skin, the skin peels off.This procedure destroys parts of the skin in a controlled way so that new skin can grow in its place. deep peel causes a deeper second-degree burn of the skin. Skin regrowth takes between 10 to 14 days after a deep peel. The skin remains extremely red for 3 weeks, up to 2 months for some people. Most people take about 2 weeks off from work.\\\\n\\\\npassage 2:Chemical Peel Basics. Your doctor can apply a chemical peel to several areas of your body, including your face, legs, arms, hands or chest, according to the American Academy of Dermatology.onsiderations. If your doctor recommends a TCA chemical peel, you may need to undergo more than one procedure to achieve the desired results, Brigham and Women's Hospital explains. If you undergo a phenol peel, your new skin may not be able to create normal levels of pigmentation.\\\\n\\\\npassage 3:Posted by Samantha Cook in Chemical Peel. ANSWER: How long it takes a chemical peel to heal depends on the type of chemical peel. More Info: Chemical peels are categorized into three subgroups, which is used depends on the severity of the skin issue.The stronger the chemical used in the procedure, the deeper the peel, and subsequently the longer the healing time.richloroacetic Acid Peel (TCA). The TCA peel causes a second degree burn on the epidermis and upper portion of the dermis, which means it will take longer to heal than a superficial peel. Following the procedure the skin will begin to crust and peel in the first 2-3 days.\\\\n\\\\n\\\",\\\"question\\\":\\\"how long does it take to heal from a chemical peel\\\"}\",\"answer\":\"Based on the given passages, the healing time for a chemical peel can range from 1 to 14 days, depending on the depth of the peel. A deep peel can take between 10 to 14 days for skin regrowth, with the skin remaining red for up to 3 weeks or even 2 months for some individuals. Most people take about 2 weeks off from work.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":110},{\"index\":1,\"byte_start\":110,\"byte_end\":317},{\"index\":2,\"byte_start\":317,\"byte_end\":375},{\"index\":3,\"byte_start\":375,\"byte_end\":436},{\"index\":4,\"byte_start\":436,\"byte_end\":512},{\"index\":5,\"byte_start\":512,\"byte_end\":593},{\"index\":6,\"byte_start\":593,\"byte_end\":775},{\"index\":7,\"byte_start\":775,\"byte_end\":941},{\"index\":8,\"byte_start\":941,\"byte_end\":1097},{\"index\":9,\"byte_start\":1097,\"byte_end\":1185},{\"index\":10,\"byte_start\":1185,\"byte_end\":1452},{\"index\":11,\"byte_start\":1452,\"byte_end\":1608},{\"index\":12,\"byte_start\":1608,\"byte_end\":1762}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":131},{\"index\":1,\"byte_start\":131,\"byte_end\":278},{\"index\":2,\"byte_start\":278,\"byte_end\":323}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 870,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:In a chemical peel, a chemical solution is applied to the skin and allowed to soak in. Over the next 1 to 14 days, depending on how deeply the chemical penetrated the skin, the skin peels off.This procedure destroys parts of the skin in a controlled way so that new skin can grow in its place. deep peel causes a deeper second-degree burn of the skin. Skin regrowth takes between 10 to 14 days after a deep peel. The skin remains extremely red for 3 weeks, up to 2 months for some people. Most people take about 2 weeks off from work.\\\\n\\\\npassage 2:Chemical Peel Basics. Your doctor can apply a chemical peel to several areas of your body, including your face, legs, arms, hands or chest, according to the American Academy of Dermatology.onsiderations. If your doctor recommends a TCA chemical peel, you may need to undergo more than one procedure to achieve the desired results, Brigham and Women's Hospital explains. If you undergo a phenol peel, your new skin may not be able to create normal levels of pigmentation.\\\\n\\\\npassage 3:Posted by Samantha Cook in Chemical Peel. ANSWER: How long it takes a chemical peel to heal depends on the type of chemical peel. More Info: Chemical peels are categorized into three subgroups, which is used depends on the severity of the skin issue.The stronger the chemical used in the procedure, the deeper the peel, and subsequently the longer the healing time.richloroacetic Acid Peel (TCA). The TCA peel causes a second degree burn on the epidermis and upper portion of the dermis, which means it will take longer to heal than a superficial peel. Following the procedure the skin will begin to crust and peel in the first 2-3 days.\\\\n\\\\n\\\",\\\"question\\\":\\\"how long does it take to heal from a chemical peel\\\"}\",\"answer\":\"Based on the given passages, the healing time for a chemical peel can range from 1 to 14 days, depending on the depth of the peel. A deep peel can take between 10 to 14 days for skin regrowth, with the skin remaining red for up to 3 weeks or even 2 months for some individuals. Most people take about 2 weeks off from work.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":110},{\"index\":1,\"byte_start\":110,\"byte_end\":317},{\"index\":2,\"byte_start\":317,\"byte_end\":375},{\"index\":3,\"byte_start\":375,\"byte_end\":436},{\"index\":4,\"byte_start\":436,\"byte_end\":512},{\"index\":5,\"byte_start\":512,\"byte_end\":593},{\"index\":6,\"byte_start\":593,\"byte_end\":775},{\"index\":7,\"byte_start\":775,\"byte_end\":941},{\"index\":8,\"byte_start\":941,\"byte_end\":1097},{\"index\":9,\"byte_start\":1097,\"byte_end\":1185},{\"index\":10,\"byte_start\":1185,\"byte_end\":1452},{\"index\":11,\"byte_start\":1452,\"byte_end\":1608},{\"index\":12,\"byte_start\":1608,\"byte_end\":1762}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":131},{\"index\":1,\"byte_start\":131,\"byte_end\":278},{\"index\":2,\"byte_start\":278,\"byte_end\":323}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "input_tokens": 858,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:In a chemical peel, a chemical solution is applied to the skin and allowed to soak in. Over the next 1 to 14 days, depending on how deeply the chemical penetrated the skin, the skin peels off.This procedure destroys parts of the skin in a controlled way so that new skin can grow in its place. deep peel causes a deeper second-degree burn of the skin. Skin regrowth takes between 10 to 14 days after a deep peel. The skin remains extremely red for 3 weeks, up to 2 months for some people. Most people take about 2 weeks off from work.\\\\n\\\\npassage 2:Chemical Peel Basics. Your doctor can apply a chemical peel to several areas of your body, including your face, legs, arms, hands or chest, according to the American Academy of Dermatology.onsiderations. If your doctor recommends a TCA chemical peel, you may need to undergo more than one procedure to achieve the desired results, Brigham and Women's Hospital explains. If you undergo a phenol peel, your new skin may not be able to create normal levels of pigmentation.\\\\n\\\\npassage 3:Posted by Samantha Cook in Chemical Peel. ANSWER: How long it takes a chemical peel to heal depends on the type of chemical peel. More Info: Chemical peels are categorized into three subgroups, which is used depends on the severity of the skin issue.The stronger the chemical used in the procedure, the deeper the peel, and subsequently the longer the healing time.richloroacetic Acid Peel (TCA). The TCA peel causes a second degree burn on the epidermis and upper portion of the dermis, which means it will take longer to heal than a superficial peel. Following the procedure the skin will begin to crust and peel in the first 2-3 days.\\\\n\\\\n\\\",\\\"question\\\":\\\"how long does it take to heal from a chemical peel\\\"}\",\"answer\":\"Based on the given passages, the healing time for a chemical peel can range from 1 to 14 days, depending on the depth of the peel. A deep peel can take between 10 to 14 days for skin regrowth, with the skin remaining red for up to 3 weeks or even 2 months for some individuals. Most people take about 2 weeks off from work.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":110},{\"index\":1,\"byte_start\":110,\"byte_end\":317},{\"index\":2,\"byte_start\":317,\"byte_end\":375},{\"index\":3,\"byte_start\":375,\"byte_end\":436},{\"index\":4,\"byte_start\":436,\"byte_end\":512},{\"index\":5,\"byte_start\":512,\"byte_end\":593},{\"index\":6,\"byte_start\":593,\"byte_end\":775},{\"index\":7,\"byte_start\":775,\"byte_end\":941},{\"index\":8,\"byte_start\":941,\"byte_end\":1097},{\"index\":9,\"byte_start\":1097,\"byte_end\":1185},{\"index\":10,\"byte_start\":1185,\"byte_end\":1452},{\"index\":11,\"byte_start\":1452,\"byte_end\":1608},{\"index\":12,\"byte_start\":1608,\"byte_end\":1762}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":131},{\"index\":1,\"byte_start\":131,\"byte_end\":278},{\"index\":2,\"byte_start\":278,\"byte_end\":323}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,1]\n1|E|0.90|[1,2]\n2|E|0.85|[2]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259265,
+    "id": "chatcmpl-xzYycpdzDdbfye8FQtmyZfUJn8JNGoDN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1044.015,
+      "predicted_n": 43,
+      "predicted_per_second": 41.18714769423811,
+      "predicted_per_token_ms": 24.279418604651166,
+      "prompt_ms": 795.877,
+      "prompt_n": 870,
+      "prompt_per_second": 1093.133738002229,
+      "prompt_per_token_ms": 0.9148011494252873
+    },
+    "usage": {
+      "completion_tokens": 43,
+      "prompt_tokens": 870,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 913
+    }
+  },
+  "source_cluster_id": "sha256:518f7ce9e62992ecee25ef7422ed39c616fffd2dd984abf93f45f7f4992322e8",
+  "started_monotonic_ns": 920171742742208,
+  "status": "completed",
+  "unit_id": "sha256:1119b561e686a38eabfdcb20954bc29271e2ae631c2589924e7f1b0e26dcf66d"
+}

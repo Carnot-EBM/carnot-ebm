@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:3dd77d3f83c87c5dc5734c6dcc6094aff5dc6439ff923623cd72370a6d64722a",
+  "ended_monotonic_ns": 920265703052471,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Form to Fast. 1  Start form shooting in the middle of the paint until you make five baskets. 2  Move to the right block (low post) and form shoot off the backboard until you make five baskets. 3  Move to the left block (low post) and form shoot off the backboard until you make five baskets.\\\\n\\\\npassage 2:FACT #3: Proper shooting form is the #1 most important skill for youth basketball coaches to master and teach. FACT #4: A team with just a couple of good shooters on the floor will make your offense infinitely more dangerous and actually give your team more lay ups.\\\\n\\\\npassage 3:Analyze Your Grip. Your fingers need to be spread apart enough to balance the basketball in just one hand, and the ball should sit right on your finger pads. Leave a bit of space between your palm and the ball. Give Smooth Delivery. When you shoot, the ball should start going right up with no dipping. Your elbow needs to be right under the ball, and your shooting hand needs to be in direct line to the rim. The ball needs to stay in front of you and should not go behind your head at all. Your body should release all with the shot: your legs, your core, and your arm all coordinated with one graceful movement.\\\\n\\\\n\\\",\\\"question\\\":\\\"ways to improve your shooting in basketball\\\"}\",\"answer\":\"Based on the given passages, here are some ways to improve your shooting in basketball:\\n\\n1. Master proper shooting form: According to passage 2, proper shooting form is the most important skill for youth basketball coaches to master and teach. This includes balancing the ball on your finger pads, keeping your elbow under the ball, and coordinating your body for a smooth delivery.\\n2. Analyze your grip: Check your grip on the ball, making sure your fingers are spread apart and leaving a small space between your palm and the ball.\\n3. Practice shooting from different locations: Passage 1 suggests starting with shots in the middle of the paint and then moving to the right and left blocks to practice shooting off the backboard.\\n4. Focus on a consistent release: Aim for a smooth, coordinated release of the ball, with your body, legs, core, and shooting hand all working together.\\n\\nI hope this helps! Let me know if you have any further questions or if there's anything else I can help with.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":37},{\"index\":1,\"byte_start\":37,\"byte_end\":116},{\"index\":2,\"byte_start\":116,\"byte_end\":216},{\"index\":3,\"byte_start\":216,\"byte_end\":439},{\"index\":4,\"byte_start\":439,\"byte_end\":627},{\"index\":5,\"byte_start\":627,\"byte_end\":766},{\"index\":6,\"byte_start\":766,\"byte_end\":819},{\"index\":7,\"byte_start\":819,\"byte_end\":841},{\"index\":8,\"byte_start\":841,\"byte_end\":911},{\"index\":9,\"byte_start\":911,\"byte_end\":1018},{\"index\":10,\"byte_start\":1018,\"byte_end\":1100},{\"index\":11,\"byte_start\":1100,\"byte_end\":1285}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":244},{\"index\":1,\"byte_start\":244,\"byte_end\":383},{\"index\":2,\"byte_start\":383,\"byte_end\":534},{\"index\":3,\"byte_start\":534,\"byte_end\":732},{\"index\":4,\"byte_start\":732,\"byte_end\":886},{\"index\":5,\"byte_start\":886,\"byte_end\":905},{\"index\":6,\"byte_start\":905,\"byte_end\":995}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 943,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Form to Fast. 1  Start form shooting in the middle of the paint until you make five baskets. 2  Move to the right block (low post) and form shoot off the backboard until you make five baskets. 3  Move to the left block (low post) and form shoot off the backboard until you make five baskets.\\\\n\\\\npassage 2:FACT #3: Proper shooting form is the #1 most important skill for youth basketball coaches to master and teach. FACT #4: A team with just a couple of good shooters on the floor will make your offense infinitely more dangerous and actually give your team more lay ups.\\\\n\\\\npassage 3:Analyze Your Grip. Your fingers need to be spread apart enough to balance the basketball in just one hand, and the ball should sit right on your finger pads. Leave a bit of space between your palm and the ball. Give Smooth Delivery. When you shoot, the ball should start going right up with no dipping. Your elbow needs to be right under the ball, and your shooting hand needs to be in direct line to the rim. The ball needs to stay in front of you and should not go behind your head at all. Your body should release all with the shot: your legs, your core, and your arm all coordinated with one graceful movement.\\\\n\\\\n\\\",\\\"question\\\":\\\"ways to improve your shooting in basketball\\\"}\",\"answer\":\"Based on the given passages, here are some ways to improve your shooting in basketball:\\n\\n1. Master proper shooting form: According to passage 2, proper shooting form is the most important skill for youth basketball coaches to master and teach. This includes balancing the ball on your finger pads, keeping your elbow under the ball, and coordinating your body for a smooth delivery.\\n2. Analyze your grip: Check your grip on the ball, making sure your fingers are spread apart and leaving a small space between your palm and the ball.\\n3. Practice shooting from different locations: Passage 1 suggests starting with shots in the middle of the paint and then moving to the right and left blocks to practice shooting off the backboard.\\n4. Focus on a consistent release: Aim for a smooth, coordinated release of the ball, with your body, legs, core, and shooting hand all working together.\\n\\nI hope this helps! Let me know if you have any further questions or if there's anything else I can help with.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":37},{\"index\":1,\"byte_start\":37,\"byte_end\":116},{\"index\":2,\"byte_start\":116,\"byte_end\":216},{\"index\":3,\"byte_start\":216,\"byte_end\":439},{\"index\":4,\"byte_start\":439,\"byte_end\":627},{\"index\":5,\"byte_start\":627,\"byte_end\":766},{\"index\":6,\"byte_start\":766,\"byte_end\":819},{\"index\":7,\"byte_start\":819,\"byte_end\":841},{\"index\":8,\"byte_start\":841,\"byte_end\":911},{\"index\":9,\"byte_start\":911,\"byte_end\":1018},{\"index\":10,\"byte_start\":1018,\"byte_end\":1100},{\"index\":11,\"byte_start\":1100,\"byte_end\":1285}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":244},{\"index\":1,\"byte_start\":244,\"byte_end\":383},{\"index\":2,\"byte_start\":383,\"byte_end\":534},{\"index\":3,\"byte_start\":534,\"byte_end\":732},{\"index\":4,\"byte_start\":732,\"byte_end\":886},{\"index\":5,\"byte_start\":886,\"byte_end\":905},{\"index\":6,\"byte_start\":905,\"byte_end\":995}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "input_tokens": 931,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Form to Fast. 1  Start form shooting in the middle of the paint until you make five baskets. 2  Move to the right block (low post) and form shoot off the backboard until you make five baskets. 3  Move to the left block (low post) and form shoot off the backboard until you make five baskets.\\\\n\\\\npassage 2:FACT #3: Proper shooting form is the #1 most important skill for youth basketball coaches to master and teach. FACT #4: A team with just a couple of good shooters on the floor will make your offense infinitely more dangerous and actually give your team more lay ups.\\\\n\\\\npassage 3:Analyze Your Grip. Your fingers need to be spread apart enough to balance the basketball in just one hand, and the ball should sit right on your finger pads. Leave a bit of space between your palm and the ball. Give Smooth Delivery. When you shoot, the ball should start going right up with no dipping. Your elbow needs to be right under the ball, and your shooting hand needs to be in direct line to the rim. The ball needs to stay in front of you and should not go behind your head at all. Your body should release all with the shot: your legs, your core, and your arm all coordinated with one graceful movement.\\\\n\\\\n\\\",\\\"question\\\":\\\"ways to improve your shooting in basketball\\\"}\",\"answer\":\"Based on the given passages, here are some ways to improve your shooting in basketball:\\n\\n1. Master proper shooting form: According to passage 2, proper shooting form is the most important skill for youth basketball coaches to master and teach. This includes balancing the ball on your finger pads, keeping your elbow under the ball, and coordinating your body for a smooth delivery.\\n2. Analyze your grip: Check your grip on the ball, making sure your fingers are spread apart and leaving a small space between your palm and the ball.\\n3. Practice shooting from different locations: Passage 1 suggests starting with shots in the middle of the paint and then moving to the right and left blocks to practice shooting off the backboard.\\n4. Focus on a consistent release: Aim for a smooth, coordinated release of the ball, with your body, legs, core, and shooting hand all working together.\\n\\nI hope this helps! Let me know if you have any further questions or if there's anything else I can help with.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":37},{\"index\":1,\"byte_start\":37,\"byte_end\":116},{\"index\":2,\"byte_start\":116,\"byte_end\":216},{\"index\":3,\"byte_start\":216,\"byte_end\":439},{\"index\":4,\"byte_start\":439,\"byte_end\":627},{\"index\":5,\"byte_start\":627,\"byte_end\":766},{\"index\":6,\"byte_start\":766,\"byte_end\":819},{\"index\":7,\"byte_start\":819,\"byte_end\":841},{\"index\":8,\"byte_start\":841,\"byte_end\":911},{\"index\":9,\"byte_start\":911,\"byte_end\":1018},{\"index\":10,\"byte_start\":1018,\"byte_end\":1100},{\"index\":11,\"byte_start\":1100,\"byte_end\":1285}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":244},{\"index\":1,\"byte_start\":244,\"byte_end\":383},{\"index\":2,\"byte_start\":383,\"byte_end\":534},{\"index\":3,\"byte_start\":534,\"byte_end\":732},{\"index\":4,\"byte_start\":732,\"byte_end\":886},{\"index\":5,\"byte_start\":886,\"byte_end\":905},{\"index\":6,\"byte_start\":905,\"byte_end\":995}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[]\n2|C|0.00|[]\n3|C|0.00|[]\n4|C|0.00|[]\n5|C|0.00|[]\n6|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259357,
+    "id": "chatcmpl-wEOt0d7soZWM0KXktUiZEc1yyyRif2mM",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1870.776,
+      "predicted_n": 77,
+      "predicted_per_second": 41.15939054167896,
+      "predicted_per_token_ms": 24.295792207792207,
+      "prompt_ms": 870.613,
+      "prompt_n": 943,
+      "prompt_per_second": 1083.1448645954056,
+      "prompt_per_token_ms": 0.9232375397667021
+    },
+    "usage": {
+      "completion_tokens": 77,
+      "prompt_tokens": 943,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1020
+    }
+  },
+  "source_cluster_id": "sha256:5617a493dbb5a2f283fc79d2055fd08ed3fa900c949cdbe4215a0f0910caf6b0",
+  "started_monotonic_ns": 920262818876556,
+  "status": "completed",
+  "unit_id": "sha256:6763e58268048e2ab65725714de7ac00d982ae4b01f31696b80ea3cf6d409032"
+}

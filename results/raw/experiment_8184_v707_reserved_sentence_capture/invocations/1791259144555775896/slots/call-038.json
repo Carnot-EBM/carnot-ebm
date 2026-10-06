@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:89030bf4563a144bb3b316a851aa4dafb8a31dcb0bc6bb805e6324c9f616ac7e",
+  "ended_monotonic_ns": 920268371619863,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"938 Embarcadero Del Norte\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Arabic, Food, Sandwiches, Bars, Restaurants, Breakfast & Brunch, Hookah Bars, Greek, Salad, Nightlife, Middle Eastern, Mediterranean\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Monday\\\":\\\"0:0-0:0\\\"},\\\"name\\\":\\\"Aladdin Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-02-29 18:22:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best place in IV hands down. Best food, best customer service etc. Nothing in IV comes close.\\\"},{\\\"review_date\\\":\\\"2020-02-14 04:34:22\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"omg it says temporary closed till the end of February ! I love love love this place .Seriously I am putting the date on my calendar and will go the moment I know they are back . I love this food and the family is super nice.The fattoush salad is great and all their veggie dips are super yummy as well as their falafel  . I can't wait till they open up again !\\\"},{\\\"review_date\\\":\\\"2020-02-07 20:35:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love Aladdin's so much!! They are one of the only authentic middle eastern restaurants in all of sb county and my favorite place to eat in Isla Vista by far!! I was so sad when I thought they closed but I hope that the temporary closing is what is actually going on!! Amazing quality food and kind staff.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Here is an objective overview of Aladdin Cafe based on the provided structured data:\\n\\nAladdin Cafe is a popular restaurant located in Isla Vista, California, serving Arabic, food, sandwiches, bars, breakfast, and brunch. The establishment has received excellent reviews from customers who praise its exceptional food quality, excellent customer service, and cozy atmosphere. The restaurant is known for its authentic Middle Eastern cuisine, with menu items such as fattoush salads and falafel being especially popular. Despite temporarily closing, customers eagerly await its reopening, highlighting the cafe's importance in the area. Overall, Aladdin Cafe stands out for its unique offerings, friendly staff, and welcoming environment, earning a rating of 4.0 stars.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":794},{\"index\":1,\"byte_start\":794,\"byte_end\":988},{\"index\":2,\"byte_start\":988,\"byte_end\":1110},{\"index\":3,\"byte_start\":1110,\"byte_end\":1254},{\"index\":4,\"byte_start\":1254,\"byte_end\":1393},{\"index\":5,\"byte_start\":1393,\"byte_end\":1527},{\"index\":6,\"byte_start\":1527,\"byte_end\":1636},{\"index\":7,\"byte_start\":1636,\"byte_end\":1689}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":221},{\"index\":1,\"byte_start\":221,\"byte_end\":375},{\"index\":2,\"byte_start\":375,\"byte_end\":519},{\"index\":3,\"byte_start\":519,\"byte_end\":635},{\"index\":4,\"byte_start\":635,\"byte_end\":767}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 958,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"938 Embarcadero Del Norte\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Arabic, Food, Sandwiches, Bars, Restaurants, Breakfast & Brunch, Hookah Bars, Greek, Salad, Nightlife, Middle Eastern, Mediterranean\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Monday\\\":\\\"0:0-0:0\\\"},\\\"name\\\":\\\"Aladdin Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-02-29 18:22:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best place in IV hands down. Best food, best customer service etc. Nothing in IV comes close.\\\"},{\\\"review_date\\\":\\\"2020-02-14 04:34:22\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"omg it says temporary closed till the end of February ! I love love love this place .Seriously I am putting the date on my calendar and will go the moment I know they are back . I love this food and the family is super nice.The fattoush salad is great and all their veggie dips are super yummy as well as their falafel  . I can't wait till they open up again !\\\"},{\\\"review_date\\\":\\\"2020-02-07 20:35:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love Aladdin's so much!! They are one of the only authentic middle eastern restaurants in all of sb county and my favorite place to eat in Isla Vista by far!! I was so sad when I thought they closed but I hope that the temporary closing is what is actually going on!! Amazing quality food and kind staff.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Here is an objective overview of Aladdin Cafe based on the provided structured data:\\n\\nAladdin Cafe is a popular restaurant located in Isla Vista, California, serving Arabic, food, sandwiches, bars, breakfast, and brunch. The establishment has received excellent reviews from customers who praise its exceptional food quality, excellent customer service, and cozy atmosphere. The restaurant is known for its authentic Middle Eastern cuisine, with menu items such as fattoush salads and falafel being especially popular. Despite temporarily closing, customers eagerly await its reopening, highlighting the cafe's importance in the area. Overall, Aladdin Cafe stands out for its unique offerings, friendly staff, and welcoming environment, earning a rating of 4.0 stars.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":794},{\"index\":1,\"byte_start\":794,\"byte_end\":988},{\"index\":2,\"byte_start\":988,\"byte_end\":1110},{\"index\":3,\"byte_start\":1110,\"byte_end\":1254},{\"index\":4,\"byte_start\":1254,\"byte_end\":1393},{\"index\":5,\"byte_start\":1393,\"byte_end\":1527},{\"index\":6,\"byte_start\":1527,\"byte_end\":1636},{\"index\":7,\"byte_start\":1636,\"byte_end\":1689}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":221},{\"index\":1,\"byte_start\":221,\"byte_end\":375},{\"index\":2,\"byte_start\":375,\"byte_end\":519},{\"index\":3,\"byte_start\":519,\"byte_end\":635},{\"index\":4,\"byte_start\":635,\"byte_end\":767}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "input_tokens": 946,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"938 Embarcadero Del Norte\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Arabic, Food, Sandwiches, Bars, Restaurants, Breakfast & Brunch, Hookah Bars, Greek, Salad, Nightlife, Middle Eastern, Mediterranean\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Monday\\\":\\\"0:0-0:0\\\"},\\\"name\\\":\\\"Aladdin Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-02-29 18:22:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best place in IV hands down. Best food, best customer service etc. Nothing in IV comes close.\\\"},{\\\"review_date\\\":\\\"2020-02-14 04:34:22\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"omg it says temporary closed till the end of February ! I love love love this place .Seriously I am putting the date on my calendar and will go the moment I know they are back . I love this food and the family is super nice.The fattoush salad is great and all their veggie dips are super yummy as well as their falafel  . I can't wait till they open up again !\\\"},{\\\"review_date\\\":\\\"2020-02-07 20:35:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love Aladdin's so much!! They are one of the only authentic middle eastern restaurants in all of sb county and my favorite place to eat in Isla Vista by far!! I was so sad when I thought they closed but I hope that the temporary closing is what is actually going on!! Amazing quality food and kind staff.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Here is an objective overview of Aladdin Cafe based on the provided structured data:\\n\\nAladdin Cafe is a popular restaurant located in Isla Vista, California, serving Arabic, food, sandwiches, bars, breakfast, and brunch. The establishment has received excellent reviews from customers who praise its exceptional food quality, excellent customer service, and cozy atmosphere. The restaurant is known for its authentic Middle Eastern cuisine, with menu items such as fattoush salads and falafel being especially popular. Despite temporarily closing, customers eagerly await its reopening, highlighting the cafe's importance in the area. Overall, Aladdin Cafe stands out for its unique offerings, friendly staff, and welcoming environment, earning a rating of 4.0 stars.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":794},{\"index\":1,\"byte_start\":794,\"byte_end\":988},{\"index\":2,\"byte_start\":988,\"byte_end\":1110},{\"index\":3,\"byte_start\":1110,\"byte_end\":1254},{\"index\":4,\"byte_start\":1254,\"byte_end\":1393},{\"index\":5,\"byte_start\":1393,\"byte_end\":1527},{\"index\":6,\"byte_start\":1527,\"byte_end\":1636},{\"index\":7,\"byte_start\":1636,\"byte_end\":1689}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":221},{\"index\":1,\"byte_start\":221,\"byte_end\":375},{\"index\":2,\"byte_start\":375,\"byte_end\":519},{\"index\":3,\"byte_start\":519,\"byte_end\":635},{\"index\":4,\"byte_start\":635,\"byte_end\":767}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[]\n1|E|0.90|[0,1]\n2|E|0.85|[1,2]\n3|E|0.90|[1,2]\n4|E|0.95|[0,1]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259360,
+    "id": "chatcmpl-SY3fsIr6Xd77AiwMS19X4LTJpG2NgBNm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1655.018,
+      "predicted_n": 67,
+      "predicted_per_second": 40.4829433879269,
+      "predicted_per_token_ms": 24.701761194029853,
+      "prompt_ms": 872.644,
+      "prompt_n": 958,
+      "prompt_per_second": 1097.813082998336,
+      "prompt_per_token_ms": 0.910901878914405
+    },
+    "usage": {
+      "completion_tokens": 67,
+      "prompt_tokens": 958,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1025
+    }
+  },
+  "source_cluster_id": "sha256:b78e0a38774a2269ef980b81c567a7036948eda69c19796d593ebd2050a51292",
+  "started_monotonic_ns": 920265705086953,
+  "status": "completed",
+  "unit_id": "sha256:6b42609fd4b4f4e8a1b4c1f52502631ebfebcbeef7efb6d07b1c9bf56581f1bb"
+}

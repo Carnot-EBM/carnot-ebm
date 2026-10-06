@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:a7dabb3c0c1a50d9626bab79d1d953d64bde8df5767f31e913bc86e88fec9ee5",
+  "ended_monotonic_ns": 920521820765178,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Sometimes we fail to hear or heed these voices of freedom because to us the privilege of our freedom is such an old, old story. \u2014Franklin Delano Roosevelt, in his Third Inaugural Address, January 20, 1941. Full text of the speech is available through the EDSITEment resource, Presidential Speeches.\\\\n\\\\npassage 2:In the future days, which we seek to make secure, we look forward to a world founded upon four essential human freedoms. The first is freedom of speech and expression -- everywhere in the world. The second is freedom of every person to worship God in his own way -- everywhere in the world.\\\\n\\\\npassage 3:In the future days, which we seek to make secure, we look forward to a world founded upon four essential human freedoms. The first is freedom of speech and expression -- everywhere in the world. The second is freedom of every person to worship God in his own way -- everywhere in the world.\\\\n\\\\n\\\",\\\"question\\\":\\\"how did different groups understand or experience the four freedoms differently\\\"}\",\"answer\":\"Based on the given passages, it can be inferred that different groups understood or experienced the four freedoms differently due to their unique perspectives and circumstances. For example, Franklin D. Roosevelt, who was addressing a predominantly American audience, emphasized the importance of protecting freedom of speech and worship as fundamental human rights. However, for individuals living under oppressive regimes or facing discrimination, these freedoms may have held different meanings or significance. Additionally, people from diverse cultural backgrounds might have varying interpretations of what constitutes freedom of worship. Ultimately, the experiences and perceptions of the four freedoms varied across different groups, shaped by their distinct histories, beliefs, and struggles.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":151},{\"index\":1,\"byte_start\":151,\"byte_end\":458},{\"index\":2,\"byte_start\":458,\"byte_end\":532},{\"index\":3,\"byte_start\":532,\"byte_end\":762},{\"index\":4,\"byte_start\":762,\"byte_end\":836},{\"index\":5,\"byte_start\":836,\"byte_end\":1030}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":178},{\"index\":1,\"byte_start\":178,\"byte_end\":367},{\"index\":2,\"byte_start\":367,\"byte_end\":515},{\"index\":3,\"byte_start\":515,\"byte_end\":645},{\"index\":4,\"byte_start\":645,\"byte_end\":801}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 641,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Sometimes we fail to hear or heed these voices of freedom because to us the privilege of our freedom is such an old, old story. \u2014Franklin Delano Roosevelt, in his Third Inaugural Address, January 20, 1941. Full text of the speech is available through the EDSITEment resource, Presidential Speeches.\\\\n\\\\npassage 2:In the future days, which we seek to make secure, we look forward to a world founded upon four essential human freedoms. The first is freedom of speech and expression -- everywhere in the world. The second is freedom of every person to worship God in his own way -- everywhere in the world.\\\\n\\\\npassage 3:In the future days, which we seek to make secure, we look forward to a world founded upon four essential human freedoms. The first is freedom of speech and expression -- everywhere in the world. The second is freedom of every person to worship God in his own way -- everywhere in the world.\\\\n\\\\n\\\",\\\"question\\\":\\\"how did different groups understand or experience the four freedoms differently\\\"}\",\"answer\":\"Based on the given passages, it can be inferred that different groups understood or experienced the four freedoms differently due to their unique perspectives and circumstances. For example, Franklin D. Roosevelt, who was addressing a predominantly American audience, emphasized the importance of protecting freedom of speech and worship as fundamental human rights. However, for individuals living under oppressive regimes or facing discrimination, these freedoms may have held different meanings or significance. Additionally, people from diverse cultural backgrounds might have varying interpretations of what constitutes freedom of worship. Ultimately, the experiences and perceptions of the four freedoms varied across different groups, shaped by their distinct histories, beliefs, and struggles.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":151},{\"index\":1,\"byte_start\":151,\"byte_end\":458},{\"index\":2,\"byte_start\":458,\"byte_end\":532},{\"index\":3,\"byte_start\":532,\"byte_end\":762},{\"index\":4,\"byte_start\":762,\"byte_end\":836},{\"index\":5,\"byte_start\":836,\"byte_end\":1030}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":178},{\"index\":1,\"byte_start\":178,\"byte_end\":367},{\"index\":2,\"byte_start\":367,\"byte_end\":515},{\"index\":3,\"byte_start\":515,\"byte_end\":645},{\"index\":4,\"byte_start\":645,\"byte_end\":801}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\"\n",
+    "input_tokens": 629,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Sometimes we fail to hear or heed these voices of freedom because to us the privilege of our freedom is such an old, old story. \u2014Franklin Delano Roosevelt, in his Third Inaugural Address, January 20, 1941. Full text of the speech is available through the EDSITEment resource, Presidential Speeches.\\\\n\\\\npassage 2:In the future days, which we seek to make secure, we look forward to a world founded upon four essential human freedoms. The first is freedom of speech and expression -- everywhere in the world. The second is freedom of every person to worship God in his own way -- everywhere in the world.\\\\n\\\\npassage 3:In the future days, which we seek to make secure, we look forward to a world founded upon four essential human freedoms. The first is freedom of speech and expression -- everywhere in the world. The second is freedom of every person to worship God in his own way -- everywhere in the world.\\\\n\\\\n\\\",\\\"question\\\":\\\"how did different groups understand or experience the four freedoms differently\\\"}\",\"answer\":\"Based on the given passages, it can be inferred that different groups understood or experienced the four freedoms differently due to their unique perspectives and circumstances. For example, Franklin D. Roosevelt, who was addressing a predominantly American audience, emphasized the importance of protecting freedom of speech and worship as fundamental human rights. However, for individuals living under oppressive regimes or facing discrimination, these freedoms may have held different meanings or significance. Additionally, people from diverse cultural backgrounds might have varying interpretations of what constitutes freedom of worship. Ultimately, the experiences and perceptions of the four freedoms varied across different groups, shaped by their distinct histories, beliefs, and struggles.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":151},{\"index\":1,\"byte_start\":151,\"byte_end\":458},{\"index\":2,\"byte_start\":458,\"byte_end\":532},{\"index\":3,\"byte_start\":532,\"byte_end\":762},{\"index\":4,\"byte_start\":762,\"byte_end\":836},{\"index\":5,\"byte_start\":836,\"byte_end\":1030}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":178},{\"index\":1,\"byte_start\":178,\"byte_end\":367},{\"index\":2,\"byte_start\":367,\"byte_end\":515},{\"index\":3,\"byte_start\":515,\"byte_end\":645},{\"index\":4,\"byte_start\":645,\"byte_end\":801}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|B|0.00|[]\n1|B|0.00|[]\n2|B|0.00|[]\n3|B|0.00|[]\n4|B|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259613,
+    "id": "chatcmpl-OGv71n7oo4TsU2jKm26zcaqcdAe9OiKJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1331.587,
+      "predicted_n": 55,
+      "predicted_per_second": 41.30409804241105,
+      "predicted_per_token_ms": 24.210672727272726,
+      "prompt_ms": 609.009,
+      "prompt_n": 592,
+      "prompt_per_second": 972.0710202969085,
+      "prompt_per_token_ms": 1.028731418918919
+    },
+    "usage": {
+      "completion_tokens": 55,
+      "prompt_tokens": 641,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 696
+    }
+  },
+  "source_cluster_id": "sha256:c54ce53cad9f9e8d46b39a85ac579906b4f921072a0691a50ddf0cf102028c31",
+  "started_monotonic_ns": 920519749525941,
+  "status": "completed",
+  "unit_id": "sha256:52270a484fdaef7602b08f480e560d53c23dfd5c8a8cbddce0758c33ed1b7edd"
+}

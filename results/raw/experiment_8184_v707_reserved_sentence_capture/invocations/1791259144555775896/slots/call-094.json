@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:39e4a3dc5e8c78b3b892896050b01398db4f57b72faf6817d89e225643583cf9",
+  "ended_monotonic_ns": 920426784958903,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Michigan Jewish Groups Prepare for Palestinian Protests\\nJewish groups and communities across Michigan are on high alert after a former high ranking Hamas member called for Muslims to protest in support of Palestine.\\nRecently, Hamas attacked Israel leaving more than a thousand people dead, including American citizens. Dozens were also taken hostage.\\nIsrael has since locked down the Gaza Strip and began retaliatory strikes.\\nIn response, former Hamas chief Khalid Meshaal has called for protests to support the Palestinians trapped in the Gaza Strip.\\nIsrael has occupied the area for 17 years and has shut off all food, water, and electricity. Currently, 2.3 million Palestinians live in the Gaza Strip. The Gaza Strip is ruled by Hamas, a Islamic terrorist organization.\\nThe Oakland Press reports that the Jewish Federal of Metropolitan Detroit has said that so far there are no credible threats.\\nThe federation released a statement yesterday, \u201cOur security partner, Jewish Community Security, Inc. (JCSI) is in close contact with law enforcement agencies including the FBI, the Oakland County Sheriff, local police departments and the national Secure Community Network (SCN.\u201d\\n\u201cBased on our ongoing communication with our security and law enforcement partners, we want to assure the community that there is no specific or credible threat in metro Detroit at this time,\u201d the federation said.\\nFarmington Hills has said that the city\u2019s police will be increasing security around places of worship, \u201cThe Farmington Hills Police Department has been fielding numerous calls from community members expressing concern for their personal safety and the safety of others as the conflict in the Middle East continues to grow,\u201d the city said in a statement.\\nFarmington Hills Police Chief Jeff King has said that after speaking with state and federal intelligence partners there does not seem to be a credible threat at this time.\\nThat said, police will make a visible presence at places of worship and schools.\",\"answer\":\"Jewish groups in Michigan are on high alert following a call for Muslim protests by a former high-ranking Hamas member, Khalid Meshaal, in support of Palestinians in the Gaza Strip. Israel has locked down the Gaza Strip following a recent attack by Hamas. The Jewish Federation of Metropolitan Detroit has stated there are no specific or credible threats at this time. Farmington Hills Police Department will increase security around places of worship and schools despite there being no credible threat.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":216},{\"index\":1,\"byte_start\":216,\"byte_end\":319},{\"index\":2,\"byte_start\":319,\"byte_end\":351},{\"index\":3,\"byte_start\":351,\"byte_end\":426},{\"index\":4,\"byte_start\":426,\"byte_end\":552},{\"index\":5,\"byte_start\":552,\"byte_end\":645},{\"index\":6,\"byte_start\":645,\"byte_end\":705},{\"index\":7,\"byte_start\":705,\"byte_end\":773},{\"index\":8,\"byte_start\":773,\"byte_end\":899},{\"index\":9,\"byte_start\":899,\"byte_end\":1003},{\"index\":10,\"byte_start\":1003,\"byte_end\":1183},{\"index\":11,\"byte_start\":1183,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1761},{\"index\":13,\"byte_start\":1761,\"byte_end\":1933},{\"index\":14,\"byte_start\":1933,\"byte_end\":2013}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":182},{\"index\":1,\"byte_start\":182,\"byte_end\":256},{\"index\":2,\"byte_start\":256,\"byte_end\":369},{\"index\":3,\"byte_start\":369,\"byte_end\":503}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 909,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Michigan Jewish Groups Prepare for Palestinian Protests\\nJewish groups and communities across Michigan are on high alert after a former high ranking Hamas member called for Muslims to protest in support of Palestine.\\nRecently, Hamas attacked Israel leaving more than a thousand people dead, including American citizens. Dozens were also taken hostage.\\nIsrael has since locked down the Gaza Strip and began retaliatory strikes.\\nIn response, former Hamas chief Khalid Meshaal has called for protests to support the Palestinians trapped in the Gaza Strip.\\nIsrael has occupied the area for 17 years and has shut off all food, water, and electricity. Currently, 2.3 million Palestinians live in the Gaza Strip. The Gaza Strip is ruled by Hamas, a Islamic terrorist organization.\\nThe Oakland Press reports that the Jewish Federal of Metropolitan Detroit has said that so far there are no credible threats.\\nThe federation released a statement yesterday, \u201cOur security partner, Jewish Community Security, Inc. (JCSI) is in close contact with law enforcement agencies including the FBI, the Oakland County Sheriff, local police departments and the national Secure Community Network (SCN.\u201d\\n\u201cBased on our ongoing communication with our security and law enforcement partners, we want to assure the community that there is no specific or credible threat in metro Detroit at this time,\u201d the federation said.\\nFarmington Hills has said that the city\u2019s police will be increasing security around places of worship, \u201cThe Farmington Hills Police Department has been fielding numerous calls from community members expressing concern for their personal safety and the safety of others as the conflict in the Middle East continues to grow,\u201d the city said in a statement.\\nFarmington Hills Police Chief Jeff King has said that after speaking with state and federal intelligence partners there does not seem to be a credible threat at this time.\\nThat said, police will make a visible presence at places of worship and schools.\",\"answer\":\"Jewish groups in Michigan are on high alert following a call for Muslim protests by a former high-ranking Hamas member, Khalid Meshaal, in support of Palestinians in the Gaza Strip. Israel has locked down the Gaza Strip following a recent attack by Hamas. The Jewish Federation of Metropolitan Detroit has stated there are no specific or credible threats at this time. Farmington Hills Police Department will increase security around places of worship and schools despite there being no credible threat.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":216},{\"index\":1,\"byte_start\":216,\"byte_end\":319},{\"index\":2,\"byte_start\":319,\"byte_end\":351},{\"index\":3,\"byte_start\":351,\"byte_end\":426},{\"index\":4,\"byte_start\":426,\"byte_end\":552},{\"index\":5,\"byte_start\":552,\"byte_end\":645},{\"index\":6,\"byte_start\":645,\"byte_end\":705},{\"index\":7,\"byte_start\":705,\"byte_end\":773},{\"index\":8,\"byte_start\":773,\"byte_end\":899},{\"index\":9,\"byte_start\":899,\"byte_end\":1003},{\"index\":10,\"byte_start\":1003,\"byte_end\":1183},{\"index\":11,\"byte_start\":1183,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1761},{\"index\":13,\"byte_start\":1761,\"byte_end\":1933},{\"index\":14,\"byte_start\":1933,\"byte_end\":2013}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":182},{\"index\":1,\"byte_start\":182,\"byte_end\":256},{\"index\":2,\"byte_start\":256,\"byte_end\":369},{\"index\":3,\"byte_start\":369,\"byte_end\":503}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "input_tokens": 897,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Michigan Jewish Groups Prepare for Palestinian Protests\\nJewish groups and communities across Michigan are on high alert after a former high ranking Hamas member called for Muslims to protest in support of Palestine.\\nRecently, Hamas attacked Israel leaving more than a thousand people dead, including American citizens. Dozens were also taken hostage.\\nIsrael has since locked down the Gaza Strip and began retaliatory strikes.\\nIn response, former Hamas chief Khalid Meshaal has called for protests to support the Palestinians trapped in the Gaza Strip.\\nIsrael has occupied the area for 17 years and has shut off all food, water, and electricity. Currently, 2.3 million Palestinians live in the Gaza Strip. The Gaza Strip is ruled by Hamas, a Islamic terrorist organization.\\nThe Oakland Press reports that the Jewish Federal of Metropolitan Detroit has said that so far there are no credible threats.\\nThe federation released a statement yesterday, \u201cOur security partner, Jewish Community Security, Inc. (JCSI) is in close contact with law enforcement agencies including the FBI, the Oakland County Sheriff, local police departments and the national Secure Community Network (SCN.\u201d\\n\u201cBased on our ongoing communication with our security and law enforcement partners, we want to assure the community that there is no specific or credible threat in metro Detroit at this time,\u201d the federation said.\\nFarmington Hills has said that the city\u2019s police will be increasing security around places of worship, \u201cThe Farmington Hills Police Department has been fielding numerous calls from community members expressing concern for their personal safety and the safety of others as the conflict in the Middle East continues to grow,\u201d the city said in a statement.\\nFarmington Hills Police Chief Jeff King has said that after speaking with state and federal intelligence partners there does not seem to be a credible threat at this time.\\nThat said, police will make a visible presence at places of worship and schools.\",\"answer\":\"Jewish groups in Michigan are on high alert following a call for Muslim protests by a former high-ranking Hamas member, Khalid Meshaal, in support of Palestinians in the Gaza Strip. Israel has locked down the Gaza Strip following a recent attack by Hamas. The Jewish Federation of Metropolitan Detroit has stated there are no specific or credible threats at this time. Farmington Hills Police Department will increase security around places of worship and schools despite there being no credible threat.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":216},{\"index\":1,\"byte_start\":216,\"byte_end\":319},{\"index\":2,\"byte_start\":319,\"byte_end\":351},{\"index\":3,\"byte_start\":351,\"byte_end\":426},{\"index\":4,\"byte_start\":426,\"byte_end\":552},{\"index\":5,\"byte_start\":552,\"byte_end\":645},{\"index\":6,\"byte_start\":645,\"byte_end\":705},{\"index\":7,\"byte_start\":705,\"byte_end\":773},{\"index\":8,\"byte_start\":773,\"byte_end\":899},{\"index\":9,\"byte_start\":899,\"byte_end\":1003},{\"index\":10,\"byte_start\":1003,\"byte_end\":1183},{\"index\":11,\"byte_start\":1183,\"byte_end\":1401},{\"index\":12,\"byte_start\":1401,\"byte_end\":1761},{\"index\":13,\"byte_start\":1761,\"byte_end\":1933},{\"index\":14,\"byte_start\":1933,\"byte_end\":2013}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":182},{\"index\":1,\"byte_start\":182,\"byte_end\":256},{\"index\":2,\"byte_start\":256,\"byte_end\":369},{\"index\":3,\"byte_start\":369,\"byte_end\":503}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[0,4]\n1|E|1.00|[3]\n2|E|1.00|[8]\n3|E|1.00|[10,14]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259518,
+    "id": "chatcmpl-5uTjh3en4N00M0zbB44EpndZJ4OLQ8a0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1408.869,
+      "predicted_n": 58,
+      "predicted_per_second": 41.167773582923616,
+      "predicted_per_token_ms": 24.290844827586206,
+      "prompt_ms": 876.164,
+      "prompt_n": 860,
+      "prompt_per_second": 981.5513990531454,
+      "prompt_per_token_ms": 1.0187953488372092
+    },
+    "usage": {
+      "completion_tokens": 58,
+      "prompt_tokens": 909,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 967
+    }
+  },
+  "source_cluster_id": "sha256:06deef38ca432adc9ae3a22a22e34de3b9d6fe2a88fac7c4952fdcb79f2c782e",
+  "started_monotonic_ns": 920424256436753,
+  "status": "completed",
+  "unit_id": "sha256:ccb149be598ae61ab0a90f40f709f8846692619889f833b8f7bed17309206246"
+}

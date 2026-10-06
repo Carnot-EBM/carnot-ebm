@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:abe384888a2014d51f536f45ba36a1b0184cfbf38a165d09369f1c354b17c869",
+  "ended_monotonic_ns": 920383245662725,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"129 E Anapamu St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":true,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Gastropubs, French, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-22:0\\\",\\\"Monday\\\":\\\"11:0-22:0\\\",\\\"Saturday\\\":\\\"8:0-22:0\\\",\\\"Sunday\\\":\\\"8:0-22:0\\\",\\\"Thursday\\\":\\\"11:0-22:0\\\",\\\"Tuesday\\\":\\\"11:0-22:0\\\",\\\"Wednesday\\\":\\\"11:0-22:0\\\"},\\\"name\\\":\\\"The French Table\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-05-12 15:42:30\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"THE FRENCH TABLE is no longer in business but there is a new restaurant in it's place called PIANO GASTROLOUNGE.  Great food, great service and the same incredible view.  If you were a fan of The French Table than you should definately come by and try this new menu.  The brunch was very good,  I had a simple soprano omelete which turned out to be not so simple.  It was delicious.  I think it was the carmelized onions that did the trick and made it so unique.  Sit ouside if you can, it is so quiet, beautiful and relaxing.\\\"},{\\\"review_date\\\":\\\"2014-03-18 00:09:27\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This place totally came out of nowhere and it is adorable! \\\\n\\\\nMy server named Dustin was incredibly attentive and kind. \\\\n\\\\nPlus this world needs more creperies, and The French Table excels in that arena.\\\"},{\\\"review_date\\\":\\\"2014-02-21 04:47:01\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"It's sad to saw but the food was really good but the service was horrid. Working in the food industry I was shocked. My friend and I were ignored by the first waiter who was flirting with a group of girls so we went to the bar. The bartender was busy talking with off the clock staff drinking for free. We were basically ignored. She also made up an excuse not to use our living social deal. Won't be going back. Staff was a joke.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"\\\"The French Table\\\" was a gastropub located at 129 E Anapamu St, Santa Barbara, CA. Known for its French cuisine, it was open seven days a week, from 11 am to 10 pm on weekdays and 8 am to 10 pm on weekends. The restaurant offered various amenities such as outdoor seating, takeout options, and was also suitable for group dining. However, it did not provide wifi or music. It was also known for its casual and romantic ambience. The restaurant was rated 3.5 stars overall, with reviews highlighting the quality of the food, especially the brunch and crepes. However, some customers raised concerns over their service. The French Table is no longer in business and has since been replaced by Piano Gastrolounge.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":906},{\"index\":1,\"byte_start\":906,\"byte_end\":963},{\"index\":2,\"byte_start\":963,\"byte_end\":1060},{\"index\":3,\"byte_start\":1060,\"byte_end\":1157},{\"index\":4,\"byte_start\":1157,\"byte_end\":1176},{\"index\":5,\"byte_start\":1176,\"byte_end\":1256},{\"index\":6,\"byte_start\":1256,\"byte_end\":1451},{\"index\":7,\"byte_start\":1451,\"byte_end\":1513},{\"index\":8,\"byte_start\":1513,\"byte_end\":1744},{\"index\":9,\"byte_start\":1744,\"byte_end\":1788},{\"index\":10,\"byte_start\":1788,\"byte_end\":1899},{\"index\":11,\"byte_start\":1899,\"byte_end\":1974},{\"index\":12,\"byte_start\":1974,\"byte_end\":2001},{\"index\":13,\"byte_start\":2001,\"byte_end\":2063},{\"index\":14,\"byte_start\":2063,\"byte_end\":2084},{\"index\":15,\"byte_start\":2084,\"byte_end\":2118}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":83},{\"index\":1,\"byte_start\":83,\"byte_end\":207},{\"index\":2,\"byte_start\":207,\"byte_end\":330},{\"index\":3,\"byte_start\":330,\"byte_end\":373},{\"index\":4,\"byte_start\":373,\"byte_end\":429},{\"index\":5,\"byte_start\":429,\"byte_end\":558},{\"index\":6,\"byte_start\":558,\"byte_end\":618},{\"index\":7,\"byte_start\":618,\"byte_end\":710}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1356,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"129 E Anapamu St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":true,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Gastropubs, French, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-22:0\\\",\\\"Monday\\\":\\\"11:0-22:0\\\",\\\"Saturday\\\":\\\"8:0-22:0\\\",\\\"Sunday\\\":\\\"8:0-22:0\\\",\\\"Thursday\\\":\\\"11:0-22:0\\\",\\\"Tuesday\\\":\\\"11:0-22:0\\\",\\\"Wednesday\\\":\\\"11:0-22:0\\\"},\\\"name\\\":\\\"The French Table\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-05-12 15:42:30\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"THE FRENCH TABLE is no longer in business but there is a new restaurant in it's place called PIANO GASTROLOUNGE.  Great food, great service and the same incredible view.  If you were a fan of The French Table than you should definately come by and try this new menu.  The brunch was very good,  I had a simple soprano omelete which turned out to be not so simple.  It was delicious.  I think it was the carmelized onions that did the trick and made it so unique.  Sit ouside if you can, it is so quiet, beautiful and relaxing.\\\"},{\\\"review_date\\\":\\\"2014-03-18 00:09:27\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This place totally came out of nowhere and it is adorable! \\\\n\\\\nMy server named Dustin was incredibly attentive and kind. \\\\n\\\\nPlus this world needs more creperies, and The French Table excels in that arena.\\\"},{\\\"review_date\\\":\\\"2014-02-21 04:47:01\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"It's sad to saw but the food was really good but the service was horrid. Working in the food industry I was shocked. My friend and I were ignored by the first waiter who was flirting with a group of girls so we went to the bar. The bartender was busy talking with off the clock staff drinking for free. We were basically ignored. She also made up an excuse not to use our living social deal. Won't be going back. Staff was a joke.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"\\\"The French Table\\\" was a gastropub located at 129 E Anapamu St, Santa Barbara, CA. Known for its French cuisine, it was open seven days a week, from 11 am to 10 pm on weekdays and 8 am to 10 pm on weekends. The restaurant offered various amenities such as outdoor seating, takeout options, and was also suitable for group dining. However, it did not provide wifi or music. It was also known for its casual and romantic ambience. The restaurant was rated 3.5 stars overall, with reviews highlighting the quality of the food, especially the brunch and crepes. However, some customers raised concerns over their service. The French Table is no longer in business and has since been replaced by Piano Gastrolounge.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":906},{\"index\":1,\"byte_start\":906,\"byte_end\":963},{\"index\":2,\"byte_start\":963,\"byte_end\":1060},{\"index\":3,\"byte_start\":1060,\"byte_end\":1157},{\"index\":4,\"byte_start\":1157,\"byte_end\":1176},{\"index\":5,\"byte_start\":1176,\"byte_end\":1256},{\"index\":6,\"byte_start\":1256,\"byte_end\":1451},{\"index\":7,\"byte_start\":1451,\"byte_end\":1513},{\"index\":8,\"byte_start\":1513,\"byte_end\":1744},{\"index\":9,\"byte_start\":1744,\"byte_end\":1788},{\"index\":10,\"byte_start\":1788,\"byte_end\":1899},{\"index\":11,\"byte_start\":1899,\"byte_end\":1974},{\"index\":12,\"byte_start\":1974,\"byte_end\":2001},{\"index\":13,\"byte_start\":2001,\"byte_end\":2063},{\"index\":14,\"byte_start\":2063,\"byte_end\":2084},{\"index\":15,\"byte_start\":2084,\"byte_end\":2118}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":83},{\"index\":1,\"byte_start\":83,\"byte_end\":207},{\"index\":2,\"byte_start\":207,\"byte_end\":330},{\"index\":3,\"byte_start\":330,\"byte_end\":373},{\"index\":4,\"byte_start\":373,\"byte_end\":429},{\"index\":5,\"byte_start\":429,\"byte_end\":558},{\"index\":6,\"byte_start\":558,\"byte_end\":618},{\"index\":7,\"byte_start\":618,\"byte_end\":710}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\"\n",
+    "input_tokens": 1344,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"129 E Anapamu St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":true,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Gastropubs, French, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-22:0\\\",\\\"Monday\\\":\\\"11:0-22:0\\\",\\\"Saturday\\\":\\\"8:0-22:0\\\",\\\"Sunday\\\":\\\"8:0-22:0\\\",\\\"Thursday\\\":\\\"11:0-22:0\\\",\\\"Tuesday\\\":\\\"11:0-22:0\\\",\\\"Wednesday\\\":\\\"11:0-22:0\\\"},\\\"name\\\":\\\"The French Table\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-05-12 15:42:30\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"THE FRENCH TABLE is no longer in business but there is a new restaurant in it's place called PIANO GASTROLOUNGE.  Great food, great service and the same incredible view.  If you were a fan of The French Table than you should definately come by and try this new menu.  The brunch was very good,  I had a simple soprano omelete which turned out to be not so simple.  It was delicious.  I think it was the carmelized onions that did the trick and made it so unique.  Sit ouside if you can, it is so quiet, beautiful and relaxing.\\\"},{\\\"review_date\\\":\\\"2014-03-18 00:09:27\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This place totally came out of nowhere and it is adorable! \\\\n\\\\nMy server named Dustin was incredibly attentive and kind. \\\\n\\\\nPlus this world needs more creperies, and The French Table excels in that arena.\\\"},{\\\"review_date\\\":\\\"2014-02-21 04:47:01\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"It's sad to saw but the food was really good but the service was horrid. Working in the food industry I was shocked. My friend and I were ignored by the first waiter who was flirting with a group of girls so we went to the bar. The bartender was busy talking with off the clock staff drinking for free. We were basically ignored. She also made up an excuse not to use our living social deal. Won't be going back. Staff was a joke.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"\\\"The French Table\\\" was a gastropub located at 129 E Anapamu St, Santa Barbara, CA. Known for its French cuisine, it was open seven days a week, from 11 am to 10 pm on weekdays and 8 am to 10 pm on weekends. The restaurant offered various amenities such as outdoor seating, takeout options, and was also suitable for group dining. However, it did not provide wifi or music. It was also known for its casual and romantic ambience. The restaurant was rated 3.5 stars overall, with reviews highlighting the quality of the food, especially the brunch and crepes. However, some customers raised concerns over their service. The French Table is no longer in business and has since been replaced by Piano Gastrolounge.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":906},{\"index\":1,\"byte_start\":906,\"byte_end\":963},{\"index\":2,\"byte_start\":963,\"byte_end\":1060},{\"index\":3,\"byte_start\":1060,\"byte_end\":1157},{\"index\":4,\"byte_start\":1157,\"byte_end\":1176},{\"index\":5,\"byte_start\":1176,\"byte_end\":1256},{\"index\":6,\"byte_start\":1256,\"byte_end\":1451},{\"index\":7,\"byte_start\":1451,\"byte_end\":1513},{\"index\":8,\"byte_start\":1513,\"byte_end\":1744},{\"index\":9,\"byte_start\":1744,\"byte_end\":1788},{\"index\":10,\"byte_start\":1788,\"byte_end\":1899},{\"index\":11,\"byte_start\":1899,\"byte_end\":1974},{\"index\":12,\"byte_start\":1974,\"byte_end\":2001},{\"index\":13,\"byte_start\":2001,\"byte_end\":2063},{\"index\":14,\"byte_start\":2063,\"byte_end\":2084},{\"index\":15,\"byte_start\":2084,\"byte_end\":2118}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":83},{\"index\":1,\"byte_start\":83,\"byte_end\":207},{\"index\":2,\"byte_start\":207,\"byte_end\":330},{\"index\":3,\"byte_start\":330,\"byte_end\":373},{\"index\":4,\"byte_start\":373,\"byte_end\":429},{\"index\":5,\"byte_start\":429,\"byte_end\":558},{\"index\":6,\"byte_start\":558,\"byte_end\":618},{\"index\":7,\"byte_start\":618,\"byte_end\":710}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]\n4|E|1.00|[]\n5|E|1.00|[]\n6|E|1.00|[]\n7|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259475,
+    "id": "chatcmpl-3aM5QLJgmqjb3w38eJD9wPERyIOyDDkm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 2141.106,
+      "predicted_n": 88,
+      "predicted_per_second": 41.10025379406718,
+      "predicted_per_token_ms": 24.330750000000002,
+      "prompt_ms": 1205.265,
+      "prompt_n": 1307,
+      "prompt_per_second": 1084.4088229559472,
+      "prompt_per_token_ms": 0.9221614384085693
+    },
+    "usage": {
+      "completion_tokens": 88,
+      "prompt_tokens": 1356,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1444
+    }
+  },
+  "source_cluster_id": "sha256:ac3ed59aef9c6296720a1cb0fc2d479c102d94ce8f46f6ae521c85eb487a1d39",
+  "started_monotonic_ns": 920379749058760,
+  "status": "completed",
+  "unit_id": "sha256:0a8501652710406a91324bf788e30058517743014be7a94541fd0b7f1d131c32"
+}

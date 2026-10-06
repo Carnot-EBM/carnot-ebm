@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:db2425889d22a5fffe4926b444a137c0f0bbd58b83d31c29de120f64f7d18855",
+  "ended_monotonic_ns": 920208382208827,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 But make sure you are aware of how to make co-sleeping safe. 2  If your baby is six months or younger, it's safest for her to sleep in a cot next to your bed. 3  Share the role of comforter with your partner, so both of you can help your baby fall back to sleep.\\\\n\\\\npassage 2:1 If your baby is six months or younger, it's safest for her to sleep in a cot next to your bed. 2  Share the role of comforter with your partner, so both of you can help your baby fall back to sleep. 3  Once your baby is old enough not to need a night-time feed, she can learn to be comforted by your partner.\\\\n\\\\npassage 3:1 You could also try massaging your baby. 2  Finish the bedtime ritual in your baby's bedroom and make sure that her room is a pleasant place to be. 3  This routine should last no longer than 45 minutes. 4  Give her a security object, such as a baby blanket or stuffed animal.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to facilitate baby's sleep\\\"}\",\"answer\":\"Based on the given passages, here are some ways to facilitate a baby's sleep:\\n\\n1. Make sure the baby sleeps in a cot next to your bed if they are six months or younger.\\n2. Share the role of comforter with your partner, so both of you can help your baby fall back to sleep.\\n3. Massage your baby.\\n4. Establish a bedtime routine that includes a pleasant bedroom environment and a security object, such as a baby blanket or stuffed animal.\\n5. Keep the bedtime routine short, no longer than 45 minutes.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":86},{\"index\":1,\"byte_start\":86,\"byte_end\":184},{\"index\":2,\"byte_start\":184,\"byte_end\":398},{\"index\":3,\"byte_start\":398,\"byte_end\":502},{\"index\":4,\"byte_start\":502,\"byte_end\":667},{\"index\":5,\"byte_start\":667,\"byte_end\":774},{\"index\":6,\"byte_start\":774,\"byte_end\":829},{\"index\":7,\"byte_start\":829,\"byte_end\":951}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":169},{\"index\":1,\"byte_start\":169,\"byte_end\":273},{\"index\":2,\"byte_start\":273,\"byte_end\":295},{\"index\":3,\"byte_start\":295,\"byte_end\":436},{\"index\":4,\"byte_start\":436,\"byte_end\":497}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 689,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 But make sure you are aware of how to make co-sleeping safe. 2  If your baby is six months or younger, it's safest for her to sleep in a cot next to your bed. 3  Share the role of comforter with your partner, so both of you can help your baby fall back to sleep.\\\\n\\\\npassage 2:1 If your baby is six months or younger, it's safest for her to sleep in a cot next to your bed. 2  Share the role of comforter with your partner, so both of you can help your baby fall back to sleep. 3  Once your baby is old enough not to need a night-time feed, she can learn to be comforted by your partner.\\\\n\\\\npassage 3:1 You could also try massaging your baby. 2  Finish the bedtime ritual in your baby's bedroom and make sure that her room is a pleasant place to be. 3  This routine should last no longer than 45 minutes. 4  Give her a security object, such as a baby blanket or stuffed animal.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to facilitate baby's sleep\\\"}\",\"answer\":\"Based on the given passages, here are some ways to facilitate a baby's sleep:\\n\\n1. Make sure the baby sleeps in a cot next to your bed if they are six months or younger.\\n2. Share the role of comforter with your partner, so both of you can help your baby fall back to sleep.\\n3. Massage your baby.\\n4. Establish a bedtime routine that includes a pleasant bedroom environment and a security object, such as a baby blanket or stuffed animal.\\n5. Keep the bedtime routine short, no longer than 45 minutes.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":86},{\"index\":1,\"byte_start\":86,\"byte_end\":184},{\"index\":2,\"byte_start\":184,\"byte_end\":398},{\"index\":3,\"byte_start\":398,\"byte_end\":502},{\"index\":4,\"byte_start\":502,\"byte_end\":667},{\"index\":5,\"byte_start\":667,\"byte_end\":774},{\"index\":6,\"byte_start\":774,\"byte_end\":829},{\"index\":7,\"byte_start\":829,\"byte_end\":951}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":169},{\"index\":1,\"byte_start\":169,\"byte_end\":273},{\"index\":2,\"byte_start\":273,\"byte_end\":295},{\"index\":3,\"byte_start\":295,\"byte_end\":436},{\"index\":4,\"byte_start\":436,\"byte_end\":497}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "input_tokens": 677,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 But make sure you are aware of how to make co-sleeping safe. 2  If your baby is six months or younger, it's safest for her to sleep in a cot next to your bed. 3  Share the role of comforter with your partner, so both of you can help your baby fall back to sleep.\\\\n\\\\npassage 2:1 If your baby is six months or younger, it's safest for her to sleep in a cot next to your bed. 2  Share the role of comforter with your partner, so both of you can help your baby fall back to sleep. 3  Once your baby is old enough not to need a night-time feed, she can learn to be comforted by your partner.\\\\n\\\\npassage 3:1 You could also try massaging your baby. 2  Finish the bedtime ritual in your baby's bedroom and make sure that her room is a pleasant place to be. 3  This routine should last no longer than 45 minutes. 4  Give her a security object, such as a baby blanket or stuffed animal.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to facilitate baby's sleep\\\"}\",\"answer\":\"Based on the given passages, here are some ways to facilitate a baby's sleep:\\n\\n1. Make sure the baby sleeps in a cot next to your bed if they are six months or younger.\\n2. Share the role of comforter with your partner, so both of you can help your baby fall back to sleep.\\n3. Massage your baby.\\n4. Establish a bedtime routine that includes a pleasant bedroom environment and a security object, such as a baby blanket or stuffed animal.\\n5. Keep the bedtime routine short, no longer than 45 minutes.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":86},{\"index\":1,\"byte_start\":86,\"byte_end\":184},{\"index\":2,\"byte_start\":184,\"byte_end\":398},{\"index\":3,\"byte_start\":398,\"byte_end\":502},{\"index\":4,\"byte_start\":502,\"byte_end\":667},{\"index\":5,\"byte_start\":667,\"byte_end\":774},{\"index\":6,\"byte_start\":774,\"byte_end\":829},{\"index\":7,\"byte_start\":829,\"byte_end\":951}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":169},{\"index\":1,\"byte_start\":169,\"byte_end\":273},{\"index\":2,\"byte_start\":273,\"byte_end\":295},{\"index\":3,\"byte_start\":295,\"byte_end\":436},{\"index\":4,\"byte_start\":436,\"byte_end\":497}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[]\n1|C|0.95|[]\n2|C|0.95|[]\n3|C|0.95|[]\n4|C|0.95|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259300,
+    "id": "chatcmpl-yVJPY7tZd8ReppANPboJuj59xvUlrbyI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1327.772,
+      "predicted_n": 55,
+      "predicted_per_second": 41.42277439198899,
+      "predicted_per_token_ms": 24.14130909090909,
+      "prompt_ms": 677.688,
+      "prompt_n": 689,
+      "prompt_per_second": 1016.6920470777113,
+      "prompt_per_token_ms": 0.9835820029027577
+    },
+    "usage": {
+      "completion_tokens": 55,
+      "prompt_tokens": 689,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 744
+    }
+  },
+  "source_cluster_id": "sha256:cee71c55e32f87cc42fbaa9831fce2da88d7b46968d17284992aa494e89581fd",
+  "started_monotonic_ns": 920206219699545,
+  "status": "completed",
+  "unit_id": "sha256:678613dca7913d9dfd82462d9d859e39e4d7ba161d01eaee2239fa7f03cb3683"
+}

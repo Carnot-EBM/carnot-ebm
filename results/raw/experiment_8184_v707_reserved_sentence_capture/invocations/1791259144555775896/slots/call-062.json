@@ -1,0 +1,88 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:cad25a3271ef81d0450c0079557314eca4d4d5c18f9c357da63183ea90c44292",
+  "ended_monotonic_ns": 920335587373613,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"A North Pacific gray whale has earned a spot in the record books after completing the longest migration of a mammal ever recorded. The whale, named Varvara, swam nearly 14,000 miles (22,500 kilometers), according to a release from Oregon State University, whose scientists helped conduct the whale-tracking study. Varvara, which is Russian for \\\"Barbara,\\\" left her primary feeding ground off Russia's Sakhalin Island to cross the  Pacific Ocean and down the West Coast of the United States to Baja, Mexico. Varvara's journey surpassed a record listed on the Guinness Worlds Records website. It said the previous record was set by a humpback whale that swam a mere 10,190-mile round trip between the \\\"warm breeding waters near the equator and the colder food-rich waters of the Arctic and Antarctic regions.\\\" Records are nice, but Bruce Mate, the lead author of the study, thinks the long trip might say more about the whale than just its ability to swim. During her 14,000-mile journey, Varvara visited \\\"three major breeding areas for eastern gray whales,\\\" which was a surprise to Mate, who is also the director of the Marine Mammal Institute at Oregon State University. \\\"For her to go to Mexico,\\\" Mate said, \\\"It's pretty strong evidence that it's where she's from.\\\" Varvara was thought to be an endangered western whale, but her ability to \\\"navigate across open water over tremendously long distances is impressive,\\\" he said in the release, which could mean that some western gray whales are actually eastern grays. With only 150 western gray whales believed to be in existence, that number might be even lower. \\\"Past studies have indicated genetic differentiation between the species, but this suggests we may need to take a closer look,\\\" Mate said. Fourth baby orca born this season.\\n\",\"answer\":\"A North Pacific gray whale named Varvara has set the record for the longest migration of a mammal, swimming 14,000 miles from Russia's Sakhalin Island to Baja, Mexico. Her journey surpassed the previous record held by a humpback whale and may indicate that some western gray whales are actually eastern grays, raising questions about the species' genetic diversity.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":131},{\"index\":1,\"byte_start\":131,\"byte_end\":314},{\"index\":2,\"byte_start\":314,\"byte_end\":506},{\"index\":3,\"byte_start\":506,\"byte_end\":590},{\"index\":4,\"byte_start\":590,\"byte_end\":807},{\"index\":5,\"byte_start\":807,\"byte_end\":954},{\"index\":6,\"byte_start\":954,\"byte_end\":1170},{\"index\":7,\"byte_start\":1170,\"byte_end\":1266},{\"index\":8,\"byte_start\":1266,\"byte_end\":1516},{\"index\":9,\"byte_start\":1516,\"byte_end\":1612},{\"index\":10,\"byte_start\":1612,\"byte_end\":1751},{\"index\":11,\"byte_start\":1751,\"byte_end\":1786}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":168},{\"index\":1,\"byte_start\":168,\"byte_end\":365}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 808,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"A North Pacific gray whale has earned a spot in the record books after completing the longest migration of a mammal ever recorded. The whale, named Varvara, swam nearly 14,000 miles (22,500 kilometers), according to a release from Oregon State University, whose scientists helped conduct the whale-tracking study. Varvara, which is Russian for \\\"Barbara,\\\" left her primary feeding ground off Russia's Sakhalin Island to cross the  Pacific Ocean and down the West Coast of the United States to Baja, Mexico. Varvara's journey surpassed a record listed on the Guinness Worlds Records website. It said the previous record was set by a humpback whale that swam a mere 10,190-mile round trip between the \\\"warm breeding waters near the equator and the colder food-rich waters of the Arctic and Antarctic regions.\\\" Records are nice, but Bruce Mate, the lead author of the study, thinks the long trip might say more about the whale than just its ability to swim. During her 14,000-mile journey, Varvara visited \\\"three major breeding areas for eastern gray whales,\\\" which was a surprise to Mate, who is also the director of the Marine Mammal Institute at Oregon State University. \\\"For her to go to Mexico,\\\" Mate said, \\\"It's pretty strong evidence that it's where she's from.\\\" Varvara was thought to be an endangered western whale, but her ability to \\\"navigate across open water over tremendously long distances is impressive,\\\" he said in the release, which could mean that some western gray whales are actually eastern grays. With only 150 western gray whales believed to be in existence, that number might be even lower. \\\"Past studies have indicated genetic differentiation between the species, but this suggests we may need to take a closer look,\\\" Mate said. Fourth baby orca born this season.\\n\",\"answer\":\"A North Pacific gray whale named Varvara has set the record for the longest migration of a mammal, swimming 14,000 miles from Russia's Sakhalin Island to Baja, Mexico. Her journey surpassed the previous record held by a humpback whale and may indicate that some western gray whales are actually eastern grays, raising questions about the species' genetic diversity.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":131},{\"index\":1,\"byte_start\":131,\"byte_end\":314},{\"index\":2,\"byte_start\":314,\"byte_end\":506},{\"index\":3,\"byte_start\":506,\"byte_end\":590},{\"index\":4,\"byte_start\":590,\"byte_end\":807},{\"index\":5,\"byte_start\":807,\"byte_end\":954},{\"index\":6,\"byte_start\":954,\"byte_end\":1170},{\"index\":7,\"byte_start\":1170,\"byte_end\":1266},{\"index\":8,\"byte_start\":1266,\"byte_end\":1516},{\"index\":9,\"byte_start\":1516,\"byte_end\":1612},{\"index\":10,\"byte_start\":1612,\"byte_end\":1751},{\"index\":11,\"byte_start\":1751,\"byte_end\":1786}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":168},{\"index\":1,\"byte_start\":168,\"byte_end\":365}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "input_tokens": 796,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"A North Pacific gray whale has earned a spot in the record books after completing the longest migration of a mammal ever recorded. The whale, named Varvara, swam nearly 14,000 miles (22,500 kilometers), according to a release from Oregon State University, whose scientists helped conduct the whale-tracking study. Varvara, which is Russian for \\\"Barbara,\\\" left her primary feeding ground off Russia's Sakhalin Island to cross the  Pacific Ocean and down the West Coast of the United States to Baja, Mexico. Varvara's journey surpassed a record listed on the Guinness Worlds Records website. It said the previous record was set by a humpback whale that swam a mere 10,190-mile round trip between the \\\"warm breeding waters near the equator and the colder food-rich waters of the Arctic and Antarctic regions.\\\" Records are nice, but Bruce Mate, the lead author of the study, thinks the long trip might say more about the whale than just its ability to swim. During her 14,000-mile journey, Varvara visited \\\"three major breeding areas for eastern gray whales,\\\" which was a surprise to Mate, who is also the director of the Marine Mammal Institute at Oregon State University. \\\"For her to go to Mexico,\\\" Mate said, \\\"It's pretty strong evidence that it's where she's from.\\\" Varvara was thought to be an endangered western whale, but her ability to \\\"navigate across open water over tremendously long distances is impressive,\\\" he said in the release, which could mean that some western gray whales are actually eastern grays. With only 150 western gray whales believed to be in existence, that number might be even lower. \\\"Past studies have indicated genetic differentiation between the species, but this suggests we may need to take a closer look,\\\" Mate said. Fourth baby orca born this season.\\n\",\"answer\":\"A North Pacific gray whale named Varvara has set the record for the longest migration of a mammal, swimming 14,000 miles from Russia's Sakhalin Island to Baja, Mexico. Her journey surpassed the previous record held by a humpback whale and may indicate that some western gray whales are actually eastern grays, raising questions about the species' genetic diversity.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":131},{\"index\":1,\"byte_start\":131,\"byte_end\":314},{\"index\":2,\"byte_start\":314,\"byte_end\":506},{\"index\":3,\"byte_start\":506,\"byte_end\":590},{\"index\":4,\"byte_start\":590,\"byte_end\":807},{\"index\":5,\"byte_start\":807,\"byte_end\":954},{\"index\":6,\"byte_start\":954,\"byte_end\":1170},{\"index\":7,\"byte_start\":1170,\"byte_end\":1266},{\"index\":8,\"byte_start\":1266,\"byte_end\":1516},{\"index\":9,\"byte_start\":1516,\"byte_end\":1612},{\"index\":10,\"byte_start\":1612,\"byte_end\":1751},{\"index\":11,\"byte_start\":1751,\"byte_end\":1786}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":168},{\"index\":1,\"byte_start\":168,\"byte_end\":365}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,1]\n1|E|0.90|[4,8]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259427,
+    "id": "chatcmpl-d4bsKAQwOT5fqDoY6gNQpN3cyHctvW5A",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 742.859,
+      "predicted_n": 30,
+      "predicted_per_second": 40.38451442332932,
+      "predicted_per_token_ms": 24.76196666666667,
+      "prompt_ms": 782.793,
+      "prompt_n": 808,
+      "prompt_per_second": 1032.2013610239235,
+      "prompt_per_token_ms": 0.9688032178217821
+    },
+    "usage": {
+      "completion_tokens": 30,
+      "prompt_tokens": 808,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 838
+    }
+  },
+  "source_cluster_id": "sha256:2084237061fe68a66c058944fa13278e9c290e3ffa17d33983a4458317c6d63f",
+  "started_monotonic_ns": 920333902009655,
+  "status": "completed",
+  "unit_id": "sha256:d80bf9a978dd8754c205e97c295e44a20019db6fed51a61b2d2c50d051262b85"
+}

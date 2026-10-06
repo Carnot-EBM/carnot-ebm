@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:e5d59892d452f34055c8a9383447e07a0ca7d708e184e262d0e62cdd6b13b028",
+  "ended_monotonic_ns": 920524478885550,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Missing Since 1986: A Mother Gone, A Child Lost, and a Stepfather with Secrets in Missouri\\nIn a chilling case from 1986 that remains unsolved, Elizabeth Turek Vasser and her toddler daughter, Cherie Barnes, experienced an ill-fated move from Nashville, Tennessee, to St. Louis, Missouri. Elizabeth began a life of p rostitution soon after relocating, with her husband, Larry Vasser, acting as her pimp.\\nThe mystery began on December 1 when Elizabeth was reported missing. While a woman's remains were found in the Mississippi River two weeks later, they would not be identified as Elizabeth's for another seven years. Throughout this period, concern grew for two-year-old Cherie's safety. The last reported sighting of the child was with stepfather Larry Vasser on January 7, 1987, in Kansas City, Missouri. Cherie's fate remains unknown to this day.\\nWhen questioned, Vasser told police that Cherie was with relatives and had been given a new identity in Kansas City Missouri. Offering to provide recent photos of Cherie as evidence, he demanded $500 from an elderly woman in exchange.\\nIn a disturbing revelation, Vasser allegedly confessed to his probation officer in 1988 about strangling his wife in 1986. There were also whispers of an accusation against Vasser in 1987 for attempting a kidnapping, although the outcomes of these investigations remain cloaked in uncertainty.\\nGiven the circumstances, if Cherie is still alive, it's likely she remains oblivious to her traumatic past and may not realize she's a missing individual. The case is classified as a non-family abduction, since Cherie was supposed to be in the custody of Elizabeth's mother. However, authorities have not dismissed the possibility of a more sinister outcome.\\nAt the time of her disappearance, Cherie was 4 feet tall, weighed 80 pounds, with brown hair and eyes. She is biracial, with a white mother and Black father. Cherie Nicole Barnes would now be 38 years old.\\nAny leads or information related to this case should be directed to the St. Louis Metropolitan Police Department at (314) 231-1212. Reference agency case number 94-060619.\\nHelp spread the word and renew interest in Cherie Barnes's case. As the plea from her family emphasizes, \\\"She is our baby sister and her life matters.\\\"\\nSource\\nSource\\nSource\",\"answer\":\"Here is a summary of the article within 92 words:\\n\\nA mother and her toddler daughter went missing in Missouri in 1986. The mother was later found dead, but the daughter, Cherie Barnes, is still missing. The stepfather, Larry Vasser, was the last person to see Cherie and has been accused of strangling the mother. Cherie would now be 38 years old, and her whereabouts remain unknown. The family is urging anyone with information to come forward.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":288},{\"index\":1,\"byte_start\":288,\"byte_end\":403},{\"index\":2,\"byte_start\":403,\"byte_end\":472},{\"index\":3,\"byte_start\":472,\"byte_end\":618},{\"index\":4,\"byte_start\":618,\"byte_end\":689},{\"index\":5,\"byte_start\":689,\"byte_end\":808},{\"index\":6,\"byte_start\":808,\"byte_end\":851},{\"index\":7,\"byte_start\":851,\"byte_end\":977},{\"index\":8,\"byte_start\":977,\"byte_end\":1086},{\"index\":9,\"byte_start\":1086,\"byte_end\":1380},{\"index\":10,\"byte_start\":1380,\"byte_end\":1535},{\"index\":11,\"byte_start\":1535,\"byte_end\":1655},{\"index\":12,\"byte_start\":1655,\"byte_end\":1739},{\"index\":13,\"byte_start\":1739,\"byte_end\":1842},{\"index\":14,\"byte_start\":1842,\"byte_end\":1897},{\"index\":15,\"byte_start\":1897,\"byte_end\":1945},{\"index\":16,\"byte_start\":1945,\"byte_end\":2182},{\"index\":17,\"byte_start\":2182,\"byte_end\":2269},{\"index\":18,\"byte_start\":2269,\"byte_end\":2289}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":203},{\"index\":1,\"byte_start\":203,\"byte_end\":314},{\"index\":2,\"byte_start\":314,\"byte_end\":384},{\"index\":3,\"byte_start\":384,\"byte_end\":445}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1157,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Missing Since 1986: A Mother Gone, A Child Lost, and a Stepfather with Secrets in Missouri\\nIn a chilling case from 1986 that remains unsolved, Elizabeth Turek Vasser and her toddler daughter, Cherie Barnes, experienced an ill-fated move from Nashville, Tennessee, to St. Louis, Missouri. Elizabeth began a life of p rostitution soon after relocating, with her husband, Larry Vasser, acting as her pimp.\\nThe mystery began on December 1 when Elizabeth was reported missing. While a woman's remains were found in the Mississippi River two weeks later, they would not be identified as Elizabeth's for another seven years. Throughout this period, concern grew for two-year-old Cherie's safety. The last reported sighting of the child was with stepfather Larry Vasser on January 7, 1987, in Kansas City, Missouri. Cherie's fate remains unknown to this day.\\nWhen questioned, Vasser told police that Cherie was with relatives and had been given a new identity in Kansas City Missouri. Offering to provide recent photos of Cherie as evidence, he demanded $500 from an elderly woman in exchange.\\nIn a disturbing revelation, Vasser allegedly confessed to his probation officer in 1988 about strangling his wife in 1986. There were also whispers of an accusation against Vasser in 1987 for attempting a kidnapping, although the outcomes of these investigations remain cloaked in uncertainty.\\nGiven the circumstances, if Cherie is still alive, it's likely she remains oblivious to her traumatic past and may not realize she's a missing individual. The case is classified as a non-family abduction, since Cherie was supposed to be in the custody of Elizabeth's mother. However, authorities have not dismissed the possibility of a more sinister outcome.\\nAt the time of her disappearance, Cherie was 4 feet tall, weighed 80 pounds, with brown hair and eyes. She is biracial, with a white mother and Black father. Cherie Nicole Barnes would now be 38 years old.\\nAny leads or information related to this case should be directed to the St. Louis Metropolitan Police Department at (314) 231-1212. Reference agency case number 94-060619.\\nHelp spread the word and renew interest in Cherie Barnes's case. As the plea from her family emphasizes, \\\"She is our baby sister and her life matters.\\\"\\nSource\\nSource\\nSource\",\"answer\":\"Here is a summary of the article within 92 words:\\n\\nA mother and her toddler daughter went missing in Missouri in 1986. The mother was later found dead, but the daughter, Cherie Barnes, is still missing. The stepfather, Larry Vasser, was the last person to see Cherie and has been accused of strangling the mother. Cherie would now be 38 years old, and her whereabouts remain unknown. The family is urging anyone with information to come forward.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":288},{\"index\":1,\"byte_start\":288,\"byte_end\":403},{\"index\":2,\"byte_start\":403,\"byte_end\":472},{\"index\":3,\"byte_start\":472,\"byte_end\":618},{\"index\":4,\"byte_start\":618,\"byte_end\":689},{\"index\":5,\"byte_start\":689,\"byte_end\":808},{\"index\":6,\"byte_start\":808,\"byte_end\":851},{\"index\":7,\"byte_start\":851,\"byte_end\":977},{\"index\":8,\"byte_start\":977,\"byte_end\":1086},{\"index\":9,\"byte_start\":1086,\"byte_end\":1380},{\"index\":10,\"byte_start\":1380,\"byte_end\":1535},{\"index\":11,\"byte_start\":1535,\"byte_end\":1655},{\"index\":12,\"byte_start\":1655,\"byte_end\":1739},{\"index\":13,\"byte_start\":1739,\"byte_end\":1842},{\"index\":14,\"byte_start\":1842,\"byte_end\":1897},{\"index\":15,\"byte_start\":1897,\"byte_end\":1945},{\"index\":16,\"byte_start\":1945,\"byte_end\":2182},{\"index\":17,\"byte_start\":2182,\"byte_end\":2269},{\"index\":18,\"byte_start\":2269,\"byte_end\":2289}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":203},{\"index\":1,\"byte_start\":203,\"byte_end\":314},{\"index\":2,\"byte_start\":314,\"byte_end\":384},{\"index\":3,\"byte_start\":384,\"byte_end\":445}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\"\n",
+    "input_tokens": 1145,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Missing Since 1986: A Mother Gone, A Child Lost, and a Stepfather with Secrets in Missouri\\nIn a chilling case from 1986 that remains unsolved, Elizabeth Turek Vasser and her toddler daughter, Cherie Barnes, experienced an ill-fated move from Nashville, Tennessee, to St. Louis, Missouri. Elizabeth began a life of p rostitution soon after relocating, with her husband, Larry Vasser, acting as her pimp.\\nThe mystery began on December 1 when Elizabeth was reported missing. While a woman's remains were found in the Mississippi River two weeks later, they would not be identified as Elizabeth's for another seven years. Throughout this period, concern grew for two-year-old Cherie's safety. The last reported sighting of the child was with stepfather Larry Vasser on January 7, 1987, in Kansas City, Missouri. Cherie's fate remains unknown to this day.\\nWhen questioned, Vasser told police that Cherie was with relatives and had been given a new identity in Kansas City Missouri. Offering to provide recent photos of Cherie as evidence, he demanded $500 from an elderly woman in exchange.\\nIn a disturbing revelation, Vasser allegedly confessed to his probation officer in 1988 about strangling his wife in 1986. There were also whispers of an accusation against Vasser in 1987 for attempting a kidnapping, although the outcomes of these investigations remain cloaked in uncertainty.\\nGiven the circumstances, if Cherie is still alive, it's likely she remains oblivious to her traumatic past and may not realize she's a missing individual. The case is classified as a non-family abduction, since Cherie was supposed to be in the custody of Elizabeth's mother. However, authorities have not dismissed the possibility of a more sinister outcome.\\nAt the time of her disappearance, Cherie was 4 feet tall, weighed 80 pounds, with brown hair and eyes. She is biracial, with a white mother and Black father. Cherie Nicole Barnes would now be 38 years old.\\nAny leads or information related to this case should be directed to the St. Louis Metropolitan Police Department at (314) 231-1212. Reference agency case number 94-060619.\\nHelp spread the word and renew interest in Cherie Barnes's case. As the plea from her family emphasizes, \\\"She is our baby sister and her life matters.\\\"\\nSource\\nSource\\nSource\",\"answer\":\"Here is a summary of the article within 92 words:\\n\\nA mother and her toddler daughter went missing in Missouri in 1986. The mother was later found dead, but the daughter, Cherie Barnes, is still missing. The stepfather, Larry Vasser, was the last person to see Cherie and has been accused of strangling the mother. Cherie would now be 38 years old, and her whereabouts remain unknown. The family is urging anyone with information to come forward.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":288},{\"index\":1,\"byte_start\":288,\"byte_end\":403},{\"index\":2,\"byte_start\":403,\"byte_end\":472},{\"index\":3,\"byte_start\":472,\"byte_end\":618},{\"index\":4,\"byte_start\":618,\"byte_end\":689},{\"index\":5,\"byte_start\":689,\"byte_end\":808},{\"index\":6,\"byte_start\":808,\"byte_end\":851},{\"index\":7,\"byte_start\":851,\"byte_end\":977},{\"index\":8,\"byte_start\":977,\"byte_end\":1086},{\"index\":9,\"byte_start\":1086,\"byte_end\":1380},{\"index\":10,\"byte_start\":1380,\"byte_end\":1535},{\"index\":11,\"byte_start\":1535,\"byte_end\":1655},{\"index\":12,\"byte_start\":1655,\"byte_end\":1739},{\"index\":13,\"byte_start\":1739,\"byte_end\":1842},{\"index\":14,\"byte_start\":1842,\"byte_end\":1897},{\"index\":15,\"byte_start\":1897,\"byte_end\":1945},{\"index\":16,\"byte_start\":1945,\"byte_end\":2182},{\"index\":17,\"byte_start\":2182,\"byte_end\":2269},{\"index\":18,\"byte_start\":2269,\"byte_end\":2289}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":203},{\"index\":1,\"byte_start\":203,\"byte_end\":314},{\"index\":2,\"byte_start\":314,\"byte_end\":384},{\"index\":3,\"byte_start\":384,\"byte_end\":445}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,1]\n1|E|0.90|[1,3]\n2|E|0.85|[3,5]\n3|E|0.95|[9,10]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259616,
+    "id": "chatcmpl-kpGmOhBKCk2xMgWQvTs3ioRXRSb1XyRg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1481.762,
+      "predicted_n": 61,
+      "predicted_per_second": 41.1672049897352,
+      "predicted_per_token_ms": 24.29118032786885,
+      "prompt_ms": 1046.899,
+      "prompt_n": 1108,
+      "prompt_per_second": 1058.3637963165502,
+      "prompt_per_token_ms": 0.9448546931407942
+    },
+    "usage": {
+      "completion_tokens": 61,
+      "prompt_tokens": 1157,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1218
+    }
+  },
+  "source_cluster_id": "sha256:26ccc2083be6395c82a5cf720d29a54d60eb5e76bc25456191617cc1c417bbc1",
+  "started_monotonic_ns": 920521821896422,
+  "status": "completed",
+  "unit_id": "sha256:980fb39c4788cf73663f9b4b70d17a97dd91dda1584202e9cccb5d2db2510c18"
+}

@@ -93910,3 +93910,23 @@ reject changed input, code, head, log or aggregate bytes during cold replay.
 Implementation: python/carnot/verify/sentence_energy_fit_8183.py and
 python/carnot/verify/sentence_energy_8183.py; thin experiment_8183 CLI and
 private tests/python/test_sentence_energy_fit_8183.py.
+
+## REQ-REPORT-8184: Publish sealed reserved sentence capture custody
+
+Freeze validation argv before measurement. Normal scoped tests,100 percent new
+statement coverage, Ruff check/format, strict mypy, explicit-path spec coverage,
+private E2E-015/019 and unmodified terminal validators precede primary_publication.
+Preserve immutable logs and historical primaries. External operand failure ends
+complete_blocked_<check>; owned failure disqualifies and zeros readiness. Declare
+actual model calls separately from imported provenance. Exposed development has
+zero independent generalization and generalized benefit. The conductor owns
+ops and traceability reconciliation.
+
+### SCENARIO-REPORT-8184-CUSTODY
+
+The thin CLI runs from outside the checkout without PYTHONPATH. Private success,
+missing input, prompt/source tamper and cold replay use temporary directories.
+Rehashed aggregate or prediction drift fails independent replay. Primitive rows
+retain all128 sources and every failed attempt. Implementation and tests are
+python/carnot/verify/reserved_sentence_capture_8184.py and
+tests/python/test_reserved_sentence_capture_8184.py.

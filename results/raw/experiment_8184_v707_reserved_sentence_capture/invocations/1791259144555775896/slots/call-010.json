@@ -1,0 +1,87 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:5ca8ddf407f2060de141147bf11cc078eb9870db6496f8b771a8227b39c7811a",
+  "ended_monotonic_ns": 920186318713129,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:There are three different Redwoods trees (true species)-. Coast Redwood, Giant Sequoia. Dawn Redwood. The Coast Redwood is found mostly along the California coast and a few along the southern Oregon coast. These giant Coast Redwoods can reach over 300 feet tall and over 20 feet across, and be over 4,000 years old.he growth rates will vary, but the Coastal and Dawn Redwoods can grow fairly fast, so a good-sized tree is possible in just a few years. The Giant Sequoia is fairly slow growing, but still can become a reasonable size with not too long a wait. The Sequoia is also a popular bonsai tree.\\\\n\\\\npassage 2:The giant sequoia is the fastest growing conifer on earth given the right conditions. We expect 4 feet of upward growth in the third year for trees in large pots and one-inch plus growth rings. They have the potential to grow faster every year.Giant sequoias grow rapidly tall and less dense when the rising and setting sun is blocked.ailure to keep the soil moist results in a dead tree. Sequoias require moist, rich, balanced ph, and well-drained soil. Permanently swampy or muddy soil will not work. Our website gallery at http://www.giant-sequoia.com/gallery/ shows giant sequoias growing in many different places around the US and the world.\\\\n\\\\npassage 3:Answers. Best Answer: Growth of seedlings is very fast, with young trees known to reach 65 feet tall in 20 years. Growing to heights of 120 feet or more at maturity, most sequoia trees will grow at a rate of 3 to 5 feet per year.Seed production begins at 10\u201315 years of age. Source(s): http://www.ehow.com/how_6207859_care-pot...rowing to heights of 120 feet or more at maturity, most sequoia trees will grow at a rate of 3 to 5 feet per year. Seed production begins at 10\u201315 years of age. Source(s): http://www.ehow.com/how_6207859_care-pot...\\\\n\\\\n\\\",\\\"question\\\":\\\"how fast do giant sequoias grow\\\"}\",\"answer\":\"Based on the given passages, giant sequoias can grow at a rate of 3 to 5 feet per year.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":81},{\"index\":1,\"byte_start\":81,\"byte_end\":111},{\"index\":2,\"byte_start\":111,\"byte_end\":125},{\"index\":3,\"byte_start\":125,\"byte_end\":229},{\"index\":4,\"byte_start\":229,\"byte_end\":475},{\"index\":5,\"byte_start\":475,\"byte_end\":582},{\"index\":6,\"byte_start\":582,\"byte_end\":724},{\"index\":7,\"byte_start\":724,\"byte_end\":832},{\"index\":8,\"byte_start\":832,\"byte_end\":1027},{\"index\":9,\"byte_start\":1027,\"byte_end\":1093},{\"index\":10,\"byte_start\":1093,\"byte_end\":1141},{\"index\":11,\"byte_start\":1141,\"byte_end\":1307},{\"index\":12,\"byte_start\":1307,\"byte_end\":1412},{\"index\":13,\"byte_start\":1412,\"byte_end\":1575},{\"index\":14,\"byte_start\":1575,\"byte_end\":1744},{\"index\":15,\"byte_start\":1744,\"byte_end\":1792},{\"index\":16,\"byte_start\":1792,\"byte_end\":1897}],\"answer_sentence_indices\":[0],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":87}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 946,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:There are three different Redwoods trees (true species)-. Coast Redwood, Giant Sequoia. Dawn Redwood. The Coast Redwood is found mostly along the California coast and a few along the southern Oregon coast. These giant Coast Redwoods can reach over 300 feet tall and over 20 feet across, and be over 4,000 years old.he growth rates will vary, but the Coastal and Dawn Redwoods can grow fairly fast, so a good-sized tree is possible in just a few years. The Giant Sequoia is fairly slow growing, but still can become a reasonable size with not too long a wait. The Sequoia is also a popular bonsai tree.\\\\n\\\\npassage 2:The giant sequoia is the fastest growing conifer on earth given the right conditions. We expect 4 feet of upward growth in the third year for trees in large pots and one-inch plus growth rings. They have the potential to grow faster every year.Giant sequoias grow rapidly tall and less dense when the rising and setting sun is blocked.ailure to keep the soil moist results in a dead tree. Sequoias require moist, rich, balanced ph, and well-drained soil. Permanently swampy or muddy soil will not work. Our website gallery at http://www.giant-sequoia.com/gallery/ shows giant sequoias growing in many different places around the US and the world.\\\\n\\\\npassage 3:Answers. Best Answer: Growth of seedlings is very fast, with young trees known to reach 65 feet tall in 20 years. Growing to heights of 120 feet or more at maturity, most sequoia trees will grow at a rate of 3 to 5 feet per year.Seed production begins at 10\u201315 years of age. Source(s): http://www.ehow.com/how_6207859_care-pot...rowing to heights of 120 feet or more at maturity, most sequoia trees will grow at a rate of 3 to 5 feet per year. Seed production begins at 10\u201315 years of age. Source(s): http://www.ehow.com/how_6207859_care-pot...\\\\n\\\\n\\\",\\\"question\\\":\\\"how fast do giant sequoias grow\\\"}\",\"answer\":\"Based on the given passages, giant sequoias can grow at a rate of 3 to 5 feet per year.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":81},{\"index\":1,\"byte_start\":81,\"byte_end\":111},{\"index\":2,\"byte_start\":111,\"byte_end\":125},{\"index\":3,\"byte_start\":125,\"byte_end\":229},{\"index\":4,\"byte_start\":229,\"byte_end\":475},{\"index\":5,\"byte_start\":475,\"byte_end\":582},{\"index\":6,\"byte_start\":582,\"byte_end\":724},{\"index\":7,\"byte_start\":724,\"byte_end\":832},{\"index\":8,\"byte_start\":832,\"byte_end\":1027},{\"index\":9,\"byte_start\":1027,\"byte_end\":1093},{\"index\":10,\"byte_start\":1093,\"byte_end\":1141},{\"index\":11,\"byte_start\":1141,\"byte_end\":1307},{\"index\":12,\"byte_start\":1307,\"byte_end\":1412},{\"index\":13,\"byte_start\":1412,\"byte_end\":1575},{\"index\":14,\"byte_start\":1575,\"byte_end\":1744},{\"index\":15,\"byte_start\":1744,\"byte_end\":1792},{\"index\":16,\"byte_start\":1792,\"byte_end\":1897}],\"answer_sentence_indices\":[0],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":87}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+    "input_tokens": 934,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:There are three different Redwoods trees (true species)-. Coast Redwood, Giant Sequoia. Dawn Redwood. The Coast Redwood is found mostly along the California coast and a few along the southern Oregon coast. These giant Coast Redwoods can reach over 300 feet tall and over 20 feet across, and be over 4,000 years old.he growth rates will vary, but the Coastal and Dawn Redwoods can grow fairly fast, so a good-sized tree is possible in just a few years. The Giant Sequoia is fairly slow growing, but still can become a reasonable size with not too long a wait. The Sequoia is also a popular bonsai tree.\\\\n\\\\npassage 2:The giant sequoia is the fastest growing conifer on earth given the right conditions. We expect 4 feet of upward growth in the third year for trees in large pots and one-inch plus growth rings. They have the potential to grow faster every year.Giant sequoias grow rapidly tall and less dense when the rising and setting sun is blocked.ailure to keep the soil moist results in a dead tree. Sequoias require moist, rich, balanced ph, and well-drained soil. Permanently swampy or muddy soil will not work. Our website gallery at http://www.giant-sequoia.com/gallery/ shows giant sequoias growing in many different places around the US and the world.\\\\n\\\\npassage 3:Answers. Best Answer: Growth of seedlings is very fast, with young trees known to reach 65 feet tall in 20 years. Growing to heights of 120 feet or more at maturity, most sequoia trees will grow at a rate of 3 to 5 feet per year.Seed production begins at 10\u201315 years of age. Source(s): http://www.ehow.com/how_6207859_care-pot...rowing to heights of 120 feet or more at maturity, most sequoia trees will grow at a rate of 3 to 5 feet per year. Seed production begins at 10\u201315 years of age. Source(s): http://www.ehow.com/how_6207859_care-pot...\\\\n\\\\n\\\",\\\"question\\\":\\\"how fast do giant sequoias grow\\\"}\",\"answer\":\"Based on the given passages, giant sequoias can grow at a rate of 3 to 5 feet per year.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":81},{\"index\":1,\"byte_start\":81,\"byte_end\":111},{\"index\":2,\"byte_start\":111,\"byte_end\":125},{\"index\":3,\"byte_start\":125,\"byte_end\":229},{\"index\":4,\"byte_start\":229,\"byte_end\":475},{\"index\":5,\"byte_start\":475,\"byte_end\":582},{\"index\":6,\"byte_start\":582,\"byte_end\":724},{\"index\":7,\"byte_start\":724,\"byte_end\":832},{\"index\":8,\"byte_start\":832,\"byte_end\":1027},{\"index\":9,\"byte_start\":1027,\"byte_end\":1093},{\"index\":10,\"byte_start\":1093,\"byte_end\":1141},{\"index\":11,\"byte_start\":1141,\"byte_end\":1307},{\"index\":12,\"byte_start\":1307,\"byte_end\":1412},{\"index\":13,\"byte_start\":1412,\"byte_end\":1575},{\"index\":14,\"byte_start\":1575,\"byte_end\":1744},{\"index\":15,\"byte_start\":1744,\"byte_end\":1792},{\"index\":16,\"byte_start\":1792,\"byte_end\":1897}],\"answer_sentence_indices\":[0],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":87}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[11,14]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259278,
+    "id": "chatcmpl-SSvUkVJGaoNOAIjyZvhGNPzH9kOIxKzn",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 408.898,
+      "predicted_n": 17,
+      "predicted_per_second": 41.57516055348767,
+      "predicted_per_token_ms": 24.052823529411768,
+      "prompt_ms": 854.626,
+      "prompt_n": 946,
+      "prompt_per_second": 1106.9169437859368,
+      "prompt_per_token_ms": 0.9034101479915433
+    },
+    "usage": {
+      "completion_tokens": 17,
+      "prompt_tokens": 946,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 963
+    }
+  },
+  "source_cluster_id": "sha256:1bf9e7d337e952b5d934a4422e12e9e21b309d0845057d0e562edf2a294b8d37",
+  "started_monotonic_ns": 920184923534885,
+  "status": "completed",
+  "unit_id": "sha256:1a092cb3f158d4b9dbbd2d41cef50898d7f1eda4eb77576714bdb861038098b0"
+}

@@ -1,0 +1,88 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:45e9d6d45c97b64a9ae8d537b25070774eaaadee969ff42eee32cf0dea519c97",
+  "ended_monotonic_ns": 920372045820102,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Even Walmart, the top company in this year's Fortune 500 list, hasn't been immune to cybersecurity breaches. According to an investigation by Wired in 2009, hackers broke into the computer system used by the company's (wmt) development team to steal information from cash registers.\\\\n\\\\npassage 2:Yahoo hack attack: Biggest data breach ever Friday, 23 Sep 2016 | 1:51 PM ET | 01:10. At least 500 million user accounts have been stolen from Yahoo, the company confirmed on Thursday. The data breach is the largest from a single site in history, according to a database of other hacking incidents. In August, hackers were discovered trying to sell 200 million Yahoo accounts, which would have been the second-largest single breach.\\\\n\\\\npassage 3:5 huge cybersecurity breaches at companies you know. Let's face it, it's been a scary year in data security for companies and their customers alike. Hackers have been slipping through corporate computer defenses like they're Swiss cheese.\\\\n\\\\n\\\",\\\"question\\\":\\\"biggest recent breaches of security\\\"}\",\"answer\":\"Here are some of the biggest recent breaches of security mentioned in the passages:\\n\\n* Yahoo hack attack: 500 million user accounts stolen (Passage 2)\\n* Walmart: Hackers broke into the computer system used by the company's development team to steal information from cash registers (Passage 1)\\n\\nUnable to answer based on given passages. The passages do not provide enough information to list the biggest recent breaches of security.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":132},{\"index\":1,\"byte_start\":132,\"byte_end\":504},{\"index\":2,\"byte_start\":504,\"byte_end\":618},{\"index\":3,\"byte_start\":618,\"byte_end\":818},{\"index\":4,\"byte_start\":818,\"byte_end\":914},{\"index\":5,\"byte_start\":914,\"byte_end\":1058}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":336},{\"index\":1,\"byte_start\":336,\"byte_end\":431}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 565,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Even Walmart, the top company in this year's Fortune 500 list, hasn't been immune to cybersecurity breaches. According to an investigation by Wired in 2009, hackers broke into the computer system used by the company's (wmt) development team to steal information from cash registers.\\\\n\\\\npassage 2:Yahoo hack attack: Biggest data breach ever Friday, 23 Sep 2016 | 1:51 PM ET | 01:10. At least 500 million user accounts have been stolen from Yahoo, the company confirmed on Thursday. The data breach is the largest from a single site in history, according to a database of other hacking incidents. In August, hackers were discovered trying to sell 200 million Yahoo accounts, which would have been the second-largest single breach.\\\\n\\\\npassage 3:5 huge cybersecurity breaches at companies you know. Let's face it, it's been a scary year in data security for companies and their customers alike. Hackers have been slipping through corporate computer defenses like they're Swiss cheese.\\\\n\\\\n\\\",\\\"question\\\":\\\"biggest recent breaches of security\\\"}\",\"answer\":\"Here are some of the biggest recent breaches of security mentioned in the passages:\\n\\n* Yahoo hack attack: 500 million user accounts stolen (Passage 2)\\n* Walmart: Hackers broke into the computer system used by the company's development team to steal information from cash registers (Passage 1)\\n\\nUnable to answer based on given passages. The passages do not provide enough information to list the biggest recent breaches of security.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":132},{\"index\":1,\"byte_start\":132,\"byte_end\":504},{\"index\":2,\"byte_start\":504,\"byte_end\":618},{\"index\":3,\"byte_start\":618,\"byte_end\":818},{\"index\":4,\"byte_start\":818,\"byte_end\":914},{\"index\":5,\"byte_start\":914,\"byte_end\":1058}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":336},{\"index\":1,\"byte_start\":336,\"byte_end\":431}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\"\n",
+    "input_tokens": 553,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Even Walmart, the top company in this year's Fortune 500 list, hasn't been immune to cybersecurity breaches. According to an investigation by Wired in 2009, hackers broke into the computer system used by the company's (wmt) development team to steal information from cash registers.\\\\n\\\\npassage 2:Yahoo hack attack: Biggest data breach ever Friday, 23 Sep 2016 | 1:51 PM ET | 01:10. At least 500 million user accounts have been stolen from Yahoo, the company confirmed on Thursday. The data breach is the largest from a single site in history, according to a database of other hacking incidents. In August, hackers were discovered trying to sell 200 million Yahoo accounts, which would have been the second-largest single breach.\\\\n\\\\npassage 3:5 huge cybersecurity breaches at companies you know. Let's face it, it's been a scary year in data security for companies and their customers alike. Hackers have been slipping through corporate computer defenses like they're Swiss cheese.\\\\n\\\\n\\\",\\\"question\\\":\\\"biggest recent breaches of security\\\"}\",\"answer\":\"Here are some of the biggest recent breaches of security mentioned in the passages:\\n\\n* Yahoo hack attack: 500 million user accounts stolen (Passage 2)\\n* Walmart: Hackers broke into the computer system used by the company's development team to steal information from cash registers (Passage 1)\\n\\nUnable to answer based on given passages. The passages do not provide enough information to list the biggest recent breaches of security.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":132},{\"index\":1,\"byte_start\":132,\"byte_end\":504},{\"index\":2,\"byte_start\":504,\"byte_end\":618},{\"index\":3,\"byte_start\":618,\"byte_end\":818},{\"index\":4,\"byte_start\":818,\"byte_end\":914},{\"index\":5,\"byte_start\":914,\"byte_end\":1058}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":336},{\"index\":1,\"byte_start\":336,\"byte_end\":431}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259463,
+    "id": "chatcmpl-bCOxQEC25QzZbm8QU7nAeEieq5vevMvh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 531.937,
+      "predicted_n": 22,
+      "predicted_per_second": 41.35828114983541,
+      "predicted_per_token_ms": 24.178954545454545,
+      "prompt_ms": 595.111,
+      "prompt_n": 565,
+      "prompt_per_second": 949.4027164680202,
+      "prompt_per_token_ms": 1.0532938053097345
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 565,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 587
+    }
+  },
+  "source_cluster_id": "sha256:5949ee56d00e982e10b434e55bf2bae0af8f0f4ad0e07ec352a74db4f28b3658",
+  "started_monotonic_ns": 920370765269911,
+  "status": "completed",
+  "unit_id": "sha256:891c519d910cf3b9d3df821e9796e45c7f51e2d1de1a9351df63d5008860703a"
+}

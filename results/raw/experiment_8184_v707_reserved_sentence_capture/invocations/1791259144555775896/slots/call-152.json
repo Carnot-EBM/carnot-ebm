@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:9380e175c9e357f18b4fd6b5940e86ddadaca7d1b64fb96e815268834e19c1b9",
+  "ended_monotonic_ns": 920593272494077,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Police in the Indian city of Malegaon, in the western state of Maharashtra, are requiring identity cards for an unusual group of residents: Cattle. Following a recent state-wide ban on the sale and consumption of beef, authorities in the city have asked residents to take a 'mugshot' of their cattle and submit it to the police. Along with the photograph, the residents have to give information about their animal's 'unique features,' such as the coloring and age of the cow, along with the length of its tail and other distinctive characteristics. Police officials believe this is the only way to solve cow slaughter cases and enforce the law. Cows are considered holy and revered by that state's majority Hindu population. \\\"We are creating a database. If we get an information of a cow slaughter, we can quickly go to the resident's place and check whether it is there or not\\\", Mahesh Sawai, Deputy Superintendent of Malegaon Police told CNN. \\\"I believe this will be very effective\\\" So far over 100 owners have complied with the police order and more are lining up outside police stations across the city to get their livestock photographed. The ruling came in the wake of a recent case of cow slaughter in Malegaon, where two men have been charged for killing the animal and and selling its meat. The Maharashtra Animal Preservation Bill now includes bans on the killing of bulls and bullocks in its list of non-bailable offenses. Even the consumption or sale of beef could now land you in prison for five years. The slaughter of buffaloes, however, is still permissible. However, beef traders in the country strongly reacted to the decision and called a month-long strike, which ended Wednesday. The traders refused to even slaughter buffaloes and deprive the state of all bovine meat. They have now vowed to file a case in the state's high court. Red meat lovers weren't too delighted either, arguing the government doesn't have a right to interfere in an individual's personal preference. Maharashtra is not the only Indian state to tighten its laws on cow slaughter. Haryana state has implemented a maximum punishment of 10 years in prison, the toughest penalty in the country. Rajnath Singh, India's Home Minister has promised that he would do all to devise a country-wide law against cow slaughter.\\n\",\"answer\":\"In Malegaon, India, police require identity cards for cattle after a state-wide ban on beef sales and consumption. Owners must provide photos and details of their cows, and the database aims to help solve cow slaughter cases. Over 100 owners have complied, but beef traders have responded with a month-long strike and plan to challenge the decision in court. The move is part of a broader effort to tighten cow slaughter laws in India, with Haryana implementing the toughest penalties and the home minister promising a country-wide law.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":148},{\"index\":1,\"byte_start\":148,\"byte_end\":329},{\"index\":2,\"byte_start\":329,\"byte_end\":549},{\"index\":3,\"byte_start\":549,\"byte_end\":645},{\"index\":4,\"byte_start\":645,\"byte_end\":725},{\"index\":5,\"byte_start\":725,\"byte_end\":754},{\"index\":6,\"byte_start\":754,\"byte_end\":945},{\"index\":7,\"byte_start\":945,\"byte_end\":1144},{\"index\":8,\"byte_start\":1144,\"byte_end\":1300},{\"index\":9,\"byte_start\":1300,\"byte_end\":1434},{\"index\":10,\"byte_start\":1434,\"byte_end\":1516},{\"index\":11,\"byte_start\":1516,\"byte_end\":1575},{\"index\":12,\"byte_start\":1575,\"byte_end\":1700},{\"index\":13,\"byte_start\":1700,\"byte_end\":1790},{\"index\":14,\"byte_start\":1790,\"byte_end\":1852},{\"index\":15,\"byte_start\":1852,\"byte_end\":1995},{\"index\":16,\"byte_start\":1995,\"byte_end\":2074},{\"index\":17,\"byte_start\":2074,\"byte_end\":2185},{\"index\":18,\"byte_start\":2185,\"byte_end\":2308}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":115},{\"index\":1,\"byte_start\":115,\"byte_end\":226},{\"index\":2,\"byte_start\":226,\"byte_end\":359},{\"index\":3,\"byte_start\":359,\"byte_end\":536}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1104,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Police in the Indian city of Malegaon, in the western state of Maharashtra, are requiring identity cards for an unusual group of residents: Cattle. Following a recent state-wide ban on the sale and consumption of beef, authorities in the city have asked residents to take a 'mugshot' of their cattle and submit it to the police. Along with the photograph, the residents have to give information about their animal's 'unique features,' such as the coloring and age of the cow, along with the length of its tail and other distinctive characteristics. Police officials believe this is the only way to solve cow slaughter cases and enforce the law. Cows are considered holy and revered by that state's majority Hindu population. \\\"We are creating a database. If we get an information of a cow slaughter, we can quickly go to the resident's place and check whether it is there or not\\\", Mahesh Sawai, Deputy Superintendent of Malegaon Police told CNN. \\\"I believe this will be very effective\\\" So far over 100 owners have complied with the police order and more are lining up outside police stations across the city to get their livestock photographed. The ruling came in the wake of a recent case of cow slaughter in Malegaon, where two men have been charged for killing the animal and and selling its meat. The Maharashtra Animal Preservation Bill now includes bans on the killing of bulls and bullocks in its list of non-bailable offenses. Even the consumption or sale of beef could now land you in prison for five years. The slaughter of buffaloes, however, is still permissible. However, beef traders in the country strongly reacted to the decision and called a month-long strike, which ended Wednesday. The traders refused to even slaughter buffaloes and deprive the state of all bovine meat. They have now vowed to file a case in the state's high court. Red meat lovers weren't too delighted either, arguing the government doesn't have a right to interfere in an individual's personal preference. Maharashtra is not the only Indian state to tighten its laws on cow slaughter. Haryana state has implemented a maximum punishment of 10 years in prison, the toughest penalty in the country. Rajnath Singh, India's Home Minister has promised that he would do all to devise a country-wide law against cow slaughter.\\n\",\"answer\":\"In Malegaon, India, police require identity cards for cattle after a state-wide ban on beef sales and consumption. Owners must provide photos and details of their cows, and the database aims to help solve cow slaughter cases. Over 100 owners have complied, but beef traders have responded with a month-long strike and plan to challenge the decision in court. The move is part of a broader effort to tighten cow slaughter laws in India, with Haryana implementing the toughest penalties and the home minister promising a country-wide law.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":148},{\"index\":1,\"byte_start\":148,\"byte_end\":329},{\"index\":2,\"byte_start\":329,\"byte_end\":549},{\"index\":3,\"byte_start\":549,\"byte_end\":645},{\"index\":4,\"byte_start\":645,\"byte_end\":725},{\"index\":5,\"byte_start\":725,\"byte_end\":754},{\"index\":6,\"byte_start\":754,\"byte_end\":945},{\"index\":7,\"byte_start\":945,\"byte_end\":1144},{\"index\":8,\"byte_start\":1144,\"byte_end\":1300},{\"index\":9,\"byte_start\":1300,\"byte_end\":1434},{\"index\":10,\"byte_start\":1434,\"byte_end\":1516},{\"index\":11,\"byte_start\":1516,\"byte_end\":1575},{\"index\":12,\"byte_start\":1575,\"byte_end\":1700},{\"index\":13,\"byte_start\":1700,\"byte_end\":1790},{\"index\":14,\"byte_start\":1790,\"byte_end\":1852},{\"index\":15,\"byte_start\":1852,\"byte_end\":1995},{\"index\":16,\"byte_start\":1995,\"byte_end\":2074},{\"index\":17,\"byte_start\":2074,\"byte_end\":2185},{\"index\":18,\"byte_start\":2185,\"byte_end\":2308}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":115},{\"index\":1,\"byte_start\":115,\"byte_end\":226},{\"index\":2,\"byte_start\":226,\"byte_end\":359},{\"index\":3,\"byte_start\":359,\"byte_end\":536}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\"\n",
+    "input_tokens": 1092,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Police in the Indian city of Malegaon, in the western state of Maharashtra, are requiring identity cards for an unusual group of residents: Cattle. Following a recent state-wide ban on the sale and consumption of beef, authorities in the city have asked residents to take a 'mugshot' of their cattle and submit it to the police. Along with the photograph, the residents have to give information about their animal's 'unique features,' such as the coloring and age of the cow, along with the length of its tail and other distinctive characteristics. Police officials believe this is the only way to solve cow slaughter cases and enforce the law. Cows are considered holy and revered by that state's majority Hindu population. \\\"We are creating a database. If we get an information of a cow slaughter, we can quickly go to the resident's place and check whether it is there or not\\\", Mahesh Sawai, Deputy Superintendent of Malegaon Police told CNN. \\\"I believe this will be very effective\\\" So far over 100 owners have complied with the police order and more are lining up outside police stations across the city to get their livestock photographed. The ruling came in the wake of a recent case of cow slaughter in Malegaon, where two men have been charged for killing the animal and and selling its meat. The Maharashtra Animal Preservation Bill now includes bans on the killing of bulls and bullocks in its list of non-bailable offenses. Even the consumption or sale of beef could now land you in prison for five years. The slaughter of buffaloes, however, is still permissible. However, beef traders in the country strongly reacted to the decision and called a month-long strike, which ended Wednesday. The traders refused to even slaughter buffaloes and deprive the state of all bovine meat. They have now vowed to file a case in the state's high court. Red meat lovers weren't too delighted either, arguing the government doesn't have a right to interfere in an individual's personal preference. Maharashtra is not the only Indian state to tighten its laws on cow slaughter. Haryana state has implemented a maximum punishment of 10 years in prison, the toughest penalty in the country. Rajnath Singh, India's Home Minister has promised that he would do all to devise a country-wide law against cow slaughter.\\n\",\"answer\":\"In Malegaon, India, police require identity cards for cattle after a state-wide ban on beef sales and consumption. Owners must provide photos and details of their cows, and the database aims to help solve cow slaughter cases. Over 100 owners have complied, but beef traders have responded with a month-long strike and plan to challenge the decision in court. The move is part of a broader effort to tighten cow slaughter laws in India, with Haryana implementing the toughest penalties and the home minister promising a country-wide law.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":148},{\"index\":1,\"byte_start\":148,\"byte_end\":329},{\"index\":2,\"byte_start\":329,\"byte_end\":549},{\"index\":3,\"byte_start\":549,\"byte_end\":645},{\"index\":4,\"byte_start\":645,\"byte_end\":725},{\"index\":5,\"byte_start\":725,\"byte_end\":754},{\"index\":6,\"byte_start\":754,\"byte_end\":945},{\"index\":7,\"byte_start\":945,\"byte_end\":1144},{\"index\":8,\"byte_start\":1144,\"byte_end\":1300},{\"index\":9,\"byte_start\":1300,\"byte_end\":1434},{\"index\":10,\"byte_start\":1434,\"byte_end\":1516},{\"index\":11,\"byte_start\":1516,\"byte_end\":1575},{\"index\":12,\"byte_start\":1575,\"byte_end\":1700},{\"index\":13,\"byte_start\":1700,\"byte_end\":1790},{\"index\":14,\"byte_start\":1790,\"byte_end\":1852},{\"index\":15,\"byte_start\":1852,\"byte_end\":1995},{\"index\":16,\"byte_start\":1995,\"byte_end\":2074},{\"index\":17,\"byte_start\":2074,\"byte_end\":2185},{\"index\":18,\"byte_start\":2185,\"byte_end\":2308}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":115},{\"index\":1,\"byte_start\":115,\"byte_end\":226},{\"index\":2,\"byte_start\":226,\"byte_end\":359},{\"index\":3,\"byte_start\":359,\"byte_end\":536}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[0,1]\n1|E|1.00|[2,3]\n2|E|1.00|[6,7]\n3|E|1.00|[15,17]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259685,
+    "id": "chatcmpl-4pbndG5YXkx8A7FAcOulHeNL39q6ZcIf",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1526.378,
+      "predicted_n": 62,
+      "predicted_per_second": 40.6190340793696,
+      "predicted_per_token_ms": 24.619,
+      "prompt_ms": 1015.706,
+      "prompt_n": 1055,
+      "prompt_per_second": 1038.6863915345582,
+      "prompt_per_token_ms": 0.9627545023696683
+    },
+    "usage": {
+      "completion_tokens": 62,
+      "prompt_tokens": 1104,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1166
+    }
+  },
+  "source_cluster_id": "sha256:9bf872f513bc63472e4f8d7fa30af7d6c639d4cfc21f69efb8953af5cffae60d",
+  "started_monotonic_ns": 920590562298246,
+  "status": "completed",
+  "unit_id": "sha256:7e6c0ed49ea30b36cfff3acafadbce563fa843cb78a74c6813beecffbaa687a5"
+}

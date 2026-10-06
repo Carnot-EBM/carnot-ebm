@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:2e6c01d394dc5c14fd119488c588c1bbbda62ad00ccc186d049369f34b585cb7",
+  "ended_monotonic_ns": 920572233041728,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"GameStop Horror: Employee Faces Charges for Stabbing Customer During Argument\\nA seemingly routine visit to a GameStop store in Potomac Mills, Virginia, took a shocking turn when an employee allegedly stabbed a customer during an argument. The incident left both the victim and the accused facing dire consequences, shaking the community and raising questions about in-store safety.\\nThe incident unfolded when an argument between a GameStop employee and a customer escalated to a horrifying level. The employee, identified as a D.C. resident, Courtney, reportedly stabbed the customer during the dispute. The victim suffered a non-life-threatening injury and was promptly provided with first aid by officers before being transported to an area hospital for further treatment.\\nLaw enforcement swiftly arrived on the scene and took Courtney into custody without further incident. Thankfully, there were no additional injuries reported during the incident.\\nThe seriousness of the alleged crime led to police charging Courtney with aggravated malicious wounding. The specifics of any bond arrangements were not immediately available at the time of reporting, leaving questions about Courtney's legal status unanswered.\\nThis incident underscores the importance of maintaining a safe and respectful environment for both employees and customers in public spaces, such as retail stores. The GameStop incident serves as a reminder that disagreements can sometimes escalate to levels of violence, and the importance of maintaining composure and finding non-violent ways to resolve conflicts. It also highlights the essential role of law enforcement in promptly responding to such incidents to protect the safety of the public.\\nAs the legal process unfolds, the Potomac Mills community will be closely following this case, hoping for justice and measures to ensure the safety of all individuals in public spaces. This incident reminds us that maintaining respectful and safe interactions is crucial in our day-to-day lives, and violence should never be an option for dispute resolution.\",\"answer\":\"An employee at a GameStop store in Virginia has been charged with aggravated malicious wounding after allegedly stabbing a customer during an argument. The victim suffered a non-life-threatening injury and was taken to the hospital. The accused was promptly arrested and is awaiting further legal proceedings. This incident highlights the importance of maintaining a safe and respectful environment in retail stores and the need for non-violent conflict resolution. The community is closely following the case, hoping for justice and increased safety measures.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":239},{\"index\":1,\"byte_start\":239,\"byte_end\":382},{\"index\":2,\"byte_start\":382,\"byte_end\":497},{\"index\":3,\"byte_start\":497,\"byte_end\":532},{\"index\":4,\"byte_start\":532,\"byte_end\":604},{\"index\":5,\"byte_start\":604,\"byte_end\":775},{\"index\":6,\"byte_start\":775,\"byte_end\":877},{\"index\":7,\"byte_start\":877,\"byte_end\":953},{\"index\":8,\"byte_start\":953,\"byte_end\":1058},{\"index\":9,\"byte_start\":1058,\"byte_end\":1214},{\"index\":10,\"byte_start\":1214,\"byte_end\":1378},{\"index\":11,\"byte_start\":1378,\"byte_end\":1581},{\"index\":12,\"byte_start\":1581,\"byte_end\":1716},{\"index\":13,\"byte_start\":1716,\"byte_end\":1901},{\"index\":14,\"byte_start\":1901,\"byte_end\":2074}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":152},{\"index\":1,\"byte_start\":152,\"byte_end\":233},{\"index\":2,\"byte_start\":233,\"byte_end\":310},{\"index\":3,\"byte_start\":310,\"byte_end\":466},{\"index\":4,\"byte_start\":466,\"byte_end\":560}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 915,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"GameStop Horror: Employee Faces Charges for Stabbing Customer During Argument\\nA seemingly routine visit to a GameStop store in Potomac Mills, Virginia, took a shocking turn when an employee allegedly stabbed a customer during an argument. The incident left both the victim and the accused facing dire consequences, shaking the community and raising questions about in-store safety.\\nThe incident unfolded when an argument between a GameStop employee and a customer escalated to a horrifying level. The employee, identified as a D.C. resident, Courtney, reportedly stabbed the customer during the dispute. The victim suffered a non-life-threatening injury and was promptly provided with first aid by officers before being transported to an area hospital for further treatment.\\nLaw enforcement swiftly arrived on the scene and took Courtney into custody without further incident. Thankfully, there were no additional injuries reported during the incident.\\nThe seriousness of the alleged crime led to police charging Courtney with aggravated malicious wounding. The specifics of any bond arrangements were not immediately available at the time of reporting, leaving questions about Courtney's legal status unanswered.\\nThis incident underscores the importance of maintaining a safe and respectful environment for both employees and customers in public spaces, such as retail stores. The GameStop incident serves as a reminder that disagreements can sometimes escalate to levels of violence, and the importance of maintaining composure and finding non-violent ways to resolve conflicts. It also highlights the essential role of law enforcement in promptly responding to such incidents to protect the safety of the public.\\nAs the legal process unfolds, the Potomac Mills community will be closely following this case, hoping for justice and measures to ensure the safety of all individuals in public spaces. This incident reminds us that maintaining respectful and safe interactions is crucial in our day-to-day lives, and violence should never be an option for dispute resolution.\",\"answer\":\"An employee at a GameStop store in Virginia has been charged with aggravated malicious wounding after allegedly stabbing a customer during an argument. The victim suffered a non-life-threatening injury and was taken to the hospital. The accused was promptly arrested and is awaiting further legal proceedings. This incident highlights the importance of maintaining a safe and respectful environment in retail stores and the need for non-violent conflict resolution. The community is closely following the case, hoping for justice and increased safety measures.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":239},{\"index\":1,\"byte_start\":239,\"byte_end\":382},{\"index\":2,\"byte_start\":382,\"byte_end\":497},{\"index\":3,\"byte_start\":497,\"byte_end\":532},{\"index\":4,\"byte_start\":532,\"byte_end\":604},{\"index\":5,\"byte_start\":604,\"byte_end\":775},{\"index\":6,\"byte_start\":775,\"byte_end\":877},{\"index\":7,\"byte_start\":877,\"byte_end\":953},{\"index\":8,\"byte_start\":953,\"byte_end\":1058},{\"index\":9,\"byte_start\":1058,\"byte_end\":1214},{\"index\":10,\"byte_start\":1214,\"byte_end\":1378},{\"index\":11,\"byte_start\":1378,\"byte_end\":1581},{\"index\":12,\"byte_start\":1581,\"byte_end\":1716},{\"index\":13,\"byte_start\":1716,\"byte_end\":1901},{\"index\":14,\"byte_start\":1901,\"byte_end\":2074}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":152},{\"index\":1,\"byte_start\":152,\"byte_end\":233},{\"index\":2,\"byte_start\":233,\"byte_end\":310},{\"index\":3,\"byte_start\":310,\"byte_end\":466},{\"index\":4,\"byte_start\":466,\"byte_end\":560}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "input_tokens": 903,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"GameStop Horror: Employee Faces Charges for Stabbing Customer During Argument\\nA seemingly routine visit to a GameStop store in Potomac Mills, Virginia, took a shocking turn when an employee allegedly stabbed a customer during an argument. The incident left both the victim and the accused facing dire consequences, shaking the community and raising questions about in-store safety.\\nThe incident unfolded when an argument between a GameStop employee and a customer escalated to a horrifying level. The employee, identified as a D.C. resident, Courtney, reportedly stabbed the customer during the dispute. The victim suffered a non-life-threatening injury and was promptly provided with first aid by officers before being transported to an area hospital for further treatment.\\nLaw enforcement swiftly arrived on the scene and took Courtney into custody without further incident. Thankfully, there were no additional injuries reported during the incident.\\nThe seriousness of the alleged crime led to police charging Courtney with aggravated malicious wounding. The specifics of any bond arrangements were not immediately available at the time of reporting, leaving questions about Courtney's legal status unanswered.\\nThis incident underscores the importance of maintaining a safe and respectful environment for both employees and customers in public spaces, such as retail stores. The GameStop incident serves as a reminder that disagreements can sometimes escalate to levels of violence, and the importance of maintaining composure and finding non-violent ways to resolve conflicts. It also highlights the essential role of law enforcement in promptly responding to such incidents to protect the safety of the public.\\nAs the legal process unfolds, the Potomac Mills community will be closely following this case, hoping for justice and measures to ensure the safety of all individuals in public spaces. This incident reminds us that maintaining respectful and safe interactions is crucial in our day-to-day lives, and violence should never be an option for dispute resolution.\",\"answer\":\"An employee at a GameStop store in Virginia has been charged with aggravated malicious wounding after allegedly stabbing a customer during an argument. The victim suffered a non-life-threatening injury and was taken to the hospital. The accused was promptly arrested and is awaiting further legal proceedings. This incident highlights the importance of maintaining a safe and respectful environment in retail stores and the need for non-violent conflict resolution. The community is closely following the case, hoping for justice and increased safety measures.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":239},{\"index\":1,\"byte_start\":239,\"byte_end\":382},{\"index\":2,\"byte_start\":382,\"byte_end\":497},{\"index\":3,\"byte_start\":497,\"byte_end\":532},{\"index\":4,\"byte_start\":532,\"byte_end\":604},{\"index\":5,\"byte_start\":604,\"byte_end\":775},{\"index\":6,\"byte_start\":775,\"byte_end\":877},{\"index\":7,\"byte_start\":877,\"byte_end\":953},{\"index\":8,\"byte_start\":953,\"byte_end\":1058},{\"index\":9,\"byte_start\":1058,\"byte_end\":1214},{\"index\":10,\"byte_start\":1214,\"byte_end\":1378},{\"index\":11,\"byte_start\":1378,\"byte_end\":1581},{\"index\":12,\"byte_start\":1581,\"byte_end\":1716},{\"index\":13,\"byte_start\":1716,\"byte_end\":1901},{\"index\":14,\"byte_start\":1901,\"byte_end\":2074}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":152},{\"index\":1,\"byte_start\":152,\"byte_end\":233},{\"index\":2,\"byte_start\":233,\"byte_end\":310},{\"index\":3,\"byte_start\":310,\"byte_end\":466},{\"index\":4,\"byte_start\":466,\"byte_end\":560}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,1]\n1|E|0.95|[1]\n2|E|0.90|[2,3]\n3|E|0.85|[5,13]\n4|E|0.90|[13]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259664,
+    "id": "chatcmpl-do793jej3EspMAsYCdHbIjRJzsSM28iR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1789.42,
+      "predicted_n": 73,
+      "predicted_per_second": 40.79534150730404,
+      "predicted_per_token_ms": 24.512602739726027,
+      "prompt_ms": 874.427,
+      "prompt_n": 866,
+      "prompt_per_second": 990.3628318887683,
+      "prompt_per_token_ms": 1.009730946882217
+    },
+    "usage": {
+      "completion_tokens": 73,
+      "prompt_tokens": 915,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 988
+    }
+  },
+  "source_cluster_id": "sha256:0109fe635e472cdf1414e9043e840b4a4909774ba52ccfc4c3001160f87e04dc",
+  "started_monotonic_ns": 920569408074111,
+  "status": "completed",
+  "unit_id": "sha256:1af365eb99620e958ed7aff83570a5876b5a386080f3bd50ce1217cbe7ccf583"
+}

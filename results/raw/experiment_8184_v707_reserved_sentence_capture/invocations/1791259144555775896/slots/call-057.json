@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:ad1ae3ab0bb330d4a048edce2f032b5e249251fb64fc79a4773c1dbe1d6531ba",
+  "ended_monotonic_ns": 920322924815093,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"413 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Restaurants, American (New)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-22:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Pace food+drink\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-12-28 22:42:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Went here on weekend get away. Service is friendly. Do be prepared to chill as is very laid back. Boyfriend and I both had the Caesar salad and the Huli Huli Chicken dish. AWESOME!! It was SO fantastic we couldn't stop thinking about it! Our neighbors (at the next table) were raving about how delicious their meals were too! Micro brews yummy! Highly recommend a visit here! I will definitely return if I visit the area again!\\\"},{\\\"review_date\\\":\\\"2014-11-11 01:08:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Love the food and atmosphere here when we visited a year and a half ago. But I just walked by here today and it looks to be CLOSED for good. What a shame.\\\"},{\\\"review_date\\\":\\\"2014-10-25 04:19:09\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Wish I could've reviewed the food!  Got there an hour and 20 min before closing and was told the kitchen is closed before they're out of food. Also took about 5 min to be acknowledged by anyone.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Pace food+drink is a local restaurant located at 413 State St, Santa Barbara, CA. This restaurant is known for its American (New) cuisine and has received a 4-star business rating. It operates from Tuesday to Saturday, with extended hours on Thursday, Friday, and Saturday till 10 pm. The restaurant offers street parking and is well-suited for groups. It also features a casual ambiance and provides takeout services, although it does not offer outdoor seating, WiFi, or music. Customer reviews highlight the friendly service, the laid-back atmosphere, and the exceptional food, particularly the Caesar salad and the Huli Huli Chicken dish. However, some customers expressed dissatisfaction over the restaurant's early kitchen closing hours.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":784},{\"index\":1,\"byte_start\":784,\"byte_end\":805},{\"index\":2,\"byte_start\":805,\"byte_end\":851},{\"index\":3,\"byte_start\":851,\"byte_end\":925},{\"index\":4,\"byte_start\":925,\"byte_end\":935},{\"index\":5,\"byte_start\":935,\"byte_end\":991},{\"index\":6,\"byte_start\":991,\"byte_end\":1079},{\"index\":7,\"byte_start\":1079,\"byte_end\":1098},{\"index\":8,\"byte_start\":1098,\"byte_end\":1129},{\"index\":9,\"byte_start\":1129,\"byte_end\":1327},{\"index\":10,\"byte_start\":1327,\"byte_end\":1395},{\"index\":11,\"byte_start\":1395,\"byte_end\":1518},{\"index\":12,\"byte_start\":1518,\"byte_end\":1625},{\"index\":13,\"byte_start\":1625,\"byte_end\":1693}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":82},{\"index\":1,\"byte_start\":82,\"byte_end\":181},{\"index\":2,\"byte_start\":181,\"byte_end\":285},{\"index\":3,\"byte_start\":285,\"byte_end\":353},{\"index\":4,\"byte_start\":353,\"byte_end\":479},{\"index\":5,\"byte_start\":479,\"byte_end\":642},{\"index\":6,\"byte_start\":642,\"byte_end\":742}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1152,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"413 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Restaurants, American (New)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-22:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Pace food+drink\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-12-28 22:42:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Went here on weekend get away. Service is friendly. Do be prepared to chill as is very laid back. Boyfriend and I both had the Caesar salad and the Huli Huli Chicken dish. AWESOME!! It was SO fantastic we couldn't stop thinking about it! Our neighbors (at the next table) were raving about how delicious their meals were too! Micro brews yummy! Highly recommend a visit here! I will definitely return if I visit the area again!\\\"},{\\\"review_date\\\":\\\"2014-11-11 01:08:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Love the food and atmosphere here when we visited a year and a half ago. But I just walked by here today and it looks to be CLOSED for good. What a shame.\\\"},{\\\"review_date\\\":\\\"2014-10-25 04:19:09\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Wish I could've reviewed the food!  Got there an hour and 20 min before closing and was told the kitchen is closed before they're out of food. Also took about 5 min to be acknowledged by anyone.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Pace food+drink is a local restaurant located at 413 State St, Santa Barbara, CA. This restaurant is known for its American (New) cuisine and has received a 4-star business rating. It operates from Tuesday to Saturday, with extended hours on Thursday, Friday, and Saturday till 10 pm. The restaurant offers street parking and is well-suited for groups. It also features a casual ambiance and provides takeout services, although it does not offer outdoor seating, WiFi, or music. Customer reviews highlight the friendly service, the laid-back atmosphere, and the exceptional food, particularly the Caesar salad and the Huli Huli Chicken dish. However, some customers expressed dissatisfaction over the restaurant's early kitchen closing hours.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":784},{\"index\":1,\"byte_start\":784,\"byte_end\":805},{\"index\":2,\"byte_start\":805,\"byte_end\":851},{\"index\":3,\"byte_start\":851,\"byte_end\":925},{\"index\":4,\"byte_start\":925,\"byte_end\":935},{\"index\":5,\"byte_start\":935,\"byte_end\":991},{\"index\":6,\"byte_start\":991,\"byte_end\":1079},{\"index\":7,\"byte_start\":1079,\"byte_end\":1098},{\"index\":8,\"byte_start\":1098,\"byte_end\":1129},{\"index\":9,\"byte_start\":1129,\"byte_end\":1327},{\"index\":10,\"byte_start\":1327,\"byte_end\":1395},{\"index\":11,\"byte_start\":1395,\"byte_end\":1518},{\"index\":12,\"byte_start\":1518,\"byte_end\":1625},{\"index\":13,\"byte_start\":1625,\"byte_end\":1693}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":82},{\"index\":1,\"byte_start\":82,\"byte_end\":181},{\"index\":2,\"byte_start\":181,\"byte_end\":285},{\"index\":3,\"byte_start\":285,\"byte_end\":353},{\"index\":4,\"byte_start\":353,\"byte_end\":479},{\"index\":5,\"byte_start\":479,\"byte_end\":642},{\"index\":6,\"byte_start\":642,\"byte_end\":742}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "input_tokens": 1140,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"413 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Restaurants, American (New)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-22:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Pace food+drink\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-12-28 22:42:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Went here on weekend get away. Service is friendly. Do be prepared to chill as is very laid back. Boyfriend and I both had the Caesar salad and the Huli Huli Chicken dish. AWESOME!! It was SO fantastic we couldn't stop thinking about it! Our neighbors (at the next table) were raving about how delicious their meals were too! Micro brews yummy! Highly recommend a visit here! I will definitely return if I visit the area again!\\\"},{\\\"review_date\\\":\\\"2014-11-11 01:08:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Love the food and atmosphere here when we visited a year and a half ago. But I just walked by here today and it looks to be CLOSED for good. What a shame.\\\"},{\\\"review_date\\\":\\\"2014-10-25 04:19:09\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Wish I could've reviewed the food!  Got there an hour and 20 min before closing and was told the kitchen is closed before they're out of food. Also took about 5 min to be acknowledged by anyone.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Pace food+drink is a local restaurant located at 413 State St, Santa Barbara, CA. This restaurant is known for its American (New) cuisine and has received a 4-star business rating. It operates from Tuesday to Saturday, with extended hours on Thursday, Friday, and Saturday till 10 pm. The restaurant offers street parking and is well-suited for groups. It also features a casual ambiance and provides takeout services, although it does not offer outdoor seating, WiFi, or music. Customer reviews highlight the friendly service, the laid-back atmosphere, and the exceptional food, particularly the Caesar salad and the Huli Huli Chicken dish. However, some customers expressed dissatisfaction over the restaurant's early kitchen closing hours.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":784},{\"index\":1,\"byte_start\":784,\"byte_end\":805},{\"index\":2,\"byte_start\":805,\"byte_end\":851},{\"index\":3,\"byte_start\":851,\"byte_end\":925},{\"index\":4,\"byte_start\":925,\"byte_end\":935},{\"index\":5,\"byte_start\":935,\"byte_end\":991},{\"index\":6,\"byte_start\":991,\"byte_end\":1079},{\"index\":7,\"byte_start\":1079,\"byte_end\":1098},{\"index\":8,\"byte_start\":1098,\"byte_end\":1129},{\"index\":9,\"byte_start\":1129,\"byte_end\":1327},{\"index\":10,\"byte_start\":1327,\"byte_end\":1395},{\"index\":11,\"byte_start\":1395,\"byte_end\":1518},{\"index\":12,\"byte_start\":1518,\"byte_end\":1625},{\"index\":13,\"byte_start\":1625,\"byte_end\":1693}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":82},{\"index\":1,\"byte_start\":82,\"byte_end\":181},{\"index\":2,\"byte_start\":181,\"byte_end\":285},{\"index\":3,\"byte_start\":285,\"byte_end\":353},{\"index\":4,\"byte_start\":353,\"byte_end\":479},{\"index\":5,\"byte_start\":479,\"byte_end\":642},{\"index\":6,\"byte_start\":642,\"byte_end\":742}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]\n4|E|1.00|[]\n5|E|1.00|[]\n6|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259414,
+    "id": "chatcmpl-lug6QuRLizZNWdK8relm5mgNzAlMk2Ec",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1871.546,
+      "predicted_n": 77,
+      "predicted_per_second": 41.142456557306105,
+      "predicted_per_token_ms": 24.30579220779221,
+      "prompt_ms": 1018.016,
+      "prompt_n": 1152,
+      "prompt_per_second": 1131.6128626662057,
+      "prompt_per_token_ms": 0.8836944444444444
+    },
+    "usage": {
+      "completion_tokens": 77,
+      "prompt_tokens": 1152,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1229
+    }
+  },
+  "source_cluster_id": "sha256:10286311fe7b9a83dfecd0f4646fe14ebc2a789739f8c8bd2707185acdeb757c",
+  "started_monotonic_ns": 920319892010071,
+  "status": "completed",
+  "unit_id": "sha256:3086a0f38bed1fd8ac1018863d07a0a50b4986d8a7fe917a488d19ff18f3710a"
+}

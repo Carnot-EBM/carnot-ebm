@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:93a0ae2a4b561cf8541a8cb441564f2746ce403a8e394d50229dc7d79060528e",
+  "ended_monotonic_ns": 920375426473306,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"731 De La Guerra Plz\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Nightlife, Restaurants, Mexican, Dance Clubs\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"TonyRay's Restaurant & Cantina\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-04-14 16:30:03\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Been to Tony Ray's for the occasional party.   DJ Fab or bunch of drunk Harley dudes, certainly a Fiesta or two.  \\\\n\\\\nAs many times as I have been there, I don't really know what it is?   Is it a restaurant?  Does it keep regular hours?   Is it a bar?  Do people go there and hang out on a Thursday night?   The bartenders have always been nice and the drinks have been good.  Not sure if they have glass because it seems that I am always served in a plastic cup.   I know I have eaten the food but I have zero recollection as to whether or not I enjoyed it, it is that forgettable.  \\\\n\\\\nI gave them two stars but I might go back and see if they deserve and upgrade.\\\"},{\\\"review_date\\\":\\\"2014-03-02 15:38:33\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This is a great spot for a drink and some dessert. The dinner menu is decent but the price and size do not match. Don't come hungry, but do enjoy a specialty drink.\\\"},{\\\"review_date\\\":\\\"2011-08-29 21:40:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"my daughters and friends love to go there for karaoke :) so fun! The owners and staff are very sweet!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"TonyRay's Restaurant & Cantina is a local business located at 731 De La Guerra Plz, Santa Barbara, CA. It is categorized under Nightlife, Restaurants, Mexican, and Dance Clubs. The establishment is known for having outdoor seating and being suitable for groups. However, it does not offer restaurant reservations, take out services, or WiFi. The ambience of the place is not specifically categorized, and it does not provide business parking. The business has an average rating of 4.0 stars. Based on customer reviews, patrons have mixed feelings about the establishment. Some appreciated the drinks and found it a fun spot for karaoke, while others were unsure about its identity as a restaurant or a bar. The food was found to be forgettable by one customer, and another mentioned that the dinner menu did not match the price and size. Despite these mixed reviews, some customers expressed willingness to return.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":655},{\"index\":1,\"byte_start\":655,\"byte_end\":722},{\"index\":2,\"byte_start\":722,\"byte_end\":796},{\"index\":3,\"byte_start\":796,\"byte_end\":817},{\"index\":4,\"byte_start\":817,\"byte_end\":847},{\"index\":5,\"byte_start\":847,\"byte_end\":861},{\"index\":6,\"byte_start\":861,\"byte_end\":916},{\"index\":7,\"byte_start\":916,\"byte_end\":985},{\"index\":8,\"byte_start\":985,\"byte_end\":1074},{\"index\":9,\"byte_start\":1074,\"byte_end\":1192},{\"index\":10,\"byte_start\":1192,\"byte_end\":1399},{\"index\":11,\"byte_start\":1399,\"byte_end\":1462},{\"index\":12,\"byte_start\":1462,\"byte_end\":1651},{\"index\":13,\"byte_start\":1651,\"byte_end\":1704}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":103},{\"index\":1,\"byte_start\":103,\"byte_end\":177},{\"index\":2,\"byte_start\":177,\"byte_end\":262},{\"index\":3,\"byte_start\":262,\"byte_end\":342},{\"index\":4,\"byte_start\":342,\"byte_end\":443},{\"index\":5,\"byte_start\":443,\"byte_end\":492},{\"index\":6,\"byte_start\":492,\"byte_end\":572},{\"index\":7,\"byte_start\":572,\"byte_end\":707},{\"index\":8,\"byte_start\":707,\"byte_end\":838},{\"index\":9,\"byte_start\":838,\"byte_end\":914}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1210,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"731 De La Guerra Plz\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Nightlife, Restaurants, Mexican, Dance Clubs\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"TonyRay's Restaurant & Cantina\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-04-14 16:30:03\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Been to Tony Ray's for the occasional party.   DJ Fab or bunch of drunk Harley dudes, certainly a Fiesta or two.  \\\\n\\\\nAs many times as I have been there, I don't really know what it is?   Is it a restaurant?  Does it keep regular hours?   Is it a bar?  Do people go there and hang out on a Thursday night?   The bartenders have always been nice and the drinks have been good.  Not sure if they have glass because it seems that I am always served in a plastic cup.   I know I have eaten the food but I have zero recollection as to whether or not I enjoyed it, it is that forgettable.  \\\\n\\\\nI gave them two stars but I might go back and see if they deserve and upgrade.\\\"},{\\\"review_date\\\":\\\"2014-03-02 15:38:33\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This is a great spot for a drink and some dessert. The dinner menu is decent but the price and size do not match. Don't come hungry, but do enjoy a specialty drink.\\\"},{\\\"review_date\\\":\\\"2011-08-29 21:40:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"my daughters and friends love to go there for karaoke :) so fun! The owners and staff are very sweet!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"TonyRay's Restaurant & Cantina is a local business located at 731 De La Guerra Plz, Santa Barbara, CA. It is categorized under Nightlife, Restaurants, Mexican, and Dance Clubs. The establishment is known for having outdoor seating and being suitable for groups. However, it does not offer restaurant reservations, take out services, or WiFi. The ambience of the place is not specifically categorized, and it does not provide business parking. The business has an average rating of 4.0 stars. Based on customer reviews, patrons have mixed feelings about the establishment. Some appreciated the drinks and found it a fun spot for karaoke, while others were unsure about its identity as a restaurant or a bar. The food was found to be forgettable by one customer, and another mentioned that the dinner menu did not match the price and size. Despite these mixed reviews, some customers expressed willingness to return.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":655},{\"index\":1,\"byte_start\":655,\"byte_end\":722},{\"index\":2,\"byte_start\":722,\"byte_end\":796},{\"index\":3,\"byte_start\":796,\"byte_end\":817},{\"index\":4,\"byte_start\":817,\"byte_end\":847},{\"index\":5,\"byte_start\":847,\"byte_end\":861},{\"index\":6,\"byte_start\":861,\"byte_end\":916},{\"index\":7,\"byte_start\":916,\"byte_end\":985},{\"index\":8,\"byte_start\":985,\"byte_end\":1074},{\"index\":9,\"byte_start\":1074,\"byte_end\":1192},{\"index\":10,\"byte_start\":1192,\"byte_end\":1399},{\"index\":11,\"byte_start\":1399,\"byte_end\":1462},{\"index\":12,\"byte_start\":1462,\"byte_end\":1651},{\"index\":13,\"byte_start\":1651,\"byte_end\":1704}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":103},{\"index\":1,\"byte_start\":103,\"byte_end\":177},{\"index\":2,\"byte_start\":177,\"byte_end\":262},{\"index\":3,\"byte_start\":262,\"byte_end\":342},{\"index\":4,\"byte_start\":342,\"byte_end\":443},{\"index\":5,\"byte_start\":443,\"byte_end\":492},{\"index\":6,\"byte_start\":492,\"byte_end\":572},{\"index\":7,\"byte_start\":572,\"byte_end\":707},{\"index\":8,\"byte_start\":707,\"byte_end\":838},{\"index\":9,\"byte_start\":838,\"byte_end\":914}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "input_tokens": 1198,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"731 De La Guerra Plz\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Nightlife, Restaurants, Mexican, Dance Clubs\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"TonyRay's Restaurant & Cantina\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-04-14 16:30:03\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Been to Tony Ray's for the occasional party.   DJ Fab or bunch of drunk Harley dudes, certainly a Fiesta or two.  \\\\n\\\\nAs many times as I have been there, I don't really know what it is?   Is it a restaurant?  Does it keep regular hours?   Is it a bar?  Do people go there and hang out on a Thursday night?   The bartenders have always been nice and the drinks have been good.  Not sure if they have glass because it seems that I am always served in a plastic cup.   I know I have eaten the food but I have zero recollection as to whether or not I enjoyed it, it is that forgettable.  \\\\n\\\\nI gave them two stars but I might go back and see if they deserve and upgrade.\\\"},{\\\"review_date\\\":\\\"2014-03-02 15:38:33\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This is a great spot for a drink and some dessert. The dinner menu is decent but the price and size do not match. Don't come hungry, but do enjoy a specialty drink.\\\"},{\\\"review_date\\\":\\\"2011-08-29 21:40:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"my daughters and friends love to go there for karaoke :) so fun! The owners and staff are very sweet!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"TonyRay's Restaurant & Cantina is a local business located at 731 De La Guerra Plz, Santa Barbara, CA. It is categorized under Nightlife, Restaurants, Mexican, and Dance Clubs. The establishment is known for having outdoor seating and being suitable for groups. However, it does not offer restaurant reservations, take out services, or WiFi. The ambience of the place is not specifically categorized, and it does not provide business parking. The business has an average rating of 4.0 stars. Based on customer reviews, patrons have mixed feelings about the establishment. Some appreciated the drinks and found it a fun spot for karaoke, while others were unsure about its identity as a restaurant or a bar. The food was found to be forgettable by one customer, and another mentioned that the dinner menu did not match the price and size. Despite these mixed reviews, some customers expressed willingness to return.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":655},{\"index\":1,\"byte_start\":655,\"byte_end\":722},{\"index\":2,\"byte_start\":722,\"byte_end\":796},{\"index\":3,\"byte_start\":796,\"byte_end\":817},{\"index\":4,\"byte_start\":817,\"byte_end\":847},{\"index\":5,\"byte_start\":847,\"byte_end\":861},{\"index\":6,\"byte_start\":861,\"byte_end\":916},{\"index\":7,\"byte_start\":916,\"byte_end\":985},{\"index\":8,\"byte_start\":985,\"byte_end\":1074},{\"index\":9,\"byte_start\":1074,\"byte_end\":1192},{\"index\":10,\"byte_start\":1192,\"byte_end\":1399},{\"index\":11,\"byte_start\":1399,\"byte_end\":1462},{\"index\":12,\"byte_start\":1462,\"byte_end\":1651},{\"index\":13,\"byte_start\":1651,\"byte_end\":1704}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":103},{\"index\":1,\"byte_start\":103,\"byte_end\":177},{\"index\":2,\"byte_start\":177,\"byte_end\":262},{\"index\":3,\"byte_start\":262,\"byte_end\":342},{\"index\":4,\"byte_start\":342,\"byte_end\":443},{\"index\":5,\"byte_start\":443,\"byte_end\":492},{\"index\":6,\"byte_start\":492,\"byte_end\":572},{\"index\":7,\"byte_start\":572,\"byte_end\":707},{\"index\":8,\"byte_start\":707,\"byte_end\":838},{\"index\":9,\"byte_start\":838,\"byte_end\":914}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]\n4|E|1.00|[]\n5|E|1.00|[]\n6|E|1.00|[]\n7|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259467,
+    "id": "chatcmpl-pqVlWBwhmpcPYoUPiIi8vaT4jQVIARlN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 2147.002,
+      "predicted_n": 88,
+      "predicted_per_second": 40.9873861319179,
+      "predicted_per_token_ms": 24.39775,
+      "prompt_ms": 1107.158,
+      "prompt_n": 1161,
+      "prompt_per_second": 1048.6308187268664,
+      "prompt_per_token_ms": 0.9536244616709733
+    },
+    "usage": {
+      "completion_tokens": 88,
+      "prompt_tokens": 1210,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1298
+    }
+  },
+  "source_cluster_id": "sha256:0b3fb31da222c22d4d4fc2ea93fbda64714e64813c0fd52617e0c499c01ce9cb",
+  "started_monotonic_ns": 920372046739259,
+  "status": "completed",
+  "unit_id": "sha256:3d59ac5ff95967ad62d51537595917ce87ad6a81987cc36d9c446dab44f7714e"
+}

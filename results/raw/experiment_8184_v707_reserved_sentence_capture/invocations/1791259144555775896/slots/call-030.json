@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:bda4d9f26051a082407311543fe30f907657383bf0ee6230892c5b66079e755b",
+  "ended_monotonic_ns": 920244830274597,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Guaranteed to last the life of your seat. This size is the most typical size found on harley-davidson seats and cycle saddle-bags. Dome Studs Category. Shaped like a dome, these dome studs are one of the most classic \u2013 a design to last the ages.\\\\n\\\\npassage 2:Push the stud's rivets completely through the seat cover until the prongs protrude out from the inside of the seat cover. Bend the prongs toward each other with a pair of needle-nose pliers to secure the stub in place. Push the prongs of the next stud into the seat cover near the previous stud. Remove the stud and cut holes for the prongs. Push the stud into place and bend its prongs in with a pair of needle-nose pliers. Repeat until you have studded to the seat to your liking. Double check the stud prongs on the inside of the seat cover. Make sure that all of the prongs have been bent completely and that the studs are held firmly in place. Lay the seat cover over your motorcycle's seat pan, then flip the entire seat upside down.\\\\n\\\\npassage 3:Flip the seat over. Pry up the staples attaching the seat cover to the seat pan, using a staple remover or a small pry bar. Drill the cover rivets out carefully with an electric drill and a 1/8-inch bit, if your seat cover is attached by rivets. Pull the cover off of the seat pan.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to attach studs to seat\\\"}\",\"answer\":\"To attach studs to a seat, push the stud's rivets completely through the seat cover until the prongs protrude out from the inside. Using needle-nose pliers, bend the prongs toward each other to secure the stud in place. Push the prongs of the next stud into the seat cover near the previous stud, remove the stud, and cut holes for the prongs. Push the stud into place and bend its prongs in with the pliers. Repeat this process until you have studded the seat to your liking. Ensure that all the prongs have been bent completely and that the studs are held firmly in place. Finally, lay the seat cover over your motorcycle's seat pan and flip the entire seat upside down.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":65},{\"index\":1,\"byte_start\":65,\"byte_end\":154},{\"index\":2,\"byte_start\":154,\"byte_end\":175},{\"index\":3,\"byte_start\":175,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":503},{\"index\":5,\"byte_start\":503,\"byte_end\":580},{\"index\":6,\"byte_start\":580,\"byte_end\":626},{\"index\":7,\"byte_start\":626,\"byte_end\":709},{\"index\":8,\"byte_start\":709,\"byte_end\":767},{\"index\":9,\"byte_start\":767,\"byte_end\":829},{\"index\":10,\"byte_start\":829,\"byte_end\":933},{\"index\":11,\"byte_start\":933,\"byte_end\":1057},{\"index\":12,\"byte_start\":1057,\"byte_end\":1161},{\"index\":13,\"byte_start\":1161,\"byte_end\":1283},{\"index\":14,\"byte_start\":1283,\"byte_end\":1365}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":131},{\"index\":1,\"byte_start\":131,\"byte_end\":220},{\"index\":2,\"byte_start\":220,\"byte_end\":344},{\"index\":3,\"byte_start\":344,\"byte_end\":409},{\"index\":4,\"byte_start\":409,\"byte_end\":477},{\"index\":5,\"byte_start\":477,\"byte_end\":575},{\"index\":6,\"byte_start\":575,\"byte_end\":672}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 974,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Guaranteed to last the life of your seat. This size is the most typical size found on harley-davidson seats and cycle saddle-bags. Dome Studs Category. Shaped like a dome, these dome studs are one of the most classic \u2013 a design to last the ages.\\\\n\\\\npassage 2:Push the stud's rivets completely through the seat cover until the prongs protrude out from the inside of the seat cover. Bend the prongs toward each other with a pair of needle-nose pliers to secure the stub in place. Push the prongs of the next stud into the seat cover near the previous stud. Remove the stud and cut holes for the prongs. Push the stud into place and bend its prongs in with a pair of needle-nose pliers. Repeat until you have studded to the seat to your liking. Double check the stud prongs on the inside of the seat cover. Make sure that all of the prongs have been bent completely and that the studs are held firmly in place. Lay the seat cover over your motorcycle's seat pan, then flip the entire seat upside down.\\\\n\\\\npassage 3:Flip the seat over. Pry up the staples attaching the seat cover to the seat pan, using a staple remover or a small pry bar. Drill the cover rivets out carefully with an electric drill and a 1/8-inch bit, if your seat cover is attached by rivets. Pull the cover off of the seat pan.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to attach studs to seat\\\"}\",\"answer\":\"To attach studs to a seat, push the stud's rivets completely through the seat cover until the prongs protrude out from the inside. Using needle-nose pliers, bend the prongs toward each other to secure the stud in place. Push the prongs of the next stud into the seat cover near the previous stud, remove the stud, and cut holes for the prongs. Push the stud into place and bend its prongs in with the pliers. Repeat this process until you have studded the seat to your liking. Ensure that all the prongs have been bent completely and that the studs are held firmly in place. Finally, lay the seat cover over your motorcycle's seat pan and flip the entire seat upside down.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":65},{\"index\":1,\"byte_start\":65,\"byte_end\":154},{\"index\":2,\"byte_start\":154,\"byte_end\":175},{\"index\":3,\"byte_start\":175,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":503},{\"index\":5,\"byte_start\":503,\"byte_end\":580},{\"index\":6,\"byte_start\":580,\"byte_end\":626},{\"index\":7,\"byte_start\":626,\"byte_end\":709},{\"index\":8,\"byte_start\":709,\"byte_end\":767},{\"index\":9,\"byte_start\":767,\"byte_end\":829},{\"index\":10,\"byte_start\":829,\"byte_end\":933},{\"index\":11,\"byte_start\":933,\"byte_end\":1057},{\"index\":12,\"byte_start\":1057,\"byte_end\":1161},{\"index\":13,\"byte_start\":1161,\"byte_end\":1283},{\"index\":14,\"byte_start\":1283,\"byte_end\":1365}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":131},{\"index\":1,\"byte_start\":131,\"byte_end\":220},{\"index\":2,\"byte_start\":220,\"byte_end\":344},{\"index\":3,\"byte_start\":344,\"byte_end\":409},{\"index\":4,\"byte_start\":409,\"byte_end\":477},{\"index\":5,\"byte_start\":477,\"byte_end\":575},{\"index\":6,\"byte_start\":575,\"byte_end\":672}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "input_tokens": 962,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Guaranteed to last the life of your seat. This size is the most typical size found on harley-davidson seats and cycle saddle-bags. Dome Studs Category. Shaped like a dome, these dome studs are one of the most classic \u2013 a design to last the ages.\\\\n\\\\npassage 2:Push the stud's rivets completely through the seat cover until the prongs protrude out from the inside of the seat cover. Bend the prongs toward each other with a pair of needle-nose pliers to secure the stub in place. Push the prongs of the next stud into the seat cover near the previous stud. Remove the stud and cut holes for the prongs. Push the stud into place and bend its prongs in with a pair of needle-nose pliers. Repeat until you have studded to the seat to your liking. Double check the stud prongs on the inside of the seat cover. Make sure that all of the prongs have been bent completely and that the studs are held firmly in place. Lay the seat cover over your motorcycle's seat pan, then flip the entire seat upside down.\\\\n\\\\npassage 3:Flip the seat over. Pry up the staples attaching the seat cover to the seat pan, using a staple remover or a small pry bar. Drill the cover rivets out carefully with an electric drill and a 1/8-inch bit, if your seat cover is attached by rivets. Pull the cover off of the seat pan.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to attach studs to seat\\\"}\",\"answer\":\"To attach studs to a seat, push the stud's rivets completely through the seat cover until the prongs protrude out from the inside. Using needle-nose pliers, bend the prongs toward each other to secure the stud in place. Push the prongs of the next stud into the seat cover near the previous stud, remove the stud, and cut holes for the prongs. Push the stud into place and bend its prongs in with the pliers. Repeat this process until you have studded the seat to your liking. Ensure that all the prongs have been bent completely and that the studs are held firmly in place. Finally, lay the seat cover over your motorcycle's seat pan and flip the entire seat upside down.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":65},{\"index\":1,\"byte_start\":65,\"byte_end\":154},{\"index\":2,\"byte_start\":154,\"byte_end\":175},{\"index\":3,\"byte_start\":175,\"byte_end\":406},{\"index\":4,\"byte_start\":406,\"byte_end\":503},{\"index\":5,\"byte_start\":503,\"byte_end\":580},{\"index\":6,\"byte_start\":580,\"byte_end\":626},{\"index\":7,\"byte_start\":626,\"byte_end\":709},{\"index\":8,\"byte_start\":709,\"byte_end\":767},{\"index\":9,\"byte_start\":767,\"byte_end\":829},{\"index\":10,\"byte_start\":829,\"byte_end\":933},{\"index\":11,\"byte_start\":933,\"byte_end\":1057},{\"index\":12,\"byte_start\":1057,\"byte_end\":1161},{\"index\":13,\"byte_start\":1161,\"byte_end\":1283},{\"index\":14,\"byte_start\":1283,\"byte_end\":1365}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":131},{\"index\":1,\"byte_start\":131,\"byte_end\":220},{\"index\":2,\"byte_start\":220,\"byte_end\":344},{\"index\":3,\"byte_start\":344,\"byte_end\":409},{\"index\":4,\"byte_start\":409,\"byte_end\":477},{\"index\":5,\"byte_start\":477,\"byte_end\":575},{\"index\":6,\"byte_start\":575,\"byte_end\":672}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]\n4|E|1.00|[]\n5|E|1.00|[]\n6|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259336,
+    "id": "chatcmpl-JGoomNbCS82noiv5xURmjPhJQG9a1KBk",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1876.685,
+      "predicted_n": 77,
+      "predicted_per_second": 41.029794557957246,
+      "predicted_per_token_ms": 24.372532467532466,
+      "prompt_ms": 897.281,
+      "prompt_n": 974,
+      "prompt_per_second": 1085.501643297919,
+      "prompt_per_token_ms": 0.9212330595482545
+    },
+    "usage": {
+      "completion_tokens": 77,
+      "prompt_tokens": 974,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1051
+    }
+  },
+  "source_cluster_id": "sha256:cbb9342ff7dba0718b6822de109c094fb163801bf62de78efea41b8e5ddb9ad7",
+  "started_monotonic_ns": 920241896352323,
+  "status": "completed",
+  "unit_id": "sha256:d24151bf3ae11fc6ad8375b96669e0a3084b79d52d11db98021242bfe64a30ac"
+}

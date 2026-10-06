@@ -1,0 +1,88 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:0d44f37eeb747fc36f804634d721f5b6cdd43fd97c1c1d38c1d6166aeffd9d0a",
+  "ended_monotonic_ns": 920171740454290,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The short-run marginal cost (MC) curve will at first decline and then will go up at some point, and will intersect the average total cost and average variable cost curves at their minimum points.\\\\n\\\\npassage 2:Average costs are U-shaped, and the marginal cost curve intersects the average cost curves at their respective minimum points. In the competitive model of the firm, the minimum average variable cost is termed the shutdown point because a firm will not produce in the short run if price is below average variable cost.\\\\n\\\\npassage 3:The U-shape of the marginal cost curve is directly attributable to increasing, then decreasing marginal returns (and the law of diminishing marginal returns). As marginal product (and marginal returns) increases for relatively small output quantities, marginal cost declines.\\\\n\\\\n\\\",\\\"question\\\":\\\"marginal cost curve characteristics\\\"}\",\"answer\":\"Based on the given passages, we can say that the marginal cost curve has U-shaped characteristics and intersects the average total cost and average variable cost curves at their minimum points. The U-shape of the marginal cost curve is directly attributed to increasing, then decreasing marginal returns due to the law of diminishing marginal returns.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":359},{\"index\":1,\"byte_start\":359,\"byte_end\":722},{\"index\":2,\"byte_start\":722,\"byte_end\":893}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":194},{\"index\":1,\"byte_start\":194,\"byte_end\":351}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 410,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The short-run marginal cost (MC) curve will at first decline and then will go up at some point, and will intersect the average total cost and average variable cost curves at their minimum points.\\\\n\\\\npassage 2:Average costs are U-shaped, and the marginal cost curve intersects the average cost curves at their respective minimum points. In the competitive model of the firm, the minimum average variable cost is termed the shutdown point because a firm will not produce in the short run if price is below average variable cost.\\\\n\\\\npassage 3:The U-shape of the marginal cost curve is directly attributable to increasing, then decreasing marginal returns (and the law of diminishing marginal returns). As marginal product (and marginal returns) increases for relatively small output quantities, marginal cost declines.\\\\n\\\\n\\\",\\\"question\\\":\\\"marginal cost curve characteristics\\\"}\",\"answer\":\"Based on the given passages, we can say that the marginal cost curve has U-shaped characteristics and intersects the average total cost and average variable cost curves at their minimum points. The U-shape of the marginal cost curve is directly attributed to increasing, then decreasing marginal returns due to the law of diminishing marginal returns.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":359},{\"index\":1,\"byte_start\":359,\"byte_end\":722},{\"index\":2,\"byte_start\":722,\"byte_end\":893}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":194},{\"index\":1,\"byte_start\":194,\"byte_end\":351}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\"\n",
+    "input_tokens": 398,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The short-run marginal cost (MC) curve will at first decline and then will go up at some point, and will intersect the average total cost and average variable cost curves at their minimum points.\\\\n\\\\npassage 2:Average costs are U-shaped, and the marginal cost curve intersects the average cost curves at their respective minimum points. In the competitive model of the firm, the minimum average variable cost is termed the shutdown point because a firm will not produce in the short run if price is below average variable cost.\\\\n\\\\npassage 3:The U-shape of the marginal cost curve is directly attributable to increasing, then decreasing marginal returns (and the law of diminishing marginal returns). As marginal product (and marginal returns) increases for relatively small output quantities, marginal cost declines.\\\\n\\\\n\\\",\\\"question\\\":\\\"marginal cost curve characteristics\\\"}\",\"answer\":\"Based on the given passages, we can say that the marginal cost curve has U-shaped characteristics and intersects the average total cost and average variable cost curves at their minimum points. The U-shape of the marginal cost curve is directly attributed to increasing, then decreasing marginal returns due to the law of diminishing marginal returns.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":359},{\"index\":1,\"byte_start\":359,\"byte_end\":722},{\"index\":2,\"byte_start\":722,\"byte_end\":893}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":194},{\"index\":1,\"byte_start\":194,\"byte_end\":351}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[0,1]\n1|C|0.90|[2]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259263,
+    "id": "chatcmpl-nWsIoWRROUXQeAp1YTZL1KAOwhzEv0MD",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 683.435,
+      "predicted_n": 28,
+      "predicted_per_second": 40.9695142917761,
+      "predicted_per_token_ms": 24.408392857142854,
+      "prompt_ms": 417.231,
+      "prompt_n": 410,
+      "prompt_per_second": 982.6690730075186,
+      "prompt_per_token_ms": 1.0176365853658536
+    },
+    "usage": {
+      "completion_tokens": 28,
+      "prompt_tokens": 410,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 438
+    }
+  },
+  "source_cluster_id": "sha256:dd3d7b4bf94b2558b46aac1fc989a3da61011ece966ed31867f7b18112fe28af",
+  "started_monotonic_ns": 920170453571377,
+  "status": "completed",
+  "unit_id": "sha256:0118b0753f55e59847cab680b61f00bc8ed3488d925d758827e0a9a8e64427e5"
+}

@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:4a8dc4dac842ea9adcc766d0eba6385c35ae39b1806f0a0353e8ac40a5c03fde",
+  "ended_monotonic_ns": 920274748589449,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Add about 1 tablespoon of oil to a saut\u00e9 pan. Heat the oil over medium-high heat until it sizzles. Add the baby broccoli to the pan and cook for 2 to 3 minutes, or until it becomes tender and bright green. Stir or toss the broccoli constantly so all sides cook evenly without overcooking. Serve warm. Season sweet baby broccoli simply with a touch of butter and salt and pepper for taste.\\\\n\\\\npassage 2:The Goodness of Broccoli for Babies. Broccoli is very high in Vitamin C and is a great source of soluble fiber. This makes broccoli wonderful to add to baby food recipes. Soluble fiber is the fiber that helps loosen up the bowels as it changes its form as it passes through the digestive tract.\\\\n\\\\npassage 3:Fill a pot with 2 to 3 inches of water. Set a steamer basket on top so the basket sits above the water inside. Bring the water to a boil over high heat. Lay the baby broccoli in the steamer basket and place the lid on top. Steam the baby broccoli for 2 to 3 minutes, or until the stalks and florets brighten in color and become tender. Serve warm. Wash and trim the stalks.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to prepare baby broccoli\\\"}\",\"answer\":\"To prepare baby broccoli, you can either saut\u00e9 or steam it. For saut\u00e9ing, add about 1 tablespoon of oil to a saut\u00e9 pan and heat it over medium-high heat until it sizzles. Then, add the baby broccoli to the pan and cook for 2 to 3 minutes, or until it becomes tender and bright green. Stir or toss the broccoli constantly so all sides cook evenly without overcooking. Season with a touch of butter, salt, and pepper, and serve warm. \\n\\nFor steaming, fill a pot with 2 to 3 inches of water and set a steamer basket on top so that it sits above the water. Bring the water to a boil over high heat. Lay the baby broccoli in the steamer basket and place the lid on top. Steam the broccoli for 2 to 3 minutes, or until the stalks and florets brighten in color and become tender. Make sure to wash and trim the stalks before cooking. Serve warm.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":70},{\"index\":1,\"byte_start\":70,\"byte_end\":123},{\"index\":2,\"byte_start\":123,\"byte_end\":230},{\"index\":3,\"byte_start\":230,\"byte_end\":313},{\"index\":4,\"byte_start\":313,\"byte_end\":325},{\"index\":5,\"byte_start\":325,\"byte_end\":463},{\"index\":6,\"byte_start\":463,\"byte_end\":538},{\"index\":7,\"byte_start\":538,\"byte_end\":597},{\"index\":8,\"byte_start\":597,\"byte_end\":774},{\"index\":9,\"byte_start\":774,\"byte_end\":845},{\"index\":10,\"byte_start\":845,\"byte_end\":887},{\"index\":11,\"byte_start\":887,\"byte_end\":957},{\"index\":12,\"byte_start\":957,\"byte_end\":1070},{\"index\":13,\"byte_start\":1070,\"byte_end\":1082},{\"index\":14,\"byte_start\":1082,\"byte_end\":1155}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":61},{\"index\":1,\"byte_start\":61,\"byte_end\":174},{\"index\":2,\"byte_start\":174,\"byte_end\":287},{\"index\":3,\"byte_start\":287,\"byte_end\":370},{\"index\":4,\"byte_start\":370,\"byte_end\":437},{\"index\":5,\"byte_start\":437,\"byte_end\":555},{\"index\":6,\"byte_start\":555,\"byte_end\":597},{\"index\":7,\"byte_start\":597,\"byte_end\":667},{\"index\":8,\"byte_start\":667,\"byte_end\":775},{\"index\":9,\"byte_start\":775,\"byte_end\":829},{\"index\":10,\"byte_start\":829,\"byte_end\":840}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1051,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Add about 1 tablespoon of oil to a saut\u00e9 pan. Heat the oil over medium-high heat until it sizzles. Add the baby broccoli to the pan and cook for 2 to 3 minutes, or until it becomes tender and bright green. Stir or toss the broccoli constantly so all sides cook evenly without overcooking. Serve warm. Season sweet baby broccoli simply with a touch of butter and salt and pepper for taste.\\\\n\\\\npassage 2:The Goodness of Broccoli for Babies. Broccoli is very high in Vitamin C and is a great source of soluble fiber. This makes broccoli wonderful to add to baby food recipes. Soluble fiber is the fiber that helps loosen up the bowels as it changes its form as it passes through the digestive tract.\\\\n\\\\npassage 3:Fill a pot with 2 to 3 inches of water. Set a steamer basket on top so the basket sits above the water inside. Bring the water to a boil over high heat. Lay the baby broccoli in the steamer basket and place the lid on top. Steam the baby broccoli for 2 to 3 minutes, or until the stalks and florets brighten in color and become tender. Serve warm. Wash and trim the stalks.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to prepare baby broccoli\\\"}\",\"answer\":\"To prepare baby broccoli, you can either saut\u00e9 or steam it. For saut\u00e9ing, add about 1 tablespoon of oil to a saut\u00e9 pan and heat it over medium-high heat until it sizzles. Then, add the baby broccoli to the pan and cook for 2 to 3 minutes, or until it becomes tender and bright green. Stir or toss the broccoli constantly so all sides cook evenly without overcooking. Season with a touch of butter, salt, and pepper, and serve warm. \\n\\nFor steaming, fill a pot with 2 to 3 inches of water and set a steamer basket on top so that it sits above the water. Bring the water to a boil over high heat. Lay the baby broccoli in the steamer basket and place the lid on top. Steam the broccoli for 2 to 3 minutes, or until the stalks and florets brighten in color and become tender. Make sure to wash and trim the stalks before cooking. Serve warm.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":70},{\"index\":1,\"byte_start\":70,\"byte_end\":123},{\"index\":2,\"byte_start\":123,\"byte_end\":230},{\"index\":3,\"byte_start\":230,\"byte_end\":313},{\"index\":4,\"byte_start\":313,\"byte_end\":325},{\"index\":5,\"byte_start\":325,\"byte_end\":463},{\"index\":6,\"byte_start\":463,\"byte_end\":538},{\"index\":7,\"byte_start\":538,\"byte_end\":597},{\"index\":8,\"byte_start\":597,\"byte_end\":774},{\"index\":9,\"byte_start\":774,\"byte_end\":845},{\"index\":10,\"byte_start\":845,\"byte_end\":887},{\"index\":11,\"byte_start\":887,\"byte_end\":957},{\"index\":12,\"byte_start\":957,\"byte_end\":1070},{\"index\":13,\"byte_start\":1070,\"byte_end\":1082},{\"index\":14,\"byte_start\":1082,\"byte_end\":1155}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":61},{\"index\":1,\"byte_start\":61,\"byte_end\":174},{\"index\":2,\"byte_start\":174,\"byte_end\":287},{\"index\":3,\"byte_start\":287,\"byte_end\":370},{\"index\":4,\"byte_start\":370,\"byte_end\":437},{\"index\":5,\"byte_start\":437,\"byte_end\":555},{\"index\":6,\"byte_start\":555,\"byte_end\":597},{\"index\":7,\"byte_start\":597,\"byte_end\":667},{\"index\":8,\"byte_start\":667,\"byte_end\":775},{\"index\":9,\"byte_start\":775,\"byte_end\":829},{\"index\":10,\"byte_start\":829,\"byte_end\":840}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "input_tokens": 1039,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Add about 1 tablespoon of oil to a saut\u00e9 pan. Heat the oil over medium-high heat until it sizzles. Add the baby broccoli to the pan and cook for 2 to 3 minutes, or until it becomes tender and bright green. Stir or toss the broccoli constantly so all sides cook evenly without overcooking. Serve warm. Season sweet baby broccoli simply with a touch of butter and salt and pepper for taste.\\\\n\\\\npassage 2:The Goodness of Broccoli for Babies. Broccoli is very high in Vitamin C and is a great source of soluble fiber. This makes broccoli wonderful to add to baby food recipes. Soluble fiber is the fiber that helps loosen up the bowels as it changes its form as it passes through the digestive tract.\\\\n\\\\npassage 3:Fill a pot with 2 to 3 inches of water. Set a steamer basket on top so the basket sits above the water inside. Bring the water to a boil over high heat. Lay the baby broccoli in the steamer basket and place the lid on top. Steam the baby broccoli for 2 to 3 minutes, or until the stalks and florets brighten in color and become tender. Serve warm. Wash and trim the stalks.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to prepare baby broccoli\\\"}\",\"answer\":\"To prepare baby broccoli, you can either saut\u00e9 or steam it. For saut\u00e9ing, add about 1 tablespoon of oil to a saut\u00e9 pan and heat it over medium-high heat until it sizzles. Then, add the baby broccoli to the pan and cook for 2 to 3 minutes, or until it becomes tender and bright green. Stir or toss the broccoli constantly so all sides cook evenly without overcooking. Season with a touch of butter, salt, and pepper, and serve warm. \\n\\nFor steaming, fill a pot with 2 to 3 inches of water and set a steamer basket on top so that it sits above the water. Bring the water to a boil over high heat. Lay the baby broccoli in the steamer basket and place the lid on top. Steam the broccoli for 2 to 3 minutes, or until the stalks and florets brighten in color and become tender. Make sure to wash and trim the stalks before cooking. Serve warm.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":70},{\"index\":1,\"byte_start\":70,\"byte_end\":123},{\"index\":2,\"byte_start\":123,\"byte_end\":230},{\"index\":3,\"byte_start\":230,\"byte_end\":313},{\"index\":4,\"byte_start\":313,\"byte_end\":325},{\"index\":5,\"byte_start\":325,\"byte_end\":463},{\"index\":6,\"byte_start\":463,\"byte_end\":538},{\"index\":7,\"byte_start\":538,\"byte_end\":597},{\"index\":8,\"byte_start\":597,\"byte_end\":774},{\"index\":9,\"byte_start\":774,\"byte_end\":845},{\"index\":10,\"byte_start\":845,\"byte_end\":887},{\"index\":11,\"byte_start\":887,\"byte_end\":957},{\"index\":12,\"byte_start\":957,\"byte_end\":1070},{\"index\":13,\"byte_start\":1070,\"byte_end\":1082},{\"index\":14,\"byte_start\":1082,\"byte_end\":1155}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":61},{\"index\":1,\"byte_start\":61,\"byte_end\":174},{\"index\":2,\"byte_start\":174,\"byte_end\":287},{\"index\":3,\"byte_start\":287,\"byte_end\":370},{\"index\":4,\"byte_start\":370,\"byte_end\":437},{\"index\":5,\"byte_start\":437,\"byte_end\":555},{\"index\":6,\"byte_start\":555,\"byte_end\":597},{\"index\":7,\"byte_start\":597,\"byte_end\":667},{\"index\":8,\"byte_start\":667,\"byte_end\":775},{\"index\":9,\"byte_start\":775,\"byte_end\":829},{\"index\":10,\"byte_start\":829,\"byte_end\":840}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[0,1]\n2|E|1.00|[2,3]\n3|E|1.00|[4,5]\n4|E|1.00|[6,7]\n5|E|1.00|[8,9]\n6|E|1.00|[10,11]\n7|E|1.00|[12,13]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259366,
+    "id": "chatcmpl-0fi35C01uw3m26wNUX0TmMQRvZtLvq0Z",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2768.886,
+      "predicted_n": 113,
+      "predicted_per_second": 40.81063647979729,
+      "predicted_per_token_ms": 24.50341592920354,
+      "prompt_ms": 953.599,
+      "prompt_n": 1051,
+      "prompt_per_second": 1102.1404175130217,
+      "prompt_per_token_ms": 0.9073254043767841
+    },
+    "usage": {
+      "completion_tokens": 113,
+      "prompt_tokens": 1051,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1164
+    }
+  },
+  "source_cluster_id": "sha256:c28a9899af70a16c087243e0e5e484538b7279d231a3b9e48f62977d36766b51",
+  "started_monotonic_ns": 920270889599300,
+  "status": "completed",
+  "unit_id": "sha256:25a1c5e25e85ad09d8c99a6e2f67034caa944236637bfb087ee1dcfd21ad55b6"
+}

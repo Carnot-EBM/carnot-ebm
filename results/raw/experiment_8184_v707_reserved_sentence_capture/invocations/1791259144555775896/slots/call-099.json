@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:63165260be97d3af48658f4d8532a5533be4ab599ccedc4ef22731caba3fbff2",
+  "ended_monotonic_ns": 920438747087801,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"'Young and the Restless' Spoilers: Nick Breaks Up With Sally, Believes She's In love With Adam?\\nThe Young and the Restless (Y&R) spoilers for the week of October 9 tease that Nick Newman (Joshua Morrow) will dump Sally Spectra (Courtney Hope) over the kiss with Adam Newman (Mark Grossman). Soap Opera Digest reports that Nick urges Sally to figure out what she wants and let him know where they stand.\\nBefore Sally confessed that Adam kissed her to Nick, she told him she wasn't in love with him yet. Sally admitted that she loved him, but being \\\"totally in love with him\\\" wasn't there yet. But she was hopeful that she would get there eventually.\\nShe Knows Soaps reports that Sally admits her emotions are a mess, thanks to Adam and the kiss. The Young and the Restless spoilers say that Nick believes that Adam has this effect on Sally because she's still in love with his brother.\\nSally hates that she still has feelings for Adam. She loves the future she could have with Nick, but none of that matters if she cannot let go of Adam and get him to leave her alone.\\nY&R spoilers say that Nick thinks Sally needs space to determine what she wants. He's prepared for her to decide that Adam is the man for her. Ultimately, Nick just wants Sally to be happy and content with her decision.\\nAdam will learn of their breakup and turn up the pressure on Sally. He sees this as a sign that he and Sally are meant to be together. Sally struggles to say no to Adam without Nick to protect and shield her from Adam.\\nY&R fans, will Sally and Adam end up together? Keep watching The Young and the Restless, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\",\"answer\":\"The Young and the Restless spoilers suggest Nick Newman (Joshua Morrow) will break up with Sally Spectra (Courtney Hope) over her kiss with Adam Newman (Mark Grossman). Nick believes Sally still harbours feelings for Adam, despite Sally's assurances that she's not in love with him yet. After their breakup, Adam increases his advances towards Sally, seeing it as a sign they should be together. Nick hopes Sally will eventually find happiness and contentment in her choice.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":96},{\"index\":1,\"byte_start\":96,\"byte_end\":291},{\"index\":2,\"byte_start\":291,\"byte_end\":403},{\"index\":3,\"byte_start\":403,\"byte_end\":502},{\"index\":4,\"byte_start\":502,\"byte_end\":592},{\"index\":5,\"byte_start\":592,\"byte_end\":649},{\"index\":6,\"byte_start\":649,\"byte_end\":745},{\"index\":7,\"byte_start\":745,\"byte_end\":885},{\"index\":8,\"byte_start\":885,\"byte_end\":935},{\"index\":9,\"byte_start\":935,\"byte_end\":1068},{\"index\":10,\"byte_start\":1068,\"byte_end\":1149},{\"index\":11,\"byte_start\":1149,\"byte_end\":1211},{\"index\":12,\"byte_start\":1211,\"byte_end\":1288},{\"index\":13,\"byte_start\":1288,\"byte_end\":1356},{\"index\":14,\"byte_start\":1356,\"byte_end\":1423},{\"index\":15,\"byte_start\":1423,\"byte_end\":1507},{\"index\":16,\"byte_start\":1507,\"byte_end\":1554},{\"index\":17,\"byte_start\":1554,\"byte_end\":1652},{\"index\":18,\"byte_start\":1652,\"byte_end\":1718},{\"index\":19,\"byte_start\":1718,\"byte_end\":1767}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":169},{\"index\":1,\"byte_start\":169,\"byte_end\":287},{\"index\":2,\"byte_start\":287,\"byte_end\":396},{\"index\":3,\"byte_start\":396,\"byte_end\":474}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1031,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"'Young and the Restless' Spoilers: Nick Breaks Up With Sally, Believes She's In love With Adam?\\nThe Young and the Restless (Y&R) spoilers for the week of October 9 tease that Nick Newman (Joshua Morrow) will dump Sally Spectra (Courtney Hope) over the kiss with Adam Newman (Mark Grossman). Soap Opera Digest reports that Nick urges Sally to figure out what she wants and let him know where they stand.\\nBefore Sally confessed that Adam kissed her to Nick, she told him she wasn't in love with him yet. Sally admitted that she loved him, but being \\\"totally in love with him\\\" wasn't there yet. But she was hopeful that she would get there eventually.\\nShe Knows Soaps reports that Sally admits her emotions are a mess, thanks to Adam and the kiss. The Young and the Restless spoilers say that Nick believes that Adam has this effect on Sally because she's still in love with his brother.\\nSally hates that she still has feelings for Adam. She loves the future she could have with Nick, but none of that matters if she cannot let go of Adam and get him to leave her alone.\\nY&R spoilers say that Nick thinks Sally needs space to determine what she wants. He's prepared for her to decide that Adam is the man for her. Ultimately, Nick just wants Sally to be happy and content with her decision.\\nAdam will learn of their breakup and turn up the pressure on Sally. He sees this as a sign that he and Sally are meant to be together. Sally struggles to say no to Adam without Nick to protect and shield her from Adam.\\nY&R fans, will Sally and Adam end up together? Keep watching The Young and the Restless, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\",\"answer\":\"The Young and the Restless spoilers suggest Nick Newman (Joshua Morrow) will break up with Sally Spectra (Courtney Hope) over her kiss with Adam Newman (Mark Grossman). Nick believes Sally still harbours feelings for Adam, despite Sally's assurances that she's not in love with him yet. After their breakup, Adam increases his advances towards Sally, seeing it as a sign they should be together. Nick hopes Sally will eventually find happiness and contentment in her choice.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":96},{\"index\":1,\"byte_start\":96,\"byte_end\":291},{\"index\":2,\"byte_start\":291,\"byte_end\":403},{\"index\":3,\"byte_start\":403,\"byte_end\":502},{\"index\":4,\"byte_start\":502,\"byte_end\":592},{\"index\":5,\"byte_start\":592,\"byte_end\":649},{\"index\":6,\"byte_start\":649,\"byte_end\":745},{\"index\":7,\"byte_start\":745,\"byte_end\":885},{\"index\":8,\"byte_start\":885,\"byte_end\":935},{\"index\":9,\"byte_start\":935,\"byte_end\":1068},{\"index\":10,\"byte_start\":1068,\"byte_end\":1149},{\"index\":11,\"byte_start\":1149,\"byte_end\":1211},{\"index\":12,\"byte_start\":1211,\"byte_end\":1288},{\"index\":13,\"byte_start\":1288,\"byte_end\":1356},{\"index\":14,\"byte_start\":1356,\"byte_end\":1423},{\"index\":15,\"byte_start\":1423,\"byte_end\":1507},{\"index\":16,\"byte_start\":1507,\"byte_end\":1554},{\"index\":17,\"byte_start\":1554,\"byte_end\":1652},{\"index\":18,\"byte_start\":1652,\"byte_end\":1718},{\"index\":19,\"byte_start\":1718,\"byte_end\":1767}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":169},{\"index\":1,\"byte_start\":169,\"byte_end\":287},{\"index\":2,\"byte_start\":287,\"byte_end\":396},{\"index\":3,\"byte_start\":396,\"byte_end\":474}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\"\n",
+    "input_tokens": 1019,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"'Young and the Restless' Spoilers: Nick Breaks Up With Sally, Believes She's In love With Adam?\\nThe Young and the Restless (Y&R) spoilers for the week of October 9 tease that Nick Newman (Joshua Morrow) will dump Sally Spectra (Courtney Hope) over the kiss with Adam Newman (Mark Grossman). Soap Opera Digest reports that Nick urges Sally to figure out what she wants and let him know where they stand.\\nBefore Sally confessed that Adam kissed her to Nick, she told him she wasn't in love with him yet. Sally admitted that she loved him, but being \\\"totally in love with him\\\" wasn't there yet. But she was hopeful that she would get there eventually.\\nShe Knows Soaps reports that Sally admits her emotions are a mess, thanks to Adam and the kiss. The Young and the Restless spoilers say that Nick believes that Adam has this effect on Sally because she's still in love with his brother.\\nSally hates that she still has feelings for Adam. She loves the future she could have with Nick, but none of that matters if she cannot let go of Adam and get him to leave her alone.\\nY&R spoilers say that Nick thinks Sally needs space to determine what she wants. He's prepared for her to decide that Adam is the man for her. Ultimately, Nick just wants Sally to be happy and content with her decision.\\nAdam will learn of their breakup and turn up the pressure on Sally. He sees this as a sign that he and Sally are meant to be together. Sally struggles to say no to Adam without Nick to protect and shield her from Adam.\\nY&R fans, will Sally and Adam end up together? Keep watching The Young and the Restless, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\",\"answer\":\"The Young and the Restless spoilers suggest Nick Newman (Joshua Morrow) will break up with Sally Spectra (Courtney Hope) over her kiss with Adam Newman (Mark Grossman). Nick believes Sally still harbours feelings for Adam, despite Sally's assurances that she's not in love with him yet. After their breakup, Adam increases his advances towards Sally, seeing it as a sign they should be together. Nick hopes Sally will eventually find happiness and contentment in her choice.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":96},{\"index\":1,\"byte_start\":96,\"byte_end\":291},{\"index\":2,\"byte_start\":291,\"byte_end\":403},{\"index\":3,\"byte_start\":403,\"byte_end\":502},{\"index\":4,\"byte_start\":502,\"byte_end\":592},{\"index\":5,\"byte_start\":592,\"byte_end\":649},{\"index\":6,\"byte_start\":649,\"byte_end\":745},{\"index\":7,\"byte_start\":745,\"byte_end\":885},{\"index\":8,\"byte_start\":885,\"byte_end\":935},{\"index\":9,\"byte_start\":935,\"byte_end\":1068},{\"index\":10,\"byte_start\":1068,\"byte_end\":1149},{\"index\":11,\"byte_start\":1149,\"byte_end\":1211},{\"index\":12,\"byte_start\":1211,\"byte_end\":1288},{\"index\":13,\"byte_start\":1288,\"byte_end\":1356},{\"index\":14,\"byte_start\":1356,\"byte_end\":1423},{\"index\":15,\"byte_start\":1423,\"byte_end\":1507},{\"index\":16,\"byte_start\":1507,\"byte_end\":1554},{\"index\":17,\"byte_start\":1554,\"byte_end\":1652},{\"index\":18,\"byte_start\":1652,\"byte_end\":1718},{\"index\":19,\"byte_start\":1718,\"byte_end\":1767}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":169},{\"index\":1,\"byte_start\":169,\"byte_end\":287},{\"index\":2,\"byte_start\":287,\"byte_end\":396},{\"index\":3,\"byte_start\":396,\"byte_end\":474}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[0,1]\n1|E|1.00|[2,3]\n2|E|1.00|[7,8]\n3|E|1.00|[6]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259530,
+    "id": "chatcmpl-oAGUiURVjC3pSgsLwIH5rc0nEuZRDLxQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1423.822,
+      "predicted_n": 58,
+      "predicted_per_second": 40.7354290072776,
+      "predicted_per_token_ms": 24.548655172413792,
+      "prompt_ms": 963.955,
+      "prompt_n": 982,
+      "prompt_per_second": 1018.719753515465,
+      "prompt_per_token_ms": 0.9816242362525459
+    },
+    "usage": {
+      "completion_tokens": 58,
+      "prompt_tokens": 1031,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1089
+    }
+  },
+  "source_cluster_id": "sha256:628788e8e47fabbba8c2b1ad29cfa26cb174735b32e5c1719c8d4768f4b16d0d",
+  "started_monotonic_ns": 920436209097891,
+  "status": "completed",
+  "unit_id": "sha256:2990634033f1cccffc5a0dfe18682779577c6571fbffcdf3a7da26fde385dd71"
+}

@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:c53d2676003276f2c922747dc0ff950a26eae2512d6d9794b285d4b2d5e67d1c",
+  "ended_monotonic_ns": 920294790994399,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"5392 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Restaurants, Bakeries\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-18:0\\\",\\\"Saturday\\\":\\\"10:0-17:30\\\",\\\"Thursday\\\":\\\"7:30-18:0\\\",\\\"Tuesday\\\":\\\"7:30-18:0\\\",\\\"Wednesday\\\":\\\"7:30-18:0\\\"},\\\"name\\\":\\\"Simply Pies\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-07-30 20:56:42\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"We used Simply Pies for our wedding this July.  The pies are delicious, clearly the best around town, and for what they are, appropriately priced.  I am under the impression that the store is currently undergoing some ownership/management changes, which may make large event planning go a bit smoother.  Despite extraordinarily friendly service, over the course of the last many months of wedding planning, Simply Pies was at times unorganized and difficult to reach.  Overall, we would have appreciated more guidance.  That being said, don't get me wrong, I would use them again because 1) Pies are better than cake, 2) Simply Pies are better than other pies.\\\"},{\\\"review_date\\\":\\\"2015-07-02 04:42:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Love the quiche, and the candied pecans  Great local businesses with excellent service and high quality offerings!\\\"},{\\\"review_date\\\":\\\"2015-05-10 00:48:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Just bought berry and apple pies, 2 beef, 2 chicken and 2 veggie pies and ohhhh my god this is heaven on earth! I highly recommend simply pies. Its so great to support local businesses and the owner is so kind!  This is a true gem and is a MUST try! 1000 stars!!!!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Simply Pies is a bakery located at 5392 Hollister Ave in Goleta, California. They specialize in pies, quiches, and other baked goods. The hours of operation are from 7:30 AM to 6:0 PM on weekdays and from 10:00 AM to 5:30 PM on Saturdays.\\n\\nCustomers have praised the quality of their offerings, with the quiche and candied pecans being particular favorites. Some have also commented on the friendly service, although others have noted that the store can be disorganized and difficult to reach during certain periods.\\n\\nIn terms of reviews, the average rating is 4.0 out of 5.0, with the highest rating being 5.0 stars. Customers have left positive feedback regarding their experience at Simply Pies, including comments about the variety of flavors available and the freshness of the ingredients used in their products.\\n\\nOverall, Simply Pies appears to be a popular choice for those seeking delicious baked goods and a friendly, locally owned experience.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":651},{\"index\":1,\"byte_start\":651,\"byte_end\":751},{\"index\":2,\"byte_start\":751,\"byte_end\":907},{\"index\":3,\"byte_start\":907,\"byte_end\":1072},{\"index\":4,\"byte_start\":1072,\"byte_end\":1123},{\"index\":5,\"byte_start\":1123,\"byte_end\":1637},{\"index\":6,\"byte_start\":1637,\"byte_end\":1669},{\"index\":7,\"byte_start\":1669,\"byte_end\":1737},{\"index\":8,\"byte_start\":1737,\"byte_end\":1775},{\"index\":9,\"byte_start\":1775,\"byte_end\":1806}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":77},{\"index\":1,\"byte_start\":77,\"byte_end\":134},{\"index\":2,\"byte_start\":134,\"byte_end\":240},{\"index\":3,\"byte_start\":240,\"byte_end\":358},{\"index\":4,\"byte_start\":358,\"byte_end\":518},{\"index\":5,\"byte_start\":518,\"byte_end\":618},{\"index\":6,\"byte_start\":618,\"byte_end\":819},{\"index\":7,\"byte_start\":819,\"byte_end\":952}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1169,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"5392 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Restaurants, Bakeries\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-18:0\\\",\\\"Saturday\\\":\\\"10:0-17:30\\\",\\\"Thursday\\\":\\\"7:30-18:0\\\",\\\"Tuesday\\\":\\\"7:30-18:0\\\",\\\"Wednesday\\\":\\\"7:30-18:0\\\"},\\\"name\\\":\\\"Simply Pies\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-07-30 20:56:42\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"We used Simply Pies for our wedding this July.  The pies are delicious, clearly the best around town, and for what they are, appropriately priced.  I am under the impression that the store is currently undergoing some ownership/management changes, which may make large event planning go a bit smoother.  Despite extraordinarily friendly service, over the course of the last many months of wedding planning, Simply Pies was at times unorganized and difficult to reach.  Overall, we would have appreciated more guidance.  That being said, don't get me wrong, I would use them again because 1) Pies are better than cake, 2) Simply Pies are better than other pies.\\\"},{\\\"review_date\\\":\\\"2015-07-02 04:42:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Love the quiche, and the candied pecans  Great local businesses with excellent service and high quality offerings!\\\"},{\\\"review_date\\\":\\\"2015-05-10 00:48:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Just bought berry and apple pies, 2 beef, 2 chicken and 2 veggie pies and ohhhh my god this is heaven on earth! I highly recommend simply pies. Its so great to support local businesses and the owner is so kind!  This is a true gem and is a MUST try! 1000 stars!!!!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Simply Pies is a bakery located at 5392 Hollister Ave in Goleta, California. They specialize in pies, quiches, and other baked goods. The hours of operation are from 7:30 AM to 6:0 PM on weekdays and from 10:00 AM to 5:30 PM on Saturdays.\\n\\nCustomers have praised the quality of their offerings, with the quiche and candied pecans being particular favorites. Some have also commented on the friendly service, although others have noted that the store can be disorganized and difficult to reach during certain periods.\\n\\nIn terms of reviews, the average rating is 4.0 out of 5.0, with the highest rating being 5.0 stars. Customers have left positive feedback regarding their experience at Simply Pies, including comments about the variety of flavors available and the freshness of the ingredients used in their products.\\n\\nOverall, Simply Pies appears to be a popular choice for those seeking delicious baked goods and a friendly, locally owned experience.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":651},{\"index\":1,\"byte_start\":651,\"byte_end\":751},{\"index\":2,\"byte_start\":751,\"byte_end\":907},{\"index\":3,\"byte_start\":907,\"byte_end\":1072},{\"index\":4,\"byte_start\":1072,\"byte_end\":1123},{\"index\":5,\"byte_start\":1123,\"byte_end\":1637},{\"index\":6,\"byte_start\":1637,\"byte_end\":1669},{\"index\":7,\"byte_start\":1669,\"byte_end\":1737},{\"index\":8,\"byte_start\":1737,\"byte_end\":1775},{\"index\":9,\"byte_start\":1775,\"byte_end\":1806}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":77},{\"index\":1,\"byte_start\":77,\"byte_end\":134},{\"index\":2,\"byte_start\":134,\"byte_end\":240},{\"index\":3,\"byte_start\":240,\"byte_end\":358},{\"index\":4,\"byte_start\":358,\"byte_end\":518},{\"index\":5,\"byte_start\":518,\"byte_end\":618},{\"index\":6,\"byte_start\":618,\"byte_end\":819},{\"index\":7,\"byte_start\":819,\"byte_end\":952}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+    "input_tokens": 1157,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"5392 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Restaurants, Bakeries\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-18:0\\\",\\\"Saturday\\\":\\\"10:0-17:30\\\",\\\"Thursday\\\":\\\"7:30-18:0\\\",\\\"Tuesday\\\":\\\"7:30-18:0\\\",\\\"Wednesday\\\":\\\"7:30-18:0\\\"},\\\"name\\\":\\\"Simply Pies\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-07-30 20:56:42\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"We used Simply Pies for our wedding this July.  The pies are delicious, clearly the best around town, and for what they are, appropriately priced.  I am under the impression that the store is currently undergoing some ownership/management changes, which may make large event planning go a bit smoother.  Despite extraordinarily friendly service, over the course of the last many months of wedding planning, Simply Pies was at times unorganized and difficult to reach.  Overall, we would have appreciated more guidance.  That being said, don't get me wrong, I would use them again because 1) Pies are better than cake, 2) Simply Pies are better than other pies.\\\"},{\\\"review_date\\\":\\\"2015-07-02 04:42:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Love the quiche, and the candied pecans  Great local businesses with excellent service and high quality offerings!\\\"},{\\\"review_date\\\":\\\"2015-05-10 00:48:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Just bought berry and apple pies, 2 beef, 2 chicken and 2 veggie pies and ohhhh my god this is heaven on earth! I highly recommend simply pies. Its so great to support local businesses and the owner is so kind!  This is a true gem and is a MUST try! 1000 stars!!!!\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Simply Pies is a bakery located at 5392 Hollister Ave in Goleta, California. They specialize in pies, quiches, and other baked goods. The hours of operation are from 7:30 AM to 6:0 PM on weekdays and from 10:00 AM to 5:30 PM on Saturdays.\\n\\nCustomers have praised the quality of their offerings, with the quiche and candied pecans being particular favorites. Some have also commented on the friendly service, although others have noted that the store can be disorganized and difficult to reach during certain periods.\\n\\nIn terms of reviews, the average rating is 4.0 out of 5.0, with the highest rating being 5.0 stars. Customers have left positive feedback regarding their experience at Simply Pies, including comments about the variety of flavors available and the freshness of the ingredients used in their products.\\n\\nOverall, Simply Pies appears to be a popular choice for those seeking delicious baked goods and a friendly, locally owned experience.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":651},{\"index\":1,\"byte_start\":651,\"byte_end\":751},{\"index\":2,\"byte_start\":751,\"byte_end\":907},{\"index\":3,\"byte_start\":907,\"byte_end\":1072},{\"index\":4,\"byte_start\":1072,\"byte_end\":1123},{\"index\":5,\"byte_start\":1123,\"byte_end\":1637},{\"index\":6,\"byte_start\":1637,\"byte_end\":1669},{\"index\":7,\"byte_start\":1669,\"byte_end\":1737},{\"index\":8,\"byte_start\":1737,\"byte_end\":1775},{\"index\":9,\"byte_start\":1775,\"byte_end\":1806}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":77},{\"index\":1,\"byte_start\":77,\"byte_end\":134},{\"index\":2,\"byte_start\":134,\"byte_end\":240},{\"index\":3,\"byte_start\":240,\"byte_end\":358},{\"index\":4,\"byte_start\":358,\"byte_end\":518},{\"index\":5,\"byte_start\":518,\"byte_end\":618},{\"index\":6,\"byte_start\":618,\"byte_end\":819},{\"index\":7,\"byte_start\":819,\"byte_end\":952}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[]\n1|E|0.90|[]\n2|E|0.85|[]\n3|E|0.90|[]\n4|E|0.80|[]\n5|E|0.95|[]\n6|E|0.90|[]\n7|E|0.85|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259386,
+    "id": "chatcmpl-GOytc0EkM3MZvNhKtNcGle88v6DedqUg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2141.911,
+      "predicted_n": 88,
+      "predicted_per_second": 41.084806978441215,
+      "predicted_per_token_ms": 24.339897727272728,
+      "prompt_ms": 1044.325,
+      "prompt_n": 1169,
+      "prompt_per_second": 1119.3833337323151,
+      "prompt_per_token_ms": 0.893349016253208
+    },
+    "usage": {
+      "completion_tokens": 88,
+      "prompt_tokens": 1169,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1257
+    }
+  },
+  "source_cluster_id": "sha256:8de85ba82a719ebe113a3c1b007bbbc23e335a63a39bfdcf30f9154618721861",
+  "started_monotonic_ns": 920291493958814,
+  "status": "completed",
+  "unit_id": "sha256:a58502bf1ce904489c6236ce5017c4d6f586414fc805f4c66d1b1c176225e934"
+}

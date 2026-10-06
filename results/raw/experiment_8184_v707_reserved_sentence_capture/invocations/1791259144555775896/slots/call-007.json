@@ -1,0 +1,92 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:cd9aa4eb5219534b6d8c9088fd472b0e4157478586629adc6581b19798578ff9",
+  "ended_monotonic_ns": 920179653450977,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Indiana Gov. Mike Pence issued an executive order Monday to extend a public health emergency in his state in response to a rampant HIV outbreak that first began in mid-December. As of Tuesday, there were 135 cases -- 129 confirmed, and six preliminary --  of HIV. The increase has been linked to injection drug use, primarily of the prescription opioid opana. Pence issued an order in March for Scott County, which then had 79 confirmed cases of HIV since mid-December. The county normally averages about five new cases a year. \\\"Scott County is facing an epidemic of HIV. But this is not a Scott County problem -- this is an Indiana problem,\\\" Pence said in March. Officials expect more cases as more individuals are tested, particularly because it can take up to three months for HIV to appear in a person's system after initial infection. The emergency order was first issued last month and set to expire Friday, but now will be in place until May 24. It calls on multiple state agencies to coordinate a response to the unprecedented outbreak and provides additional resources. Law enforcement, emergency agencies and health officials are working together. Most notably, a temporary needle exchange program that began April 4. As of Tuesday, more than 4,300 clean syringes had been distributed and more than 3,100 used needles had been turned in, according to the Indiana Department of Health. A team from the CDC Division of HIV/AIDS Prevention was working on site with state and local officials. In extending the public health emergency declaration, the governor said: \\\"While we've made progress in identifying and treating those affected by this heartbreaking epidemic, the public health emergency continues and so must our efforts to fight it.\\\"\\n\",\"answer\":\"Indiana Gov. Mike Pence has extended a public health emergency in response to a rampant HIV outbreak in the state. There have been 135 cases of HIV, primarily linked to injection drug use of the prescription opioid opana. Pence issued an order in March for Scott County, which had 79 confirmed cases at the time. The emergency order has been extended until May 24 and includes a needle exchange program and additional resources to combat the outbreak. Pence stated that the public health emergency continues and efforts to fight it must continue.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":13},{\"index\":1,\"byte_start\":13,\"byte_end\":178},{\"index\":2,\"byte_start\":178,\"byte_end\":264},{\"index\":3,\"byte_start\":264,\"byte_end\":360},{\"index\":4,\"byte_start\":360,\"byte_end\":470},{\"index\":5,\"byte_start\":470,\"byte_end\":528},{\"index\":6,\"byte_start\":528,\"byte_end\":572},{\"index\":7,\"byte_start\":572,\"byte_end\":664},{\"index\":8,\"byte_start\":664,\"byte_end\":840},{\"index\":9,\"byte_start\":840,\"byte_end\":1079},{\"index\":10,\"byte_start\":1079,\"byte_end\":1158},{\"index\":11,\"byte_start\":1158,\"byte_end\":1395},{\"index\":12,\"byte_start\":1395,\"byte_end\":1499},{\"index\":13,\"byte_start\":1499,\"byte_end\":1750}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":13},{\"index\":1,\"byte_start\":13,\"byte_end\":115},{\"index\":2,\"byte_start\":115,\"byte_end\":222},{\"index\":3,\"byte_start\":222,\"byte_end\":313},{\"index\":4,\"byte_start\":313,\"byte_end\":452},{\"index\":5,\"byte_start\":452,\"byte_end\":546}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 918,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Indiana Gov. Mike Pence issued an executive order Monday to extend a public health emergency in his state in response to a rampant HIV outbreak that first began in mid-December. As of Tuesday, there were 135 cases -- 129 confirmed, and six preliminary --  of HIV. The increase has been linked to injection drug use, primarily of the prescription opioid opana. Pence issued an order in March for Scott County, which then had 79 confirmed cases of HIV since mid-December. The county normally averages about five new cases a year. \\\"Scott County is facing an epidemic of HIV. But this is not a Scott County problem -- this is an Indiana problem,\\\" Pence said in March. Officials expect more cases as more individuals are tested, particularly because it can take up to three months for HIV to appear in a person's system after initial infection. The emergency order was first issued last month and set to expire Friday, but now will be in place until May 24. It calls on multiple state agencies to coordinate a response to the unprecedented outbreak and provides additional resources. Law enforcement, emergency agencies and health officials are working together. Most notably, a temporary needle exchange program that began April 4. As of Tuesday, more than 4,300 clean syringes had been distributed and more than 3,100 used needles had been turned in, according to the Indiana Department of Health. A team from the CDC Division of HIV/AIDS Prevention was working on site with state and local officials. In extending the public health emergency declaration, the governor said: \\\"While we've made progress in identifying and treating those affected by this heartbreaking epidemic, the public health emergency continues and so must our efforts to fight it.\\\"\\n\",\"answer\":\"Indiana Gov. Mike Pence has extended a public health emergency in response to a rampant HIV outbreak in the state. There have been 135 cases of HIV, primarily linked to injection drug use of the prescription opioid opana. Pence issued an order in March for Scott County, which had 79 confirmed cases at the time. The emergency order has been extended until May 24 and includes a needle exchange program and additional resources to combat the outbreak. Pence stated that the public health emergency continues and efforts to fight it must continue.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":13},{\"index\":1,\"byte_start\":13,\"byte_end\":178},{\"index\":2,\"byte_start\":178,\"byte_end\":264},{\"index\":3,\"byte_start\":264,\"byte_end\":360},{\"index\":4,\"byte_start\":360,\"byte_end\":470},{\"index\":5,\"byte_start\":470,\"byte_end\":528},{\"index\":6,\"byte_start\":528,\"byte_end\":572},{\"index\":7,\"byte_start\":572,\"byte_end\":664},{\"index\":8,\"byte_start\":664,\"byte_end\":840},{\"index\":9,\"byte_start\":840,\"byte_end\":1079},{\"index\":10,\"byte_start\":1079,\"byte_end\":1158},{\"index\":11,\"byte_start\":1158,\"byte_end\":1395},{\"index\":12,\"byte_start\":1395,\"byte_end\":1499},{\"index\":13,\"byte_start\":1499,\"byte_end\":1750}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":13},{\"index\":1,\"byte_start\":13,\"byte_end\":115},{\"index\":2,\"byte_start\":115,\"byte_end\":222},{\"index\":3,\"byte_start\":222,\"byte_end\":313},{\"index\":4,\"byte_start\":313,\"byte_end\":452},{\"index\":5,\"byte_start\":452,\"byte_end\":546}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "input_tokens": 906,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Indiana Gov. Mike Pence issued an executive order Monday to extend a public health emergency in his state in response to a rampant HIV outbreak that first began in mid-December. As of Tuesday, there were 135 cases -- 129 confirmed, and six preliminary --  of HIV. The increase has been linked to injection drug use, primarily of the prescription opioid opana. Pence issued an order in March for Scott County, which then had 79 confirmed cases of HIV since mid-December. The county normally averages about five new cases a year. \\\"Scott County is facing an epidemic of HIV. But this is not a Scott County problem -- this is an Indiana problem,\\\" Pence said in March. Officials expect more cases as more individuals are tested, particularly because it can take up to three months for HIV to appear in a person's system after initial infection. The emergency order was first issued last month and set to expire Friday, but now will be in place until May 24. It calls on multiple state agencies to coordinate a response to the unprecedented outbreak and provides additional resources. Law enforcement, emergency agencies and health officials are working together. Most notably, a temporary needle exchange program that began April 4. As of Tuesday, more than 4,300 clean syringes had been distributed and more than 3,100 used needles had been turned in, according to the Indiana Department of Health. A team from the CDC Division of HIV/AIDS Prevention was working on site with state and local officials. In extending the public health emergency declaration, the governor said: \\\"While we've made progress in identifying and treating those affected by this heartbreaking epidemic, the public health emergency continues and so must our efforts to fight it.\\\"\\n\",\"answer\":\"Indiana Gov. Mike Pence has extended a public health emergency in response to a rampant HIV outbreak in the state. There have been 135 cases of HIV, primarily linked to injection drug use of the prescription opioid opana. Pence issued an order in March for Scott County, which had 79 confirmed cases at the time. The emergency order has been extended until May 24 and includes a needle exchange program and additional resources to combat the outbreak. Pence stated that the public health emergency continues and efforts to fight it must continue.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":13},{\"index\":1,\"byte_start\":13,\"byte_end\":178},{\"index\":2,\"byte_start\":178,\"byte_end\":264},{\"index\":3,\"byte_start\":264,\"byte_end\":360},{\"index\":4,\"byte_start\":360,\"byte_end\":470},{\"index\":5,\"byte_start\":470,\"byte_end\":528},{\"index\":6,\"byte_start\":528,\"byte_end\":572},{\"index\":7,\"byte_start\":572,\"byte_end\":664},{\"index\":8,\"byte_start\":664,\"byte_end\":840},{\"index\":9,\"byte_start\":840,\"byte_end\":1079},{\"index\":10,\"byte_start\":1079,\"byte_end\":1158},{\"index\":11,\"byte_start\":1158,\"byte_end\":1395},{\"index\":12,\"byte_start\":1395,\"byte_end\":1499},{\"index\":13,\"byte_start\":1499,\"byte_end\":1750}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":13},{\"index\":1,\"byte_start\":13,\"byte_end\":115},{\"index\":2,\"byte_start\":115,\"byte_end\":222},{\"index\":3,\"byte_start\":222,\"byte_end\":313},{\"index\":4,\"byte_start\":313,\"byte_end\":452},{\"index\":5,\"byte_start\":452,\"byte_end\":546}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[0,1]\n1|E|1.00|[2,3]\n2|E|1.00|[4]\n3|E|1.00|[8,11]\n4|E|1.00|[13]\n5|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259271,
+    "id": "chatcmpl-sFvMQwszUkSia30fyEXWZ1IGYh8t8kuz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2034.436,
+      "predicted_n": 84,
+      "predicted_per_second": 41.28908454234982,
+      "predicted_per_token_ms": 24.21947619047619,
+      "prompt_ms": 842.385,
+      "prompt_n": 918,
+      "prompt_per_second": 1089.7629943553125,
+      "prompt_per_token_ms": 0.9176307189542483
+    },
+    "usage": {
+      "completion_tokens": 84,
+      "prompt_tokens": 918,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1002
+    }
+  },
+  "source_cluster_id": "sha256:36685a6ed955447b1dcdb4251b41a12e66f77834002964636eb8afb93192cdf0",
+  "started_monotonic_ns": 920176614789735,
+  "status": "completed",
+  "unit_id": "sha256:a5dd7ae4352b488e6a40d5646d8bea1e97bf4ca8b6d4cae0592b8b43473d0d9e"
+}

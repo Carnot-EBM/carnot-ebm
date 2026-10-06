@@ -1,0 +1,88 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:cd211c28475d405913051c87b8fa372ef6481f8028443fd368d082430340f286",
+  "ended_monotonic_ns": 920291492881751,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Poor quality sleep can affect many areas of your life and health, and your doctor may be able to help you if you have insomnia or another sleep disorder or conditions affecting your sleep. Learn more about the health consequences of sleep loss.\\\\n\\\\npassage 2:Poor quality sleep can affect many areas of your life and health, and your doctor may be able to help you if you have difficulty sleeping, have insomnia, or have other sleep disorders. Learn more about the health consequences of sleep loss.\\\\n\\\\npassage 3:A. If you take your ears for granted, listen up: hearing loss is the third most common health problem in the U.S. It's also on the rise with nearly 36 million Americans now reporting lost hearing.\\\\n\\\\n\\\",\\\"question\\\":\\\"how does hearing loss affect sleeping and eating\\\"}\",\"answer\":\"Based on the provided passages, there is no direct mention of how hearing loss affects sleeping and eating. Therefore, I am unable to answer this question based on the given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":212},{\"index\":1,\"byte_start\":212,\"byte_end\":466},{\"index\":2,\"byte_start\":466,\"byte_end\":799}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":108},{\"index\":1,\"byte_start\":108,\"byte_end\":183}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 380,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Poor quality sleep can affect many areas of your life and health, and your doctor may be able to help you if you have insomnia or another sleep disorder or conditions affecting your sleep. Learn more about the health consequences of sleep loss.\\\\n\\\\npassage 2:Poor quality sleep can affect many areas of your life and health, and your doctor may be able to help you if you have difficulty sleeping, have insomnia, or have other sleep disorders. Learn more about the health consequences of sleep loss.\\\\n\\\\npassage 3:A. If you take your ears for granted, listen up: hearing loss is the third most common health problem in the U.S. It's also on the rise with nearly 36 million Americans now reporting lost hearing.\\\\n\\\\n\\\",\\\"question\\\":\\\"how does hearing loss affect sleeping and eating\\\"}\",\"answer\":\"Based on the provided passages, there is no direct mention of how hearing loss affects sleeping and eating. Therefore, I am unable to answer this question based on the given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":212},{\"index\":1,\"byte_start\":212,\"byte_end\":466},{\"index\":2,\"byte_start\":466,\"byte_end\":799}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":108},{\"index\":1,\"byte_start\":108,\"byte_end\":183}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\"\n",
+    "input_tokens": 368,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Poor quality sleep can affect many areas of your life and health, and your doctor may be able to help you if you have insomnia or another sleep disorder or conditions affecting your sleep. Learn more about the health consequences of sleep loss.\\\\n\\\\npassage 2:Poor quality sleep can affect many areas of your life and health, and your doctor may be able to help you if you have difficulty sleeping, have insomnia, or have other sleep disorders. Learn more about the health consequences of sleep loss.\\\\n\\\\npassage 3:A. If you take your ears for granted, listen up: hearing loss is the third most common health problem in the U.S. It's also on the rise with nearly 36 million Americans now reporting lost hearing.\\\\n\\\\n\\\",\\\"question\\\":\\\"how does hearing loss affect sleeping and eating\\\"}\",\"answer\":\"Based on the provided passages, there is no direct mention of how hearing loss affects sleeping and eating. Therefore, I am unable to answer this question based on the given passages.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":212},{\"index\":1,\"byte_start\":212,\"byte_end\":466},{\"index\":2,\"byte_start\":466,\"byte_end\":799}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":108},{\"index\":1,\"byte_start\":108,\"byte_end\":183}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259383,
+    "id": "chatcmpl-DJZcsEu25Ya1YYQJYWLC0QYxM36JlAd3",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 531.801,
+      "predicted_n": 22,
+      "predicted_per_second": 41.36885789985351,
+      "predicted_per_token_ms": 24.17277272727273,
+      "prompt_ms": 384.446,
+      "prompt_n": 380,
+      "prompt_per_second": 988.4353069091627,
+      "prompt_per_token_ms": 1.0117
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 380,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 402
+    }
+  },
+  "source_cluster_id": "sha256:1400ffca8f6d7a90cf28fa76b2f9f7d4e2a13ae8d08562b67dd58c20279f9199",
+  "started_monotonic_ns": 920290421202108,
+  "status": "completed",
+  "unit_id": "sha256:d792586a62e87059e081f571a4eabc27128a5267b42b8a75503d27717f64990a"
+}

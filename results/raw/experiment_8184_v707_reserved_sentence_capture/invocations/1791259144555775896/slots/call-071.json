@@ -1,0 +1,92 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:581aec27604c6c1fd9a1a6eef4d224ddf6580ddcc128eaaaddb1d49316f672bb",
+  "ended_monotonic_ns": 920363115703589,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Once you\u2019re in your vehicle you will need to press the \u201cPhone\u201d button either the steering wheel or on the center console. 2  When you are in the Phone Menu you will need to use the Seek or Tune Knob to navigate and find \u201cSystem Settings\u201dand Press the \u201cOK\u201d button.he MyFord interface is similar to the SYNC interface when it comes the the menu layout. 1  Press the \u201cPhone\u201d button located on the center console. 2  Use the Arrow buttons to navigate the menu till you find \u201cSystem Settings\u201d and press \u201cOK\u201d. 3  Locate \u201cBluetooth Devices\u201d and press \u201cOK\u201d.\\\\n\\\\npassage 2:The MyFord interface is similar to the SYNC interface when it comes the the menu layout. 1  Press the \u201cPhone\u201d button located on the center console. 2  Use the Arrow buttons to navigate the menu till you find \u201cSystem Settings\u201d and press \u201cOK\u201d. 3  Locate \u201cBluetooth Devices\u201d and press \u201cOK\u201d.he MyFord interface is similar to the SYNC interface when it comes the the menu layout. 1  Press the \u201cPhone\u201d button located on the center console. 2  Use the Arrow buttons to navigate the menu till you find \u201cSystem Settings\u201d and press \u201cOK\u201d. 3  Locate \u201cBluetooth Devices\u201d and press \u201cOK\u201d.\\\\n\\\\npassage 3:Pairing an iPhone with a MyFord Touch Equipped Vehicle. 1. In your vehicle, locate the \u201cPhone\u201d button, it is usually in the upper left area of the screen. 2. This will prompt a 6-digit PIN. 3. On your phone, locate and select your \u201cSettings\u201d app, then select \u201cBluetooth\u201d, make sure the bluetooth is set to \u201cON\u201d.4.Under \u201cBluetooth\u201d select \u201cSync\u201d. Once your phone has been located, MyFord will ask if the PIN of the vehicle is the same on the phone. 5. Select \u201cYes\u201d on MyFord, and \u201cPair\u201d on your iPhone. 6.n your phone, locate and select your \u201cSettings\u201d app, then select \u201cBluetooth\u201d, make sure the bluetooth is set to \u201cON\u201d. 4. Under \u201cBluetooth\u201d select \u201cSync\u201d. Once your phone has been located, MyFord will ask if the PIN of the vehicle is the same on the phone. 5. Select \u201cYes\u201d on MyFord, and \u201cPair\u201d on your iPhone.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to get iphone 6 to work with ford sync\\\"}\",\"answer\":\"To get an iPhone 6 to work with Ford Sync, follow these steps:\\n\\n1. In your vehicle, locate the \\\"Phone\\\" button, which is usually in the upper left area of the screen.\\n2. Press the \\\"Phone\\\" button and use the \\\"Seek\\\" or \\\"Tune\\\" knob to navigate to \\\"System Settings\\\".\\n3. Press \\\"OK\\\" to enter System Settings.\\n4. Navigate to \\\"Bluetooth Devices\\\" using the arrow buttons and press \\\"OK\\\".\\n5. Follow the prompts to pair your iPhone with the vehicle by entering the 6-digit PIN on both the phone and the vehicle's system.\\n6. Once paired, your iPhone 6 should be able to connect to your Ford Sync system.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":153},{\"index\":1,\"byte_start\":153,\"byte_end\":390},{\"index\":2,\"byte_start\":390,\"byte_end\":453},{\"index\":3,\"byte_start\":453,\"byte_end\":555},{\"index\":4,\"byte_start\":555,\"byte_end\":711},{\"index\":5,\"byte_start\":711,\"byte_end\":774},{\"index\":6,\"byte_start\":774,\"byte_end\":876},{\"index\":7,\"byte_start\":876,\"byte_end\":1017},{\"index\":8,\"byte_start\":1017,\"byte_end\":1080},{\"index\":9,\"byte_start\":1080,\"byte_end\":1182},{\"index\":10,\"byte_start\":1182,\"byte_end\":1305},{\"index\":11,\"byte_start\":1305,\"byte_end\":1408},{\"index\":12,\"byte_start\":1408,\"byte_end\":1443},{\"index\":13,\"byte_start\":1443,\"byte_end\":1619},{\"index\":14,\"byte_start\":1619,\"byte_end\":1721},{\"index\":15,\"byte_start\":1721,\"byte_end\":1783},{\"index\":16,\"byte_start\":1783,\"byte_end\":1915},{\"index\":17,\"byte_start\":1915,\"byte_end\":1959},{\"index\":18,\"byte_start\":1959,\"byte_end\":2061},{\"index\":19,\"byte_start\":2061,\"byte_end\":2184}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":166},{\"index\":1,\"byte_start\":166,\"byte_end\":262},{\"index\":2,\"byte_start\":262,\"byte_end\":302},{\"index\":3,\"byte_start\":302,\"byte_end\":377},{\"index\":4,\"byte_start\":377,\"byte_end\":508},{\"index\":5,\"byte_start\":508,\"byte_end\":589}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1273,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Once you\u2019re in your vehicle you will need to press the \u201cPhone\u201d button either the steering wheel or on the center console. 2  When you are in the Phone Menu you will need to use the Seek or Tune Knob to navigate and find \u201cSystem Settings\u201dand Press the \u201cOK\u201d button.he MyFord interface is similar to the SYNC interface when it comes the the menu layout. 1  Press the \u201cPhone\u201d button located on the center console. 2  Use the Arrow buttons to navigate the menu till you find \u201cSystem Settings\u201d and press \u201cOK\u201d. 3  Locate \u201cBluetooth Devices\u201d and press \u201cOK\u201d.\\\\n\\\\npassage 2:The MyFord interface is similar to the SYNC interface when it comes the the menu layout. 1  Press the \u201cPhone\u201d button located on the center console. 2  Use the Arrow buttons to navigate the menu till you find \u201cSystem Settings\u201d and press \u201cOK\u201d. 3  Locate \u201cBluetooth Devices\u201d and press \u201cOK\u201d.he MyFord interface is similar to the SYNC interface when it comes the the menu layout. 1  Press the \u201cPhone\u201d button located on the center console. 2  Use the Arrow buttons to navigate the menu till you find \u201cSystem Settings\u201d and press \u201cOK\u201d. 3  Locate \u201cBluetooth Devices\u201d and press \u201cOK\u201d.\\\\n\\\\npassage 3:Pairing an iPhone with a MyFord Touch Equipped Vehicle. 1. In your vehicle, locate the \u201cPhone\u201d button, it is usually in the upper left area of the screen. 2. This will prompt a 6-digit PIN. 3. On your phone, locate and select your \u201cSettings\u201d app, then select \u201cBluetooth\u201d, make sure the bluetooth is set to \u201cON\u201d.4.Under \u201cBluetooth\u201d select \u201cSync\u201d. Once your phone has been located, MyFord will ask if the PIN of the vehicle is the same on the phone. 5. Select \u201cYes\u201d on MyFord, and \u201cPair\u201d on your iPhone. 6.n your phone, locate and select your \u201cSettings\u201d app, then select \u201cBluetooth\u201d, make sure the bluetooth is set to \u201cON\u201d. 4. Under \u201cBluetooth\u201d select \u201cSync\u201d. Once your phone has been located, MyFord will ask if the PIN of the vehicle is the same on the phone. 5. Select \u201cYes\u201d on MyFord, and \u201cPair\u201d on your iPhone.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to get iphone 6 to work with ford sync\\\"}\",\"answer\":\"To get an iPhone 6 to work with Ford Sync, follow these steps:\\n\\n1. In your vehicle, locate the \\\"Phone\\\" button, which is usually in the upper left area of the screen.\\n2. Press the \\\"Phone\\\" button and use the \\\"Seek\\\" or \\\"Tune\\\" knob to navigate to \\\"System Settings\\\".\\n3. Press \\\"OK\\\" to enter System Settings.\\n4. Navigate to \\\"Bluetooth Devices\\\" using the arrow buttons and press \\\"OK\\\".\\n5. Follow the prompts to pair your iPhone with the vehicle by entering the 6-digit PIN on both the phone and the vehicle's system.\\n6. Once paired, your iPhone 6 should be able to connect to your Ford Sync system.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":153},{\"index\":1,\"byte_start\":153,\"byte_end\":390},{\"index\":2,\"byte_start\":390,\"byte_end\":453},{\"index\":3,\"byte_start\":453,\"byte_end\":555},{\"index\":4,\"byte_start\":555,\"byte_end\":711},{\"index\":5,\"byte_start\":711,\"byte_end\":774},{\"index\":6,\"byte_start\":774,\"byte_end\":876},{\"index\":7,\"byte_start\":876,\"byte_end\":1017},{\"index\":8,\"byte_start\":1017,\"byte_end\":1080},{\"index\":9,\"byte_start\":1080,\"byte_end\":1182},{\"index\":10,\"byte_start\":1182,\"byte_end\":1305},{\"index\":11,\"byte_start\":1305,\"byte_end\":1408},{\"index\":12,\"byte_start\":1408,\"byte_end\":1443},{\"index\":13,\"byte_start\":1443,\"byte_end\":1619},{\"index\":14,\"byte_start\":1619,\"byte_end\":1721},{\"index\":15,\"byte_start\":1721,\"byte_end\":1783},{\"index\":16,\"byte_start\":1783,\"byte_end\":1915},{\"index\":17,\"byte_start\":1915,\"byte_end\":1959},{\"index\":18,\"byte_start\":1959,\"byte_end\":2061},{\"index\":19,\"byte_start\":2061,\"byte_end\":2184}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":166},{\"index\":1,\"byte_start\":166,\"byte_end\":262},{\"index\":2,\"byte_start\":262,\"byte_end\":302},{\"index\":3,\"byte_start\":302,\"byte_end\":377},{\"index\":4,\"byte_start\":377,\"byte_end\":508},{\"index\":5,\"byte_start\":508,\"byte_end\":589}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\" | \"17\" | \"18\" | \"19\"\n",
+    "input_tokens": 1261,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:1 Once you\u2019re in your vehicle you will need to press the \u201cPhone\u201d button either the steering wheel or on the center console. 2  When you are in the Phone Menu you will need to use the Seek or Tune Knob to navigate and find \u201cSystem Settings\u201dand Press the \u201cOK\u201d button.he MyFord interface is similar to the SYNC interface when it comes the the menu layout. 1  Press the \u201cPhone\u201d button located on the center console. 2  Use the Arrow buttons to navigate the menu till you find \u201cSystem Settings\u201d and press \u201cOK\u201d. 3  Locate \u201cBluetooth Devices\u201d and press \u201cOK\u201d.\\\\n\\\\npassage 2:The MyFord interface is similar to the SYNC interface when it comes the the menu layout. 1  Press the \u201cPhone\u201d button located on the center console. 2  Use the Arrow buttons to navigate the menu till you find \u201cSystem Settings\u201d and press \u201cOK\u201d. 3  Locate \u201cBluetooth Devices\u201d and press \u201cOK\u201d.he MyFord interface is similar to the SYNC interface when it comes the the menu layout. 1  Press the \u201cPhone\u201d button located on the center console. 2  Use the Arrow buttons to navigate the menu till you find \u201cSystem Settings\u201d and press \u201cOK\u201d. 3  Locate \u201cBluetooth Devices\u201d and press \u201cOK\u201d.\\\\n\\\\npassage 3:Pairing an iPhone with a MyFord Touch Equipped Vehicle. 1. In your vehicle, locate the \u201cPhone\u201d button, it is usually in the upper left area of the screen. 2. This will prompt a 6-digit PIN. 3. On your phone, locate and select your \u201cSettings\u201d app, then select \u201cBluetooth\u201d, make sure the bluetooth is set to \u201cON\u201d.4.Under \u201cBluetooth\u201d select \u201cSync\u201d. Once your phone has been located, MyFord will ask if the PIN of the vehicle is the same on the phone. 5. Select \u201cYes\u201d on MyFord, and \u201cPair\u201d on your iPhone. 6.n your phone, locate and select your \u201cSettings\u201d app, then select \u201cBluetooth\u201d, make sure the bluetooth is set to \u201cON\u201d. 4. Under \u201cBluetooth\u201d select \u201cSync\u201d. Once your phone has been located, MyFord will ask if the PIN of the vehicle is the same on the phone. 5. Select \u201cYes\u201d on MyFord, and \u201cPair\u201d on your iPhone.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to get iphone 6 to work with ford sync\\\"}\",\"answer\":\"To get an iPhone 6 to work with Ford Sync, follow these steps:\\n\\n1. In your vehicle, locate the \\\"Phone\\\" button, which is usually in the upper left area of the screen.\\n2. Press the \\\"Phone\\\" button and use the \\\"Seek\\\" or \\\"Tune\\\" knob to navigate to \\\"System Settings\\\".\\n3. Press \\\"OK\\\" to enter System Settings.\\n4. Navigate to \\\"Bluetooth Devices\\\" using the arrow buttons and press \\\"OK\\\".\\n5. Follow the prompts to pair your iPhone with the vehicle by entering the 6-digit PIN on both the phone and the vehicle's system.\\n6. Once paired, your iPhone 6 should be able to connect to your Ford Sync system.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":153},{\"index\":1,\"byte_start\":153,\"byte_end\":390},{\"index\":2,\"byte_start\":390,\"byte_end\":453},{\"index\":3,\"byte_start\":453,\"byte_end\":555},{\"index\":4,\"byte_start\":555,\"byte_end\":711},{\"index\":5,\"byte_start\":711,\"byte_end\":774},{\"index\":6,\"byte_start\":774,\"byte_end\":876},{\"index\":7,\"byte_start\":876,\"byte_end\":1017},{\"index\":8,\"byte_start\":1017,\"byte_end\":1080},{\"index\":9,\"byte_start\":1080,\"byte_end\":1182},{\"index\":10,\"byte_start\":1182,\"byte_end\":1305},{\"index\":11,\"byte_start\":1305,\"byte_end\":1408},{\"index\":12,\"byte_start\":1408,\"byte_end\":1443},{\"index\":13,\"byte_start\":1443,\"byte_end\":1619},{\"index\":14,\"byte_start\":1619,\"byte_end\":1721},{\"index\":15,\"byte_start\":1721,\"byte_end\":1783},{\"index\":16,\"byte_start\":1783,\"byte_end\":1915},{\"index\":17,\"byte_start\":1915,\"byte_end\":1959},{\"index\":18,\"byte_start\":1959,\"byte_end\":2061},{\"index\":19,\"byte_start\":2061,\"byte_end\":2184}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":166},{\"index\":1,\"byte_start\":166,\"byte_end\":262},{\"index\":2,\"byte_start\":262,\"byte_end\":302},{\"index\":3,\"byte_start\":302,\"byte_end\":377},{\"index\":4,\"byte_start\":377,\"byte_end\":508},{\"index\":5,\"byte_start\":508,\"byte_end\":589}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.90|[]\n1|C|0.85|[0,1]\n2|C|0.80|[1]\n3|C|0.85|[1,2]\n4|C|0.75|[3,4]\n5|C|0.60|[4,5]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259454,
+    "id": "chatcmpl-cgRWgOYv3E4QhSEiCOLDN3WQ4nhq5lxQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1928.092,
+      "predicted_n": 79,
+      "predicted_per_second": 40.97314858419618,
+      "predicted_per_token_ms": 24.406227848101267,
+      "prompt_ms": 1103.969,
+      "prompt_n": 1273,
+      "prompt_per_second": 1153.1120891981568,
+      "prompt_per_token_ms": 0.867218381775334
+    },
+    "usage": {
+      "completion_tokens": 79,
+      "prompt_tokens": 1273,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1352
+    }
+  },
+  "source_cluster_id": "sha256:0767d3318d14f93fa66253719dc8fe551016cbeedfd2b09ae88c99aa5164a8ac",
+  "started_monotonic_ns": 920359933186797,
+  "status": "completed",
+  "unit_id": "sha256:6e87f5737b0a621211f9036b1aecbc1b3a3d0b2c71b457dbf7c853f4d41c347d"
+}

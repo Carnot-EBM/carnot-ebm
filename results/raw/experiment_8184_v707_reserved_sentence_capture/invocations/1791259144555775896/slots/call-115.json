@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:fb89ad02efc1cc36ed97e0b1b2610138144d13ab25ac52887192751b81f3a4a7",
+  "ended_monotonic_ns": 920488482430268,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:If you see these signs, be willing to talk about suicide with the person in danger. Ask questions in a non-threatening way. If you feel this person is in immediate danger they should see a mental health professional or doctor immediately. Call 911 or take them to the emergency room.ventually, the situation has gotten better. Suicide may end your pain, but it will cause others to hurt. With the technology we have today, it is very difficult to make a suicide look like an accident, so people who love you would always question what they could have done for you.\\\\n\\\\npassage 2:Then you should speak to a family member, a counsellor or a suicide crisis line. Thinking like that means you are depressed and depression is a treatable illness and the recovery times are often less than 3 months.ventually, the situation has gotten better. Suicide may end your pain, but it will cause others to hurt. With the technology we have today, it is very difficult to make a suicide look like an accident, so people who love you would always question what they could have done for you.\\\\n\\\\npassage 3:6. Get a friend to help you. Having ideas (especially ones they have been entertaining awhile), a plan, and the means to commit suicide constitute a very serious, immediate danger, and you should contact police immediately. If you're on the phone, it's best not to let this person know that's what you're doing though. If your friend tells you that she/he is going to commit suicide, get help immediately, even if they tell you to keep it secret. 2  It is better to anger a friend than lose the actual human being.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to stop a person from commiting suicide\\\"}\",\"answer\":\"Based on the given passages, to stop a person from committing suicide, one should:\\n\\n1. Be willing to talk about suicide with the person in danger.\\n2. Ask questions in a non-threatening way.\\n3. If the person is in immediate danger, they should see a mental health professional or doctor immediately.\\n4. Call 911 or take them to the emergency room if necessary.\\n5. Encourage the person to speak to a family member, counselor, or suicide crisis line.\\n6. Seek help from a friend or contact the police if the person has ideas, a plan, and the means to commit suicide.\\n7. Even if the person asks you to keep it a secret, it is better to get help immediately.\\n\\nNote: The given passages provide various suggestions and precautions to address potential suicide situations. However, it is important to seek professional advice and support in such cases.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":107},{\"index\":1,\"byte_start\":107,\"byte_end\":147},{\"index\":2,\"byte_start\":147,\"byte_end\":262},{\"index\":3,\"byte_start\":262,\"byte_end\":350},{\"index\":4,\"byte_start\":350,\"byte_end\":411},{\"index\":5,\"byte_start\":411,\"byte_end\":682},{\"index\":6,\"byte_start\":682,\"byte_end\":859},{\"index\":7,\"byte_start\":859,\"byte_end\":920},{\"index\":8,\"byte_start\":920,\"byte_end\":1139},{\"index\":9,\"byte_start\":1139,\"byte_end\":1334},{\"index\":10,\"byte_start\":1334,\"byte_end\":1429},{\"index\":11,\"byte_start\":1429,\"byte_end\":1557},{\"index\":12,\"byte_start\":1557,\"byte_end\":1687}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":147},{\"index\":1,\"byte_start\":147,\"byte_end\":190},{\"index\":2,\"byte_start\":190,\"byte_end\":299},{\"index\":3,\"byte_start\":299,\"byte_end\":360},{\"index\":4,\"byte_start\":360,\"byte_end\":448},{\"index\":5,\"byte_start\":448,\"byte_end\":563},{\"index\":6,\"byte_start\":563,\"byte_end\":654},{\"index\":7,\"byte_start\":654,\"byte_end\":764},{\"index\":8,\"byte_start\":764,\"byte_end\":843}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1063,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:If you see these signs, be willing to talk about suicide with the person in danger. Ask questions in a non-threatening way. If you feel this person is in immediate danger they should see a mental health professional or doctor immediately. Call 911 or take them to the emergency room.ventually, the situation has gotten better. Suicide may end your pain, but it will cause others to hurt. With the technology we have today, it is very difficult to make a suicide look like an accident, so people who love you would always question what they could have done for you.\\\\n\\\\npassage 2:Then you should speak to a family member, a counsellor or a suicide crisis line. Thinking like that means you are depressed and depression is a treatable illness and the recovery times are often less than 3 months.ventually, the situation has gotten better. Suicide may end your pain, but it will cause others to hurt. With the technology we have today, it is very difficult to make a suicide look like an accident, so people who love you would always question what they could have done for you.\\\\n\\\\npassage 3:6. Get a friend to help you. Having ideas (especially ones they have been entertaining awhile), a plan, and the means to commit suicide constitute a very serious, immediate danger, and you should contact police immediately. If you're on the phone, it's best not to let this person know that's what you're doing though. If your friend tells you that she/he is going to commit suicide, get help immediately, even if they tell you to keep it secret. 2  It is better to anger a friend than lose the actual human being.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to stop a person from commiting suicide\\\"}\",\"answer\":\"Based on the given passages, to stop a person from committing suicide, one should:\\n\\n1. Be willing to talk about suicide with the person in danger.\\n2. Ask questions in a non-threatening way.\\n3. If the person is in immediate danger, they should see a mental health professional or doctor immediately.\\n4. Call 911 or take them to the emergency room if necessary.\\n5. Encourage the person to speak to a family member, counselor, or suicide crisis line.\\n6. Seek help from a friend or contact the police if the person has ideas, a plan, and the means to commit suicide.\\n7. Even if the person asks you to keep it a secret, it is better to get help immediately.\\n\\nNote: The given passages provide various suggestions and precautions to address potential suicide situations. However, it is important to seek professional advice and support in such cases.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":107},{\"index\":1,\"byte_start\":107,\"byte_end\":147},{\"index\":2,\"byte_start\":147,\"byte_end\":262},{\"index\":3,\"byte_start\":262,\"byte_end\":350},{\"index\":4,\"byte_start\":350,\"byte_end\":411},{\"index\":5,\"byte_start\":411,\"byte_end\":682},{\"index\":6,\"byte_start\":682,\"byte_end\":859},{\"index\":7,\"byte_start\":859,\"byte_end\":920},{\"index\":8,\"byte_start\":920,\"byte_end\":1139},{\"index\":9,\"byte_start\":1139,\"byte_end\":1334},{\"index\":10,\"byte_start\":1334,\"byte_end\":1429},{\"index\":11,\"byte_start\":1429,\"byte_end\":1557},{\"index\":12,\"byte_start\":1557,\"byte_end\":1687}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":147},{\"index\":1,\"byte_start\":147,\"byte_end\":190},{\"index\":2,\"byte_start\":190,\"byte_end\":299},{\"index\":3,\"byte_start\":299,\"byte_end\":360},{\"index\":4,\"byte_start\":360,\"byte_end\":448},{\"index\":5,\"byte_start\":448,\"byte_end\":563},{\"index\":6,\"byte_start\":563,\"byte_end\":654},{\"index\":7,\"byte_start\":654,\"byte_end\":764},{\"index\":8,\"byte_start\":764,\"byte_end\":843}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "input_tokens": 1051,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:If you see these signs, be willing to talk about suicide with the person in danger. Ask questions in a non-threatening way. If you feel this person is in immediate danger they should see a mental health professional or doctor immediately. Call 911 or take them to the emergency room.ventually, the situation has gotten better. Suicide may end your pain, but it will cause others to hurt. With the technology we have today, it is very difficult to make a suicide look like an accident, so people who love you would always question what they could have done for you.\\\\n\\\\npassage 2:Then you should speak to a family member, a counsellor or a suicide crisis line. Thinking like that means you are depressed and depression is a treatable illness and the recovery times are often less than 3 months.ventually, the situation has gotten better. Suicide may end your pain, but it will cause others to hurt. With the technology we have today, it is very difficult to make a suicide look like an accident, so people who love you would always question what they could have done for you.\\\\n\\\\npassage 3:6. Get a friend to help you. Having ideas (especially ones they have been entertaining awhile), a plan, and the means to commit suicide constitute a very serious, immediate danger, and you should contact police immediately. If you're on the phone, it's best not to let this person know that's what you're doing though. If your friend tells you that she/he is going to commit suicide, get help immediately, even if they tell you to keep it secret. 2  It is better to anger a friend than lose the actual human being.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to stop a person from commiting suicide\\\"}\",\"answer\":\"Based on the given passages, to stop a person from committing suicide, one should:\\n\\n1. Be willing to talk about suicide with the person in danger.\\n2. Ask questions in a non-threatening way.\\n3. If the person is in immediate danger, they should see a mental health professional or doctor immediately.\\n4. Call 911 or take them to the emergency room if necessary.\\n5. Encourage the person to speak to a family member, counselor, or suicide crisis line.\\n6. Seek help from a friend or contact the police if the person has ideas, a plan, and the means to commit suicide.\\n7. Even if the person asks you to keep it a secret, it is better to get help immediately.\\n\\nNote: The given passages provide various suggestions and precautions to address potential suicide situations. However, it is important to seek professional advice and support in such cases.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":107},{\"index\":1,\"byte_start\":107,\"byte_end\":147},{\"index\":2,\"byte_start\":147,\"byte_end\":262},{\"index\":3,\"byte_start\":262,\"byte_end\":350},{\"index\":4,\"byte_start\":350,\"byte_end\":411},{\"index\":5,\"byte_start\":411,\"byte_end\":682},{\"index\":6,\"byte_start\":682,\"byte_end\":859},{\"index\":7,\"byte_start\":859,\"byte_end\":920},{\"index\":8,\"byte_start\":920,\"byte_end\":1139},{\"index\":9,\"byte_start\":1139,\"byte_end\":1334},{\"index\":10,\"byte_start\":1334,\"byte_end\":1429},{\"index\":11,\"byte_start\":1429,\"byte_end\":1557},{\"index\":12,\"byte_start\":1557,\"byte_end\":1687}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":147},{\"index\":1,\"byte_start\":147,\"byte_end\":190},{\"index\":2,\"byte_start\":190,\"byte_end\":299},{\"index\":3,\"byte_start\":299,\"byte_end\":360},{\"index\":4,\"byte_start\":360,\"byte_end\":448},{\"index\":5,\"byte_start\":448,\"byte_end\":563},{\"index\":6,\"byte_start\":563,\"byte_end\":654},{\"index\":7,\"byte_start\":654,\"byte_end\":764},{\"index\":8,\"byte_start\":764,\"byte_end\":843}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[]\n1|E|0.95|[]\n2|E|0.95|[]\n3|E|0.95|[]\n4|E|0.95|[]\n5|E|0.95|[]\n6|E|0.95|[]\n7|E|0.95|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259580,
+    "id": "chatcmpl-Vo6X4A6zdkM0HuoTvI8aa0skDCmqHX5d",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 2138.285,
+      "predicted_n": 88,
+      "predicted_per_second": 41.15447660157557,
+      "predicted_per_token_ms": 24.29869318181818,
+      "prompt_ms": 966.073,
+      "prompt_n": 1014,
+      "prompt_per_second": 1049.6101226304845,
+      "prompt_per_token_ms": 0.9527347140039447
+    },
+    "usage": {
+      "completion_tokens": 88,
+      "prompt_tokens": 1063,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1151
+    }
+  },
+  "source_cluster_id": "sha256:ed24a1bdbf284ae5a2311a7abfcf2d2dfbbed16765f53132fd340fb58d66383c",
+  "started_monotonic_ns": 920485210605359,
+  "status": "completed",
+  "unit_id": "sha256:8dc768b3d3e3e099714930f2ea765f59b486110326efc8e5e0f8de39b89bb9f0"
+}

@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:ac25de3afeeb7ad60f9afb36419f6fe6759c53f49458d31feb34f5c7cf67d981",
+  "ended_monotonic_ns": 920254713798169,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Home treatments may be advised for mild, viral meningitis. Medications for headaches, pain killers, and anti-sickness drugs to prevent vomiting are enough for the patient to recover within 14 days. There s no need to continue taking antibiotics once viral meningitis is confirmed.\\\\n\\\\npassage 2:Avoid Liquid Food: When you get diagnosed with meningitis, the patients should avoid liquid food. Instead of that food, they should drink the juice of ORS (oral re-hydration salts). The better way on how to treat meningitis naturally is to mix the juice of ORS with the lukewarm water. This is the treatment for the first days.\\\\n\\\\npassage 3:1. Take A Good Sleep: As the way on how to treat meningitis, the doctors have suggested that the patients with meningitis need to take a good sleep for at least 8 hours a day. By putting the patients into the comfortable bed rest, this treatment will help them relieve the symptoms of meningitis such as headache.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to treat meningitis\\\"}\",\"answer\":\"Based on the given passages, here is how to treat meningitis:\\n\\n1. For mild, viral meningitis, home treatments may be advised, including medications for headaches, painkillers, and anti-sickness drugs to prevent vomiting. It is not necessary to continue taking antibiotics once viral meningitis is confirmed. (Passage 1)\\n2. Avoid liquid food and instead drink the juice of ORS (oral rehydration salts) mixed with lukewarm water. This is recommended for the first few days of treatment. (Passage 2)\\n3. Get plenty of rest and sleep for at least 8 hours a day to help relieve symptoms such as headaches. (Passage 3)\\n\\nTherefore, the treatment for meningitis involves a combination of hydration therapy, pain management, and rest. Antibiotics may not be necessary for mild, viral cases, but should be taken as prescribed by a doctor if the infection is severe or bacterial in nature.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":82},{\"index\":1,\"byte_start\":82,\"byte_end\":221},{\"index\":2,\"byte_start\":221,\"byte_end\":415},{\"index\":3,\"byte_start\":415,\"byte_end\":499},{\"index\":4,\"byte_start\":499,\"byte_end\":603},{\"index\":5,\"byte_start\":603,\"byte_end\":834},{\"index\":6,\"byte_start\":834,\"byte_end\":1014}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":221},{\"index\":1,\"byte_start\":221,\"byte_end\":308},{\"index\":2,\"byte_start\":308,\"byte_end\":428},{\"index\":3,\"byte_start\":428,\"byte_end\":485},{\"index\":4,\"byte_start\":485,\"byte_end\":600},{\"index\":5,\"byte_start\":600,\"byte_end\":725},{\"index\":6,\"byte_start\":725,\"byte_end\":877}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 771,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Home treatments may be advised for mild, viral meningitis. Medications for headaches, pain killers, and anti-sickness drugs to prevent vomiting are enough for the patient to recover within 14 days. There s no need to continue taking antibiotics once viral meningitis is confirmed.\\\\n\\\\npassage 2:Avoid Liquid Food: When you get diagnosed with meningitis, the patients should avoid liquid food. Instead of that food, they should drink the juice of ORS (oral re-hydration salts). The better way on how to treat meningitis naturally is to mix the juice of ORS with the lukewarm water. This is the treatment for the first days.\\\\n\\\\npassage 3:1. Take A Good Sleep: As the way on how to treat meningitis, the doctors have suggested that the patients with meningitis need to take a good sleep for at least 8 hours a day. By putting the patients into the comfortable bed rest, this treatment will help them relieve the symptoms of meningitis such as headache.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to treat meningitis\\\"}\",\"answer\":\"Based on the given passages, here is how to treat meningitis:\\n\\n1. For mild, viral meningitis, home treatments may be advised, including medications for headaches, painkillers, and anti-sickness drugs to prevent vomiting. It is not necessary to continue taking antibiotics once viral meningitis is confirmed. (Passage 1)\\n2. Avoid liquid food and instead drink the juice of ORS (oral rehydration salts) mixed with lukewarm water. This is recommended for the first few days of treatment. (Passage 2)\\n3. Get plenty of rest and sleep for at least 8 hours a day to help relieve symptoms such as headaches. (Passage 3)\\n\\nTherefore, the treatment for meningitis involves a combination of hydration therapy, pain management, and rest. Antibiotics may not be necessary for mild, viral cases, but should be taken as prescribed by a doctor if the infection is severe or bacterial in nature.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":82},{\"index\":1,\"byte_start\":82,\"byte_end\":221},{\"index\":2,\"byte_start\":221,\"byte_end\":415},{\"index\":3,\"byte_start\":415,\"byte_end\":499},{\"index\":4,\"byte_start\":499,\"byte_end\":603},{\"index\":5,\"byte_start\":603,\"byte_end\":834},{\"index\":6,\"byte_start\":834,\"byte_end\":1014}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":221},{\"index\":1,\"byte_start\":221,\"byte_end\":308},{\"index\":2,\"byte_start\":308,\"byte_end\":428},{\"index\":3,\"byte_start\":428,\"byte_end\":485},{\"index\":4,\"byte_start\":485,\"byte_end\":600},{\"index\":5,\"byte_start\":600,\"byte_end\":725},{\"index\":6,\"byte_start\":725,\"byte_end\":877}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "input_tokens": 759,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Home treatments may be advised for mild, viral meningitis. Medications for headaches, pain killers, and anti-sickness drugs to prevent vomiting are enough for the patient to recover within 14 days. There s no need to continue taking antibiotics once viral meningitis is confirmed.\\\\n\\\\npassage 2:Avoid Liquid Food: When you get diagnosed with meningitis, the patients should avoid liquid food. Instead of that food, they should drink the juice of ORS (oral re-hydration salts). The better way on how to treat meningitis naturally is to mix the juice of ORS with the lukewarm water. This is the treatment for the first days.\\\\n\\\\npassage 3:1. Take A Good Sleep: As the way on how to treat meningitis, the doctors have suggested that the patients with meningitis need to take a good sleep for at least 8 hours a day. By putting the patients into the comfortable bed rest, this treatment will help them relieve the symptoms of meningitis such as headache.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to treat meningitis\\\"}\",\"answer\":\"Based on the given passages, here is how to treat meningitis:\\n\\n1. For mild, viral meningitis, home treatments may be advised, including medications for headaches, painkillers, and anti-sickness drugs to prevent vomiting. It is not necessary to continue taking antibiotics once viral meningitis is confirmed. (Passage 1)\\n2. Avoid liquid food and instead drink the juice of ORS (oral rehydration salts) mixed with lukewarm water. This is recommended for the first few days of treatment. (Passage 2)\\n3. Get plenty of rest and sleep for at least 8 hours a day to help relieve symptoms such as headaches. (Passage 3)\\n\\nTherefore, the treatment for meningitis involves a combination of hydration therapy, pain management, and rest. Antibiotics may not be necessary for mild, viral cases, but should be taken as prescribed by a doctor if the infection is severe or bacterial in nature.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":82},{\"index\":1,\"byte_start\":82,\"byte_end\":221},{\"index\":2,\"byte_start\":221,\"byte_end\":415},{\"index\":3,\"byte_start\":415,\"byte_end\":499},{\"index\":4,\"byte_start\":499,\"byte_end\":603},{\"index\":5,\"byte_start\":603,\"byte_end\":834},{\"index\":6,\"byte_start\":834,\"byte_end\":1014}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":221},{\"index\":1,\"byte_start\":221,\"byte_end\":308},{\"index\":2,\"byte_start\":308,\"byte_end\":428},{\"index\":3,\"byte_start\":428,\"byte_end\":485},{\"index\":4,\"byte_start\":485,\"byte_end\":600},{\"index\":5,\"byte_start\":600,\"byte_end\":725},{\"index\":6,\"byte_start\":725,\"byte_end\":877}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[]\n1|E|0.95|[0,1]\n2|E|0.95|[2,3]\n3|E|0.95|[4,5]\n4|E|0.95|[6]\n5|C|0.85|[0,2]\n6|B|0.10|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259346,
+    "id": "chatcmpl-Iq9kldbruNrZH8yOU1p6wPFeVTFzMVkA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2199.467,
+      "predicted_n": 90,
+      "predicted_per_second": 40.919004467900635,
+      "predicted_per_token_ms": 24.438522222222222,
+      "prompt_ms": 726.539,
+      "prompt_n": 771,
+      "prompt_per_second": 1061.1956137247967,
+      "prompt_per_token_ms": 0.9423333333333334
+    },
+    "usage": {
+      "completion_tokens": 90,
+      "prompt_tokens": 771,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 861
+    }
+  },
+  "source_cluster_id": "sha256:1021f293aab85d8a88464d6c4ec89eccef2978770b69d4302a472bda37437623",
+  "started_monotonic_ns": 920251622961000,
+  "status": "completed",
+  "unit_id": "sha256:04c71dad98982892e4ec604bcb7a9c945c98fd9862fc834285298e51512515ac"
+}

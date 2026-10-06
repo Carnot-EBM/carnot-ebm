@@ -1,0 +1,87 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:f5634b9c8eb5dd81d96c4d292c1529dd4bb1d8e99feee0ccfccbc90fa313d107",
+  "ended_monotonic_ns": 920280265008155,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r8\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"6530 Seville Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Sandwiches, Vegan, Delis, Gluten-Free\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-15:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-15:0\\\",\\\"Sunday\\\":\\\"11:0-15:0\\\",\\\"Thursday\\\":\\\"11:0-15:0\\\",\\\"Tuesday\\\":\\\"11:0-15:0\\\",\\\"Wednesday\\\":\\\"11:0-15:0\\\"},\\\"name\\\":\\\"Ike's Place\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-03-17 20:00:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Visiting town from LA and this was the closest vegan place to the campus that was open. We weren't especially excited about it on the way because the menu was just sandwiches. \\\\nWe got three different sandwiches and every single one was epically delicious. We all got vegetarian and vegan sandwiches and were so impressed that we tried eachothers sandwiches and every one loved all three of them. \\\\nI can't wait to come back again next time I'm in town.\\\"},{\\\"review_date\\\":\\\"2019-03-13 04:30:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Absolutely delicious, we got the turkey with avocado. Don't leave the counter without getting an extra side of special \\\\\\\"DIRTY\\\\\\\" sauce.  Incredible!\\\"},{\\\"review_date\\\":\\\"2019-02-17 22:21:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"the best vegan sandwich place in the wolrd. \\\\ni always get the james & the giant peach on Dutch crunch bread :)\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Ike's Place is a restaurant located at 6530 Seville Rd, Goleta, CA. They offer a variety of services such as catering, takeout, and good for groups. They also provide outdoor seating, music, and WiFi. However, parking is not available on-site, and reservations are not accepted. Ike's Place has a rating of 4.0 out of 5.0 stars. Customers have praised their delicious sandwiches, which include vegetarian and vegan options. One customer recommended trying the \\\"DIRTY\\\" sauce as an additional side. Another customer called Ike's Place the best vegan sandwich place in the world and highly recommended the James & the Giant Peach sandwich on Dutch crunch bread. Overall, Ike's Place appears to be a popular choice for those looking for tasty sandwiches and a casual atmosphere.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":889},{\"index\":1,\"byte_start\":889,\"byte_end\":977},{\"index\":2,\"byte_start\":977,\"byte_end\":1058},{\"index\":3,\"byte_start\":1058,\"byte_end\":1198},{\"index\":4,\"byte_start\":1198,\"byte_end\":1382},{\"index\":5,\"byte_start\":1382,\"byte_end\":1465},{\"index\":6,\"byte_start\":1465,\"byte_end\":1594},{\"index\":7,\"byte_start\":1594,\"byte_end\":1678}],\"answer_sentence_indices\":[8],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":68},{\"index\":1,\"byte_start\":68,\"byte_end\":149},{\"index\":2,\"byte_start\":149,\"byte_end\":201},{\"index\":3,\"byte_start\":201,\"byte_end\":279},{\"index\":4,\"byte_start\":279,\"byte_end\":329},{\"index\":5,\"byte_start\":329,\"byte_end\":424},{\"index\":6,\"byte_start\":424,\"byte_end\":497},{\"index\":7,\"byte_start\":497,\"byte_end\":659},{\"index\":8,\"byte_start\":659,\"byte_end\":774}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1076,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"6530 Seville Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Sandwiches, Vegan, Delis, Gluten-Free\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-15:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-15:0\\\",\\\"Sunday\\\":\\\"11:0-15:0\\\",\\\"Thursday\\\":\\\"11:0-15:0\\\",\\\"Tuesday\\\":\\\"11:0-15:0\\\",\\\"Wednesday\\\":\\\"11:0-15:0\\\"},\\\"name\\\":\\\"Ike's Place\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-03-17 20:00:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Visiting town from LA and this was the closest vegan place to the campus that was open. We weren't especially excited about it on the way because the menu was just sandwiches. \\\\nWe got three different sandwiches and every single one was epically delicious. We all got vegetarian and vegan sandwiches and were so impressed that we tried eachothers sandwiches and every one loved all three of them. \\\\nI can't wait to come back again next time I'm in town.\\\"},{\\\"review_date\\\":\\\"2019-03-13 04:30:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Absolutely delicious, we got the turkey with avocado. Don't leave the counter without getting an extra side of special \\\\\\\"DIRTY\\\\\\\" sauce.  Incredible!\\\"},{\\\"review_date\\\":\\\"2019-02-17 22:21:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"the best vegan sandwich place in the wolrd. \\\\ni always get the james & the giant peach on Dutch crunch bread :)\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Ike's Place is a restaurant located at 6530 Seville Rd, Goleta, CA. They offer a variety of services such as catering, takeout, and good for groups. They also provide outdoor seating, music, and WiFi. However, parking is not available on-site, and reservations are not accepted. Ike's Place has a rating of 4.0 out of 5.0 stars. Customers have praised their delicious sandwiches, which include vegetarian and vegan options. One customer recommended trying the \\\"DIRTY\\\" sauce as an additional side. Another customer called Ike's Place the best vegan sandwich place in the world and highly recommended the James & the Giant Peach sandwich on Dutch crunch bread. Overall, Ike's Place appears to be a popular choice for those looking for tasty sandwiches and a casual atmosphere.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":889},{\"index\":1,\"byte_start\":889,\"byte_end\":977},{\"index\":2,\"byte_start\":977,\"byte_end\":1058},{\"index\":3,\"byte_start\":1058,\"byte_end\":1198},{\"index\":4,\"byte_start\":1198,\"byte_end\":1382},{\"index\":5,\"byte_start\":1382,\"byte_end\":1465},{\"index\":6,\"byte_start\":1465,\"byte_end\":1594},{\"index\":7,\"byte_start\":1594,\"byte_end\":1678}],\"answer_sentence_indices\":[8],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":68},{\"index\":1,\"byte_start\":68,\"byte_end\":149},{\"index\":2,\"byte_start\":149,\"byte_end\":201},{\"index\":3,\"byte_start\":201,\"byte_end\":279},{\"index\":4,\"byte_start\":279,\"byte_end\":329},{\"index\":5,\"byte_start\":329,\"byte_end\":424},{\"index\":6,\"byte_start\":424,\"byte_end\":497},{\"index\":7,\"byte_start\":497,\"byte_end\":659},{\"index\":8,\"byte_start\":659,\"byte_end\":774}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r8\nr8 ::= \"8|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "input_tokens": 1064,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"6530 Seville Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Sandwiches, Vegan, Delis, Gluten-Free\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-15:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-15:0\\\",\\\"Sunday\\\":\\\"11:0-15:0\\\",\\\"Thursday\\\":\\\"11:0-15:0\\\",\\\"Tuesday\\\":\\\"11:0-15:0\\\",\\\"Wednesday\\\":\\\"11:0-15:0\\\"},\\\"name\\\":\\\"Ike's Place\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-03-17 20:00:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Visiting town from LA and this was the closest vegan place to the campus that was open. We weren't especially excited about it on the way because the menu was just sandwiches. \\\\nWe got three different sandwiches and every single one was epically delicious. We all got vegetarian and vegan sandwiches and were so impressed that we tried eachothers sandwiches and every one loved all three of them. \\\\nI can't wait to come back again next time I'm in town.\\\"},{\\\"review_date\\\":\\\"2019-03-13 04:30:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Absolutely delicious, we got the turkey with avocado. Don't leave the counter without getting an extra side of special \\\\\\\"DIRTY\\\\\\\" sauce.  Incredible!\\\"},{\\\"review_date\\\":\\\"2019-02-17 22:21:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"the best vegan sandwich place in the wolrd. \\\\ni always get the james & the giant peach on Dutch crunch bread :)\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Ike's Place is a restaurant located at 6530 Seville Rd, Goleta, CA. They offer a variety of services such as catering, takeout, and good for groups. They also provide outdoor seating, music, and WiFi. However, parking is not available on-site, and reservations are not accepted. Ike's Place has a rating of 4.0 out of 5.0 stars. Customers have praised their delicious sandwiches, which include vegetarian and vegan options. One customer recommended trying the \\\"DIRTY\\\" sauce as an additional side. Another customer called Ike's Place the best vegan sandwich place in the world and highly recommended the James & the Giant Peach sandwich on Dutch crunch bread. Overall, Ike's Place appears to be a popular choice for those looking for tasty sandwiches and a casual atmosphere.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":889},{\"index\":1,\"byte_start\":889,\"byte_end\":977},{\"index\":2,\"byte_start\":977,\"byte_end\":1058},{\"index\":3,\"byte_start\":1058,\"byte_end\":1198},{\"index\":4,\"byte_start\":1198,\"byte_end\":1382},{\"index\":5,\"byte_start\":1382,\"byte_end\":1465},{\"index\":6,\"byte_start\":1465,\"byte_end\":1594},{\"index\":7,\"byte_start\":1594,\"byte_end\":1678}],\"answer_sentence_indices\":[8],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":68},{\"index\":1,\"byte_start\":68,\"byte_end\":149},{\"index\":2,\"byte_start\":149,\"byte_end\":201},{\"index\":3,\"byte_start\":201,\"byte_end\":279},{\"index\":4,\"byte_start\":279,\"byte_end\":329},{\"index\":5,\"byte_start\":329,\"byte_end\":424},{\"index\":6,\"byte_start\":424,\"byte_end\":497},{\"index\":7,\"byte_start\":497,\"byte_end\":659},{\"index\":8,\"byte_start\":659,\"byte_end\":774}]}",
+    "request_index": 1,
+    "sentence_indices": [
+      8
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "8|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259372,
+    "id": "chatcmpl-PCSpDwmUkeENdB8l8rVHHJK2GiZpBfo7",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 574,
+      "predicted_ms": 265.905,
+      "predicted_n": 11,
+      "predicted_per_second": 41.36815780071831,
+      "predicted_per_token_ms": 24.173181818181817,
+      "prompt_ms": 550.949,
+      "prompt_n": 502,
+      "prompt_per_second": 911.1551159907724,
+      "prompt_per_token_ms": 1.09750796812749
+    },
+    "usage": {
+      "completion_tokens": 11,
+      "prompt_tokens": 1076,
+      "prompt_tokens_details": {
+        "cached_tokens": 574
+      },
+      "total_tokens": 1087
+    }
+  },
+  "source_cluster_id": "sha256:d796cc04578caeb5a070d5bdc073b3aa0fa01ea76df6e88ec614e7d3606b4771",
+  "started_monotonic_ns": 920279421244349,
+  "status": "completed",
+  "unit_id": "sha256:76a244560b4649f9ce920928a97925dff2c93b30d5fa0de1183db7417842f085"
+}

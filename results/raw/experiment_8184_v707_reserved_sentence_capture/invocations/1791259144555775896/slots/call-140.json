@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:bdda487cebd20017ff3e1f136f167295a28c7f689052594a650190ba6fec82e7",
+  "ended_monotonic_ns": 920558396663101,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"201 S Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Bakeries, Food, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"5:0-20:0\\\",\\\"Monday\\\":\\\"5:0-20:0\\\",\\\"Saturday\\\":\\\"5:0-20:0\\\",\\\"Sunday\\\":\\\"5:0-20:0\\\",\\\"Thursday\\\":\\\"5:0-20:0\\\",\\\"Tuesday\\\":\\\"5:0-20:0\\\",\\\"Wednesday\\\":\\\"5:0-20:0\\\"},\\\"name\\\":\\\"Panaderia Veronica\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 15:45:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Good fresh baked bread friendly service That location isn't the greatest because of parking though\\\"},{\\\"review_date\\\":\\\"2021-06-30 18:14:17\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Bottom Line:  An awesome local bakery\\\\n\\\\nIve been coming here since my son was born seven years ago.  We used to come in at 5am to get warm Bolillos and the folks that work here are always super friendly, the bread is always awesome and I always come back.\\\\n\\\\nI filled a bag full of randoms and brought it into work the other day and people loved it and were asking where it came from.\\\\n\\\\nThis place is great - you need to check it out if you havent yet!!\\\"},{\\\"review_date\\\":\\\"2021-05-12 04:06:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Polvorones!!!! The best I've had in a long time! And huge!!!!  I'm just talking about the pink sugar cookies, which are my favorite. It's not overly sweet or lardy. Lots of places are just blah and leave that film in the mouth from all the lard.\\\\n\\\\nI enjoyed it so much I had to come back before going back home. I also bought their bread, which was freshly baked. Omg so good!!! I was bummed they were out of conchas. I bet it's delicious as well. \\\\n\\\\nDefinitely coming back here when I'm in town.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sure! Here's an objective overview of Panaderia Veronica based on the provided structured data:\\n\\nPanaderia Veronica is a Mexican restaurant and bakery located in Santa Barbara, CA. They offer a variety of menu items such as baked goods, sandwiches, and coffee. The business has a rating of 4.5 stars based on customer reviews and is known for its fresh bread and friendly service. One reviewer praised the bakery's polvorones (pink sugar cookies) and described them as the best they've had in a long time. Another reviewer mentioned that the bread is always freshly baked and enjoyable. However, some reviewers have noted that the parking situation can be challenging. Overall, Panaderia Veronica appears to be a popular local bakery with a loyal customer base and a reputation for serving delicious, freshly baked goods.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":1072},{\"index\":1,\"byte_start\":1072,\"byte_end\":1514},{\"index\":2,\"byte_start\":1514,\"byte_end\":1548},{\"index\":3,\"byte_start\":1548,\"byte_end\":1562},{\"index\":4,\"byte_start\":1562,\"byte_end\":1632},{\"index\":5,\"byte_start\":1632,\"byte_end\":1664},{\"index\":6,\"byte_start\":1664,\"byte_end\":1812},{\"index\":7,\"byte_start\":1812,\"byte_end\":1864},{\"index\":8,\"byte_start\":1864,\"byte_end\":1879},{\"index\":9,\"byte_start\":1879,\"byte_end\":1918},{\"index\":10,\"byte_start\":1918,\"byte_end\":1948},{\"index\":11,\"byte_start\":1948,\"byte_end\":2014}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":181},{\"index\":2,\"byte_start\":181,\"byte_end\":261},{\"index\":3,\"byte_start\":261,\"byte_end\":381},{\"index\":4,\"byte_start\":381,\"byte_end\":506},{\"index\":5,\"byte_start\":506,\"byte_end\":587},{\"index\":6,\"byte_start\":587,\"byte_end\":669},{\"index\":7,\"byte_start\":669,\"byte_end\":821}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1255,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"201 S Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Bakeries, Food, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"5:0-20:0\\\",\\\"Monday\\\":\\\"5:0-20:0\\\",\\\"Saturday\\\":\\\"5:0-20:0\\\",\\\"Sunday\\\":\\\"5:0-20:0\\\",\\\"Thursday\\\":\\\"5:0-20:0\\\",\\\"Tuesday\\\":\\\"5:0-20:0\\\",\\\"Wednesday\\\":\\\"5:0-20:0\\\"},\\\"name\\\":\\\"Panaderia Veronica\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 15:45:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Good fresh baked bread friendly service That location isn't the greatest because of parking though\\\"},{\\\"review_date\\\":\\\"2021-06-30 18:14:17\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Bottom Line:  An awesome local bakery\\\\n\\\\nIve been coming here since my son was born seven years ago.  We used to come in at 5am to get warm Bolillos and the folks that work here are always super friendly, the bread is always awesome and I always come back.\\\\n\\\\nI filled a bag full of randoms and brought it into work the other day and people loved it and were asking where it came from.\\\\n\\\\nThis place is great - you need to check it out if you havent yet!!\\\"},{\\\"review_date\\\":\\\"2021-05-12 04:06:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Polvorones!!!! The best I've had in a long time! And huge!!!!  I'm just talking about the pink sugar cookies, which are my favorite. It's not overly sweet or lardy. Lots of places are just blah and leave that film in the mouth from all the lard.\\\\n\\\\nI enjoyed it so much I had to come back before going back home. I also bought their bread, which was freshly baked. Omg so good!!! I was bummed they were out of conchas. I bet it's delicious as well. \\\\n\\\\nDefinitely coming back here when I'm in town.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sure! Here's an objective overview of Panaderia Veronica based on the provided structured data:\\n\\nPanaderia Veronica is a Mexican restaurant and bakery located in Santa Barbara, CA. They offer a variety of menu items such as baked goods, sandwiches, and coffee. The business has a rating of 4.5 stars based on customer reviews and is known for its fresh bread and friendly service. One reviewer praised the bakery's polvorones (pink sugar cookies) and described them as the best they've had in a long time. Another reviewer mentioned that the bread is always freshly baked and enjoyable. However, some reviewers have noted that the parking situation can be challenging. Overall, Panaderia Veronica appears to be a popular local bakery with a loyal customer base and a reputation for serving delicious, freshly baked goods.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":1072},{\"index\":1,\"byte_start\":1072,\"byte_end\":1514},{\"index\":2,\"byte_start\":1514,\"byte_end\":1548},{\"index\":3,\"byte_start\":1548,\"byte_end\":1562},{\"index\":4,\"byte_start\":1562,\"byte_end\":1632},{\"index\":5,\"byte_start\":1632,\"byte_end\":1664},{\"index\":6,\"byte_start\":1664,\"byte_end\":1812},{\"index\":7,\"byte_start\":1812,\"byte_end\":1864},{\"index\":8,\"byte_start\":1864,\"byte_end\":1879},{\"index\":9,\"byte_start\":1879,\"byte_end\":1918},{\"index\":10,\"byte_start\":1918,\"byte_end\":1948},{\"index\":11,\"byte_start\":1948,\"byte_end\":2014}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":181},{\"index\":2,\"byte_start\":181,\"byte_end\":261},{\"index\":3,\"byte_start\":261,\"byte_end\":381},{\"index\":4,\"byte_start\":381,\"byte_end\":506},{\"index\":5,\"byte_start\":506,\"byte_end\":587},{\"index\":6,\"byte_start\":587,\"byte_end\":669},{\"index\":7,\"byte_start\":669,\"byte_end\":821}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\"\n",
+    "input_tokens": 1243,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"201 S Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Bakeries, Food, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"5:0-20:0\\\",\\\"Monday\\\":\\\"5:0-20:0\\\",\\\"Saturday\\\":\\\"5:0-20:0\\\",\\\"Sunday\\\":\\\"5:0-20:0\\\",\\\"Thursday\\\":\\\"5:0-20:0\\\",\\\"Tuesday\\\":\\\"5:0-20:0\\\",\\\"Wednesday\\\":\\\"5:0-20:0\\\"},\\\"name\\\":\\\"Panaderia Veronica\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 15:45:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Good fresh baked bread friendly service That location isn't the greatest because of parking though\\\"},{\\\"review_date\\\":\\\"2021-06-30 18:14:17\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Bottom Line:  An awesome local bakery\\\\n\\\\nIve been coming here since my son was born seven years ago.  We used to come in at 5am to get warm Bolillos and the folks that work here are always super friendly, the bread is always awesome and I always come back.\\\\n\\\\nI filled a bag full of randoms and brought it into work the other day and people loved it and were asking where it came from.\\\\n\\\\nThis place is great - you need to check it out if you havent yet!!\\\"},{\\\"review_date\\\":\\\"2021-05-12 04:06:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Polvorones!!!! The best I've had in a long time! And huge!!!!  I'm just talking about the pink sugar cookies, which are my favorite. It's not overly sweet or lardy. Lots of places are just blah and leave that film in the mouth from all the lard.\\\\n\\\\nI enjoyed it so much I had to come back before going back home. I also bought their bread, which was freshly baked. Omg so good!!! I was bummed they were out of conchas. I bet it's delicious as well. \\\\n\\\\nDefinitely coming back here when I'm in town.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sure! Here's an objective overview of Panaderia Veronica based on the provided structured data:\\n\\nPanaderia Veronica is a Mexican restaurant and bakery located in Santa Barbara, CA. They offer a variety of menu items such as baked goods, sandwiches, and coffee. The business has a rating of 4.5 stars based on customer reviews and is known for its fresh bread and friendly service. One reviewer praised the bakery's polvorones (pink sugar cookies) and described them as the best they've had in a long time. Another reviewer mentioned that the bread is always freshly baked and enjoyable. However, some reviewers have noted that the parking situation can be challenging. Overall, Panaderia Veronica appears to be a popular local bakery with a loyal customer base and a reputation for serving delicious, freshly baked goods.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":1072},{\"index\":1,\"byte_start\":1072,\"byte_end\":1514},{\"index\":2,\"byte_start\":1514,\"byte_end\":1548},{\"index\":3,\"byte_start\":1548,\"byte_end\":1562},{\"index\":4,\"byte_start\":1562,\"byte_end\":1632},{\"index\":5,\"byte_start\":1632,\"byte_end\":1664},{\"index\":6,\"byte_start\":1664,\"byte_end\":1812},{\"index\":7,\"byte_start\":1812,\"byte_end\":1864},{\"index\":8,\"byte_start\":1864,\"byte_end\":1879},{\"index\":9,\"byte_start\":1879,\"byte_end\":1918},{\"index\":10,\"byte_start\":1918,\"byte_end\":1948},{\"index\":11,\"byte_start\":1948,\"byte_end\":2014}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":6},{\"index\":1,\"byte_start\":6,\"byte_end\":181},{\"index\":2,\"byte_start\":181,\"byte_end\":261},{\"index\":3,\"byte_start\":261,\"byte_end\":381},{\"index\":4,\"byte_start\":381,\"byte_end\":506},{\"index\":5,\"byte_start\":506,\"byte_end\":587},{\"index\":6,\"byte_start\":587,\"byte_end\":669},{\"index\":7,\"byte_start\":669,\"byte_end\":821}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[]\n1|C|0.90|[0,1]\n2|C|0.95|[0,1]\n3|C|0.90|[1,2]\n4|C|0.95|[1,2]\n5|C|0.90|[0,1]\n6|C|0.95|[0,1]\n7|C|0.90|[0,1]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259650,
+    "id": "chatcmpl-3cfbxLhoDmRglsWNb1cY0EBTBzdz1XqQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 2669.704,
+      "predicted_n": 109,
+      "predicted_per_second": 40.8284963426657,
+      "predicted_per_token_ms": 24.492697247706424,
+      "prompt_ms": 1124.211,
+      "prompt_n": 1206,
+      "prompt_per_second": 1072.7523569863665,
+      "prompt_per_token_ms": 0.932181592039801
+    },
+    "usage": {
+      "completion_tokens": 109,
+      "prompt_tokens": 1255,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1364
+    }
+  },
+  "source_cluster_id": "sha256:349ab8239be50e753480f4d70fd0fc28d64112b53597d61a5bfd2da916fe12b6",
+  "started_monotonic_ns": 920554441189419,
+  "status": "completed",
+  "unit_id": "sha256:2619b8317e8f3632032c2da33c1124be608e0c1c5210105aaf273df4a2dd421d"
+}

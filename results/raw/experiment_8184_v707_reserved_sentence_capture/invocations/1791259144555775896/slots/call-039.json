@@ -1,0 +1,91 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:ea981a5bfe6f67ff15f33304bd4764a73963659602ea6c1790300edcece1887f",
+  "ended_monotonic_ns": 920270885508216,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"701 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Food, Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-3:0\\\",\\\"Monday\\\":\\\"9:0-20:0\\\",\\\"Saturday\\\":\\\"9:0-3:0\\\",\\\"Sunday\\\":\\\"9:0-21:0\\\",\\\"Thursday\\\":\\\"9:0-3:0\\\",\\\"Tuesday\\\":\\\"9:0-20:0\\\",\\\"Wednesday\\\":\\\"9:0-20:0\\\"},\\\"name\\\":\\\"Romanti-Ezer\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-12-12 20:37:00\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"A good taco on the go. Pretty average but reliable for late night food run. Also good (when Covid is done) after a movie and shopping bc it's nearby :) it's has decent prices and the employees work quickly.\\\"},{\\\"review_date\\\":\\\"2020-08-30 19:07:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"From LA and I've had a lot of Mexican food, this place is better than most I've been to\\\"},{\\\"review_date\\\":\\\"2020-06-26 21:45:39\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Had the pastor burrito. The burrito came out less than 90 seconds after ordering which led me to believe I ate a $9 pre made burrito which was heated on the griddle to order. Not great quality, taste not the best, but I've had a couple worse in my day. Icing on the cake was I got very ill after eating this. Maybe don't get the pastor ?\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Romanti-Ezer is a locally owned Mexican restaurant located in Santa Barbara, California. The establishment offers a variety of traditional Mexican dishes, including tacos, burritos, and more. Customers have given the restaurant mixed reviews, with some praising its convenience and quick service, while others have expressed disappointment with the quality of their meals. One reviewer noted that the pastor burrito they ordered was pre-made and heated on the griddle, which may affect the taste and quality. Despite these criticisms, Romanti-Ezer has a relatively high rating of 3.5 stars and is open seven days a week from 9am to 10pm.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":797},{\"index\":1,\"byte_start\":797,\"byte_end\":850},{\"index\":2,\"byte_start\":850,\"byte_end\":1239},{\"index\":3,\"byte_start\":1239,\"byte_end\":1390},{\"index\":4,\"byte_start\":1390,\"byte_end\":1468},{\"index\":5,\"byte_start\":1468,\"byte_end\":1524},{\"index\":6,\"byte_start\":1524,\"byte_end\":1569}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":89},{\"index\":1,\"byte_start\":89,\"byte_end\":192},{\"index\":2,\"byte_start\":192,\"byte_end\":373},{\"index\":3,\"byte_start\":373,\"byte_end\":509},{\"index\":4,\"byte_start\":509,\"byte_end\":637}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 937,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"701 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Food, Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-3:0\\\",\\\"Monday\\\":\\\"9:0-20:0\\\",\\\"Saturday\\\":\\\"9:0-3:0\\\",\\\"Sunday\\\":\\\"9:0-21:0\\\",\\\"Thursday\\\":\\\"9:0-3:0\\\",\\\"Tuesday\\\":\\\"9:0-20:0\\\",\\\"Wednesday\\\":\\\"9:0-20:0\\\"},\\\"name\\\":\\\"Romanti-Ezer\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-12-12 20:37:00\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"A good taco on the go. Pretty average but reliable for late night food run. Also good (when Covid is done) after a movie and shopping bc it's nearby :) it's has decent prices and the employees work quickly.\\\"},{\\\"review_date\\\":\\\"2020-08-30 19:07:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"From LA and I've had a lot of Mexican food, this place is better than most I've been to\\\"},{\\\"review_date\\\":\\\"2020-06-26 21:45:39\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Had the pastor burrito. The burrito came out less than 90 seconds after ordering which led me to believe I ate a $9 pre made burrito which was heated on the griddle to order. Not great quality, taste not the best, but I've had a couple worse in my day. Icing on the cake was I got very ill after eating this. Maybe don't get the pastor ?\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Romanti-Ezer is a locally owned Mexican restaurant located in Santa Barbara, California. The establishment offers a variety of traditional Mexican dishes, including tacos, burritos, and more. Customers have given the restaurant mixed reviews, with some praising its convenience and quick service, while others have expressed disappointment with the quality of their meals. One reviewer noted that the pastor burrito they ordered was pre-made and heated on the griddle, which may affect the taste and quality. Despite these criticisms, Romanti-Ezer has a relatively high rating of 3.5 stars and is open seven days a week from 9am to 10pm.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":797},{\"index\":1,\"byte_start\":797,\"byte_end\":850},{\"index\":2,\"byte_start\":850,\"byte_end\":1239},{\"index\":3,\"byte_start\":1239,\"byte_end\":1390},{\"index\":4,\"byte_start\":1390,\"byte_end\":1468},{\"index\":5,\"byte_start\":1468,\"byte_end\":1524},{\"index\":6,\"byte_start\":1524,\"byte_end\":1569}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":89},{\"index\":1,\"byte_start\":89,\"byte_end\":192},{\"index\":2,\"byte_start\":192,\"byte_end\":373},{\"index\":3,\"byte_start\":373,\"byte_end\":509},{\"index\":4,\"byte_start\":509,\"byte_end\":637}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\"\n",
+    "input_tokens": 925,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"701 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Food, Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-3:0\\\",\\\"Monday\\\":\\\"9:0-20:0\\\",\\\"Saturday\\\":\\\"9:0-3:0\\\",\\\"Sunday\\\":\\\"9:0-21:0\\\",\\\"Thursday\\\":\\\"9:0-3:0\\\",\\\"Tuesday\\\":\\\"9:0-20:0\\\",\\\"Wednesday\\\":\\\"9:0-20:0\\\"},\\\"name\\\":\\\"Romanti-Ezer\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-12-12 20:37:00\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"A good taco on the go. Pretty average but reliable for late night food run. Also good (when Covid is done) after a movie and shopping bc it's nearby :) it's has decent prices and the employees work quickly.\\\"},{\\\"review_date\\\":\\\"2020-08-30 19:07:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"From LA and I've had a lot of Mexican food, this place is better than most I've been to\\\"},{\\\"review_date\\\":\\\"2020-06-26 21:45:39\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Had the pastor burrito. The burrito came out less than 90 seconds after ordering which led me to believe I ate a $9 pre made burrito which was heated on the griddle to order. Not great quality, taste not the best, but I've had a couple worse in my day. Icing on the cake was I got very ill after eating this. Maybe don't get the pastor ?\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Romanti-Ezer is a locally owned Mexican restaurant located in Santa Barbara, California. The establishment offers a variety of traditional Mexican dishes, including tacos, burritos, and more. Customers have given the restaurant mixed reviews, with some praising its convenience and quick service, while others have expressed disappointment with the quality of their meals. One reviewer noted that the pastor burrito they ordered was pre-made and heated on the griddle, which may affect the taste and quality. Despite these criticisms, Romanti-Ezer has a relatively high rating of 3.5 stars and is open seven days a week from 9am to 10pm.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":797},{\"index\":1,\"byte_start\":797,\"byte_end\":850},{\"index\":2,\"byte_start\":850,\"byte_end\":1239},{\"index\":3,\"byte_start\":1239,\"byte_end\":1390},{\"index\":4,\"byte_start\":1390,\"byte_end\":1468},{\"index\":5,\"byte_start\":1468,\"byte_end\":1524},{\"index\":6,\"byte_start\":1524,\"byte_end\":1569}],\"answer_sentence_indices\":[0,1,2,3,4],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":89},{\"index\":1,\"byte_start\":89,\"byte_end\":192},{\"index\":2,\"byte_start\":192,\"byte_end\":373},{\"index\":3,\"byte_start\":373,\"byte_end\":509},{\"index\":4,\"byte_start\":509,\"byte_end\":637}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[]\n1|C|0.90|[]\n2|C|0.85|[2,3]\n3|C|0.90|[3]\n4|C|0.80|[0,4]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259362,
+    "id": "chatcmpl-cZsjZ3X6EZ59JEXFWGibi9jSF943HmAv",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1507.121,
+      "predicted_n": 62,
+      "predicted_per_second": 41.13803735731902,
+      "predicted_per_token_ms": 24.308403225806455,
+      "prompt_ms": 868.5,
+      "prompt_n": 937,
+      "prompt_per_second": 1078.8716177317212,
+      "prompt_per_token_ms": 0.9268943436499466
+    },
+    "usage": {
+      "completion_tokens": 62,
+      "prompt_tokens": 937,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 999
+    }
+  },
+  "source_cluster_id": "sha256:3d9910599dc5aa7ad8ccde6b99c529346edd0bf2c74e5774d3399af98fffc1d8",
+  "started_monotonic_ns": 920268373330867,
+  "status": "completed",
+  "unit_id": "sha256:f074cc8780e6b026c15a77f972df3c7a3f330c9a1ad1af35833c3da874b9879f"
+}

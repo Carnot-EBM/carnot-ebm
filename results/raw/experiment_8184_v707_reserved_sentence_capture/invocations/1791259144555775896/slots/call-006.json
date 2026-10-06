@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:f44aeee1f2e0cc14b1576bd8bafd52f2c39e4a3d846f0abfffa474d9a95c67f7",
+  "ended_monotonic_ns": 920176611850353,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"2009 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":true,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Mexican, Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-22:0\\\",\\\"Monday\\\":\\\"10:0-21:0\\\",\\\"Saturday\\\":\\\"10:0-22:0\\\",\\\"Thursday\\\":\\\"10:0-22:0\\\",\\\"Tuesday\\\":\\\"10:0-21:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Taqueria El Pastorcito\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-04-25 05:55:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"It's an average priced taco place in this high priced town! I live right around the corner and constantly find myself craving their amazing carne asada tacos. Probably the best tacos in Santa Barbara.\\\"},{\\\"review_date\\\":\\\"2016-03-15 05:11:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is for their Noleta location.Muy delicioso.The people were friendly,the homemade tortillas  were fresh and on the thicker side with a good texture.I got the vegetarian alambres and a side of beans and a burrito.It all had good flavor .The salsas were tasty and am I super excited that they are there.\\\"},{\\\"review_date\\\":\\\"2016-03-09 23:42:56\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Let's start by saying no one mexican was in here. If a Mexican came here they would say,\\\\\\\"cagada.\\\\\\\" Not once but eight times did I believe this. Horrible tortillas, and beans were from a can. Last but not least they gave me food poisoning.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Taqueria El Pastorcito is a Mexican restaurant located at 2009 De La Vina St, Santa Barbara, CA. The restaurant is open from 10am to 9pm from Monday to Wednesday, and until 10pm from Thursday to Saturday. It offers convenient street and lot parking, outdoor seating, take out options, and is good for groups. However, it doesn't offer Wi-Fi or accept reservations. Reviews of Taqueria El Pastorcito are mixed, with an average rating of 4 stars. Some customers have praised the quality of the tacos, particularly the carne asada, and the homemade tortillas. However, one reviewer expressed dissatisfaction with the quality of the tortillas and beans, and alleged that they suffered food poisoning after their visit.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":838},{\"index\":1,\"byte_start\":838,\"byte_end\":937},{\"index\":2,\"byte_start\":937,\"byte_end\":1481},{\"index\":3,\"byte_start\":1481,\"byte_end\":1576},{\"index\":4,\"byte_start\":1576,\"byte_end\":1623},{\"index\":5,\"byte_start\":1623,\"byte_end\":1687}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":97},{\"index\":1,\"byte_start\":97,\"byte_end\":205},{\"index\":2,\"byte_start\":205,\"byte_end\":309},{\"index\":3,\"byte_start\":309,\"byte_end\":365},{\"index\":4,\"byte_start\":365,\"byte_end\":445},{\"index\":5,\"byte_start\":445,\"byte_end\":557},{\"index\":6,\"byte_start\":557,\"byte_end\":714}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1007,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"2009 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":true,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Mexican, Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-22:0\\\",\\\"Monday\\\":\\\"10:0-21:0\\\",\\\"Saturday\\\":\\\"10:0-22:0\\\",\\\"Thursday\\\":\\\"10:0-22:0\\\",\\\"Tuesday\\\":\\\"10:0-21:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Taqueria El Pastorcito\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-04-25 05:55:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"It's an average priced taco place in this high priced town! I live right around the corner and constantly find myself craving their amazing carne asada tacos. Probably the best tacos in Santa Barbara.\\\"},{\\\"review_date\\\":\\\"2016-03-15 05:11:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is for their Noleta location.Muy delicioso.The people were friendly,the homemade tortillas  were fresh and on the thicker side with a good texture.I got the vegetarian alambres and a side of beans and a burrito.It all had good flavor .The salsas were tasty and am I super excited that they are there.\\\"},{\\\"review_date\\\":\\\"2016-03-09 23:42:56\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Let's start by saying no one mexican was in here. If a Mexican came here they would say,\\\\\\\"cagada.\\\\\\\" Not once but eight times did I believe this. Horrible tortillas, and beans were from a can. Last but not least they gave me food poisoning.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Taqueria El Pastorcito is a Mexican restaurant located at 2009 De La Vina St, Santa Barbara, CA. The restaurant is open from 10am to 9pm from Monday to Wednesday, and until 10pm from Thursday to Saturday. It offers convenient street and lot parking, outdoor seating, take out options, and is good for groups. However, it doesn't offer Wi-Fi or accept reservations. Reviews of Taqueria El Pastorcito are mixed, with an average rating of 4 stars. Some customers have praised the quality of the tacos, particularly the carne asada, and the homemade tortillas. However, one reviewer expressed dissatisfaction with the quality of the tortillas and beans, and alleged that they suffered food poisoning after their visit.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":838},{\"index\":1,\"byte_start\":838,\"byte_end\":937},{\"index\":2,\"byte_start\":937,\"byte_end\":1481},{\"index\":3,\"byte_start\":1481,\"byte_end\":1576},{\"index\":4,\"byte_start\":1576,\"byte_end\":1623},{\"index\":5,\"byte_start\":1623,\"byte_end\":1687}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":97},{\"index\":1,\"byte_start\":97,\"byte_end\":205},{\"index\":2,\"byte_start\":205,\"byte_end\":309},{\"index\":3,\"byte_start\":309,\"byte_end\":365},{\"index\":4,\"byte_start\":365,\"byte_end\":445},{\"index\":5,\"byte_start\":445,\"byte_end\":557},{\"index\":6,\"byte_start\":557,\"byte_end\":714}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\"\n",
+    "input_tokens": 995,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"2009 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":true,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Mexican, Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-22:0\\\",\\\"Monday\\\":\\\"10:0-21:0\\\",\\\"Saturday\\\":\\\"10:0-22:0\\\",\\\"Thursday\\\":\\\"10:0-22:0\\\",\\\"Tuesday\\\":\\\"10:0-21:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Taqueria El Pastorcito\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-04-25 05:55:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"It's an average priced taco place in this high priced town! I live right around the corner and constantly find myself craving their amazing carne asada tacos. Probably the best tacos in Santa Barbara.\\\"},{\\\"review_date\\\":\\\"2016-03-15 05:11:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is for their Noleta location.Muy delicioso.The people were friendly,the homemade tortillas  were fresh and on the thicker side with a good texture.I got the vegetarian alambres and a side of beans and a burrito.It all had good flavor .The salsas were tasty and am I super excited that they are there.\\\"},{\\\"review_date\\\":\\\"2016-03-09 23:42:56\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Let's start by saying no one mexican was in here. If a Mexican came here they would say,\\\\\\\"cagada.\\\\\\\" Not once but eight times did I believe this. Horrible tortillas, and beans were from a can. Last but not least they gave me food poisoning.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Taqueria El Pastorcito is a Mexican restaurant located at 2009 De La Vina St, Santa Barbara, CA. The restaurant is open from 10am to 9pm from Monday to Wednesday, and until 10pm from Thursday to Saturday. It offers convenient street and lot parking, outdoor seating, take out options, and is good for groups. However, it doesn't offer Wi-Fi or accept reservations. Reviews of Taqueria El Pastorcito are mixed, with an average rating of 4 stars. Some customers have praised the quality of the tacos, particularly the carne asada, and the homemade tortillas. However, one reviewer expressed dissatisfaction with the quality of the tortillas and beans, and alleged that they suffered food poisoning after their visit.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":838},{\"index\":1,\"byte_start\":838,\"byte_end\":937},{\"index\":2,\"byte_start\":937,\"byte_end\":1481},{\"index\":3,\"byte_start\":1481,\"byte_end\":1576},{\"index\":4,\"byte_start\":1576,\"byte_end\":1623},{\"index\":5,\"byte_start\":1623,\"byte_end\":1687}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":97},{\"index\":1,\"byte_start\":97,\"byte_end\":205},{\"index\":2,\"byte_start\":205,\"byte_end\":309},{\"index\":3,\"byte_start\":309,\"byte_end\":365},{\"index\":4,\"byte_start\":365,\"byte_end\":445},{\"index\":5,\"byte_start\":445,\"byte_end\":557},{\"index\":6,\"byte_start\":557,\"byte_end\":714}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|E|1.00|[]\n3|E|1.00|[]\n4|E|1.00|[]\n5|E|1.00|[]\n6|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259268,
+    "id": "chatcmpl-WFlBurtdJ2eQ2Iw6IYVIGkitJYYGVbyo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1858.893,
+      "predicted_n": 77,
+      "predicted_per_second": 41.42250253242118,
+      "predicted_per_token_ms": 24.141467532467534,
+      "prompt_ms": 881.976,
+      "prompt_n": 1007,
+      "prompt_per_second": 1141.7544241566663,
+      "prompt_per_token_ms": 0.875845084409136
+    },
+    "usage": {
+      "completion_tokens": 77,
+      "prompt_tokens": 1007,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1084
+    }
+  },
+  "source_cluster_id": "sha256:c2c2c4728983285f79bf38f012f6a0ef114153f28253c9f5e5cf83e9cfbfed8e",
+  "started_monotonic_ns": 920173720092904,
+  "status": "completed",
+  "unit_id": "sha256:4f75aeb3b1a56d24dbbe9512282af589dc9c937e272a4be1715677648ba607b5"
+}

@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:6440cd3d509c05e9dfd817f3e17f3dd26bbe42a3e42b9afde65f821cbe460bda",
+  "ended_monotonic_ns": 920304649929770,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The cost of sales is the accumulated total of all costs used to create a product or service, which has been sold. The term is most commonly used by retailers. A manufacturer is more likely to use the term cost of goods sold.The cost of sales line item appears near the top of the income statement, as a subtraction from net sales. The result of this calculation is the gross margin earned by the reporting entity.he term is most commonly used by retailers. A manufacturer is more likely to use the term cost of goods sold. The cost of sales line item appears near the top of the income statement, as a subtraction from net sales. The result of this calculation is the gross margin earned by the reporting entity.\\\\n\\\\npassage 2:It is also known as cost of sales. Cost of goods sold is an expense charged against sales to work out a gross profit (see definition below). So, for example, we may have sold 100 units this year at $4 each, and these 100 units that we sold cost us $3 each originally.So our sales would be $400 and our cost of the goods we sold (cost of sales) would amount to $300. This would result in a gross profit of $100 (sales minus cost of sales).Cost of goods sold is not the same as purchases, as you will see from our examples below.ost of goods sold is an expense charged against sales to work out a gross profit (see definition below). So, for example, we may have sold 100 units this year at $4 each, and these 100 units that we sold cost us $3 each originally.\\\\n\\\\npassage 3:First, select a target for total cost of sales. For this example, we will use 35%. For every $100 in food sales, we would need to transfer $35 to COGS.irst, select a target for total cost of sales. For this example, we will use 35%. For every $100 in food sales, we would need to transfer $35 to COGS.\\\\n\\\\n\\\",\\\"question\\\":\\\"cost of sales example\\\"}\",\"answer\":\"Based on the given passages, it is clear that the cost of sales is an expense that a business charges against its sales to determine the gross profit earned. The cost of sales includes all costs incurred in creating the product or service that was sold, including direct labor, materials, and overhead. It is typically reported as a subtraction from net sales on the income statement and is calculated as the difference between the cost of goods sold and the beginning inventory plus the cost of goods sold.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":137},{\"index\":1,\"byte_start\":137,\"byte_end\":182},{\"index\":2,\"byte_start\":182,\"byte_end\":354},{\"index\":3,\"byte_start\":354,\"byte_end\":480},{\"index\":4,\"byte_start\":480,\"byte_end\":546},{\"index\":5,\"byte_start\":546,\"byte_end\":653},{\"index\":6,\"byte_start\":653,\"byte_end\":784},{\"index\":7,\"byte_start\":784,\"byte_end\":890},{\"index\":8,\"byte_start\":890,\"byte_end\":1381},{\"index\":9,\"byte_start\":1381,\"byte_end\":1569},{\"index\":10,\"byte_start\":1569,\"byte_end\":1604},{\"index\":11,\"byte_start\":1604,\"byte_end\":1719},{\"index\":12,\"byte_start\":1719,\"byte_end\":1754},{\"index\":13,\"byte_start\":1754,\"byte_end\":1863}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":158},{\"index\":1,\"byte_start\":158,\"byte_end\":303},{\"index\":2,\"byte_start\":303,\"byte_end\":507}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 956,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The cost of sales is the accumulated total of all costs used to create a product or service, which has been sold. The term is most commonly used by retailers. A manufacturer is more likely to use the term cost of goods sold.The cost of sales line item appears near the top of the income statement, as a subtraction from net sales. The result of this calculation is the gross margin earned by the reporting entity.he term is most commonly used by retailers. A manufacturer is more likely to use the term cost of goods sold. The cost of sales line item appears near the top of the income statement, as a subtraction from net sales. The result of this calculation is the gross margin earned by the reporting entity.\\\\n\\\\npassage 2:It is also known as cost of sales. Cost of goods sold is an expense charged against sales to work out a gross profit (see definition below). So, for example, we may have sold 100 units this year at $4 each, and these 100 units that we sold cost us $3 each originally.So our sales would be $400 and our cost of the goods we sold (cost of sales) would amount to $300. This would result in a gross profit of $100 (sales minus cost of sales).Cost of goods sold is not the same as purchases, as you will see from our examples below.ost of goods sold is an expense charged against sales to work out a gross profit (see definition below). So, for example, we may have sold 100 units this year at $4 each, and these 100 units that we sold cost us $3 each originally.\\\\n\\\\npassage 3:First, select a target for total cost of sales. For this example, we will use 35%. For every $100 in food sales, we would need to transfer $35 to COGS.irst, select a target for total cost of sales. For this example, we will use 35%. For every $100 in food sales, we would need to transfer $35 to COGS.\\\\n\\\\n\\\",\\\"question\\\":\\\"cost of sales example\\\"}\",\"answer\":\"Based on the given passages, it is clear that the cost of sales is an expense that a business charges against its sales to determine the gross profit earned. The cost of sales includes all costs incurred in creating the product or service that was sold, including direct labor, materials, and overhead. It is typically reported as a subtraction from net sales on the income statement and is calculated as the difference between the cost of goods sold and the beginning inventory plus the cost of goods sold.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":137},{\"index\":1,\"byte_start\":137,\"byte_end\":182},{\"index\":2,\"byte_start\":182,\"byte_end\":354},{\"index\":3,\"byte_start\":354,\"byte_end\":480},{\"index\":4,\"byte_start\":480,\"byte_end\":546},{\"index\":5,\"byte_start\":546,\"byte_end\":653},{\"index\":6,\"byte_start\":653,\"byte_end\":784},{\"index\":7,\"byte_start\":784,\"byte_end\":890},{\"index\":8,\"byte_start\":890,\"byte_end\":1381},{\"index\":9,\"byte_start\":1381,\"byte_end\":1569},{\"index\":10,\"byte_start\":1569,\"byte_end\":1604},{\"index\":11,\"byte_start\":1604,\"byte_end\":1719},{\"index\":12,\"byte_start\":1719,\"byte_end\":1754},{\"index\":13,\"byte_start\":1754,\"byte_end\":1863}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":158},{\"index\":1,\"byte_start\":158,\"byte_end\":303},{\"index\":2,\"byte_start\":303,\"byte_end\":507}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "input_tokens": 944,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:The cost of sales is the accumulated total of all costs used to create a product or service, which has been sold. The term is most commonly used by retailers. A manufacturer is more likely to use the term cost of goods sold.The cost of sales line item appears near the top of the income statement, as a subtraction from net sales. The result of this calculation is the gross margin earned by the reporting entity.he term is most commonly used by retailers. A manufacturer is more likely to use the term cost of goods sold. The cost of sales line item appears near the top of the income statement, as a subtraction from net sales. The result of this calculation is the gross margin earned by the reporting entity.\\\\n\\\\npassage 2:It is also known as cost of sales. Cost of goods sold is an expense charged against sales to work out a gross profit (see definition below). So, for example, we may have sold 100 units this year at $4 each, and these 100 units that we sold cost us $3 each originally.So our sales would be $400 and our cost of the goods we sold (cost of sales) would amount to $300. This would result in a gross profit of $100 (sales minus cost of sales).Cost of goods sold is not the same as purchases, as you will see from our examples below.ost of goods sold is an expense charged against sales to work out a gross profit (see definition below). So, for example, we may have sold 100 units this year at $4 each, and these 100 units that we sold cost us $3 each originally.\\\\n\\\\npassage 3:First, select a target for total cost of sales. For this example, we will use 35%. For every $100 in food sales, we would need to transfer $35 to COGS.irst, select a target for total cost of sales. For this example, we will use 35%. For every $100 in food sales, we would need to transfer $35 to COGS.\\\\n\\\\n\\\",\\\"question\\\":\\\"cost of sales example\\\"}\",\"answer\":\"Based on the given passages, it is clear that the cost of sales is an expense that a business charges against its sales to determine the gross profit earned. The cost of sales includes all costs incurred in creating the product or service that was sold, including direct labor, materials, and overhead. It is typically reported as a subtraction from net sales on the income statement and is calculated as the difference between the cost of goods sold and the beginning inventory plus the cost of goods sold.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":137},{\"index\":1,\"byte_start\":137,\"byte_end\":182},{\"index\":2,\"byte_start\":182,\"byte_end\":354},{\"index\":3,\"byte_start\":354,\"byte_end\":480},{\"index\":4,\"byte_start\":480,\"byte_end\":546},{\"index\":5,\"byte_start\":546,\"byte_end\":653},{\"index\":6,\"byte_start\":653,\"byte_end\":784},{\"index\":7,\"byte_start\":784,\"byte_end\":890},{\"index\":8,\"byte_start\":890,\"byte_end\":1381},{\"index\":9,\"byte_start\":1381,\"byte_end\":1569},{\"index\":10,\"byte_start\":1569,\"byte_end\":1604},{\"index\":11,\"byte_start\":1604,\"byte_end\":1719},{\"index\":12,\"byte_start\":1719,\"byte_end\":1754},{\"index\":13,\"byte_start\":1754,\"byte_end\":1863}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":158},{\"index\":1,\"byte_start\":158,\"byte_end\":303},{\"index\":2,\"byte_start\":303,\"byte_end\":507}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|B|0.50|[]\n1|B|0.50|[]\n2|B|0.50|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259396,
+    "id": "chatcmpl-ddgpqJhsosUXukd9tJPGO9mrM4J0Z92I",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 799.157,
+      "predicted_n": 33,
+      "predicted_per_second": 41.29351303936523,
+      "predicted_per_token_ms": 24.216878787878787,
+      "prompt_ms": 870.68,
+      "prompt_n": 956,
+      "prompt_per_second": 1097.9923737768183,
+      "prompt_per_token_ms": 0.9107531380753138
+    },
+    "usage": {
+      "completion_tokens": 33,
+      "prompt_tokens": 956,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 989
+    }
+  },
+  "source_cluster_id": "sha256:7f259a0c5425fe8b4cf8015f7bca217d13f71681856c4beef803a4efb28fb3c9",
+  "started_monotonic_ns": 920302758511583,
+  "status": "completed",
+  "unit_id": "sha256:13c7be5559390a6846616fb8bb796a1ec3d532cbe28374ade27341e506be40ac"
+}

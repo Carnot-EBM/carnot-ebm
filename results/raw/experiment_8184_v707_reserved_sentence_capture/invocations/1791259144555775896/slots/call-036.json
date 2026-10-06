@@ -1,0 +1,94 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:7cc57d1ffc68379cc219df632899d9c72104ac2a0d4dcf5ccf8dc2abbdd0ee93",
+  "ended_monotonic_ns": 920262810590732,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"2840-B De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Pizza\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"3:0-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-22:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Lilsy Wood Fired Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-11-06 19:25:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Good wood fired pizza, good price and quick. Better than those non-local places. Support local businesses like this please :)\\\"},{\\\"review_date\\\":\\\"2020-09-19 05:18:41\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"There is no way that this any better than Rustys pizza. And I hate Rustys. It's literally junk. Except you pay $45 for pizza that is beyond mediocre. Way overpriced flavorless dough with basically no cheese and and a smattering of toppings.  The only way this would be acceptable is if you were baked out of your skull.\\\"},{\\\"review_date\\\":\\\"2020-08-28 06:25:47\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Pizza was pretty tasty, got the Cotto Carne, but I ordered some garlic bread which was a little than I desired.  It was \\\\\\\"French Bread\\\\\\\" but it was the bread you would buy at the grocery store in the 8-pack of sandwich bread.  Expected the loaf of bread you use for bbqs\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Lilsy Wood Fired Pizza is a restaurant located at 2840-B De La Vina St in Santa Barbara, California. They specialize in wood-fired pizza and are categorized as restaurants and pizza establishments. They offer outdoor seating and takeout options. Their hours of operation vary throughout the week, but they are open from 11:00 am to 21:00 pm on Monday through Saturday and from 12:00 pm to 21:00 pm on Sundays. Based on the reviews provided, their prices are reasonable, and the quality of their food exceeds that of other non-local pizzerias. Customers have praised their wood-fired pizza and garlic bread. However, some customers have criticized the texture of the crust and the lack of cheese in their pizzas. Overall, Lilsy Wood Fired Pizza appears to be a casual and affordable option for pizza lovers looking for a taste of wood-fired goodness.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":828},{\"index\":1,\"byte_start\":828,\"byte_end\":864},{\"index\":2,\"byte_start\":864,\"byte_end\":1038},{\"index\":3,\"byte_start\":1038,\"byte_end\":1057},{\"index\":4,\"byte_start\":1057,\"byte_end\":1078},{\"index\":5,\"byte_start\":1078,\"byte_end\":1132},{\"index\":6,\"byte_start\":1132,\"byte_end\":1224},{\"index\":7,\"byte_start\":1224,\"byte_end\":1488},{\"index\":8,\"byte_start\":1488,\"byte_end\":1602},{\"index\":9,\"byte_start\":1602,\"byte_end\":1662}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":101},{\"index\":1,\"byte_start\":101,\"byte_end\":198},{\"index\":2,\"byte_start\":198,\"byte_end\":246},{\"index\":3,\"byte_start\":246,\"byte_end\":410},{\"index\":4,\"byte_start\":410,\"byte_end\":543},{\"index\":5,\"byte_start\":543,\"byte_end\":607},{\"index\":6,\"byte_start\":607,\"byte_end\":712},{\"index\":7,\"byte_start\":712,\"byte_end\":849}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1142,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"2840-B De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Pizza\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"3:0-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-22:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Lilsy Wood Fired Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-11-06 19:25:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Good wood fired pizza, good price and quick. Better than those non-local places. Support local businesses like this please :)\\\"},{\\\"review_date\\\":\\\"2020-09-19 05:18:41\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"There is no way that this any better than Rustys pizza. And I hate Rustys. It's literally junk. Except you pay $45 for pizza that is beyond mediocre. Way overpriced flavorless dough with basically no cheese and and a smattering of toppings.  The only way this would be acceptable is if you were baked out of your skull.\\\"},{\\\"review_date\\\":\\\"2020-08-28 06:25:47\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Pizza was pretty tasty, got the Cotto Carne, but I ordered some garlic bread which was a little than I desired.  It was \\\\\\\"French Bread\\\\\\\" but it was the bread you would buy at the grocery store in the 8-pack of sandwich bread.  Expected the loaf of bread you use for bbqs\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Lilsy Wood Fired Pizza is a restaurant located at 2840-B De La Vina St in Santa Barbara, California. They specialize in wood-fired pizza and are categorized as restaurants and pizza establishments. They offer outdoor seating and takeout options. Their hours of operation vary throughout the week, but they are open from 11:00 am to 21:00 pm on Monday through Saturday and from 12:00 pm to 21:00 pm on Sundays. Based on the reviews provided, their prices are reasonable, and the quality of their food exceeds that of other non-local pizzerias. Customers have praised their wood-fired pizza and garlic bread. However, some customers have criticized the texture of the crust and the lack of cheese in their pizzas. Overall, Lilsy Wood Fired Pizza appears to be a casual and affordable option for pizza lovers looking for a taste of wood-fired goodness.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":828},{\"index\":1,\"byte_start\":828,\"byte_end\":864},{\"index\":2,\"byte_start\":864,\"byte_end\":1038},{\"index\":3,\"byte_start\":1038,\"byte_end\":1057},{\"index\":4,\"byte_start\":1057,\"byte_end\":1078},{\"index\":5,\"byte_start\":1078,\"byte_end\":1132},{\"index\":6,\"byte_start\":1132,\"byte_end\":1224},{\"index\":7,\"byte_start\":1224,\"byte_end\":1488},{\"index\":8,\"byte_start\":1488,\"byte_end\":1602},{\"index\":9,\"byte_start\":1602,\"byte_end\":1662}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":101},{\"index\":1,\"byte_start\":101,\"byte_end\":198},{\"index\":2,\"byte_start\":198,\"byte_end\":246},{\"index\":3,\"byte_start\":246,\"byte_end\":410},{\"index\":4,\"byte_start\":410,\"byte_end\":543},{\"index\":5,\"byte_start\":543,\"byte_end\":607},{\"index\":6,\"byte_start\":607,\"byte_end\":712},{\"index\":7,\"byte_start\":712,\"byte_end\":849}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6 \"\\n\" r7\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nr7 ::= \"7|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\"\n",
+    "input_tokens": 1130,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"2840-B De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Pizza\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"3:0-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-22:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Lilsy Wood Fired Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-11-06 19:25:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Good wood fired pizza, good price and quick. Better than those non-local places. Support local businesses like this please :)\\\"},{\\\"review_date\\\":\\\"2020-09-19 05:18:41\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"There is no way that this any better than Rustys pizza. And I hate Rustys. It's literally junk. Except you pay $45 for pizza that is beyond mediocre. Way overpriced flavorless dough with basically no cheese and and a smattering of toppings.  The only way this would be acceptable is if you were baked out of your skull.\\\"},{\\\"review_date\\\":\\\"2020-08-28 06:25:47\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Pizza was pretty tasty, got the Cotto Carne, but I ordered some garlic bread which was a little than I desired.  It was \\\\\\\"French Bread\\\\\\\" but it was the bread you would buy at the grocery store in the 8-pack of sandwich bread.  Expected the loaf of bread you use for bbqs\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Lilsy Wood Fired Pizza is a restaurant located at 2840-B De La Vina St in Santa Barbara, California. They specialize in wood-fired pizza and are categorized as restaurants and pizza establishments. They offer outdoor seating and takeout options. Their hours of operation vary throughout the week, but they are open from 11:00 am to 21:00 pm on Monday through Saturday and from 12:00 pm to 21:00 pm on Sundays. Based on the reviews provided, their prices are reasonable, and the quality of their food exceeds that of other non-local pizzerias. Customers have praised their wood-fired pizza and garlic bread. However, some customers have criticized the texture of the crust and the lack of cheese in their pizzas. Overall, Lilsy Wood Fired Pizza appears to be a casual and affordable option for pizza lovers looking for a taste of wood-fired goodness.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":828},{\"index\":1,\"byte_start\":828,\"byte_end\":864},{\"index\":2,\"byte_start\":864,\"byte_end\":1038},{\"index\":3,\"byte_start\":1038,\"byte_end\":1057},{\"index\":4,\"byte_start\":1057,\"byte_end\":1078},{\"index\":5,\"byte_start\":1078,\"byte_end\":1132},{\"index\":6,\"byte_start\":1132,\"byte_end\":1224},{\"index\":7,\"byte_start\":1224,\"byte_end\":1488},{\"index\":8,\"byte_start\":1488,\"byte_end\":1602},{\"index\":9,\"byte_start\":1602,\"byte_end\":1662}],\"answer_sentence_indices\":[0,1,2,3,4,5,6,7],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":101},{\"index\":1,\"byte_start\":101,\"byte_end\":198},{\"index\":2,\"byte_start\":198,\"byte_end\":246},{\"index\":3,\"byte_start\":246,\"byte_end\":410},{\"index\":4,\"byte_start\":410,\"byte_end\":543},{\"index\":5,\"byte_start\":543,\"byte_end\":607},{\"index\":6,\"byte_start\":607,\"byte_end\":712},{\"index\":7,\"byte_start\":712,\"byte_end\":849}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]\n2|C|0.00|[0]\n3|C|0.00|[0]\n4|C|0.00|[0]\n5|C|0.00|[0]\n6|C|0.00|[0]\n7|C|0.00|[0]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259354,
+    "id": "chatcmpl-2hax9QFcqAa33XX44NePNHNSH7dCPYbq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2287.901,
+      "predicted_n": 94,
+      "predicted_per_second": 41.085693830283745,
+      "predicted_per_token_ms": 24.33937234042553,
+      "prompt_ms": 1017.54,
+      "prompt_n": 1142,
+      "prompt_per_second": 1122.3146018829727,
+      "prompt_per_token_ms": 0.891015761821366
+    },
+    "usage": {
+      "completion_tokens": 94,
+      "prompt_tokens": 1142,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1236
+    }
+  },
+  "source_cluster_id": "sha256:9d6a61bf9e182fdfdc64eb5e917fadaac3dfed1cf27b4897ecc147a5dd7ec8a3",
+  "started_monotonic_ns": 920259358900061,
+  "status": "completed",
+  "unit_id": "sha256:55fca85224efcfb140e33cdee5d44211c0dd64cfb88b8e5d8c12627ad3e7b37c"
+}

@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:10bc5bc4cc31aedc1d22795134e6d8733b8f119221f35955db5895eb6c929004",
+  "ended_monotonic_ns": 920230770660867,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Arizona Republican Announces 2024 Campaign\\nArizona Republican Blake Masters has announced that he will again be running for office in 2024, following up his 2022 campaign for U.S. Senate in which he lost to Democrat Mark Kelly.\\nMasters announced this week that he would be running for Arizona's 8th Congressional District, a seat being left open by fellow Republican Debbie Lesko, who says she will not be seeking reelection at the end of her current term.\\nBlake Masters Launches New Campaign\\nRepublican Blake Masters has announced this week that he is launching his campaign for Congress in 2024, looking to take over the seat being vacated by fellow Republican Debbie Lesko, who stated earlier this month that she would not be seeking reelection.\\n\u201cI\u2019m running for Congress, to fight for Arizona\u2019s 8th,\u201d Masters said on X, the platform formerly known as Twitter. \u201cBiden has failed. We need Trump back. We need to stop inflation, Build the Wall, avoid WW3, and secure Arizona\u2019s water future. We need to fight for our families.\u201d\\nMasters, who lost to Democrat Mark Kelly in the 2022 midterm race for U.S. Senate, had also been rumored to be running for Senator Kyrsten Sinema's Senate seat in 2024, but those rumors quickly dissipated after popular Republican Kari Lake announced her candidacy.\\nFor Lesko's seat, Masters will be faced with overcoming fellow 2022 candidate Abe Hamadeh, who also recently announced his campaign for the position. The two will likely have a close primary race, but the seat is expected to go to the Republican nominee in a district that has remained staunchly red in recent years.\\nAt DailyNewsNow we bring you the latest news from the West Coast and around the country, covering a wide range of topics from politics and campaign news to entertainment and local interest stories. Please feel free to share the story with friends and join the conversation in the comments below!\",\"answer\":\"Arizona Republican Blake Masters has announced his campaign for Congress in 2024. He will be running for Arizona's 8th Congressional District, which is being left open by fellow Republican Debbie Lesko. Masters, who lost in the 2022 race for U.S. Senate, stated that he wants to fight for Arizona's families and address issues such as inflation, border security, and water resources. He will face competition from fellow candidate Abe Hamadeh in the primary race, but the district is expected to remain Republican.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":228},{\"index\":1,\"byte_start\":228,\"byte_end\":457},{\"index\":2,\"byte_start\":457,\"byte_end\":749},{\"index\":3,\"byte_start\":749,\"byte_end\":872},{\"index\":4,\"byte_start\":872,\"byte_end\":893},{\"index\":5,\"byte_start\":893,\"byte_end\":913},{\"index\":6,\"byte_start\":913,\"byte_end\":1004},{\"index\":7,\"byte_start\":1004,\"byte_end\":1042},{\"index\":8,\"byte_start\":1042,\"byte_end\":1307},{\"index\":9,\"byte_start\":1307,\"byte_end\":1457},{\"index\":10,\"byte_start\":1457,\"byte_end\":1624},{\"index\":11,\"byte_start\":1624,\"byte_end\":1822},{\"index\":12,\"byte_start\":1822,\"byte_end\":1919}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":203},{\"index\":1,\"byte_start\":203,\"byte_end\":384},{\"index\":2,\"byte_start\":384,\"byte_end\":514}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 912,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Arizona Republican Announces 2024 Campaign\\nArizona Republican Blake Masters has announced that he will again be running for office in 2024, following up his 2022 campaign for U.S. Senate in which he lost to Democrat Mark Kelly.\\nMasters announced this week that he would be running for Arizona's 8th Congressional District, a seat being left open by fellow Republican Debbie Lesko, who says she will not be seeking reelection at the end of her current term.\\nBlake Masters Launches New Campaign\\nRepublican Blake Masters has announced this week that he is launching his campaign for Congress in 2024, looking to take over the seat being vacated by fellow Republican Debbie Lesko, who stated earlier this month that she would not be seeking reelection.\\n\u201cI\u2019m running for Congress, to fight for Arizona\u2019s 8th,\u201d Masters said on X, the platform formerly known as Twitter. \u201cBiden has failed. We need Trump back. We need to stop inflation, Build the Wall, avoid WW3, and secure Arizona\u2019s water future. We need to fight for our families.\u201d\\nMasters, who lost to Democrat Mark Kelly in the 2022 midterm race for U.S. Senate, had also been rumored to be running for Senator Kyrsten Sinema's Senate seat in 2024, but those rumors quickly dissipated after popular Republican Kari Lake announced her candidacy.\\nFor Lesko's seat, Masters will be faced with overcoming fellow 2022 candidate Abe Hamadeh, who also recently announced his campaign for the position. The two will likely have a close primary race, but the seat is expected to go to the Republican nominee in a district that has remained staunchly red in recent years.\\nAt DailyNewsNow we bring you the latest news from the West Coast and around the country, covering a wide range of topics from politics and campaign news to entertainment and local interest stories. Please feel free to share the story with friends and join the conversation in the comments below!\",\"answer\":\"Arizona Republican Blake Masters has announced his campaign for Congress in 2024. He will be running for Arizona's 8th Congressional District, which is being left open by fellow Republican Debbie Lesko. Masters, who lost in the 2022 race for U.S. Senate, stated that he wants to fight for Arizona's families and address issues such as inflation, border security, and water resources. He will face competition from fellow candidate Abe Hamadeh in the primary race, but the district is expected to remain Republican.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":228},{\"index\":1,\"byte_start\":228,\"byte_end\":457},{\"index\":2,\"byte_start\":457,\"byte_end\":749},{\"index\":3,\"byte_start\":749,\"byte_end\":872},{\"index\":4,\"byte_start\":872,\"byte_end\":893},{\"index\":5,\"byte_start\":893,\"byte_end\":913},{\"index\":6,\"byte_start\":913,\"byte_end\":1004},{\"index\":7,\"byte_start\":1004,\"byte_end\":1042},{\"index\":8,\"byte_start\":1042,\"byte_end\":1307},{\"index\":9,\"byte_start\":1307,\"byte_end\":1457},{\"index\":10,\"byte_start\":1457,\"byte_end\":1624},{\"index\":11,\"byte_start\":1624,\"byte_end\":1822},{\"index\":12,\"byte_start\":1822,\"byte_end\":1919}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":203},{\"index\":1,\"byte_start\":203,\"byte_end\":384},{\"index\":2,\"byte_start\":384,\"byte_end\":514}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "input_tokens": 900,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Arizona Republican Announces 2024 Campaign\\nArizona Republican Blake Masters has announced that he will again be running for office in 2024, following up his 2022 campaign for U.S. Senate in which he lost to Democrat Mark Kelly.\\nMasters announced this week that he would be running for Arizona's 8th Congressional District, a seat being left open by fellow Republican Debbie Lesko, who says she will not be seeking reelection at the end of her current term.\\nBlake Masters Launches New Campaign\\nRepublican Blake Masters has announced this week that he is launching his campaign for Congress in 2024, looking to take over the seat being vacated by fellow Republican Debbie Lesko, who stated earlier this month that she would not be seeking reelection.\\n\u201cI\u2019m running for Congress, to fight for Arizona\u2019s 8th,\u201d Masters said on X, the platform formerly known as Twitter. \u201cBiden has failed. We need Trump back. We need to stop inflation, Build the Wall, avoid WW3, and secure Arizona\u2019s water future. We need to fight for our families.\u201d\\nMasters, who lost to Democrat Mark Kelly in the 2022 midterm race for U.S. Senate, had also been rumored to be running for Senator Kyrsten Sinema's Senate seat in 2024, but those rumors quickly dissipated after popular Republican Kari Lake announced her candidacy.\\nFor Lesko's seat, Masters will be faced with overcoming fellow 2022 candidate Abe Hamadeh, who also recently announced his campaign for the position. The two will likely have a close primary race, but the seat is expected to go to the Republican nominee in a district that has remained staunchly red in recent years.\\nAt DailyNewsNow we bring you the latest news from the West Coast and around the country, covering a wide range of topics from politics and campaign news to entertainment and local interest stories. Please feel free to share the story with friends and join the conversation in the comments below!\",\"answer\":\"Arizona Republican Blake Masters has announced his campaign for Congress in 2024. He will be running for Arizona's 8th Congressional District, which is being left open by fellow Republican Debbie Lesko. Masters, who lost in the 2022 race for U.S. Senate, stated that he wants to fight for Arizona's families and address issues such as inflation, border security, and water resources. He will face competition from fellow candidate Abe Hamadeh in the primary race, but the district is expected to remain Republican.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":228},{\"index\":1,\"byte_start\":228,\"byte_end\":457},{\"index\":2,\"byte_start\":457,\"byte_end\":749},{\"index\":3,\"byte_start\":749,\"byte_end\":872},{\"index\":4,\"byte_start\":872,\"byte_end\":893},{\"index\":5,\"byte_start\":893,\"byte_end\":913},{\"index\":6,\"byte_start\":913,\"byte_end\":1004},{\"index\":7,\"byte_start\":1004,\"byte_end\":1042},{\"index\":8,\"byte_start\":1042,\"byte_end\":1307},{\"index\":9,\"byte_start\":1307,\"byte_end\":1457},{\"index\":10,\"byte_start\":1457,\"byte_end\":1624},{\"index\":11,\"byte_start\":1624,\"byte_end\":1822},{\"index\":12,\"byte_start\":1822,\"byte_end\":1919}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":203},{\"index\":1,\"byte_start\":203,\"byte_end\":384},{\"index\":2,\"byte_start\":384,\"byte_end\":514}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[0,1]\n1|E|1.00|[1,2]\n2|E|1.00|[3,8]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259322,
+    "id": "chatcmpl-2Yk2m4vvvLJpXkDMBTZP3Cr17Mbren4i",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1090.725,
+      "predicted_n": 45,
+      "predicted_per_second": 41.25696211235646,
+      "predicted_per_token_ms": 24.23833333333333,
+      "prompt_ms": 859.135,
+      "prompt_n": 912,
+      "prompt_per_second": 1061.5328208023186,
+      "prompt_per_token_ms": 0.9420339912280702
+    },
+    "usage": {
+      "completion_tokens": 45,
+      "prompt_tokens": 912,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 957
+    }
+  },
+  "source_cluster_id": "sha256:f987110171f0b4f54a8c1f6f79b438fefd33c02f37453625f5b16cc10cdd8786",
+  "started_monotonic_ns": 920228664794662,
+  "status": "completed",
+  "unit_id": "sha256:f8da1af4fc706cb3cc93c9e47040400b85615ce7d8a35368e2150a985f543b05"
+}

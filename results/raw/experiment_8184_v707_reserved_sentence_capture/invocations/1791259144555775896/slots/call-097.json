@@ -1,0 +1,92 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:8a53cde44dbf92d06a1931123501e7baef91137c861d34bb4046e461425f3b38",
+  "ended_monotonic_ns": 920433238729018,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Information technology can be considered as a subset of information systems. It deals with the technology part of any information system, and as such deals with hardware, servers, operating systems and software etc. A system is always a combination of people, machines, processes and technology.\\\\n\\\\npassage 2:The basics concepts of computer science are derived from physics, math, electrical engineering, and linguistics. Before it emerged as a separate discipline, computer science was taught as an extension of electrical and electronics engineering only. Information technology. As the name implies, information technology is all about making use of computer based information systems. How this information is designed, developed, implemented, supported or managed by computers is what makes the bulk of syllabus of any information technology course.\\\\n\\\\npassage 3:Computer science is at the \u2018lower level\u2019 while Information technology is at high level, in computing terms. 3. Information technology integrates computer science into the business world for automated solutions. 4. Computer scientists should have low level workings of computers whereas in IT that\u2019s not necessary.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between computer science and information technology\\\"}\",\"answer\":\"Based on the given passages, here's the difference between computer science and information technology:\\n\\nComputer science focuses on the theoretical foundations of computation and the design of algorithms, software, and hardware components. It has a broader scope that encompasses programming languages, computer architecture, databases, artificial intelligence, and human-computer interaction, among other topics. In contrast, information technology (IT) primarily deals with the application of computer systems and technology to manage and process information. IT is concerned with the practical aspects of using computers and telecommunications equipment to store, retrieve, and transmit information in various settings, such as businesses, organizations, and homes.\\n\\nTherefore, computer science provides the technical foundation for IT, while IT applies these technical principles to solve real-world problems and improve productivity, efficiency, and decision-making. IT professionals typically focus on the implementation, management, and maintenance of computer systems and networks, while computer scientists explore new technologies and develop innovative solutions to complex problems.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":100},{\"index\":1,\"byte_start\":100,\"byte_end\":445},{\"index\":2,\"byte_start\":445,\"byte_end\":581},{\"index\":3,\"byte_start\":581,\"byte_end\":605},{\"index\":4,\"byte_start\":605,\"byte_end\":712},{\"index\":5,\"byte_start\":712,\"byte_end\":1002},{\"index\":6,\"byte_start\":1002,\"byte_end\":1105},{\"index\":7,\"byte_start\":1105,\"byte_end\":1303}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":241},{\"index\":1,\"byte_start\":241,\"byte_end\":415},{\"index\":2,\"byte_start\":415,\"byte_end\":563},{\"index\":3,\"byte_start\":563,\"byte_end\":771},{\"index\":4,\"byte_start\":771,\"byte_end\":973},{\"index\":5,\"byte_start\":973,\"byte_end\":1195}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 779,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Information technology can be considered as a subset of information systems. It deals with the technology part of any information system, and as such deals with hardware, servers, operating systems and software etc. A system is always a combination of people, machines, processes and technology.\\\\n\\\\npassage 2:The basics concepts of computer science are derived from physics, math, electrical engineering, and linguistics. Before it emerged as a separate discipline, computer science was taught as an extension of electrical and electronics engineering only. Information technology. As the name implies, information technology is all about making use of computer based information systems. How this information is designed, developed, implemented, supported or managed by computers is what makes the bulk of syllabus of any information technology course.\\\\n\\\\npassage 3:Computer science is at the \u2018lower level\u2019 while Information technology is at high level, in computing terms. 3. Information technology integrates computer science into the business world for automated solutions. 4. Computer scientists should have low level workings of computers whereas in IT that\u2019s not necessary.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between computer science and information technology\\\"}\",\"answer\":\"Based on the given passages, here's the difference between computer science and information technology:\\n\\nComputer science focuses on the theoretical foundations of computation and the design of algorithms, software, and hardware components. It has a broader scope that encompasses programming languages, computer architecture, databases, artificial intelligence, and human-computer interaction, among other topics. In contrast, information technology (IT) primarily deals with the application of computer systems and technology to manage and process information. IT is concerned with the practical aspects of using computers and telecommunications equipment to store, retrieve, and transmit information in various settings, such as businesses, organizations, and homes.\\n\\nTherefore, computer science provides the technical foundation for IT, while IT applies these technical principles to solve real-world problems and improve productivity, efficiency, and decision-making. IT professionals typically focus on the implementation, management, and maintenance of computer systems and networks, while computer scientists explore new technologies and develop innovative solutions to complex problems.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":100},{\"index\":1,\"byte_start\":100,\"byte_end\":445},{\"index\":2,\"byte_start\":445,\"byte_end\":581},{\"index\":3,\"byte_start\":581,\"byte_end\":605},{\"index\":4,\"byte_start\":605,\"byte_end\":712},{\"index\":5,\"byte_start\":712,\"byte_end\":1002},{\"index\":6,\"byte_start\":1002,\"byte_end\":1105},{\"index\":7,\"byte_start\":1105,\"byte_end\":1303}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":241},{\"index\":1,\"byte_start\":241,\"byte_end\":415},{\"index\":2,\"byte_start\":415,\"byte_end\":563},{\"index\":3,\"byte_start\":563,\"byte_end\":771},{\"index\":4,\"byte_start\":771,\"byte_end\":973},{\"index\":5,\"byte_start\":973,\"byte_end\":1195}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\"\n",
+    "input_tokens": 767,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Information technology can be considered as a subset of information systems. It deals with the technology part of any information system, and as such deals with hardware, servers, operating systems and software etc. A system is always a combination of people, machines, processes and technology.\\\\n\\\\npassage 2:The basics concepts of computer science are derived from physics, math, electrical engineering, and linguistics. Before it emerged as a separate discipline, computer science was taught as an extension of electrical and electronics engineering only. Information technology. As the name implies, information technology is all about making use of computer based information systems. How this information is designed, developed, implemented, supported or managed by computers is what makes the bulk of syllabus of any information technology course.\\\\n\\\\npassage 3:Computer science is at the \u2018lower level\u2019 while Information technology is at high level, in computing terms. 3. Information technology integrates computer science into the business world for automated solutions. 4. Computer scientists should have low level workings of computers whereas in IT that\u2019s not necessary.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between computer science and information technology\\\"}\",\"answer\":\"Based on the given passages, here's the difference between computer science and information technology:\\n\\nComputer science focuses on the theoretical foundations of computation and the design of algorithms, software, and hardware components. It has a broader scope that encompasses programming languages, computer architecture, databases, artificial intelligence, and human-computer interaction, among other topics. In contrast, information technology (IT) primarily deals with the application of computer systems and technology to manage and process information. IT is concerned with the practical aspects of using computers and telecommunications equipment to store, retrieve, and transmit information in various settings, such as businesses, organizations, and homes.\\n\\nTherefore, computer science provides the technical foundation for IT, while IT applies these technical principles to solve real-world problems and improve productivity, efficiency, and decision-making. IT professionals typically focus on the implementation, management, and maintenance of computer systems and networks, while computer scientists explore new technologies and develop innovative solutions to complex problems.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":100},{\"index\":1,\"byte_start\":100,\"byte_end\":445},{\"index\":2,\"byte_start\":445,\"byte_end\":581},{\"index\":3,\"byte_start\":581,\"byte_end\":605},{\"index\":4,\"byte_start\":605,\"byte_end\":712},{\"index\":5,\"byte_start\":712,\"byte_end\":1002},{\"index\":6,\"byte_start\":1002,\"byte_end\":1105},{\"index\":7,\"byte_start\":1105,\"byte_end\":1303}],\"answer_sentence_indices\":[0,1,2,3,4,5],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":241},{\"index\":1,\"byte_start\":241,\"byte_end\":415},{\"index\":2,\"byte_start\":415,\"byte_end\":563},{\"index\":3,\"byte_start\":563,\"byte_end\":771},{\"index\":4,\"byte_start\":771,\"byte_end\":973},{\"index\":5,\"byte_start\":973,\"byte_end\":1195}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|B|0.00|[]\n1|B|0.00|[]\n2|B|0.00|[]\n3|B|0.00|[]\n4|B|0.00|[]\n5|B|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259525,
+    "id": "chatcmpl-hCnDclVlUeiOT9MnRAHL2ZDqQ6Wf5ofW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1602.178,
+      "predicted_n": 66,
+      "predicted_per_second": 41.193924769906964,
+      "predicted_per_token_ms": 24.275424242424243,
+      "prompt_ms": 710.564,
+      "prompt_n": 730,
+      "prompt_per_second": 1027.3529196525578,
+      "prompt_per_token_ms": 0.9733753424657534
+    },
+    "usage": {
+      "completion_tokens": 66,
+      "prompt_tokens": 779,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 845
+    }
+  },
+  "source_cluster_id": "sha256:c17a7a4dd9c0777e8c21c01d3bce054c876185e591e3d80264d51d54ffcf76b9",
+  "started_monotonic_ns": 920430799308027,
+  "status": "completed",
+  "unit_id": "sha256:2c19cfd7eccbe1242b4d28660b0dc448e610694207eb6afc93810cb2c89e8b9a"
+}

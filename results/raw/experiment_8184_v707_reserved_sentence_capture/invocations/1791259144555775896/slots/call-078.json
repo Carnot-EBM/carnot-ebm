@@ -1,0 +1,93 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:9dffce7b53e17b83cf3a5185353922ccc8126e322555d9493c1ab0ae5952cccd",
+  "ended_monotonic_ns": 920379747625238,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"4203 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Bars, Nightlife, German, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Dutch Garden Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-09-15 21:24:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"So happy to hear the Dutch Garden will reopen  and keep the original menu !!!  I  grow up going to the Dutch garden since I was 7 I am 59 now !!!   Saw 4 owners ...   60 and 70 it was a local place for the Germans ...  so many memories !   Can't wait for the reopening !!!! Love the Schnitzel and potato pancakes the Duck and the lunch time menu and sandwiches!!!!!!\\\"},{\\\"review_date\\\":\\\"2020-09-07 05:09:27\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"NEWS FLASH: Dutch Garden restaurant has been acquired by local chefs and is in the process of a remodel to reopen late 2020! The scoop is that the new owners will not be changing anything except for improvements on the actual facility. They are committed to keeping The Dutch Garden preserved and continue the legacy.\\\"},{\\\"review_date\\\":\\\"2020-06-26 19:03:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"There is now a voicemail greeting that they've closed their doors as of 3pm on Thursday, June 25, 2020.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sure, here's an objective overview of the local business Dutch Garden Restaurant based on the provided structured data in JSON format:\\n\\nDutch Garden Restaurant is a local eatery located in Santa Barbara, California, offering Bars, Nightlife, German, and Restaurants services. With an overall rating of 4.5 stars and three reviews, this restaurant appears to have a solid reputation among its patrons. One reviewer expresses excitement for the restaurant's reopening after it was acquired by new local chefs who are committed to preserving its legacy and menu. Another reviewer shares positive sentiments towards the restaurant's atmosphere and cuisine, highlighting the Schnitzel, potato pancakes, duck, and lunch menu options. A third reviewer provides an update that the restaurant has closed its doors temporarily as of June 25th, 2020. This information suggests that Dutch Garden Restaurant may be currently undergoing renovations or updates before its planned reopening. Features such as outdoor seating and takeout services are available, but Wi-Fi and reservations are not offered. Overall, Dutch Garden Restaurant seems to be a beloved local spot with a rich history, delicious German-inspired cuisine, and a commitment to preserving its authenticity.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":819},{\"index\":1,\"byte_start\":819,\"byte_end\":888},{\"index\":2,\"byte_start\":888,\"byte_end\":907},{\"index\":3,\"byte_start\":907,\"byte_end\":959},{\"index\":4,\"byte_start\":959,\"byte_end\":980},{\"index\":5,\"byte_start\":980,\"byte_end\":1014},{\"index\":6,\"byte_start\":1014,\"byte_end\":1305},{\"index\":7,\"byte_start\":1305,\"byte_end\":1416},{\"index\":8,\"byte_start\":1416,\"byte_end\":1691}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":276},{\"index\":1,\"byte_start\":276,\"byte_end\":401},{\"index\":2,\"byte_start\":401,\"byte_end\":560},{\"index\":3,\"byte_start\":560,\"byte_end\":728},{\"index\":4,\"byte_start\":728,\"byte_end\":976},{\"index\":5,\"byte_start\":976,\"byte_end\":1089},{\"index\":6,\"byte_start\":1089,\"byte_end\":1259}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1133,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"4203 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Bars, Nightlife, German, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Dutch Garden Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-09-15 21:24:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"So happy to hear the Dutch Garden will reopen  and keep the original menu !!!  I  grow up going to the Dutch garden since I was 7 I am 59 now !!!   Saw 4 owners ...   60 and 70 it was a local place for the Germans ...  so many memories !   Can't wait for the reopening !!!! Love the Schnitzel and potato pancakes the Duck and the lunch time menu and sandwiches!!!!!!\\\"},{\\\"review_date\\\":\\\"2020-09-07 05:09:27\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"NEWS FLASH: Dutch Garden restaurant has been acquired by local chefs and is in the process of a remodel to reopen late 2020! The scoop is that the new owners will not be changing anything except for improvements on the actual facility. They are committed to keeping The Dutch Garden preserved and continue the legacy.\\\"},{\\\"review_date\\\":\\\"2020-06-26 19:03:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"There is now a voicemail greeting that they've closed their doors as of 3pm on Thursday, June 25, 2020.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sure, here's an objective overview of the local business Dutch Garden Restaurant based on the provided structured data in JSON format:\\n\\nDutch Garden Restaurant is a local eatery located in Santa Barbara, California, offering Bars, Nightlife, German, and Restaurants services. With an overall rating of 4.5 stars and three reviews, this restaurant appears to have a solid reputation among its patrons. One reviewer expresses excitement for the restaurant's reopening after it was acquired by new local chefs who are committed to preserving its legacy and menu. Another reviewer shares positive sentiments towards the restaurant's atmosphere and cuisine, highlighting the Schnitzel, potato pancakes, duck, and lunch menu options. A third reviewer provides an update that the restaurant has closed its doors temporarily as of June 25th, 2020. This information suggests that Dutch Garden Restaurant may be currently undergoing renovations or updates before its planned reopening. Features such as outdoor seating and takeout services are available, but Wi-Fi and reservations are not offered. Overall, Dutch Garden Restaurant seems to be a beloved local spot with a rich history, delicious German-inspired cuisine, and a commitment to preserving its authenticity.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":819},{\"index\":1,\"byte_start\":819,\"byte_end\":888},{\"index\":2,\"byte_start\":888,\"byte_end\":907},{\"index\":3,\"byte_start\":907,\"byte_end\":959},{\"index\":4,\"byte_start\":959,\"byte_end\":980},{\"index\":5,\"byte_start\":980,\"byte_end\":1014},{\"index\":6,\"byte_start\":1014,\"byte_end\":1305},{\"index\":7,\"byte_start\":1305,\"byte_end\":1416},{\"index\":8,\"byte_start\":1416,\"byte_end\":1691}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":276},{\"index\":1,\"byte_start\":276,\"byte_end\":401},{\"index\":2,\"byte_start\":401,\"byte_end\":560},{\"index\":3,\"byte_start\":560,\"byte_end\":728},{\"index\":4,\"byte_start\":728,\"byte_end\":976},{\"index\":5,\"byte_start\":976,\"byte_end\":1089},{\"index\":6,\"byte_start\":1089,\"byte_end\":1259}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3 \"\\n\" r4 \"\\n\" r5 \"\\n\" r6\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nr4 ::= \"4|\" relation \"|\" probability \"|\" refs\nr5 ::= \"5|\" relation \"|\" probability \"|\" refs\nr6 ::= \"6|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\"\n",
+    "input_tokens": 1121,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"address\\\":\\\"4203 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Bars, Nightlife, German, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Dutch Garden Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-09-15 21:24:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"So happy to hear the Dutch Garden will reopen  and keep the original menu !!!  I  grow up going to the Dutch garden since I was 7 I am 59 now !!!   Saw 4 owners ...   60 and 70 it was a local place for the Germans ...  so many memories !   Can't wait for the reopening !!!! Love the Schnitzel and potato pancakes the Duck and the lunch time menu and sandwiches!!!!!!\\\"},{\\\"review_date\\\":\\\"2020-09-07 05:09:27\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"NEWS FLASH: Dutch Garden restaurant has been acquired by local chefs and is in the process of a remodel to reopen late 2020! The scoop is that the new owners will not be changing anything except for improvements on the actual facility. They are committed to keeping The Dutch Garden preserved and continue the legacy.\\\"},{\\\"review_date\\\":\\\"2020-06-26 19:03:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"There is now a voicemail greeting that they've closed their doors as of 3pm on Thursday, June 25, 2020.\\\"}],\\\"state\\\":\\\"CA\\\"}\",\"answer\":\"Sure, here's an objective overview of the local business Dutch Garden Restaurant based on the provided structured data in JSON format:\\n\\nDutch Garden Restaurant is a local eatery located in Santa Barbara, California, offering Bars, Nightlife, German, and Restaurants services. With an overall rating of 4.5 stars and three reviews, this restaurant appears to have a solid reputation among its patrons. One reviewer expresses excitement for the restaurant's reopening after it was acquired by new local chefs who are committed to preserving its legacy and menu. Another reviewer shares positive sentiments towards the restaurant's atmosphere and cuisine, highlighting the Schnitzel, potato pancakes, duck, and lunch menu options. A third reviewer provides an update that the restaurant has closed its doors temporarily as of June 25th, 2020. This information suggests that Dutch Garden Restaurant may be currently undergoing renovations or updates before its planned reopening. Features such as outdoor seating and takeout services are available, but Wi-Fi and reservations are not offered. Overall, Dutch Garden Restaurant seems to be a beloved local spot with a rich history, delicious German-inspired cuisine, and a commitment to preserving its authenticity.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":819},{\"index\":1,\"byte_start\":819,\"byte_end\":888},{\"index\":2,\"byte_start\":888,\"byte_end\":907},{\"index\":3,\"byte_start\":907,\"byte_end\":959},{\"index\":4,\"byte_start\":959,\"byte_end\":980},{\"index\":5,\"byte_start\":980,\"byte_end\":1014},{\"index\":6,\"byte_start\":1014,\"byte_end\":1305},{\"index\":7,\"byte_start\":1305,\"byte_end\":1416},{\"index\":8,\"byte_start\":1416,\"byte_end\":1691}],\"answer_sentence_indices\":[0,1,2,3,4,5,6],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":276},{\"index\":1,\"byte_start\":276,\"byte_end\":401},{\"index\":2,\"byte_start\":401,\"byte_end\":560},{\"index\":3,\"byte_start\":560,\"byte_end\":728},{\"index\":4,\"byte_start\":728,\"byte_end\":976},{\"index\":5,\"byte_start\":976,\"byte_end\":1089},{\"index\":6,\"byte_start\":1089,\"byte_end\":1259}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[]\n1|E|0.95|[]\n2|E|0.95|[]\n3|E|0.95|[]\n4|E|0.95|[]\n5|E|0.95|[]\n6|E|0.95|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259471,
+    "id": "chatcmpl-GXgWPdfG4sFDUqFflchVv09laFxa7kK7",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1872.076,
+      "predicted_n": 77,
+      "predicted_per_second": 41.13080879195075,
+      "predicted_per_token_ms": 24.312675324675325,
+      "prompt_ms": 1040.279,
+      "prompt_n": 1084,
+      "prompt_per_second": 1042.02814821793,
+      "prompt_per_token_ms": 0.9596669741697417
+    },
+    "usage": {
+      "completion_tokens": 77,
+      "prompt_tokens": 1133,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1210
+    }
+  },
+  "source_cluster_id": "sha256:51bd7888e9f3983a27615510a918618e7297c82c7ad7e8e9cd80cfe4286b8f3d",
+  "started_monotonic_ns": 920376656123476,
+  "status": "completed",
+  "unit_id": "sha256:96d2ebab38f7ed7e3e1a6c779fdbde4296f7cc48d5e74a6402d9046c96192883"
+}

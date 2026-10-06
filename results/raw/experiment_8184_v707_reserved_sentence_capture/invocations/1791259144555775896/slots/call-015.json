@@ -1,0 +1,88 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:404f02b87ae08942d8df84a489ecae53dfc93dbf59c36272236e34460fae8921",
+  "ended_monotonic_ns": 920198579768887,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:If these aren't removed, the cells decompose and can cause bad breath. While dry mouth, which is often a cause of bad breath, can be permanent or even progressive, there are management and relief options available to those who suffer. These options involve the use of either saliva substitutes and/or saliva stimulants.\\\\n\\\\npassage 2:Causes of Mouth Dryness. Ongoing dryness of your mouth can be a symptom of various medical conditions, including Parkinson's disease, as the Journal of Parkinson's Disease reports, or even diabetes. Mouth dryness (known as xerostomia) is also a side effect of some medication.\\\\n\\\\npassage 3:Bad breath (clinically termed halitosis) is most commonly the result of poor dental hygiene and can be worsened by certain habits (such as smoking or tobacco use) or through the consumption of odorous foods such as onions, garlic, coffee, alcohol, dairy products, orange juice, soda, and more.\\\\n\\\\n\\\",\\\"question\\\":\\\"causes of bad breath and dry mouth\\\"}\",\"answer\":\"Bad breath and dry mouth can be caused by several factors, including poor dental hygiene, certain medications, and medical conditions such as Parkinson's disease and diabetes. Management options for dry mouth include saliva substitutes and saliva stimulants.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":94},{\"index\":1,\"byte_start\":94,\"byte_end\":258},{\"index\":2,\"byte_start\":258,\"byte_end\":381},{\"index\":3,\"byte_start\":381,\"byte_end\":555},{\"index\":4,\"byte_start\":555,\"byte_end\":993}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":176},{\"index\":1,\"byte_start\":176,\"byte_end\":258}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 474,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:If these aren't removed, the cells decompose and can cause bad breath. While dry mouth, which is often a cause of bad breath, can be permanent or even progressive, there are management and relief options available to those who suffer. These options involve the use of either saliva substitutes and/or saliva stimulants.\\\\n\\\\npassage 2:Causes of Mouth Dryness. Ongoing dryness of your mouth can be a symptom of various medical conditions, including Parkinson's disease, as the Journal of Parkinson's Disease reports, or even diabetes. Mouth dryness (known as xerostomia) is also a side effect of some medication.\\\\n\\\\npassage 3:Bad breath (clinically termed halitosis) is most commonly the result of poor dental hygiene and can be worsened by certain habits (such as smoking or tobacco use) or through the consumption of odorous foods such as onions, garlic, coffee, alcohol, dairy products, orange juice, soda, and more.\\\\n\\\\n\\\",\\\"question\\\":\\\"causes of bad breath and dry mouth\\\"}\",\"answer\":\"Bad breath and dry mouth can be caused by several factors, including poor dental hygiene, certain medications, and medical conditions such as Parkinson's disease and diabetes. Management options for dry mouth include saliva substitutes and saliva stimulants.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":94},{\"index\":1,\"byte_start\":94,\"byte_end\":258},{\"index\":2,\"byte_start\":258,\"byte_end\":381},{\"index\":3,\"byte_start\":381,\"byte_end\":555},{\"index\":4,\"byte_start\":555,\"byte_end\":993}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":176},{\"index\":1,\"byte_start\":176,\"byte_end\":258}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\"\n",
+    "input_tokens": 462,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:If these aren't removed, the cells decompose and can cause bad breath. While dry mouth, which is often a cause of bad breath, can be permanent or even progressive, there are management and relief options available to those who suffer. These options involve the use of either saliva substitutes and/or saliva stimulants.\\\\n\\\\npassage 2:Causes of Mouth Dryness. Ongoing dryness of your mouth can be a symptom of various medical conditions, including Parkinson's disease, as the Journal of Parkinson's Disease reports, or even diabetes. Mouth dryness (known as xerostomia) is also a side effect of some medication.\\\\n\\\\npassage 3:Bad breath (clinically termed halitosis) is most commonly the result of poor dental hygiene and can be worsened by certain habits (such as smoking or tobacco use) or through the consumption of odorous foods such as onions, garlic, coffee, alcohol, dairy products, orange juice, soda, and more.\\\\n\\\\n\\\",\\\"question\\\":\\\"causes of bad breath and dry mouth\\\"}\",\"answer\":\"Bad breath and dry mouth can be caused by several factors, including poor dental hygiene, certain medications, and medical conditions such as Parkinson's disease and diabetes. Management options for dry mouth include saliva substitutes and saliva stimulants.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":94},{\"index\":1,\"byte_start\":94,\"byte_end\":258},{\"index\":2,\"byte_start\":258,\"byte_end\":381},{\"index\":3,\"byte_start\":381,\"byte_end\":555},{\"index\":4,\"byte_start\":555,\"byte_end\":993}],\"answer_sentence_indices\":[0,1],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":176},{\"index\":1,\"byte_start\":176,\"byte_end\":258}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[]\n1|E|1.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259290,
+    "id": "chatcmpl-6kl4wke3JtjNEat7zN4xlYZ0oWeSJbRe",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 528.829,
+      "predicted_n": 22,
+      "predicted_per_second": 41.60134939649679,
+      "predicted_per_token_ms": 24.037681818181817,
+      "prompt_ms": 458.986,
+      "prompt_n": 474,
+      "prompt_per_second": 1032.7112373797893,
+      "prompt_per_token_ms": 0.9683248945147679
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 474,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 496
+    }
+  },
+  "source_cluster_id": "sha256:f0aef55a681799acc555facd99ddda79c00d61422986cae5b0b042779ccddf43",
+  "started_monotonic_ns": 920197452110099,
+  "status": "completed",
+  "unit_id": "sha256:33ffce99f2570f6fa928099abccb9586d4929087f8a6e311cf65ffb96bfaf106"
+}

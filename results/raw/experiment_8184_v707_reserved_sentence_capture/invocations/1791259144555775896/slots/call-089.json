@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:ffe7bcea1a16e127336ce6962b8abe57f0d7dc4ffd6a2d38223094c2fc430d6f",
+  "ended_monotonic_ns": 920411192442546,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Although area codes are not assigned based upon population the locations with greater populations have an increased demand for area codes. The non-geographic area codes utilized in the United States are 456, 500, 533, 544, 566, 577, 700, 710, 800, 844, 855, 866, 877, 888 and 900. While many United States locations are assigned a single area code others are within geographic overlays.\\\\n\\\\npassage 2:Click Here! There are two ways to use our printable area code list service... Just above just type in the area code needed into our database to get an instant response or we have 3 links on the left that have the printable area codes sorted either by area code number, alphabetically by state or alphabetically by time zone.\\\\n\\\\npassage 3:Alabama Area Codes: 205 - 251 - 256 - 334. Alaska Area Codes: 907. Arizona Area Codes: 480 - 520 - 602 - 623 - 928. Arkansas Area Codes: 501 - 870. California Area Codes: 209 - 213 - 310 - 323 - 408 - 415 - 510 - 530 - 559 - 562 - 619 - 626 - 650 - 661 - 707 - 714 - 760 - 805 - 818 - 831 - 858 - 909 - 916 - 925 - 949. Colorado Area Codes: 303 - 719 - 720 - 970.\\\\n\\\\n\\\",\\\"question\\\":\\\"area code usa\\\"}\",\"answer\":\"Based on the provided passages, the answer to the question \\\"area code usa\\\" is:\\n\\nArea codes in the United States are 2-3 digit numbers assigned to specific geographic areas. There are currently 566 area codes in use in the US, including 456, 500, 533, 544, 566, 577, 700, 710, 800, 844, 855, 866, 877, 888, and 900. These area codes are used to route phone calls to their intended destination within a particular region or state. Some areas may have multiple area codes due to the high demand for phone numbers or the need to split a large geographic area into smaller sections.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":162},{\"index\":1,\"byte_start\":162,\"byte_end\":435},{\"index\":2,\"byte_start\":435,\"byte_end\":501},{\"index\":3,\"byte_start\":501,\"byte_end\":1157}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":173},{\"index\":1,\"byte_start\":173,\"byte_end\":429},{\"index\":2,\"byte_start\":429,\"byte_end\":577}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 843,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Although area codes are not assigned based upon population the locations with greater populations have an increased demand for area codes. The non-geographic area codes utilized in the United States are 456, 500, 533, 544, 566, 577, 700, 710, 800, 844, 855, 866, 877, 888 and 900. While many United States locations are assigned a single area code others are within geographic overlays.\\\\n\\\\npassage 2:Click Here! There are two ways to use our printable area code list service... Just above just type in the area code needed into our database to get an instant response or we have 3 links on the left that have the printable area codes sorted either by area code number, alphabetically by state or alphabetically by time zone.\\\\n\\\\npassage 3:Alabama Area Codes: 205 - 251 - 256 - 334. Alaska Area Codes: 907. Arizona Area Codes: 480 - 520 - 602 - 623 - 928. Arkansas Area Codes: 501 - 870. California Area Codes: 209 - 213 - 310 - 323 - 408 - 415 - 510 - 530 - 559 - 562 - 619 - 626 - 650 - 661 - 707 - 714 - 760 - 805 - 818 - 831 - 858 - 909 - 916 - 925 - 949. Colorado Area Codes: 303 - 719 - 720 - 970.\\\\n\\\\n\\\",\\\"question\\\":\\\"area code usa\\\"}\",\"answer\":\"Based on the provided passages, the answer to the question \\\"area code usa\\\" is:\\n\\nArea codes in the United States are 2-3 digit numbers assigned to specific geographic areas. There are currently 566 area codes in use in the US, including 456, 500, 533, 544, 566, 577, 700, 710, 800, 844, 855, 866, 877, 888, and 900. These area codes are used to route phone calls to their intended destination within a particular region or state. Some areas may have multiple area codes due to the high demand for phone numbers or the need to split a large geographic area into smaller sections.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":162},{\"index\":1,\"byte_start\":162,\"byte_end\":435},{\"index\":2,\"byte_start\":435,\"byte_end\":501},{\"index\":3,\"byte_start\":501,\"byte_end\":1157}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":173},{\"index\":1,\"byte_start\":173,\"byte_end\":429},{\"index\":2,\"byte_start\":429,\"byte_end\":577}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\"\n",
+    "input_tokens": 831,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Although area codes are not assigned based upon population the locations with greater populations have an increased demand for area codes. The non-geographic area codes utilized in the United States are 456, 500, 533, 544, 566, 577, 700, 710, 800, 844, 855, 866, 877, 888 and 900. While many United States locations are assigned a single area code others are within geographic overlays.\\\\n\\\\npassage 2:Click Here! There are two ways to use our printable area code list service... Just above just type in the area code needed into our database to get an instant response or we have 3 links on the left that have the printable area codes sorted either by area code number, alphabetically by state or alphabetically by time zone.\\\\n\\\\npassage 3:Alabama Area Codes: 205 - 251 - 256 - 334. Alaska Area Codes: 907. Arizona Area Codes: 480 - 520 - 602 - 623 - 928. Arkansas Area Codes: 501 - 870. California Area Codes: 209 - 213 - 310 - 323 - 408 - 415 - 510 - 530 - 559 - 562 - 619 - 626 - 650 - 661 - 707 - 714 - 760 - 805 - 818 - 831 - 858 - 909 - 916 - 925 - 949. Colorado Area Codes: 303 - 719 - 720 - 970.\\\\n\\\\n\\\",\\\"question\\\":\\\"area code usa\\\"}\",\"answer\":\"Based on the provided passages, the answer to the question \\\"area code usa\\\" is:\\n\\nArea codes in the United States are 2-3 digit numbers assigned to specific geographic areas. There are currently 566 area codes in use in the US, including 456, 500, 533, 544, 566, 577, 700, 710, 800, 844, 855, 866, 877, 888, and 900. These area codes are used to route phone calls to their intended destination within a particular region or state. Some areas may have multiple area codes due to the high demand for phone numbers or the need to split a large geographic area into smaller sections.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":162},{\"index\":1,\"byte_start\":162,\"byte_end\":435},{\"index\":2,\"byte_start\":435,\"byte_end\":501},{\"index\":3,\"byte_start\":501,\"byte_end\":1157}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":173},{\"index\":1,\"byte_start\":173,\"byte_end\":429},{\"index\":2,\"byte_start\":429,\"byte_end\":577}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|B|0.00|[]\n1|B|0.00|[]\n2|B|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259502,
+    "id": "chatcmpl-53ZKy4I4iEDS9ol61qDsxxnnPG9uudrc",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 799.317,
+      "predicted_n": 33,
+      "predicted_per_second": 41.28524727986518,
+      "predicted_per_token_ms": 24.22172727272727,
+      "prompt_ms": 825.11,
+      "prompt_n": 794,
+      "prompt_per_second": 962.2959362994025,
+      "prompt_per_token_ms": 1.0391813602015114
+    },
+    "usage": {
+      "completion_tokens": 33,
+      "prompt_tokens": 843,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 876
+    }
+  },
+  "source_cluster_id": "sha256:c4e0aa4e507de0b24fcd07ba46adb4fba0f9c84d5ae214d05a1b1017656ce714",
+  "started_monotonic_ns": 920409366254226,
+  "status": "completed",
+  "unit_id": "sha256:238c63e15cc1dbc6edf493f77edb94c185ad345109c93c7b087f159a4225a283"
+}

@@ -1,0 +1,87 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:2ff1c0c59451663aead41e391353eea7936c364d93b357ed47409cf26016bbfb",
+  "ended_monotonic_ns": 920316589561608,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Typical signs of strep throat infection are: 1  Fever. 2  Swollen, tender lymph nodes on the sides of the neck (cervical lymphadenopathy). 3  White patches seen on the tonsils and throat (tonsillar exudates).\\\\n\\\\npassage 2:Some people experience mild symptoms like a sore throat, whereas other people have more severe symptoms including fever and difficulty swallowing. Common symptoms of strep throat include: 1  sudden fever. 2  sore throat (red throat with white patches). 3  headache. 4  chills. 5  loss of appetite. 6  swollen lymph nodes in the neck.\\\\n\\\\npassage 3:Common symptoms of strep throat in children and adults include: 1  Severe and sudden sore throat without coughing, sneezing, or other cold symptoms. 2  Pain or difficulty with swallowing. 3  Fever over 101\u00b0F (38.3\u00b0C) . 4  Lower fevers may point to a viral infection and not strep. 5  Swollen lymph nodes in the neck.\\\\n\\\\n\\\",\\\"question\\\":\\\"what's the symptoms of strep throat\\\"}\",\"answer\":\"Based on the given passages, the symptoms of strep throat infection are: fever, swollen and tender lymph nodes on the sides of the neck (cervical lymphadenopathy), white patches seen on the tonsils and throat (tonsillar exudates), sudden fever, sore throat (red throat with white patches), headache, chills, loss of appetite, severe and sudden sore throat without coughing, sneezing, or other cold symptoms, pain or difficulty with swallowing, fever over 101\u00b0F (38.3\u00b0C).\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":78},{\"index\":1,\"byte_start\":78,\"byte_end\":162},{\"index\":2,\"byte_start\":162,\"byte_end\":392},{\"index\":3,\"byte_start\":392,\"byte_end\":450},{\"index\":4,\"byte_start\":450,\"byte_end\":498},{\"index\":5,\"byte_start\":498,\"byte_end\":511},{\"index\":6,\"byte_start\":511,\"byte_end\":522},{\"index\":7,\"byte_start\":522,\"byte_end\":543},{\"index\":8,\"byte_start\":543,\"byte_end\":741},{\"index\":9,\"byte_start\":741,\"byte_end\":780},{\"index\":10,\"byte_start\":780,\"byte_end\":813},{\"index\":11,\"byte_start\":813,\"byte_end\":875},{\"index\":12,\"byte_start\":875,\"byte_end\":965}],\"answer_sentence_indices\":[0],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":472}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 704,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Typical signs of strep throat infection are: 1  Fever. 2  Swollen, tender lymph nodes on the sides of the neck (cervical lymphadenopathy). 3  White patches seen on the tonsils and throat (tonsillar exudates).\\\\n\\\\npassage 2:Some people experience mild symptoms like a sore throat, whereas other people have more severe symptoms including fever and difficulty swallowing. Common symptoms of strep throat include: 1  sudden fever. 2  sore throat (red throat with white patches). 3  headache. 4  chills. 5  loss of appetite. 6  swollen lymph nodes in the neck.\\\\n\\\\npassage 3:Common symptoms of strep throat in children and adults include: 1  Severe and sudden sore throat without coughing, sneezing, or other cold symptoms. 2  Pain or difficulty with swallowing. 3  Fever over 101\u00b0F (38.3\u00b0C) . 4  Lower fevers may point to a viral infection and not strep. 5  Swollen lymph nodes in the neck.\\\\n\\\\n\\\",\\\"question\\\":\\\"what's the symptoms of strep throat\\\"}\",\"answer\":\"Based on the given passages, the symptoms of strep throat infection are: fever, swollen and tender lymph nodes on the sides of the neck (cervical lymphadenopathy), white patches seen on the tonsils and throat (tonsillar exudates), sudden fever, sore throat (red throat with white patches), headache, chills, loss of appetite, severe and sudden sore throat without coughing, sneezing, or other cold symptoms, pain or difficulty with swallowing, fever over 101\u00b0F (38.3\u00b0C).\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":78},{\"index\":1,\"byte_start\":78,\"byte_end\":162},{\"index\":2,\"byte_start\":162,\"byte_end\":392},{\"index\":3,\"byte_start\":392,\"byte_end\":450},{\"index\":4,\"byte_start\":450,\"byte_end\":498},{\"index\":5,\"byte_start\":498,\"byte_end\":511},{\"index\":6,\"byte_start\":511,\"byte_end\":522},{\"index\":7,\"byte_start\":522,\"byte_end\":543},{\"index\":8,\"byte_start\":543,\"byte_end\":741},{\"index\":9,\"byte_start\":741,\"byte_end\":780},{\"index\":10,\"byte_start\":780,\"byte_end\":813},{\"index\":11,\"byte_start\":813,\"byte_end\":875},{\"index\":12,\"byte_start\":875,\"byte_end\":965}],\"answer_sentence_indices\":[0],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":472}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\"\n",
+    "input_tokens": 692,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:Typical signs of strep throat infection are: 1  Fever. 2  Swollen, tender lymph nodes on the sides of the neck (cervical lymphadenopathy). 3  White patches seen on the tonsils and throat (tonsillar exudates).\\\\n\\\\npassage 2:Some people experience mild symptoms like a sore throat, whereas other people have more severe symptoms including fever and difficulty swallowing. Common symptoms of strep throat include: 1  sudden fever. 2  sore throat (red throat with white patches). 3  headache. 4  chills. 5  loss of appetite. 6  swollen lymph nodes in the neck.\\\\n\\\\npassage 3:Common symptoms of strep throat in children and adults include: 1  Severe and sudden sore throat without coughing, sneezing, or other cold symptoms. 2  Pain or difficulty with swallowing. 3  Fever over 101\u00b0F (38.3\u00b0C) . 4  Lower fevers may point to a viral infection and not strep. 5  Swollen lymph nodes in the neck.\\\\n\\\\n\\\",\\\"question\\\":\\\"what's the symptoms of strep throat\\\"}\",\"answer\":\"Based on the given passages, the symptoms of strep throat infection are: fever, swollen and tender lymph nodes on the sides of the neck (cervical lymphadenopathy), white patches seen on the tonsils and throat (tonsillar exudates), sudden fever, sore throat (red throat with white patches), headache, chills, loss of appetite, severe and sudden sore throat without coughing, sneezing, or other cold symptoms, pain or difficulty with swallowing, fever over 101\u00b0F (38.3\u00b0C).\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":78},{\"index\":1,\"byte_start\":78,\"byte_end\":162},{\"index\":2,\"byte_start\":162,\"byte_end\":392},{\"index\":3,\"byte_start\":392,\"byte_end\":450},{\"index\":4,\"byte_start\":450,\"byte_end\":498},{\"index\":5,\"byte_start\":498,\"byte_end\":511},{\"index\":6,\"byte_start\":511,\"byte_end\":522},{\"index\":7,\"byte_start\":522,\"byte_end\":543},{\"index\":8,\"byte_start\":543,\"byte_end\":741},{\"index\":9,\"byte_start\":741,\"byte_end\":780},{\"index\":10,\"byte_start\":780,\"byte_end\":813},{\"index\":11,\"byte_start\":813,\"byte_end\":875},{\"index\":12,\"byte_start\":875,\"byte_end\":965}],\"answer_sentence_indices\":[0],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":472}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|1.00|[0,1]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259408,
+    "id": "chatcmpl-BMGDjO2F4fx0ZAw8Gj8qOSoNfTMZ1fdK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 378.629,
+      "predicted_n": 15,
+      "predicted_per_second": 39.61661679374797,
+      "predicted_per_token_ms": 25.241933333333336,
+      "prompt_ms": 689.135,
+      "prompt_n": 704,
+      "prompt_per_second": 1021.5705195643815,
+      "prompt_per_token_ms": 0.9788849431818182
+    },
+    "usage": {
+      "completion_tokens": 15,
+      "prompt_tokens": 704,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 719
+    }
+  },
+  "source_cluster_id": "sha256:e43ee9eaed51f4703c2db2acd3d588dcb7d851233bfa3fa68a7e0d5e7d94c494",
+  "started_monotonic_ns": 920315359609465,
+  "status": "completed",
+  "unit_id": "sha256:bcb5ebef31dda45ff0e6e96a4130941cf6fd366172c2ef7cb728317711177d6e"
+}

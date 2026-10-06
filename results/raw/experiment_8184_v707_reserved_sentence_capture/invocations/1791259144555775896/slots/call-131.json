@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:0199bb29032da0b3c392ffb73fedc13abab47785a95b5481685b64556303190b",
+  "ended_monotonic_ns": 920531296659628,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Nancy Branch & 3 Others Disappeared During Trip In 1992\\nA weekend in Santa Barbara, California, is the backdrop for a mystery that has haunted authorities for decades. It was on December 6, 1992, that 29-year-old Stanford University graduate Nancy Branch was making her way home back to Palo Alto, California, with her fianc\u00e9 Kevin Clarke (31) and newlyweds Alan Stewart (29) and Amy Haxton Stewart (31). Amy, a University of California, Los Angeles graduate, had reportedly married Alan only six weeks prior. The pair had plans of honeymooning in South Africa one month later.\\nThe Circumstances\\nThe foursome of friends made their way to the Santa Barbara Airport to return to Palo Alto so that one of the couples could purchase their Christmas tree. They boarded a single-engine Piper Archer airplane, and according to The Charley Project, the last time there was communication from the plane was eight minutes later.\\nThe pilot didn't alert anyone that there were problems with the aircraft, although the weather was described as \\\"treacherous.\\\" The plane never arrived in Palo Alto, and while there were searches conducted by professionals near and far, there was no indication that the plane had any sort of accident. \\\"Investigators received a tip that it had crashed somewhere near the Big Basin area of California, but no evidence was discovered,\\\" TCP writes. It's believed that everyone on board is deceased, but they've remained missing persons because this mystery hasn't uncovered remains of either the persons involved or the aircraft.\\nFor context, the drive from Santa Barbara to Palo Alto is about five and a half hours.\\nWhat To Know\\nAt the time of her disappearance, Nancy was 5 feet 3 inches tall and 120 pounds. She has brown hair and brown eyes. There wasn't much else included in the National Missing & Unidentified Persons System database.\\nAnyone with information about this case is urged to contact the Menlo Park Police Department at (650) 330-6343 or their local authorities. The agency case number is 92-4968.\\nPlease share this story about Nancy Branch to reignite the investigation into the disappearance of these four people. She is our sister, and her life matters.\",\"answer\":\"Here is a summary of the article within 90 words:\\n\\nOn December 6th, 1992, four friends - Nancy Branch, Kevin Clarke, Alan Stewart, and Amy Haxton Stewart - disappeared while traveling in a small plane over California. Despite extensive searches, no trace of the plane or the passengers was found. The case remains unsolved, and investigators believe the group may have died in a crash, but no evidence has been found. The missing individuals are still considered alive, and their families hope for answers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":168},{\"index\":1,\"byte_start\":168,\"byte_end\":406},{\"index\":2,\"byte_start\":406,\"byte_end\":511},{\"index\":3,\"byte_start\":511,\"byte_end\":579},{\"index\":4,\"byte_start\":579,\"byte_end\":752},{\"index\":5,\"byte_start\":752,\"byte_end\":920},{\"index\":6,\"byte_start\":920,\"byte_end\":1047},{\"index\":7,\"byte_start\":1047,\"byte_end\":1221},{\"index\":8,\"byte_start\":1221,\"byte_end\":1365},{\"index\":9,\"byte_start\":1365,\"byte_end\":1546},{\"index\":10,\"byte_start\":1546,\"byte_end\":1633},{\"index\":11,\"byte_start\":1633,\"byte_end\":1727},{\"index\":12,\"byte_start\":1727,\"byte_end\":1762},{\"index\":13,\"byte_start\":1762,\"byte_end\":1858},{\"index\":14,\"byte_start\":1858,\"byte_end\":1997},{\"index\":15,\"byte_start\":1997,\"byte_end\":2150},{\"index\":16,\"byte_start\":2150,\"byte_end\":2190}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":218},{\"index\":1,\"byte_start\":218,\"byte_end\":297},{\"index\":2,\"byte_start\":297,\"byte_end\":418},{\"index\":3,\"byte_start\":418,\"byte_end\":506}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1073,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Nancy Branch & 3 Others Disappeared During Trip In 1992\\nA weekend in Santa Barbara, California, is the backdrop for a mystery that has haunted authorities for decades. It was on December 6, 1992, that 29-year-old Stanford University graduate Nancy Branch was making her way home back to Palo Alto, California, with her fianc\u00e9 Kevin Clarke (31) and newlyweds Alan Stewart (29) and Amy Haxton Stewart (31). Amy, a University of California, Los Angeles graduate, had reportedly married Alan only six weeks prior. The pair had plans of honeymooning in South Africa one month later.\\nThe Circumstances\\nThe foursome of friends made their way to the Santa Barbara Airport to return to Palo Alto so that one of the couples could purchase their Christmas tree. They boarded a single-engine Piper Archer airplane, and according to The Charley Project, the last time there was communication from the plane was eight minutes later.\\nThe pilot didn't alert anyone that there were problems with the aircraft, although the weather was described as \\\"treacherous.\\\" The plane never arrived in Palo Alto, and while there were searches conducted by professionals near and far, there was no indication that the plane had any sort of accident. \\\"Investigators received a tip that it had crashed somewhere near the Big Basin area of California, but no evidence was discovered,\\\" TCP writes. It's believed that everyone on board is deceased, but they've remained missing persons because this mystery hasn't uncovered remains of either the persons involved or the aircraft.\\nFor context, the drive from Santa Barbara to Palo Alto is about five and a half hours.\\nWhat To Know\\nAt the time of her disappearance, Nancy was 5 feet 3 inches tall and 120 pounds. She has brown hair and brown eyes. There wasn't much else included in the National Missing & Unidentified Persons System database.\\nAnyone with information about this case is urged to contact the Menlo Park Police Department at (650) 330-6343 or their local authorities. The agency case number is 92-4968.\\nPlease share this story about Nancy Branch to reignite the investigation into the disappearance of these four people. She is our sister, and her life matters.\",\"answer\":\"Here is a summary of the article within 90 words:\\n\\nOn December 6th, 1992, four friends - Nancy Branch, Kevin Clarke, Alan Stewart, and Amy Haxton Stewart - disappeared while traveling in a small plane over California. Despite extensive searches, no trace of the plane or the passengers was found. The case remains unsolved, and investigators believe the group may have died in a crash, but no evidence has been found. The missing individuals are still considered alive, and their families hope for answers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":168},{\"index\":1,\"byte_start\":168,\"byte_end\":406},{\"index\":2,\"byte_start\":406,\"byte_end\":511},{\"index\":3,\"byte_start\":511,\"byte_end\":579},{\"index\":4,\"byte_start\":579,\"byte_end\":752},{\"index\":5,\"byte_start\":752,\"byte_end\":920},{\"index\":6,\"byte_start\":920,\"byte_end\":1047},{\"index\":7,\"byte_start\":1047,\"byte_end\":1221},{\"index\":8,\"byte_start\":1221,\"byte_end\":1365},{\"index\":9,\"byte_start\":1365,\"byte_end\":1546},{\"index\":10,\"byte_start\":1546,\"byte_end\":1633},{\"index\":11,\"byte_start\":1633,\"byte_end\":1727},{\"index\":12,\"byte_start\":1727,\"byte_end\":1762},{\"index\":13,\"byte_start\":1762,\"byte_end\":1858},{\"index\":14,\"byte_start\":1858,\"byte_end\":1997},{\"index\":15,\"byte_start\":1997,\"byte_end\":2150},{\"index\":16,\"byte_start\":2150,\"byte_end\":2190}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":218},{\"index\":1,\"byte_start\":218,\"byte_end\":297},{\"index\":2,\"byte_start\":297,\"byte_end\":418},{\"index\":3,\"byte_start\":418,\"byte_end\":506}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+    "input_tokens": 1061,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"Nancy Branch & 3 Others Disappeared During Trip In 1992\\nA weekend in Santa Barbara, California, is the backdrop for a mystery that has haunted authorities for decades. It was on December 6, 1992, that 29-year-old Stanford University graduate Nancy Branch was making her way home back to Palo Alto, California, with her fianc\u00e9 Kevin Clarke (31) and newlyweds Alan Stewart (29) and Amy Haxton Stewart (31). Amy, a University of California, Los Angeles graduate, had reportedly married Alan only six weeks prior. The pair had plans of honeymooning in South Africa one month later.\\nThe Circumstances\\nThe foursome of friends made their way to the Santa Barbara Airport to return to Palo Alto so that one of the couples could purchase their Christmas tree. They boarded a single-engine Piper Archer airplane, and according to The Charley Project, the last time there was communication from the plane was eight minutes later.\\nThe pilot didn't alert anyone that there were problems with the aircraft, although the weather was described as \\\"treacherous.\\\" The plane never arrived in Palo Alto, and while there were searches conducted by professionals near and far, there was no indication that the plane had any sort of accident. \\\"Investigators received a tip that it had crashed somewhere near the Big Basin area of California, but no evidence was discovered,\\\" TCP writes. It's believed that everyone on board is deceased, but they've remained missing persons because this mystery hasn't uncovered remains of either the persons involved or the aircraft.\\nFor context, the drive from Santa Barbara to Palo Alto is about five and a half hours.\\nWhat To Know\\nAt the time of her disappearance, Nancy was 5 feet 3 inches tall and 120 pounds. She has brown hair and brown eyes. There wasn't much else included in the National Missing & Unidentified Persons System database.\\nAnyone with information about this case is urged to contact the Menlo Park Police Department at (650) 330-6343 or their local authorities. The agency case number is 92-4968.\\nPlease share this story about Nancy Branch to reignite the investigation into the disappearance of these four people. She is our sister, and her life matters.\",\"answer\":\"Here is a summary of the article within 90 words:\\n\\nOn December 6th, 1992, four friends - Nancy Branch, Kevin Clarke, Alan Stewart, and Amy Haxton Stewart - disappeared while traveling in a small plane over California. Despite extensive searches, no trace of the plane or the passengers was found. The case remains unsolved, and investigators believe the group may have died in a crash, but no evidence has been found. The missing individuals are still considered alive, and their families hope for answers.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":168},{\"index\":1,\"byte_start\":168,\"byte_end\":406},{\"index\":2,\"byte_start\":406,\"byte_end\":511},{\"index\":3,\"byte_start\":511,\"byte_end\":579},{\"index\":4,\"byte_start\":579,\"byte_end\":752},{\"index\":5,\"byte_start\":752,\"byte_end\":920},{\"index\":6,\"byte_start\":920,\"byte_end\":1047},{\"index\":7,\"byte_start\":1047,\"byte_end\":1221},{\"index\":8,\"byte_start\":1221,\"byte_end\":1365},{\"index\":9,\"byte_start\":1365,\"byte_end\":1546},{\"index\":10,\"byte_start\":1546,\"byte_end\":1633},{\"index\":11,\"byte_start\":1633,\"byte_end\":1727},{\"index\":12,\"byte_start\":1727,\"byte_end\":1762},{\"index\":13,\"byte_start\":1762,\"byte_end\":1858},{\"index\":14,\"byte_start\":1858,\"byte_end\":1997},{\"index\":15,\"byte_start\":1997,\"byte_end\":2150},{\"index\":16,\"byte_start\":2150,\"byte_end\":2190}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":218},{\"index\":1,\"byte_start\":218,\"byte_end\":297},{\"index\":2,\"byte_start\":297,\"byte_end\":418},{\"index\":3,\"byte_start\":418,\"byte_end\":506}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.95|[0,1]\n1|C|0.90|[2,4]\n2|C|0.85|[4,5]\n3|B|0.30|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259623,
+    "id": "chatcmpl-vENGLR1rqx4WDLnRfowuTfFduadGKWjj",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1394.971,
+      "predicted_n": 56,
+      "predicted_per_second": 40.14420371462919,
+      "predicted_per_token_ms": 24.910196428571428,
+      "prompt_ms": 968.538,
+      "prompt_n": 1024,
+      "prompt_per_second": 1057.2636282727162,
+      "prompt_per_token_ms": 0.945837890625
+    },
+    "usage": {
+      "completion_tokens": 56,
+      "prompt_tokens": 1073,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1129
+    }
+  },
+  "source_cluster_id": "sha256:f09b590f92457dfffd3ebc0827a796cb4a329a1b3c139c7d92142976a99dabc6",
+  "started_monotonic_ns": 920528762097946,
+  "status": "completed",
+  "unit_id": "sha256:4bf0ada136515f60f9cd0b1a7f1da1cdf646175d3d6f3f86ebfe9256d5a2904a"
+}

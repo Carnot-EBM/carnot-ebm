@@ -49581,3 +49581,22 @@ Private fixtures SHALL exercise role leakage, duplicate sources, gold-derived
 features, degenerate features, missing arms, input/model hash tamper and cold
 replay. Missing external operands block; owned failures disqualify. A converged
 null fit may be ready for a later reserved comparison.
+
+## REQ-VERIFY-8184: Seal label-blind reserved sentence predictions
+
+Require Exp8183 energy_fit_ready_score=1 and authenticate frozen head, source,
+prompt, grammar, tokenizer and runtime bytes before owned CUDA capture. Preserve
+the original128 evaluation slots, full text, all masks and costs. Use the frozen
+Qwen3.8-27B grammar with at most256 calls and256 output tokens. Seal raw responses
+and complete source features before applying unchanged heads, thresholds and
+comparator. Missing, malformed or oversized evidence escalates in every arm.
+No evaluator target file may be opened, copied or passed to the worker. Capture
+readiness certifies sealed predictions; support separately requires96 complete
+paired sources. Class support and decision benefit belong to the later reader.
+
+### SCENARIO-VERIFY-8184-ISOLATION
+
+Private tests cover target-field rejection, prompt mutation, mismatched source,
+incomplete transport, launch cutoff, missing historical pairs and exact head
+application. Hash-bound cold replay independently rebuilds every prediction and
+headline. Checkpoint every8 sources, stop calls at3000 seconds and close by4800.

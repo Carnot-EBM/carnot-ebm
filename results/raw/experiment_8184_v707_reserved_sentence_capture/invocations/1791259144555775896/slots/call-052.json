@@ -1,0 +1,89 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:be1d4ee0ab439ec4a7aecf7f9e7b214cbdde5198eb6caff4c50fc150dd98bbfa",
+  "ended_monotonic_ns": 920306732330391,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:What is the difference between Dandruff and Nits? \u2022 Nits are eggs of lice laid by female lice while dandruff is a condition of the scalp. \u2022 Nits are found on the shafts of hair and are a result of sharing of head accessories and garments. They are also caught with head to head contact.\\\\n\\\\npassage 2:Knowing the difference between lice and dandruff can help heal your scalp condition properly. Lice are infectious parasites and dandruff is a self-contained scalp condition. Dandruff comes from the head, and flakes off. Dandruff is due to the excessive shedding of dead skin cells from the scalp, and lice are wingless insects (small bugs) that infest the hair and scalp. The methods of prevention and treatment also vary between lice and dandruff.\\\\n\\\\npassage 3:Head Lice vs. Dandruff: How to Tell the Difference. Head lice and dandruff are two completely different things, yet people often mistake one for the other. Head lice are parasites that feed on human blood, and are spread through contact with others. Their bites cause an itchy scalp and occasionally an allergic reaction. Dandruff is a skin condition on the scalp that causes flaking of the skin and a slightly itchy scalp. Here's how to tell the difference between the two. Head lice are small, brown parasites with six legs about the size of a sesame seed. They have elongated bodies, with small, oval shaped heads.\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between dandruff and lice\\\"}\",\"answer\":\"Based on the given passages, the difference between dandruff and lice is that dandruff is a condition of the scalp caused by the excessive shedding of dead skin cells, resulting in flaking and a slightly itchy scalp. On the other hand, lice are infectious parasites that infest the hair and scalp, causing an itchy scalp and occasionally an allergic reaction. Lice are small, brown parasites with six legs, while dandruff is a self-contained scalp condition.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":73},{\"index\":1,\"byte_start\":73,\"byte_end\":163},{\"index\":2,\"byte_start\":163,\"byte_end\":266},{\"index\":3,\"byte_start\":266,\"byte_end\":421},{\"index\":4,\"byte_start\":421,\"byte_end\":501},{\"index\":5,\"byte_start\":501,\"byte_end\":547},{\"index\":6,\"byte_start\":547,\"byte_end\":699},{\"index\":7,\"byte_start\":699,\"byte_end\":841},{\"index\":8,\"byte_start\":841,\"byte_end\":945},{\"index\":9,\"byte_start\":945,\"byte_end\":1039},{\"index\":10,\"byte_start\":1039,\"byte_end\":1111},{\"index\":11,\"byte_start\":1111,\"byte_end\":1213},{\"index\":12,\"byte_start\":1213,\"byte_end\":1264},{\"index\":13,\"byte_start\":1264,\"byte_end\":1348},{\"index\":14,\"byte_start\":1348,\"byte_end\":1462}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":217},{\"index\":1,\"byte_start\":217,\"byte_end\":360},{\"index\":2,\"byte_start\":360,\"byte_end\":458}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 845,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:What is the difference between Dandruff and Nits? \u2022 Nits are eggs of lice laid by female lice while dandruff is a condition of the scalp. \u2022 Nits are found on the shafts of hair and are a result of sharing of head accessories and garments. They are also caught with head to head contact.\\\\n\\\\npassage 2:Knowing the difference between lice and dandruff can help heal your scalp condition properly. Lice are infectious parasites and dandruff is a self-contained scalp condition. Dandruff comes from the head, and flakes off. Dandruff is due to the excessive shedding of dead skin cells from the scalp, and lice are wingless insects (small bugs) that infest the hair and scalp. The methods of prevention and treatment also vary between lice and dandruff.\\\\n\\\\npassage 3:Head Lice vs. Dandruff: How to Tell the Difference. Head lice and dandruff are two completely different things, yet people often mistake one for the other. Head lice are parasites that feed on human blood, and are spread through contact with others. Their bites cause an itchy scalp and occasionally an allergic reaction. Dandruff is a skin condition on the scalp that causes flaking of the skin and a slightly itchy scalp. Here's how to tell the difference between the two. Head lice are small, brown parasites with six legs about the size of a sesame seed. They have elongated bodies, with small, oval shaped heads.\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between dandruff and lice\\\"}\",\"answer\":\"Based on the given passages, the difference between dandruff and lice is that dandruff is a condition of the scalp caused by the excessive shedding of dead skin cells, resulting in flaking and a slightly itchy scalp. On the other hand, lice are infectious parasites that infest the hair and scalp, causing an itchy scalp and occasionally an allergic reaction. Lice are small, brown parasites with six legs, while dandruff is a self-contained scalp condition.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":73},{\"index\":1,\"byte_start\":73,\"byte_end\":163},{\"index\":2,\"byte_start\":163,\"byte_end\":266},{\"index\":3,\"byte_start\":266,\"byte_end\":421},{\"index\":4,\"byte_start\":421,\"byte_end\":501},{\"index\":5,\"byte_start\":501,\"byte_end\":547},{\"index\":6,\"byte_start\":547,\"byte_end\":699},{\"index\":7,\"byte_start\":699,\"byte_end\":841},{\"index\":8,\"byte_start\":841,\"byte_end\":945},{\"index\":9,\"byte_start\":945,\"byte_end\":1039},{\"index\":10,\"byte_start\":1039,\"byte_end\":1111},{\"index\":11,\"byte_start\":1111,\"byte_end\":1213},{\"index\":12,\"byte_start\":1213,\"byte_end\":1264},{\"index\":13,\"byte_start\":1264,\"byte_end\":1348},{\"index\":14,\"byte_start\":1348,\"byte_end\":1462}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":217},{\"index\":1,\"byte_start\":217,\"byte_end\":360},{\"index\":2,\"byte_start\":360,\"byte_end\":458}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\"\n",
+    "input_tokens": 833,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:What is the difference between Dandruff and Nits? \u2022 Nits are eggs of lice laid by female lice while dandruff is a condition of the scalp. \u2022 Nits are found on the shafts of hair and are a result of sharing of head accessories and garments. They are also caught with head to head contact.\\\\n\\\\npassage 2:Knowing the difference between lice and dandruff can help heal your scalp condition properly. Lice are infectious parasites and dandruff is a self-contained scalp condition. Dandruff comes from the head, and flakes off. Dandruff is due to the excessive shedding of dead skin cells from the scalp, and lice are wingless insects (small bugs) that infest the hair and scalp. The methods of prevention and treatment also vary between lice and dandruff.\\\\n\\\\npassage 3:Head Lice vs. Dandruff: How to Tell the Difference. Head lice and dandruff are two completely different things, yet people often mistake one for the other. Head lice are parasites that feed on human blood, and are spread through contact with others. Their bites cause an itchy scalp and occasionally an allergic reaction. Dandruff is a skin condition on the scalp that causes flaking of the skin and a slightly itchy scalp. Here's how to tell the difference between the two. Head lice are small, brown parasites with six legs about the size of a sesame seed. They have elongated bodies, with small, oval shaped heads.\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between dandruff and lice\\\"}\",\"answer\":\"Based on the given passages, the difference between dandruff and lice is that dandruff is a condition of the scalp caused by the excessive shedding of dead skin cells, resulting in flaking and a slightly itchy scalp. On the other hand, lice are infectious parasites that infest the hair and scalp, causing an itchy scalp and occasionally an allergic reaction. Lice are small, brown parasites with six legs, while dandruff is a self-contained scalp condition.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":73},{\"index\":1,\"byte_start\":73,\"byte_end\":163},{\"index\":2,\"byte_start\":163,\"byte_end\":266},{\"index\":3,\"byte_start\":266,\"byte_end\":421},{\"index\":4,\"byte_start\":421,\"byte_end\":501},{\"index\":5,\"byte_start\":501,\"byte_end\":547},{\"index\":6,\"byte_start\":547,\"byte_end\":699},{\"index\":7,\"byte_start\":699,\"byte_end\":841},{\"index\":8,\"byte_start\":841,\"byte_end\":945},{\"index\":9,\"byte_start\":945,\"byte_end\":1039},{\"index\":10,\"byte_start\":1039,\"byte_end\":1111},{\"index\":11,\"byte_start\":1111,\"byte_end\":1213},{\"index\":12,\"byte_start\":1213,\"byte_end\":1264},{\"index\":13,\"byte_start\":1264,\"byte_end\":1348},{\"index\":14,\"byte_start\":1348,\"byte_end\":1462}],\"answer_sentence_indices\":[0,1,2],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":217},{\"index\":1,\"byte_start\":217,\"byte_end\":360},{\"index\":2,\"byte_start\":360,\"byte_end\":458}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|E|0.95|[0,2]\n1|E|0.95|[2,6]\n2|E|0.90|[10,12]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259398,
+    "id": "chatcmpl-uLZ9EHCRDIG4okvVkL6Kp2INDUt49Idu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1154.978,
+      "predicted_n": 47,
+      "predicted_per_second": 40.6934158053227,
+      "predicted_per_token_ms": 24.574,
+      "prompt_ms": 792.257,
+      "prompt_n": 845,
+      "prompt_per_second": 1066.5730943368126,
+      "prompt_per_token_ms": 0.93758224852071
+    },
+    "usage": {
+      "completion_tokens": 47,
+      "prompt_tokens": 845,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 892
+    }
+  },
+  "source_cluster_id": "sha256:f0e327282eb83d369c5939768f61a1c601886a69e79ef27c8d9eb03b5d37468f",
+  "started_monotonic_ns": 920304650946509,
+  "status": "completed",
+  "unit_id": "sha256:17fb4a38fa7c65b08a3388aa5b3ab33ee5d00c2d7c07bb100f07de577f7864e6"
+}

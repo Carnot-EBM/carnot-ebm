@@ -1,0 +1,90 @@
+{
+  "arm": "grammar",
+  "cache_key": "sha256:3fbebb4f5d6ea628074c278abe684260fffaa3a2715c58ea56030a1c8a8eefaf",
+  "ended_monotonic_ns": 920536713940622,
+  "exclusion_reason": null,
+  "identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "fixture": false,
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "reasoning_interface": {
+      "enable_thinking": false
+    },
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "payload": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "max_tokens": 256,
+    "messages": [
+      {
+        "content": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:If you\u2019re new to O2, you don\u2019t need to swap your sim-you\u2019ll already have the right one. Before we get started, you\u2019ll need: Your O2 mobile so we can text you a code. The sim serial number (SSN) of your new sim-it\u2019s printed on the back and is up to 19 digits. Sim swaps usually take less than an hour.But if we\u2019re really busy, it can take up to 24 hours.our O2 mobile so we can text you a code. The sim serial number (SSN) of your new sim-it\u2019s printed on the back and is up to 19 digits. Sim swaps usually take less than an hour. But if we\u2019re really busy, it can take up to 24 hours.\\\\n\\\\npassage 2:Finally, provide your PAC code to your new O2 mobile network operator who will then be able to port your existing phone number from Vodafone. They will tell you what day the transfer is due to take place (usually within 48 hours).he first step is to join O2. Once you have done that, ensure you have the following information ready: 1  Your original mobile number you want to keep. 2  The Port Authorization Code (PAC) from your previous Vodafone network. 3  The temporary mobile number from your new O2 sim card.\\\\n\\\\npassage 3:Switching to O2. If you would like to switch to O2 and you would like to keep your current mobile phone number, you will need a PAC code (porting authorisation code) from your current mobile phone network. This will allow you to transfer your mobile phone number from your current provider to O2.The process for transferring your mobile phone number from your current network to O2 is termed mobile number portability, or mobile number porting.his will allow you to transfer your mobile phone number from your current provider to O2. The process for transferring your mobile phone number from your current network to O2 is termed mobile number portability, or mobile number porting.\\\\n\\\\n\\\",\\\"question\\\":\\\"changing number to o2\\\"}\",\"answer\":\"Based on the provided passages, to change a number to O2, you will need to follow these steps:\\n\\n1. Obtain a PAC code from your current mobile network provider (Passage 2).\\n2. Provide the PAC code to your new O2 mobile network operator (Passage 2).\\n3. Transfer your mobile phone number from your current provider to O2 through mobile number porting (Passage 3).\\n\\nTherefore, the answer to the question is:\\n\\nYes, you can change a number to O2 by obtaining a PAC code from your current mobile network provider and transferring your mobile phone number to O2 through mobile number porting.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":117},{\"index\":1,\"byte_start\":117,\"byte_end\":197},{\"index\":2,\"byte_start\":197,\"byte_end\":292},{\"index\":3,\"byte_start\":292,\"byte_end\":429},{\"index\":4,\"byte_start\":429,\"byte_end\":524},{\"index\":5,\"byte_start\":524,\"byte_end\":566},{\"index\":6,\"byte_start\":566,\"byte_end\":777},{\"index\":7,\"byte_start\":777,\"byte_end\":894},{\"index\":8,\"byte_start\":894,\"byte_end\":1017},{\"index\":9,\"byte_start\":1017,\"byte_end\":1091},{\"index\":10,\"byte_start\":1091,\"byte_end\":1179},{\"index\":11,\"byte_start\":1179,\"byte_end\":1368},{\"index\":12,\"byte_start\":1368,\"byte_end\":1696},{\"index\":13,\"byte_start\":1696,\"byte_end\":1885}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":172},{\"index\":1,\"byte_start\":172,\"byte_end\":248},{\"index\":2,\"byte_start\":248,\"byte_end\":362},{\"index\":3,\"byte_start\":362,\"byte_end\":584}]}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 70781,
+    "stream": false,
+    "temperature": 0
+  },
+  "rendered_input_tokens": 1012,
+  "rendered_prompt": "<|im_start|>user\n{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:If you\u2019re new to O2, you don\u2019t need to swap your sim-you\u2019ll already have the right one. Before we get started, you\u2019ll need: Your O2 mobile so we can text you a code. The sim serial number (SSN) of your new sim-it\u2019s printed on the back and is up to 19 digits. Sim swaps usually take less than an hour.But if we\u2019re really busy, it can take up to 24 hours.our O2 mobile so we can text you a code. The sim serial number (SSN) of your new sim-it\u2019s printed on the back and is up to 19 digits. Sim swaps usually take less than an hour. But if we\u2019re really busy, it can take up to 24 hours.\\\\n\\\\npassage 2:Finally, provide your PAC code to your new O2 mobile network operator who will then be able to port your existing phone number from Vodafone. They will tell you what day the transfer is due to take place (usually within 48 hours).he first step is to join O2. Once you have done that, ensure you have the following information ready: 1  Your original mobile number you want to keep. 2  The Port Authorization Code (PAC) from your previous Vodafone network. 3  The temporary mobile number from your new O2 sim card.\\\\n\\\\npassage 3:Switching to O2. If you would like to switch to O2 and you would like to keep your current mobile phone number, you will need a PAC code (porting authorisation code) from your current mobile phone network. This will allow you to transfer your mobile phone number from your current provider to O2.The process for transferring your mobile phone number from your current network to O2 is termed mobile number portability, or mobile number porting.his will allow you to transfer your mobile phone number from your current provider to O2. The process for transferring your mobile phone number from your current network to O2 is termed mobile number portability, or mobile number porting.\\\\n\\\\n\\\",\\\"question\\\":\\\"changing number to o2\\\"}\",\"answer\":\"Based on the provided passages, to change a number to O2, you will need to follow these steps:\\n\\n1. Obtain a PAC code from your current mobile network provider (Passage 2).\\n2. Provide the PAC code to your new O2 mobile network operator (Passage 2).\\n3. Transfer your mobile phone number from your current provider to O2 through mobile number porting (Passage 3).\\n\\nTherefore, the answer to the question is:\\n\\nYes, you can change a number to O2 by obtaining a PAC code from your current mobile network provider and transferring your mobile phone number to O2 through mobile number porting.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":117},{\"index\":1,\"byte_start\":117,\"byte_end\":197},{\"index\":2,\"byte_start\":197,\"byte_end\":292},{\"index\":3,\"byte_start\":292,\"byte_end\":429},{\"index\":4,\"byte_start\":429,\"byte_end\":524},{\"index\":5,\"byte_start\":524,\"byte_end\":566},{\"index\":6,\"byte_start\":566,\"byte_end\":777},{\"index\":7,\"byte_start\":777,\"byte_end\":894},{\"index\":8,\"byte_start\":894,\"byte_end\":1017},{\"index\":9,\"byte_start\":1017,\"byte_end\":1091},{\"index\":10,\"byte_start\":1091,\"byte_end\":1179},{\"index\":11,\"byte_start\":1179,\"byte_end\":1368},{\"index\":12,\"byte_start\":1368,\"byte_end\":1696},{\"index\":13,\"byte_start\":1696,\"byte_end\":1885}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":172},{\"index\":1,\"byte_start\":172,\"byte_end\":248},{\"index\":2,\"byte_start\":248,\"byte_end\":362},{\"index\":3,\"byte_start\":362,\"byte_end\":584}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+  "request": {
+    "grammar": "root ::= r0 \"\\n\" r1 \"\\n\" r2 \"\\n\" r3\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nr1 ::= \"1|\" relation \"|\" probability \"|\" refs\nr2 ::= \"2|\" relation \"|\" probability \"|\" refs\nr3 ::= \"3|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\"\n",
+    "input_tokens": 1000,
+    "maximum_output_tokens": 256,
+    "payload": "{\"instruction\":\"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\",\"source\":\"{\\\"passages\\\":\\\"passage 1:If you\u2019re new to O2, you don\u2019t need to swap your sim-you\u2019ll already have the right one. Before we get started, you\u2019ll need: Your O2 mobile so we can text you a code. The sim serial number (SSN) of your new sim-it\u2019s printed on the back and is up to 19 digits. Sim swaps usually take less than an hour.But if we\u2019re really busy, it can take up to 24 hours.our O2 mobile so we can text you a code. The sim serial number (SSN) of your new sim-it\u2019s printed on the back and is up to 19 digits. Sim swaps usually take less than an hour. But if we\u2019re really busy, it can take up to 24 hours.\\\\n\\\\npassage 2:Finally, provide your PAC code to your new O2 mobile network operator who will then be able to port your existing phone number from Vodafone. They will tell you what day the transfer is due to take place (usually within 48 hours).he first step is to join O2. Once you have done that, ensure you have the following information ready: 1  Your original mobile number you want to keep. 2  The Port Authorization Code (PAC) from your previous Vodafone network. 3  The temporary mobile number from your new O2 sim card.\\\\n\\\\npassage 3:Switching to O2. If you would like to switch to O2 and you would like to keep your current mobile phone number, you will need a PAC code (porting authorisation code) from your current mobile phone network. This will allow you to transfer your mobile phone number from your current provider to O2.The process for transferring your mobile phone number from your current network to O2 is termed mobile number portability, or mobile number porting.his will allow you to transfer your mobile phone number from your current provider to O2. The process for transferring your mobile phone number from your current network to O2 is termed mobile number portability, or mobile number porting.\\\\n\\\\n\\\",\\\"question\\\":\\\"changing number to o2\\\"}\",\"answer\":\"Based on the provided passages, to change a number to O2, you will need to follow these steps:\\n\\n1. Obtain a PAC code from your current mobile network provider (Passage 2).\\n2. Provide the PAC code to your new O2 mobile network operator (Passage 2).\\n3. Transfer your mobile phone number from your current provider to O2 through mobile number porting (Passage 3).\\n\\nTherefore, the answer to the question is:\\n\\nYes, you can change a number to O2 by obtaining a PAC code from your current mobile network provider and transferring your mobile phone number to O2 through mobile number porting.\",\"source_segments\":[{\"index\":0,\"byte_start\":0,\"byte_end\":117},{\"index\":1,\"byte_start\":117,\"byte_end\":197},{\"index\":2,\"byte_start\":197,\"byte_end\":292},{\"index\":3,\"byte_start\":292,\"byte_end\":429},{\"index\":4,\"byte_start\":429,\"byte_end\":524},{\"index\":5,\"byte_start\":524,\"byte_end\":566},{\"index\":6,\"byte_start\":566,\"byte_end\":777},{\"index\":7,\"byte_start\":777,\"byte_end\":894},{\"index\":8,\"byte_start\":894,\"byte_end\":1017},{\"index\":9,\"byte_start\":1017,\"byte_end\":1091},{\"index\":10,\"byte_start\":1091,\"byte_end\":1179},{\"index\":11,\"byte_start\":1179,\"byte_end\":1368},{\"index\":12,\"byte_start\":1368,\"byte_end\":1696},{\"index\":13,\"byte_start\":1696,\"byte_end\":1885}],\"answer_sentence_indices\":[0,1,2,3],\"answer_offsets\":[{\"index\":0,\"byte_start\":0,\"byte_end\":172},{\"index\":1,\"byte_start\":172,\"byte_end\":248},{\"index\":2,\"byte_start\":248,\"byte_end\":362},{\"index\":3,\"byte_start\":362,\"byte_end\":584}]}",
+    "request_index": 0,
+    "sentence_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "token_count_measured": true
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "0|C|0.00|[]\n1|C|0.00|[]\n2|C|0.00|[]\n3|C|0.00|[]",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791259628,
+    "id": "chatcmpl-SoBtruPcqWvRPKfXb219TH1u1zKu94J9",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 49,
+      "predicted_ms": 1074.981,
+      "predicted_n": 44,
+      "predicted_per_second": 40.930955988989574,
+      "predicted_per_token_ms": 24.431386363636364,
+      "prompt_ms": 933.508,
+      "prompt_n": 963,
+      "prompt_per_second": 1031.592659088085,
+      "prompt_per_token_ms": 0.9693748701973002
+    },
+    "usage": {
+      "completion_tokens": 44,
+      "prompt_tokens": 1012,
+      "prompt_tokens_details": {
+        "cached_tokens": 49
+      },
+      "total_tokens": 1056
+    }
+  },
+  "source_cluster_id": "sha256:e37db87a051319a122895cf4255a93085d9ab93faf25f6470ac72b2a2ea7bad6",
+  "started_monotonic_ns": 920534548429593,
+  "status": "completed",
+  "unit_id": "sha256:6ee89e8897430fc9e047a8ce621fa8f8ce78b0748f0b4a67b16a94d0db6e6989"
+}
