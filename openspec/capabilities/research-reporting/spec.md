@@ -94177,3 +94177,26 @@ reuses qualified bounded supervision and primary publication. Frozen protocol:
 sorting replaces a preserved fingerprint-key draft under the experiment's raw
 failed_attempts directory. Operator-curated pages and conductor-managed ops and
 traceability reconciliation remain untouched under the task's final instruction.
+## REQ-REPORT-8197: Publish validated selective audit custody
+
+Load no model; distinguish imported Qwen/head provenance from zero current calls.
+Freeze validation argv before measurement. Require scoped tests,100 percent new
+statement coverage,Ruff check/format,strict mypy,explicit-path spec coverage and
+private E2E-019 success,missing-input,tamper and cold replay. Run the full Python
+suite once as separate repository health. Preserve hashes and immutable logs.
+Publish through primary_publication after replay,unmodified adversarial_verify
+and strict verdict-row lint exit normally. External prerequisite failure gives
+complete_blocked_<check> with actual gate operands; owned failure disqualifies.
+Audit readiness is separate from h1_development_signal_score. Conductor owns
+ops/status/changelog/traceability reconciliation under the final instruction.
+
+### SCENARIO-REPORT-8197: Private direct CLI and aggregate tamper
+
+Direct execution outside checkout without PYTHONPATH must publish private
+fixtures and blocked cases, replay cold, and reject changed aggregates or
+primitive bytes even when content hashes are recomputed.
+
+Implementation: `scripts/experiments/experiment_8197_v708_selective_decision_audit.py`
+is a thin no-model CLI. `tests/python/test_selective_decision_audit_8197.py`
+uses private temporary custody and real external subprocesses. The publisher
+records bounded validation and immutable log hashes before exposing one primary.

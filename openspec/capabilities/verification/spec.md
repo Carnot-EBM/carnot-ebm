@@ -49845,3 +49845,28 @@ Implementation: `python/carnot/verify/selective_rule_8194.py` and
 `tests/python/test_selective_methods_8194.py` cover exact quantiles, role support,
 calibration-label independence, solver failure, scalar replay, rehashed tampering,
 original-label swaps, no-model direct CLI and a known-positive H1 control.
+## REQ-VERIFY-8197: Independent all-slot selective utility audit
+
+Authenticate Exp8196 sealed_evaluation_ready_score=1 and immutable prediction
+bytes before opening original source labels. Reconstruct original annotation
+targets and the frozen cost matrix independently. Retain all128 slots with
+missing evidence escalated. H1 local_set versus frozen_v707_radial requires
+96 complete pairs,12/class,10000 source bootstrap draws,9500 valid, lower
+one-sided97.5 percent gain>.02,5 improved sources,no newly false-accepted source
+and Brier increase<=.01. All-escalate cannot pass against a stronger cost control.
+Report complete cases and wrapper/feature/always-escalate contrasts as secondary.
+Class coverage, singleton coverage, conditional error on unsupported sources
+and accepted-output error use distinct denominators and exact binomial intervals.
+Reconstruct logistic equivalence and common-logit-shift invariance. Retain V707
+null and zero independent generalization; chosen alpha is no empirical guarantee.
+
+### SCENARIO-VERIFY-8197: Original targets, masks and source reductions
+
+Private tests exercise original-label drift, missing slots, support failures,
+source duplication, positive utility controls, all-escalate controls, exact
+intervals and independent recomputation. Owned validation failures zero readiness.
+
+Implementation: `python/carnot/verify/selective_decision_audit_8197.py` reuses
+the qualified sealed-prediction equations and independently reconstructs source
+annotations and typed costs. Private tests cover natural custody, original labels,
+missing evidence, null and positive controls, exact intervals and rehashed drift.
