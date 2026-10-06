@@ -50033,3 +50033,42 @@ exact restart states, independent stream custody, blocks and tamper rejection.
 The frozen owned validation measured152/152 new verifier statements. All20
 learnable seeds install by140 and change at least57 later decisions. This is
 fixture readiness; H2 remains registered and unmeasured on natural outcomes.
+
+## REQ-VERIFY-8207: Register restricted conditional-energy decisions
+
+Freeze the original source identities and fit, temperature, tune and reserved
+roles before any fit. Keep all128 reserved slots. Missing evidence escalates.
+Decision inputs SHALL exclude targets. Use the same sixteen qualified features,
+seventeen coefficients, fit sources, optimizer budget, temperature sources and
+permission mask for radial energy, additive and linear logistic heads.
+Accept is allowed only when the frozen V707 baseline accepts the same input.
+Expected costs are accept=5*p_bad, reject=1-p_bad and escalate=0.5.
+Normalize exp(-E_bad) over both energies. Ties escalate. This bounds extra false
+accept counts for every possible target assignment, not population error risk.
+
+### SCENARIO-VERIFY-8207-ACTIONS
+
+Extreme energies, both permissions, missing evidence and boundary ties SHALL
+preserve the acceptance subset. Reject invalid probabilities and target fields.
+Equivalent logistic probabilities SHALL match conditional energy probabilities.
+Empty and constant-score fixtures expose abstention and shuffled fit labels
+expose loss of signal. Fixtures cannot certify learned correctness.
+
+### SCENARIO-VERIFY-8207-CONTROLS
+
+Fit-only geometry and equal optimizer/temperature budgets SHALL be executable.
+Select the primary additive or linear control by mean restricted typed cost on
+the frozen tune role only, breaking ties by arm name. Preserve original baseline,
+original local_set, always-escalate and equivalent-logistic identity controls.
+Retire only the unchanged class-conditional singleton policy as a future
+candidate; preserve its historical descriptive rows and all primary bytes.
+
+### SCENARIO-VERIFY-8207-HYPOTHESES
+
+Register H1 before fitting: one-sided97.5% source-bootstrap lower cost-gain
+bound>0.02 against the tune-selected simple control; at least5 improved sources;
+zero extra false accepts; Brier increase<=0.01; baseline cost increase<=0.02.
+Require96 complete independent sources,12 per class,10000 draws and9500 valid.
+H2 retains alpha0.025; exactly two primary tests share family alpha0.05.
+Other contrasts and the four-accept error bounds are descriptive. Reused
+sources remain exposed development with both generalization scores zero.

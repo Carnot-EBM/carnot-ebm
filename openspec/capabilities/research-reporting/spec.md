@@ -94381,3 +94381,24 @@ The frozen validation passed9 owned/numerical tests and56 consumer/E2E tests,
 scoped Ruff check/format, strict mypy and explicit-file spec coverage. Combined
 invocation data measured all193 new statements with zero exclusions. Repository
 health remains a separate diagnostic; the conductor owns ops reconciliation.
+
+## REQ-REPORT-8207: Seal restricted-action methods and current receipts
+
+Register the method for later Exp8208 fitting, Exp8209 sealing and Exp8210 H1
+audit. Authenticate required branch inputs before dependent work. Record absent
+optional siblings separately. Retrieve at most three primary papers at low
+concurrency and bind exact response bytes or access failures before fitting.
+Freeze exact validation argv before measurement. Reuse bounded process-group
+supervision, template normalization and atomic primary publication. Preserve
+complete streams, exit status, clocks, source/code/config hashes and primitive
+rows. Keep all historical primaries immutable. Conductor owns ops reconciliation.
+
+### SCENARIO-REPORT-8207-CLI
+
+Real private CLI success, missing-input blocking, invalid date and fresh replay
+SHALL execute outside checkout. Aggregate or primitive tampering SHALL fail
+replay. Owned tests and real CLI statements require measured100% coverage,
+scoped Ruff/format/strict mypy, explicit-file spec coverage and E2E-015/019.
+Run the full Python suite once as separate repository health; preserve failures.
+Owned check failures disqualify. Validate a private candidate with unchanged
+primary, adversarial and strict-row validators before atomic publication.
