@@ -19667,3 +19667,4 @@ code |
 | 2026-10-06 20:45 UTC | Run delayed-feedback learning after genuine crash  | OK | 87 passed, 1 warning in 150.07s (0:02:30) |
 | 2026-10-06 21:19 UTC | Measure later learning benefit and independent ret | OK | 87 passed, 1 warning in 174.88s (0:02:54) |
 | 2026-10-06 21:45 UTC | Qualify request identity and issue clocks before l | OK | 97 passed, 1 warning in 39.82s |
+| 2026-10-06 22:33 UTC | Measure bounded Qwen acquisition and complete dura | OK | 94 passed, 1 warning in 59.05s |
