@@ -21512,3 +21512,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-06: Train small energy heads with separate temperature and set calibration (⚠️ Research Finding) — honest_verdict=complete_null_selective_fit_sealed; results/experiment_8195_v708_selective_energy_fit.json
 - 2026-10-06: Seal selective decisions on every original reserved source (⚠️ Research Finding) — honest_verdict=complete_null_selective_predictions_sealed; results/experiment_8196_v708_selective_sealed_evaluation.json
 - 2026-10-06: Audit safe decision utility and calibration on all intended slots (⚠️ Research Finding) — honest_verdict=complete_null_selective_decision_null; results/experiment_8197_v708_selective_decision_audit.json
+- 2026-10-06: Freeze an observed request sequence without injected exact repeats (⚠️ Blocked) — honest_verdict=complete_blocked_reconstructable_request_count; results/experiment_8200_v708_request_trace_census.json
