@@ -49735,3 +49735,24 @@ Implementation reuses qualified source decision, exact-request service and
 hardware reducers. The H1 test retains all128 sources,97 complete pairs and31
 missing pairs. H2 execution follows its own learning task. Prior verdicts bind
 to their immutable contract-custody hashes. The three PRD gaps remain separate.
+
+## REQ-VERIFY-8192: Independent administrative reductions and cold custody
+
+Reduce thirteen administrative rows from frozen full-task operands. Rows name
+source clusters, conditions, metrics, numerators, denominators and exclusions.
+Freeze exact producer verdicts, failed receipts and imported model provenance.
+Historical mismatch stays visible while current contract readiness can be one.
+Owned abnormal exits or failed checks disqualify and zero readiness. Missing
+external inputs terminate complete_blocked_<check> with actual failed operands.
+Retain KV260, PolarFire and GateMate obligations without claiming new board work.
+
+### SCENARIO-VERIFY-8192: Mutation and durable replay
+
+Replay rechecks saved authority, primitives, logs, source/code/config hashes and
+headline reductions. Later mutable spec edits cannot invalidate saved authority.
+Changed frozen operands or reported readiness fail replay. New captures cannot
+repair old provenance. Private fixtures stay outside results/.
+
+Implementation: `tests/python/test_contract_custody_8192.py` uses private
+fixtures for thirteen-task lifecycle, fourteen historical outcomes, failed old
+validation, source/code/log mutation and direct external CLI replay.

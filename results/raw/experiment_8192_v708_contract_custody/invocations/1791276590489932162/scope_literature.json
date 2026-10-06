@@ -1,0 +1,672 @@
+{
+  "literature_mapping": {
+    "all_old_cohorts": "exposed development",
+    "board_obligations": [
+      "KV260",
+      "PolarFire",
+      "GateMate"
+    ],
+    "entry": "\nV707 qualified sentence transport. Its source decision audit found a mean\ntyped-cost gain of -0.01953125 across 128 intended slots, with two extra false\naccepts. The calibrated memory prototype failed owned coverage: 384 of 386\nstatements ran. These findings separate a decision-policy question from an\nexecution qualification problem. The scan below informed the next design.\n\n### Methods worth testing\n\n- **Softmax is not Enough (for Adaptive Conformal Classification)**,\n  [ICLR 2026 paper](https://openreview.net/pdf?id=zCwTMRtASZ) and\n  [author implementation](https://github.com/navidattar/Energy-Based-Conformal-Classification).\n  Search-indexed paper text describes energy-adjusted nonconformity scores and\n  class-conditional calibration. Direct OpenReview access hit a browser challenge;\n  the author repository was readable and identifies its ICLR 2026 presentation.\n  Adapt the simpler class-conditional prediction-set baseline first. Map singleton\n  sets to accept/reject, and ambiguous or empty sets to escalation. Preserve an\n  equivalent logistic control. Arbitrary common logit shifts must not create a\n  semantic signal. Do not import image-classification results as text evidence.\n- **Continual Calibration: Coverage Can Collapse Before Accuracy in Lifelong\n  LLM Fine-Tuning**, [arXiv:2604.23987](https://arxiv.org/abs/2604.23987),\n  submitted April 27, 2026. The authors distinguish accuracy retention from\n  coverage retention and study separate calibration buffers. Adapt the measurement\n  discipline to Carnot's small online head. Keep retention labels separate from\n  training and admission. This does not authorize generator fine-tuning.\n- **Adaptive Conformal Inference Under Delayed Feedback: Coverage Guarantees\n  and a Delay-to-Memory Diagnostic**,\n  [arXiv:2609.07251](https://arxiv.org/abs/2609.07251).\n  The delay/memory distinction motivates explicit issue, release and admission\n  clocks. A replay with historically exposed labels cannot inherit prospective\n  coverage guarantees. Preserve the existing delay and pending-state protocol.\n- **KAC: Kolmogorov-Arnold Classifier for Continual Learning**,\n  [arXiv:2503.21076](https://arxiv.org/abs/2503.21076), March 27, 2025.\n  Its radial classifier motivates the existing bounded center memory. Compare\n  error-selected growth with fixed, random and calibration-only controls. Local\n  support alone is not evidence of retained knowledge or useful later decisions.\n- **KANtize: Exploring Low-bit Quantization of Kolmogorov-Arnold Networks for\n  Efficient Inference**, [arXiv:2603.17230](https://arxiv.org/abs/2603.17230),\n  March 18, 2026, and **Ultrafast On-Chip Online Learning via Spline Locality**,\n  [arXiv:2602.02056](https://arxiv.org/abs/2602.02056).\n  Lookup tables and local updates motivate a precision/decision-margin audit.\n  Test complete operations, storage and transfer costs. Their accelerators are\n  not Carnot's KV260, and splines are not interchangeable with radial kernels.\n\n### All requested primary topics checked\n\n| Topic | Primary source checked | Planning consequence |\n|---|---|---|\n| EBM reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092) | Train small conditional energies; no foundation-model scaling claim. |\n| ARM/EBM equivalence | [2512.15605v4](https://arxiv.org/abs/2512.15605v4), revised May 25, 2026 | Probability-equivalent energy and logistic arms must agree. |\n| Neural constraints | [NSVIF, 2601.17789](https://arxiv.org/abs/2601.17789) | Logical constraint satisfaction cannot certify incorrect semantic extraction. |\n| Ising in ML | [Neural Ising Machines, 2602.00302](https://arxiv.org/abs/2602.00302) | Learned update dynamics remain a separate sampler question; do not add a sampler sweep to fix decision errors. |\n| Hallucination verification | [RT4CHART, 2603.27752](https://arxiv.org/abs/2603.27752) | Preserve full sentence/source evidence; distinguish better transport from better decisions. |\n| KAN | KAC and KANtize above | Equal-capacity controls, retention and numerical decision stability. |\n| Energy-guided generation | [ETS, 2601.21484v3](https://arxiv.org/abs/2601.21484v3), revised May 19, 2026 | Defer steering until the verifier has safe measured utility. |\n| Hardware sampling | [FPGA/Ising co-design, 2602.15985](https://arxiv.org/abs/2602.15985) | Include decomposition, communication and readout in acceleration bounds. |\n| Online learning | Continual Calibration and delayed ACI above | Separate optimizer qualification, useful later decisions and retention. |\n\n### Secondary channels and access limits\n\n- **OpenReview:** searched 2026 EBM/verification and energy-conformal work.\n  The conformal paper above is the actionable lead. Browser challenges prevented\n  direct forum review; search excerpts and author code are separate evidence.\n- **Extropic:** checked the [writing index](https://extropic.ai/writing) and\n  [Z1T article](https://extropic.ai/writing/z1t/). The index exposed little text.\n  Z1T describes a hybrid TSU/FPGA system. Vendor projections establish neither\n  local device access nor whole-service speed on Carnot workloads.\n- **Semantic Scholar:** attempted both Graph API citation endpoints for\n  ARXIV:2507.02092 and ARXIV:2512.15605. Both returned tool errors. Title searches\n  did not provide a verified citing-paper inventory. Citation coverage is incomplete.\n- **Hugging Face Papers:** checked RT4CHART and discovered\n  [OpenHalDet, 2606.06959](https://huggingface.co/papers/2606.06959) and\n  [SIRIN, 2608.00033](https://huggingface.co/papers/2608.00033).\n  These are leads for later evaluation interoperability. Their discovery pages\n  are not evidence of a new local corpus or detector benefit.\n- **GitHub:** checked [Python Trending](https://github.com/trending/python?since=monthly)\n  and [Rust Trending](https://github.com/trending/rust?since=monthly).\n  Responses were crawled about three weeks earlier, so no current ranking claim\n  follows. Inspected the conformal author repository instead. Its code provides\n  a method reference, not a dependency added to this project.\n- **Logical Intelligence:** checked its [site](https://logicalintelligence.com/)\n  and [Kona page](https://logicalintelligence.com/kona). The pages describe latent\n  reasoning and verification. No reproducible new training recipe or local Kona\n  access was established by this inspection.\n- **Fresh-data caution:** [FaithBench's NAACL 2025 publication](https://aclanthology.org/2025.naacl-short.38/)\n  and [official data](https://github.com/vectara/FaithBench) are useful human-label\n  resources, but Carnot already referenced FaithBench in V653\u2013V657. Downloading\n  it again does not establish an unexposed evaluation cohort.\n\nThese are method adaptations and deferred leads. No external accuracy or speed\nnumber is a Carnot result. The next design must state its exposure limits.\n",
+    "frozen_design": {
+      "exists": true,
+      "role": "design",
+      "sha256": "sha256:96cd3be1a6be98bb100deb0dbf7ec24a2671eeba0b17a531a9b47e57e601474a",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8192_v708_contract_custody/invocations/1791276590489932162/authority/design-96cd3be1a6be98bb100deb0dbf7ec24a2671eeba0b17a531a9b47e57e601474a.bin",
+      "snapshot_sha256": "sha256:96cd3be1a6be98bb100deb0dbf7ec24a2671eeba0b17a531a9b47e57e601474a",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    "frozen_protocol": " \u2014 methods and qualification, Exp8192\u2013Exp8194\n\n**8192** binds thirteen complete tasks using the existing authority lifecycle.\nIt snapshots current authorities and completed logs. Historical hash failures\nremain separate. It preserves all fourteen V707 dispositions, including skips.\n\n**8193** repairs the exact coverage failure through a real instrumented child.\nThe child must save coverage, exit 73, resume and contribute its measured data\nto combined coverage. No skipped statements, relaxed threshold or mocked exit\ncan qualify the task. The V707 numerical method remains unchanged. New evidence\nlives under Exp8193; Exp8180 remains disqualified. Fixture qualification requires\ninstallation by slot 208, at least 32 later changed decisions, objective parity\nwithin 1e-8, projected-gradient tolerance 1e-6 and exact restart state. Stream\ncustody has a separate readiness field. Fixture success is circular_positive.\n\n**8194** ingests the research methods and freezes the selective-decision protocol.\nKeep the original 128 fit, 64 tune and 128 reserved source slots. Sort fit sources\nby SHA256 of source ID plus the literal `v708-fit-role`: first 96 fit heads;\nremaining 32 fit temperatures. The 64 tune sources calibrate prediction sets only.\nAll source IDs and masks freeze before reserved row-level labels are reopened.\n\nFor unsupported label y=1 and probability p1, use nonconformity `A_y=1-p_y`.\nFor each class, fix alpha=.05. Its threshold is the\n`ceil((n_y+1)*.95)`-th sorted calibration score. An out-of-range index gives\ninfinity. Include a class when its score is at most its threshold. Singleton\n{0} accepts; singleton {1} rejects; empty or two-label sets escalate. Missing\nevidence escalates. This targets class-conditional coverage under exchangeability;\nit does not bound the fraction of errors among accepted predictions. The actual\nreused cohort does not establish the assumptions for a deployment guarantee.\n\nUse scalar-reference fixtures for ties, missing classes, small samples, missing\nevidence and leakage. Check common-logit-shift invariance. Do not introduce\nunidentified free-energy modulation into a binary logistic head.\n\n## Phase 2 \u2014 train, seal and audit selective decisions, Exp8195\u2013Exp8197\n\n**8195** trains local_evidence_radial16 and radial16 feature-control heads on\nthe same 96-source role. Retain the V707 feature definitions, center rule and\nregularization. Fit one positive temperature in [.25,4] on each head's separate\n32-source role. Use all 64 calibration sources only for class thresholds.\nRequire at least 72 head-fit sources, 24 temperature sources with eight per class,\nand 48 calibration sources with twenty per class. No threshold is selected on\nreserved labels. Probability-equivalent logistic scoring must agree within 1e-10.\n\nThe seven arms are local_set, local_point, radial_set, radial_point,\nfrozen_v707_radial, equivalent_logistic_set and always_escalate. Point arms use\nthe original cost matrix and Bayes thresholds. Freeze heads, temperatures,\nquantiles, costs, feature order and source hashes before evaluation.\n\n**8196** seals all seven arms on every original reserved slot. It imports existing\nQwen features with original call clocks and makes zero model calls. It preserves\nmissing evidence and source identity. Labels open only after predictions seal.\nLow support is recorded but does not prevent a completed audit of the null.\n\n**8197** independently tests **H1: local_set versus frozen_v707_radial**.\nThe denominator is all 128 intended slots. Missing evidence escalates in every\narm. Require 96 complete pairs and twelve sources per class. Use 10,000 paired\nsource bootstrap draws, with at least 9,500 valid draws. Promotion requires:\n\n- One-sided 97.5% lower typed-cost gain greater than .02.\n- At least five improved sources and zero extra false accepts.\n- Brier increase no greater than .01.\n\nReport complete-case results and wrapper/feature contrasts as secondary.\nReport class coverage, singleton coverage, error among unsupported sources and\nerror among accepts with separate denominators and binomial intervals. Equivalent\nlogistic predictions cannot be described as an energy-specific win. All-escalate\nis a control, not success. Any positive result is a development signal only.\n\n## Phase 3 \u2014 continuous learning and observed request costs, Exp8198\u2013Exp8201\n\n**8198** runs the unchanged calibrated-memory protocol after Exp8193 qualifies\nboth methods and stream custody. Use 256 original stream slots, 64 retention\nslots and twenty seeds. Preserve delay 20, pending capacity 32, opportunity slots\n64/144 and expiry slots 144/224. Candidates commit before twelve strictly later,\none-use admission labels. Modulo-four roles remain unchanged.\n\nThe score is `a*logit(clip(p_Qwen,1e-6,1-1e-6))+b+w\u00b7phi`.\nBounds are a\u2208[0,2], b\u2208[-8,8], w\u2208[-4,4]. Fit the newest 64 released update-only\nrows using mean log loss plus `.005*sum(w*w)+.005*(a-1)^2`. Deterministic bounded\nL-BFGS-B has 200 iterations and projected-gradient tolerance 1e-6. Nonconverged\ncandidates cannot enter admission. Interpolate a,b,w together without fitting\non admission labels. Grow sixteen centers to at most twenty-four.\n\nThe five arms remain calibrated_error_center, calibrated_fixed_center,\ncalibrated_random_center, calibration_only and frozen_qwen_offset.\n`calibration_only` retains sixteen fixed centers; its name does not mean a\nzero-feature temperature model. Persist issued state, feedback, admissions,\nparameters and RNG. Seal retention predictions before reading retention labels.\n\n**8199** independently tests **H2: calibrated_error_center versus\ncalibrated_fixed_center**. Require 128 later source pairs, eight per class and\neight original-slot blocks. Average seeds within source. Use moving blocks of\n16, sensitivities 8/32, 10,000 draws and at least 9,500 valid draws. Require lower\none-sided 97.5% cost gain>.02, five improved sources, no extra false accepts,\nBrier increase\u2264.01 and cost no more than .02 above each other control.\nRetention needs 48 sources, eight per class, cost increase\u2264.02, Brier increase\u2264.01\nand no extra false accepts versus the initial head. Restart state/predictions\nmust match exactly. Shared calibration gain is separate from structural memory.\nH1 and H2 each retain alpha=.025; a blocked branch transfers no alpha.\n\n**8200** inventories authenticated model call ledgers from V701\u2013V707. It removes\nwarmups, designed duplicates, retries and forced hit/invalidation cases. Freeze\nthe last 96 eligible first-attempt research requests in original issue order,\nwith at least 24 source clusters and a supported qualified schema. Missing\nrequest bytes or chronology cannot be synthesized. Zero observed hits is valid.\nA support deficit blocks only the service benchmark.\n\nOriginal exact identities include model/runtime, prompt/template, schema,\ngrammar, tokenizer, source/answer bytes, seed and sampling settings. Report actual\nidentity hits separately from a replay mapped to the current runtime. The latter\nis a controlled research scenario. Neither is production-demand evidence.\n\n**8201** measures Python/no reuse, Rust/no reuse, Python/exact reuse and\nRust/exact reuse on that frozen sequence, each with a separate empty durable\nstore. Preserve within-arm request order; freeze randomized arm order. Run the\nactual PyO3 binding and pinned Qwen model. Budgets are 384 main calls plus two\nwarmups, with original bounded outputs at most 256 tokens. No silent truncation.\n\nInclude acquisition, queue, parsing, cache identity/lookup, evaluation, commit\nand startup. Allocate one measured model startup per arm and label the allocation;\nkeep actual load counts separate. Report steady-state results separately.\nCompare caching effects separately from Python/Rust effects. Require 96 matched\nrequests, 24 source clusters and semantic parity. Use 10,000 paired source-cluster\nbootstrap draws with at least 9,500 valid. A speed benefit needs lower95>1;\nNFR-01 requires lower95\u226510 for the complete Python/Rust boundary. Conditional\ncache gains cannot close NFR-01. Censor unfinished calls visibly.\n",
+    "independent_generalization_credit": 0,
+    "method_to_tasks": [
+      {
+        "method": "real child coverage and calibrated memory",
+        "tasks": [
+          8193,
+          8198,
+          8199
+        ]
+      },
+      {
+        "method": "energy-conformal selective decisions",
+        "tasks": [
+          8194,
+          8195,
+          8196,
+          8197
+        ]
+      },
+      {
+        "method": "ordinary request census and service boundary",
+        "tasks": [
+          8200,
+          8201
+        ]
+      },
+      {
+        "method": "ARC supervisor frontier",
+        "tasks": [
+          8202
+        ]
+      },
+      {
+        "method": "precision bounds and attached boards",
+        "tasks": [
+          8203
+        ]
+      }
+    ],
+    "nfr01_measure": "complete Rust/Python throughput ratio",
+    "nfr01_threshold": 10,
+    "source": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
+      "sha256": "sha256:8b87be75be615e0c6a76da0d55143db0afe989679cdab0efba38f96bf5821abc",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8192_v708_contract_custody/invocations/1791276590489932162/inputs/input-8b87be75be615e0c6a76da0d55143db0afe989679cdab0efba38f96bf5821abc.bin"
+    }
+  },
+  "prior_scope_ledger": [
+    {
+      "cause_class": "external_gate_block",
+      "consumer": "exp8178-contract-custody",
+      "failed_receipts": [],
+      "honest_verdict": "complete_blocked_sha256",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8164_v706_contract_custody.json",
+      "prior_failure": {
+        "addressed_by": "Snapshot current authority and completed logs before mutable specs change; report prior hash mismatches separately without repairing or qualifying their historical evidence.",
+        "experiment_id": "exp8164-contract-custody",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_blocked_sha256"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Snapshot current authority and completed logs before mutable specs change; report prior hash mismatches separately without repairing or qualifying their historical evidence.",
+      "sha256": "sha256:e0d3dd87cb335e79398be81551ec675065cbb326aba2986c32f05834a535864b",
+      "verdict_class": "blocked"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8179-sentence-transport-methods",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_fit_sentence_capture",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8167_v706_fit_sentence_capture.json",
+      "prior_failure": {
+        "addressed_by": "Replace verbose generated quotes with grammar-bound source indices and a fixed canary; preserve complete text and the original decision hypothesis.",
+        "experiment_id": "exp8167-fit-sentence-capture",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_fit_sentence_capture"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Replace verbose generated quotes with grammar-bound source indices and a fixed canary; preserve complete text and the original decision hypothesis.",
+      "sha256": "sha256:5dc84701520534b187fa607409c1d4f7ed37e6a3b533f639728c6d3f40f2bcb4",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8180-calibrated-memory-methods",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_no_later_typed_cost_benefit",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "prior_failure": {
+        "addressed_by": "Keep the successful admission schedule; replace the immutable saturated base offset and four-step residual fit with a bounded learned logit scale and converged convex candidate fit.",
+        "experiment_id": "exp8172-learning-benefit-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_no_later_typed_cost_benefit"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Keep the successful admission schedule; replace the immutable saturated base offset and four-step residual fit with a bounded learned logit scale and converged convex candidate fit.",
+      "sha256": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8181-sentence-transport-canary",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_fit_sentence_capture",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8167_v706_fit_sentence_capture.json",
+      "prior_failure": {
+        "addressed_by": "A fixed paired canary exercises actual grammar propagation and short index records before the full panel; repeated output-budget failure terminates this transport scope.",
+        "experiment_id": "exp8167-fit-sentence-capture",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_fit_sentence_capture"
+      },
+      "retry_unchanged": false,
+      "scope_change": "A fixed paired canary exercises actual grammar propagation and short index records before the full panel; repeated output-budget failure terminates this transport scope.",
+      "sha256": "sha256:5dc84701520534b187fa607409c1d4f7ed37e6a3b533f639728c6d3f40f2bcb4",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8182-fit-sentence-capture",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_fit_sentence_capture",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8167_v706_fit_sentence_capture.json",
+      "prior_failure": {
+        "addressed_by": "Scale only after a successful indexed-record canary; retain original labels, lossless input and exact transport support gates.",
+        "experiment_id": "exp8167-fit-sentence-capture",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_fit_sentence_capture"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Scale only after a successful indexed-record canary; retain original labels, lossless input and exact transport support gates.",
+      "sha256": "sha256:5dc84701520534b187fa607409c1d4f7ed37e6a3b533f639728c6d3f40f2bcb4",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8183-sentence-energy-fit",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_decision_development_null",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8156_v705_decision_audit.json",
+      "prior_failure": {
+        "addressed_by": "Add complete sentence relations after the answer-level span null; retain matched controls and an unchanged source-level decision criterion. V706 fitting was gate-skipped, not a scientific failure.",
+        "experiment_id": "exp8156-decision-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_decision_development_null"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Add complete sentence relations after the answer-level span null; retain matched controls and an unchanged source-level decision criterion. V706 fitting was gate-skipped, not a scientific failure.",
+      "sha256": "sha256:65a13925f00541b524172bb9c3ea2be765e078cee8bafda3d55619b9a8a4de13",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8184-reserved-sentence-capture",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_fit_sentence_capture",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8167_v706_fit_sentence_capture.json",
+      "prior_failure": {
+        "addressed_by": "Reserved acquisition uses only the proven short-record grammar and frozen heads; the original zero-yield transport is not retried unchanged.",
+        "experiment_id": "exp8167-fit-sentence-capture",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_fit_sentence_capture"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Reserved acquisition uses only the proven short-record grammar and frozen heads; the original zero-yield transport is not retried unchanged.",
+      "sha256": "sha256:5dc84701520534b187fa607409c1d4f7ed37e6a3b533f639728c6d3f40f2bcb4",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8185-sentence-decision-audit",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_decision_development_null",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8156_v705_decision_audit.json",
+      "prior_failure": {
+        "addressed_by": "Test full sentence evidence instead of one answer-level quote, using a frozen comparator and identical source-level benefit bar.",
+        "experiment_id": "exp8156-decision-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_decision_development_null"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Test full sentence evidence instead of one answer-level quote, using a frozen comparator and identical source-level benefit bar.",
+      "sha256": "sha256:65a13925f00541b524172bb9c3ea2be765e078cee8bafda3d55619b9a8a4de13",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8186-calibrated-online-memory",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_no_later_typed_cost_benefit",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "prior_failure": {
+        "addressed_by": "Earlier installation worked but never changed decisions; train the base-logit scale jointly under fixed causal feedback and convergence checks, with calibration-only and equal-capacity controls.",
+        "experiment_id": "exp8172-learning-benefit-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_no_later_typed_cost_benefit"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Earlier installation worked but never changed decisions; train the base-logit scale jointly under fixed causal feedback and convergence checks, with calibration-only and equal-capacity controls.",
+      "sha256": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8187-learning-benefit-audit",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_no_later_typed_cost_benefit",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "prior_failure": {
+        "addressed_by": "Audit the new jointly calibrated head, preserving the old null and testing whether center growth adds value beyond shared calibration.",
+        "experiment_id": "exp8172-learning-benefit-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_no_later_typed_cost_benefit"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Audit the new jointly calibrated head, preserving the old null and testing whether center growth adds value beyond shared calibration.",
+      "sha256": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8188-exact-request-service",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_complete_request_cost",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8174_v706_complete_request_cost.json",
+      "prior_failure": {
+        "addressed_by": "Target measured acquisition dominance with exact-request reuse and forced-refresh parity, rather than another arithmetic implementation comparison.",
+        "experiment_id": "exp8174-complete-request-cost",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_complete_request_cost"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Target measured acquisition dominance with exact-request reuse and forced-refresh parity, rather than another arithmetic implementation comparison.",
+      "sha256": "sha256:15a13284335442ff04a491c6683d825e2b4d96de3950e6aa602a7c0afa1a252f",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8189-arc-supervisor-frontier",
+      "failed_receipts": [
+        {
+          "actual_exit": -15,
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+            "tests/python",
+            "-q",
+            "--basetemp=/tmp/carnot-exp8175-lcvwwatv/full_python_suite/pytest"
+          ],
+          "classification": "repository_health",
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q --basetemp=/tmp/carnot-exp8175-lcvwwatv/full_python_suite/pytest",
+          "command_argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+            "tests/python",
+            "-q",
+            "--basetemp=/tmp/carnot-exp8175-lcvwwatv/full_python_suite/pytest"
+          ],
+          "deadline_s": 120,
+          "duration_s": 144.8837448459817,
+          "exit_code": -15,
+          "expected_exit": 0,
+          "expected_text": null,
+          "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8175_v706_arc_supervisor_delta/logs/full_python_suite-f6668499678ce9e29958a44d5660661dd03ca5c666144c7c3f14aac17b4e5350.log",
+          "log_sha256": "sha256:f6668499678ce9e29958a44d5660661dd03ca5c666144c7c3f14aac17b4e5350",
+          "name": "full_python_suite",
+          "normal_exit": false,
+          "output_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [76022 items]\n\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n................................................/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140130560848096, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140408328925552, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140323522539936, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139835479896000, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+          "passed": false,
+          "scope": "repository_health",
+          "timed_out": true
+        }
+      ],
+      "honest_verdict": "complete_null_no_new_outcomes",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8175_v706_arc_supervisor_delta.json",
+      "prior_failure": {
+        "addressed_by": "Advance only the qualified outcome frontier; an unchanged ledger completes a cheap terminal null with no repeated game runs or fabricated refinement.",
+        "experiment_id": "exp8175-arc-supervisor-delta",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_no_new_outcomes"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Advance only the qualified outcome frontier; an unchanged ledger completes a cheap terminal null with no repeated game runs or fabricated refinement.",
+      "sha256": "sha256:49f06784ce128fdeae263ef45f9b5d4f6fa627b305796c59b33efe299be20183",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "external_gate_block",
+      "consumer": "exp8190-hardware-service-boundary",
+      "failed_receipts": [],
+      "honest_verdict": "complete_blocked_composition_replay_ready_score",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8176_v706_hardware_workload_boundary.json",
+      "prior_failure": {
+        "addressed_by": "Use the new exact-request workload and qualified complete requests; do not require the unavailable historical composition to estimate this different boundary.",
+        "experiment_id": "exp8176-hardware-workload-boundary",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_blocked_composition_replay_ready_score"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Use the new exact-request workload and qualified complete requests; do not require the unavailable historical composition to estimate this different boundary.",
+      "sha256": "sha256:87c939826bae900889a1227801db0bed1bea4a082cd7bc0f8cbafa6af769ab91",
+      "verdict_class": "blocked"
+    },
+    {
+      "cause_class": "external_gate_block",
+      "consumer": "exp8191-capstone",
+      "failed_receipts": [],
+      "honest_verdict": "complete_blocked_sha256",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8177_v706_capstone.json",
+      "prior_failure": {
+        "addressed_by": "Use immutable current authority and independently qualified branches; retain old hash failures as historical dispositions instead of mutable global prerequisites.",
+        "experiment_id": "exp8177-capstone",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_blocked_sha256"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Use immutable current authority and independently qualified branches; retain old hash failures as historical dispositions instead of mutable global prerequisites.",
+      "sha256": "sha256:15d5ba2130db9ed0a911a872e44b330e3b29e15f16bded3cb4eec4e54c17cb81",
+      "verdict_class": "blocked"
+    },
+    {
+      "cause_class": "external_gate_block",
+      "consumer": "exp8192-contract-custody",
+      "failed_receipts": [],
+      "honest_verdict": "complete_blocked_sha256",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8178_v707_contract_custody.json",
+      "prior_failure": {
+        "addressed_by": "Use immutable current authorities and durable completed logs; explicitly isolate old hash failures from the new contract readiness.",
+        "experiment_id": "exp8178-contract-custody",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_blocked_sha256"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Use immutable current authorities and durable completed logs; explicitly isolate old hash failures from the new contract readiness.",
+      "sha256": "sha256:248d75631302dcd0dd574836d090695610fda9b45ba1c92ebd6a4a2135bae3ad",
+      "verdict_class": "blocked"
+    },
+    {
+      "cause_class": "owned_validation_failure",
+      "consumer": "exp8193-learning-qualification",
+      "failed_receipts": [
+        {
+          "actual_exit": 2,
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+            "report",
+            "--rcfile=/tmp/carnot-8111-4berryfx/coverage.ini",
+            "--show-missing",
+            "--fail-under=100",
+            "--data-file=/tmp/carnot-8111-4berryfx/.coverage"
+          ],
+          "classification": "required",
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --rcfile=/tmp/carnot-8111-4berryfx/coverage.ini --show-missing --fail-under=100 --data-file=/tmp/carnot-8111-4berryfx/.coverage",
+          "command_argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+            "report",
+            "--rcfile=/tmp/carnot-8111-4berryfx/coverage.ini",
+            "--show-missing",
+            "--fail-under=100",
+            "--data-file=/tmp/carnot-8111-4berryfx/.coverage"
+          ],
+          "deadline_s": 180,
+          "duration_s": 0.08494382200296968,
+          "exit_code": 2,
+          "expected_exit": 0,
+          "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8180_v707_calibrated_memory_methods/invocations/1791251258958880691/logs/coverage_report-e284501f33e89f90b9edc31dc99044edd7bd354f9aaabfdab0f0c3600481f4a8.log",
+          "log_sha256": "sha256:e284501f33e89f90b9edc31dc99044edd7bd354f9aaabfdab0f0c3600481f4a8",
+          "name": "coverage_report",
+          "output_tail": "Name                                                                    Stmts   Miss  Cover   Missing\n-----------------------------------------------------------------------------------------------------\npython/carnot/reporting/calibrated_memory_execution_8180.py                56      0   100%\npython/carnot/verify/calibrated_memory_methods_8180.py                    319      2    99%   291-292\nscripts/experiments/experiment_8180_v707_calibrated_memory_methods.py      11      0   100%\n-----------------------------------------------------------------------------------------------------\nTOTAL                                                                     386      2    99%\nCoverage failure: total of 99 is less than fail-under=100\n",
+          "passed": false,
+          "scope": "required",
+          "timed_out": false
+        }
+      ],
+      "honest_verdict": "complete_disqualified_owned_validation",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8180_v707_calibrated_memory_methods.json",
+      "prior_failure": {
+        "addressed_by": "Exercise and combine actual hard-exit child coverage for the two missed statements before any natural trajectory; retain the same numerical protocol.",
+        "experiment_id": "exp8180-calibrated-memory-methods",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_disqualified_owned_validation"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Exercise and combine actual hard-exit child coverage for the two missed statements before any natural trajectory; retain the same numerical protocol.",
+      "sha256": "sha256:b843a704850d71a82defda3c0a1f1897d80c09efcbcd05da944f4bc7b15f1411",
+      "verdict_class": "disqualified"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8194-selective-methods",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_sentence_decision_null",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8185_v707_sentence_decision_audit.json",
+      "prior_failure": {
+        "addressed_by": "Replace point decisions with separately calibrated class-conditional prediction sets; preserve exposed labels, original costs and original safety gate.",
+        "experiment_id": "exp8185-sentence-decision-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_sentence_decision_null"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Replace point decisions with separately calibrated class-conditional prediction sets; preserve exposed labels, original costs and original safety gate.",
+      "sha256": "sha256:85e67f7b39e7d89e621326a0bc8572468c33b43e7caee781628c69ff67cf1083",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8195-selective-energy-fit",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_sentence_energy_fit",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8183_v707_sentence_energy_fit.json",
+      "prior_failure": {
+        "addressed_by": "Fit on disjoint head/temperature roles and use class-conditional calibration instead of the old point-decision rule; keep equal-information controls.",
+        "experiment_id": "exp8183-sentence-energy-fit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_sentence_energy_fit"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Fit on disjoint head/temperature roles and use class-conditional calibration instead of the old point-decision rule; keep equal-information controls.",
+      "sha256": "sha256:a446ca982fbe34ac06ecd68d19c31da0c305bd9d53da61598019a30b6310d7ff",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8196-selective-sealed-evaluation",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_reserved_sentence_capture",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8184_v707_reserved_sentence_capture.json",
+      "prior_failure": {
+        "addressed_by": "Evaluate a newly frozen prediction-set policy over authenticated existing features; no repeated extraction or reset of historical exposure.",
+        "experiment_id": "exp8184-reserved-sentence-capture",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_reserved_sentence_capture"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Evaluate a newly frozen prediction-set policy over authenticated existing features; no repeated extraction or reset of historical exposure.",
+      "sha256": "sha256:e70bc2604c31780fb61a7a13aafb11e97ad422383523a88d8ec21e416e7fbf82",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8197-selective-decision-audit",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_sentence_decision_null",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8185_v707_sentence_decision_audit.json",
+      "prior_failure": {
+        "addressed_by": "Audit separately calibrated prediction sets and source-level selective risk; preserve original masks and require the same cost/safety threshold.",
+        "experiment_id": "exp8185-sentence-decision-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_sentence_decision_null"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Audit separately calibrated prediction sets and source-level selective risk; preserve original masks and require the same cost/safety threshold.",
+      "sha256": "sha256:85e67f7b39e7d89e621326a0bc8572468c33b43e7caee781628c69ff67cf1083",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "owned_validation_failure",
+      "consumer": "exp8198-calibrated-online-memory",
+      "failed_receipts": [
+        {
+          "actual_exit": 2,
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+            "report",
+            "--rcfile=/tmp/carnot-8111-4berryfx/coverage.ini",
+            "--show-missing",
+            "--fail-under=100",
+            "--data-file=/tmp/carnot-8111-4berryfx/.coverage"
+          ],
+          "classification": "required",
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --rcfile=/tmp/carnot-8111-4berryfx/coverage.ini --show-missing --fail-under=100 --data-file=/tmp/carnot-8111-4berryfx/.coverage",
+          "command_argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+            "report",
+            "--rcfile=/tmp/carnot-8111-4berryfx/coverage.ini",
+            "--show-missing",
+            "--fail-under=100",
+            "--data-file=/tmp/carnot-8111-4berryfx/.coverage"
+          ],
+          "deadline_s": 180,
+          "duration_s": 0.08494382200296968,
+          "exit_code": 2,
+          "expected_exit": 0,
+          "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8180_v707_calibrated_memory_methods/invocations/1791251258958880691/logs/coverage_report-e284501f33e89f90b9edc31dc99044edd7bd354f9aaabfdab0f0c3600481f4a8.log",
+          "log_sha256": "sha256:e284501f33e89f90b9edc31dc99044edd7bd354f9aaabfdab0f0c3600481f4a8",
+          "name": "coverage_report",
+          "output_tail": "Name                                                                    Stmts   Miss  Cover   Missing\n-----------------------------------------------------------------------------------------------------\npython/carnot/reporting/calibrated_memory_execution_8180.py                56      0   100%\npython/carnot/verify/calibrated_memory_methods_8180.py                    319      2    99%   291-292\nscripts/experiments/experiment_8180_v707_calibrated_memory_methods.py      11      0   100%\n-----------------------------------------------------------------------------------------------------\nTOTAL                                                                     386      2    99%\nCoverage failure: total of 99 is less than fail-under=100\n",
+          "passed": false,
+          "scope": "required",
+          "timed_out": false
+        }
+      ],
+      "honest_verdict": "complete_disqualified_owned_validation",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8180_v707_calibrated_memory_methods.json",
+      "prior_failure": {
+        "addressed_by": "Depend on independent repaired qualification8193; keep the natural trajectory separate from method fixture validation.",
+        "experiment_id": "exp8180-calibrated-memory-methods",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_disqualified_owned_validation"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Depend on independent repaired qualification8193; keep the natural trajectory separate from method fixture validation.",
+      "sha256": "sha256:b843a704850d71a82defda3c0a1f1897d80c09efcbcd05da944f4bc7b15f1411",
+      "verdict_class": "disqualified"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8198-calibrated-online-memory",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_no_later_typed_cost_benefit",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "prior_failure": {
+        "addressed_by": "Test learned bounded base calibration and converged fits instead of the saturated fixed offset with four-step residual updates.",
+        "experiment_id": "exp8172-learning-benefit-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_no_later_typed_cost_benefit"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Test learned bounded base calibration and converged fits instead of the saturated fixed offset with four-step residual updates.",
+      "sha256": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8199-learning-benefit-audit",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_no_later_typed_cost_benefit",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "prior_failure": {
+        "addressed_by": "Audit the newly qualified learned-base trajectory and distinguish shared calibration from additional center-growth benefit.",
+        "experiment_id": "exp8172-learning-benefit-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_no_later_typed_cost_benefit"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Audit the newly qualified learned-base trajectory and distinguish shared calibration from additional center-growth benefit.",
+      "sha256": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "completed_measurement",
+      "consumer": "exp8200-request-trace-census",
+      "failed_receipts": [],
+      "honest_verdict": "complete_positive_exact_request_service",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8188_v707_exact_request_service.json",
+      "prior_failure": {
+        "addressed_by": "Replace the forced-repeat schedule with authenticated ordinary research request order; measure actual identity frequency before paying for a replay benchmark.",
+        "experiment_id": "exp8188-exact-request-service",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_positive_exact_request_service"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Replace the forced-repeat schedule with authenticated ordinary research request order; measure actual identity frequency before paying for a replay benchmark.",
+      "sha256": "sha256:5806eb7c3aa928c34034d4cd2c9f35d758d36d2127dcd60272ed85bc8e31de53",
+      "verdict_class": "positive"
+    },
+    {
+      "cause_class": "completed_measurement",
+      "consumer": "exp8201-observed-service-cost",
+      "failed_receipts": [],
+      "honest_verdict": "complete_positive_exact_request_service",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8188_v707_exact_request_service.json",
+      "prior_failure": {
+        "addressed_by": "Measure a frozen ordinary research trace including cold misses and startup; separate result reuse from the Python/Rust effect instead of extrapolating forced hits.",
+        "experiment_id": "exp8188-exact-request-service",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_positive_exact_request_service"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Measure a frozen ordinary research trace including cold misses and startup; separate result reuse from the Python/Rust effect instead of extrapolating forced hits.",
+      "sha256": "sha256:5806eb7c3aa928c34034d4cd2c9f35d758d36d2127dcd60272ed85bc8e31de53",
+      "verdict_class": "positive"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8202-arc-supervisor-frontier",
+      "failed_receipts": [
+        {
+          "actual_exit": -15,
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+            "tests/python",
+            "-q",
+            "--basetemp=/tmp/carnot-exp8189-hkphzqay/full_python_suite/pytest"
+          ],
+          "classification": "repository_health",
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q --basetemp=/tmp/carnot-exp8189-hkphzqay/full_python_suite/pytest",
+          "command_argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+            "tests/python",
+            "-q",
+            "--basetemp=/tmp/carnot-exp8189-hkphzqay/full_python_suite/pytest"
+          ],
+          "deadline_s": 120,
+          "duration_s": 144.54405134997796,
+          "exit_code": -15,
+          "expected_exit": 0,
+          "expected_text": null,
+          "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8189_v707_arc_supervisor_frontier/logs/full_python_suite-ba51bee803f53d71b9cdfa6a2cd690637245ddba4e3da6af736ed3008e894656.log",
+          "log_sha256": "sha256:ba51bee803f53d71b9cdfa6a2cd690637245ddba4e3da6af736ed3008e894656",
+          "name": "full_python_suite",
+          "normal_exit": false,
+          "output_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [76143 items]\n\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  0%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n...................................................................../home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139794162412832, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140419302123248, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140151502386000, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140486909041776, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+          "passed": false,
+          "scope": "repository_health",
+          "timed_out": true
+        }
+      ],
+      "honest_verdict": "complete_null_no_new_outcomes",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8189_v707_arc_supervisor_frontier.json",
+      "prior_failure": {
+        "addressed_by": "Use the already qualified reader and a changed authenticated event frontier only; an unchanged frontier takes the bounded no-work path allowed by the standing floor.",
+        "experiment_id": "exp8189-arc-supervisor-frontier",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_no_new_outcomes"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Use the already qualified reader and a changed authenticated event frontier only; an unchanged frontier takes the bounded no-work path allowed by the standing floor.",
+      "sha256": "sha256:bc298ca8b5e58f082e8cb714b8ffe1cf808432cbb4f54e5490fdc6f5468d75c0",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "terminal_null",
+      "consumer": "exp8203-hardware-decision-boundary",
+      "failed_receipts": [],
+      "honest_verdict": "complete_null_hardware_service_boundary",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8190_v707_hardware_service_boundary.json",
+      "prior_failure": {
+        "addressed_by": "Add prediction-set boundary precision and qualified learned-base operations; use observed trace costs when available, while retaining unchanged physical blockers separately.",
+        "experiment_id": "exp8190-hardware-service-boundary",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_hardware_service_boundary"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Add prediction-set boundary precision and qualified learned-base operations; use observed trace costs when available, while retaining unchanged physical blockers separately.",
+      "sha256": "sha256:3c72e06e85d7cc86a23ea9d71bf3c1c644c9d81510a6129ba9d0e43f64ccdd8e",
+      "verdict_class": "null"
+    },
+    {
+      "cause_class": "external_gate_block",
+      "consumer": "exp8204-capstone",
+      "failed_receipts": [],
+      "honest_verdict": "complete_blocked_required_checks_passed",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8191_v707_capstone.json",
+      "prior_failure": {
+        "addressed_by": "Separate repaired current qualification and independent branches from prior owned failures; always reduce all thirteen actual dispositions without retrying unchanged external blocks.",
+        "experiment_id": "exp8191-capstone",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_blocked_required_checks_passed"
+      },
+      "retry_unchanged": false,
+      "scope_change": "Separate repaired current qualification and independent branches from prior owned failures; always reduce all thirteen actual dispositions without retrying unchanged external blocks.",
+      "sha256": "sha256:8cef6f74f5db5d438785d2331ac807701fc6bc6206894e42a769ecabfdc8ec53",
+      "verdict_class": "blocked"
+    }
+  ]
+}

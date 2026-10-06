@@ -94066,3 +94066,32 @@ Implementation: `carnot.reporting.v707_capstone`, `v707_capstone_evidence`,
 `v707_capstone_science` and `scripts/experiments/experiment_8191_v707_capstone.py`.
 Traced private tests cover mixed outcomes, immutable authority, external CLI,
 replay mutations, owned failure and completed/pending child wait counts.
+
+## REQ-REPORT-8192: Bind V708 without qualifying failed V707 science
+
+Bind exactly thirteen complete tasks Exp8192 through Exp8204 with the existing
+reader. Check the visible table, executable JSON and full-task digest. Validate
+staged authority using a private activation copy. Accept matching active authority
+after staging moves. Never change live roadmaps. Freeze current authority, prior
+methods, scope and literature into content-addressed copies. Preserve fourteen
+V707 dispositions by exact deliverable paths and conductor records: twelve
+primaries and two gate skips. Exp8180 stays disqualified. Exp8186/8187 stay untested.
+Preserve historical hash failures. Keep contract and historical readiness separate.
+NFR-01 stays 10x. Every old cohort is exposed development. Current model calls,
+independent generalization and generalized learning credit stay zero.
+
+### SCENARIO-REPORT-8192: Private lifecycle and publication
+
+Exercise E2E-018 staged, activated, staged-absent, prompt-tamper and missing-input
+cases. Run the CLI outside checkout without PYTHONPATH. Freeze owned argv before
+measurement. Require normal scoped tests, 100 percent new statement coverage,
+Ruff, strict mypy and explicit spec coverage. Run full Python health once as a
+separate diagnostic. Publish through primary_publication after unchanged terminal
+validators pass. The conductor owns ops and traceability reconciliation.
+Flush phase boundaries and actual completed/pending counts during child waits
+at least every sixty seconds. Never count imported model activity as current work.
+
+Implementation: `carnot.reporting.v708_contract_custody`,
+`v708_contract_history` and the Exp8192 thin CLI reuse the qualified authority
+reader and publication runner. Missing design contracts retain readable active
+task bytes, but cannot grant contract readiness.

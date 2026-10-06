@@ -1,0 +1,233 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8192-owned-final-vnk_o3op/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "tests/python/test_contract_custody_8192.py",
+        "tests/python/test_contract_custody_8083.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "focused_E2E018"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_roadmap_schema.py",
+        "tests/python/test_audit_roadmap_gates.py",
+        "tests/python/test_exclusion_manifest_lint.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "consumer_tests"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8192-owned-final-vnk_o3op/coverage.ini"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot-8192-owned-final-vnk_o3op/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v708_contract_custody.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v708_contract_history.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8192_v708_contract_custody.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8192-owned-final-vnk_o3op/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v708_contract_custody.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v708_contract_history.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8192_v708_contract_custody.py",
+        "-o",
+        "/tmp/carnot-8192-owned-final-vnk_o3op/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v708_contract_custody.py",
+        "python/carnot/reporting/v708_contract_history.py",
+        "scripts/experiments/experiment_8192_v708_contract_custody.py",
+        "tests/python/test_contract_custody_8192.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v708_contract_custody.py",
+        "python/carnot/reporting/v708_contract_history.py",
+        "scripts/experiments/experiment_8192_v708_contract_custody.py",
+        "tests/python/test_contract_custody_8192.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/v708_contract_custody.py",
+        "python/carnot/reporting/v708_contract_history.py",
+        "scripts/experiments/experiment_8192_v708_contract_custody.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_contract_custody_8192.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "scoped_spec_coverage"
+    }
+  ],
+  "coverage_config": "/tmp/carnot-8192-owned-final-vnk_o3op/coverage.ini",
+  "measurement_command": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8192_v708_contract_custody.py",
+      "--date",
+      "20261006",
+      "--worker-output",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8192_v708_contract_custody/invocations/1791276590489932162/measurement.json"
+    ],
+    "classification": "required",
+    "deadline_s": 120,
+    "expected_exit": 0,
+    "name": "measurement"
+  },
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "classification": "diagnostic",
+    "completed_receipt": {
+      "actual_exit": -15,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "diagnostic",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "deadline_s": 180,
+      "duration_s": 210.30742573307361,
+      "exit_code": -15,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8192_v708_contract_custody/invocations/1791276151350083642/health_logs/repository_full_suite-bf31c80669ea6441198216b9036c4563309a0c11ee15a00dfcc8107b31d2afe5.log",
+      "log_sha256": "sha256:bf31c80669ea6441198216b9036c4563309a0c11ee15a00dfcc8107b31d2afe5",
+      "name": "repository_full_suite",
+      "output_tail": "................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n........................................................................ [  1%]\n..................F......F.............................................. [  1%]\n........F............................................................... [  1%]\n........................................................................ [  1%]\n........................................................................ [  2%]\n.................................F...................................... [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  2%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n................................................s....................... [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n................................................................/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139980679990256, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139976491794944, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140083043733664, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140312016892128, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+      "passed": false,
+      "scope": "diagnostic",
+      "timed_out": true
+    },
+    "deadline_s": 180,
+    "execution_policy": "Reuse the completed diagnostic from this task; do not rerun the full suite.",
+    "expected_exit": 0,
+    "name": "repository_full_suite"
+  },
+  "terminal_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8192_v708_contract_custody.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8192_v708_contract_custody/terminal_candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8192_v708_contract_custody/terminal_candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "adversarial_verify"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8192_v708_contract_custody/terminal_candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_row_lint"
+    }
+  ]
+}
