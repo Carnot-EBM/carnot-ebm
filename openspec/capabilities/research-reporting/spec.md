@@ -94112,6 +94112,24 @@ missing-input, tamper and cold replay. External blocks name actual failed gate
 operands. Only unfinished owned work is partial. New primitive evidence binds
 source/code/config hashes, measured coverage counts and the unchanged protocol.
 
+## REQ-REPORT-8195: Publish checked selective fit custody
+
+Require Exp8194 selective_protocol_ready_score=1 and passing terminal readers
+for imported evidence. Authenticate byte hashes, retirement, runtime and writable
+storage before fitting. Freeze validation argv before measurement; run scoped
+pytest, 100 percent new statement coverage, Ruff, strict mypy, explicit-path
+spec coverage, private E2E-015/019 and full repository health once. Seal logs and
+publish through primary_publication after independent replay and unchanged
+terminal validators. External failures are complete_blocked_<check>; owned
+validation failures disqualify and zero selective_fit_ready_score. Load no LLM.
+Conductor owns ops and traceability reconciliation under the final instruction.
+
+### SCENARIO-REPORT-8195: Private CLI and immutable cold replay
+
+Direct scripts outside checkout without PYTHONPATH support success, missing
+input and cold replay. Reject tampered evidence, aggregates and evaluator labels.
+Record actual gates, hashes, normal exits, duration and immutable log receipts.
+
 ## REQ-REPORT-8194: Publish selective-method evidence with no model calls
 
 Exp8194 SHALL authenticate immutable upstream and V707 method bytes, runtime,

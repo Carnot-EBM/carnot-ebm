@@ -2,6 +2,22 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8195: Fit selective heads without reserved evidence
+
+Reuse authenticated Qwen fit/tune evidence and the immutable V708 protocol.
+Fit local and twelve-feature radial controls on the same frozen 96-source role,
+temperature only on 32 sources, and class quantiles only on 64 sources. Preserve
+failed masks, finite-sample infinity, at most sixteen centers and fixed costs.
+Freeze all seven arms in a self-contained head manifest. Require probability,
+decision and common-logit-shift parity within 1e-10. Shuffled-label and no-signal
+heads are diagnostic only. Readiness depends on execution and support, not benefit.
+
+### SCENARIO-VERIFY-8195: Separation, masks and evaluator rejection
+
+Private fixtures check role isolation, missing evidence, class support, scalar
+reduction, exact quantiles and evaluator-label rejection. Reserved feature and
+label files remain unopened. Exposed data cannot establish independent benefit.
+
 ## REQ-VERIFY-8162: Bound durable arithmetic without importing hardware speed
 
 Compute S_max=1/(1-f) only for measured removable arithmetic. Mixed scoring
