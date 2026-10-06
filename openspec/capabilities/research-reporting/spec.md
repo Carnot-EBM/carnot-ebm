@@ -2,6 +2,25 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8196: Publish sealed cached decisions with normal owned checks
+
+Load no LLM. Declare empty MODEL_SPECS, no_model_load, zero current calls and
+all imported small heads separately from historical Qwen calls and clocks.
+Check paths, hashes, runtime, retirement and writable storage before reduction.
+Freeze validation argv before measurement. Require scoped pytest,100 percent
+new statement coverage, Ruff check/format, strict mypy, explicit-file spec
+coverage and private E2E-015/019. Run the full Python suite once as separate
+repository health. Preserve immutable logs, old primaries and failed receipts.
+Publish through primary_publication after independent replay, unchanged
+adversarial_verify and strict row lint. Failed owned checks disqualify readiness;
+external prerequisites yield complete_blocked_<operand> with exact values.
+Conductor owns ops and traceability reconciliation under the final instruction.
+
+### SCENARIO-REPORT-8196: Direct private CLI and durable replay
+
+Outside-checkout CLI without PYTHONPATH covers success, missing input, tamper
+and cold replay. Rehashed primitive, headline and log mutations fail closed.
+
 ## REQ-REPORT-8162: Preserve V705 board and workload boundaries
 
 Authenticate each original board receipt and transcript independently. Preserve

@@ -49645,6 +49645,25 @@ Six tests in `tests/python/test_sentence_decision_audit_8185.py` qualify origina
 labels, source identity, support floors, source bootstrap and independent equations.
 # Exact-request service, 2026-10-06
 
+## REQ-VERIFY-8196: Seal all original selective reserved decisions
+
+Require authenticated Exp8195 selective_fit_ready_score=1 and its frozen head
+digest. Import label-free Exp8184 feature, prediction and call manifests with
+original clocks. Apply seven frozen arms to all128 original sources. Preserve
+source hashes and missing masks. Incomplete evidence escalates in every arm.
+Join the prior radial comparator by source identity and preserve authentic
+probabilities and actions. Reject duplicate or unmatched sources and evaluator
+labels. Seal predictions, roles and head bytes before any evaluator opens labels.
+Report complete-pair support separately; insufficient support remains a null
+for the later audit and does not prevent completed sealing readiness.
+
+### SCENARIO-VERIFY-8196: Label isolation and independent reconstruction
+
+Private tests cover source permutation, missing features, unmatched comparator,
+modified head, injected evaluator labels and cold reconstruction. Scalar and
+energy probabilities agree within1e-10; equivalent logistic decisions and sets
+agree exactly. Exposed development supplies no independent generalization.
+
 ## REQ-VERIFY-8188: Memoize fixed-seed verifier evidence
 
 Freeze the original 24 Exp8174 source IDs and a deterministic response service
