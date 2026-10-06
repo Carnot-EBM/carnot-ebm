@@ -94501,3 +94501,21 @@ hard exit/resume and cold replay without ambient imports. Measure100% newly owne
 statements including real CLI/child routes. Run scoped Ruff/format/strict mypy,
 explicit-file spec coverage, affected consumers and E2E-015/019. Run full Python
 health once and preserve unrelated failures separately without claiming global green.
+
+## REQ-REPORT-8212: Checked atomic memory audit publication
+
+Publish experiment_8212_v709_memory_benefit_audit.json through the unchanged
+terminal publication validator. Freeze owned validation argv before measurement,
+keep private scratch and complete stdout/stderr hashes, preserve exit status,
+measurement clocks and exact code/config/source hashes. Use no_model_load with
+MODEL_SPECS=[] and aggregation_from_upstream_artifacts. Historical primaries stay
+immutable. Conductor owns ops/status/changelog/traceability reconciliation.
+
+### SCENARIO-REPORT-8212-CLI
+
+Real script-path CLI covers natural reduction, private publication, blocking,
+invalid dates and cold replay including rehashed tamper rejection. Measure100%
+newly owned statements, scoped Ruff/format/strict mypy, explicit-file spec coverage,
+affected consumers and E2E-015/019. Run the full Python health command once and
+preserve unrelated repository failures separately. Run unchanged adversarial and
+strict verdict-row validators on the private candidate before atomic publication.

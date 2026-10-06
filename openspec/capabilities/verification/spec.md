@@ -50182,3 +50182,29 @@ Cold replay reconstructs numerical states, rows, counts and readiness. Rehashed
 primitive or aggregate tampering fails. Missing external operands block with exact
 field/path/hash/operator/expected/observed evidence. Failed owned checks disqualify.
 Valid trajectories can be null; exposed data earn zero generalization credit.
+
+## REQ-VERIFY-8212: Independent calibrated memory benefit and retention audit
+
+Require Exp8211 learning_trajectory_ready_score == 1 and authenticate its primary,
+trajectory, issue/release/admission journals and state hashes before reduction.
+Recompute predictions with the qualified scalar equations and costs from original
+labels. Seal the audit's pre-update rows before opening independent retention labels.
+Keep unchanged V707 H2: error-center versus fixed-center, seed means per original
+source, 128 complete sources, eight per class and eight original nonoverlapping
+blocks. Use 10000 moving-block draws, primary16 and descriptive8/32, missing masks,
+9500 valid draws, one-sided97.5% lower gain > .02, five improved sources, no extra
+false accepts, Brier degradation <= .01 and other-control cost degradation <= .02.
+Retention requires 48 complete sources, eight per class, cost degradation <= .02,
+Brier degradation <= .01 and no extra false accepts. Report shared calibration,
+structural increment, probability movement, action movement and center contribution
+separately. Zero action movement forbids a decision-benefit claim. Gaussian overlap
+versus retention errors is descriptive and cannot choose a post-hoc winner.
+
+### SCENARIO-VERIFY-8212-REDUCTION
+
+Tests cover valid nulls, positive controls, missing masks, insufficient support,
+seed repetition without independent credit, retention/control safety failures,
+absent versus zero readiness and primitive/aggregate tampering after rehash.
+Reconstruct genuine hard-exit/resume equality and future-label mutation invariance
+from sealed primitive logs. Missing external operands are terminal blocked; failed
+owned arithmetic or validation is disqualified. Exposed data earn zero generalization.
