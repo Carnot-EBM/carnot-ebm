@@ -19740,3 +19740,4 @@ code |
 | 2026-10-07 21:28 UTC | Plan milestone 2026.10.713 | OK | 14 tasks proposed |
 | 2026-10-07 21:40 UTC | Milestone 2026.10.713 activated | OK | 14 tasks queued |
 | 2026-10-07 22:12 UTC | Bind fourteen tasks and freeze matched source-evid | OK | 88 passed, 1 warning in 56.15s |
+| 2026-10-07 22:36 UTC | Qualify complete-sentence views and delayed constr | OK | 87 passed, 1 warning in 20.47s |
