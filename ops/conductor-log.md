@@ -19718,3 +19718,4 @@ code |
 | 2026-10-07 08:32 UTC | Measure independent serial and concurrent requests | GATE_BLOCK | gate-unsat(final): 3 of 4 gate(s) failed; first failure: exp8227-concurrency-canary.concurrent_canary_ready_score (actual=0 == expected=1) |
 | 2026-10-07 09:00 UTC | Inspect new environment-grounded supervisor outcom | OK | 95 passed, 1 warning in 48.31s |
 | 2026-10-07 09:24 UTC | Bound KV260 utility-kernel work and whole-request  | OK | 87 passed, 1 warning in 29.86s |
+| 2026-10-07 09:49 UTC | Specify PolarFire transfer and persistence for the | OK | 87 passed, 1 warning in 29.62s |
