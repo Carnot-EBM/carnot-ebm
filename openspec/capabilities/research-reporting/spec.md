@@ -94846,3 +94846,27 @@ REQ-REPORT-8222 implementation: utility_fit_execution_8222.py authenticates
 upstream terminal receipts, current kernel snapshots and pinned V709 evidence.
 The thin runner uses the existing bounded supervisor and atomic publication
 checks. Primitive rows, role hashes and fitted trees remain below the raw path.
+
+## REQ-REPORT-8223: Publish a target-free utility prediction seal
+
+Authenticate named inputs, writable private scratch and current resources before
+scoring. Missing external evidence yields complete_blocked_<operand>. Owned
+validation failures disqualify and zero readiness. Preserve actual commands,
+exits, full log hashes and clocks. No current model loads or LLM calls occur.
+
+### SCENARIO-REPORT-8223-CLI
+
+Exercise real private CLI success, blocked operands, schema errors and cold
+replay. Freeze owned unit, consumer, private E2E-015/019, Ruff, strict mypy and
+spec commands before measurement. Measure100 percent of added statements,
+including real CLI children. Keep bounded full-suite health separate. Atomically
+publish only after normal exit and unchanged terminal validators. Readiness
+requires all128 slots accounted for and a valid prediction seal. It grants no
+scientific benefit. Both generalization scores stay zero for exposed sources.
+
+REQ-REPORT-8223 implementation: utility_seal_execution_8223.py pins Exp8222 and
+original target-free V709 primitives. It reuses bounded supervision and unchanged
+primary publication. Fresh replay authenticates every bound input copy and
+recomputes the seal. Private tests cover label, state, slot, log and rehashed
+aggregate changes. Ops and traceability reconciliation is delegated to the
+conductor by the task's explicit stop rule.

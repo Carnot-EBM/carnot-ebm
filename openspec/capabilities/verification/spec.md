@@ -50506,3 +50506,24 @@ REQ-VERIFY-8222 implementation: utility_fit_8222.py reuses the qualified static
 kernel for72 arm/seed runs. Each completion has a byte-bound checkpoint and
 actual fit clock. Original calibration rows select depth and the frozen eligible
 comparator; missing targets retain unavailable metrics and zero residual weight.
+
+## REQ-VERIFY-8223: Seal corrected predictions without evaluator targets
+
+Use authenticated Exp8222 selected trees and original public reserved rows only.
+Keep all128 slots, original missing masks and all72 arm/seed conditions. Recompute
+base probabilities from original features. Do not fit, recapture or load generators.
+Accept only within original V707 permission. Minimize expected costs5*p,1-p,.5;
+ties and missing evidence escalate. Bind every prediction to its saved state.
+
+### SCENARIO-VERIFY-8223-SEAL
+
+Reject nested labels before scoring, altered heads, slot deletion and missingness
+changes. Verify direct probability and normalized-energy parity within1e-10.
+Fresh replay authenticates original inputs and rejects rehashed aggregate or
+primitive tampering. Seal probabilities, permission mask and code/config hashes
+before the separate audit opens labels. Keep labels_opened=false.
+
+REQ-VERIFY-8223 implementation: utility_seal_8223.py reuses the authenticated
+V709 public-row scorer and V711 probability-tree kernel. It records72 corrected
+arm/seed conditions plus the original baseline and escalation control per slot.
+It compares normalized energies, preserves masks and binds every saved state.
