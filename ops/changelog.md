@@ -21699,3 +21699,4 @@ Recorded 14 completed experiments in 101.3 minutes (1.7 hours), including 2 comp
 - 2026-10-07: Bind fourteen tasks and freeze matched source-evidence interventions (⚠️ Research Finding) — honest_verdict=complete_null_evidence_intervention_methods; results/experiment_8248_v713_evidence_intervention_methods.json
 - 2026-10-07: Qualify complete-sentence views and delayed constraint admission mechanics (⚠️ Research Finding) — honest_verdict=complete_disqualified_evidence_view_kernel; results/experiment_8249_v713_evidence_view_kernel.json
 - 2026-10-07: Inspect new live supervisor outcomes for cross-game arm selection (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8257_v713_arc_outcome_frontier.json
+- 2026-10-07: Bound new evidence and learning costs against the KV260 operation set (⚠️ Blocked) — honest_verdict=complete_blocked_capture; results/experiment_8258_v713_kv260_evidence_cost_boundary.json
