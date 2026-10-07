@@ -1,0 +1,3923 @@
+{
+  "board": {
+    "acquisition_relevance": "defer: no measured board whole-service benefit",
+    "actual_substrate": "fpga_fabric",
+    "arm": "historical_accounting",
+    "blocked_idcode": null,
+    "blocker": null,
+    "board": "KV260",
+    "censored": false,
+    "claim_class": "historical",
+    "compatible_sparse_kernel": false,
+    "compatible_update_kernel": false,
+    "completed": false,
+    "current_hardware_execution": false,
+    "current_reachability": "not_probed",
+    "custody_checked_date": "20261003",
+    "custody_date": "20260930",
+    "custody_status": "valid",
+    "custody_valid": true,
+    "eligible": 1,
+    "evidence_status": "historical_authenticated",
+    "excluded": false,
+    "execution_date_absence_reason": "Original execution timestamp absent or this receipt is read-only history",
+    "expected_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+    "failed": false,
+    "family": "KV260",
+    "historical_verdict": "historical_fabric_k_max<=5",
+    "independent": 0,
+    "intended": 1,
+    "k_max": 5,
+    "last_actual_execution_date": null,
+    "last_actual_execution_hash": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+    "last_authenticated_evidence_date": "20260913",
+    "measured_current_latency_ms": null,
+    "metric": null,
+    "next_missing_prerequisite": "A new workload with k<=5, authenticated SSH fabric transcript, transport and complete service timing",
+    "next_operator_or_device_change": "Connect by SSH through kria; run a qualified k<=5 workload with transport and coupling timing",
+    "original_observed_latest_receipt_date": null,
+    "original_receipt_run_date": null,
+    "processor_class": "fpga_fabric",
+    "radial_mapping_implemented": false,
+    "raw_provenance": {
+      "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+    },
+    "receipt_date": "20260913",
+    "receipt_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+    "reopen_condition": "Useful measured k<=5 workload, authenticated SSH/device fabric receipt and transfer-inclusive timing.",
+    "scope": "SSH authenticated quadratic Ising fabric, k_max<=5; transport limits preserved",
+    "seed": null,
+    "service_fraction": null,
+    "source_family": "KV260",
+    "source_hash": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+    "source_path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+    "source_transcript": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json",
+    "source_transcript_sha256": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+    "started": false,
+    "state": "historical_fabric_k_max<=5",
+    "status": "completed",
+    "terminal_criterion": "Authenticated SSH fabric transcript and full service timing for k<=5",
+    "terminal_criterion_met": false,
+    "timestamp": null,
+    "timestamp_absence_reason": "original execution date unavailable",
+    "unit": "board_obligation",
+    "venue": "kv260_fpga_fabric_historical",
+    "workload": "SSH authenticated quadratic Ising fabric, k_max<=5; transport limits preserved"
+  },
+  "branches": {
+    "historical": {
+      "failed_operands": [],
+      "fields": {
+        "fixture_mode": null,
+        "flagged_adversarial": false,
+        "hardware_boundary_ready_score": 1,
+        "owned_failure": null,
+        "required_checks_passed": true,
+        "verdict_class": "null"
+      },
+      "ready": true,
+      "verdict": "complete_null_hardware_workload_obligations"
+    },
+    "kernel": {
+      "failed_operands": [],
+      "fields": {
+        "fixture_mode": null,
+        "flagged_adversarial": false,
+        "owned_failure": null,
+        "required_checks_passed": true,
+        "static_kernel_ready_score": 1,
+        "verdict_class": "circular_positive"
+      },
+      "ready": true,
+      "verdict": "complete_circular_positive_utility_kernel"
+    },
+    "learning": {
+      "failed_operands": [
+        {
+          "artifact_field": "utility_trajectory_ready_score",
+          "check": "utility_trajectory_ready_score",
+          "expected": 1,
+          "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+          "observed": 0,
+          "op": "==",
+          "passed": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+          "upstream": "experiment_8225_v711_delayed_utility_learning"
+        },
+        {
+          "artifact_field": "required_checks_passed",
+          "check": "required_checks_passed",
+          "expected": true,
+          "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+          "observed": false,
+          "op": "==",
+          "passed": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+          "upstream": "experiment_8225_v711_delayed_utility_learning"
+        },
+        {
+          "artifact_field": "verdict_class_qualified",
+          "check": "verdict_class_qualified",
+          "expected": true,
+          "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+          "observed": false,
+          "op": "==",
+          "passed": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+          "upstream": "experiment_8225_v711_delayed_utility_learning"
+        }
+      ],
+      "fields": {
+        "fixture_mode": false,
+        "flagged_adversarial": false,
+        "owned_failure": "",
+        "required_checks_passed": false,
+        "utility_trajectory_ready_score": 0,
+        "verdict_class": "disqualified"
+      },
+      "ready": false,
+      "verdict": "complete_disqualified_owned_validation"
+    },
+    "service": {
+      "failed_operands": [
+        {
+          "artifact_field": "exists",
+          "check": "exists",
+          "expected": true,
+          "hash": null,
+          "observed": null,
+          "op": "==",
+          "passed": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8228_v711_concurrent_service.json",
+          "upstream": "experiment_8228_v711_concurrent_service"
+        },
+        {
+          "artifact_field": "authenticated_schema_and_primitives",
+          "check": "authenticated_schema_and_primitives",
+          "expected": "byte-bound valid schema",
+          "hash": null,
+          "observed": "[Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8228_v711_concurrent_service.json'",
+          "op": "==",
+          "passed": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8228_v711_concurrent_service.json",
+          "upstream": "experiment_8228_v711_concurrent_service"
+        }
+      ],
+      "fields": {
+        "concurrent_service_ready_score": null,
+        "fixture_mode": null,
+        "flagged_adversarial": null,
+        "owned_failure": null,
+        "required_checks_passed": null,
+        "verdict_class": null
+      },
+      "ready": false,
+      "verdict": null
+    }
+  },
+  "cases": [
+    {
+      "arm": "frozen_static",
+      "model": {
+        "base": {
+          "kind": "input"
+        },
+        "kind": "patch",
+        "patches": [
+          {
+            "delta": 0.05,
+            "group": {
+              "distinct_fit_members": 20,
+              "fit_membership_sha256": "sha256:b388eca55580e5807de801fb3303f51cb4a2112550a71f56d6606cf919c1904a",
+              "interval": [
+                0.25,
+                0.5
+              ],
+              "name": "bin_2",
+              "reject_only": false
+            },
+            "witness": {
+              "accept_cost_residual": 1.275,
+              "available_members": 32,
+              "denominator": 64,
+              "distinct_members": 32,
+              "eligible": true,
+              "escalate_cost_residual": 0,
+              "group": "bin_2",
+              "numerator": 16.32,
+              "probability_residual": 0.255,
+              "reject_cost_residual": -0.255
+            }
+          },
+          {
+            "delta": 0.05,
+            "group": {
+              "distinct_fit_members": 20,
+              "fit_membership_sha256": "sha256:b388eca55580e5807de801fb3303f51cb4a2112550a71f56d6606cf919c1904a",
+              "interval": [
+                0.25,
+                0.5
+              ],
+              "name": "bin_2",
+              "reject_only": false
+            },
+            "witness": {
+              "accept_cost_residual": 1.15,
+              "available_members": 32,
+              "denominator": 64,
+              "distinct_members": 32,
+              "eligible": true,
+              "escalate_cost_residual": 0,
+              "group": "bin_2",
+              "numerator": 14.719999999999999,
+              "probability_residual": 0.22999999999999998,
+              "reject_cost_residual": -0.22999999999999998
+            }
+          },
+          {
+            "delta": 0.05,
+            "group": {
+              "distinct_fit_members": 20,
+              "fit_membership_sha256": "sha256:b388eca55580e5807de801fb3303f51cb4a2112550a71f56d6606cf919c1904a",
+              "interval": [
+                0.25,
+                0.5
+              ],
+              "name": "bin_2",
+              "reject_only": false
+            },
+            "witness": {
+              "accept_cost_residual": 1.025,
+              "available_members": 32,
+              "denominator": 64,
+              "distinct_members": 32,
+              "eligible": true,
+              "escalate_cost_residual": 0,
+              "group": "bin_2",
+              "numerator": 13.119999999999997,
+              "probability_residual": 0.20499999999999996,
+              "reject_cost_residual": -0.20499999999999996
+            }
+          },
+          {
+            "delta": 0.05,
+            "group": {
+              "distinct_fit_members": 20,
+              "fit_membership_sha256": "sha256:b388eca55580e5807de801fb3303f51cb4a2112550a71f56d6606cf919c1904a",
+              "interval": [
+                0.25,
+                0.5
+              ],
+              "name": "bin_2",
+              "reject_only": false
+            },
+            "witness": {
+              "accept_cost_residual": 0.8999999999999997,
+              "available_members": 32,
+              "denominator": 64,
+              "distinct_members": 32,
+              "eligible": true,
+              "escalate_cost_residual": 0,
+              "group": "bin_2",
+              "numerator": 11.519999999999996,
+              "probability_residual": 0.17999999999999994,
+              "reject_cost_residual": -0.17999999999999994
+            }
+          }
+        ]
+      },
+      "rows": [
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 1,
+          "source_cluster_id": "private-1",
+          "source_id": "fixture-1-0",
+          "unit_id": "private-1"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 2,
+          "source_cluster_id": "private-2",
+          "source_id": "fixture-2-0",
+          "unit_id": "private-2"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 3,
+          "source_cluster_id": "private-3",
+          "source_id": "fixture-3-0",
+          "unit_id": "private-3"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 4,
+          "source_cluster_id": "private-4",
+          "source_id": "fixture-4-1",
+          "unit_id": "private-4"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 5,
+          "source_cluster_id": "private-5",
+          "source_id": "fixture-5-0",
+          "unit_id": "private-5"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 6,
+          "source_cluster_id": "private-6",
+          "source_id": "fixture-6-1",
+          "unit_id": "private-6"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 7,
+          "source_cluster_id": "private-7",
+          "source_id": "fixture-7-0",
+          "unit_id": "private-7"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 8,
+          "source_cluster_id": "private-8",
+          "source_id": "fixture-8-0",
+          "unit_id": "private-8"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 9,
+          "source_cluster_id": "private-9",
+          "source_id": "fixture-9-0",
+          "unit_id": "private-9"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 10,
+          "source_cluster_id": "private-10",
+          "source_id": "fixture-10-1",
+          "unit_id": "private-10"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 11,
+          "source_cluster_id": "private-11",
+          "source_id": "fixture-11-0",
+          "unit_id": "private-11"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 12,
+          "source_cluster_id": "private-12",
+          "source_id": "fixture-12-0",
+          "unit_id": "private-12"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 13,
+          "source_cluster_id": "private-13",
+          "source_id": "fixture-13-0",
+          "unit_id": "private-13"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 14,
+          "source_cluster_id": "private-14",
+          "source_id": "fixture-14-1",
+          "unit_id": "private-14"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 15,
+          "source_cluster_id": "private-15",
+          "source_id": "fixture-15-1",
+          "unit_id": "private-15"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 16,
+          "source_cluster_id": "private-16",
+          "source_id": "fixture-16-0",
+          "unit_id": "private-16"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 17,
+          "source_cluster_id": "private-17",
+          "source_id": "fixture-17-0",
+          "unit_id": "private-17"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 18,
+          "source_cluster_id": "private-18",
+          "source_id": "fixture-18-0",
+          "unit_id": "private-18"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 19,
+          "source_cluster_id": "private-19",
+          "source_id": "fixture-19-0",
+          "unit_id": "private-19"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 20,
+          "source_cluster_id": "private-20",
+          "source_id": "fixture-20-2",
+          "unit_id": "private-20"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 21,
+          "source_cluster_id": "private-21",
+          "source_id": "fixture-21-0",
+          "unit_id": "private-21"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 22,
+          "source_cluster_id": "private-22",
+          "source_id": "fixture-22-0",
+          "unit_id": "private-22"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 23,
+          "source_cluster_id": "private-23",
+          "source_id": "fixture-23-0",
+          "unit_id": "private-23"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 24,
+          "source_cluster_id": "private-24",
+          "source_id": "fixture-24-0",
+          "unit_id": "private-24"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 25,
+          "source_cluster_id": "private-25",
+          "source_id": "fixture-25-0",
+          "unit_id": "private-25"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 26,
+          "source_cluster_id": "private-26",
+          "source_id": "fixture-26-1",
+          "unit_id": "private-26"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 27,
+          "source_cluster_id": "private-27",
+          "source_id": "fixture-27-1",
+          "unit_id": "private-27"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 28,
+          "source_cluster_id": "private-28",
+          "source_id": "fixture-28-0",
+          "unit_id": "private-28"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 29,
+          "source_cluster_id": "private-29",
+          "source_id": "fixture-29-0",
+          "unit_id": "private-29"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 30,
+          "source_cluster_id": "private-30",
+          "source_id": "fixture-30-2",
+          "unit_id": "private-30"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 31,
+          "source_cluster_id": "private-31",
+          "source_id": "fixture-31-0",
+          "unit_id": "private-31"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 32,
+          "source_cluster_id": "private-32",
+          "source_id": "fixture-32-0",
+          "unit_id": "private-32"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 33,
+          "source_cluster_id": "private-33",
+          "source_id": "fixture-33-0",
+          "unit_id": "private-33"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 34,
+          "source_cluster_id": "private-34",
+          "source_id": "fixture-34-0",
+          "unit_id": "private-34"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 35,
+          "source_cluster_id": "private-35",
+          "source_id": "fixture-35-0",
+          "unit_id": "private-35"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 36,
+          "source_cluster_id": "private-36",
+          "source_id": "fixture-36-0",
+          "unit_id": "private-36"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 37,
+          "source_cluster_id": "private-37",
+          "source_id": "fixture-37-0",
+          "unit_id": "private-37"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 38,
+          "source_cluster_id": "private-38",
+          "source_id": "fixture-38-0",
+          "unit_id": "private-38"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 39,
+          "source_cluster_id": "private-39",
+          "source_id": "fixture-39-1",
+          "unit_id": "private-39"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 40,
+          "source_cluster_id": "private-40",
+          "source_id": "fixture-40-0",
+          "unit_id": "private-40"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 41,
+          "source_cluster_id": "private-41",
+          "source_id": "fixture-41-0",
+          "unit_id": "private-41"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 42,
+          "source_cluster_id": "private-42",
+          "source_id": "fixture-42-1",
+          "unit_id": "private-42"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 43,
+          "source_cluster_id": "private-43",
+          "source_id": "fixture-43-0",
+          "unit_id": "private-43"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 44,
+          "source_cluster_id": "private-44",
+          "source_id": "fixture-44-0",
+          "unit_id": "private-44"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 45,
+          "source_cluster_id": "private-45",
+          "source_id": "fixture-45-0",
+          "unit_id": "private-45"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 46,
+          "source_cluster_id": "private-46",
+          "source_id": "fixture-46-0",
+          "unit_id": "private-46"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 47,
+          "source_cluster_id": "private-47",
+          "source_id": "fixture-47-0",
+          "unit_id": "private-47"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 48,
+          "source_cluster_id": "private-48",
+          "source_id": "fixture-48-0",
+          "unit_id": "private-48"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 49,
+          "source_cluster_id": "private-49",
+          "source_id": "fixture-49-0",
+          "unit_id": "private-49"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 50,
+          "source_cluster_id": "private-50",
+          "source_id": "fixture-50-0",
+          "unit_id": "private-50"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 51,
+          "source_cluster_id": "private-51",
+          "source_id": "fixture-51-1",
+          "unit_id": "private-51"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 52,
+          "source_cluster_id": "private-52",
+          "source_id": "fixture-52-0",
+          "unit_id": "private-52"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 53,
+          "source_cluster_id": "private-53",
+          "source_id": "fixture-53-0",
+          "unit_id": "private-53"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 54,
+          "source_cluster_id": "private-54",
+          "source_id": "fixture-54-0",
+          "unit_id": "private-54"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 55,
+          "source_cluster_id": "private-55",
+          "source_id": "fixture-55-1",
+          "unit_id": "private-55"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 56,
+          "source_cluster_id": "private-56",
+          "source_id": "fixture-56-0",
+          "unit_id": "private-56"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 57,
+          "source_cluster_id": "private-57",
+          "source_id": "fixture-57-1",
+          "unit_id": "private-57"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 58,
+          "source_cluster_id": "private-58",
+          "source_id": "fixture-58-0",
+          "unit_id": "private-58"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 59,
+          "source_cluster_id": "private-59",
+          "source_id": "fixture-59-1",
+          "unit_id": "private-59"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 60,
+          "source_cluster_id": "private-60",
+          "source_id": "fixture-60-0",
+          "unit_id": "private-60"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 61,
+          "source_cluster_id": "private-61",
+          "source_id": "fixture-61-0",
+          "unit_id": "private-61"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 62,
+          "source_cluster_id": "private-62",
+          "source_id": "fixture-62-0",
+          "unit_id": "private-62"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 63,
+          "source_cluster_id": "private-63",
+          "source_id": "fixture-63-0",
+          "unit_id": "private-63"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 64,
+          "source_cluster_id": "private-64",
+          "source_id": "fixture-64-0",
+          "unit_id": "private-64"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 65,
+          "source_cluster_id": "private-65",
+          "source_id": "fixture-65-2",
+          "unit_id": "private-65"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 66,
+          "source_cluster_id": "private-66",
+          "source_id": "fixture-66-1",
+          "unit_id": "private-66"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 67,
+          "source_cluster_id": "private-67",
+          "source_id": "fixture-67-4",
+          "unit_id": "private-67"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 68,
+          "source_cluster_id": "private-68",
+          "source_id": "fixture-68-7",
+          "unit_id": "private-68"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 69,
+          "source_cluster_id": "private-69",
+          "source_id": "fixture-69-3",
+          "unit_id": "private-69"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 70,
+          "source_cluster_id": "private-70",
+          "source_id": "fixture-70-1",
+          "unit_id": "private-70"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 71,
+          "source_cluster_id": "private-71",
+          "source_id": "fixture-71-1",
+          "unit_id": "private-71"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 72,
+          "source_cluster_id": "private-72",
+          "source_id": "fixture-72-4",
+          "unit_id": "private-72"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 73,
+          "source_cluster_id": "private-73",
+          "source_id": "fixture-73-0",
+          "unit_id": "private-73"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 74,
+          "source_cluster_id": "private-74",
+          "source_id": "fixture-74-0",
+          "unit_id": "private-74"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 75,
+          "source_cluster_id": "private-75",
+          "source_id": "fixture-75-3",
+          "unit_id": "private-75"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 76,
+          "source_cluster_id": "private-76",
+          "source_id": "fixture-76-6",
+          "unit_id": "private-76"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 77,
+          "source_cluster_id": "private-77",
+          "source_id": "fixture-77-0",
+          "unit_id": "private-77"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 78,
+          "source_cluster_id": "private-78",
+          "source_id": "fixture-78-1",
+          "unit_id": "private-78"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 79,
+          "source_cluster_id": "private-79",
+          "source_id": "fixture-79-1",
+          "unit_id": "private-79"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 80,
+          "source_cluster_id": "private-80",
+          "source_id": "fixture-80-0",
+          "unit_id": "private-80"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 81,
+          "source_cluster_id": "private-81",
+          "source_id": "fixture-81-0",
+          "unit_id": "private-81"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 82,
+          "source_cluster_id": "private-82",
+          "source_id": "fixture-82-1",
+          "unit_id": "private-82"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 83,
+          "source_cluster_id": "private-83",
+          "source_id": "fixture-83-1",
+          "unit_id": "private-83"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 84,
+          "source_cluster_id": "private-84",
+          "source_id": "fixture-84-0",
+          "unit_id": "private-84"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 85,
+          "source_cluster_id": "private-85",
+          "source_id": "fixture-85-0",
+          "unit_id": "private-85"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 86,
+          "source_cluster_id": "private-86",
+          "source_id": "fixture-86-0",
+          "unit_id": "private-86"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 87,
+          "source_cluster_id": "private-87",
+          "source_id": "fixture-87-0",
+          "unit_id": "private-87"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 88,
+          "source_cluster_id": "private-88",
+          "source_id": "fixture-88-0",
+          "unit_id": "private-88"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 89,
+          "source_cluster_id": "private-89",
+          "source_id": "fixture-89-0",
+          "unit_id": "private-89"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 90,
+          "source_cluster_id": "private-90",
+          "source_id": "fixture-90-0",
+          "unit_id": "private-90"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 91,
+          "source_cluster_id": "private-91",
+          "source_id": "fixture-91-2",
+          "unit_id": "private-91"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 92,
+          "source_cluster_id": "private-92",
+          "source_id": "fixture-92-1",
+          "unit_id": "private-92"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 93,
+          "source_cluster_id": "private-93",
+          "source_id": "fixture-93-1",
+          "unit_id": "private-93"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 94,
+          "source_cluster_id": "private-94",
+          "source_id": "fixture-94-0",
+          "unit_id": "private-94"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 95,
+          "source_cluster_id": "private-95",
+          "source_id": "fixture-95-0",
+          "unit_id": "private-95"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 96,
+          "source_cluster_id": "private-96",
+          "source_id": "fixture-96-1",
+          "unit_id": "private-96"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 97,
+          "source_cluster_id": "private-97",
+          "source_id": "fixture-97-0",
+          "unit_id": "private-97"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 98,
+          "source_cluster_id": "private-98",
+          "source_id": "fixture-98-0",
+          "unit_id": "private-98"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 99,
+          "source_cluster_id": "private-99",
+          "source_id": "fixture-99-1",
+          "unit_id": "private-99"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 100,
+          "source_cluster_id": "private-100",
+          "source_id": "fixture-100-1",
+          "unit_id": "private-100"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 101,
+          "source_cluster_id": "private-101",
+          "source_id": "fixture-101-1",
+          "unit_id": "private-101"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 102,
+          "source_cluster_id": "private-102",
+          "source_id": "fixture-102-0",
+          "unit_id": "private-102"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 103,
+          "source_cluster_id": "private-103",
+          "source_id": "fixture-103-0",
+          "unit_id": "private-103"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 104,
+          "source_cluster_id": "private-104",
+          "source_id": "fixture-104-1",
+          "unit_id": "private-104"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 105,
+          "source_cluster_id": "private-105",
+          "source_id": "fixture-105-0",
+          "unit_id": "private-105"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 106,
+          "source_cluster_id": "private-106",
+          "source_id": "fixture-106-1",
+          "unit_id": "private-106"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 107,
+          "source_cluster_id": "private-107",
+          "source_id": "fixture-107-0",
+          "unit_id": "private-107"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 108,
+          "source_cluster_id": "private-108",
+          "source_id": "fixture-108-0",
+          "unit_id": "private-108"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 109,
+          "source_cluster_id": "private-109",
+          "source_id": "fixture-109-0",
+          "unit_id": "private-109"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 110,
+          "source_cluster_id": "private-110",
+          "source_id": "fixture-110-1",
+          "unit_id": "private-110"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 111,
+          "source_cluster_id": "private-111",
+          "source_id": "fixture-111-0",
+          "unit_id": "private-111"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 112,
+          "source_cluster_id": "private-112",
+          "source_id": "fixture-112-0",
+          "unit_id": "private-112"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 113,
+          "source_cluster_id": "private-113",
+          "source_id": "fixture-113-0",
+          "unit_id": "private-113"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 114,
+          "source_cluster_id": "private-114",
+          "source_id": "fixture-114-0",
+          "unit_id": "private-114"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 115,
+          "source_cluster_id": "private-115",
+          "source_id": "fixture-115-1",
+          "unit_id": "private-115"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 116,
+          "source_cluster_id": "private-116",
+          "source_id": "fixture-116-2",
+          "unit_id": "private-116"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 117,
+          "source_cluster_id": "private-117",
+          "source_id": "fixture-117-0",
+          "unit_id": "private-117"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 118,
+          "source_cluster_id": "private-118",
+          "source_id": "fixture-118-0",
+          "unit_id": "private-118"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 119,
+          "source_cluster_id": "private-119",
+          "source_id": "fixture-119-0",
+          "unit_id": "private-119"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 120,
+          "source_cluster_id": "private-120",
+          "source_id": "fixture-120-0",
+          "unit_id": "private-120"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 121,
+          "source_cluster_id": "private-121",
+          "source_id": "fixture-121-2",
+          "unit_id": "private-121"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 122,
+          "source_cluster_id": "private-122",
+          "source_id": "fixture-122-0",
+          "unit_id": "private-122"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 123,
+          "source_cluster_id": "private-123",
+          "source_id": "fixture-123-0",
+          "unit_id": "private-123"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 124,
+          "source_cluster_id": "private-124",
+          "source_id": "fixture-124-0",
+          "unit_id": "private-124"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 125,
+          "source_cluster_id": "private-125",
+          "source_id": "fixture-125-0",
+          "unit_id": "private-125"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 126,
+          "source_cluster_id": "private-126",
+          "source_id": "fixture-126-0",
+          "unit_id": "private-126"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 127,
+          "source_cluster_id": "private-127",
+          "source_id": "fixture-127-0",
+          "unit_id": "private-127"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 128,
+          "source_cluster_id": "private-128",
+          "source_id": "fixture-128-0",
+          "unit_id": "private-128"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 129,
+          "source_cluster_id": "private-129",
+          "source_id": "fixture-129-0",
+          "unit_id": "private-129"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 130,
+          "source_cluster_id": "private-130",
+          "source_id": "fixture-130-0",
+          "unit_id": "private-130"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 131,
+          "source_cluster_id": "private-131",
+          "source_id": "fixture-131-0",
+          "unit_id": "private-131"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 132,
+          "source_cluster_id": "private-132",
+          "source_id": "fixture-132-0",
+          "unit_id": "private-132"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 133,
+          "source_cluster_id": "private-133",
+          "source_id": "fixture-133-0",
+          "unit_id": "private-133"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 134,
+          "source_cluster_id": "private-134",
+          "source_id": "fixture-134-0",
+          "unit_id": "private-134"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 135,
+          "source_cluster_id": "private-135",
+          "source_id": "fixture-135-0",
+          "unit_id": "private-135"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 136,
+          "source_cluster_id": "private-136",
+          "source_id": "fixture-136-0",
+          "unit_id": "private-136"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 137,
+          "source_cluster_id": "private-137",
+          "source_id": "fixture-137-0",
+          "unit_id": "private-137"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 138,
+          "source_cluster_id": "private-138",
+          "source_id": "fixture-138-0",
+          "unit_id": "private-138"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 139,
+          "source_cluster_id": "private-139",
+          "source_id": "fixture-139-0",
+          "unit_id": "private-139"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 140,
+          "source_cluster_id": "private-140",
+          "source_id": "fixture-140-0",
+          "unit_id": "private-140"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 141,
+          "source_cluster_id": "private-141",
+          "source_id": "fixture-141-1",
+          "unit_id": "private-141"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 142,
+          "source_cluster_id": "private-142",
+          "source_id": "fixture-142-0",
+          "unit_id": "private-142"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 143,
+          "source_cluster_id": "private-143",
+          "source_id": "fixture-143-0",
+          "unit_id": "private-143"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 144,
+          "source_cluster_id": "private-144",
+          "source_id": "fixture-144-1",
+          "unit_id": "private-144"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 145,
+          "source_cluster_id": "private-145",
+          "source_id": "fixture-145-0",
+          "unit_id": "private-145"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 146,
+          "source_cluster_id": "private-146",
+          "source_id": "fixture-146-5",
+          "unit_id": "private-146"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 147,
+          "source_cluster_id": "private-147",
+          "source_id": "fixture-147-1",
+          "unit_id": "private-147"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 148,
+          "source_cluster_id": "private-148",
+          "source_id": "fixture-148-0",
+          "unit_id": "private-148"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 149,
+          "source_cluster_id": "private-149",
+          "source_id": "fixture-149-6",
+          "unit_id": "private-149"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 150,
+          "source_cluster_id": "private-150",
+          "source_id": "fixture-150-1",
+          "unit_id": "private-150"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 151,
+          "source_cluster_id": "private-151",
+          "source_id": "fixture-151-5",
+          "unit_id": "private-151"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 152,
+          "source_cluster_id": "private-152",
+          "source_id": "fixture-152-4",
+          "unit_id": "private-152"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 153,
+          "source_cluster_id": "private-153",
+          "source_id": "fixture-153-6",
+          "unit_id": "private-153"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 154,
+          "source_cluster_id": "private-154",
+          "source_id": "fixture-154-6",
+          "unit_id": "private-154"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 155,
+          "source_cluster_id": "private-155",
+          "source_id": "fixture-155-17",
+          "unit_id": "private-155"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 156,
+          "source_cluster_id": "private-156",
+          "source_id": "fixture-156-6",
+          "unit_id": "private-156"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 157,
+          "source_cluster_id": "private-157",
+          "source_id": "fixture-157-1",
+          "unit_id": "private-157"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 158,
+          "source_cluster_id": "private-158",
+          "source_id": "fixture-158-0",
+          "unit_id": "private-158"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 159,
+          "source_cluster_id": "private-159",
+          "source_id": "fixture-159-0",
+          "unit_id": "private-159"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 160,
+          "source_cluster_id": "private-160",
+          "source_id": "fixture-160-0",
+          "unit_id": "private-160"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 161,
+          "source_cluster_id": "private-161",
+          "source_id": "fixture-161-2",
+          "unit_id": "private-161"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 162,
+          "source_cluster_id": "private-162",
+          "source_id": "fixture-162-1",
+          "unit_id": "private-162"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 163,
+          "source_cluster_id": "private-163",
+          "source_id": "fixture-163-3",
+          "unit_id": "private-163"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 164,
+          "source_cluster_id": "private-164",
+          "source_id": "fixture-164-0",
+          "unit_id": "private-164"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 165,
+          "source_cluster_id": "private-165",
+          "source_id": "fixture-165-2",
+          "unit_id": "private-165"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 166,
+          "source_cluster_id": "private-166",
+          "source_id": "fixture-166-0",
+          "unit_id": "private-166"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 167,
+          "source_cluster_id": "private-167",
+          "source_id": "fixture-167-2",
+          "unit_id": "private-167"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 168,
+          "source_cluster_id": "private-168",
+          "source_id": "fixture-168-1",
+          "unit_id": "private-168"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 169,
+          "source_cluster_id": "private-169",
+          "source_id": "fixture-169-0",
+          "unit_id": "private-169"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 170,
+          "source_cluster_id": "private-170",
+          "source_id": "fixture-170-0",
+          "unit_id": "private-170"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 171,
+          "source_cluster_id": "private-171",
+          "source_id": "fixture-171-0",
+          "unit_id": "private-171"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 172,
+          "source_cluster_id": "private-172",
+          "source_id": "fixture-172-0",
+          "unit_id": "private-172"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 173,
+          "source_cluster_id": "private-173",
+          "source_id": "fixture-173-0",
+          "unit_id": "private-173"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 174,
+          "source_cluster_id": "private-174",
+          "source_id": "fixture-174-0",
+          "unit_id": "private-174"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 175,
+          "source_cluster_id": "private-175",
+          "source_id": "fixture-175-1",
+          "unit_id": "private-175"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 176,
+          "source_cluster_id": "private-176",
+          "source_id": "fixture-176-0",
+          "unit_id": "private-176"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 177,
+          "source_cluster_id": "private-177",
+          "source_id": "fixture-177-1",
+          "unit_id": "private-177"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 178,
+          "source_cluster_id": "private-178",
+          "source_id": "fixture-178-0",
+          "unit_id": "private-178"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 179,
+          "source_cluster_id": "private-179",
+          "source_id": "fixture-179-0",
+          "unit_id": "private-179"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 180,
+          "source_cluster_id": "private-180",
+          "source_id": "fixture-180-0",
+          "unit_id": "private-180"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 181,
+          "source_cluster_id": "private-181",
+          "source_id": "fixture-181-1",
+          "unit_id": "private-181"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 182,
+          "source_cluster_id": "private-182",
+          "source_id": "fixture-182-0",
+          "unit_id": "private-182"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 183,
+          "source_cluster_id": "private-183",
+          "source_id": "fixture-183-0",
+          "unit_id": "private-183"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 184,
+          "source_cluster_id": "private-184",
+          "source_id": "fixture-184-0",
+          "unit_id": "private-184"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 185,
+          "source_cluster_id": "private-185",
+          "source_id": "fixture-185-1",
+          "unit_id": "private-185"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 186,
+          "source_cluster_id": "private-186",
+          "source_id": "fixture-186-0",
+          "unit_id": "private-186"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 187,
+          "source_cluster_id": "private-187",
+          "source_id": "fixture-187-0",
+          "unit_id": "private-187"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 188,
+          "source_cluster_id": "private-188",
+          "source_id": "fixture-188-3",
+          "unit_id": "private-188"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 189,
+          "source_cluster_id": "private-189",
+          "source_id": "fixture-189-0",
+          "unit_id": "private-189"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 190,
+          "source_cluster_id": "private-190",
+          "source_id": "fixture-190-0",
+          "unit_id": "private-190"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 191,
+          "source_cluster_id": "private-191",
+          "source_id": "fixture-191-1",
+          "unit_id": "private-191"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 192,
+          "source_cluster_id": "private-192",
+          "source_id": "fixture-192-1",
+          "unit_id": "private-192"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 193,
+          "source_cluster_id": "private-193",
+          "source_id": "fixture-193-3",
+          "unit_id": "private-193"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 194,
+          "source_cluster_id": "private-194",
+          "source_id": "fixture-194-0",
+          "unit_id": "private-194"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 195,
+          "source_cluster_id": "private-195",
+          "source_id": "fixture-195-0",
+          "unit_id": "private-195"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 196,
+          "source_cluster_id": "private-196",
+          "source_id": "fixture-196-1",
+          "unit_id": "private-196"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 197,
+          "source_cluster_id": "private-197",
+          "source_id": "fixture-197-1",
+          "unit_id": "private-197"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 198,
+          "source_cluster_id": "private-198",
+          "source_id": "fixture-198-0",
+          "unit_id": "private-198"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 199,
+          "source_cluster_id": "private-199",
+          "source_id": "fixture-199-0",
+          "unit_id": "private-199"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 200,
+          "source_cluster_id": "private-200",
+          "source_id": "fixture-200-0",
+          "unit_id": "private-200"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 201,
+          "source_cluster_id": "private-201",
+          "source_id": "fixture-201-2",
+          "unit_id": "private-201"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 202,
+          "source_cluster_id": "private-202",
+          "source_id": "fixture-202-0",
+          "unit_id": "private-202"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 203,
+          "source_cluster_id": "private-203",
+          "source_id": "fixture-203-0",
+          "unit_id": "private-203"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 204,
+          "source_cluster_id": "private-204",
+          "source_id": "fixture-204-0",
+          "unit_id": "private-204"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 205,
+          "source_cluster_id": "private-205",
+          "source_id": "fixture-205-0",
+          "unit_id": "private-205"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 206,
+          "source_cluster_id": "private-206",
+          "source_id": "fixture-206-0",
+          "unit_id": "private-206"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 207,
+          "source_cluster_id": "private-207",
+          "source_id": "fixture-207-0",
+          "unit_id": "private-207"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 208,
+          "source_cluster_id": "private-208",
+          "source_id": "fixture-208-0",
+          "unit_id": "private-208"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 209,
+          "source_cluster_id": "private-209",
+          "source_id": "fixture-209-2",
+          "unit_id": "private-209"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 210,
+          "source_cluster_id": "private-210",
+          "source_id": "fixture-210-0",
+          "unit_id": "private-210"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 211,
+          "source_cluster_id": "private-211",
+          "source_id": "fixture-211-0",
+          "unit_id": "private-211"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 212,
+          "source_cluster_id": "private-212",
+          "source_id": "fixture-212-0",
+          "unit_id": "private-212"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 213,
+          "source_cluster_id": "private-213",
+          "source_id": "fixture-213-1",
+          "unit_id": "private-213"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 214,
+          "source_cluster_id": "private-214",
+          "source_id": "fixture-214-1",
+          "unit_id": "private-214"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 215,
+          "source_cluster_id": "private-215",
+          "source_id": "fixture-215-0",
+          "unit_id": "private-215"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 216,
+          "source_cluster_id": "private-216",
+          "source_id": "fixture-216-1",
+          "unit_id": "private-216"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 217,
+          "source_cluster_id": "private-217",
+          "source_id": "fixture-217-1",
+          "unit_id": "private-217"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 218,
+          "source_cluster_id": "private-218",
+          "source_id": "fixture-218-0",
+          "unit_id": "private-218"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 219,
+          "source_cluster_id": "private-219",
+          "source_id": "fixture-219-0",
+          "unit_id": "private-219"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 220,
+          "source_cluster_id": "private-220",
+          "source_id": "fixture-220-0",
+          "unit_id": "private-220"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 221,
+          "source_cluster_id": "private-221",
+          "source_id": "fixture-221-1",
+          "unit_id": "private-221"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 222,
+          "source_cluster_id": "private-222",
+          "source_id": "fixture-222-0",
+          "unit_id": "private-222"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 223,
+          "source_cluster_id": "private-223",
+          "source_id": "fixture-223-0",
+          "unit_id": "private-223"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 224,
+          "source_cluster_id": "private-224",
+          "source_id": "fixture-224-1",
+          "unit_id": "private-224"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 225,
+          "source_cluster_id": "private-225",
+          "source_id": "fixture-225-0",
+          "unit_id": "private-225"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 226,
+          "source_cluster_id": "private-226",
+          "source_id": "fixture-226-0",
+          "unit_id": "private-226"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 227,
+          "source_cluster_id": "private-227",
+          "source_id": "fixture-227-0",
+          "unit_id": "private-227"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 228,
+          "source_cluster_id": "private-228",
+          "source_id": "fixture-228-0",
+          "unit_id": "private-228"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 229,
+          "source_cluster_id": "private-229",
+          "source_id": "fixture-229-0",
+          "unit_id": "private-229"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 230,
+          "source_cluster_id": "private-230",
+          "source_id": "fixture-230-1",
+          "unit_id": "private-230"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 231,
+          "source_cluster_id": "private-231",
+          "source_id": "fixture-231-0",
+          "unit_id": "private-231"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 232,
+          "source_cluster_id": "private-232",
+          "source_id": "fixture-232-1",
+          "unit_id": "private-232"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 233,
+          "source_cluster_id": "private-233",
+          "source_id": "fixture-233-1",
+          "unit_id": "private-233"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 234,
+          "source_cluster_id": "private-234",
+          "source_id": "fixture-234-0",
+          "unit_id": "private-234"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 235,
+          "source_cluster_id": "private-235",
+          "source_id": "fixture-235-0",
+          "unit_id": "private-235"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 236,
+          "source_cluster_id": "private-236",
+          "source_id": "fixture-236-0",
+          "unit_id": "private-236"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 237,
+          "source_cluster_id": "private-237",
+          "source_id": "fixture-237-1",
+          "unit_id": "private-237"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 238,
+          "source_cluster_id": "private-238",
+          "source_id": "fixture-238-1",
+          "unit_id": "private-238"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 239,
+          "source_cluster_id": "private-239",
+          "source_id": "fixture-239-0",
+          "unit_id": "private-239"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 240,
+          "source_cluster_id": "private-240",
+          "source_id": "fixture-240-0",
+          "unit_id": "private-240"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 241,
+          "source_cluster_id": "private-241",
+          "source_id": "fixture-241-0",
+          "unit_id": "private-241"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 242,
+          "source_cluster_id": "private-242",
+          "source_id": "fixture-242-0",
+          "unit_id": "private-242"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 243,
+          "source_cluster_id": "private-243",
+          "source_id": "fixture-243-1",
+          "unit_id": "private-243"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 244,
+          "source_cluster_id": "private-244",
+          "source_id": "fixture-244-1",
+          "unit_id": "private-244"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 245,
+          "source_cluster_id": "private-245",
+          "source_id": "fixture-245-0",
+          "unit_id": "private-245"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 246,
+          "source_cluster_id": "private-246",
+          "source_id": "fixture-246-0",
+          "unit_id": "private-246"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 247,
+          "source_cluster_id": "private-247",
+          "source_id": "fixture-247-0",
+          "unit_id": "private-247"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 248,
+          "source_cluster_id": "private-248",
+          "source_id": "fixture-248-0",
+          "unit_id": "private-248"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 249,
+          "source_cluster_id": "private-249",
+          "source_id": "fixture-249-0",
+          "unit_id": "private-249"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 250,
+          "source_cluster_id": "private-250",
+          "source_id": "fixture-250-0",
+          "unit_id": "private-250"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 251,
+          "source_cluster_id": "private-251",
+          "source_id": "fixture-251-0",
+          "unit_id": "private-251"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 252,
+          "source_cluster_id": "private-252",
+          "source_id": "fixture-252-0",
+          "unit_id": "private-252"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 253,
+          "source_cluster_id": "private-253",
+          "source_id": "fixture-253-0",
+          "unit_id": "private-253"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 254,
+          "source_cluster_id": "private-254",
+          "source_id": "fixture-254-0",
+          "unit_id": "private-254"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49,
+          "p": 0.49,
+          "slot": 255,
+          "source_cluster_id": "private-255",
+          "source_id": "fixture-255-1",
+          "unit_id": "private-255"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09,
+          "p": 0.09,
+          "slot": 256,
+          "source_cluster_id": "private-256",
+          "source_id": "fixture-256-1",
+          "unit_id": "private-256"
+        }
+      ],
+      "scope": "fixture"
+    },
+    {
+      "arm": "frozen_static",
+      "model": {
+        "base": {
+          "kind": "input"
+        },
+        "kind": "patch",
+        "patches": [
+          {
+            "delta": 0.05,
+            "group": {
+              "distinct_fit_members": 20,
+              "fit_membership_sha256": "sha256:b388eca55580e5807de801fb3303f51cb4a2112550a71f56d6606cf919c1904a",
+              "interval": [
+                0.25,
+                0.5
+              ],
+              "name": "bin_2",
+              "reject_only": false
+            },
+            "witness": {
+              "accept_cost_residual": 1.275,
+              "available_members": 32,
+              "denominator": 64,
+              "distinct_members": 32,
+              "eligible": true,
+              "escalate_cost_residual": 0,
+              "group": "bin_2",
+              "numerator": 16.32,
+              "probability_residual": 0.255,
+              "reject_cost_residual": -0.255
+            }
+          },
+          {
+            "delta": 0.05,
+            "group": {
+              "distinct_fit_members": 20,
+              "fit_membership_sha256": "sha256:b388eca55580e5807de801fb3303f51cb4a2112550a71f56d6606cf919c1904a",
+              "interval": [
+                0.25,
+                0.5
+              ],
+              "name": "bin_2",
+              "reject_only": false
+            },
+            "witness": {
+              "accept_cost_residual": 1.15,
+              "available_members": 32,
+              "denominator": 64,
+              "distinct_members": 32,
+              "eligible": true,
+              "escalate_cost_residual": 0,
+              "group": "bin_2",
+              "numerator": 14.719999999999999,
+              "probability_residual": 0.22999999999999998,
+              "reject_cost_residual": -0.22999999999999998
+            }
+          },
+          {
+            "delta": 0.05,
+            "group": {
+              "distinct_fit_members": 20,
+              "fit_membership_sha256": "sha256:b388eca55580e5807de801fb3303f51cb4a2112550a71f56d6606cf919c1904a",
+              "interval": [
+                0.25,
+                0.5
+              ],
+              "name": "bin_2",
+              "reject_only": false
+            },
+            "witness": {
+              "accept_cost_residual": 1.025,
+              "available_members": 32,
+              "denominator": 64,
+              "distinct_members": 32,
+              "eligible": true,
+              "escalate_cost_residual": 0,
+              "group": "bin_2",
+              "numerator": 13.119999999999997,
+              "probability_residual": 0.20499999999999996,
+              "reject_cost_residual": -0.20499999999999996
+            }
+          },
+          {
+            "delta": 0.05,
+            "group": {
+              "distinct_fit_members": 20,
+              "fit_membership_sha256": "sha256:b388eca55580e5807de801fb3303f51cb4a2112550a71f56d6606cf919c1904a",
+              "interval": [
+                0.25,
+                0.5
+              ],
+              "name": "bin_2",
+              "reject_only": false
+            },
+            "witness": {
+              "accept_cost_residual": 0.8999999999999997,
+              "available_members": 32,
+              "denominator": 64,
+              "distinct_members": 32,
+              "eligible": true,
+              "escalate_cost_residual": 0,
+              "group": "bin_2",
+              "numerator": 11.519999999999996,
+              "probability_residual": 0.17999999999999994,
+              "reject_cost_residual": -0.17999999999999994
+            }
+          }
+        ]
+      },
+      "rows": [
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:2bafa81b856aa98ea3543d8455f436b8571ed954ae017f05edca2d20dc44dc37",
+          "unit_id": "sha256:afbc53c67c23b61cb44d181f4198309ab17782044b25dad1c2529100148c9c9c"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.8711017079210113,
+          "p": 0.8711017079210113,
+          "source_cluster_id": "sha256:91cf0828a4c2382e6f6438f2ae2c0ce2e7d44404e8b03aed160eb2e3595ef4b5",
+          "unit_id": "sha256:1a68ac2fa07b48f6222675d2fa4d96cbc276e196b10f31d0e483e54aa92f2526"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.8092681199049613,
+          "p": 0.8092681199049613,
+          "source_cluster_id": "sha256:511582318bd1904dc5ed7ec7437bf7d1041875d4b1ab29bb6f8cbf84d081ef0a",
+          "unit_id": "sha256:15502b3bb03d762de685e8f5db2fd2cf267c5ef0f3ae63ca8fdbf1965e289c00"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.24120231322558233,
+          "p": 0.24120231322558233,
+          "source_cluster_id": "sha256:cf6f88df625edc1733365cade2aeba2f217e2fa57319a9defe6bba03892b7766",
+          "unit_id": "sha256:77758793354fb575a7ed4a111a761910889fb97fe88db6b6d9407ff0ca3446d5"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.28674197797586454,
+          "p": 0.28674197797586454,
+          "source_cluster_id": "sha256:96a3609a9815537412739dded9ea88b4c6162af135a8f4da173233b19b5a73cf",
+          "unit_id": "sha256:2d205472157764a144d6db1a9aa42a067a643c9b8e5bf53f4c876ca8b51582a4"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.41382684277413684,
+          "p": 0.41382684277413684,
+          "source_cluster_id": "sha256:12c288a6fc13915988b0d7d7783a79b051ef0a997089ec9ad04e6d499f3763bd",
+          "unit_id": "sha256:d2f4d75824dbe2944cf209c67379115b39f5b03f2d484498b5372a279d6a76ab"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9495473166770663,
+          "p": 0.9495473166770663,
+          "source_cluster_id": "sha256:dddceea7ec23d285b505da80ef37e799450027506cb25d914b57a180927e6839",
+          "unit_id": "sha256:a825923cdaea973b8ce8ecc863a277158626cb786c7d63e36b896760a591bf40"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.49728937378292354,
+          "p": 0.49728937378292354,
+          "source_cluster_id": "sha256:141dfcbbbfd7695f9dcf46a551896128814f2c2d4ca3b1dbadfe2322c54e3cc4",
+          "unit_id": "sha256:7d3f7c11c5099341fb0feb022290515c4f92b2488c9aec9d694ac2b9f12d06c9"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.4127738207738202,
+          "p": 0.4127738207738202,
+          "source_cluster_id": "sha256:3cf0a195088c4a9be466140a7aae0b86e027f43cc73ef653b7a0608aa2b7369c",
+          "unit_id": "sha256:4e81df93883ce5c26a38ec81bb73233edd0fe45e464f1a16aa2901f09b1f9fe4"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9727991901969337,
+          "p": 0.9727991901969337,
+          "source_cluster_id": "sha256:03d0eeadb123741a1b093494ba7b4d1e62aa170eff9f513b0632843197a8baf4",
+          "unit_id": "sha256:2005471700d7e8aba119b33d5f2c14974817b1cc55bc76f1163fade845e6f1ab"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.054256163650025446,
+          "p": 0.054256163650025446,
+          "source_cluster_id": "sha256:d24b9a3e609ce915d7902c9bb9eba0e5d9088e1d2e0239377a0e1d372bb7e366",
+          "unit_id": "sha256:1b0a2fedf0eaf67566bf1336e1c5ec446d3c81752bbc752b1788f6bf5be535e7"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.469013747396585,
+          "p": 0.469013747396585,
+          "source_cluster_id": "sha256:69a7167b341c2455a0411107c163d2dc6b41b5ecb716ba2ecf50359fb01981c3",
+          "unit_id": "sha256:3dc479c65dd28a8ad5a46be834349ae6834acdc0948894ee19c48d5b6104703c"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.8997939432872674,
+          "p": 0.8997939432872674,
+          "source_cluster_id": "sha256:520146317a23d6967f96d94040ffef4951a2c2b20d9055732fdb303ae52d391d",
+          "unit_id": "sha256:1a44045bb01fa3ae658d08ee704cfc5d8d558c6d78f2b27b0bd7f19a77792f44"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.6428777399397718,
+          "p": 0.6428777399397718,
+          "source_cluster_id": "sha256:e282a725dc8078a174983dcdeb98aa64adb941df36553d3735d4f970ebf8b262",
+          "unit_id": "sha256:e18ad08230c6a6df11883a991c8d5583066ec5a5c6ca0fa559e0b9b2a34f9e4a"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.925930092299074,
+          "p": 0.925930092299074,
+          "source_cluster_id": "sha256:284166cf6d9b226b81ef908437f828b453f9a9568f02282ea439c0cc65bf8da9",
+          "unit_id": "sha256:a6134059ab39dc7f6eb88ce5d40106afc96e08b67240ce1057bf1d7053cb256d"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:3bb495f78f4ee46930a9c1f0e60433ef163143f00b9e8e0db446ea660f56386a",
+          "unit_id": "sha256:c607985efdff0748f2ef74149b8988ba41be5c8ed1d08b79f4220693b0a9eff5"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:7dfb5c7284b91d208931487d267a44f3832d3366b71e958bb01a2911503ef5b0",
+          "unit_id": "sha256:72ab4b15e7aec735972522a94dc9c98db8424af805ca4a9f273b350a10ba78e9"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.7200396897221105,
+          "p": 0.7200396897221105,
+          "source_cluster_id": "sha256:6ecd07875d1950f231d8d8ed9826b1feac02773c810f97224d28ccceee113d02",
+          "unit_id": "sha256:0e232e9c9a339e266065ac9cc7fdc91e1bc7d1c1948f6b955134cec764b90d13"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.13305361701276322,
+          "p": 0.13305361701276322,
+          "source_cluster_id": "sha256:7bf0d93681631c06dae2c34c077d9c00611b1f07c7124f23d989115d0a3fa24e",
+          "unit_id": "sha256:bfeced756a445efbfbd6a8fb4c6a4cb0b43914196e29f7d79da266df1ba2734f"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:6896043359d602608595b836e71b2e05ea32d2ddcb02bf907ca80f11c8c6599d",
+          "unit_id": "sha256:6e5c8f2ca7bac6ea66ba86ac3d26c872361ffad15878f737723f37ae53d2752e"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.24070294282200255,
+          "p": 0.24070294282200255,
+          "source_cluster_id": "sha256:14429bc4be567577c432c24d542fe8b9a2262c8388d8a2bb36a1e3b47f18f4ba",
+          "unit_id": "sha256:c3ab6226611c7363032733d75646041fddb612ce2c9601deffe13d6d1185ee5b"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.4363090426992171,
+          "p": 0.4363090426992171,
+          "source_cluster_id": "sha256:bd9de668e42d26194ab2b63268f810abff1e37123251388a9cda4d56b664d08d",
+          "unit_id": "sha256:98fe6f9b21f18390e8da11eb65baec9adaa694e3499a7e262029254c304d813a"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:dca3203dca2f52b06cb20f36bc30682e12424cc0b64f954b352ff0292af010a2",
+          "unit_id": "sha256:a9f7020e9dbe5907f6c894dc29ff8ff4131144381174407109cb5f8da4f69499"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.12343518630704145,
+          "p": 0.12343518630704145,
+          "source_cluster_id": "sha256:27124e3bb66d11abdab05df91de70367d761ca9ccbb3aa11da9af869c9a25744",
+          "unit_id": "sha256:86bfc4f68578cf2d0f0cccb9f96105ef04298cd8b3e40f1cbfac1e0b53c23ab5"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.4147349155199876,
+          "p": 0.4147349155199876,
+          "source_cluster_id": "sha256:0f09117d97a39e2c66c7f9d26ed4d0d33f110b4d28dad44065b3562eba1aecb8",
+          "unit_id": "sha256:6822bd8bb8a2447c1ae535cc695b2d64b00f91f8b374ac9d1078cc1e0ef4ad08"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.1199516557519978,
+          "p": 0.1199516557519978,
+          "source_cluster_id": "sha256:e3601a0d46485161cadd071e858a1e79977b563ead6af774940cff33fe3e09aa",
+          "unit_id": "sha256:a3d69df1147952d6aa1540d6b689c3d88fc7c23345a5d21b18f8552949935181"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.8092673435164653,
+          "p": 0.8092673435164653,
+          "source_cluster_id": "sha256:4f22766c820384994e028493318d9107d39b44fa393974a21eceb406a0497305",
+          "unit_id": "sha256:74c0dbb46ddbab2c61c30a46483766e389e39bc311a06c497f6d9467c5915332"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.40985026551987125,
+          "p": 0.40985026551987125,
+          "source_cluster_id": "sha256:f5069a289eebf4fbde3286e8151e60f6ef9c6127f955e9f8961faed18115cd3c",
+          "unit_id": "sha256:1c272bbcdc122b4a0c8292a332928256812fdc26af2f7d76ddbbc93f67476603"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.242203559540408,
+          "p": 0.242203559540408,
+          "source_cluster_id": "sha256:e5b974dc0a15e8cc94b520388e95171d301d608fa85410ca99083d57e27ecdcc",
+          "unit_id": "sha256:00ce0c7957b4efcbf0a6f8a5882781be32d7777f8037736ad265a435bbfc1f1a"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.22535006173235347,
+          "p": 0.22535006173235347,
+          "source_cluster_id": "sha256:9781df9e0ba7424f43f584a8584b93834e39cd721549d7f74088689a878decca",
+          "unit_id": "sha256:913bc60ee1ca7f45decee84d8d093ce33a8d31e21d4b1994a73e30cd323baac2"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.10727098477565826,
+          "p": 0.10727098477565826,
+          "source_cluster_id": "sha256:68f484955128ae2cfc8357e276dc672638b5efb59faa5c8d85921e4587345647",
+          "unit_id": "sha256:171f49a4a9a61b8d5d33b03f2219e5918aae3d7abf196d3a5b606851e67f6378"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.22948464641001437,
+          "p": 0.22948464641001437,
+          "source_cluster_id": "sha256:b5f60c208cfb3209c1a1233bfb9a268a06948b421bc33a3991564270653468f8",
+          "unit_id": "sha256:2d84535a31dd51fcb83b0dd3bdf7c7cbd81159bbd59e63a326921653200d7dd8"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9033747014556722,
+          "p": 0.9033747014556722,
+          "source_cluster_id": "sha256:c860014b1d36ec93054a70bad6954e6d28d9d9b21cbc0d168ecebe973c83dabb",
+          "unit_id": "sha256:cad9e17f8addd90b86d80f87621488dad62665161a54cf837ac3b43f05784157"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.7043497259888729,
+          "p": 0.7043497259888729,
+          "source_cluster_id": "sha256:d1e1c19a0396c4288e4680e35fcd68e709f9f3588c48651e591e8ff52ed17ebc",
+          "unit_id": "sha256:30f18169617d9616dd4414faf8de5d24ce2b3c7577e0e9c3887eabf6f1ae61a0"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9423868295562599,
+          "p": 0.9423868295562599,
+          "source_cluster_id": "sha256:4ceacd923521718ad2e37164e0fee0a1cfbe768e2fa3e16f400fa25f6d66683d",
+          "unit_id": "sha256:2780790732cf2b9f657fbfac7fa48ff365774b71113e4b7da65359e1f187b12b"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.09457442120106883,
+          "p": 0.09457442120106883,
+          "source_cluster_id": "sha256:f1ff3a0c0664177d9e74f4209774befa81b5da3a3f8699258879fb4f85ce7041",
+          "unit_id": "sha256:6413e68e0989aa36e888d34b3765dd4ba898e81b077e522611e5d2b82891c557"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.3802281346330291,
+          "p": 0.3802281346330291,
+          "source_cluster_id": "sha256:560e3881ef384ec2cf593f02fff90a940b2bda52df3afba098fa2031845c2c52",
+          "unit_id": "sha256:c0b7160f26719e8498613c2e07c96e719a2fd2dac20aea67e815545e87369e6e"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.25365085730515613,
+          "p": 0.25365085730515613,
+          "source_cluster_id": "sha256:0192bc1a081136b2481a802cfb677fbe298b2ca7bbcf013c57aa304ceb807fcd",
+          "unit_id": "sha256:ea3645adbf582f4ee165ddf89b1841fc913db4454bd8ef1056c6c672ee14baca"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.10729172073124536,
+          "p": 0.10729172073124536,
+          "source_cluster_id": "sha256:b238b4948ef876cd15749d1c8c35c94b40fd6ef5ff2444a70c22516066c8c96b",
+          "unit_id": "sha256:04562c1460950beef1e2020e134e4bc88924f31722d39a3888917178f86125c1"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:f90d0d5fa29e02ac4e3688ec887cbea917efeb33ae4353eec8afffd1d3821608",
+          "unit_id": "sha256:438eae9a524c5c668afcd2e4da47651a3a6e3f582caf73b769a03d7d0b7e0d7d"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:07e7f56b943ebe9ec9b3d251713694d814041e594b5c4a5594bc574a8ac44a99",
+          "unit_id": "sha256:3d4e62dd6ac1944e8aa4d203e26a79417a186045dd860665b75900b6bcfaccff"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9802216230836536,
+          "p": 0.9802216230836536,
+          "source_cluster_id": "sha256:be4bd11316773082d28d46db4baea2d09ff1b902ff4233100745fc7a56ae7a65",
+          "unit_id": "sha256:fd650327a2fc5e1079acd81e07bdcac42f874ed3df18b34f6066ae7732d5b999"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.13613736479757704,
+          "p": 0.13613736479757704,
+          "source_cluster_id": "sha256:feac048b0cab2df601699864f9571db7d1d06f59112d7277f58269368f3d4a36",
+          "unit_id": "sha256:624cf824eff243de64c90a708ec3db22f5d7c879bc22be4fae8ba7fe90f89172"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.7972206616024794,
+          "p": 0.7972206616024794,
+          "source_cluster_id": "sha256:007166f948ac40cecb7ad1b23ad5ac3b0ddf57399bd7492abd77fbbb2bf53c33",
+          "unit_id": "sha256:f00a2e4d6124f5edd00f2c8c248f7cd9146ef81b3a76c808f40e50818957a72e"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:79cc4240da567a41fcb65569a915a542113f29f877922e7c07539f9103f63bca",
+          "unit_id": "sha256:11fc6fe9e7ac8124815e1d91a417ae5de2a63f3eb3272c347ec6a3eefcb22db0"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9084005578369656,
+          "p": 0.9084005578369656,
+          "source_cluster_id": "sha256:9e0f34f6c869788b29b4d2394595c450fb8eb4675c54098afc2de6d0feb7982d",
+          "unit_id": "sha256:02301c2ef2728a9eefd99cae923b10608d2c05d1a4a8faa04ffbada8901f7171"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.31078029399843154,
+          "p": 0.31078029399843154,
+          "source_cluster_id": "sha256:a022cfa467bd5262c93eb0b0b0e7d063af12b033acbbd55dc78dc25404d43df0",
+          "unit_id": "sha256:ee4bcb14d6e706c4670532336ab48988f3c95e34de3e527adde85745fd01a9f7"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.4213327780763178,
+          "p": 0.4213327780763178,
+          "source_cluster_id": "sha256:b0fe421ca49655a1e3d47c056e192af5c2d986e618f48fb6730092a250a935aa",
+          "unit_id": "sha256:ac33278fc699791c926c8c560d3d213d99db7206960e175e2a3ef84b7fcd43c1"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.6712389789176297,
+          "p": 0.6712389789176297,
+          "source_cluster_id": "sha256:71902cea1f088ed1839e717741eef7a2930d0c78dd14baa1f6aa539ddc9f33d6",
+          "unit_id": "sha256:f6b1517a0301272ac16afc9905122256cc66d8a832a4aa6d974df63dbb24cb1e"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.3188941466853768,
+          "p": 0.3188941466853768,
+          "source_cluster_id": "sha256:0a804909360d135fa841661189b03fcc5d4e5797e9c1e38f8df72b46c9c5a9ac",
+          "unit_id": "sha256:40d0e89e38d99379e3142bd75f6a8d1f5504c600a094ac18e36ebb31cd86a660"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.1835625480875929,
+          "p": 0.1835625480875929,
+          "source_cluster_id": "sha256:c7ab0cdac50196b5f546c83c3ef8932f10ba53607c8fb2907a805e989c10f241",
+          "unit_id": "sha256:2d447b86c3f6dbf1710d3d5372b28e1c95e7d2feb99a4d9569386c58ef3df787"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9313367172053907,
+          "p": 0.9313367172053907,
+          "source_cluster_id": "sha256:0d45f44e789f19b47d6b895a5a6c101b976cb4babe2bfe9e721207c6b1ac3365",
+          "unit_id": "sha256:6ae5b28f1a2f325709986e7d351d6912b5f00b375e46f939e08f05f1e323babc"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:542794fca9364ac8553195bb79d121fe52ed5e66a049888a4b60f0fa974ef595",
+          "unit_id": "sha256:8602fb7ae92d508802f1ffe44eb765fdce10b20e723829209e5ea3a60305a823"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.7180862466230197,
+          "p": 0.7180862466230197,
+          "source_cluster_id": "sha256:22c9f628fd9ddb3dce63090355d53693a0e66822e0433d2bedce2b41b34437d8",
+          "unit_id": "sha256:4d83e5d13a6115827476979f3792a0414babe3fbe29802c2fd7838edc1e28db8"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:266362038130579f0ed45637fe239d875d40a2b4a2d8e09a8b9e86ae3d83157b",
+          "unit_id": "sha256:93348748a2630afec544d1bd3649310ef3dbb33c80075f16cede967eab6d076d"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:d43f1aff163a6747805553177292e73dd44da5f2442ef5638f125301ea7c2244",
+          "unit_id": "sha256:5b267903592f50826b12c1ae8c315c22c86952b04fd93c066c99da64d6f71b0f"
+        },
+        {
+          "baseline_action": "accept",
+          "baseline_p": 0.0700608894718522,
+          "p": 0.0700608894718522,
+          "source_cluster_id": "sha256:ab32a74c2a40c0969dddaa4baa308273ee6a5a1a30018bf9daefb03b8d66ba12",
+          "unit_id": "sha256:b032beea2e91655a5974dcff0e2881bba0dd3bfef7b09de8d95f41a35b021a99"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:1b9743e90c455019afeef7fd16fa3dda85cf244f344e6b9dbcde3c144c4da985",
+          "unit_id": "sha256:64a672a778e058c57e22700a0a5fc8d327d7ddecac551a57409db15f07ca6c91"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.2797112766334118,
+          "p": 0.2797112766334118,
+          "source_cluster_id": "sha256:d4966bebf02d45312b729a70018ccb7c1572f8c6b3bcdfa35e38eb22db824213",
+          "unit_id": "sha256:c177c8194ab40ce99df3c76c2d2e3f63441bfb7c1fcf0baddac8fafca4149f52"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9553309693562373,
+          "p": 0.9553309693562373,
+          "source_cluster_id": "sha256:e438a5707d1f924f6ae81470a4c39178b0f968cb5fb87dd59fc21963e57e5981",
+          "unit_id": "sha256:55153e67c5bf542d90b376096318a9d1415f1d4404498672830b02f8889de66c"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9170868673331884,
+          "p": 0.9170868673331884,
+          "source_cluster_id": "sha256:f7edb9f06e311c310aefa5b161b85296a1dd039bde50405a390341e4ed91a93d",
+          "unit_id": "sha256:b4d1a35bc9b251059b5471c31384c4ae9fc7a2314fa37b51fbd66a23faeab5e2"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:e7abc805dc99445fa641b4d41e894158a0c79b0670e2528568572f6304237aeb",
+          "unit_id": "sha256:aaf96d0f496bd9a3cf0a1cc57b71106ac0d6f6b0e4ba392d2b951f30a66b1757"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:371d8efa1a69e901189cf1a30b6144067971de6a914c8aeefcfa494118f8a730",
+          "unit_id": "sha256:37ba1e939e79b0df679e2989d1e06c6af5716e090c66d333033c53f2c505f5c6"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9195978608211061,
+          "p": 0.9195978608211061,
+          "source_cluster_id": "sha256:f1ca5a86dfbb71a7af24e2b00f9e8f481538e890db32c5a9e048e81f38901166",
+          "unit_id": "sha256:3f746e3f11185ccc09bbbbf1551ff3aaa3cd132af6b67f4f52faa837a005f09f"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.15526185975996512,
+          "p": 0.15526185975996512,
+          "source_cluster_id": "sha256:05af6134eec80c91e92de6cc83e4c96a4e7fe5992ce19bcc42c796600711b85b",
+          "unit_id": "sha256:c5b894d6859e2c1f07bd6553af432867a56a2bc45e93bbcf6aff7e257569ae90"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:dccd8ef6d240e9cbb9755b4ebdffdddf8afc9304cf3a4d7ad4c1b788a82454b6",
+          "unit_id": "sha256:2752fc20de4f5c0934a3b3e4e41657162d6d526f093ab549680516359ec1c7a2"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.6724868847849692,
+          "p": 0.6724868847849692,
+          "source_cluster_id": "sha256:f7323828c968227c4279735de9730cb0cd69dd6cc75f2fbdf3099d438b044b3b",
+          "unit_id": "sha256:a5e2020a81f04224911e9429029f9f9a5caa9537b4467d6c891f1f7d307209cc"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": null,
+          "p": null,
+          "source_cluster_id": "sha256:a37e4bc34f055161d35deea1311ab241ca2f2b38b26807de28a6497307e49921",
+          "unit_id": "sha256:9aa4e8acf8e9decae78a067029e3cf8ed8ac66d7ed0b0e32a88177e878d4134a"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.6495221181278903,
+          "p": 0.6495221181278903,
+          "source_cluster_id": "sha256:c7fb3575d6664db588dc213757a582b5e5f43a56d59f1b92e52ccff6c3e351b6",
+          "unit_id": "sha256:c26bba9daf6ba2c40f8473539f8e9150fdce8c4e58924abae8555c201d57ac29"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.6612920124617289,
+          "p": 0.6612920124617289,
+          "source_cluster_id": "sha256:847df2f7de080d6b1966e7978c333c27223f6469af41e0ded59e923b96d609ab",
+          "unit_id": "sha256:b124f2809a933cf438a7cd0ac114ae101fd6f2db16518fa7a82b8255e2dc8d3d"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.575338695998792,
+          "p": 0.575338695998792,
+          "source_cluster_id": "sha256:3f024b0e48a06e17c86fd2a6529a38819828cc23bba35c271278e2dab88c3b3d",
+          "unit_id": "sha256:9d2ff877db31379de65eef15881e2000aa03cb2378a3df3966ed939bc8e9e305"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9602798357637722,
+          "p": 0.9602798357637722,
+          "source_cluster_id": "sha256:6f179c95d2c7e9717a68a1e735e6e3e41b3bf779d9a99d20ac8f65faf726e13f",
+          "unit_id": "sha256:631f48b63ee153afafe42b202b0707fb94e8ec71f27de05babd71567c19bebed"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9493691055108222,
+          "p": 0.9493691055108222,
+          "source_cluster_id": "sha256:92313a447d30cab78230786ad4aae2afcb20ae024fe3cca30dca523fc9d489d7",
+          "unit_id": "sha256:3cd07cc9b62e6c79d5419aad1d177e4e9478462143c799da8be688a950eda3a9"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.971367826532471,
+          "p": 0.971367826532471,
+          "source_cluster_id": "sha256:ed1c93705e7a40af8234bebf2669daab7f04ba7e123aac7ce8ee96428ca3f333",
+          "unit_id": "sha256:d39ccd6e9ffabb7cf3fdc53156b4e3c85b445178fba6536b69b6fbdf1b89485f"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9469101016667475,
+          "p": 0.9469101016667475,
+          "source_cluster_id": "sha256:f0c7247494c908ea84814cb7fd9ef5218e726b20e08870b1f46b63482e15ed33",
+          "unit_id": "sha256:fc42aae833099f040e4411a8ed6b35487e90d014bb8274bfccb4baf6a07561cc"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.3708681024342666,
+          "p": 0.3708681024342666,
+          "source_cluster_id": "sha256:ab3a163547f067caabaa4ac3600d240d8c3777a7c10e3e35c75f6e22620b6bdc",
+          "unit_id": "sha256:992e0c08d195cb88df19454fdb9a28aa51d8ac4d2c45c4c4fed343eadc3c925c"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.2026898085693821,
+          "p": 0.2026898085693821,
+          "source_cluster_id": "sha256:b5dfaddd70628e8f197bed9ac495482e479d3d4d30111163117d06369fa5dbf9",
+          "unit_id": "sha256:f8dab1a52c42fe49e5856ea2647f50e7a67545314771897a973e5f518c268f1d"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9514082129527862,
+          "p": 0.9514082129527862,
+          "source_cluster_id": "sha256:4f65485d43481bb09bae153ab3c2d3e2a6a06395e7c65ecae20670855257da4a",
+          "unit_id": "sha256:007ae3b2e515371682098fe24190d1a53546e5a0f799127415664e5e444370aa"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.7661955708966699,
+          "p": 0.7661955708966699,
+          "source_cluster_id": "sha256:8d0586a7acfdbb55e20662a0f47851d55a0b54ffd974f9c1ce1b4654b4d043d7",
+          "unit_id": "sha256:9101e15e9c6e87e10a7133be18ea2f237280d43ffa45024ea3cb5f11f3e55727"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.3833266043918094,
+          "p": 0.3833266043918094,
+          "source_cluster_id": "sha256:241fc0c98cdcb77947264cf980a5f2ac318e3638fdf12c0d33178086f3ceb9f9",
+          "unit_id": "sha256:c74286217af01aaff6e658f29bc0cee9028bc175b03ec44c82e52b7571c4ce88"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.35359807897020024,
+          "p": 0.35359807897020024,
+          "source_cluster_id": "sha256:63293103794841f6ca5fc356d25ccfd9374573e8cdc77f6932ad9d67032eb87e",
+          "unit_id": "sha256:0882425e85d9e021d147dd7aad542405da994847a1eb84d0146fe4a5a8b313ef"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.533539047538289,
+          "p": 0.533539047538289,
+          "source_cluster_id": "sha256:9406f9440b92507db3902168f52be878c92e6d4a20142ac9b140dc739ed79720",
+          "unit_id": "sha256:07e66df17bd373c286d40cc4338127cec037b815db0bd436e1626e12e3fea13d"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.4347179485471814,
+          "p": 0.4347179485471814,
+          "source_cluster_id": "sha256:9ad0e63f5e058fcfedd768d5bdfc7dd18b1c073648d4c625d72e0f53fd99c643",
+          "unit_id": "sha256:81fc9aa50780def4e6c59810946918d46353ef7edace4804653fd8999c6199c7"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.344997713908439,
+          "p": 0.344997713908439,
+          "source_cluster_id": "sha256:cd347925a993d6f8915597d48b23a8ab5708b4b9701a3f333532e30487631c65",
+          "unit_id": "sha256:c9f3daefcb60f6b3e26bfc8ed317a3b5096993e861310ce874c461c2346b3cda"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.1271047970781181,
+          "p": 0.1271047970781181,
+          "source_cluster_id": "sha256:54e86c18764e7681d8afe1ba94c496a036465867c122f87829692fa783e86d65",
+          "unit_id": "sha256:03d197bc02313a1ae9f408cff2eb95574dee70416b4bc2bceb0813a5b9468c34"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.1166935230630736,
+          "p": 0.1166935230630736,
+          "source_cluster_id": "sha256:d91beecc09f74ccce4a431ce2fbe627c8bd71f9ac47d44eaa03d2c9641529f53",
+          "unit_id": "sha256:0fc1673c47a825d53160d8b47637a1ca9ece5c797ac1ee5122e18cff1a20116f"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.9778540243210714,
+          "p": 0.9778540243210714,
+          "source_cluster_id": "sha256:defcd2b4db658d777390ee1d2445e664ced6c9a24b231c5c3ffdd3cff60f251e",
+          "unit_id": "sha256:e742891bf984517b833938244f0b9d5f85c5c9467bcb6c5f2343597f419e6840"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.18839945184771786,
+          "p": 0.18839945184771786,
+          "source_cluster_id": "sha256:8fdf3a401f1a5a75a7a77c337932ec06d3c771e50f71f081f32eb844a0f897bc",
+          "unit_id": "sha256:691358573df44abbc469b153a1197fc87a2799f45c5640c4a8a0653c3b9ecc1c"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.5010606144577464,
+          "p": 0.5010606144577464,
+          "source_cluster_id": "sha256:d176eb80206f27de12671b4ccd4a1b882eb83067472a6d554539340648c42543",
+          "unit_id": "sha256:3bcbaa69499f8b537c4fe594ffc6fca0f94782bc12ff57879edee2792688338a"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.12469340255706922,
+          "p": 0.12469340255706922,
+          "source_cluster_id": "sha256:7e2b8b8a03afbacfb2118679ee3b653bc8529ace8d528d9295f0b49a7c6445ce",
+          "unit_id": "sha256:354130cdbecd5bdd0f497e210fa140faea66debb9def146b03ab1f973a07490a"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.950471128211349,
+          "p": 0.950471128211349,
+          "source_cluster_id": "sha256:2e91700cb050f9e571c37c84fffeb36726e06cdf68a5354446a1cbefce68ba40",
+          "unit_id": "sha256:b36cff2f370269d9e58de45e331ec65f315eb06ee8df5a1c949866022a41e882"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.1128135816045216,
+          "p": 0.1128135816045216,
+          "source_cluster_id": "sha256:4d3aad6e0e5c81369ed27eec2ad3af71f6fea031fdc9b3efb12bde95df2d7590",
+          "unit_id": "sha256:0c7391a2e79e8965e9303e59f7255d975880b1f136e9ec70cfa77d86224ef909"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.8706734911906719,
+          "p": 0.8706734911906719,
+          "source_cluster_id": "sha256:7bd368b83aefb9672ab905b02235f48d9f54e6929e826b38f8280f9dfdf2339c",
+          "unit_id": "sha256:35a365629f4eb86e98d5682d77bce8c0b3e26b14fded64185f8e07f1f55cc274"
+        },
+        {
+          "baseline_action": "reject",
+          "baseline_p": 0.5797192451442225,
+          "p": 0.5797192451442225,
+          "source_cluster_id": "sha256:e016f109659a331c31a4b000928529ee15aa2b8ddc2fbae75f92083023958000",
+          "unit_id": "sha256:f5cabba122f5218163830de9f414ada0cd486d0949b84fd8a1fc5c275e268c25"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.12195604472543616,
+          "p": 0.12195604472543616,
+          "source_cluster_id": "sha256:bcfa230eebc2b52eeb68d361ae20c1ae6de8a3bac05b8908b6aa1320b7493bb7",
+          "unit_id": "sha256:2e03d82153a2022380b02c3e1297cc4a0276f75de60ad6c862a573d58f795d69"
+        },
+        {
+          "baseline_action": "escalate",
+          "baseline_p": 0.4107640525936079,
+          "p": 0.4107640525936079,
+          "source_cluster_id": "sha256:f41d676be34a28d4dc3a490b07e38ab8e486eeea69414f5cc7e3017f1f20431e",
+          "unit_id": "sha256:f69e64441191b38afca2ca014d36f4f736c019a9f147022b5fef0debce5479b5"
+        }
+      ],
+      "scope": "natural_public_fixture_model"
+    }
+  ],
+  "checks": [
+    {
+      "artifact_field": "exists",
+      "check": "exists",
+      "expected": true,
+      "hash": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "upstream": "experiment_8216_v709_hardware_workload_obligations"
+    },
+    {
+      "artifact_field": "object_schema",
+      "check": "object_schema",
+      "expected": true,
+      "hash": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "upstream": "experiment_8216_v709_hardware_workload_obligations"
+    },
+    {
+      "artifact_field": "experiment_id",
+      "check": "experiment_id",
+      "expected": 8216,
+      "hash": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "observed": 8216,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "upstream": "experiment_8216_v709_hardware_workload_obligations"
+    },
+    {
+      "artifact_field": "task_id",
+      "check": "task_id",
+      "expected": "exp8216-hardware-workload-obligations",
+      "hash": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "observed": "exp8216-hardware-workload-obligations",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "upstream": "experiment_8216_v709_hardware_workload_obligations"
+    },
+    {
+      "artifact_field": "hardware_boundary_ready_score",
+      "check": "hardware_boundary_ready_score",
+      "expected": 1,
+      "hash": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "upstream": "experiment_8216_v709_hardware_workload_obligations"
+    },
+    {
+      "artifact_field": "required_checks_passed",
+      "check": "required_checks_passed",
+      "expected": true,
+      "hash": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "upstream": "experiment_8216_v709_hardware_workload_obligations"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check": "flagged_adversarial",
+      "expected": false,
+      "hash": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "upstream": "experiment_8216_v709_hardware_workload_obligations"
+    },
+    {
+      "artifact_field": "fixture_mode",
+      "check": "fixture_mode",
+      "expected": false,
+      "hash": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "upstream": "experiment_8216_v709_hardware_workload_obligations"
+    },
+    {
+      "artifact_field": "verdict_class_qualified",
+      "check": "verdict_class_qualified",
+      "expected": true,
+      "hash": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "upstream": "experiment_8216_v709_hardware_workload_obligations"
+    },
+    {
+      "artifact_field": "sha256",
+      "check": "sha256",
+      "expected": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "hash": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "observed": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "upstream": "experiment_8216_v709_hardware_workload_obligations"
+    },
+    {
+      "artifact_field": "publication.primary_path",
+      "check": "publication.primary_path",
+      "expected": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "hash": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "upstream": "experiment_8216_v709_hardware_workload_obligations"
+    },
+    {
+      "artifact_field": "terminal_report_passed",
+      "check": "terminal_report_passed",
+      "expected": true,
+      "hash": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "upstream": "experiment_8216_v709_hardware_workload_obligations"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "exists",
+      "expected": true,
+      "hash": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "upstream": "experiment_8221_v711_utility_kernel"
+    },
+    {
+      "artifact_field": "object_schema",
+      "check": "object_schema",
+      "expected": true,
+      "hash": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "upstream": "experiment_8221_v711_utility_kernel"
+    },
+    {
+      "artifact_field": "experiment_id",
+      "check": "experiment_id",
+      "expected": 8221,
+      "hash": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5",
+      "observed": 8221,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "upstream": "experiment_8221_v711_utility_kernel"
+    },
+    {
+      "artifact_field": "task_id",
+      "check": "task_id",
+      "expected": "exp8221-utility-kernel",
+      "hash": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5",
+      "observed": "exp8221-utility-kernel",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "upstream": "experiment_8221_v711_utility_kernel"
+    },
+    {
+      "artifact_field": "static_kernel_ready_score",
+      "check": "static_kernel_ready_score",
+      "expected": 1,
+      "hash": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5",
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "upstream": "experiment_8221_v711_utility_kernel"
+    },
+    {
+      "artifact_field": "required_checks_passed",
+      "check": "required_checks_passed",
+      "expected": true,
+      "hash": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "upstream": "experiment_8221_v711_utility_kernel"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check": "flagged_adversarial",
+      "expected": false,
+      "hash": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "upstream": "experiment_8221_v711_utility_kernel"
+    },
+    {
+      "artifact_field": "fixture_mode",
+      "check": "fixture_mode",
+      "expected": false,
+      "hash": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "upstream": "experiment_8221_v711_utility_kernel"
+    },
+    {
+      "artifact_field": "verdict_class_qualified",
+      "check": "verdict_class_qualified",
+      "expected": true,
+      "hash": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "upstream": "experiment_8221_v711_utility_kernel"
+    },
+    {
+      "artifact_field": "sha256",
+      "check": "sha256",
+      "expected": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5",
+      "hash": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5",
+      "observed": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "upstream": "experiment_8221_v711_utility_kernel"
+    },
+    {
+      "artifact_field": "publication.primary_path",
+      "check": "publication.primary_path",
+      "expected": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "hash": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "upstream": "experiment_8221_v711_utility_kernel"
+    },
+    {
+      "artifact_field": "terminal_report_passed",
+      "check": "terminal_report_passed",
+      "expected": true,
+      "hash": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "upstream": "experiment_8221_v711_utility_kernel"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "exists",
+      "expected": true,
+      "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "upstream": "experiment_8225_v711_delayed_utility_learning"
+    },
+    {
+      "artifact_field": "object_schema",
+      "check": "object_schema",
+      "expected": true,
+      "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "upstream": "experiment_8225_v711_delayed_utility_learning"
+    },
+    {
+      "artifact_field": "experiment_id",
+      "check": "experiment_id",
+      "expected": 8225,
+      "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+      "observed": 8225,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "upstream": "experiment_8225_v711_delayed_utility_learning"
+    },
+    {
+      "artifact_field": "task_id",
+      "check": "task_id",
+      "expected": "exp8225-delayed-utility-learning",
+      "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+      "observed": "exp8225-delayed-utility-learning",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "upstream": "experiment_8225_v711_delayed_utility_learning"
+    },
+    {
+      "artifact_field": "utility_trajectory_ready_score",
+      "check": "utility_trajectory_ready_score",
+      "expected": 1,
+      "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "upstream": "experiment_8225_v711_delayed_utility_learning"
+    },
+    {
+      "artifact_field": "required_checks_passed",
+      "check": "required_checks_passed",
+      "expected": true,
+      "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "upstream": "experiment_8225_v711_delayed_utility_learning"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check": "flagged_adversarial",
+      "expected": false,
+      "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "upstream": "experiment_8225_v711_delayed_utility_learning"
+    },
+    {
+      "artifact_field": "fixture_mode",
+      "check": "fixture_mode",
+      "expected": false,
+      "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "upstream": "experiment_8225_v711_delayed_utility_learning"
+    },
+    {
+      "artifact_field": "verdict_class_qualified",
+      "check": "verdict_class_qualified",
+      "expected": true,
+      "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "upstream": "experiment_8225_v711_delayed_utility_learning"
+    },
+    {
+      "artifact_field": "sha256",
+      "check": "sha256",
+      "expected": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+      "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+      "observed": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "upstream": "experiment_8225_v711_delayed_utility_learning"
+    },
+    {
+      "artifact_field": "publication.primary_path",
+      "check": "publication.primary_path",
+      "expected": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "upstream": "experiment_8225_v711_delayed_utility_learning"
+    },
+    {
+      "artifact_field": "terminal_report_passed",
+      "check": "terminal_report_passed",
+      "expected": true,
+      "hash": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "upstream": "experiment_8225_v711_delayed_utility_learning"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "exists",
+      "expected": true,
+      "hash": null,
+      "observed": null,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8228_v711_concurrent_service.json",
+      "upstream": "experiment_8228_v711_concurrent_service"
+    },
+    {
+      "artifact_field": "authenticated_schema_and_primitives",
+      "check": "authenticated_schema_and_primitives",
+      "expected": "byte-bound valid schema",
+      "hash": null,
+      "observed": "[Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8228_v711_concurrent_service.json'",
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8228_v711_concurrent_service.json",
+      "upstream": "experiment_8228_v711_concurrent_service"
+    }
+  ],
+  "cited": [
+    {
+      "imported_fields": [
+        "hardware_boundary_ready_score",
+        "verdict_class",
+        "terminal_validation_sidecar_path",
+        "board_rows",
+        "measurement_reference",
+        "raw_shard_hashes",
+        "whole_request_spans"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "sha256": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f"
+    },
+    {
+      "imported_fields": [
+        "static_kernel_ready_score",
+        "verdict_class",
+        "terminal_validation_sidecar_path",
+        "board_rows",
+        "measurement_reference",
+        "raw_shard_hashes",
+        "whole_request_spans"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "sha256": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5"
+    },
+    {
+      "imported_fields": [
+        "utility_trajectory_ready_score",
+        "verdict_class",
+        "terminal_validation_sidecar_path",
+        "board_rows",
+        "measurement_reference",
+        "raw_shard_hashes",
+        "whole_request_spans"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "sha256": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6"
+    },
+    {
+      "imported_fields": [
+        "concurrent_service_ready_score",
+        "verdict_class",
+        "terminal_validation_sidecar_path",
+        "board_rows",
+        "measurement_reference",
+        "raw_shard_hashes",
+        "whole_request_spans"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8228_v711_concurrent_service.json",
+      "sha256": null
+    }
+  ],
+  "fixture": false,
+  "references": [
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8216_v709_hardware_workload_obligations.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8230_v711_kv260_workload_boundary/invocations/1791364500914482374/inputs/5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f.json",
+      "sha256": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8216_v709_hardware_workload_obligations/invocations/1791329064951723950/terminal_validation.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8230_v711_kv260_workload_boundary/invocations/1791364500914482374/inputs/aec27d0b18aef28a90eeab6c5b5b5f6236ce110e170eb5c3ca07b287b192e998.json",
+      "sha256": "sha256:aec27d0b18aef28a90eeab6c5b5b5f6236ce110e170eb5c3ca07b287b192e998"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8216_v709_hardware_workload_obligations/validators/5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8230_v711_kv260_workload_boundary/invocations/1791364500914482374/inputs/9c3c78b15f70ae331ece85d3a1ca136c8ecb584608233612fa905a753c703bc8.json",
+      "sha256": "sha256:9c3c78b15f70ae331ece85d3a1ca136c8ecb584608233612fa905a753c703bc8"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8230_v711_kv260_workload_boundary/invocations/1791364500914482374/inputs/b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e.json",
+      "sha256": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8221_v711_utility_kernel.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8230_v711_kv260_workload_boundary/invocations/1791364500914482374/inputs/5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5.json",
+      "sha256": "sha256:5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8221_v711_utility_kernel/invocations/1791348210335823541/terminal_validation.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8230_v711_kv260_workload_boundary/invocations/1791364500914482374/inputs/fa846667b082f39e2ddbce70ef8764ec4313d5c20280b5cc49c8e6433dad87d8.json",
+      "sha256": "sha256:fa846667b082f39e2ddbce70ef8764ec4313d5c20280b5cc49c8e6433dad87d8"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8221_v711_utility_kernel/validators/5ff6f09312a81ce95b752d38dec94d8a1c57bbf894cde785ebe7494ca7c639e5.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8230_v711_kv260_workload_boundary/invocations/1791364500914482374/inputs/8c53fbfcea9f3de1bcd52a3b5aa61a1796e8e58133c119af79f1db2409a85069.json",
+      "sha256": "sha256:8c53fbfcea9f3de1bcd52a3b5aa61a1796e8e58133c119af79f1db2409a85069"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8221_v711_utility_kernel/invocations/1791348210335823541/measurement.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8230_v711_kv260_workload_boundary/invocations/1791364500914482374/inputs/05cfc96cc0c496b1cce919b2381084bb7c08a2113a59788e16ea0212cbc33114.json",
+      "sha256": "sha256:05cfc96cc0c496b1cce919b2381084bb7c08a2113a59788e16ea0212cbc33114"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8221_v711_utility_kernel/invocations/1791348210335823541/restart-input.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8230_v711_kv260_workload_boundary/invocations/1791364500914482374/inputs/1667034c7e8d4e9e04cc73e9bda296b825643f70d66ddaf26304a3e375e725b5.json",
+      "sha256": "sha256:1667034c7e8d4e9e04cc73e9bda296b825643f70d66ddaf26304a3e375e725b5"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8225_v711_delayed_utility_learning.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8230_v711_kv260_workload_boundary/invocations/1791364500914482374/inputs/fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6.json",
+      "sha256": "sha256:fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8225_v711_delayed_utility_learning/invocations/1791357569336774756/terminal_validation.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8230_v711_kv260_workload_boundary/invocations/1791364500914482374/inputs/411e7ea25cf04578920b04b7955aa230b875135b090f4386f1a219bd4e1f4318.json",
+      "sha256": "sha256:411e7ea25cf04578920b04b7955aa230b875135b090f4386f1a219bd4e1f4318"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8225_v711_delayed_utility_learning/validators/fa51388af179d1c28880a484da5c87ddea6e7d36d80690f3f05d5888da6d5de6.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8230_v711_kv260_workload_boundary/invocations/1791364500914482374/inputs/aee0755f130b316257f21f5fd9fa8fa93dd0e03c8c8f80a39bb412e23631d4cc.json",
+      "sha256": "sha256:aee0755f130b316257f21f5fd9fa8fa93dd0e03c8c8f80a39bb412e23631d4cc"
+    }
+  ],
+  "requests": []
+}

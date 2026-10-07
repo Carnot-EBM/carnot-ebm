@@ -94995,3 +94995,30 @@ The thin script-path CLI is experiment_8227_v711_concurrency_canary.py; its
 24 private requirement-linked tests cover unit, child and failure statements.
 Canary dispositions remain in results/experiment_8227_v711_concurrency_canary.json;
 readiness never establishes a service speedup or scientific benefit.
+## REQ-REPORT-8230: Publish a replayable KV260 utility workload boundary
+
+Publish Exp8230 atomically only after unchanged primary terminal checks, cold
+replay, adversarial verification and strict row lint accept the private bytes.
+Use no_model_load, MODEL_SPECS=[], zero current calls and separate trained head
+provenance. Readiness describes owned boundary checks; external missing service
+spans remain complete_blocked with exact operands. Failed owned checks disqualify
+and zero readiness. Generalization and learning benefit scores remain zero.
+Freeze commands before measurement and retain clocks, argv, exits and full stream
+hashes. Check 100percent added statements including real CLI children, scoped
+Ruff, strict mypy, spec references, consumers and private E2E-015/019. Run one
+bounded full-suite health diagnostic separately. The conductor owns ops/status,
+changelog and traceability reconciliation after exit.
+
+### SCENARIO-REPORT-8230-CLI
+
+Private fixtures, independently missing/schema/disqualified branches, invalid
+dates, invalid fixture destinations, terminal rejection and owned check failures
+must exercise the real CLI. Cold replay verifies source and primitive bytes,
+recomputes precision and bounds, and rejects rehashed summary mutations. Retain
+historical primary bytes and every intended condition, including missing rows.
+
+REQ-REPORT-8230 implementation: `kv260_boundary_execution_8230.py` uses qualified
+bounded process supervision and unchanged primary publication. The thin CLI,
+private terminal checks, rehashed primitive/summary rejection and exact owned
+statement coverage are exercised by `test_kv260_workload_boundary_8230.py`.
+Operational and traceability reconciliation remains owned by the conductor.

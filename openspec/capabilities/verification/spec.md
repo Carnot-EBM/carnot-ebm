@@ -50642,3 +50642,36 @@ Exp8213 recorder with serialized journal writes and fixed slot queues.
 concurrency_runtime_8227.py binds cached GGUF metadata, private owned process
 supervision and the existing kernel-backed GPU lease. Requirement-linked tests
 cover streamed primitive bytes, queued failures and all ownership paths.
+## REQ-VERIFY-8230: Bound utility arithmetic within the qualified KV260 scope
+
+Authenticate Exp8221, Exp8225 and the named Exp8228 separately. Retain exact
+missing/disqualified operands and historical Exp8216 KV260 transcript hashes.
+The existing quadratic Ising fabric supports no utility interval lookup,
+ordered clipped probability adds, global calibration, logarithms, mixtures or
+durable host state. Keep these operations on CPU and retain k_max<=5. No RTL,
+board probe, flash, TSU or NPU qualification occurs. Future access uses ssh kria.
+
+### SCENARIO-VERIFY-8230-PRECISION
+
+Compare frozen fixture rows and frozen natural public probabilities separately
+with a signed Q16.16 reference: ties-to-even rounding, integer interval lookup,
+ordered adds, clipping after each add to [1,65535]/65536. Preserve original
+accept permission. Report raw action differences and conservative CPU fallback
+for membership or decision-boundary ambiguity and unsupported mixtures. Missing
+rows remain excluded. Applying a fixture model to natural public probabilities
+tests arithmetic only and cannot qualify a naturally trained head or benefit.
+
+### SCENARIO-VERIFY-8230-BOUNDS
+
+Only authenticated same-request disjoint spans can supply eligible_ns/total_ns
+and 1/(1-f). Keep acquisition, transfer, readout, durable commit and unsupported
+work. Missing spans yield unavailable bounds, never substituted historical
+latency. A practical estimate requires measured device and link costs. Existing
+fabric eligible utility work is zero; a hypothetical lookup/add bound must be
+explicitly separate from supported fabric acceleration.
+
+REQ-VERIFY-8230 implementation: `kv260_workload_boundary_8230.py` reads each
+branch independently, retains historical fabric hashes, preserves ordered
+Q16.16 clipping, and requires complete same-request spans for Amdahl bounds.
+`test_kv260_workload_boundary_8230.py` covers rounding, permission, missing rows,
+private authenticated branches, practical transfer obligations and failure paths.
