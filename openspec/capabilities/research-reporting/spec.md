@@ -94895,3 +94895,30 @@ primary publication. Fresh replay authenticates every bound input copy and
 recomputes the seal. Private tests cover label, state, slot, log and rehashed
 aggregate changes. Ops and traceability reconciliation is delegated to the
 conductor by the task's explicit stop rule.
+
+## REQ-REPORT-8225: delayed utility trajectory publication
+
+Authenticate Exp8221 causal readiness, its hash-bound terminal receipt, the
+frozen utility/global protocols and original stream/retention primitive bytes.
+Missing evidence produces complete_blocked_<operand>; owned failures disqualify
+and clear readiness. Declare no_model_load, MODEL_SPECS=[] and zero LLM calls.
+Freeze exact owned validation commands, preserve full command/exit/log/hash/clock
+receipts and separate the single bounded full-suite health diagnostic. Require
+100 percent new statements including real CLI/hard-exit children, scoped Ruff,
+strict mypy, spec coverage and private E2E015/019/020. Cold-reexecute primitives
+in a fresh process, validate the private candidate through unchanged primary
+publication, adversarial and strict row checks, then publish atomically.
+Readiness is causal execution/recovery only; changed probability is not benefit.
+Both generalization scores stay zero and H2/retention remain unmeasured.
+
+### SCENARIO-REPORT-8225-CLI
+
+The real script CLI publishes/replays private evidence, rejects invalid dates,
+public fixture output, missing upstream operands and rehashed trajectory edits.
+All original primaries retain their bytes. Private tests write outside results/.
+
+REQ-REPORT-8225 implementation: delayed_utility_execution_8225.py owns the
+frozen validation manifest and primitive replay; the thin
+scripts/experiments/experiment_8225_v711_delayed_utility_learning.py publishes
+results/experiment_8225_v711_delayed_utility_learning.json through unchanged
+primary_publication terminal checks. Evidence remains under its raw/ namespace.

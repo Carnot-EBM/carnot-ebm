@@ -50548,3 +50548,47 @@ REQ-VERIFY-8223 implementation: utility_seal_8223.py reuses the authenticated
 V709 public-row scorer and V711 probability-tree kernel. It records72 corrected
 arm/seed conditions plus the original baseline and escalation control per slot.
 It compares normalized energies, preserves masks and binds every saved state.
+
+## REQ-VERIFY-8225: causal persistent utility corrections (FR-11)
+
+Execute the frozen Exp8219/8221 probability kernel on original256 slots,
+SHA256(source_id) modulo4 roles, delay20, warmup1–64, seeds101–120 and
+opportunities64/144 with expiry144/224. Start at the historical Qwen offset;
+freeze original V707 membership and accept permission for all five arms.
+Global-only, global-plus-group and global-plus-random reuse the qualified
+scale/intercept optimizer; each opportunity supplies at most four ordered
+patches on its registered dictionary. Local-only excludes the global witness.
+Preserve missing slots in the newest64 released update-role window and exclude
+unfinished global solves. Never fit admission/retention labels. Persist issues
+before release, commit candidate bytes before selecting12 unused later-origin
+admission rows, and reuse exact probability interpolation and safety gates.
+Seal final states and64 retention predictions before any retention target opens.
+Keep H2 and retention verdicts for Exp8226. Real exits73 at90/170 must recover
+complete state, journals, RNG, masks, consumed IDs and pending labels exactly.
+Bound natural execution to1200 seconds and report measured CPU costs/state bytes.
+
+### SCENARIO-VERIFY-8225-CAUSAL
+
+Focused private trajectories preserve issue/release order, missing windows,
+all five arms, rejected writes, exact mixtures and two-class admission. Real
+CLI crashes90/170 resume to the uninterrupted complete state and journals.
+
+REQ-VERIFY-8225 also permits a converged changed global calibration candidate
+with zero residual patch operations. Extend the qualified kernel's candidate
+eligibility with a producer-supplied global_fit_changed flag; absent flags keep
+all Exp8221 behavior unchanged. Record actual random witness draws and isolate
+issue lookup CPU costs from journal/update costs.
+
+The next12 admission rows are selected by immutable source role and origin
+order, including rows with missing evidence or missing labels. Missing slots
+must not be silently replaced by later complete rows. A missing admission label
+prevents scoring/admission; missing predictions escalate and retain cost units.
+
+For natural stream/retention rows, baseline membership and accept permission
+are frozen from that stream's historical Qwen offset. The static V707 fitted
+baseline has a different feature schema and is not a stream-head prerequisite.
+
+REQ-VERIFY-8225 implementation: delayed_utility_learning_8225.py adapts the
+qualified utility_kernel_8221.py and calibrated_memory_methods_8180.py. The
+requirement-linked test_delayed_utility_learning_8225.py exercises real child
+crashes, natural-byte replay, missing units, global-only candidates and costs.

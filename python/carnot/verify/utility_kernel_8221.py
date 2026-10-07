@@ -138,7 +138,11 @@ def losses(records: list[Json], probabilities: list[float | None]) -> tuple[floa
 
 def admission(candidate: Json, installed: Json, records: list[Json]) -> tuple[Json, Json]:
     """Twelve future labels choose a grid point but never change fitted operations."""
-    if len(records) != 12 or min(sum(r["y"] == y for r in records) for y in [0, 1]) < 2:
+    if (
+        len(records) != 12
+        or any(r["y"] not in [0, 1] for r in records)
+        or min(sum(r["y"] == y for r in records) for y in [0, 1]) < 2
+    ):
         return installed, dict(step=0, gates=[])
     incumbent = losses(records, [predict(installed, r) for r in records])
     baseline = losses(records, [predict(dict(kind="input"), r) for r in records])
@@ -277,7 +281,7 @@ def run(
             s["consumed"].append(old)
             row, y = rows[old - 1], labels[old - 1]
             s["events"].append(dict(kind="release_feedback", slot=slot, label_slot=old, y=y))
-            if y is not None and row["p"] is not None:
+            if y is not None and row["p"] is not None or not roles.bucket(row):
                 if roles.bucket(row):
                     s["training"].append(old)
                     s["pool"].append(dict(row, y=y))
@@ -315,7 +319,7 @@ def run(
             proposed = fit_patches(pool, model=s["model"], seed=seed) if eligible else None
             s["candidate"] = (
                 dict(model=proposed, commit=slot, labels=[])
-                if proposed and proposed["patches"]
+                if proposed and (proposed["patches"] or proposed.get("global_fit_changed"))
                 else None
             )
             s["events"].append(
