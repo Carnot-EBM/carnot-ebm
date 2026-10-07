@@ -95605,3 +95605,19 @@ primitive audit replay and terminal consumers. The thin Exp8247 CLI and
 `test_v712_capstone_8247.py` cover private null, blocked and tampered outcomes.
 Ops/status/traceability reconciliation is delegated to the conductor by the
 explicit final task instruction; historical primaries and active YAML stay intact.
+
+## REQ-REPORT-8249: Evidence kernel execution qualification
+
+Exp8249 SHALL publish one atomic terminal primary with independently gated
+view_kernel_ready_score and admission_kernel_ready_score, authenticated upstream
+terminal custody, complete row counts, replayable maps/events, current zero model
+calls, and100 percent new-code statement coverage including real CLI children.
+Private oracle learning controls establish circular_positive mechanics only;
+independent_generalization_score and generalized_learning_benefit_score stay0.
+
+### SCENARIO-REPORT-8249-CLI
+
+Freeze current checks before measurement; cold reconstruction rejects hash drift
+and rehashed aggregate tampering. Missing external resources block and failed
+owned checks disqualify with zero readiness. Ops and traceability reconciliation
+is assigned to the conductor by the final explicit task instruction.

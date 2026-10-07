@@ -51165,3 +51165,53 @@ checks disqualify with zero readiness; external unavailable inputs block.
 Private fixtures remain outside results. Real CLI and cold child statements,
 negative replay, missing inputs and normal terminal publication are measured.
 All-null outcomes are terminal and never trigger additional model work.
+
+## REQ-VERIFY-8249: Complete sentence views and bounded delayed counters
+
+Construct views by removing only complete source sentences, preserving every
+answer byte and original UTF-8 offsets with an original-to-view map. Reuse V707
+requests/parser and V713 role binding; byte validity never establishes truth.
+Freeze eight label-blind groups from cached E/non-E, selected delta >.1 and
+absolute control delta >.1. Beta(1,1) counters mix with static probabilities
+using lambda=n/(n+16); groups contribute only after eight distinct released
+source clusters. Global-only stops after global mixing. Missing-feature releases
+update global counters identically but no real or shuffled group. Durable issues
+precede t-8 releases; future, duplicate, retention and corrupted feedback fail.
+
+### SCENARIO-VERIFY-8249-VIEWS
+
+Private missing citations, repeated evidence, Unicode, negation, redundant
+support, empty sources, unavailable controls, bad addresses, context overflow,
+partial records and hash drift are exercised. Changing only human labels cannot
+change requests, views, features or group keys.
+
+### SCENARIO-VERIFY-8249-STATE
+
+Zero state identity, bounded probabilities, exact restart, admission at eight,
+no group effect before admission and identical arm releases are required. A
+private group-conditional delayed stream must improve later decision cost over
+global-only and equal-size shuffled groups while retaining an earlier panel.
+Fixture gains are circular_positive and separate from natural evidence.
+
+## REQ-REPORT-8249: Independent kernel readiness and primitive replay
+
+Freeze owned validation before measurement. Require100 percent new statements,
+real CLI children, scoped lint/type/spec checks, private E2E-019/020 and unchanged
+terminal validators. Record actual argv/exits/clocks/log hashes; bounded repository
+health remains diagnostic. Cold replay reconstructs views and state from primitive
+bytes and rejects rehashed tampering. External failures block; owned failures
+disqualify. Separate view/admission readiness from benefit, keep both independent
+and generalized benefit scores zero, no model load or external publication.
+
+### SCENARIO-REPORT-8249-CLI
+
+Private normal/blocked/disqualified CLI and cold replay preserve full fields and
+atomic publication. Negative and rehashed aggregate/state tampering fail; current
+owned command failures cannot qualify either mechanism. Historical bytes remain.
+
+REQ-VERIFY-8249 / REQ-REPORT-8249 implementation2026-10-07:
+`evidence_view_kernel_8249.py` adapts qualified view/transport/ledger primitives;
+`evidence_view_execution_8249.py` reuses the bounded supervisor and publication
+validators. `test_evidence_view_kernel_8249.py` qualifies private mechanics,
+label-independent custody, equal-size shuffled controls and real CLI replay.
+Ops/changelog/status/traceability remain assigned to the conductor.
