@@ -2,6 +2,36 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8217: Account for the exact thirteen V709 outcomes
+
+Freeze the qualified Exp8205 activation authorities. If qualification is absent,
+validate current activation independently and retain the original contract failure.
+Enumerate Exp8205 through Exp8217 exactly once, including self, pre-gate skips,
+missing producers and disqualified producers. Preserve exact gate operands and
+retired scope matches. Missing optional siblings block only their branch.
+External blocks are complete_blocked; owned failures are complete_disqualified.
+Valid negative science remains null. Historical primary bytes stay immutable.
+
+### SCENARIO-REPORT-8217-CUSTODY
+
+Private controls cover frozen authority, fallback activation, missing and malformed
+inputs, both typed hash/receipt schemas, terminal custody failure and gate skips.
+Authenticate each prior_failures verdict against its artifact or pre-gate record.
+Retire only an identical tested configuration with an identical verdict. Preserve
+changed or untested hypotheses, ARC outcome custody and every board obligation.
+
+### SCENARIO-REPORT-8217-CLI
+
+Freeze exact validation before measurement. Keep private parents alive for all
+children. Require focused tests,100 percent new Python/real CLI statements,
+Ruff/format/strict mypy, explicit-file spec coverage, affected consumers and
+private E2E-015/018/019. Run the full Python suite once as separate health.
+Retain literal commands, exits, complete stream hashes, clocks and code/config
+hashes. Fresh-process primitive replay and unchanged terminal auditors validate
+a private candidate before atomic primary publication. No model loads, package
+push, external publication, conductor edits or active-roadmap edits occur.
+The conductor owns ops/status/changelog/traceability reconciliation.
+
 ## Planned continuation — V709 (2026-10-06)
 
 `openspec/change-proposals/research-roadmap-vNEXT.md` and
@@ -94645,3 +94675,10 @@ primary publisher. The direct Exp8216 runner publishes one primary and retains
 source copies, primitive rows, terminal checks and stream receipts below raw/.
 Tests exercise independent producer receipts, private publication, cold replay,
 protected output rejection and owned-check disqualification.
+
+REQ-REPORT-8217 implementation: `v709_capstone_inputs.py` preserves frozen
+activation, typed receipt custody, all thirteen dispositions and exact prior
+configuration matches. `v709_capstone.py` reuses qualified bounded supervision
+and unchanged atomic publication. The standalone Exp8217 runner records separate
+repository health. The invocation artifact owns measured validation status.
+The conductor owns ops and traceability reconciliation.

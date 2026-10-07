@@ -1,0 +1,27 @@
+{
+  "actual_exit": 0,
+  "argv": [
+    ".venv/bin/python",
+    "-c",
+    "import json,sys,os,pytest,coverage,yaml; from pathlib import Path; names=['AGENTS.md','CODEX.md','CLAUDE.md','ops/e2e-test-plan.md','openspec/capabilities/research-reporting/spec.md','openspec/capabilities/verification/spec.md','scripts/experiment_template.py','python/carnot/reporting/primary_publication.py','ops/exclusion_manifest.yaml','openspec/change-proposals/research-roadmap-vNEXT.md','python/carnot/reporting/v708_capstone.py','python/carnot/reporting/v708_capstone_inputs.py','python/carnot/reporting/v708_capstone_science.py','python/carnot/reporting/v685_authority_lifecycle.py','scripts/publication_gate.py','results/experiment_8204_v708_capstone.json','results/experiment_8205_v709_contract_consumer_qualification.json','ops/north-star.md','research-roadmap.yaml','research-roadmap-next.yaml','ops/conductor-log.md']; print(json.dumps({'paths':{n:Path(n).is_file() for n in names},'python':sys.version,'executable':sys.executable,'tools':{n:os.access(Path(sys.executable).parent/n,os.X_OK) for n in ['pytest','coverage','ruff','mypy']},'schemas':{n:json.loads(Path(n).read_bytes()).get('schema') for n in names if n.endswith('.json') and Path(n).is_file()}}))"
+  ],
+  "command": ".venv/bin/python -c 'import json,sys,os,pytest,coverage,yaml; from pathlib import Path; names=['\"'\"'AGENTS.md'\"'\"','\"'\"'CODEX.md'\"'\"','\"'\"'CLAUDE.md'\"'\"','\"'\"'ops/e2e-test-plan.md'\"'\"','\"'\"'openspec/capabilities/research-reporting/spec.md'\"'\"','\"'\"'openspec/capabilities/verification/spec.md'\"'\"','\"'\"'scripts/experiment_template.py'\"'\"','\"'\"'python/carnot/reporting/primary_publication.py'\"'\"','\"'\"'ops/exclusion_manifest.yaml'\"'\"','\"'\"'openspec/change-proposals/research-roadmap-vNEXT.md'\"'\"','\"'\"'python/carnot/reporting/v708_capstone.py'\"'\"','\"'\"'python/carnot/reporting/v708_capstone_inputs.py'\"'\"','\"'\"'python/carnot/reporting/v708_capstone_science.py'\"'\"','\"'\"'python/carnot/reporting/v685_authority_lifecycle.py'\"'\"','\"'\"'scripts/publication_gate.py'\"'\"','\"'\"'results/experiment_8204_v708_capstone.json'\"'\"','\"'\"'results/experiment_8205_v709_contract_consumer_qualification.json'\"'\"','\"'\"'ops/north-star.md'\"'\"','\"'\"'research-roadmap.yaml'\"'\"','\"'\"'research-roadmap-next.yaml'\"'\"','\"'\"'ops/conductor-log.md'\"'\"']; print(json.dumps({'\"'\"'paths'\"'\"':{n:Path(n).is_file() for n in names},'\"'\"'python'\"'\"':sys.version,'\"'\"'executable'\"'\"':sys.executable,'\"'\"'tools'\"'\"':{n:os.access(Path(sys.executable).parent/n,os.X_OK) for n in ['\"'\"'pytest'\"'\"','\"'\"'coverage'\"'\"','\"'\"'ruff'\"'\"','\"'\"'mypy'\"'\"']},'\"'\"'schemas'\"'\"':{n:json.loads(Path(n).read_bytes()).get('\"'\"'schema'\"'\"') for n in names if n.endswith('\"'\"'.json'\"'\"') and Path(n).is_file()}}))'",
+  "deadline_s": 30,
+  "duration_s": 0.215398185,
+  "ended_monotonic_ns": 990565601493915,
+  "exit_code": 0,
+  "expected_exit": 0,
+  "log_path": "/tmp/carnot8217-startup-n20kfxfa/startup.stdout",
+  "log_sha256": "sha256:294252817d7cd0864a4d60a9dbaaa935c7eff489f3f639da94f1368b6b8610ac",
+  "name": "startup",
+  "normal_exit": true,
+  "passed": true,
+  "scope": "owned",
+  "started_monotonic_ns": 990565386095730,
+  "started_wall_ns": 1791329657175266395,
+  "stderr_path": "/tmp/carnot8217-startup-n20kfxfa/startup.stderr",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_path": "/tmp/carnot8217-startup-n20kfxfa/startup.stdout",
+  "stdout_sha256": "sha256:294252817d7cd0864a4d60a9dbaaa935c7eff489f3f639da94f1368b6b8610ac",
+  "timed_out": false
+}

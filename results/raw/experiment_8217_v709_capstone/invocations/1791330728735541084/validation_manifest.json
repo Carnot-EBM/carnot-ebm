@@ -1,0 +1,300 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.reporting.v709_capstone",
+        "carnot.reporting.v709_capstone_inputs",
+        "carnot.reporting.v709_capstone_science"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "worktree_imports",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8217-e_vb3xwu/pytest/focused",
+        "tests/python/test_v709_capstone_8217.py",
+        "-q"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "focused_pytest",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot8217-e_vb3xwu/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_v709_capstone_8217.py",
+        "--basetemp=/tmp/carnot8217-e_vb3xwu/covered"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "changed_module_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot8217-e_vb3xwu/coverage.ini"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "changed_module_coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v709_capstone.py",
+        "python/carnot/reporting/v709_capstone_inputs.py",
+        "python/carnot/reporting/v709_capstone_science.py",
+        "scripts/experiments/experiment_8217_v709_capstone.py",
+        "tests/python/test_v709_capstone_8217.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v709_capstone.py",
+        "python/carnot/reporting/v709_capstone_inputs.py",
+        "python/carnot/reporting/v709_capstone_science.py",
+        "scripts/experiments/experiment_8217_v709_capstone.py",
+        "tests/python/test_v709_capstone_8217.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=skip",
+        "python/carnot/reporting/v709_capstone.py",
+        "python/carnot/reporting/v709_capstone_inputs.py",
+        "python/carnot/reporting/v709_capstone_science.py",
+        "scripts/experiments/experiment_8217_v709_capstone.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "changed_module_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_v709_capstone_8217.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "scoped_spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot8217-e_vb3xwu/coverage.ini",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot8217-e_vb3xwu/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "--basetemp=/tmp/carnot8217-e_vb3xwu/consumers"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "consumers_E2E018",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "full_python_suite",
+      "scope": "repository_health"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "tests/python/test_v709_qualification_8205.py",
+        "tests/python/test_restricted_decision_audit_8210.py",
+        "tests/python/test_memory_benefit_audit_8212.py",
+        "tests/python/test_prospective_service_measurement_8214.py",
+        "tests/python/test_arc_authoritative_frontier_8215.py",
+        "tests/python/test_hardware_workload_obligations_8216.py",
+        "--basetemp=/tmp/carnot8217-e_vb3xwu/reducers"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "affected_reducers_E2E015_019",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/publication_gate.py",
+        "--json"
+      ],
+      "deadline": 90,
+      "expected": 0,
+      "name": "publication_gate",
+      "scope": "publication"
+    }
+  ],
+  "controls": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-c",
+        "/dev/null",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/tmp/carnot8217-e_vb3xwu/controls/tiny_pass.py",
+        "--basetemp=/tmp/carnot8217-e_vb3xwu/controls/tiny_pass_temp"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "tiny_pass",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-c",
+        "/dev/null",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/tmp/carnot8217-e_vb3xwu/controls/tiny_fail.py",
+        "--basetemp=/tmp/carnot8217-e_vb3xwu/controls/tiny_fail_temp"
+      ],
+      "deadline": 180,
+      "expected": 1,
+      "name": "tiny_fail",
+      "scope": "owned"
+    }
+  ],
+  "frozen_before_measurement_ns": 991636947241564,
+  "precondition": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-c",
+      "import json,sys,os,pytest,coverage,yaml; from pathlib import Path; p=Path(sys.executable).parent; tools={n:os.access(p/n,os.X_OK) for n in ['python','pytest','coverage','ruff','mypy']}; print(json.dumps({'python':sys.version,'executable':sys.executable,'pytest':pytest.__version__,'coverage':coverage.__version__,'yaml':yaml.__version__,'tools':tools})); print(json.dumps({\"named_input_paths\":{n:Path(n).is_file() for n in ['/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md', '/home/ianblenke/github.com/ianblenke/carnot/CODEX.md', '/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md', '/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md', '/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md', '/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/verification/spec.md', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py', '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py', '/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml', '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md', '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml', '/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml', '/home/ianblenke/github.com/ianblenke/carnot/ops/conductor-log.md', '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/roadmap_contract.py', '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py', '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v708_contract_custody.py', '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v708_capstone_inputs.py', '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v708_capstone.py', '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8192_v708_contract_custody.json', '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8204_v708_capstone.json', '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-v708-preserved-20261006.md', '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8205_v709_contract_consumer_qualification.json', '/home/ianblenke/github.com/ianblenke/carnot/ops/north-star.md', '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml']}})); raise SystemExit(int(not all(tools.values())))"
+    ],
+    "deadline": 30,
+    "expected": 0,
+    "name": "environment_preconditions",
+    "scope": "preconditions"
+  },
+  "runtime": {
+    "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "private_mode": "0o700",
+    "private_writable": true,
+    "python": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]"
+  },
+  "terminal_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8217_v709_capstone.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8217_v709_capstone/terminal_candidate.json"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "cold_replay",
+      "scope": "terminal"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8217_v709_capstone/terminal_candidate.json"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "adversarial_verify",
+      "scope": "terminal"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8217_v709_capstone/terminal_candidate.json"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "strict_rows",
+      "scope": "terminal"
+    }
+  ]
+}

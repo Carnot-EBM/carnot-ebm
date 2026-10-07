@@ -2,6 +2,31 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8217: Reduce V709 scientific branches independently
+
+Recompute H1 from qualified sealed source rows even if the upstream audit is
+disqualified. Keep policy versus baseline distinct from energy increment.
+Recompute H2 from causal and retention primitives, keeping shared calibration
+distinct from structural memory. Preserve both primary alpha=0.025 tests and
+source denominators; repeated seeds supply no independent source credit.
+Reconstruct service totals from current request/stage clocks. Shared acquisition
+cannot establish cold-inclusive independent deployment or the original10x NFR-01
+claim. Exposed development leaves both generalization scores zero.
+
+### SCENARIO-VERIFY-8217-BRANCHES
+
+Tests retain all missing source slots and prove one blocked branch does not erase
+another valid null. Changed policy, energy increment, calibration-only movement,
+structural action movement and retention use separate fields. Report all three
+PRD gaps and exact blockers. Execution-ready externally blocked science has
+verdict_class=blocked, never partial. Failed owned checks forbid readiness.
+
+### SCENARIO-VERIFY-8217-REPLAY
+
+A fresh interpreter rehashes frozen inputs and complete validation streams,
+recomputes branch statistics and rejects altered primitives or aggregates.
+Publication G1-G4 semantics remain unchanged and external authorization is false.
+
 ## REQ-VERIFY-8195: Fit selective heads without reserved evidence
 
 Reuse authenticated Qwen fit/tune evidence and the immutable V708 protocol.
@@ -50323,3 +50348,10 @@ counts guarded CPU fallbacks and keeps failed service stages unknown. Amdahl
 ceilings retain all acquisition and model startup. Original learning component
 clocks remain an explicit blocked cost obligation. Historical board rows keep
 their original dates, substrate limits and reopen conditions.
+
+REQ-VERIFY-8217 implementation: `v709_capstone_science.py` independently reuses
+sealed-action, causal-memory, retention and request-stage reducers. It preserves
+both primary alpha allocations, source missingness, calibration and structural
+memory effects, ARC custody and board/access obligations. Designed shared
+acquisition cannot close independent cold-inclusive deployment or NFR-01.
+The Exp8217 artifact records terminal scientific scope and current owned validity.

@@ -1,0 +1,29 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8217_v709_capstone.json"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "adversarial_verify",
+      "scope": "terminal"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8217_v709_capstone.json"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "strict_rows",
+      "scope": "terminal"
+    }
+  ],
+  "reason": "Validate the atomically published identical bytes through the explicitly requested primary paths."
+}
