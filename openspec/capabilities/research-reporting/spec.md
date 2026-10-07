@@ -95232,3 +95232,28 @@ and cold replay. Current qualification and external resource disposition are
 recorded only in the Exp8236 primary and its invocation evidence. The conductor
 will reconcile ops and traceability after exit, as the task's final instruction
 requires.
+
+## REQ-REPORT-8237: Publish measured margin fitting separately from benefit
+
+Freeze validation commands before measurement. Declare no_model_load, empty
+MODEL_SPECS and zero current LLM calls. Preserve all six arms and missing slots.
+Run private E2E-015/019/021, consumers, scoped Ruff, strict mypy, spec coverage
+and100 percent newly owned statements including actual CLI children. Retain
+exact argv, expected/actual exits, stream hashes, clocks and bounded deadlines.
+Keep repository-health failures separate. Missing external operands block;
+failed owned work disqualifies. Both generalization scores remain zero.
+
+### SCENARIO-REPORT-8237-CLI
+
+Private fixtures stay outside results/. Flushed progress and supervised children
+prevent silent stalls. Cold replay, adversarial verification and strict row
+checks precede unchanged atomic primary publication. Preserve historical bytes
+and evidence from failed attempts. The scoring bundle is executable without
+reserved labels, generator loads or generator weight changes.
+
+REQ-REPORT-8237 implementation2026-10-07: the producer authenticates Exp8234
+and original manifests before fitting. Its thin runner reuses the qualified
+process-group supervisor and unchanged primary publisher. Frozen validation
+includes owned coverage, strict types, scoped lint/spec checks, consumers and
+private E2E-015/019/021. Both generalization scores stay zero. The conductor
+reconciles ops and traceability after this task, per the operator instruction.

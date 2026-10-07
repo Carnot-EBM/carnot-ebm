@@ -50832,3 +50832,36 @@ Implementation2026-10-07: the qualified producer runs frozen owned checks before
 resource preflight. The reused runtime accepts the current task's lease identity
 and bounds loading and generation by the remaining canary deadline. The actual
 CLI and child statements are included in measured coverage with no exclusions.
+
+## REQ-VERIFY-8237: Fit and freeze six matched decision-margin heads
+
+Authenticate Exp8234 and its frozen V712 inputs before fitting. Reuse the
+qualified weighted objective and numerical solver. Check analytic gradients
+against finite differences and the uniform limit within1e-10. Fit six17-column
+heads on original head_fit folds with identical ridge grids and optimizer
+budgets. Save source identities, weights, objective values, full gradients,
+convergence, clocks and parameter hashes for every solve. Durable checkpoints
+bind inputs and permit replay without refitting completed solves.
+
+### SCENARIO-VERIFY-8237-FIT
+
+Temperature uses separate temperature_fit labels and unweighted loss. Only
+calibration-role cost, Brier and frozen ties select the primary comparator.
+Retain equally weighted additive/logistic comparisons and the unchanged V711
+energy_global. Reject reserved targets before fitting. A frozen scoring API
+returns accept/reject/escalate, p_bad and normalized energies with probability
+parity within1e-10. Missing slots escalate. Valid zero-benefit fits qualify
+readiness; development sources grant no independent generalization credit.
+
+### SCENARIO-VERIFY-8237-REPLAY
+
+Fresh-process replay authenticates primitives and rebuilds heads, folds and
+selection. Reject changed parameters, source membership, receipts, input hashes
+and rehashed aggregate tampering. Failed owned checks zero readiness.
+
+REQ-VERIFY-8237 implementation2026-10-07: `margin_energy_training_8237.py`
+wraps the frozen V712 trainer and unchanged numerical solver. It checkpoints
+all126 solves, preserves source weights and gradients, calibrates temperature
+on the original separate role, and exposes a public-input typed scoring API.
+The linked tests cover numerical parity, permissions, missing inputs, restart
+binding and fresh-process replay with changed and rehashed primitives.

@@ -1,0 +1,297 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.verify.margin_energy_training_8237",
+        "carnot.reporting.margin_energy_training_8237",
+        "carnot.reporting.margin_energy_runner_8237"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "worktree_imports",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot8237-p41os15z/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_margin_energy_training_8237.py",
+        "--basetemp=/tmp/carnot8237-p41os15z/covered"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "changed_module_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot8237-p41os15z/coverage.ini"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "changed_module_coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/margin_energy_training_8237.py",
+        "python/carnot/reporting/margin_energy_training_8237.py",
+        "python/carnot/reporting/margin_energy_runner_8237.py",
+        "scripts/experiments/experiment_8237_v712_margin_energy_training.py",
+        "tests/python/test_margin_energy_training_8237.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/margin_energy_training_8237.py",
+        "python/carnot/reporting/margin_energy_training_8237.py",
+        "python/carnot/reporting/margin_energy_runner_8237.py",
+        "scripts/experiments/experiment_8237_v712_margin_energy_training.py",
+        "tests/python/test_margin_energy_training_8237.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/verify/margin_energy_training_8237.py",
+        "python/carnot/reporting/margin_energy_training_8237.py",
+        "python/carnot/reporting/margin_energy_runner_8237.py",
+        "scripts/experiments/experiment_8237_v712_margin_energy_training.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "changed_module_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_margin_energy_training_8237.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "scoped_spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot8237-p41os15z/coverage.ini",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot8237-p41os15z/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "--basetemp=/tmp/carnot8237-p41os15z/consumers"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "consumers_E2E018",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "full_python_suite",
+      "scope": "repository_health"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_restricted_decision_audit_8210.py",
+        "--basetemp=/tmp/carnot8237-p41os15z/e2e021"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E021",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_source_boundary_7852.py",
+        "--basetemp=/tmp/carnot8237-p41os15z/e2e015"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E015",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "--basetemp=/tmp/carnot8237-p41os15z/e2e019"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E019",
+      "scope": "owned"
+    }
+  ],
+  "controls": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-c",
+        "/dev/null",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/tmp/carnot8237-p41os15z/controls/tiny_pass.py",
+        "--basetemp=/tmp/carnot8237-p41os15z/controls/tiny_pass_temp"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "tiny_pass",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-c",
+        "/dev/null",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/tmp/carnot8237-p41os15z/controls/tiny_fail.py",
+        "--basetemp=/tmp/carnot8237-p41os15z/controls/tiny_fail_temp"
+      ],
+      "deadline": 180,
+      "expected": 1,
+      "name": "tiny_fail",
+      "scope": "owned"
+    }
+  ],
+  "frozen_before_measurement_ns": 1044610071554522,
+  "owned": [
+    "python/carnot/verify/margin_energy_training_8237.py",
+    "python/carnot/reporting/margin_energy_training_8237.py",
+    "python/carnot/reporting/margin_energy_runner_8237.py",
+    "scripts/experiments/experiment_8237_v712_margin_energy_training.py"
+  ],
+  "runtime": {
+    "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "free_bytes": 23850053632,
+    "mode": "0o700",
+    "path": "/tmp/carnot8237-p41os15z",
+    "writable": true
+  },
+  "terminal": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8237_v712_margin_energy_training.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8237_v712_margin_energy_training/terminal_candidate.json"
+      ],
+      "deadline": 120,
+      "expected": 0,
+      "name": "cold_replay",
+      "scope": "terminal"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8237_v712_margin_energy_training/terminal_candidate.json"
+      ],
+      "deadline": 120,
+      "expected": 0,
+      "name": "adversarial_verify",
+      "scope": "terminal"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8237_v712_margin_energy_training/terminal_candidate.json"
+      ],
+      "deadline": 120,
+      "expected": 0,
+      "name": "strict_rows",
+      "scope": "terminal"
+    }
+  ]
+}
