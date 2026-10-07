@@ -21641,3 +21641,4 @@ Recorded 2 completed experiments in 13.2 minutes (0.2 hours), with 0 compute-bou
 - 2026-10-07: Test corrected decision utility against equally adapted controls (⚠️ Research Finding) — honest_verdict=complete_null_utility_audit; results/experiment_8224_v711_utility_audit.json
 - 2026-10-07: Learn persistent group corrections from causally released feedback (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8225_v711_delayed_utility_learning.json
 - 2026-10-07: Freeze request isolation and qualify a bounded two-slot Qwen canary (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8227_v711_concurrency_canary.json
+- 2026-10-07: Inspect new environment-grounded supervisor outcomes for cross-game selection (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8229_v711_arc_outcome_delta.json
