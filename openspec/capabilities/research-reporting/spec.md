@@ -94741,3 +94741,24 @@ and field-bound dispositions; `v710_replay_runner.py` freezes owned checks and
 publishes through unchanged terminal validators. Invocation receipts determine
 readiness. Missing authority and originals remain explicit; historical science
 is unchanged. The conductor owns ops and traceability reconciliation.
+## REQ-REPORT-8219: Publish authenticated utility method readiness
+
+Implementation: the thin Exp8219 CLI reuses the qualified bounded child supervisor
+and unchanged publication checks. Durable receipts retain separate child streams,
+coverage evidence and original input/code bytes. Registration never grants H1/H2
+or generalization credit. Operational reconciliation belongs to the conductor.
+
+The thin CLI SHALL bind named inputs, protocol, code snapshots, real invocation
+clocks and stream hashes. Use no_model_load, MODEL_SPECS=[] and zero current
+calls. Readiness means a complete usable protocol and passing owned checks;
+H1/H2 remain unmeasured and both generalization scores stay zero. Missing external
+operands yield complete_blocked_<operand>; failed owned checks disqualify.
+
+### SCENARIO-REPORT-8219-CLI
+
+Exercise real private CLI success, missing input, schema/hash drift, invalid date,
+worker and cold replay. Rehashed aggregate or primitive tampering SHALL fail.
+Freeze owned commands before measurement; measure100percent new-code coverage,
+Ruff, strict mypy,spec tracing and private E2E-015/019. Bound repository health
+separately and preserve its failures. Unchanged primary_publication,adversarial
+and strict row checks precede atomic publication. Preserve historical bytes.

@@ -50399,3 +50399,33 @@ and aggregate-tamper controls retain exits and full stream hashes. Fresh-process
 replay authenticates original projections, source/code copies and H1 reduction.
 Complete primary snapshots retain rows and missingness without duplicating large
 scientific arrays in administrative summaries. No current LLM calls or training.
+## REQ-VERIFY-8219: Freeze finite utility witnesses without future targets
+
+Implementation: `carnot.verify.utility_patch_methods_8219` freezes seven public
+membership vectors and independently reduces authenticated fit/tune primitives.
+Five focused tests exercise missing inputs, numerical boundaries and rehashed
+tampering. Natural correction training and benefit evaluation remain deferred.
+
+Register at most eleven groups in fixed order: global, five baseline-probability
+intervals [0,.1), [.1,.25), [.25,.5), [.5,.75), [.75,1], then their intersections
+with baseline rejection. Deduplicate on public head-fit membership vectors only.
+Identity and labels never define predicates. Preserve V709 heads, roles, missing
+masks and all128 reserved slots. Only fit/tune residuals may be inspected here.
+
+### SCENARIO-VERIFY-8219-WITNESSES
+
+Boundary, empty and duplicate controls verify frozen baseline membership. Freeze
+r_g=sum(g*(y-p))/n, eight distinct members, fixed-order ties, delta=clip(.5*mean
+(y-p within group),-.05,.05), probability clipping1e-6 and at most four patches.
+Stop at residual<=.01. Original/global/group energy and simple arms share labels,
+features, budget and accept permission; local-only and label-blind random controls
+remain explicit. Tune cost, Brier, fixed name choose the simple/global comparator.
+
+### SCENARIO-VERIFY-8219-SCOPE
+
+H1/H2 alone use alpha=.025,10000 draws and>=9500 valid draws, original support,
+safety,retention and .02 improvement margins. Register utility-cost witnesses
+descriptively: accept residual5*r_g, reject residual-r_g, escalate residual0.
+Appendix A of2510.25458 and2504.15206 motivate empirical bounded corrections;
+population oracle, fresh independent sampling and full global calibration do not
+transfer. No correction training or evaluation/retention label access occurs here.
