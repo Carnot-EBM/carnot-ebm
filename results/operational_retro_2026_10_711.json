@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.711",
+  "generated_at": "2026-10-07T11:01:04Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 44.0,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Reconcile fourteen outcomes and decide whether each PRD gap moved",
+      "duration_minutes": 8.54,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Preserve the GateMate physical blocker and freeze conditions for reopening",
+      "duration_minutes": 6.75,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Inspect new environment-grounded supervisor outcomes for cross-game selection",
+      "duration_minutes": 6.32,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bound KV260 utility-kernel work and whole-request acceleration",
+      "duration_minutes": 5.73,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Specify PolarFire transfer and persistence for the learned correction state",
+      "duration_minutes": 5.61,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.711 completed 12 experiments (1 compute-bound, 11 synthesis-only) across 44.0 total wall-time minutes (averaging 4 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was led entirely by synthesis tasks: PRD gap reconciliation (8.54 minutes), GateMate blocker preservation (6.75 minutes), cross-game supervisor outcome inspection (6.32 minutes), KV260 utility-kernel bounding (5.73 minutes), and PolarFire state transfer specification (5.61 minutes). With gpu_idle_on_compute_bound_tasks recorded as false, the observed 0% GPU utilization across both NVIDIA GeForce RTX 3090 GPUs reflects expected non-accelerated behavior for the 11 synthesis workloads.",
+  "bottlenecks_identified": [
+    "The top five slowest experiments were all synthesis-only tasks accounting for 32.95 of the 44.0 total milestone wall-time minutes, led by 'Reconcile fourteen outcomes and decide whether each PRD gap moved' (8.54 minutes) and 'Preserve the GateMate physical blocker and freeze conditions for reopening' (6.75 minutes).",
+    "The single compute-bound task completed in under 5.61 minutes and did not rank among the top five slowest tasks, but lack of phase-level telemetry (model loading, evaluation, branch writing) prevents isolating its internal execution profile.",
+    "All 11 synthesis-only workloads executed serially without sub-phase instrumentation or stage receipts (contract qualification, schema validation, artifact emission), obscuring the internal critical path."
+  ],
+  "improvements_suggested": [
+    "Instrument synthesis tasks with fine-grained intra-task phase timers to isolate PRD gap reconciliation, hardware boundary evaluation, and artifact serialization latency.",
+    "Implement incremental caching and memoized evidence evaluation for PRD gap reconciliation and supervisor outcome inspections to prevent re-evaluating unchanged task states.",
+    "Persist synchronous lifecycle start and finish timestamps directly into experiment receipt artifacts during conductor execution to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Deploy continuous in-flight accelerator telemetry sampling during compute-bound tasks so active GPU utilization can be verified against point-in-time monitor snapshots.",
+    "Enforce DualGPURunner dispatch strictly when two or more distinct models execute concurrently in parallel, avoiding misapplication to single-model or synthesis-only workloads."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument synthesis reconciliation and hardware boundary evaluation runners with granular intra-task execution timers to expose serial verification latency.",
+    "Implement incremental outcome reduction and cached evidence evaluation for PRD gap reconciliation to eliminate redundant synthesis overhead.",
+    "Persist structured lifecycle timestamps directly into experiment receipts and sample GPU utilization during active compute intervals."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Across 12 completed experiments and 44.0 minutes of wall time, latency was concentrated in synthesis tasks led by PRD gap reconciliation (8.54 minutes) and GateMate physical blocker preservation (6.75 minutes), while the sole compute-bound experiment completed in under 5.61 minutes. Point-in-time GPU monitor polling observed 0% utilization across both RTX 3090 GPUs outside active compute intervals, which represents expected ambient behavior for non-accelerated synthesis workloads, and gpu_idle_on_compute_bound_tasks is confirmed false. Operational gains depend on instrumenting intra-task execution phases and caching repetitive synthesis checks, with estimated time savings conservatively set to 0% pending empirical measurement."
+}

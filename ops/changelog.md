@@ -21,6 +21,13 @@ Final reconciliation passes documentation freshness and reports only that
 existing repository-wide spec-traceability issue.
 
 
+## 2026-10-07 — Operational retrospective for milestone 2026.10.711
+
+- Wrote `results/operational_retro_2026_10_711.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.711`. Authoritative disk-mtime fallback data records 12 experiments completed (1 compute-bound, 11 synthesis-only) across 44.0 total wall-time minutes (average 4 minutes per experiment).
+- Execution wall time was led entirely by synthesis tasks: PRD gap reconciliation (8.54 minutes), GateMate blocker preservation (6.75 minutes), cross-game supervisor outcome inspection (6.32 minutes), KV260 utility-kernel bounding (5.73 minutes), and PolarFire state transfer specification (5.61 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization across both RTX 3090 GPUs outside active compute intervals; `gpu_idle_on_compute_bound_tasks` is false as no compute-bound idle anomalies or multi-model parallel dispatch requirements were present, and 0% GPU utilization is expected behavior for synthesis tasks.
+- Recommended operational improvements: instrument synthesis tasks with fine-grained intra-task phase timers, implement incremental caching and memoized evidence evaluation for PRD gap reconciliation, capture continuous in-flight accelerator telemetry during compute-bound tasks, and persist structured lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-07 — Operational retrospective for milestone 2026.10.710
 
 - Wrote `results/operational_retro_2026_10_710.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.710`. Authoritative disk-mtime fallback data records 2 experiments completed (0 compute-bound, 2 synthesis-only) across 13.2 total wall-time minutes (average 7 minutes per experiment).
@@ -21646,3 +21653,7 @@ Recorded 2 completed experiments in 13.2 minutes (0.2 hours), with 0 compute-bou
 - 2026-10-07: Specify PolarFire transfer and persistence for the learned correction state (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_checks; results/experiment_8231_v711_polarfire_state_boundary.json
 - 2026-10-07: Preserve the GateMate physical blocker and freeze conditions for reopening (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_physical_change; results/experiment_8232_v711_gatemate_continuity.json
 - 2026-10-07: Reconcile fourteen outcomes and decide whether each PRD gap moved (⚠️ Blocked) — honest_verdict=complete_blocked_upstream_evidence; results/experiment_8233_v711_capstone.json
+
+### Milestone 2026.10.711 — operational retrospective
+
+Recorded 12 completed experiments in 44.0 minutes (0.7 hours), including 1 compute-bound task. PRD gap reconciliation (8.54 min) and GateMate physical blocker preservation (6.75 min) led the listed timings. Proposed sub-phase execution timers for synthesis tasks, incremental outcome reduction and caching for PRD gap reconciliation, and active-interval GPU telemetry sampling. Locked artifact fields remain unchanged; GPU idle on compute-bound tasks is false, parallel-model dispatch had no data available this milestone, and estimated time savings remain 0%. Artifact: `results/operational_retro_2026_10_711.json`.
