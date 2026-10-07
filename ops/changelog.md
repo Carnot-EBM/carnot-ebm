@@ -20,6 +20,12 @@ These scoped planning passes do not establish a repository-wide pass.
 Final reconciliation passes documentation freshness and reports only that
 existing repository-wide spec-traceability issue.
 
+## 2026-10-07 — Operational retrospective for milestone 2026.10.712
+
+- Wrote `results/operational_retro_2026_10_712.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.712`. Authoritative disk-mtime fallback data records 14 experiments completed (2 compute-bound, 12 synthesis-only) across 101.3 total wall-time minutes (average 7 minutes per experiment).
+- Execution wall time was led by synthesis task 'Qualify the existing delayed learner through its uncovered failure paths' (25.78 minutes), followed by compute-bound tasks 'Cover request-error reduction and qualify real bounded Qwen concurrency' (16.36 minutes) and 'Measure independent serial and concurrent Qwen requests including cold costs' (9.59 minutes), policy training with decision-sensitive loss (8.07 minutes), and fourteen-outcome reconciliation (7.33 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization across both RTX 3090 GPUs outside active compute intervals; `gpu_idle_on_compute_bound_tasks` is false as no compute-bound idle anomalies or multi-model parallel dispatch requirements were present, and 0% GPU utilization is expected behavior for synthesis tasks.
+- Recommended operational improvements: instrument delayed learner qualification with fine-grained intra-task phase timers, add sub-phase breakdown logging to Qwen concurrency benchmark runners, implement incremental caching for fourteen-outcome reconciliation, and capture continuous in-flight accelerator telemetry during compute-bound execution.
 
 ## 2026-10-07 — Operational retrospective for milestone 2026.10.711
 
@@ -21671,3 +21677,7 @@ Recorded 12 completed experiments in 44.0 minutes (0.7 hours), including 1 compu
 - 2026-10-07: Qualify PolarFire transfer validation and attempt a bounded board-local state dispatch (⚠️ Research Finding) — honest_verdict=complete_disqualified_polarfire_state_dispatch; results/experiment_8245_v712_polarfire_state_dispatch.json
 - 2026-10-07: Carry GateMate physical-change evidence into the next executable reopen decision (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_physical_change; results/experiment_8246_v712_gatemate_change_ledger.json
 - 2026-10-07: Reconcile all fourteen outcomes and retire unchanged decision-only nulls (⚠️ Blocked) — honest_verdict=complete_blocked_upstream_evidence; results/experiment_8247_v712_capstone.json
+
+### Milestone 2026.10.712 — operational retrospective
+
+Recorded 14 completed experiments in 101.3 minutes (1.7 hours), including 2 compute-bound tasks. Qualify the existing delayed learner through its uncovered failure paths (25.78 min) and Cover request-error reduction and qualify real bounded Qwen concurrency (16.36 min) led the listed timings. Proposed sub-phase timing instrumentation for delayed learner qualification and Qwen benchmark runners, incremental outcome reconciliation caching, direct receipt timestamp logging, and continuous in-flight accelerator telemetry. Locked artifact fields remain unchanged; GPU idle on compute-bound tasks is false, parallel-model dispatch had no data available this milestone, and estimated time savings remain 0%. Artifact: `results/operational_retro_2026_10_712.json`.

@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.712",
+  "generated_at": "2026-10-07T20:22:34Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 101.3,
+  "experiments_completed": 14,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify the existing delayed learner through its uncovered failure paths",
+      "duration_minutes": 25.78,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Cover request-error reduction and qualify real bounded Qwen concurrency",
+      "duration_minutes": 16.36,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure independent serial and concurrent Qwen requests including cold costs",
+      "duration_minutes": 9.59,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Train matched energy and simple policies with decision-sensitive loss",
+      "duration_minutes": 8.07,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile all fourteen outcomes and retire unchanged decision-only nulls",
+      "duration_minutes": 7.33,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.712 completed 14 experiments (2 compute-bound, 12 synthesis-only) across 101.3 total wall-time minutes (averaging 7 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was led by synthesis task 'Qualify the existing delayed learner through its uncovered failure paths' (25.78 minutes), followed by two compute-bound Qwen concurrency and cold-cost evaluation tasks (16.36 minutes and 9.59 minutes), policy training with decision-sensitive loss (8.07 minutes), and fourteen-outcome reconciliation (7.33 minutes). With gpu_idle_on_compute_bound_tasks recorded as false, the snapshot of 0% GPU utilization across both NVIDIA GeForce RTX 3090 GPUs reflects post-run idle state rather than an active-task compute stall, and single-model Qwen workloads correctly operated without DualGPURunner multi-model dispatch.",
+  "bottlenecks_identified": [
+    "The single slowest task was a synthesis-only workload, 'Qualify the existing delayed learner through its uncovered failure paths', consuming 25.78 minutes (over 25% of total milestone wall time) due to serial execution of un-instrumented failure-path qualification.",
+    "The two compute-bound Qwen tasks ('Cover request-error reduction and qualify real bounded Qwen concurrency' at 16.36 minutes and 'Measure independent serial and concurrent Qwen requests including cold costs' at 9.59 minutes) accounted for 25.95 minutes of wall time, but lacked sub-phase telemetry to separate model loading and cold start overhead from active inference concurrency.",
+    "Synthesis-only experiments represented 12 of the 14 completed tasks and 3 of the top 5 slowest tasks (totaling 41.18 minutes among the top 5 alone), executing without stage-level caching or intermediate receipt checkpoints for policy training and outcome reconciliation."
+  ],
+  "improvements_suggested": [
+    "Instrument delayed learner failure-path qualification with granular sub-phase timers to isolate path exploration, state validation, and artifact serialization bottlenecks.",
+    "Add intra-task phase breakdown logging (cold model load, request dispatch, concurrent queuing, and inference latency) to Qwen benchmark runners.",
+    "Implement memoization and incremental evaluation for fourteen-outcome reconciliation to skip unchanged decision-only null evaluations.",
+    "Persist synchronous start and end timestamps directly into experiment result receipts to avoid relying on disk-mtime reconstruction fallbacks.",
+    "Capture continuous in-flight accelerator utilization and memory metrics during compute-bound execution to corroborate point-in-time GPU monitor reports."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add granular sub-phase timing instrumentation to delayed learner failure path qualification to identify the primary driver of its 25.78-minute runtime.",
+    "Instrument Qwen compute-bound benchmarking tasks with sub-phase metrics isolating cold model loading, queuing latency, and active GPU inference.",
+    "Implement incremental outcome reconciliation caching to eliminate redundant evaluation across multi-task milestone wrap-ups."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.712 saw wall time predominantly driven by a single 25.78-minute synthesis failure-path qualification task and two compute-bound Qwen concurrency benchmarks totaling 25.95 minutes across 101.3 total wall-time minutes. GPU resources were utilized appropriately during compute-bound tasks with gpu_idle_on_compute_bound_tasks confirmed false, and single-model workloads correctly avoided unnecessary DualGPURunner invocation. Future milestone efficiency gains will require fine-grained sub-phase telemetry in both long-running synthesis learners and compute-bound Qwen concurrency harnesses."
+}

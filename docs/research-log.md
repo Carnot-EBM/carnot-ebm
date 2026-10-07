@@ -7309,3 +7309,10 @@ Operational evidence addendum: this entry supersedes earlier operational asserti
 - theme: Operational efficiency across 12 completed experiments (1 compute-bound, 11 synthesis-only) in 44 minutes of milestone wall time.
 - key result: honest operational negative — 12 experiments completed in 44.0 minutes led by PRD gap reconciliation (8.54 min), GateMate blocker preservation (6.75 min), and cross-game supervisor outcome inspection (6.32 min); the single compute-bound task completed in under 5.61 minutes outside the top 5 slowest tasks, and available records lack intra-task sub-phase telemetry and active-interval GPU telemetry.
 - acceptance: no data available this milestone
+
+### Milestone 2026.10.712
+
+- exp_range: no data available this milestone
+- theme: Operational efficiency across 14 completed experiments (2 compute-bound, 12 synthesis-only) in 101 minutes of milestone wall time.
+- key result: honest operational negative — 14 experiments completed in 101.3 minutes led by delayed learner qualification (25.78 min), bounded Qwen concurrency (16.36 min), and independent Qwen request benchmarks (9.59 min); GPU utilization was 0% post-run with gpu_idle_on_compute_bound_tasks recorded as false, and available records lack intra-task sub-phase telemetry and continuous in-flight accelerator sampling.
+- acceptance: no data available this milestone
