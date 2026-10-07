@@ -419,3 +419,11 @@ Additional official ARC-AGI-3 Semi-Private results absent from your supplied fin
 
 **September 3 — GPT-6 Astra results announced:** ARC-AGI-3 Semi-Private scores reached **62.7%** with the Standard harness (max reasoning) and **99.9%** with the Provider Adapter harness (high reasoning). [Official announcement](https://arcprize.org/blog/astra), [verified results](https://arcprize.org/results/openai-gpt-6-astra).
 
+## 2026-10-07 13:11 UTC -- NEW
+
+- **October 1 — Milestone #2 winners:** Daniel Franzen **27.9% ($25,000)**; Lord Han Solo **23.8% ($7,500)**; Lohit Siriki **22.5% ($5,000)**. [ARC Prize announcement](https://x.com/arcprize/status/2105737436450201734), [announcement mirror](https://site.twstalker.com/arcprize).
+
+- **October 5 — Leaderboard snapshot:** Tufa Labs led with **55.89%**, followed by Yi-Chia Chen at **48.59%**. These are dated reported standings; the directly indexed Kaggle leaderboard was older. [Source](https://www.metirai.com/blog/arc-agi-3-kaggle-scores-surge-harnesses-arc-prize-2026).
+
+- **September 29 — GPT-6.1 Sol verified results:** ARC-AGI-3 Semi-Private scores reached **52.7%** with the Standard harness at max reasoning and **96.4%** with the Provider Adapter harness at xhigh reasoning. [Official results](https://arcprize.org/results/openai-gpt-6-1-sol).
+

@@ -1,0 +1,180 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,sys,coverage,re\nfrom pathlib import Path\nfrom carnot.reporting.current_work_receipt import sha256_file\nraw=Path(sys.argv[1]); private=Path(sys.argv[2]); root=Path(sys.argv[3])\nreport=raw/'logs/changed_code_coverage.json'\nreceipt=next(r for r in json.loads((raw/'validation_receipts.json').read_bytes())['rows'] if r['name']=='coverage_json')\nassert sha256_file(report)==receipt['coverage_reference']['sha256']\nreport_value=json.loads(report.read_bytes())\nwork=json.loads((raw/'measurement.json').read_bytes())\nrefs={r['path']:r['sha256'] for r in work['code_config_hashes']}\nfrom carnot.verify import delayed_utility_execution_8225 as legacy\nmapping={}\nfor name in legacy.OWNED:\n    assert sha256_file(root/name)==refs[str(root/name)]\n    mapping[str(root/name)]=report_value['files'][name]['executed_lines']\nprior=raw.parent/'1791379474837412104-final-batch'\nprior_receipt=json.loads((prior/'logs/final_coverage_report.receipt.json').read_bytes())\nconsole=prior/'logs/final_coverage_report.stdout'\nassert sha256_file(console)==prior_receipt['stdout_sha256']\ncurrent_refs={r['path']:r['sha256'] for r in json.loads((prior/'measurement.json').read_bytes())['code_config_hashes']}\nfrom carnot.verify import learning_validation_8235 as current\nanalysis=coverage.Coverage(config_file=str(private/'coverage.ini'),data_file='/tmp/carnot-8235-source-analysis.coverage')\nfor name in current.OWNED:\n    assert sha256_file(root/name)==current_refs[str(root/name)]\n    row=re.search(r'^'+re.escape(name)+r'\\s+(\\d+)\\s+(\\d+)\\s+\\d+%\\s*([^\n]*)',console.read_text(),re.MULTILINE)\n    assert row is not None\n    statements=set(analysis.analysis2(str(root/name))[1])\n    assert len(statements)==int(row.group(1))\n    missing=set()\n    for item in row.group(3).split(','):\n        item=item.strip()\n        if not item: continue\n        bounds=item.split('-')\n        missing.update(range(int(bounds[0]),int(bounds[-1])+1))\n    assert len(missing)==int(row.group(2)) and missing <= statements\n    mapping[str(root/name)]=sorted(set(mapping.get(str(root/name),[])) | (statements-missing))\ndata=coverage.CoverageData(basename=str(private/'.coverage.current_baseline'))\ndata.add_lines(mapping); data.write()\nprint(json.dumps({'authenticated_report':str(report),'sha256':sha256_file(report),'imported_executed_statement_counts':{name:len(lines) for name,lines in mapping.items()}},sort_keys=True),flush=True)\n",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8235_v712_learning_validation/invocations/1791378422406004029",
+        "/tmp/carnot-8235-final-arc3lh3u",
+        "/home/ianblenke/github.com/ianblenke/carnot"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "restore_authenticated_current_baseline"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8235-final-arc3lh3u/coverage.ini"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "final_coverage_combine_complete"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot-8235-final-arc3lh3u/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "final_coverage_report_complete"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8235-final-arc3lh3u/coverage.ini",
+        "-o",
+        "/tmp/carnot-8235-final-arc3lh3u/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "final_coverage_json_complete"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/delayed_utility_learning_8225.py",
+        "python/carnot/verify/delayed_utility_execution_8225.py",
+        "scripts/experiments/experiment_8225_v711_delayed_utility_learning.py",
+        "python/carnot/verify/utility_kernel_8221.py",
+        "python/carnot/verify/learning_validation_8235.py",
+        "scripts/experiments/experiment_8235_v712_learning_validation.py",
+        "tests/python/test_learning_validation_8235.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "final_ruff_check_complete"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/delayed_utility_learning_8225.py",
+        "python/carnot/verify/delayed_utility_execution_8225.py",
+        "scripts/experiments/experiment_8225_v711_delayed_utility_learning.py",
+        "python/carnot/verify/utility_kernel_8221.py",
+        "python/carnot/verify/learning_validation_8235.py",
+        "scripts/experiments/experiment_8235_v712_learning_validation.py",
+        "tests/python/test_learning_validation_8235.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "final_ruff_format_complete"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=skip",
+        "python/carnot/verify/delayed_utility_learning_8225.py",
+        "python/carnot/verify/delayed_utility_execution_8225.py",
+        "scripts/experiments/experiment_8225_v711_delayed_utility_learning.py",
+        "python/carnot/verify/utility_kernel_8221.py",
+        "python/carnot/verify/learning_validation_8235.py",
+        "scripts/experiments/experiment_8235_v712_learning_validation.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "final_strict_mypy_complete"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_learning_validation_8235.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "final_spec_coverage_complete"
+    }
+  ],
+  "continued_from": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8235_v712_learning_validation/invocations/1791378422406004029",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8235_v712_learning_validation/invocations/1791379474837412104-final-batch"
+  ],
+  "imported_validation_receipts": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8235_v712_learning_validation/invocations/1791378422406004029/logs/owned_unit_and_private_CLI.receipt.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8235_v712_learning_validation/invocations/1791378422406004029/logs/consumer_and_E2E015_019.receipt.json"
+  ],
+  "repository_health": {
+    "argv": [
+      "/usr/bin/env",
+      "COVERAGE_FILE=/tmp/carnot-8235-final-arc3lh3u/repository_health.coverage",
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "classification": "diagnostic",
+    "deadline_s": 180,
+    "expected_exit": 0,
+    "name": "repository_full_suite"
+  },
+  "terminal_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8235_v712_learning_validation.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8235_v712_learning_validation/terminal_candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8235_v712_learning_validation/terminal_candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "adversarial_verify"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8235_v712_learning_validation/terminal_candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_row_lint"
+    }
+  ]
+}

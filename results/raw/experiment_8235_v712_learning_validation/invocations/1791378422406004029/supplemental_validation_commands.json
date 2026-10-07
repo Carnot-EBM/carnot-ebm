@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "/usr/bin/env",
+    "COVERAGE_RCFILE=/tmp/carnot-8111-p3s2f07h/coverage.ini",
+    "CARNOT_8235_CONTROL_DIR=/tmp/carnot-8111-p3s2f07h/corrected_controls",
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+    "run",
+    "--rcfile=/tmp/carnot-8111-p3s2f07h/coverage.ini",
+    "-m",
+    "pytest",
+    "-n",
+    "0",
+    "-o",
+    "addopts=",
+    "--no-cov",
+    "-q",
+    "-s",
+    "tests/python/test_learning_validation_8235.py",
+    "-k",
+    "actual_receipt_mismatch",
+    "--basetemp=/tmp/carnot-8111-p3s2f07h/log_control_pytest"
+  ],
+  "classification": "required",
+  "deadline_s": 180,
+  "expected_exit": 0,
+  "name": "coverage_preserving_log_failure_controls"
+}

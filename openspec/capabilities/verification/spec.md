@@ -50569,6 +50569,28 @@ V709 public-row scorer and V711 probability-tree kernel. It records72 corrected
 arm/seed conditions plus the original baseline and escalation control per slot.
 It compares normalized energies, preserves masks and binds every saved state.
 
+## REQ-VERIFY-8235: Reach authenticated schema and replay log failure paths
+
+Use the current AST statement map for Exp8225's two historical uncovered paths.
+Private malformed feature bytes SHALL pass actual hash binding before triggering
+the schema exception handler. Private receipt logs SHALL pass artifact byte checks
+before an actual stdout or stderr mismatch rejects cold replay. Preserve every
+existing assertion, threshold and Coverage.py patch=_exit child configuration.
+Combine current unit, real CLI and hard-exit child shards without exclusions.
+Qualification grants execution readiness only; it does not measure scientific H2.
+
+### SCENARIO-VERIFY-8235-FAILURES
+
+Assert all preceding schema gates pass, the final schema gate fails, and no owned
+failure is invented. For stdout and stderr independently, mutate a log omitted
+from raw shards, recompute the candidate checksum, and trace the actual receipt
+mismatch return. Real exits73 at90/170 recover exact states and journals.
+
+Implementation2026-10-07: `test_learning_validation_8235.py` uses authenticated
+private malformed bytes and return profiling that preserves Coverage.py tracing.
+The producer reports only its declared owned files at the unchanged100 percent
+threshold; all original learner/kernel assertions and scientific methods remain.
+
 ## REQ-VERIFY-8225: causal persistent utility corrections (FR-11)
 
 Execute the frozen Exp8219/8221 probability kernel on original256 slots,

@@ -94938,6 +94938,29 @@ recomputes the seal. Private tests cover label, state, slot, log and rehashed
 aggregate changes. Ops and traceability reconciliation is delegated to the
 conductor by the task's explicit stop rule.
 
+## REQ-REPORT-8235: Qualify delayed learning execution separately from benefit
+
+Authenticate the disqualified Exp8225 primary, failed coverage receipt and original
+trajectory/state bytes. Preserve its verdict and all V710/V711 scientific methods.
+Publish a new execution qualification with zero current model calls and both
+generalization scores zero. Freeze task mappings and protocol hashes only in
+v712-learning-execution-bindings.json. Missing external operands block with exact
+field/operator/expected/observed/hash gates. Owned failures disqualify and clear
+learning_execution_ready_score. Require current100 percent owned unit/CLI/child
+statements, real exit73 recovery, E2E-020/021 and unchanged terminal validators.
+Keep bounded full-suite diagnostics separate. The conductor owns ops reconciliation.
+
+### SCENARIO-REPORT-8235-CLI
+
+Private CLI candidates and cold replay authenticate receipts and original bytes;
+missing operands block, invalid dates and public fixture paths fail, and rehashed
+headline or log tampering fails. Publication is atomic after required normal exits.
+
+Implementation2026-10-07: `learning_validation_8235.py` and its thin CLI bind
+the historical failure and original primitives to current scoped validation.
+Private reports retain real recovery exits and hashes outside pytest cleanup.
+The conductor owns ops/status/changelog/traceability reconciliation after exit.
+
 ## REQ-REPORT-8225: delayed utility trajectory publication
 
 Authenticate Exp8221 causal readiness, its hash-bound terminal receipt, the
