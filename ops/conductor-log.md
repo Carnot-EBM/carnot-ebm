@@ -19716,3 +19716,4 @@ code |
 | 2026-10-07 07:49 UTC | Audit later utility proper loss and retention from | GATE_BLOCK | gate-unsat(final): 3 of 4 gate(s) failed; first failure: exp8225-delayed-utility-learning.utility_trajectory_ready_score (actual=0 == expected=1) |
 | 2026-10-07 08:29 UTC | Freeze request isolation and qualify a bounded two | OK | 105 passed, 1 warning in 41.27s |
 | 2026-10-07 08:32 UTC | Measure independent serial and concurrent requests | GATE_BLOCK | gate-unsat(final): 3 of 4 gate(s) failed; first failure: exp8227-concurrency-canary.concurrent_canary_ready_score (actual=0 == expected=1) |
+| 2026-10-07 09:00 UTC | Inspect new environment-grounded supervisor outcom | OK | 95 passed, 1 warning in 48.31s |
