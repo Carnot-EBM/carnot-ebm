@@ -51032,3 +51032,93 @@ Some repository completion timestamps are October 7 UTC.
   The page describes an energy-based constraint layer beneath AI systems.
   No executable local recipe or reproducible benchmark was established from
   this page. Treat it as architecture positioning, not evidence of parity.
+
+## 2026-10-07 — V712 source review, recorded before experiment design
+
+The V711 primary artifacts establish a qualified static null. Group-corrected
+energy and global-only energy made identical reserved decisions: zero improved
+sources and zero cost gain. The learning and concurrency producers failed owned
+coverage checks. These are separate scientific and execution findings.
+
+### Promising findings and proposed tests
+
+- **Decision-Calibrated Conformal Uncertainty for Pacing Decisions in Streaming
+  Advertising**, 2026-06-08, [arXiv:2606.10187](https://arxiv.org/abs/2606.10187).
+  The paper measures uncertainty through the policies that use it. This motivates
+  a small Carnot experiment that weights training examples by their public
+  decision margin, then measures actual accept/reject/escalate cost. The proposed
+  weighted log-loss objective is our heuristic, not the paper's conformal algorithm.
+  It inherits no coverage guarantee. Include equally weighted simple heads and
+  unchanged unweighted heads, with the same features and fitting budget.
+- **Inference-Time Decision Calibration for Temporal Classification**,
+  2026-06-14, [arXiv:2606.16034](https://arxiv.org/abs/2606.16034).
+  Separating representation and calibration helps interpret a null: a changed
+  probability need not supply useful evidence or change an action. Record margin,
+  probability and action deltas separately. No temporal-classification result is
+  evidence of hallucination-detection benefit in Carnot.
+- **Optimal Recalibration of an Online Predictor**, 2026-07-22,
+  [arXiv:2607.19689](https://arxiv.org/abs/2607.19689).
+  The study separates calibration from excess proper loss. Preserve that
+  distinction in the delayed-learning audit. First qualify the existing causal
+  learner's uncovered failure paths; do not change its scientific protocol after
+  observing its trajectory. No Blackwell-approachability or regret theorem is
+  claimed for the finite Carnot stream.
+- **NLPCC 2026 Task 10: Citation-Level Faithfulness Verification with DeBERTa
+  Ensembles and Class-Wise Calibration**, 2026-09-19,
+  [arXiv:2609.22774](https://arxiv.org/abs/2609.22774).
+  This is a useful future independent grounding benchmark. The label and evidence
+  retrieval heads have distinct errors. Defer importing its corpus until license,
+  data availability and exposure checks establish a suitable comparison.
+- **Evidence-Aligned Entity Verification for Hallucination Detection in
+  Retrieval-Augmented Generation**, 2026-09-08,
+  [arXiv:2609.08267](https://arxiv.org/abs/2609.08267).
+  Entity-evidence alignment and counterfactual stability are future extraction
+  leads if another decision-only mechanism is null. A new extraction test must
+  preserve qualifiers and use independent labels. This paper does not reopen
+  unchanged retired counter-evidence protocols.
+- **Provably Tractable NFA-Constrained Language Generation via HMMs**,
+  2026-09-30, [arXiv:2609.40185](https://arxiv.org/abs/2609.40185).
+  NFA-LM is a new constrained-decoding lead. Its formal-language guarantees do
+  not establish semantic correctness. Defer integration until a task needs this
+  constraint class and the useful-verifier prerequisite is met.
+
+### Primary scan across the required topics
+
+| Topic | Source checked | Planning consequence |
+|---|---|---|
+| EBM verification/reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM/EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605v4), revised 2026-05-25 | Keep energy as verifier. Probability-equivalent controls prevent a representation from being mistaken for new information. |
+| Neural constraints | [NSVIF, 2601.17789](https://arxiv.org/abs/2601.17789); [constrained parameterization, 2606.00855](https://arxiv.org/abs/2606.00855) | Constraint satisfaction certifies the encoding, not the extraction. No automatic zero-false-positive claim. |
+| Ising in ML | [Higher-Order Neuromorphic Ising Machines, 2506.19964](https://arxiv.org/abs/2506.19964) | Keep sampler and decision-head operation compatibility separate. |
+| Hallucination detection | [HalluTracer, 2608.16353](https://arxiv.org/abs/2608.16353); the two grounding papers above | Internal-state access and new source evidence remain future mechanisms, not substitutes for current measured inputs. |
+| KAN and continual learning | [On-chip spline learning, 2602.02056v4](https://arxiv.org/abs/2602.02056v4); [KAN forgetting, 2511.12828](https://arxiv.org/abs/2511.12828) | Measure sparse state, update costs and independent retention; locality alone cannot prove retention. |
+| Guided decoding | [ETS, 2601.21484v3](https://arxiv.org/abs/2601.21484v3), revised 2026-05-19; NFA-LM above | Defer steering until the verifier earns a measured role. |
+| FPGA sampling | [FPGA decomposition co-design, 2602.15985](https://arxiv.org/abs/2602.15985) | Include transfer and host orchestration in any speed claim. |
+| Online constraints | [Global calibration/multiaccuracy, 2504.15206v2](https://arxiv.org/abs/2504.15206v2); online recalibration above | Distinguish calibrated probabilities, later action benefit and preservation of earlier knowledge. |
+
+### Secondary-source checks and access limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM and verification work. The
+  [EBT PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg) identifies itself as an
+  ICLR 2026 conference paper. Other retrieved submissions identify themselves as
+  under review. Search pages also contained unrelated spam; those are excluded.
+- **Extropic:** checked the [writing index](https://extropic.ai/writing) and
+  [Z1T article](https://extropic.ai/writing/z1t/), dated 2026-09-04. Z1T separates
+  sparse chip operations from FPGA work. Its energy estimates and open training
+  recipe do not establish Carnot TSU access or measured whole-request savings.
+- **Semantic Scholar:** attempted Graph API citation lists for both
+  `ARXIV:2507.02092` and `ARXIV:2512.15605`. Both reads failed in the browsing
+  tool. No verified complete citation census or citation counts are claimed.
+- **Hugging Face:** the [Spilled Energy paper page](https://huggingface.co/papers/2602.18671)
+  loaded and links the authors' [repository](https://github.com/OmnAI-Lab/spilled-energy).
+  The citation-faithfulness paper page failed to load. Feed summaries are discovery
+  aids; primary papers supply method claims.
+- **GitHub Trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned pages were
+  cached three weeks earlier. No current trending rank or newly qualified
+  EBM/constraint/KAN replacement is asserted.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  Its constraint/energy framing remains architecture context. The inspected page
+  does not provide a reproducible local implementation for this milestone.
+
+These findings are hypotheses and comparisons. No external result changes a
+local retirement, hardware-access boundary, sealed dataset or model mandate.
