@@ -21634,3 +21634,4 @@ Recorded 13 completed experiments in 43.9 minutes (0.7 hours), including 2 compu
 ### Milestone 2026.10.710 — operational retrospective
 
 Recorded 2 completed experiments in 13.2 minutes (0.2 hours), with 0 compute-bound tasks. Task binding and immutable historical replay qualification (13.2 min) led the listed timings. Proposed sub-phase execution timers, caching for immutable historical replay validation, and lifecycle receipt timestamps. Locked artifact fields remain unchanged; GPU idle on compute-bound tasks is null, parallel-model dispatch had no data available this milestone, and estimated time savings remain 0%. Artifact: `results/operational_retro_2026_10_710.json`.
+- 2026-10-07: Bind fourteen current tasks and preserve the two actual V710 outcomes (⚠️ Research Finding) — honest_verdict=complete_circular_positive_current_contract; results/experiment_8220_v711_current_contract.json
