@@ -1,5 +1,31 @@
 # Carnot — Operational Status
 
+## 2026-10-06 — V711 research plan staged
+
+Milestone `2026.10.711` contains exactly fourteen proposed tasks, Exp8220–Exp8233,
+across four phases. Its design is `openspec/change-proposals/research-roadmap-vNEXT.md`;
+its execution contract is `research-roadmap-next.yaml`. The complete task JSON,
+visible table and canonical digest bind the same tasks. V710's design is preserved
+in `openspec/change-proposals/research-roadmap-v710-preserved-20261006.md`.
+
+V710 actually activated two tasks. Exp8218 retained a disqualified historical
+replay outcome. Exp8219 qualified a utility-correction protocol without measuring
+benefit. The new plan executes that protocol, tests persistent delayed learning,
+and measures independent bounded Qwen request concurrency. Separate ARC, KV260,
+PolarFire and GateMate tasks remain explicit. Reused cohorts stay development
+evidence. No experiment is activated by this planning change.
+
+Planning checks pass for fourteen complete task objects, gate fields, model
+substrates, failure lineage and prompt formatting. The 91 relevant unit and
+private E2E-018 checks pass. Scoped Ruff and spec coverage pass. The active
+roadmap and conductor source remain byte-identical; no push occurred.
+
+Repository-wide spec coverage still reports 1,142 existing missing references.
+These scoped planning passes do not establish a repository-wide pass.
+Final reconciliation passes documentation freshness and reports only that
+existing repository-wide spec-traceability issue.
+
+
 ## 2026-10-06 — Exp8210 frozen replay repair
 
 The standalone restricted audit manifest now binds Exp8210's CLI through the

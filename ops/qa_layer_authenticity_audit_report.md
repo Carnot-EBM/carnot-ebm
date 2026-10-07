@@ -19,7 +19,7 @@ Scanned 20 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21):
 
 ---
 
-## adversarial_verify.py::check_novelty_proposal_ablation_overclaim
+## adversarial_verify.py::main
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -30,7 +30,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_claims_proposal_filter_coverage_up
+## worktree_import_guard.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -41,7 +41,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::check_proposal_filter_heldout_rejection_overclaim
+## capstone_milestone_rot_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -52,7 +52,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::check_perception_overclaim
+## harness_integrity_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -63,7 +63,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_claims_world_model_trust_pass
+## eval_run_consumer_field_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -74,7 +74,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_grid_changing_correct_evidence
+## substrate_alias_evidence_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -85,7 +85,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_has_s2_schema_signal
+## determination_preservation_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -96,7 +96,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_engine_selection_game_rows
+## test_suite_mutation_check.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -107,7 +107,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_candidate_outcome_values
+## operator_curated_docs_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -118,7 +118,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_count_effective_selection_games
+## operator_curated_doc_guard.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -129,7 +129,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_draws_selection_conclusion
+## child_results_guard.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -140,7 +140,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::check_engine_selection_candidate_diversity
+## artifact_freshness_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -151,7 +151,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::check_world_model_trust_degeneracy
+## arc_artifact_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -162,7 +162,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_is_arc_outer_loop_calibration_solve
+## arc_count_integrity_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -173,7 +173,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::check_arc_outer_loop_solve
+## arc_llm_on_liveness_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -184,7 +184,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_verify_artifact_impl
+## verifier_authenticity_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -195,7 +195,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::verify_artifact
+## arc_orphan_solver_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -206,7 +206,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::sweep_milestone_range
+## tracked_results_guard.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -217,7 +217,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_claims_live_model
+## research_complete_ledger_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------
@@ -228,7 +228,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::backfill_stamps
+## mutation_marker_lint.py
 
 (audit call failed: codex exit 1: OpenAI Codex v0.156.1
 --------

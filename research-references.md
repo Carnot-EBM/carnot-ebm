@@ -50950,3 +50950,85 @@ Local motivation is distinct from paper evidence. V709's center-growth audit
 reports worse later cost than fixed centers. Its service audit puts the scoring
 share near 0.008 percent. Group corrections and request-level acquisition work
 are candidate changes to those mechanisms; neither is an observed improvement.
+
+## 2026-10-06 — V711 source scan, before experiment design
+
+This scan follows the two tasks actually activated in V710 (Exp8218–8219).
+The fourteen-task V710 design was not its executed schedule. Exp8219 froze a
+usable utility protocol; no patch benefit has been measured. Exp8218 retained
+missing original-code operands and a disqualified verdict. The completed YAML
+archive ends at V709; V710 outcomes come from primary artifacts and the log.
+Some repository completion timestamps are October 7 UTC.
+
+### Methods to carry into the next experiments
+
+- **Scalable Utility-Aware Multiclass Calibration**, Hegazy et al., October 29,
+  2025, [paper](https://arxiv.org/abs/2510.25458),
+  [full text](https://arxiv.org/html/2510.25458v1),
+  [author code](https://github.com/mahegz/Scalable-Calibration).
+  Rechecked the utility-based evaluation and Appendix A patching discussion.
+  Execute the finite-group, bounded empirical adaptation already frozen by
+  Exp8219. Compare identically patched energy and simple heads. The paper does
+  not establish a Carnot benefit or justify tuning on reserved outcomes.
+- **How Global Calibration Strengthens Multiaccuracy**, Casacuberta et al.,
+  April 2025, revised February 17, 2026,
+  [paper](https://arxiv.org/abs/2504.15206). Its complementary global and group
+  conditions motivate the frozen global-only, local-only and combined controls.
+  Theoretical learning implications do not transfer automatically to a small,
+  exposed stream with delayed feedback.
+- **Optimal Recalibration of an Online Predictor**, Hu, Tian and Yang,
+  July 22, 2026, [paper](https://arxiv.org/abs/2607.19689),
+  [full text](https://arxiv.org/html/2607.19689v1). This newly checked lead jointly
+  studies calibration and excess proper loss relative to an original predictor,
+  including multiple hints. Use that distinction in the continual-learning
+  audit: report residual calibration, excess Brier loss and actual action cost
+  separately, against frozen and global-only predictors. Keep Exp8219's method
+  fixed. A future implementation of the paper's approachability algorithm needs
+  its own protocol; this milestone does not claim its rates or guarantees.
+- **Self-Reports Are Not Verification: Environment-Grounded Auditing of LLM
+  Operators in Evolutionary Search**, Pan et al., September 1, 2026,
+  [paper](https://arxiv.org/abs/2609.00652). Its environment-based outcomes are
+  useful methodological support for ARC supervisor evaluation. Separate stated
+  confidence and inherited rationales from actual progress after redirects.
+  Existing authenticated game receipts, not model self-reports, determine any
+  cross-game selection finding. This is an adaptation, not a Contexto replication.
+
+### Requested topic coverage and deferred leads
+
+| Topic | Primary source checked | Planning consequence |
+|---|---|---|
+| EBM reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM/EBM, 2512.15605](https://arxiv.org/abs/2512.15605) | Equivalent probability controls remain essential; no generator retraining. |
+| Neural constraint satisfaction | [NSVIF, 2601.17789](https://arxiv.org/abs/2601.17789); [constraint acquisition, 2609.12267](https://arxiv.org/abs/2609.12267) | Symbolic consistency still depends on faithful semantic extraction. Defer a new neural oracle until the current sentence evidence earns decision value. |
+| Ising and structured energies | [Neural Ising Machines, 2602.00302](https://arxiv.org/abs/2602.00302); [Convex Compositional Reasoning, 2605.23395](https://arxiv.org/abs/2605.23395) | Keep sampler and convex-model leads separate from the retired energy-generates mechanism; no new sampler benchmark without a suitable workload. |
+| Hallucination detection | [Diversion Decoding, 2607.10476](https://arxiv.org/abs/2607.10476); [HalluScoring 2026, 2609.38355](https://arxiv.org/abs/2609.38355) | Perturbation features and question/model-shift evaluation are later leads. Arabic data, licensing, exposure and feature-access checks precede any corpus claim. |
+| KAN and continual learning | [KAC, 2503.21076](https://arxiv.org/abs/2503.21076); [KAN forgetting, 2511.12828](https://arxiv.org/abs/2511.12828) | Local bases do not guarantee retention. Retain independent retention and equally adaptive controls after the failed center-growth result. |
+| Energy-guided generation | [ETS, 2601.21484](https://arxiv.org/abs/2601.21484); [object hallucination decoding, 2507.07731](https://arxiv.org/abs/2507.07731) | Defer steering until useful detection; the second work is vision-language and does not directly fit the text GGUF path. |
+| FPGA/thermodynamic sampling | [FPGA–ASIC co-design, 2602.15985](https://arxiv.org/abs/2602.15985); [Extropic Z1T](https://extropic.ai/writing/z1t/) | Bound full request cost and state transfer before proposing a hardware mapping. |
+
+### Secondary channels and limits
+
+- **OpenReview:** searched 2026 energy/reasoning submissions. The indexed
+  [neural Ising submission](https://openreview.net/pdf?id=5H8kxW0Efk) was
+  discoverable; opening it returned a browser challenge. Use its checked arXiv
+  counterpart for technical claims. This scan did not establish acceptance.
+- **Semantic Scholar:** searched both anchor IDs and attempted Graph API citation
+  lists for `ARXIV:2507.02092` and `ARXIV:2512.15605`. Both requests failed in
+  the browser tool. No authenticated citing-paper inventory or citation count
+  was recovered; citation coverage remains incomplete.
+- **Hugging Face:** checked [verification papers](https://huggingface.co/papers?q=verification)
+  and [verifier papers](https://huggingface.co/papers?q=verifier). These are
+  discovery indexes, not evidence for performance claims. No unverified summary
+  changes the registered method.
+- **GitHub Trending:** checked [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned pages were
+  crawled three weeks earlier; no current trending EBM/KAN discovery is claimed.
+  The utility-calibration author repository is a concrete code reference.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and the September 4,
+  2026 [Z1T article](https://extropic.ai/writing/z1t/). It describes sparse
+  operations distributed between Z1 and FPGA coprocessors, with open recipe and
+  weight links. Its energy/latency figures are estimates. It establishes neither
+  local TSU access nor measured Carnot efficiency.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  The page describes an energy-based constraint layer beneath AI systems.
+  No executable local recipe or reproducible benchmark was established from
+  this page. Treat it as architecture positioning, not evidence of parity.

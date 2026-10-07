@@ -1,5 +1,30 @@
 # Carnot — Traceability Matrix
 
+## Planned V711 research mapping — 2026-10-06
+
+The staged milestone contains exactly fourteen tasks, Exp8220–Exp8233. See
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+These are planned experiments, not implemented capability requirements. V710's
+actual two-task outcome is distinct from its preserved fourteen-task design.
+
+| PRD requirement | Planned tasks | Existing capability anchor |
+|---|---|---|
+| FR-06, FR-12 | Exp8221–Exp8224 | verification/spec.md; REQ-VERIFY-8219 and matched utility decisions |
+| FR-11 | Exp8221, Exp8225–Exp8226 | verification/spec.md; REQ-VERIFY-8206, causal feedback and retention |
+| FR-05, FR-08, NFR-01 | Exp8227–Exp8228, Exp8230–Exp8232 | verification/spec.md; REQ-VERIFY-8213 and complete request/state costs |
+| FR-09, FR-10 | Exp8220, Exp8233 and each task's checks | research-reporting/spec.md; REQ-REPORT-7837, REQ-REPORT-7891-V685 |
+| ARC generalization floor | Exp8229 | arc-world-model-trust-energy/spec.md; REQ-ARC-WMTE-6640 |
+
+Validation uses existing contract and authority readers, gate/exclusion tests,
+private E2E-018 CLI tests, scoped Ruff and spec coverage. All 91 selected tests
+pass. The active V710 authority is preserved; staged matching is not activation.
+
+Repository-wide spec coverage still reports 1,142 existing missing references.
+These scoped planning passes do not establish a repository-wide pass.
+Final reconciliation passes documentation freshness and reports only that
+existing repository-wide spec-traceability issue.
+
+
 ## Planned V709 research mapping — 2026-10-06
 
 The staged milestone contains exactly thirteen tasks, Exp8205–Exp8217; see

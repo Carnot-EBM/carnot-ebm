@@ -1,5 +1,26 @@
 # Carnot — Changelog
 
+## 2026-10-06 — Plan milestone 2026.10.711
+
+- Added a matching fourteen-task design and next roadmap, Exp8220–Exp8233.
+  Preserved V710's prior design and its actual two-task execution history.
+- Recorded a fresh primary and secondary literature scan before designing tasks.
+  Logged unavailable Semantic Scholar citation lists and OpenReview access limits.
+- Carried the qualified utility protocol into matched static and continual tests.
+  Added bounded Qwen concurrency measurement and separate obligations for ARC
+  generalization, KV260, PolarFire and GateMate.
+- Verified full task/digest agreement, gate spellings, model substrates, prior
+  failures, placeholders and protected-file hashes. All 91 scoped unit/private
+  E2E-018 checks, scoped Ruff and spec coverage pass.
+- Planning only: no activation, implementation changes, active-roadmap edits,
+  conductor edits or push.
+
+Repository-wide spec coverage still reports 1,142 existing missing references.
+These scoped planning passes do not establish a repository-wide pass.
+Final reconciliation passes documentation freshness and reports only that
+existing repository-wide spec-traceability issue.
+
+
 ## 2026-10-07 — Operational retrospective for milestone 2026.10.710
 
 - Wrote `results/operational_retro_2026_10_710.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.710`. Authoritative disk-mtime fallback data records 2 experiments completed (0 compute-bound, 2 synthesis-only) across 13.2 total wall-time minutes (average 7 minutes per experiment).
