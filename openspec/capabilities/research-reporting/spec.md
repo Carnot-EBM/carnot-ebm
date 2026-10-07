@@ -94702,3 +94702,42 @@ V710 pair and a private matching activation copy. They reject count, order,
 title, prompt, gate, model, deliverable and digest mutations. Planning checks
 SHALL preserve real historical science dispositions and existing workspace edits.
 Status: planned contract only; no experiment implementation or activation.
+
+## REQ-REPORT-8218: Qualify immutable V710 contract replay separately
+
+Exp8218 SHALL bind fourteen tasks with the existing parameterized authority
+readers (first_id=8218, count=14). Visible table, complete task JSON and digest
+SHALL agree. Staged readiness SHALL never imply activation. Preserve all thirteen
+V709 outcomes, primary bytes, receipt schema versions and terminal sidecars.
+Producer seals SHALL resolve to immutable original bytes; a mutable checkout
+comparison SHALL NOT imply historical misconduct. Missing original bytes and
+unavailable external reproduction operands SHALL produce complete_blocked_*
+with exact path/hash/field/operator/expected/observed gates. Owned check failure
+SHALL disqualify and zero readiness. No model, activation or publication claim.
+
+### SCENARIO-REPORT-8218-CONTRACT
+
+Private matching authority passes; count, order, title, prompt, gate, model,
+deliverable, visible table and digest changes fail. Missing staging is distinct
+from missing activation. Preserve current external authority without rewriting it.
+
+### SCENARIO-REPORT-8218-HISTORY
+
+Run byte-bound terminal readers with documented mapping-v1/reference-list-v1
+and named-receipt schemas. Preserve failed historical reports. Authenticate
+retained Exp8217 affected-reducer logs before any consumer change; reproduction
+unavailability remains explicit. Freeze a minimal consumer validation manifest.
+
+### SCENARIO-REPORT-8218-CLI
+
+The thin real CLI publishes private checked candidates atomically, accepts cold
+replay in a fresh process, rejects rehashed aggregate/primitive/log mutations,
+and rejects invalid dates and fixture destinations. Freeze commands before
+measurement, retain full stream hashes and clocks, and measure all new statements.
+
+REQ-REPORT-8218 implementation: `v710_contract_replay.py` reuses parameterized
+complete-task readers; `v710_replay_history.py` preserves full primary snapshots
+and field-bound dispositions; `v710_replay_runner.py` freezes owned checks and
+publishes through unchanged terminal validators. Invocation receipts determine
+readiness. Missing authority and originals remain explicit; historical science
+is unchanged. The conductor owns ops and traceability reconciliation.

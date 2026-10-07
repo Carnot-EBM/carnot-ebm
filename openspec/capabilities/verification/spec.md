@@ -50375,3 +50375,27 @@ checks. Cached learning uses no_model_load. Both bounded Qwen experiments use
 model_bounded_generation. ARC receipt review grants no level-solve credit.
 Hardware review preserves separate KV260, PolarFire and GateMate obligations.
 All experiment behavior remains proposed until its spec-first implementation.
+
+## REQ-VERIFY-8218: Authenticate original audit primitives without science credit
+
+Freeze the repaired Exp8210 audit CLI itself, never the Exp8208 trainer. Run it
+on private copies of original primitive rows and preserve all128 slots, registered
+H1 costs, thresholds and source missingness. Compare original H1 reduction only
+for custody; no training or threshold choice. Keep this receipt outside scientific
+branch gates and both generalization scores at zero. Administrative oracle success
+is circular_positive. Historical scientific verdicts SHALL remain unchanged.
+
+### SCENARIO-VERIFY-8218-REPLAY
+
+Actual successful and expected-failure children and tampered receipts SHALL be
+measured without copied or mocked passed flags. Cold replay SHALL authenticate
+immutable code, source and stream bytes and recompute contract and reduction.
+Private E2E-015/019 and applicable E2E-018/021 SHALL retain genuine outcomes.
+Repository-wide health is a separate bounded diagnostic, never a green claim.
+
+REQ-VERIFY-8218 implementation: the repaired audit CLI replays private original
+primitives with frozen registered H1 operands. Actual success, assertion-failure
+and aggregate-tamper controls retain exits and full stream hashes. Fresh-process
+replay authenticates original projections, source/code copies and H1 reduction.
+Complete primary snapshots retain rows and missingness without duplicating large
+scientific arrays in administrative summaries. No current LLM calls or training.

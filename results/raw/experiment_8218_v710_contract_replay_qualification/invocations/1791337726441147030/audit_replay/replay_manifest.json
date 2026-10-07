@@ -1,0 +1,58 @@
+{
+  "CLI": "scripts/experiments/experiment_8210_v709_restricted_decision_audit.py",
+  "argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py",
+    "--cold-replay",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8218_v710_contract_replay_qualification/invocations/1791337726441147030/audit_replay/candidate.json"
+  ],
+  "controls": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-c",
+        "/dev/null",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8218_v710_contract_replay_qualification/invocations/1791337726441147030/audit_controls/tiny_pass.py",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8218_v710_contract_replay_qualification/invocations/1791337726441147030/audit_controls/tiny_pass_temp"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "tiny_pass",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-c",
+        "/dev/null",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8218_v710_contract_replay_qualification/invocations/1791337726441147030/audit_controls/tiny_fail.py",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8218_v710_contract_replay_qualification/invocations/1791337726441147030/audit_controls/tiny_fail_temp"
+      ],
+      "deadline": 180,
+      "expected": 1,
+      "name": "tiny_fail",
+      "scope": "owned"
+    }
+  ],
+  "expected_exits": [
+    0,
+    1
+  ],
+  "frozen_before_measurement_ns": 998656795248815,
+  "tampered_argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py",
+    "--cold-replay",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8218_v710_contract_replay_qualification/invocations/1791337726441147030/audit_replay/tampered_candidate.json"
+  ]
+}
