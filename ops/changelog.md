@@ -21638,3 +21638,4 @@ Recorded 2 completed experiments in 13.2 minutes (0.2 hours), with 0 compute-bou
 - 2026-10-07: Qualify the frozen correction kernel and causal admission state (⚠️ Research Finding) — honest_verdict=complete_circular_positive_utility_kernel; results/experiment_8221_v711_utility_kernel.json
 - 2026-10-07: Fit matched energy and simple corrections on the original fit and tune roles (⚠️ Research Finding) — honest_verdict=complete_null_utility_fit; results/experiment_8222_v711_utility_fit.json
 - 2026-10-07: Seal corrected predictions for every original reserved source (⚠️ Research Finding) — honest_verdict=complete_null_utility_seal; results/experiment_8223_v711_utility_seal.json
+- 2026-10-07: Test corrected decision utility against equally adapted controls (⚠️ Research Finding) — honest_verdict=complete_null_utility_audit; results/experiment_8224_v711_utility_audit.json
