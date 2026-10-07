@@ -9,11 +9,47 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 3 |
+| CHECKABLE | 1 |
 | AGGREGATE_ONLY | 1 |
-| CANNOT_DETERMINE | 4 |
+| CANNOT_DETERMINE | 6 |
 
-## experiment_8226_learning_audit.json
+## experiment_8240_v712_qualified_delayed_learning.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8241_v712_delayed_benefit_audit.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8242_v712_independent_concurrent_service.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8243_v712_arc_supervisor_frontier.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8244_v712_kv260_decision_boundary.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8245_v712_polarfire_state_dispatch.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8246_v712_gatemate_change_ledger.json
 
 **CHECKABLE**
 
@@ -21,7 +57,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run was blocked at the conductor pre-gate because upstream experiment exp8225-delayed-utility-learning failed prerequisite gate checks.
+GateMate hardware execution remains blocked because no authenticated physical change evidence has been recorded since experiment 8232.
 
 ## WHAT IS MISSING
 nothing
@@ -29,63 +65,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8227_v711_concurrency_canary.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8228_concurrent_service.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked at the conductor pre-gate because upstream dependency `exp8227-concurrency-canary` failed three of four evaluation gates.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8229_v711_arc_outcome_delta.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8230_v711_kv260_workload_boundary.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8231_v711_polarfire_state_boundary.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8232_v711_gatemate_continuity.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-GateMate hardware execution remains blocked due to the absence of recorded operator physical change evidence following historical JTAG IDCODE failure.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8233_v711_capstone.json
+## experiment_8247_v712_capstone.json
 
 **AGGREGATE_ONLY**
 
@@ -93,10 +73,10 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-Hypothesis H1 failed because treatment arm `energy_group` achieved zero cost gain (`lower_gain` = 0.0) and zero improved sources (`improved_sources` = 0 vs. >= 5 expected) relative to comparator `energy_global`.
+The artifact claims hypothesis H1 failed because `energy_margin` did not meet the required thresholds for `lower_gain`, `improved_sources`, and `original_frozen_v707_radial_cost_increase` relative to the calibration-selected primary arm and baseline controls.
 
 ## WHAT IS MISSING
-Per-unit records showing individual outcomes for each of the 97 complete sources or 128 slots (`cluster_unit`: "original_source", `complete_sources`: 97, `intended_count`: 128). Present are only pooled arm-level aggregates in `calibration_and_cost_comparisons` (`all_slot_cost`, `complete_case_brier`, `complete_case_cost`, `treatment_brier_increase`, and `treatment_cost_increase`), summary counts in `complete_class_support`, and summary diagnostics in `bootstrap_diagnostics`.
+While aggregate summary values are reported in `statistics.H1.operands` and `action_switch_matrices`, the artifact's `action_switch_rows` contains per-unit entries exclusively for `"arm": "energy_uniform"`. Per-unit/per-source rows giving metrics, costs, and decisions for the actual arms evaluated in the comparison (`energy_margin`, `primary`, `original_frozen_v707_radial`, `additive_margin`, and `logistic_margin`) are missing entirely.
 
 ## THE CHECK A READER CANNOT DO
-A reader cannot determine whether `energy_group` and `energy_global` produced identical predictions across all 97 sources or whether individual positive and negative source-level gains canceled out to zero.
+A reader cannot determine which 2 source clusters actually improved under `energy_margin`, nor whether the observed `lower_gain` of -0.04296875 was a consistent effect across sources or driven by extreme outliers.

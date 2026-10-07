@@ -51122,3 +51122,86 @@ coverage checks. These are separate scientific and execution findings.
 
 These findings are hypotheses and comparisons. No external result changes a
 local retirement, hardware-access boundary, sealed dataset or model mandate.
+
+## 2026-10-07 — V713 research scan, before milestone design
+
+V712 qualified its static and delayed experiments. Both decision-benefit gates
+were null. Its capstone retired the margin-only objective on the exposed cohort.
+New evidence features are a better next question than another coefficient sweep.
+The following are research leads, not measured Carnot improvements.
+
+### Methods worth testing
+
+- **Evidence-Aligned Entity Verification for Hallucination Detection in
+  Retrieval-Augmented Generation**, Runsong Jia et al., 2026-09-08.
+  [Paper and methods](https://arxiv.org/html/2609.08267v1).
+  The method combines entity identity, semantic alignment, consistency, and
+  stability under evidence perturbations. Carnot can test a narrower adaptation:
+  use intact response sentences and source sentences to measure support changes
+  when the selected evidence is removed. Include an equal-length irrelevant
+  deletion control. This tests evidence dependence, not an EAEV reproduction.
+  A deletion can remove redundant or incomplete evidence; its effect is a feature,
+  never a correctness label. Preserve qualifiers and the original source bytes.
+- **SEVA: Self-Evolving Verification Agent with Process Reward for Fact
+  Attribution**, Aojie Yuan et al., 2026-06-29.
+  [Primary paper](https://arxiv.org/abs/2606.29713).
+  The work uses structured attribution and diagnoses, then studies self-evolution.
+  Its reported cross-benchmark tradeoffs motivate separate retention checks.
+  Borrow the diagnostic-to-memory question, not its generator-training recipe.
+  Test whether released attribution errors can add useful reusable constraints.
+- **Adaptive Conformal Inference Under Delayed Feedback**, Lama El Halabi and
+  Adam Brandt, 2026-09-07. [Paper](https://arxiv.org/abs/2609.07251).
+  Delays change the relation between predictions, outcomes, and updates.
+  Freeze issuance clocks and delayed release before measuring online memory.
+  The proposed counter learner is not ACI and inherits no coverage theorem.
+- **Ultrafast On-Chip Online Learning via Spline Locality in Kolmogorov-Arnold
+  Networks**, Duc Hoang et al.; revised 2026-06-19.
+  [Paper](https://arxiv.org/abs/2602.02056).
+  Sparse local updates motivate bounded state and operation counts.
+  **Catastrophic Forgetting in Kolmogorov-Arnold Networks**, 2025-11-16,
+  [paper](https://arxiv.org/abs/2511.12828), cautions against assuming retention
+  from local support alone. Compare old and new behavior on a sealed panel.
+
+### Broad primary-source coverage
+
+| Required topic | Source checked | Planning consequence |
+|---|---|---|
+| EBM verification and reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092) | Train small verification heads. Foundation-model training remains outside scope. |
+| ARM/EBM relation | [2512.15605v4](https://arxiv.org/abs/2512.15605), [ICML proceedings](https://proceedings.mlr.press/v306/blondel26a.html) | Include probability-equivalent and equal-information controls. An energy representation does not add truth. |
+| Neural constraint satisfaction | [NSVIF, 2601.17789](https://arxiv.org/abs/2601.17789) | Separate extraction correctness from formal validity. Exact text addresses certify custody only. |
+| Ising in ML | [Neural Ising Machines, 2602.00302](https://arxiv.org/abs/2602.00302), [equilibrium propagation, 2606.09112](https://arxiv.org/abs/2606.09112) | Interesting learning mechanisms; defer until a compatible local workload and useful signal exist. |
+| Hallucination detection | Entity verification and SEVA above; [Spilled Energy](https://huggingface.co/papers/2602.18671) | Prioritize source intervention over another unchanged scalar confidence head. |
+| KAN and continual learning | Online KAN and forgetting papers above; [KAC, 2503.21076](https://arxiv.org/abs/2503.21076) | Measure retained accuracy, touched coefficients, and durable update cost separately. |
+| Guided decoding | [ETS, 2601.21484](https://arxiv.org/abs/2601.21484), [DCCD, 2603.03305](https://arxiv.org/abs/2603.03305) | Structured transport is not semantic verification. Defer steering until decision benefit qualifies. |
+| FPGA and thermodynamic sampling | [FPGA/ASIC co-design, 2602.15985](https://arxiv.org/abs/2602.15985), [Extropic Z1T](https://extropic.ai/writing/z1t/) | Count transfer, host orchestration, and unsupported operations in whole-request bounds. |
+
+### Secondary-source access and limits
+
+- **OpenReview:** searches found the [EBT PDF](https://openreview.net/pdf/f9139bb41c8b7a03e09be518a71426bcbd061a3f.pdf)
+  and an [intrinsic-optimizer submission](https://openreview.net/pdf?id=UGB6JCl9lz)
+  citing EBT. Indexed snippets label the latter under review. Direct requests for
+  the [entity-verification](https://openreview.net/pdf?id=96vyGkAO08) and
+  [neural Ising](https://openreview.net/pdf?id=5H8kxW0Efk) PDFs reached browser
+  challenges. No acceptance claim follows from those snippets.
+- **Extropic:** the [writing index](https://extropic.ai/writing) returned a sparse
+  navigation page. Z1T loaded. Its energy projections exclude final vocabulary
+  readout and inter-chip movement from the headline comparison. Local complete
+  service timing must include both. The page does not establish Carnot TSU access.
+- **Semantic Scholar:** both Graph API citation queries, for ARXIV:2507.02092 and
+  ARXIV:2512.15605, returned tool errors. Title searches did not recover a verified
+  citation inventory. Citation coverage remains incomplete; it is not zero.
+- **Hugging Face papers:** entity-verification and SEVA pages failed to load.
+  The [Spilled Energy page](https://huggingface.co/papers/2602.18671) loaded and
+  linked the [author repository](https://github.com/OmnAI-Lab/spilled-energy).
+  Treat that implementation as a future comparator, not proof of local benefit.
+- **GitHub Trending:** weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) pages were three weeks
+  stale. No current trending rank is asserted. EBT's
+  [author repository](https://github.com/Diogenesoftoronto/EnergyBasedTransformer)
+  was found separately. No new library dependency is needed for this milestone.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona) still
+  describes a constraint reasoning layer. The inspected page supplies no local
+  training or evaluation recipe. It remains architectural context.
+
+All adaptations need matched controls and independent labels. Reusing Carnot's
+exposed development sources does not establish independent generalization.

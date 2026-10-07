@@ -2,6 +2,21 @@
 
 # Research Reporting Capability Specification
 
+## Planned V713 contract and evidence work — 2026-10-07
+
+The proposed V713 milestone has exactly fourteen tasks, Exp8248–Exp8261.
+`openspec/change-proposals/research-roadmap-vNEXT.md` contains its visible table
+and full task JSON. `research-roadmap-next.yaml` contains the same task objects.
+Existing REQ-REPORT-7837 and REQ-REPORT-7891-V685 anchor planning validation.
+
+This is a planning reconciliation, not a new implemented behavior. Each task
+must extend its driving REQ-* and SCENARIO-* before implementation. The plan
+requires source rows, exact gate operands, closed verdict classes, current
+model-call provenance and independent replay. Informative-null retirement
+requires qualified controls and action headroom. Hardware evidence keeps
+current device work separate from historical receipts and CPU calculations.
+
+
 ## REQ-REPORT-8243: Inspect only the sealed Exp8229 supervisor frontier
 
 Authenticate Exp8229 primary and bound terminal bytes, producer contracts,

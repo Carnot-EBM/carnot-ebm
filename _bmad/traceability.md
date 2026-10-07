@@ -1,5 +1,26 @@
 # Carnot — Traceability Matrix
 
+## Planned V713 research mapping — 2026-10-07
+
+The staged contract contains fourteen tasks, Exp8248–Exp8261. Its complete
+design and YAML agree. These mappings describe planned work, not implemented
+requirements or measured scientific benefit.
+
+| PRD requirement | Planned tasks | Existing capability anchor |
+|---|---|---|
+| FR-06, FR-12 | Exp8248–Exp8254 | verification/spec.md; REQ-VERIFY-8179, REQ-VERIFY-8183 |
+| FR-11 | Exp8249, Exp8255–Exp8256 | verification/spec.md; REQ-VERIFY-8206 and causal-memory requirements |
+| FR-05, FR-08, NFR-01 | Exp8250–Exp8253 cost capture; Exp8258–Exp8259 | verification/spec.md and research-reporting/spec.md; deployment evidence |
+| FR-09, FR-10 | Exp8248–Exp8249, Exp8261; every task's validation | research-reporting/spec.md; REQ-REPORT-7837, REQ-REPORT-7891-V685 |
+| ARC generalization standing floor | Exp8257 | arc-world-model-trust-energy/spec.md; REQ-ARC-WMTE-6640 |
+| Attached-board continuity | Exp8258–Exp8260 | research-reporting/spec.md; current hardware evidence requirements |
+
+V712's design is retained at
+`openspec/change-proposals/research-roadmap-v712-preserved-20261007.md`.
+The new design references current evidence without promoting nulls, fixtures,
+historical model calls or host computations into scientific/device claims.
+
+
 ## Planned V711 research mapping — 2026-10-06
 
 The staged milestone contains exactly fourteen tasks, Exp8220–Exp8233. See

@@ -1,5 +1,26 @@
 # Carnot — Operational Status
 
+## 2026-10-07 — V713 research plan staged
+
+Milestone `2026.10.713` proposes exactly fourteen tasks, Exp8248–Exp8261,
+across four phases. The matching design is
+`openspec/change-proposals/research-roadmap-vNEXT.md`; execution prompts are in
+`research-roadmap-next.yaml`. V712's complete design is preserved separately.
+
+V712 executed fourteen tasks but its static and delayed decision gates were
+null. V713 tests new source-evidence interventions, calibrated small heads,
+continuous constraint admission and independent retention. Current local LLM
+tasks use Qwen3.8-27B GGUF with bounded generation. ARC outcome inspection and
+separate KV260, PolarFire and GateMate obligations remain explicit.
+
+A public-input census removed an impossible cached-citation prerequisite.
+The revised method has 105 fit, 53 tune and 97 evaluation sources available
+before new inference. These are feasibility counts, not experiment results.
+Retirement requires informative controls and action headroom. All cohorts
+remain exposed development. Planning does not activate experiments, change
+the active roadmap or conductor, or publish externally.
+
+
 ## 2026-10-06 — V711 research plan staged
 
 Milestone `2026.10.711` contains exactly fourteen proposed tasks, Exp8220–Exp8233,

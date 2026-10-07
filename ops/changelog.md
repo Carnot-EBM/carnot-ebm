@@ -1,5 +1,20 @@
 # Carnot — Changelog
 
+## 2026-10-07 — Plan milestone 2026.10.713
+
+- Recorded a current primary/secondary research scan before experiment design.
+  Preserved access limits for Semantic Scholar, OpenReview and GitHub Trending.
+- Added fourteen matching tasks, Exp8248–Exp8261, with four phases, architecture,
+  exact task objects, gates, failure lineage and hardware requirements.
+- Preserved V712's design. Its qualified decision and learning nulls motivate
+  new evidence features and causal constraint admission, not margin retuning.
+- Revised an impossible citation-support gate after adversarial review and a
+  public-input census. Added a control-only head, informative-null checks and
+  total-task capture budgets. Kept ARC and each board obligation explicit.
+- Planning only. The active roadmap and conductor source are unchanged.
+  No experiments were activated and nothing was pushed.
+
+
 ## 2026-10-06 — Plan milestone 2026.10.711
 
 - Added a matching fourteen-task design and next roadmap, Exp8220–Exp8233.
