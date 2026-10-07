@@ -19730,3 +19730,4 @@ code |
 | 2026-10-07 15:21 UTC | Seal all reserved decisions from the frozen margin | OK | 86 passed, 1 warning in 61.86s (0:01:01) |
 | 2026-10-07 15:44 UTC | Test margin-trained decision value against equally | OK | 87 passed, 1 warning in 44.63s |
 | 2026-10-07 16:17 UTC | Run the unchanged continuous learner after complet | OK | 85 passed, 1 warning in 48.81s |
+| 2026-10-07 16:52 UTC | Measure later decision benefit and independent ret | OK | 88 passed, 1 warning in 36.19s |
