@@ -1,0 +1,44 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.710",
+  "generated_at": "2026-10-07T02:37:54Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 13.2,
+  "experiments_completed": 2,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Bind fourteen tasks and qualify immutable historical replay",
+      "duration_minutes": 13.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Freeze utility witnesses and matched energy correction controls",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.710 completed 2 experiments (0 compute-bound, 2 synthesis-only) across 13.2 total wall-time minutes (averaging 7 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was concentrated in synthesis task 'Bind fourteen tasks and qualify immutable historical replay' (13.2 minutes), while 'Freeze utility witnesses and matched energy correction controls' completed in 0.01 minutes. Because no compute-bound experiments were executed (compute_bound_experiments_count=0), gpu_idle_on_compute_bound_tasks is null, and observed 0% GPU utilization across both NVIDIA GeForce RTX 3090 GPUs reflects expected non-accelerated behavior for synthesis tasks.",
+  "bottlenecks_identified": [
+    "Execution wall time was heavily concentrated in the single slowest task: synthesis experiment 'Bind fourteen tasks and qualify immutable historical replay' accounted for 13.2 of the 13.2 total milestone wall-time minutes.",
+    "Both completed experiments were synthesis-only workloads totaling 13.2 minutes with 0 compute-bound experiments; ambient 0% GPU utilization on both RTX 3090 GPUs represents correct non-accelerated synthesis behavior rather than an execution bottleneck.",
+    "Milestone timing relied on disk-mtime fallback reconstruction following zero commits on the live git-log path, leaving intra-task execution phases (task binding, replay qualification, schema validation, and artifact serialization) uninstrumented without granular sub-phase telemetry."
+  ],
+  "improvements_suggested": [
+    "Instrument synthesis tasks with granular intra-task sub-phase timers to isolate task binding, historical replay qualification, schema checks, and artifact emission.",
+    "Implement caching or incremental validation for immutable historical replay qualification in 'Bind fourteen tasks and qualify immutable historical replay' to avoid re-evaluating unchanged historical replay states.",
+    "Emit synchronous lifecycle start and completion timestamps directly into experiment result receipts during conductor execution to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Deploy continuous in-flight accelerator telemetry sampling during future compute-bound tasks so GPU utilization can be verified during active compute windows.",
+    "Enforce DualGPURunner dispatch strictly when two or more distinct models execute in parallel, avoiding misapplication on single-model or synthesis-only workloads."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument task binding and historical replay synthesis runners with granular sub-phase execution timers to expose serial verification latency.",
+    "Implement caching and incremental validation for immutable historical replay qualification to reduce repetitive verification overhead.",
+    "Persist structured start and finish lifecycle timestamps directly into experiment receipt artifacts to replace disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.710 completed 2 synthesis-only experiments in 13.2 wall-time minutes with 0 compute-bound experiments, where latency was almost entirely consumed by 'Bind fourteen tasks and qualify immutable historical replay' (13.2 minutes). The observed 0% GPU utilization across both NVIDIA GeForce RTX 3090 GPUs represents expected ambient behavior for non-accelerated code and JSON synthesis, with gpu_idle_on_compute_bound_tasks recorded as null. Highest-leverage operational gains lie in instrumenting intra-task execution phases and caching historical replay qualification passes, with estimated time savings set to a conservative 0% pending empirical phase telemetry."
+}

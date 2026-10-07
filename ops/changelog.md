@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-07 — Operational retrospective for milestone 2026.10.710
+
+- Wrote `results/operational_retro_2026_10_710.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.710`. Authoritative disk-mtime fallback data records 2 experiments completed (0 compute-bound, 2 synthesis-only) across 13.2 total wall-time minutes (average 7 minutes per experiment).
+- Execution wall time was concentrated in synthesis task 'Bind fourteen tasks and qualify immutable historical replay' (13.2 minutes), followed by synthesis task 'Freeze utility witnesses and matched energy correction controls' (0.01 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs; `gpu_idle_on_compute_bound_tasks` is null as zero compute-bound experiments were executed and 0% GPU utilization is expected behavior for synthesis tasks.
+- Recommended operational improvements: instrument synthesis tasks with granular sub-phase timers to isolate task binding and historical replay qualification latency, implement caching for immutable historical replay validation, and persist structured lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-07 — Operational retrospective for milestone 2026.10.709
 
 - Wrote `results/operational_retro_2026_10_709.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.709`. Authoritative disk-mtime fallback data records 13 experiments completed (2 compute-bound, 11 synthesis-only) across 43.9 total wall-time minutes (average 3 minutes per experiment).
@@ -21602,3 +21609,7 @@ Recorded 10 completed experiments in 25 minutes, including 1 compute-bound task.
 Recorded 13 completed experiments in 43.9 minutes (0.7 hours), including 2 compute-bound tasks. Bounded Qwen acquisition (11.17 min) and synthesis reconciliation (10.24 min) led the listed timings. Proposed phase-level execution receipts, incremental evidence reduction for synthesis reconciliation, and interval-joined GPU telemetry. Locked artifact fields remain unchanged; GPU idle on compute-bound tasks is false, parallel-model dispatch had no data available this milestone, and estimated time savings remain 0%. Artifact: `results/operational_retro_2026_10_709.json`.
 - 2026-10-07: Bind fourteen tasks and qualify immutable historical replay (⚠️ Research Finding) — honest_verdict=complete_disqualified_original_code_bytes; results/experiment_8218_v710_contract_replay_qualification.json
 - 2026-10-07: Freeze utility witnesses and matched energy correction controls (⚠️ Research Finding) — honest_verdict=complete_null_utility_patch_methods; results/experiment_8219_v710_utility_patch_methods.json
+
+### Milestone 2026.10.710 — operational retrospective
+
+Recorded 2 completed experiments in 13.2 minutes (0.2 hours), with 0 compute-bound tasks. Task binding and immutable historical replay qualification (13.2 min) led the listed timings. Proposed sub-phase execution timers, caching for immutable historical replay validation, and lifecycle receipt timestamps. Locked artifact fields remain unchanged; GPU idle on compute-bound tasks is null, parallel-model dispatch had no data available this milestone, and estimated time savings remain 0%. Artifact: `results/operational_retro_2026_10_710.json`.
