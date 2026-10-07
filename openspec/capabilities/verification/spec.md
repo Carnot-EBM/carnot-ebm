@@ -50429,3 +50429,28 @@ descriptively: accept residual5*r_g, reject residual-r_g, escalate residual0.
 Appendix A of2510.25458 and2504.15206 motivate empirical bounded corrections;
 population oracle, fresh independent sampling and full global calibration do not
 transfer. No correction training or evaluation/retention label access occurs here.
+
+## REQ-VERIFY-8220: Measured current authority qualification without benefit credit
+
+Freeze literal argv, expected exits and bounded deadlines before measurement.
+Reuse qualified child supervision with flushed boundaries, heartbeats and process
+group cleanup. Preserve full stdout/stderr hashes and clocks. Measure100percent
+new statements including real CLI subprocesses, scoped Ruff check/format, strict
+mypy, explicit spec tracing and private E2E-018. Run the full Python suite once
+as bounded repository health; its failures SHALL never become an owned pass.
+Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Administrative
+oracle agreement is circular_positive; both generalization scores remain zero.
+
+### SCENARIO-VERIFY-8220-REPLAY
+
+Valid and tampered byte-bound receipt readers and real expected-failure children
+exercise current readiness only. Fresh-process replay rehashes saved primitives,
+logs and current source copies and independently recomputes authority/history.
+Missing historical originals retain their prior disposition. Failed owned checks
+zero current readiness, even when external evidence is also missing.
+
+REQ-VERIFY-8220 implementation: the existing bounded supervisor retains actual
+expected-success/failure child receipts. Coverage.py subprocess instrumentation
+measures only the two current modules and direct script. Independent replay
+recomputes authority and historical excerpts from saved input bytes. Unrelated
+repository health retains its literal exits and cannot supply owned readiness.

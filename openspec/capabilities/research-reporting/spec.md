@@ -94762,3 +94762,40 @@ Freeze owned commands before measurement; measure100percent new-code coverage,
 Ruff, strict mypy,spec tracing and private E2E-015/019. Bound repository health
 separately and preserve its failures. Unchanged primary_publication,adversarial
 and strict row checks precede atomic publication. Preserve historical bytes.
+
+## REQ-REPORT-8220: Bind current V711 authority and preserve actual V710 history
+
+Exp8220 SHALL bind fourteen tasks, first_id=8220, against the visible table,
+complete JSON, canonical digest, independent staged YAML when present, and real
+active YAML. It SHALL never activate by copying staging. Snapshot current owned
+sources before validation. Preserve the two actual V710 outcomes byte for byte,
+including Exp8218 original_code_bytes failures and Exp8219 registered unmeasured
+H1/H2. Record twelve unexecuted design entries from the preserved V710 document;
+missing historical originals SHALL remain unavailable without reconstruction.
+Current administrative readiness grants no scientific benefit or science gate.
+External missing/schema operands SHALL block; owned failures SHALL disqualify.
+
+### SCENARIO-REPORT-8220-CONTRACT
+
+Private matching, staged-only and absent authority cases distinguish activation
+from planning. Count, order, prompt, title, gate, model and digest mutations fail.
+Two historical dispositions and twelve unexecuted entries retain their identity.
+
+### SCENARIO-REPORT-8220-CLI
+
+The real CLI accepts private matching and externally blocked fixtures, rejects
+invalid dates and fixture destinations, and cold-replays in a fresh process.
+Rehashed row, history, receipt, source and primitive mutations SHALL fail. Atomic
+publication uses unchanged primary terminal, adversarial and strict row checks.
+
+## REQ-REPORT-8220-STATUS
+
+The conductor owns ops and traceability reconciliation. This implementation
+reconciles capability specifications only; no generator or conductor edits.
+
+REQ-REPORT-8220 implementation: `v711_current_contract.py` reuses the complete-task
+reader and historical failure precedence; saved source bytes retain two outcomes
+and twelve preserved design excerpts. `v711_current_runner.py` freezes current
+checks and atomically publishes only unchanged-terminal-validated candidates.
+Private CLI, staged-only, missing/schema and rehashed tamper cases are covered by
+`test_v711_current_contract_8220.py`. No active YAML or historical primary is edited.

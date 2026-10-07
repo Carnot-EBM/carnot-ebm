@@ -1,0 +1,32 @@
+{
+  "actual_exit": 0,
+  "argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "-c",
+    "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+    "--exp7303-resolve-imports",
+    "/home/ianblenke/github.com/ianblenke/carnot",
+    "carnot.reporting.v711_current_contract",
+    "carnot.reporting.v711_current_runner"
+  ],
+  "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.reporting.v711_current_contract carnot.reporting.v711_current_runner",
+  "deadline_s": 240,
+  "duration_s": 1.518381515,
+  "ended_monotonic_ns": 1006373687275829,
+  "exit_code": 0,
+  "expected_exit": 0,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8220_v711_current_contract/invocations/1791345458828756550/validation_logs/worktree_imports.stdout",
+  "log_sha256": "sha256:d46cd4900347a0fbefa79709a15bbcaa08389ce1fdc7673e488d51ed02f65c75",
+  "name": "worktree_imports",
+  "normal_exit": true,
+  "passed": true,
+  "scope": "owned",
+  "started_monotonic_ns": 1006372168894314,
+  "started_wall_ns": 1791345463958065020,
+  "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8220_v711_current_contract/invocations/1791345458828756550/validation_logs/worktree_imports.stderr",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8220_v711_current_contract/invocations/1791345458828756550/validation_logs/worktree_imports.stdout",
+  "stdout_sha256": "sha256:d46cd4900347a0fbefa79709a15bbcaa08389ce1fdc7673e488d51ed02f65c75",
+  "timed_out": false
+}

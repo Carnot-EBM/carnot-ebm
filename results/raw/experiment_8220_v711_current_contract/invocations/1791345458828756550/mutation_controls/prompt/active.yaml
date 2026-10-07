@@ -1,0 +1,2339 @@
+milestone: 2026.10.711
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+milestone_title: Execute utility corrections, test delayed learning, and measure acquisition
+  concurrency
+tasks:
+- MODEL_SPECS: []
+  deliverable: results/experiment_8220_v711_current_contract.json
+  estimated_wall_time_min: 30
+  gated_on: []
+  id: exp8220-current-contract
+  inference_substrate_class: no_model_load
+  max_turns: 100
+  milestone: 2026.10.711
+  model: opus
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: Replace archive-wide reconstruction with prospective current-source
+      custody; preserve missing originals as historical unavailable operands. The
+      fully emitted fourteen-task V711 contract fixes the prior count mismatch.
+    experiment_id: exp8218-contract-replay-qualification
+    retire_if_same_verdict: true
+    verdict: complete_disqualified_original_code_bytes
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. V710 activated only Exp8218 and Exp8219. Its
+    design claimed fourteen tasks. Exp8218 is complete_disqualified_original_code_bytes;
+    Exp8219 has utility_protocol_ready_score=1. The archive currently stops at V709.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md;
+    python/carnot/reporting/roadmap_contract.py; python/carnot/reporting/v685_authority_lifecycle.py;
+    python/carnot/reporting/v709_qualification.py; results/experiment_8218_v710_contract_replay_qualification.json;
+    results/experiment_8219_v710_utility_patch_methods.json; openspec/change-proposals/research-roadmap-v710-preserved-20261006.md
+
+    TASK:
+
+    Bind fourteen current tasks and preserve the two actual V710 outcomes. Deliver
+    results/experiment_8220_v711_current_contract.json. Create the thin runner scripts/experiments/experiment_8220_v711_current_contract.py.
+    Store primitive evidence under results/raw/experiment_8220_v711_current_contract/.
+    Keep execution readiness separate from benefit.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS: Emit a flushed start line. Authenticate named inputs, schemas,
+    writable private scratch and resources. Record actual commands and exits. Missing
+    external evidence yields complete_blocked_<operand> with verdict_class=blocked.
+    Do not fabricate inputs or substitute missing rows.
+
+    1. Emit a flushed progress line at every phase boundary. Emit lines before and
+    after each model load, generation, benchmark and subprocess. Print completed/pending
+    counts inside long loops. Emit a heartbeat at least every 60 seconds while a child
+    runs. Keep every output gap below 600 seconds. Use unbuffered output, bounded
+    child deadlines and process-group cleanup. Write any file over about 200 lines
+    in several tool calls of at most about 150 lines. Send a progress message between
+    file-writing calls. Split long work into resumable batches; no single huge tool
+    call. Do not pad runtime.
+
+    2. Extend the relevant REQ-* and SCENARIO-* before implementation. Write focused
+    failing tests first. Exercise real CLI and failure paths. Keep original tests
+    and assertions. Reuse qualified helpers. Keep scratch outside the repository root
+    and fixture outputs outside results/. Follow the V711 design. No generator weight
+    changes or external publication.
+
+    3. Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts
+    for reductions, or verifier_ensemble_against_cached_candidates for numerical fitting/scoring.
+    Declare trained_head_specs separately. Historical Qwen provenance is not a current
+    invocation.
+
+    4. Bind V711 with first_id=8220 and count=14. Compare visible table, complete
+    JSON, canonical digest and staged YAML. After activation compare the real active
+    YAML. Never copy the staged YAML into the active slot to claim activation. Test
+    count, order, prompt, title, gate, model and digest mutations using private fixtures.
+
+    5. Snapshot current owned source/config bytes before validation and replay. Record
+    V710 as two scheduled outcomes and twelve unexecuted design entries. Preserve
+    Exp8218 original-code failures and Exp8219 registered, unmeasured H1/H2. Do not
+    attempt another archive-wide reconstruction of unavailable original code.
+
+    6. Qualify only the current authority CLI and receipt reader on valid, tampered
+    and externally blocked private cases. Missing historical originals remain unavailable
+    evidence, separate from current authority readiness. Do not upgrade historical
+    dispositions. Store current snapshots for the capstone; this administrative result
+    is not a science-branch gate.
+
+    7. Run applicable private E2E-018 from ops/e2e-test-plan.md using private fixtures.
+    Freeze exact owned commands before measurement. Run relevant unit/consumer tests,
+    measured 100% changed-code coverage including real CLI/child statements, scoped
+    Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>.
+    Preserve argv, expected/actual exits, full stdout/stderr hashes and clocks. Keep
+    bounded repository-health diagnostics separate; existing failures do not become
+    a global pass.
+
+    8. Cold-replay primitives in a fresh process. Validate a private candidate through
+    unchanged primary_publication terminal checks, scripts/adversarial_verify.py --json
+    <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>.
+    Publish atomically to results/experiment_8220_v711_current_contract.json only
+    after normal exit and required checks. Preserve historical primary bytes. Reconcile
+    openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not modify
+    research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual
+    invocation.
+
+    honest_verdict, verdict_class: principle: Use complete_* terminal verdicts and
+    exactly positive | circular_positive | null | blocked | disqualified | partial.
+    Partial means unfinished owned work only. Unchanged external blocks are blocked.
+
+    gate_check_summary: principle: Each blocked result names upstream/path/hash, exact
+    field, operator, expected and observed value. Missing differs from measured zero.
+
+    inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts:
+    principle: Actual current operations determine duration floors; cached provenance
+    is not a model call.
+
+    rows, intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: Preserve every unit/arm/condition and metric with
+    its numerator, denominator and missing status. Seeds and repeats do not add independent
+    sources.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score:
+    principle: Oracle-defined success is circular_positive. Reused development data
+    cannot prove independent generalization; both generalization scores stay zero
+    here.
+
+    flagged_adversarial, required_checks_passed, acceptance_gates, validation_receipts,
+    terminal_validation_sidecar_path: principle: Failed owned checks disqualify and
+    set readiness to zero. Readiness alone is not scientific benefit.
+
+    preconditions_checked, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes,
+    code_config_hashes, raw_shard_hashes, phase_spans: principle: Preserve actual
+    work clocks and independently checkable input bytes.
+
+    cited_upstream_artifacts, field_principles: principle: Name imported fields and
+    their hashes. Explain each added field.
+
+    current_contract_ready_score: principle: One means the actual current contract
+    and its owned checks agree, not that missing historical bytes were recovered.
+
+    historical_dispositions, unexecuted_v710_design_entries, canonical_tasks_sha256,
+    current_code_snapshots: principle: Prevent promises and current bytes from impersonating
+    executed history.
+
+    Run command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python
+    -u scripts/experiments/experiment_8220_v711_current_contract.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py. changed'
+  requires_gpu: false
+  title: Bind fourteen current tasks and preserve the two actual V710 outcomes
+  track: infra
+- MODEL_SPECS: []
+  agent_type: codex
+  deliverable: results/experiment_8221_v711_utility_kernel.json
+  estimated_wall_time_min: 45
+  gated_on: []
+  id: exp8221-utility-kernel
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.10.711
+  model: gpt-6.1-sol
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: Replace error-selected center growth with the Exp8219 frozen residual-patch
+      mechanism; qualify state and future-label admission before natural learning.
+    experiment_id: exp8212-memory-benefit-audit
+    retire_if_same_verdict: true
+    verdict: complete_null_independent_memory_benefit_audit
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. Exp8219 froze the method and authenticated usable
+    fit/tune inputs. Its protocol is unmeasured. Error-center growth in Exp8212 lost
+    to fixed centers; finite group corrections are a different mechanism.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md;
+    python/carnot/verify/utility_patch_methods_8219.py; openspec/change-proposals/v710-utility-patch-protocol.json;
+    python/carnot/verify/calibrated_memory_methods_8180.py; python/carnot/verify/admission_horizon_methods_8152.py;
+    tests/python/test_hard_exit_learning_qualification_8206.py; results/experiment_8219_v710_utility_patch_methods.json
+
+    TASK:
+
+    Qualify the frozen correction kernel and causal admission state. Deliver results/experiment_8221_v711_utility_kernel.json.
+    Create the thin runner scripts/experiments/experiment_8221_v711_utility_kernel.py.
+    Store primitive evidence under results/raw/experiment_8221_v711_utility_kernel/.
+    Keep execution readiness separate from benefit.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS: Emit a flushed start line. Authenticate named inputs, schemas,
+    writable private scratch and resources. Record actual commands and exits. Missing
+    external evidence yields complete_blocked_<operand> with verdict_class=blocked.
+    Do not fabricate inputs or substitute missing rows.
+
+    1. Emit a flushed progress line at every phase boundary. Emit lines before and
+    after each model load, generation, benchmark and subprocess. Print completed/pending
+    counts inside long loops. Emit a heartbeat at least every 60 seconds while a child
+    runs. Keep every output gap below 600 seconds. Use unbuffered output, bounded
+    child deadlines and process-group cleanup. Write any file over about 200 lines
+    in several tool calls of at most about 150 lines. Send a progress message between
+    file-writing calls. Split long work into resumable batches; no single huge tool
+    call. Do not pad runtime.
+
+    2. Extend the relevant REQ-* and SCENARIO-* before implementation. Write focused
+    failing tests first. Exercise real CLI and failure paths. Keep original tests
+    and assertions. Reuse qualified helpers. Keep scratch outside the repository root
+    and fixture outputs outside results/. Follow the V711 design. No generator weight
+    changes or external publication.
+
+    3. Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts
+    for reductions, or verifier_ensemble_against_cached_candidates for numerical fitting/scoring.
+    Declare trained_head_specs separately. Historical Qwen provenance is not a current
+    invocation.
+
+    4. Authenticate Exp8219 protocol and its named primitive inputs. Write openspec/change-proposals/v711-execution-bindings.json
+    containing the original protocol hash and task-ID mappings only. Freeze current
+    source snapshots. Preserve all numerical methods, comparator eligibility, source
+    roles, witness order and H1/H2 seeds. Historical planning prose is reference material,
+    not an immutable current-code prerequisite.
+
+    5. Implement the exact frozen patch evaluator. Use baseline-defined group membership;
+    require eight distinct members. Select the largest absolute residual with fixed
+    ties. Set delta=clip(.5*mean(y-p within group),-.05,.05). Clip probabilities to
+    [1e-6,1-1e-6]. Stop at residual<=.01 or four steps. Normalize E_good=-log(1-p),
+    E_bad=-log(p), matching direct probabilities at 1e-10. Test unsupported/duplicate/empty
+    groups and sequential clipping.
+
+    6. Qualify delayed admission with public warmup1-64, delay20, opportunities64/144,
+    expiry144/224 and twelve unused later admission labels. Use newest64 released
+    update-role rows. Require two labels/class. Admission labels never fit a candidate.
+    Interpolate final probabilities on 1/.5/.25/.125 and retain exact mixture state.
+    Preserve the protocol safety and no-worsening gates.
+
+    7. Use private deterministic fixtures that admit a patch before at least32 later
+    decisions. Demonstrate a rejected write leaves state unchanged. Exercise genuine
+    exit73 at slots90/170 under Coverage.py patch=_exit and exact resumed state equality.
+    Record actual exits, pending IDs, RNG, predicates, deltas, mixtures and consumed
+    feedback. Reuse the qualified crash mechanism; do not create another general recovery
+    framework.
+
+    8. Freeze a small kernel API and serialized-state schema for static and continual
+    consumers. Emit separate static_kernel_ready_score and causal_kernel_ready_score.
+    Each requires its own real checks. Fixtures qualify mechanics as circular_positive;
+    they establish no natural learning benefit.
+
+    9. Run applicable E2E-020 and private E2E-015/019 from ops/e2e-test-plan.md using
+    private fixtures. Freeze exact owned commands before measurement. Run relevant
+    unit/consumer tests, measured 100% changed-code coverage including real CLI/child
+    statements, scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py
+    --files <owned-test-files>. Preserve argv, expected/actual exits, full stdout/stderr
+    hashes and clocks. Keep bounded repository-health diagnostics separate; existing
+    failures do not become a global pass.
+
+    10. Cold-replay primitives in a fresh process. Validate a private candidate through
+    unchanged primary_publication terminal checks, scripts/adversarial_verify.py --json
+    <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>.
+    Publish atomically to results/experiment_8221_v711_utility_kernel.json only after
+    normal exit and required checks. Preserve historical primary bytes. Reconcile
+    openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not modify
+    research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual
+    invocation.
+
+    honest_verdict, verdict_class: principle: Use complete_* terminal verdicts and
+    exactly positive | circular_positive | null | blocked | disqualified | partial.
+    Partial means unfinished owned work only. Unchanged external blocks are blocked.
+
+    gate_check_summary: principle: Each blocked result names upstream/path/hash, exact
+    field, operator, expected and observed value. Missing differs from measured zero.
+
+    inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts:
+    principle: Actual current operations determine duration floors; cached provenance
+    is not a model call.
+
+    rows, intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: Preserve every unit/arm/condition and metric with
+    its numerator, denominator and missing status. Seeds and repeats do not add independent
+    sources.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score:
+    principle: Oracle-defined success is circular_positive. Reused development data
+    cannot prove independent generalization; both generalization scores stay zero
+    here.
+
+    flagged_adversarial, required_checks_passed, acceptance_gates, validation_receipts,
+    terminal_validation_sidecar_path: principle: Failed owned checks disqualify and
+    set readiness to zero. Readiness alone is not scientific benefit.
+
+    preconditions_checked, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes,
+    code_config_hashes, raw_shard_hashes, phase_spans: principle: Preserve actual
+    work clocks and independently checkable input bytes.
+
+    cited_upstream_artifacts, field_principles: principle: Name imported fields and
+    their hashes. Explain each added field.
+
+    static_kernel_ready_score, causal_kernel_ready_score: principle: Independent readiness
+    fields prevent a stream defect from blocking valid static evaluation.
+
+    protocol_sha256, execution_bindings_path, kernel_code_snapshots, state_schema,
+    crash_controls, energy_probability_error: principle: Bind unchanged scientific
+    choices to the executable kernel and genuine recovery evidence.
+
+    Run command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python
+    -u scripts/experiments/experiment_8221_v711_utility_kernel.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Qualify the frozen correction kernel and causal admission state
+  track: science
+- MODEL_SPECS: []
+  deliverable: results/experiment_8222_v711_utility_fit.json
+  estimated_wall_time_min: 40
+  gated_on:
+  - artifact_field: static_kernel_ready_score
+    op: ==
+    upstream: exp8221-utility-kernel
+    value: 1
+  - artifact_field: required_checks_passed
+    op: ==
+    upstream: exp8221-utility-kernel
+    value: true
+  - artifact_field: flagged_adversarial
+    op: ==
+    upstream: exp8221-utility-kernel
+    value: false
+  - artifact_field: verdict_class
+    op: in
+    upstream: exp8221-utility-kernel
+    value:
+    - positive
+    - 'null'
+    - circular_positive
+  id: exp8222-utility-fit
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.10.711
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: Execute newly frozen finite utility corrections on matched energy
+      and simple heads; preserve original evidence and action constraints.
+    experiment_id: exp8208-restricted-energy-fit
+    retire_if_same_verdict: true
+    verdict: complete_null_restricted_energy_fit
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. V710 did not execute fitting. Exp8219 supplies
+    a frozen finite utility protocol. The V709 restricted fit was a valid null, so
+    useful decision benefit remains open.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md;
+    python/carnot/verify/utility_patch_methods_8219.py; python/carnot/verify/restricted_energy_8208.py;
+    python/carnot/verify/restricted_action_rule_8207.py; openspec/change-proposals/v710-utility-patch-protocol.json;
+    results/experiment_8221_v711_utility_kernel.json
+
+    TASK:
+
+    Fit matched energy and simple corrections on the original fit and tune roles.
+    Deliver results/experiment_8222_v711_utility_fit.json. Create the thin runner
+    scripts/experiments/experiment_8222_v711_utility_fit.py. Store primitive evidence
+    under results/raw/experiment_8222_v711_utility_fit/. Keep execution readiness
+    separate from benefit.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS: Emit a flushed start line. Authenticate named inputs, schemas,
+    writable private scratch and resources. Record actual commands and exits. Missing
+    external evidence yields complete_blocked_<operand> with verdict_class=blocked.
+    Do not fabricate inputs or substitute missing rows.
+
+    1. Emit a flushed progress line at every phase boundary. Emit lines before and
+    after each model load, generation, benchmark and subprocess. Print completed/pending
+    counts inside long loops. Emit a heartbeat at least every 60 seconds while a child
+    runs. Keep every output gap below 600 seconds. Use unbuffered output, bounded
+    child deadlines and process-group cleanup. Write any file over about 200 lines
+    in several tool calls of at most about 150 lines. Send a progress message between
+    file-writing calls. Split long work into resumable batches; no single huge tool
+    call. Do not pad runtime.
+
+    2. Extend the relevant REQ-* and SCENARIO-* before implementation. Write focused
+    failing tests first. Exercise real CLI and failure paths. Keep original tests
+    and assertions. Reuse qualified helpers. Keep scratch outside the repository root
+    and fixture outputs outside results/. Follow the V711 design. No generator weight
+    changes or external publication.
+
+    3. Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts
+    for reductions, or verifier_ensemble_against_cached_candidates for numerical fitting/scoring.
+    Declare trained_head_specs separately. Historical Qwen provenance is not a current
+    invocation.
+
+    4. Load the qualified current static kernel and authenticated V709 base heads.
+    Train only on the original head_fit rows. Keep temperature and set-calibration
+    roles unchanged. Do not open reserved or retention targets. Bound numeric fitting
+    to600seconds with checkpointed arm completion.
+
+    5. Fit all fifteen frozen arms: energy/additive/logistic crossed with original/global/group/local/random.
+    Preserve matched labels, features, four-step budgets and action permissions. Local
+    excludes the all-source group. Random selects supported predicates without residual-magnitude
+    access, then fits deltas using the same labels. Use seeds101-120 only for random
+    controls.
+
+    6. Select patch depth0-4 on the original tune roles. Select the primary comparator
+    from Exp8219 comparator.eligible, including energy_global, by all-slot tune cost,
+    then Brier, then fixed name. Keep equally group-patched additive/logistic mandatory.
+    Freeze selected arms and depth before evaluation. A zero-depth choice is valid.
+
+    7. Emit per-source/arm/seed probabilities, energies, actions, witness residuals,
+    learned deltas, actual fit costs and role hashes. Preserve every unavailable source.
+    This task measures fitting and calibration; leave H1 benefit to the independent
+    audit. Seal model weights and current execution code for downstream replay.
+
+    8. Run applicable E2E-015/019 from ops/e2e-test-plan.md using private fixtures.
+    Freeze exact owned commands before measurement. Run relevant unit/consumer tests,
+    measured 100% changed-code coverage including real CLI/child statements, scoped
+    Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>.
+    Preserve argv, expected/actual exits, full stdout/stderr hashes and clocks. Keep
+    bounded repository-health diagnostics separate; existing failures do not become
+    a global pass.
+
+    9. Cold-replay primitives in a fresh process. Validate a private candidate through
+    unchanged primary_publication terminal checks, scripts/adversarial_verify.py --json
+    <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>.
+    Publish atomically to results/experiment_8222_v711_utility_fit.json only after
+    normal exit and required checks. Preserve historical primary bytes. Reconcile
+    openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not modify
+    research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual
+    invocation.
+
+    honest_verdict, verdict_class: principle: Use complete_* terminal verdicts and
+    exactly positive | circular_positive | null | blocked | disqualified | partial.
+    Partial means unfinished owned work only. Unchanged external blocks are blocked.
+
+    gate_check_summary: principle: Each blocked result names upstream/path/hash, exact
+    field, operator, expected and observed value. Missing differs from measured zero.
+
+    inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts:
+    principle: Actual current operations determine duration floors; cached provenance
+    is not a model call.
+
+    rows, intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: Preserve every unit/arm/condition and metric with
+    its numerator, denominator and missing status. Seeds and repeats do not add independent
+    sources.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score:
+    principle: Oracle-defined success is circular_positive. Reused development data
+    cannot prove independent generalization; both generalization scores stay zero
+    here.
+
+    flagged_adversarial, required_checks_passed, acceptance_gates, validation_receipts,
+    terminal_validation_sidecar_path: principle: Failed owned checks disqualify and
+    set readiness to zero. Readiness alone is not scientific benefit.
+
+    preconditions_checked, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes,
+    code_config_hashes, raw_shard_hashes, phase_spans: principle: Preserve actual
+    work clocks and independently checkable input bytes.
+
+    cited_upstream_artifacts, field_principles: principle: Name imported fields and
+    their hashes. Explain each added field.
+
+    utility_fit_ready_score: principle: One means complete, reproducible fit and selection
+    artifacts with passing checks, including a valid zero-patch optimum.
+
+    trained_head_specs, fitted_heads_path, frozen_comparator, selected_depths, fit_tune_role_hashes,
+    utility_residuals: principle: Make model fitting and selection independently reconstructible.
+
+    Run command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python
+    -u scripts/experiments/experiment_8222_v711_utility_fit.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Fit matched energy and simple corrections on the original fit and tune roles
+  track: science
+- MODEL_SPECS: []
+  agent_type: codex
+  deliverable: results/experiment_8223_v711_utility_seal.json
+  estimated_wall_time_min: 25
+  gated_on:
+  - artifact_field: utility_fit_ready_score
+    op: ==
+    upstream: exp8222-utility-fit
+    value: 1
+  - artifact_field: required_checks_passed
+    op: ==
+    upstream: exp8222-utility-fit
+    value: true
+  - artifact_field: flagged_adversarial
+    op: ==
+    upstream: exp8222-utility-fit
+    value: false
+  - artifact_field: verdict_class
+    op: in
+    upstream: exp8222-utility-fit
+    value:
+    - positive
+    - 'null'
+    - circular_positive
+  id: exp8223-utility-seal
+  inference_substrate_class: no_model_load
+  max_turns: 30
+  milestone: 2026.10.711
+  model: gpt-6.1-sol
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: Seal newly fitted residual-corrected heads rather than repeat the
+      unchanged restricted heads; retain exposure and missingness.
+    experiment_id: exp8209-restricted-sealed-evaluation
+    retire_if_same_verdict: true
+    verdict: complete_null_restricted_predictions_sealed
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. Exp8222 freezes the fitted heads and comparator
+    before reserved evaluation. Historical source exposure remains; a new prediction
+    seal does not make this cohort fresh.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md;
+    python/carnot/verify/restricted_action_rule_8207.py; scripts/experiments/experiment_8209_v709_restricted_sealed_evaluation.py;
+    results/experiment_8222_v711_utility_fit.json; openspec/change-proposals/v710-utility-patch-protocol.json
+
+    TASK:
+
+    Seal corrected predictions for every original reserved source. Deliver results/experiment_8223_v711_utility_seal.json.
+    Create the thin runner scripts/experiments/experiment_8223_v711_utility_seal.py.
+    Store primitive evidence under results/raw/experiment_8223_v711_utility_seal/.
+    Keep execution readiness separate from benefit.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS: Emit a flushed start line. Authenticate named inputs, schemas,
+    writable private scratch and resources. Record actual commands and exits. Missing
+    external evidence yields complete_blocked_<operand> with verdict_class=blocked.
+    Do not fabricate inputs or substitute missing rows.
+
+    1. Emit a flushed progress line at every phase boundary. Emit lines before and
+    after each model load, generation, benchmark and subprocess. Print completed/pending
+    counts inside long loops. Emit a heartbeat at least every 60 seconds while a child
+    runs. Keep every output gap below 600 seconds. Use unbuffered output, bounded
+    child deadlines and process-group cleanup. Write any file over about 200 lines
+    in several tool calls of at most about 150 lines. Send a progress message between
+    file-writing calls. Split long work into resumable batches; no single huge tool
+    call. Do not pad runtime.
+
+    2. Extend the relevant REQ-* and SCENARIO-* before implementation. Write focused
+    failing tests first. Exercise real CLI and failure paths. Keep original tests
+    and assertions. Reuse qualified helpers. Keep scratch outside the repository root
+    and fixture outputs outside results/. Follow the V711 design. No generator weight
+    changes or external publication.
+
+    3. Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts
+    for reductions, or verifier_ensemble_against_cached_candidates for numerical fitting/scoring.
+    Declare trained_head_specs separately. Historical Qwen provenance is not a current
+    invocation.
+
+    4. Load only public features and sealed model parameters. Produce probabilities
+    and typed accept/reject/escalate decisions for all128 original reserved slots.
+    Do not expose labels to prediction code. Keep the original missing masks and unavailable
+    inputs; no replacement or recapture.
+
+    5. Minimize expected costs accept=5*p_bad, reject=1-p_bad, escalate=.5. Allow
+    accept only within the original V707 accepted set. Escalate ties and missing evidence.
+    Record baseline permission, chosen action, state hash and every arm probability.
+
+    6. Seal predictions and code/config hashes before label access by the separate
+    audit. Cold-replay from original public rows with direct-probability and normalized-energy
+    parity. Negative fixtures must reject label-bearing inputs, changed heads and
+    rehashed aggregate tampering. Keep labels_opened=false.
+
+    7. Run applicable E2E-015/019 from ops/e2e-test-plan.md using private fixtures.
+    Freeze exact owned commands before measurement. Run relevant unit/consumer tests,
+    measured 100% changed-code coverage including real CLI/child statements, scoped
+    Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>.
+    Preserve argv, expected/actual exits, full stdout/stderr hashes and clocks. Keep
+    bounded repository-health diagnostics separate; existing failures do not become
+    a global pass.
+
+    8. Cold-replay primitives in a fresh process. Validate a private candidate through
+    unchanged primary_publication terminal checks, scripts/adversarial_verify.py --json
+    <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>.
+    Publish atomically to results/experiment_8223_v711_utility_seal.json only after
+    normal exit and required checks. Preserve historical primary bytes. Reconcile
+    openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not modify
+    research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual
+    invocation.
+
+    honest_verdict, verdict_class: principle: Use complete_* terminal verdicts and
+    exactly positive | circular_positive | null | blocked | disqualified | partial.
+    Partial means unfinished owned work only. Unchanged external blocks are blocked.
+
+    gate_check_summary: principle: Each blocked result names upstream/path/hash, exact
+    field, operator, expected and observed value. Missing differs from measured zero.
+
+    inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts:
+    principle: Actual current operations determine duration floors; cached provenance
+    is not a model call.
+
+    rows, intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: Preserve every unit/arm/condition and metric with
+    its numerator, denominator and missing status. Seeds and repeats do not add independent
+    sources.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score:
+    principle: Oracle-defined success is circular_positive. Reused development data
+    cannot prove independent generalization; both generalization scores stay zero
+    here.
+
+    flagged_adversarial, required_checks_passed, acceptance_gates, validation_receipts,
+    terminal_validation_sidecar_path: principle: Failed owned checks disqualify and
+    set readiness to zero. Readiness alone is not scientific benefit.
+
+    preconditions_checked, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes,
+    code_config_hashes, raw_shard_hashes, phase_spans: principle: Preserve actual
+    work clocks and independently checkable input bytes.
+
+    cited_upstream_artifacts, field_principles: principle: Name imported fields and
+    their hashes. Explain each added field.
+
+    utility_predictions_ready_score: principle: One requires all intended slots accounted
+    for and a valid target-free prediction seal.
+
+    sealed_predictions_path, prediction_sha256, labels_opened, permission_mask_sha256:
+    principle: Prevent retrospective selection or missing-slot deletion.
+
+    Run command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python
+    -u scripts/experiments/experiment_8223_v711_utility_seal.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Seal corrected predictions for every original reserved source
+  track: science
+- MODEL_SPECS: []
+  deliverable: results/experiment_8224_v711_utility_audit.json
+  estimated_wall_time_min: 35
+  gated_on:
+  - artifact_field: utility_predictions_ready_score
+    op: ==
+    upstream: exp8223-utility-seal
+    value: 1
+  - artifact_field: required_checks_passed
+    op: ==
+    upstream: exp8223-utility-seal
+    value: true
+  - artifact_field: flagged_adversarial
+    op: ==
+    upstream: exp8223-utility-seal
+    value: false
+  - artifact_field: verdict_class
+    op: in
+    upstream: exp8223-utility-seal
+    value:
+    - positive
+    - 'null'
+    - circular_positive
+  id: exp8224-utility-audit
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.10.711
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: Use the repaired audit-specific manifest pattern with current immutable
+      producer snapshots; evaluate a changed patch mechanism and preserve the historical
+      audit failure.
+    experiment_id: exp8210-restricted-decision-audit
+    retire_if_same_verdict: true
+    verdict: complete_disqualified_restricted_decision_audit
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. V709 H1 showed a small gain with a negative
+    lower bound; its original audit also disqualified. V711 tests the new patch mechanism
+    with its own qualified audit CLI.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md;
+    python/carnot/verify/restricted_decision_audit_8210.py; tests/python/test_restricted_decision_audit_8210.py;
+    results/experiment_8223_v711_utility_seal.json; openspec/change-proposals/v710-utility-patch-protocol.json
+
+    TASK:
+
+    Test corrected decision utility against equally adapted controls. Deliver results/experiment_8224_v711_utility_audit.json.
+    Create the thin runner scripts/experiments/experiment_8224_v711_utility_audit.py.
+    Store primitive evidence under results/raw/experiment_8224_v711_utility_audit/.
+    Keep execution readiness separate from benefit.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS: Emit a flushed start line. Authenticate named inputs, schemas,
+    writable private scratch and resources. Record actual commands and exits. Missing
+    external evidence yields complete_blocked_<operand> with verdict_class=blocked.
+    Do not fabricate inputs or substitute missing rows.
+
+    1. Emit a flushed progress line at every phase boundary. Emit lines before and
+    after each model load, generation, benchmark and subprocess. Print completed/pending
+    counts inside long loops. Emit a heartbeat at least every 60 seconds while a child
+    runs. Keep every output gap below 600 seconds. Use unbuffered output, bounded
+    child deadlines and process-group cleanup. Write any file over about 200 lines
+    in several tool calls of at most about 150 lines. Send a progress message between
+    file-writing calls. Split long work into resumable batches; no single huge tool
+    call. Do not pad runtime.
+
+    2. Extend the relevant REQ-* and SCENARIO-* before implementation. Write focused
+    failing tests first. Exercise real CLI and failure paths. Keep original tests
+    and assertions. Reuse qualified helpers. Keep scratch outside the repository root
+    and fixture outputs outside results/. Follow the V711 design. No generator weight
+    changes or external publication.
+
+    3. Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts
+    for reductions, or verifier_ensemble_against_cached_candidates for numerical fitting/scoring.
+    Declare trained_head_specs separately. Historical Qwen provenance is not a current
+    invocation.
+
+    4. Authenticate the V711 prediction seal before opening evaluator labels. Reduce
+    each source independently using original labels and all128 intended slots. Charge
+    unavailable decisions escalation cost. Report complete-case metrics separately
+    with explicit denominators.
+
+    5. Recompute registered H1 unchanged: energy_group versus the frozen tune-selected
+    comparator. Require96 complete paired sources,12/class,10000 source-cluster bootstrap
+    draws and at least9500 valid draws. Use the protocol seed and one-sided alpha=.025.
+    Require lower cost-gain bound>.02 and five improved sources.
+
+    6. Enforce Brier increase<=.01 and zero extra false accepts against the primary
+    comparator and original baseline. Enforce cost increase<=.02 versus the original
+    baseline and equally group-patched simple controls. Report energy-specific advantage
+    separately from a shared calibration effect. No optional arm may replace H1.
+
+    7. Freeze this audit CLI, not an upstream producer CLI. Exercise valid replay
+    and rehashed aggregate tampering from outside the checkout without PYTHONPATH.
+    Use immutable current producer snapshots; missing historical originals cannot
+    become an audit-wide prerequisite. Set h1_development_signal_score only when every
+    registered benefit condition passes.
+
+    8. Run applicable E2E-021 and private E2E-015/019 from ops/e2e-test-plan.md using
+    private fixtures. Freeze exact owned commands before measurement. Run relevant
+    unit/consumer tests, measured 100% changed-code coverage including real CLI/child
+    statements, scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py
+    --files <owned-test-files>. Preserve argv, expected/actual exits, full stdout/stderr
+    hashes and clocks. Keep bounded repository-health diagnostics separate; existing
+    failures do not become a global pass.
+
+    9. Cold-replay primitives in a fresh process. Validate a private candidate through
+    unchanged primary_publication terminal checks, scripts/adversarial_verify.py --json
+    <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>.
+    Publish atomically to results/experiment_8224_v711_utility_audit.json only after
+    normal exit and required checks. Preserve historical primary bytes. Reconcile
+    openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not modify
+    research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual
+    invocation.
+
+    honest_verdict, verdict_class: principle: Use complete_* terminal verdicts and
+    exactly positive | circular_positive | null | blocked | disqualified | partial.
+    Partial means unfinished owned work only. Unchanged external blocks are blocked.
+
+    gate_check_summary: principle: Each blocked result names upstream/path/hash, exact
+    field, operator, expected and observed value. Missing differs from measured zero.
+
+    inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts:
+    principle: Actual current operations determine duration floors; cached provenance
+    is not a model call.
+
+    rows, intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: Preserve every unit/arm/condition and metric with
+    its numerator, denominator and missing status. Seeds and repeats do not add independent
+    sources.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score:
+    principle: Oracle-defined success is circular_positive. Reused development data
+    cannot prove independent generalization; both generalization scores stay zero
+    here.
+
+    flagged_adversarial, required_checks_passed, acceptance_gates, validation_receipts,
+    terminal_validation_sidecar_path: principle: Failed owned checks disqualify and
+    set readiness to zero. Readiness alone is not scientific benefit.
+
+    preconditions_checked, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes,
+    code_config_hashes, raw_shard_hashes, phase_spans: principle: Preserve actual
+    work clocks and independently checkable input bytes.
+
+    cited_upstream_artifacts, field_principles: principle: Name imported fields and
+    their hashes. Explain each added field.
+
+    utility_audit_ready_score, h1_development_signal_score: principle: Successful
+    audit execution is distinct from a scientifically qualified development effect.
+
+    H1, per_source_deltas, calibration_and_cost_comparisons, bootstrap_diagnostics,
+    comparator_sha256: principle: Headline claims must be recomputable from paired
+    source outcomes.
+
+    Run command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python
+    -u scripts/experiments/experiment_8224_v711_utility_audit.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Test corrected decision utility against equally adapted controls
+  track: science
+- MODEL_SPECS: []
+  deliverable: results/experiment_8225_v711_delayed_utility_learning.json
+  estimated_wall_time_min: 50
+  gated_on:
+  - artifact_field: causal_kernel_ready_score
+    op: ==
+    upstream: exp8221-utility-kernel
+    value: 1
+  - artifact_field: required_checks_passed
+    op: ==
+    upstream: exp8221-utility-kernel
+    value: true
+  - artifact_field: flagged_adversarial
+    op: ==
+    upstream: exp8221-utility-kernel
+    value: false
+  - artifact_field: verdict_class
+    op: in
+    upstream: exp8221-utility-kernel
+    value:
+    - positive
+    - 'null'
+    - circular_positive
+  id: exp8225-delayed-utility-learning
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.10.711
+  per_unit_rows: true
+  phase: 3
+  prior_failures:
+  - addressed_by: Replace error-center additions with released-feedback group residual
+      corrections while retaining qualified causal timing and recovery.
+    experiment_id: exp8211-calibrated-memory-trajectory
+    retire_if_same_verdict: true
+    verdict: complete_null_causal_trajectory_benefit_reserved_for_8212
+  - addressed_by: Compare combined correction memory against equally calibrated global-only
+      and random-group controls, with later decision and retention gates.
+    experiment_id: exp8212-memory-benefit-audit
+    retire_if_same_verdict: true
+    verdict: complete_null_independent_memory_benefit_audit
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. This is the continuous self-learning experiment
+    for FR-11. V709 error-selected centers lost to fixed centers. The frozen Exp8219
+    patch mechanism replaces center growth and keeps an equally adaptive global control.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md;
+    python/carnot/verify/calibrated_memory_methods_8180.py; python/carnot/verify/admission_horizon_methods_8152.py;
+    python/carnot/reporting/calibrated_trajectory_execution_8211.py; openspec/change-proposals/v710-utility-patch-protocol.json;
+    results/experiment_8221_v711_utility_kernel.json
+
+    TASK:
+
+    Learn persistent group corrections from causally released feedback. Deliver results/experiment_8225_v711_delayed_utility_learning.json.
+    Create the thin runner scripts/experiments/experiment_8225_v711_delayed_utility_learning.py.
+    Store primitive evidence under results/raw/experiment_8225_v711_delayed_utility_learning/.
+    Keep execution readiness separate from benefit.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS: Emit a flushed start line. Authenticate named inputs, schemas,
+    writable private scratch and resources. Record actual commands and exits. Missing
+    external evidence yields complete_blocked_<operand> with verdict_class=blocked.
+    Do not fabricate inputs or substitute missing rows.
+
+    1. Emit a flushed progress line at every phase boundary. Emit lines before and
+    after each model load, generation, benchmark and subprocess. Print completed/pending
+    counts inside long loops. Emit a heartbeat at least every 60 seconds while a child
+    runs. Keep every output gap below 600 seconds. Use unbuffered output, bounded
+    child deadlines and process-group cleanup. Write any file over about 200 lines
+    in several tool calls of at most about 150 lines. Send a progress message between
+    file-writing calls. Split long work into resumable batches; no single huge tool
+    call. Do not pad runtime.
+
+    2. Extend the relevant REQ-* and SCENARIO-* before implementation. Write focused
+    failing tests first. Exercise real CLI and failure paths. Keep original tests
+    and assertions. Reuse qualified helpers. Keep scratch outside the repository root
+    and fixture outputs outside results/. Follow the V711 design. No generator weight
+    changes or external publication.
+
+    3. Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts
+    for reductions, or verifier_ensemble_against_cached_candidates for numerical fitting/scoring.
+    Declare trained_head_specs separately. Historical Qwen provenance is not a current
+    invocation.
+
+    4. Use the original256-slot stream, original SHA256 role assignment,20-slot label
+    delay and warmup1-64. Start from the historical Qwen offset, independently of
+    static fitting. Keep frozen, global-only, global-plus-group, local-only and global-plus-random
+    arms. Use the same stream-frozen accept permission in every arm.
+
+    5. At opportunities64/144 use the newest64 released update-role rows. Global arms
+    use the existing scale/intercept optimizer. Give global-only four all-source corrections;
+    give combined/local/random arms the frozen four-step dictionary budget. Preserve
+    support, ties, clipping, seeds101-120 and all missing slots. Bound natural trajectory
+    work to1200seconds.
+
+    6. Commit candidate bytes before selecting the next12 unused admission rows. Their
+    labels must release strictly after commitment. Require two labels/class. Expire
+    at144/224. Admit only when the fixed interpolation grid meets no extra false accepts
+    and no cost/Brier worsening versus incumbent, plus frozen-head bounds .02 cost/.01
+    Brier. Never fit on admission or retention labels.
+
+    7. Persist issue-time predictions before feedback release. Save global parameters,
+    ordered clipped deltas, predicates, exact mixtures, RNG, consumed IDs, pending
+    labels and missing masks. Exercise actual crash/restart at slots90/170 using the
+    qualified kernel. Compare complete resumed state with uninterrupted execution.
+
+    8. Seal final states and retention predictions before opening retention labels.
+    Emit per-slot/arm/seed learning rows, admitted updates, affected later decisions,
+    CPU update/lookup costs and state bytes. No admitted change is a valid terminal
+    null. A changed probability alone is not a learning benefit. Leave H2 and retention
+    verdicts to Exp8226.
+
+    9. Run applicable E2E-020 and private E2E-015/019 from ops/e2e-test-plan.md using
+    private fixtures. Freeze exact owned commands before measurement. Run relevant
+    unit/consumer tests, measured 100% changed-code coverage including real CLI/child
+    statements, scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py
+    --files <owned-test-files>. Preserve argv, expected/actual exits, full stdout/stderr
+    hashes and clocks. Keep bounded repository-health diagnostics separate; existing
+    failures do not become a global pass.
+
+    10. Cold-replay primitives in a fresh process. Validate a private candidate through
+    unchanged primary_publication terminal checks, scripts/adversarial_verify.py --json
+    <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>.
+    Publish atomically to results/experiment_8225_v711_delayed_utility_learning.json
+    only after normal exit and required checks. Preserve historical primary bytes.
+    Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md.
+    Do not modify research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual
+    invocation.
+
+    honest_verdict, verdict_class: principle: Use complete_* terminal verdicts and
+    exactly positive | circular_positive | null | blocked | disqualified | partial.
+    Partial means unfinished owned work only. Unchanged external blocks are blocked.
+
+    gate_check_summary: principle: Each blocked result names upstream/path/hash, exact
+    field, operator, expected and observed value. Missing differs from measured zero.
+
+    inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts:
+    principle: Actual current operations determine duration floors; cached provenance
+    is not a model call.
+
+    rows, intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: Preserve every unit/arm/condition and metric with
+    its numerator, denominator and missing status. Seeds and repeats do not add independent
+    sources.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score:
+    principle: Oracle-defined success is circular_positive. Reused development data
+    cannot prove independent generalization; both generalization scores stay zero
+    here.
+
+    flagged_adversarial, required_checks_passed, acceptance_gates, validation_receipts,
+    terminal_validation_sidecar_path: principle: Failed owned checks disqualify and
+    set readiness to zero. Readiness alone is not scientific benefit.
+
+    preconditions_checked, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes,
+    code_config_hashes, raw_shard_hashes, phase_spans: principle: Preserve actual
+    work clocks and independently checkable input bytes.
+
+    cited_upstream_artifacts, field_principles: principle: Name imported fields and
+    their hashes. Explain each added field.
+
+    utility_trajectory_ready_score: principle: One means a complete causal trajectory
+    and exact recovery, regardless of scientific benefit.
+
+    trajectory_path, update_log, release_log, final_states_path, retention_predictions_path,
+    later_decision_changes, update_timing_rows, memory_bytes: principle: Demonstrate
+    that released feedback changed subsequent decisions with a persistent, measurable
+    state.
+
+    Run command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python
+    -u scripts/experiments/experiment_8225_v711_delayed_utility_learning.py --date
+    {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Learn persistent group corrections from causally released feedback
+  track: learning
+- MODEL_SPECS: []
+  deliverable: results/experiment_8226_v711_learning_audit.json
+  estimated_wall_time_min: 35
+  gated_on:
+  - artifact_field: utility_trajectory_ready_score
+    op: ==
+    upstream: exp8225-delayed-utility-learning
+    value: 1
+  - artifact_field: required_checks_passed
+    op: ==
+    upstream: exp8225-delayed-utility-learning
+    value: true
+  - artifact_field: flagged_adversarial
+    op: ==
+    upstream: exp8225-delayed-utility-learning
+    value: false
+  - artifact_field: verdict_class
+    op: in
+    upstream: exp8225-delayed-utility-learning
+    value:
+    - positive
+    - 'null'
+    - circular_positive
+  id: exp8226-learning-audit
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.10.711
+  per_unit_rows: true
+  phase: 3
+  prior_failures:
+  - addressed_by: Audit newly trained finite corrections, with the same primary support
+      and retention gates plus explicit proper-loss accounting.
+    experiment_id: exp8212-memory-benefit-audit
+    retire_if_same_verdict: true
+    verdict: complete_null_independent_memory_benefit_audit
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. Online recalibration research separates calibration
+    from excess proper loss. V711 must additionally show lower later action cost.
+    Reused source sequences establish only an exposed-development effect.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md;
+    python/carnot/verify/memory_benefit_audit_8212.py; scripts/experiments/experiment_8212_v709_memory_benefit_audit.py;
+    results/experiment_8225_v711_delayed_utility_learning.json; openspec/change-proposals/v710-utility-patch-protocol.json;
+    research-references.md
+
+    TASK:
+
+    Audit later utility proper loss and retention from frozen learning traces. Deliver
+    results/experiment_8226_v711_learning_audit.json. Create the thin runner scripts/experiments/experiment_8226_v711_learning_audit.py.
+    Store primitive evidence under results/raw/experiment_8226_v711_learning_audit/.
+    Keep execution readiness separate from benefit.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS: Emit a flushed start line. Authenticate named inputs, schemas,
+    writable private scratch and resources. Record actual commands and exits. Missing
+    external evidence yields complete_blocked_<operand> with verdict_class=blocked.
+    Do not fabricate inputs or substitute missing rows.
+
+    1. Emit a flushed progress line at every phase boundary. Emit lines before and
+    after each model load, generation, benchmark and subprocess. Print completed/pending
+    counts inside long loops. Emit a heartbeat at least every 60 seconds while a child
+    runs. Keep every output gap below 600 seconds. Use unbuffered output, bounded
+    child deadlines and process-group cleanup. Write any file over about 200 lines
+    in several tool calls of at most about 150 lines. Send a progress message between
+    file-writing calls. Split long work into resumable batches; no single huge tool
+    call. Do not pad runtime.
+
+    2. Extend the relevant REQ-* and SCENARIO-* before implementation. Write focused
+    failing tests first. Exercise real CLI and failure paths. Keep original tests
+    and assertions. Reuse qualified helpers. Keep scratch outside the repository root
+    and fixture outputs outside results/. Follow the V711 design. No generator weight
+    changes or external publication.
+
+    3. Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts
+    for reductions, or verifier_ensemble_against_cached_candidates for numerical fitting/scoring.
+    Declare trained_head_specs separately. Historical Qwen provenance is not a current
+    invocation.
+
+    4. Authenticate trajectory and final-state seals. Audit predictions at issue time,
+    label-release times, update/admission role separation and complete restart state.
+    Open retention labels only after authenticating final predictions. Evaluate original192
+    later slots65-256 and64 retention slots.
+
+    5. Recompute H2 combined versus global-only using seeds averaged within each source.
+    Use original-slot moving blocks of16, sensitivities8/32,10000 draws and at least9500
+    valid draws. Require128 complete sources,8/class and8 nonoverlapping blocks. Keep
+    the frozen seed and one-sided alpha=.025 even if H1 was blocked.
+
+    6. Require the lower later-cost gain bound>.02 and five improved sources. Require
+    Brier increase<=.01 and zero per-seed extra false accepts versus global-only.
+    Keep frozen/random cost degradation<=.02. Retention requires48 complete sources,8/class
+    and no extra false accepts, cost+.02/Brier+.01 at most versus both frozen and
+    global-only.
+
+    7. Report finite-witness residual calibration, excess Brier loss and actual decision
+    cost as distinct quantities. This audit incorporates arXiv:2607.19689 as a comparison
+    principle, not an implementation or guarantee of its algorithm. Report support
+    and overlap; do not tune on retention or claim distribution-free safety.
+
+    8. Independently recompute primitive rows and inject rehashed metric mutations
+    in private fixtures. Distinguish no admitted changes, admitted but ineffective
+    changes, harmful changes and qualified benefit. External missing trajectories
+    use blocked, not partial. Emit h2_development_signal_score only for all registered
+    conditions.
+
+    9. Run applicable E2E-020 and private E2E-015/019 from ops/e2e-test-plan.md using
+    private fixtures. Freeze exact owned commands before measurement. Run relevant
+    unit/consumer tests, measured 100% changed-code coverage including real CLI/child
+    statements, scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py
+    --files <owned-test-files>. Preserve argv, expected/actual exits, full stdout/stderr
+    hashes and clocks. Keep bounded repository-health diagnostics separate; existing
+    failures do not become a global pass.
+
+    10. Cold-replay primitives in a fresh process. Validate a private candidate through
+    unchanged primary_publication terminal checks, scripts/adversarial_verify.py --json
+    <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>.
+    Publish atomically to results/experiment_8226_v711_learning_audit.json only after
+    normal exit and required checks. Preserve historical primary bytes. Reconcile
+    openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not modify
+    research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual
+    invocation.
+
+    honest_verdict, verdict_class: principle: Use complete_* terminal verdicts and
+    exactly positive | circular_positive | null | blocked | disqualified | partial.
+    Partial means unfinished owned work only. Unchanged external blocks are blocked.
+
+    gate_check_summary: principle: Each blocked result names upstream/path/hash, exact
+    field, operator, expected and observed value. Missing differs from measured zero.
+
+    inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts:
+    principle: Actual current operations determine duration floors; cached provenance
+    is not a model call.
+
+    rows, intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: Preserve every unit/arm/condition and metric with
+    its numerator, denominator and missing status. Seeds and repeats do not add independent
+    sources.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score:
+    principle: Oracle-defined success is circular_positive. Reused development data
+    cannot prove independent generalization; both generalization scores stay zero
+    here.
+
+    flagged_adversarial, required_checks_passed, acceptance_gates, validation_receipts,
+    terminal_validation_sidecar_path: principle: Failed owned checks disqualify and
+    set readiness to zero. Readiness alone is not scientific benefit.
+
+    preconditions_checked, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes,
+    code_config_hashes, raw_shard_hashes, phase_spans: principle: Preserve actual
+    work clocks and independently checkable input bytes.
+
+    cited_upstream_artifacts, field_principles: principle: Name imported fields and
+    their hashes. Explain each added field.
+
+    learning_audit_ready_score, h2_development_signal_score: principle: Audit validity
+    and later learning benefit are separate verdicts.
+
+    H2, retention, calibration_residuals, excess_brier, later_action_cost, per_source_deltas,
+    bootstrap_diagnostics: principle: Calibration improvement cannot substitute for
+    decision improvement or retained capability.
+
+    Run command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python
+    -u scripts/experiments/experiment_8226_v711_learning_audit.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Audit later utility proper loss and retention from frozen learning traces
+  track: learning
+- MODEL_SPECS:
+  - hf_id: unsloth/Qwen3.8-27B-GGUF
+    quantization: Q4_K_M
+  deliverable: results/experiment_8227_v711_concurrency_canary.json
+  estimated_wall_time_min: 45
+  gated_on: []
+  id: exp8227-concurrency-canary
+  inference_substrate_class: model_bounded_generation
+  max_turns: 100
+  milestone: 2026.10.711
+  model: opus
+  per_unit_rows: true
+  phase: 3
+  prior_failures:
+  - addressed_by: Change shared generation to independent serial versus concurrent
+      requests; qualify actual slot isolation and include acquisition and durable
+      storage costs.
+    experiment_id: exp8214-prospective-service-measurement
+    retire_if_same_verdict: true
+    verdict: complete_null_shared_acquisition_accounting
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. Exp8214 qualified shared-acquisition accounting
+    but showed no useful full-service speedup. V711 changes independent request concurrency
+    while holding model and service settings fixed.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md;
+    python/carnot/verify/request_recorder_8213.py; python/carnot/verify/prospective_service_8214.py;
+    python/carnot/reporting/prospective_service_execution_8214.py; tests/python/test_prospective_request_recorder_8213.py;
+    python/carnot/inference/sota_models.py; results/experiment_8214_v709_prospective_service_measurement.json
+
+    TASK:
+
+    Freeze request isolation and qualify a bounded two-slot Qwen canary. Deliver results/experiment_8227_v711_concurrency_canary.json.
+    Create the thin runner scripts/experiments/experiment_8227_v711_concurrency_canary.py.
+    Store primitive evidence under results/raw/experiment_8227_v711_concurrency_canary/.
+    Keep execution readiness separate from benefit.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS: Emit a flushed start line. Authenticate named inputs, schemas,
+    writable private scratch and resources. Record actual commands and exits. Missing
+    external evidence yields complete_blocked_<operand> with verdict_class=blocked.
+    Do not fabricate inputs or substitute missing rows.
+
+    1. Emit a flushed progress line at every phase boundary. Emit lines before and
+    after each model load, generation, benchmark and subprocess. Print completed/pending
+    counts inside long loops. Emit a heartbeat at least every 60 seconds while a child
+    runs. Keep every output gap below 600 seconds. Use unbuffered output, bounded
+    child deadlines and process-group cleanup. Write any file over about 200 lines
+    in several tool calls of at most about 150 lines. Send a progress message between
+    file-writing calls. Split long work into resumable batches; no single huge tool
+    call. Do not pad runtime.
+
+    2. Extend the relevant REQ-* and SCENARIO-* before implementation. Write focused
+    failing tests first. Exercise real CLI and failure paths. Keep original tests
+    and assertions. Reuse qualified helpers. Keep scratch outside the repository root
+    and fixture outputs outside results/. Follow the V711 design. No generator weight
+    changes or external publication.
+
+    3. Use MODEL_SPECS with unsloth/Qwen3.8-27B-GGUF Q4_K_M. Resolve cached_current_model
+    and the GGUF chat template. Set CARNOT_FORCE_LIVE=1. Declare live_llm_inference
+    and model_bounded_generation (10s floor). Preserve measured GPU/model/template
+    hashes and token counts. A cache or GPU miss blocks; a legacy model cannot replace
+    this model.
+
+    4. Before any model call, write openspec/change-proposals/v711-concurrent-acquisition-protocol.json.
+    Freeze four canary sources and24 separate benchmark sources from public fit identities
+    in hash order. Freeze model/template/tokenizer,128 maximum output tokens, context4096
+    per slot, seeds, temperature0, prompt serialization,120-second request timeout
+    and cache-off behavior.
+
+    5. Qualify the recorder and concurrency scheduler against a private scripted HTTP
+    peer. Test interleaving, request identity isolation, queued failure, partial tails
+    and restart. Reuse the real recorder. Freeze request clocks for issue/queue/start/first-token/end/durability.
+    Fixture evidence remains circular_positive.
+
+    6. Use one free RTX3090 and an owned llama.cpp server configured with two slots
+    in both arms. Client concurrency is1 versus2. Preflight actual memory for Q4_K_M
+    plus two4096-token slots. Preserve existing ARC/GPU leases. Do not restart a shared
+    server or lower context silently. If unsupported or occupied, emit blocked with
+    the exact operand.
+
+    7. Run eight independent real-Qwen canary requests, four source pairs, at most128
+    output tokens each. Cap measured canary work at900seconds. Require at leastthree
+    complete pairs, both slots exercised, no cross-talk and valid durable request
+    identities. Record model load, generation, token and shutdown spans. Do not infer
+    accuracy or speed from four sources.
+
+    8. Freeze two-sweep benchmark order serial/concurrent then concurrent/serial.
+    Each sweep/arm workload starts and stops a fresh owned server. Charge all four
+    cold starts and shutdowns, two per arm. Record actual launch order. Bind all96
+    intended independent calls before Exp8228. Keep every failure and censoring rule.
+    Seal the protocol before performance evidence.
+
+    9. Run applicable E2E-022 and private E2E-015/019 from ops/e2e-test-plan.md using
+    private fixtures. Freeze exact owned commands before measurement. Run relevant
+    unit/consumer tests, measured 100% changed-code coverage including real CLI/child
+    statements, scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py
+    --files <owned-test-files>. Preserve argv, expected/actual exits, full stdout/stderr
+    hashes and clocks. Keep bounded repository-health diagnostics separate; existing
+    failures do not become a global pass.
+
+    10. Cold-replay primitives in a fresh process. Validate a private candidate through
+    unchanged primary_publication terminal checks, scripts/adversarial_verify.py --json
+    <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>.
+    Publish atomically to results/experiment_8227_v711_concurrency_canary.json only
+    after normal exit and required checks. Preserve historical primary bytes. Reconcile
+    openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not modify
+    research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual
+    invocation.
+
+    honest_verdict, verdict_class: principle: Use complete_* terminal verdicts and
+    exactly positive | circular_positive | null | blocked | disqualified | partial.
+    Partial means unfinished owned work only. Unchanged external blocks are blocked.
+
+    gate_check_summary: principle: Each blocked result names upstream/path/hash, exact
+    field, operator, expected and observed value. Missing differs from measured zero.
+
+    inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts:
+    principle: Actual current operations determine duration floors; cached provenance
+    is not a model call.
+
+    rows, intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: Preserve every unit/arm/condition and metric with
+    its numerator, denominator and missing status. Seeds and repeats do not add independent
+    sources.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score:
+    principle: Oracle-defined success is circular_positive. Reused development data
+    cannot prove independent generalization; both generalization scores stay zero
+    here.
+
+    flagged_adversarial, required_checks_passed, acceptance_gates, validation_receipts,
+    terminal_validation_sidecar_path: principle: Failed owned checks disqualify and
+    set readiness to zero. Readiness alone is not scientific benefit.
+
+    preconditions_checked, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes,
+    code_config_hashes, raw_shard_hashes, phase_spans: principle: Preserve actual
+    work clocks and independently checkable input bytes.
+
+    cited_upstream_artifacts, field_principles: principle: Name imported fields and
+    their hashes. Explain each added field.
+
+    concurrent_canary_ready_score: principle: One requires both qualified request
+    isolation and actual bounded Qwen slot evidence.
+
+    concurrent_protocol_path, concurrent_protocol_sha256, canary_pairs, model_path_sha256,
+    gpu_lease, server_argv, context_per_slot, generated_tokens: principle: Bind the
+    benchmark to real model and request operations.
+
+    Run command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python
+    -u scripts/experiments/experiment_8227_v711_concurrency_canary.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: true
+  title: Freeze request isolation and qualify a bounded two-slot Qwen canary
+  track: inference
+- MODEL_SPECS:
+  - hf_id: unsloth/Qwen3.8-27B-GGUF
+    quantization: Q4_K_M
+  deliverable: results/experiment_8228_v711_concurrent_service.json
+  estimated_wall_time_min: 65
+  gated_on:
+  - artifact_field: concurrent_canary_ready_score
+    op: ==
+    upstream: exp8227-concurrency-canary
+    value: 1
+  - artifact_field: required_checks_passed
+    op: ==
+    upstream: exp8227-concurrency-canary
+    value: true
+  - artifact_field: flagged_adversarial
+    op: ==
+    upstream: exp8227-concurrency-canary
+    value: false
+  - artifact_field: verdict_class
+    op: in
+    upstream: exp8227-concurrency-canary
+    value:
+    - positive
+    - 'null'
+    - circular_positive
+  id: exp8228-concurrent-service
+  inference_substrate_class: model_bounded_generation
+  max_turns: 50
+  milestone: 2026.10.711
+  per_unit_rows: true
+  phase: 4
+  prior_failures:
+  - addressed_by: Run independent real generation per arm under a qualified two-slot
+      schedule instead of sharing acquisition across services.
+    experiment_id: exp8214-prospective-service-measurement
+    retire_if_same_verdict: true
+    verdict: complete_null_shared_acquisition_accounting
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. Exp8227 freezes the request protocol and qualifies
+    real Qwen slots. The question is acquisition throughput and complete request cost,
+    not Rust-versus-Python speed or independent reasoning quality.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md;
+    python/carnot/verify/prospective_service_8214.py; python/carnot/verify/request_recorder_8213.py;
+    python/carnot/verify/complete_request_8174.py; results/experiment_8227_v711_concurrency_canary.json;
+    openspec/change-proposals/v711-concurrent-acquisition-protocol.json
+
+    TASK:
+
+    Measure independent serial and concurrent requests with complete cost accounting.
+    Deliver results/experiment_8228_v711_concurrent_service.json. Create the thin
+    runner scripts/experiments/experiment_8228_v711_concurrent_service.py. Store primitive
+    evidence under results/raw/experiment_8228_v711_concurrent_service/. Keep execution
+    readiness separate from benefit.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS: Emit a flushed start line. Authenticate named inputs, schemas,
+    writable private scratch and resources. Record actual commands and exits. Missing
+    external evidence yields complete_blocked_<operand> with verdict_class=blocked.
+    Do not fabricate inputs or substitute missing rows.
+
+    1. Emit a flushed progress line at every phase boundary. Emit lines before and
+    after each model load, generation, benchmark and subprocess. Print completed/pending
+    counts inside long loops. Emit a heartbeat at least every 60 seconds while a child
+    runs. Keep every output gap below 600 seconds. Use unbuffered output, bounded
+    child deadlines and process-group cleanup. Write any file over about 200 lines
+    in several tool calls of at most about 150 lines. Send a progress message between
+    file-writing calls. Split long work into resumable batches; no single huge tool
+    call. Do not pad runtime.
+
+    2. Extend the relevant REQ-* and SCENARIO-* before implementation. Write focused
+    failing tests first. Exercise real CLI and failure paths. Keep original tests
+    and assertions. Reuse qualified helpers. Keep scratch outside the repository root
+    and fixture outputs outside results/. Follow the V711 design. No generator weight
+    changes or external publication.
+
+    3. Use MODEL_SPECS with unsloth/Qwen3.8-27B-GGUF Q4_K_M. Resolve cached_current_model
+    and the GGUF chat template. Set CARNOT_FORCE_LIVE=1. Declare live_llm_inference
+    and model_bounded_generation (10s floor). Preserve measured GPU/model/template
+    hashes and token counts. A cache or GPU miss blocks; a legacy model cannot replace
+    this model.
+
+    4. Authenticate the canary and protocol. Run24 sources per arm in each of two
+    frozen sweeps,96 independent generations total. Hold the existing Rust durable
+    service fixed. Per-source prompts and seeds match across arms. Disable exact-request
+    and prefix reuse for this comparison. Retain distinct response and request IDs.
+
+    5. Execute the counterbalanced sweeps without exceeding two total active generation
+    slots. Charge a fresh measured startup and shutdown to each sweep/arm workload,
+    two per arm, as frozen. Measure queueing, inference, normalization, Rust dispatch,
+    fsync and persistence. Record the actual server lifetime, memory and token spans.
+    No copied generation may represent an independent arm.
+
+    6. Cap measurement at3000seconds. Checkpoint after each source pair or completed
+    request. Use120-second request deadlines and live heartbeats. Preserve all96 intended
+    requests with failure/censoring status. Complete at least20 paired sources for
+    descriptive latency intervals; fewer produces an insufficient-support null, not
+    invented rows.
+
+    7. Report per-source paired latency intervals, warm throughput and measured cold-inclusive
+    makespans separately. Two sweeps cannot support a population throughput confidence
+    claim. Report valid completion counts, output hashes/schema changes and token
+    counts. A faster arm with fewer valid completions cannot qualify as an improvement.
+
+    8. Recompute acquisition and scoring fractions and Amdahl upper bounds from measured
+    spans. Preserve NFR-01 as unmet: this comparison holds Rust fixed and cannot prove10x
+    Rust-versus-Python speed. Make no hallucination or answer-quality gain claim from
+    schema validity. Frozen source exposure remains a designed development workload.
+
+    9. Run applicable E2E-022 and private E2E-015/019 from ops/e2e-test-plan.md using
+    private fixtures. Freeze exact owned commands before measurement. Run relevant
+    unit/consumer tests, measured 100% changed-code coverage including real CLI/child
+    statements, scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py
+    --files <owned-test-files>. Preserve argv, expected/actual exits, full stdout/stderr
+    hashes and clocks. Keep bounded repository-health diagnostics separate; existing
+    failures do not become a global pass.
+
+    10. Cold-replay primitives in a fresh process. Validate a private candidate through
+    unchanged primary_publication terminal checks, scripts/adversarial_verify.py --json
+    <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>.
+    Publish atomically to results/experiment_8228_v711_concurrent_service.json only
+    after normal exit and required checks. Preserve historical primary bytes. Reconcile
+    openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not modify
+    research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual
+    invocation.
+
+    honest_verdict, verdict_class: principle: Use complete_* terminal verdicts and
+    exactly positive | circular_positive | null | blocked | disqualified | partial.
+    Partial means unfinished owned work only. Unchanged external blocks are blocked.
+
+    gate_check_summary: principle: Each blocked result names upstream/path/hash, exact
+    field, operator, expected and observed value. Missing differs from measured zero.
+
+    inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts:
+    principle: Actual current operations determine duration floors; cached provenance
+    is not a model call.
+
+    rows, intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: Preserve every unit/arm/condition and metric with
+    its numerator, denominator and missing status. Seeds and repeats do not add independent
+    sources.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score:
+    principle: Oracle-defined success is circular_positive. Reused development data
+    cannot prove independent generalization; both generalization scores stay zero
+    here.
+
+    flagged_adversarial, required_checks_passed, acceptance_gates, validation_receipts,
+    terminal_validation_sidecar_path: principle: Failed owned checks disqualify and
+    set readiness to zero. Readiness alone is not scientific benefit.
+
+    preconditions_checked, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes,
+    code_config_hashes, raw_shard_hashes, phase_spans: principle: Preserve actual
+    work clocks and independently checkable input bytes.
+
+    cited_upstream_artifacts, field_principles: principle: Name imported fields and
+    their hashes. Explain each added field.
+
+    concurrent_service_ready_score: principle: One means sufficient authenticated
+    request evidence and owned checks, not necessarily a timing win.
+
+    request_rows_path, sweep_makespans, cold_costs, latency_intervals, valid_completion_counts,
+    token_totals, acquisition_fraction, scoring_speedup_upper_bound: principle: Expose
+    all costs and quality limits behind a service comparison.
+
+    Run command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python
+    -u scripts/experiments/experiment_8228_v711_concurrent_service.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: true
+  title: Measure independent serial and concurrent requests with complete cost accounting
+  track: inference
+- MODEL_SPECS: []
+  deliverable: results/experiment_8229_v711_arc_outcome_delta.json
+  estimated_wall_time_min: 15
+  gated_on: []
+  id: exp8229-arc-outcome-delta
+  inference_substrate_class: no_model_load
+  max_turns: 20
+  milestone: 2026.10.711
+  per_unit_rows: true
+  phase: 4
+  prior_failures:
+  - addressed_by: Use Exp8215 shipped authority locator and its authenticated frontier;
+      inspect only new outcomes. Empty frontier exits immediately without the retired
+      unchanged inventory.
+    experiment_id: exp7988-arc-supervisor-delta
+    retire_if_same_verdict: true
+    verdict: complete_disqualified_supervisor_delta_prerequisites
+  - addressed_by: Inspect only later authenticated receipt bytes, with environment
+      outcomes separated from self-reported confidence; unchanged bytes cause an immediate
+      terminal null.
+    experiment_id: exp8215-arc-authoritative-frontier
+    retire_if_same_verdict: true
+    verdict: complete_null_no_new_outcomes
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. Exp8215 qualified the actual producer authority
+    and found zero new outcomes. The ARC floor permits an immediate null when the
+    authenticated frontier has not changed.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md;
+    python/carnot/reporting/arc_authoritative_frontier_8215.py; python/carnot/reporting/arc_authoritative_execution_8215.py;
+    python/carnot/agentic/arc_competition_agent.py; ops/arc_solve_registry.yaml; results/experiment_8215_v709_arc_authoritative_frontier.json;
+    openspec/capabilities/arc-world-model-trust-energy/spec.md; research-references.md
+
+    TASK:
+
+    Inspect new environment-grounded supervisor outcomes for cross-game selection.
+    Deliver results/experiment_8229_v711_arc_outcome_delta.json. Create the thin runner
+    scripts/experiments/experiment_8229_v711_arc_outcome_delta.py. Store primitive
+    evidence under results/raw/experiment_8229_v711_arc_outcome_delta/. Keep execution
+    readiness separate from benefit.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS: Emit a flushed start line. Authenticate named inputs, schemas,
+    writable private scratch and resources. Record actual commands and exits. Missing
+    external evidence yields complete_blocked_<operand> with verdict_class=blocked.
+    Do not fabricate inputs or substitute missing rows.
+
+    1. Emit a flushed progress line at every phase boundary. Emit lines before and
+    after each model load, generation, benchmark and subprocess. Print completed/pending
+    counts inside long loops. Emit a heartbeat at least every 60 seconds while a child
+    runs. Keep every output gap below 600 seconds. Use unbuffered output, bounded
+    child deadlines and process-group cleanup. Write any file over about 200 lines
+    in several tool calls of at most about 150 lines. Send a progress message between
+    file-writing calls. Split long work into resumable batches; no single huge tool
+    call. Do not pad runtime.
+
+    2. Extend the relevant REQ-* and SCENARIO-* before implementation. Write focused
+    failing tests first. Exercise real CLI and failure paths. Keep original tests
+    and assertions. Reuse qualified helpers. Keep scratch outside the repository root
+    and fixture outputs outside results/. Follow the V711 design. No generator weight
+    changes or external publication.
+
+    3. Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts
+    for reductions, or verifier_ensemble_against_cached_candidates for numerical fitting/scoring.
+    Declare trained_head_specs separately. Historical Qwen provenance is not a current
+    invocation.
+
+    4. Check the solve registry and Exp8215 frontier first. Authenticate only new
+    supervisor outcome receipts through the qualified producer locator. If no new
+    bytes or no firings exist, emit complete_null_no_new_outcomes immediately. Do
+    not rerun unchanged failed inventories or public games.
+
+    5. For genuine new outcomes, compare curated arms using resolved_by_levelup, actions_to_levelup,
+    fired/helped counts and stagnations_unredirected. Separate prior selection propensity
+    and game/context support. Compare model confidence or rationales only descriptively;
+    actual environment progress is the outcome, following arXiv:2609.00652.
+
+    6. Use leave-one-game-out analysis only when independent games and arm overlap
+    support it. Emit per-game/arm rows and confounding limits. Recommend selection
+    changes only with supported transferable evidence. Do not create new arms, change
+    live priorities, load a model, run a game, or submit a leaderboard result.
+
+    7. Preserve the live-agent discovery boundary. No game-level solve is claimed;
+    solve_claims=[] and credited_new_levels=0. Authenticate original provenance for
+    cited outcomes. A development proxy or outer-loop reconstruction cannot become
+    a live solve.
+
+    8. Run applicable E2E-017/023 from ops/e2e-test-plan.md using private fixtures.
+    Freeze exact owned commands before measurement. Run relevant unit/consumer tests,
+    measured 100% changed-code coverage including real CLI/child statements, scoped
+    Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>.
+    Preserve argv, expected/actual exits, full stdout/stderr hashes and clocks. Keep
+    bounded repository-health diagnostics separate; existing failures do not become
+    a global pass.
+
+    9. Cold-replay primitives in a fresh process. Validate a private candidate through
+    unchanged primary_publication terminal checks, scripts/adversarial_verify.py --json
+    <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>.
+    Publish atomically to results/experiment_8229_v711_arc_outcome_delta.json only
+    after normal exit and required checks. Preserve historical primary bytes. Reconcile
+    openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not modify
+    research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual
+    invocation.
+
+    honest_verdict, verdict_class: principle: Use complete_* terminal verdicts and
+    exactly positive | circular_positive | null | blocked | disqualified | partial.
+    Partial means unfinished owned work only. Unchanged external blocks are blocked.
+
+    gate_check_summary: principle: Each blocked result names upstream/path/hash, exact
+    field, operator, expected and observed value. Missing differs from measured zero.
+
+    inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts:
+    principle: Actual current operations determine duration floors; cached provenance
+    is not a model call.
+
+    rows, intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: Preserve every unit/arm/condition and metric with
+    its numerator, denominator and missing status. Seeds and repeats do not add independent
+    sources.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score:
+    principle: Oracle-defined success is circular_positive. Reused development data
+    cannot prove independent generalization; both generalization scores stay zero
+    here.
+
+    flagged_adversarial, required_checks_passed, acceptance_gates, validation_receipts,
+    terminal_validation_sidecar_path: principle: Failed owned checks disqualify and
+    set readiness to zero. Readiness alone is not scientific benefit.
+
+    preconditions_checked, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes,
+    code_config_hashes, raw_shard_hashes, phase_spans: principle: Preserve actual
+    work clocks and independently checkable input bytes.
+
+    cited_upstream_artifacts, field_principles: principle: Name imported fields and
+    their hashes. Explain each added field.
+
+    arc_delta_ready_score, new_outcome_count, frontier_sha256, selection_recommendations:
+    principle: Only new authenticated environment evidence can justify transferable
+    supervisor changes.
+
+    solve_provenance, solve_claims, credited_new_levels: principle: Use live_agent_self_discovery
+    only for authenticated live receipts; null when no solve evidence is present.
+    This task credits zero new solves.
+
+    Run command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python
+    -u scripts/experiments/experiment_8229_v711_arc_outcome_delta.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Inspect new environment-grounded supervisor outcomes for cross-game selection
+  track: arc
+- MODEL_SPECS: []
+  deliverable: results/experiment_8230_v711_kv260_workload_boundary.json
+  estimated_wall_time_min: 25
+  gated_on: []
+  id: exp8230-kv260-workload-boundary
+  inference_substrate_class: no_model_load
+  max_turns: 30
+  milestone: 2026.10.711
+  per_unit_rows: true
+  phase: 4
+  prior_failures:
+  - addressed_by: Replace the generic workload summary with current correction-operation
+      and fixed-point evidence for KV260; preserve missing branches and prohibit unchanged
+      bring-up retries.
+    experiment_id: exp8216-hardware-workload-obligations
+    retire_if_same_verdict: true
+    verdict: complete_null_hardware_workload_obligations
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. Exp8216 preserved qualified KV260 fabric scope
+    but proved no full-service speedup. New utility kernels may have a different operation
+    mix; acquisition still dominates prior measured requests.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md;
+    python/carnot/reporting/hardware_workload_obligations_8216.py; results/experiment_8216_v709_hardware_workload_obligations.json;
+    research-hardware-wishlist.md; ops/hardware-bringup-prep.md; results/experiment_8221_v711_utility_kernel.json;
+    results/experiment_8225_v711_delayed_utility_learning.json; results/experiment_8228_v711_concurrent_service.json
+
+    TASK:
+
+    Bound KV260 utility-kernel work and whole-request acceleration. Deliver results/experiment_8230_v711_kv260_workload_boundary.json.
+    Create the thin runner scripts/experiments/experiment_8230_v711_kv260_workload_boundary.py.
+    Store primitive evidence under results/raw/experiment_8230_v711_kv260_workload_boundary/.
+    Keep execution readiness separate from benefit.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS: Emit a flushed start line. Authenticate named inputs, schemas,
+    writable private scratch and resources. Record actual commands and exits. Missing
+    external evidence yields complete_blocked_<operand> with verdict_class=blocked.
+    Do not fabricate inputs or substitute missing rows.
+
+    1. Emit a flushed progress line at every phase boundary. Emit lines before and
+    after each model load, generation, benchmark and subprocess. Print completed/pending
+    counts inside long loops. Emit a heartbeat at least every 60 seconds while a child
+    runs. Keep every output gap below 600 seconds. Use unbuffered output, bounded
+    child deadlines and process-group cleanup. Write any file over about 200 lines
+    in several tool calls of at most about 150 lines. Send a progress message between
+    file-writing calls. Split long work into resumable batches; no single huge tool
+    call. Do not pad runtime.
+
+    2. Extend the relevant REQ-* and SCENARIO-* before implementation. Write focused
+    failing tests first. Exercise real CLI and failure paths. Keep original tests
+    and assertions. Reuse qualified helpers. Keep scratch outside the repository root
+    and fixture outputs outside results/. Follow the V711 design. No generator weight
+    changes or external publication.
+
+    3. Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts
+    for reductions, or verifier_ensemble_against_cached_candidates for numerical fitting/scoring.
+    Declare trained_head_specs separately. Historical Qwen provenance is not a current
+    invocation.
+
+    4. Authenticate each available V711 branch separately. Retain unavailable or disqualified
+    branches with exact fields and hashes. Do not gate the KV260 obligation on success
+    of static learning or service timing.
+
+    5. Classify actual kernel operations: interval lookup, ordered clipped adds, global
+    calibration, log normalization and durable host state. Identify which operations
+    the existing quadratic Ising fabric actually supports. Do not call this piecewise
+    correction an Ising sampler or propose new RTL.
+
+    6. On available frozen kernel fixtures and natural rows, compare FP64 with a declared
+    Q16.16 lookup/add reference. Preserve clipping order. Count action differences
+    and fallback rates; unsupported operations remain CPU. Report fixture and natural
+    rows separately. No approximation is deployed.
+
+    7. Use authenticated whole-request spans to compute1/(1-f) as an ideal upper bound
+    for eliminating only the eligible work. Include transfer/readout and durable host
+    obligations in any practical estimate. If timings are missing, leave the bound
+    unavailable rather than reuse unrelated latency.
+
+    8. Retain KV260 k_max<=5 and the historical fabric transcript scope. This task
+    performs no board probe or flash. Future availability checks use ssh kria, never
+    a host storage-device check. Report precisely which current evidence would justify
+    a transfer-inclusive board experiment. TSU/NPU access remains unqualified.
+
+    9. Run applicable E2E-015/019 from ops/e2e-test-plan.md using private fixtures.
+    Freeze exact owned commands before measurement. Run relevant unit/consumer tests,
+    measured 100% changed-code coverage including real CLI/child statements, scoped
+    Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>.
+    Preserve argv, expected/actual exits, full stdout/stderr hashes and clocks. Keep
+    bounded repository-health diagnostics separate; existing failures do not become
+    a global pass.
+
+    10. Cold-replay primitives in a fresh process. Validate a private candidate through
+    unchanged primary_publication terminal checks, scripts/adversarial_verify.py --json
+    <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>.
+    Publish atomically to results/experiment_8230_v711_kv260_workload_boundary.json
+    only after normal exit and required checks. Preserve historical primary bytes.
+    Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md.
+    Do not modify research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual
+    invocation.
+
+    honest_verdict, verdict_class: principle: Use complete_* terminal verdicts and
+    exactly positive | circular_positive | null | blocked | disqualified | partial.
+    Partial means unfinished owned work only. Unchanged external blocks are blocked.
+
+    gate_check_summary: principle: Each blocked result names upstream/path/hash, exact
+    field, operator, expected and observed value. Missing differs from measured zero.
+
+    inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts:
+    principle: Actual current operations determine duration floors; cached provenance
+    is not a model call.
+
+    rows, intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: Preserve every unit/arm/condition and metric with
+    its numerator, denominator and missing status. Seeds and repeats do not add independent
+    sources.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score:
+    principle: Oracle-defined success is circular_positive. Reused development data
+    cannot prove independent generalization; both generalization scores stay zero
+    here.
+
+    flagged_adversarial, required_checks_passed, acceptance_gates, validation_receipts,
+    terminal_validation_sidecar_path: principle: Failed owned checks disqualify and
+    set readiness to zero. Readiness alone is not scientific benefit.
+
+    preconditions_checked, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes,
+    code_config_hashes, raw_shard_hashes, phase_spans: principle: Preserve actual
+    work clocks and independently checkable input bytes.
+
+    cited_upstream_artifacts, field_principles: principle: Name imported fields and
+    their hashes. Explain each added field.
+
+    kv260_boundary_ready_score, kv260_obligation, operation_mapping, precision_rows,
+    whole_request_bounds: principle: Keep numerical feasibility, hardware access and
+    measured service acceleration distinct.
+
+    Run command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python
+    -u scripts/experiments/experiment_8230_v711_kv260_workload_boundary.py --date
+    {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Bound KV260 utility-kernel work and whole-request acceleration
+  track: hardware
+- MODEL_SPECS: []
+  deliverable: results/experiment_8231_v711_polarfire_state_boundary.json
+  estimated_wall_time_min: 20
+  gated_on: []
+  id: exp8231-polarfire-state-boundary
+  inference_substrate_class: no_model_load
+  max_turns: 20
+  milestone: 2026.10.711
+  per_unit_rows: true
+  phase: 4
+  prior_failures:
+  - addressed_by: Specialize the obligation to the new correction-state transfer and
+      durable commit contract, while retaining CPU-only board evidence.
+    experiment_id: exp8216-hardware-workload-obligations
+    retire_if_same_verdict: true
+    verdict: complete_null_hardware_workload_obligations
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. PolarFire has historical Linux CPU dispatch
+    evidence. That is not fabric acceleration. V711 creates a new bounded state representation
+    whose transfer and persistence costs need an explicit boundary.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md;
+    python/carnot/reporting/hardware_workload_obligations_8216.py; results/experiment_8216_v709_hardware_workload_obligations.json;
+    research-hardware-wishlist.md; ops/hardware-bringup-prep.md; results/experiment_8221_v711_utility_kernel.json;
+    results/experiment_8225_v711_delayed_utility_learning.json
+
+    TASK:
+
+    Specify PolarFire transfer and persistence for the learned correction state. Deliver
+    results/experiment_8231_v711_polarfire_state_boundary.json. Create the thin runner
+    scripts/experiments/experiment_8231_v711_polarfire_state_boundary.py. Store primitive
+    evidence under results/raw/experiment_8231_v711_polarfire_state_boundary/. Keep
+    execution readiness separate from benefit.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS: Emit a flushed start line. Authenticate named inputs, schemas,
+    writable private scratch and resources. Record actual commands and exits. Missing
+    external evidence yields complete_blocked_<operand> with verdict_class=blocked.
+    Do not fabricate inputs or substitute missing rows.
+
+    1. Emit a flushed progress line at every phase boundary. Emit lines before and
+    after each model load, generation, benchmark and subprocess. Print completed/pending
+    counts inside long loops. Emit a heartbeat at least every 60 seconds while a child
+    runs. Keep every output gap below 600 seconds. Use unbuffered output, bounded
+    child deadlines and process-group cleanup. Write any file over about 200 lines
+    in several tool calls of at most about 150 lines. Send a progress message between
+    file-writing calls. Split long work into resumable batches; no single huge tool
+    call. Do not pad runtime.
+
+    2. Extend the relevant REQ-* and SCENARIO-* before implementation. Write focused
+    failing tests first. Exercise real CLI and failure paths. Keep original tests
+    and assertions. Reuse qualified helpers. Keep scratch outside the repository root
+    and fixture outputs outside results/. Follow the V711 design. No generator weight
+    changes or external publication.
+
+    3. Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts
+    for reductions, or verifier_ensemble_against_cached_candidates for numerical fitting/scoring.
+    Declare trained_head_specs separately. Historical Qwen provenance is not a current
+    invocation.
+
+    4. Authenticate the latest PolarFire obligation independently of other science
+    branches. Retain Linux CPU-only dispatch provenance. Do not claim fabric use,
+    current SSH reachability or a fresh device timing.
+
+    5. From available qualified kernel state, enumerate predicates, ordered corrections,
+    global parameters, exact mixtures and checksum fields. Measure serialized bytes
+    and host encode/decode parity on frozen state examples. Distinguish natural states
+    from private fixtures. This host measurement does not represent board performance.
+
+    6. Write a transfer-inclusive follow-up contract covering payload hash equality,
+    version rejection, durable commit, restart and all host/network costs. Bound transport
+    bandwidth symbolically unless measured board clocks already exist. Do not substitute
+    advertised link rates for measured latency.
+
+    7. Emit separate completed, blocked and future device obligations. If the learning
+    branch is blocked, preserve its exact reason while still completing the existing
+    board-state inventory. No physical probe, install, flash or unchanged bring-up
+    retry is authorized by this task.
+
+    8. Run applicable E2E-015/019 from ops/e2e-test-plan.md using private fixtures.
+    Freeze exact owned commands before measurement. Run relevant unit/consumer tests,
+    measured 100% changed-code coverage including real CLI/child statements, scoped
+    Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>.
+    Preserve argv, expected/actual exits, full stdout/stderr hashes and clocks. Keep
+    bounded repository-health diagnostics separate; existing failures do not become
+    a global pass.
+
+    9. Cold-replay primitives in a fresh process. Validate a private candidate through
+    unchanged primary_publication terminal checks, scripts/adversarial_verify.py --json
+    <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>.
+    Publish atomically to results/experiment_8231_v711_polarfire_state_boundary.json
+    only after normal exit and required checks. Preserve historical primary bytes.
+    Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md.
+    Do not modify research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual
+    invocation.
+
+    honest_verdict, verdict_class: principle: Use complete_* terminal verdicts and
+    exactly positive | circular_positive | null | blocked | disqualified | partial.
+    Partial means unfinished owned work only. Unchanged external blocks are blocked.
+
+    gate_check_summary: principle: Each blocked result names upstream/path/hash, exact
+    field, operator, expected and observed value. Missing differs from measured zero.
+
+    inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts:
+    principle: Actual current operations determine duration floors; cached provenance
+    is not a model call.
+
+    rows, intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: Preserve every unit/arm/condition and metric with
+    its numerator, denominator and missing status. Seeds and repeats do not add independent
+    sources.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score:
+    principle: Oracle-defined success is circular_positive. Reused development data
+    cannot prove independent generalization; both generalization scores stay zero
+    here.
+
+    flagged_adversarial, required_checks_passed, acceptance_gates, validation_receipts,
+    terminal_validation_sidecar_path: principle: Failed owned checks disqualify and
+    set readiness to zero. Readiness alone is not scientific benefit.
+
+    preconditions_checked, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes,
+    code_config_hashes, raw_shard_hashes, phase_spans: principle: Preserve actual
+    work clocks and independently checkable input bytes.
+
+    cited_upstream_artifacts, field_principles: principle: Name imported fields and
+    their hashes. Explain each added field.
+
+    polarfire_boundary_ready_score, polarfire_obligation, serialized_state_rows, transfer_contract_path:
+    principle: Make the portable state concrete without converting host checks into
+    device evidence.
+
+    Run command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python
+    -u scripts/experiments/experiment_8231_v711_polarfire_state_boundary.py --date
+    {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Specify PolarFire transfer and persistence for the learned correction state
+  track: hardware
+- MODEL_SPECS: []
+  deliverable: results/experiment_8232_v711_gatemate_continuity.json
+  estimated_wall_time_min: 15
+  gated_on: []
+  id: exp8232-gatemate-continuity
+  inference_substrate_class: no_model_load
+  max_turns: 20
+  milestone: 2026.10.711
+  per_unit_rows: true
+  phase: 4
+  prior_failures:
+  - addressed_by: Create a board-specific physical-change and evidence contract from
+      the current obligation; do not rerun the unchanged JTAG mechanism.
+    experiment_id: exp8216-hardware-workload-obligations
+    retire_if_same_verdict: true
+    verdict: complete_null_hardware_workload_obligations
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. GateMate retains the historical 0xffffffff JTAG
+    observation. New software experiments cannot repair an unchanged physical setup.
+    Its obligation must remain visible without another doomed probe.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md;
+    python/carnot/reporting/hardware_workload_obligations_8216.py; results/experiment_8216_v709_hardware_workload_obligations.json;
+    ops/hardware-bringup-prep.md; docs/jtag-wiring-gatemate-dirtyjtag.md; research-hardware-wishlist.md;
+    ops/known-issues.md
+
+    TASK:
+
+    Preserve the GateMate physical blocker and freeze conditions for reopening. Deliver
+    results/experiment_8232_v711_gatemate_continuity.json. Create the thin runner
+    scripts/experiments/experiment_8232_v711_gatemate_continuity.py. Store primitive
+    evidence under results/raw/experiment_8232_v711_gatemate_continuity/. Keep execution
+    readiness separate from benefit.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS: Emit a flushed start line. Authenticate named inputs, schemas,
+    writable private scratch and resources. Record actual commands and exits. Missing
+    external evidence yields complete_blocked_<operand> with verdict_class=blocked.
+    Do not fabricate inputs or substitute missing rows.
+
+    1. Emit a flushed progress line at every phase boundary. Emit lines before and
+    after each model load, generation, benchmark and subprocess. Print completed/pending
+    counts inside long loops. Emit a heartbeat at least every 60 seconds while a child
+    runs. Keep every output gap below 600 seconds. Use unbuffered output, bounded
+    child deadlines and process-group cleanup. Write any file over about 200 lines
+    in several tool calls of at most about 150 lines. Send a progress message between
+    file-writing calls. Split long work into resumable batches; no single huge tool
+    call. Do not pad runtime.
+
+    2. Extend the relevant REQ-* and SCENARIO-* before implementation. Write focused
+    failing tests first. Exercise real CLI and failure paths. Keep original tests
+    and assertions. Reuse qualified helpers. Keep scratch outside the repository root
+    and fixture outputs outside results/. Follow the V711 design. No generator weight
+    changes or external publication.
+
+    3. Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts
+    for reductions, or verifier_ensemble_against_cached_candidates for numerical fitting/scoring.
+    Declare trained_head_specs separately. Historical Qwen provenance is not a current
+    invocation.
+
+    4. Authenticate the latest GateMate evidence and any dated operator cable/port/power
+    change. Record whether such a change exists. Do not perform a JTAG retry or infer
+    a change from wall-clock time.
+
+    5. Write docs/research-notes/v711-gatemate-reopen.md. Name the exact observed
+    blocker, required physical change, expected IDCODE evidence and n16 tile/hash
+    smoke acceptance. Keep host file presence separate from flash and on-device success.
+
+    6. Reconcile one explicit board row with paths, hashes, terminal-state flags and
+    required next evidence. Even if a change is recorded, this task remains a documentation
+    audit; a future device experiment must preflight it. An unchanged external block
+    uses complete_blocked_gatemate_physical_change and verdict_class=blocked, never
+    partial.
+
+    7. Validate the evidence reducer using private changed/unchanged/missing-receipt
+    fixtures. Do not turn fabricated fixture hardware into current board status. This
+    task runs regardless of verifier or GPU branch gates.
+
+    8. Run applicable E2E-015/019 from ops/e2e-test-plan.md using private fixtures.
+    Freeze exact owned commands before measurement. Run relevant unit/consumer tests,
+    measured 100% changed-code coverage including real CLI/child statements, scoped
+    Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>.
+    Preserve argv, expected/actual exits, full stdout/stderr hashes and clocks. Keep
+    bounded repository-health diagnostics separate; existing failures do not become
+    a global pass.
+
+    9. Cold-replay primitives in a fresh process. Validate a private candidate through
+    unchanged primary_publication terminal checks, scripts/adversarial_verify.py --json
+    <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>.
+    Publish atomically to results/experiment_8232_v711_gatemate_continuity.json only
+    after normal exit and required checks. Preserve historical primary bytes. Reconcile
+    openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not modify
+    research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual
+    invocation.
+
+    honest_verdict, verdict_class: principle: Use complete_* terminal verdicts and
+    exactly positive | circular_positive | null | blocked | disqualified | partial.
+    Partial means unfinished owned work only. Unchanged external blocks are blocked.
+
+    gate_check_summary: principle: Each blocked result names upstream/path/hash, exact
+    field, operator, expected and observed value. Missing differs from measured zero.
+
+    inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts:
+    principle: Actual current operations determine duration floors; cached provenance
+    is not a model call.
+
+    rows, intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: Preserve every unit/arm/condition and metric with
+    its numerator, denominator and missing status. Seeds and repeats do not add independent
+    sources.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score:
+    principle: Oracle-defined success is circular_positive. Reused development data
+    cannot prove independent generalization; both generalization scores stay zero
+    here.
+
+    flagged_adversarial, required_checks_passed, acceptance_gates, validation_receipts,
+    terminal_validation_sidecar_path: principle: Failed owned checks disqualify and
+    set readiness to zero. Readiness alone is not scientific benefit.
+
+    preconditions_checked, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes,
+    code_config_hashes, raw_shard_hashes, phase_spans: principle: Preserve actual
+    work clocks and independently checkable input bytes.
+
+    cited_upstream_artifacts, field_principles: principle: Name imported fields and
+    their hashes. Explain each added field.
+
+    gatemate_obligation_ready_score, gatemate_obligation, physical_change_evidence,
+    reopen_contract_path: principle: Preserve the board obligation and actionable
+    reopening condition without inventing hardware progress.
+
+    Run command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python
+    -u scripts/experiments/experiment_8232_v711_gatemate_continuity.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Preserve the GateMate physical blocker and freeze conditions for reopening
+  track: hardware
+- MODEL_SPECS: []
+  deliverable: results/experiment_8233_v711_capstone.json
+  estimated_wall_time_min: 40
+  gated_on: []
+  id: exp8233-capstone
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.10.711
+  per_unit_rows: true
+  phase: 4
+  prior_failures:
+  - addressed_by: Use a bounded current consumer manifest and immutable invocation
+      snapshots. Preserve missing historical code without making it a false current-source
+      requirement.
+    experiment_id: exp8217-capstone
+    retire_if_same_verdict: true
+    verdict: complete_disqualified_owned_validation
+  - addressed_by: Account for the two actual V710 tasks and all fourteen V711 tasks;
+      do not rerun unavailable archive-wide original-code reconstruction.
+    experiment_id: exp8218-contract-replay-qualification
+    retire_if_same_verdict: true
+    verdict: complete_disqualified_original_code_bytes
+  priority: high
+  prompt: 'CONTEXT:
+
+    Work in {project_root} on {date}. V710 completed two scheduled tasks, not the
+    fourteen described in its stale contract. V711 must account for exactly fourteen
+    outcomes and preserve null, blocked and disqualified branches without futile retries.
+
+    EXISTING CODE TO READ FIRST:
+
+    CLAUDE.md; CODEX.md; ops/e2e-test-plan.md; openspec/capabilities/research-reporting/spec.md;
+    openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py;
+    ops/exclusion_manifest.yaml; openspec/change-proposals/research-roadmap-vNEXT.md;
+    python/carnot/reporting/v709_capstone.py; python/carnot/reporting/v709_capstone_science.py;
+    python/carnot/reporting/roadmap_contract.py; scripts/publication_gate.py; results/experiment_8220_v711_current_contract.json;
+    openspec/change-proposals/research-roadmap-v710-preserved-20261006.md; ops/exclusion_manifest.yaml
+
+    TASK:
+
+    Reconcile fourteen outcomes and decide whether each PRD gap moved. Deliver results/experiment_8233_v711_capstone.json.
+    Create the thin runner scripts/experiments/experiment_8233_v711_capstone.py. Store
+    primitive evidence under results/raw/experiment_8233_v711_capstone/. Keep execution
+    readiness separate from benefit.
+
+    CONCRETE STEPS:
+
+    0. PRECONDITIONS: Emit a flushed start line. Authenticate named inputs, schemas,
+    writable private scratch and resources. Record actual commands and exits. Missing
+    external evidence yields complete_blocked_<operand> with verdict_class=blocked.
+    Do not fabricate inputs or substitute missing rows.
+
+    1. Emit a flushed progress line at every phase boundary. Emit lines before and
+    after each model load, generation, benchmark and subprocess. Print completed/pending
+    counts inside long loops. Emit a heartbeat at least every 60 seconds while a child
+    runs. Keep every output gap below 600 seconds. Use unbuffered output, bounded
+    child deadlines and process-group cleanup. Write any file over about 200 lines
+    in several tool calls of at most about 150 lines. Send a progress message between
+    file-writing calls. Split long work into resumable batches; no single huge tool
+    call. Do not pad runtime.
+
+    2. Extend the relevant REQ-* and SCENARIO-* before implementation. Write focused
+    failing tests first. Exercise real CLI and failure paths. Keep original tests
+    and assertions. Reuse qualified helpers. Keep scratch outside the repository root
+    and fixture outputs outside results/. Follow the V711 design. No generator weight
+    changes or external publication.
+
+    3. Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts
+    for reductions, or verifier_ensemble_against_cached_candidates for numerical fitting/scoring.
+    Declare trained_head_specs separately. Historical Qwen provenance is not a current
+    invocation.
+
+    4. Run unconditionally. Enumerate Exp8220-8233 from the exact contract. Record
+    thirteen upstream dispositions plus this capstone own execution row. Include conductor
+    pre-gate blocked artifacts, missing outputs, failed checks and actual executed
+    task counts. Never reduce the contract to successful outputs.
+
+    5. Authenticate current evidence through immutable invocation snapshots and documented
+    schemas. Do not require unavailable V709 original code or silently upgrade Exp8218.
+    Missing historical operands stay historical limitations. Use the existing audit-specific
+    replay CLI pattern rather than inheriting a producer command.
+
+    6. Recompute H1/H2 from eligible V711 primitive rows. Separate owned execution
+    readiness, exposed-development signals and independent generalization. Keep H1/H2
+    family alpha fixed. Retain negative/blocked branches. Reconcile the energy-specific
+    control, later learning and retention, and complete request accounting.
+
+    7. Keep separate KV260, PolarFire and GateMate rows regardless of branch results.
+    Reconcile ARC new-outcome support and zero new solve credit. State the three remaining
+    PRD gaps explicitly. Decide continue, retire or await named evidence for each
+    mechanism; repeated prior verdicts trigger scope-specific retirement with a falsifiable
+    reopening condition.
+
+    8. Run scripts/publication_gate.py --json and preserve actual G1-G4, paper_ready
+    and unmet_gates. Do not publish externally. Write docs/research-notes/v711-outcomes.md
+    from artifact-backed numbers only. If required external inputs remain unavailable,
+    use complete_blocked_upstream_evidence with verdict_class=blocked. Owned failed
+    checks mean disqualified; neither means partial.
+
+    9. Validate the current capstone on private all-null, externally blocked, tampered
+    and complete fixtures before natural reduction. Bind a small explicit current
+    consumer manifest; no unbounded archive health repair. Retain global health failures
+    separately. A qualified null is a finished scientific result.
+
+    10. Run applicable private E2E-018/021 and E2E-015/019 from ops/e2e-test-plan.md
+    using private fixtures. Freeze exact owned commands before measurement. Run relevant
+    unit/consumer tests, measured 100% changed-code coverage including real CLI/child
+    statements, scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py
+    --files <owned-test-files>. Preserve argv, expected/actual exits, full stdout/stderr
+    hashes and clocks. Keep bounded repository-health diagnostics separate; existing
+    failures do not become a global pass.
+
+    11. Cold-replay primitives in a fresh process. Validate a private candidate through
+    unchanged primary_publication terminal checks, scripts/adversarial_verify.py --json
+    <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>.
+    Publish atomically to results/experiment_8233_v711_capstone.json only after normal
+    exit and required checks. Preserve historical primary bytes. Reconcile openspec/,
+    _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not modify research-roadmap.yaml.
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual
+    invocation.
+
+    honest_verdict, verdict_class: principle: Use complete_* terminal verdicts and
+    exactly positive | circular_positive | null | blocked | disqualified | partial.
+    Partial means unfinished owned work only. Unchanged external blocks are blocked.
+
+    gate_check_summary: principle: Each blocked result names upstream/path/hash, exact
+    field, operator, expected and observed value. Missing differs from measured zero.
+
+    inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts:
+    principle: Actual current operations determine duration floors; cached provenance
+    is not a model call.
+
+    rows, intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: Preserve every unit/arm/condition and metric with
+    its numerator, denominator and missing status. Seeds and repeats do not add independent
+    sources.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score:
+    principle: Oracle-defined success is circular_positive. Reused development data
+    cannot prove independent generalization; both generalization scores stay zero
+    here.
+
+    flagged_adversarial, required_checks_passed, acceptance_gates, validation_receipts,
+    terminal_validation_sidecar_path: principle: Failed owned checks disqualify and
+    set readiness to zero. Readiness alone is not scientific benefit.
+
+    preconditions_checked, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes,
+    code_config_hashes, raw_shard_hashes, phase_spans: principle: Preserve actual
+    work clocks and independently checkable input bytes.
+
+    cited_upstream_artifacts, field_principles: principle: Name imported fields and
+    their hashes. Explain each added field.
+
+    capstone_execution_ready_score, science_ready_score, h1_development_signal_score,
+    h2_development_signal_score: principle: A completed milestone does not imply scientific
+    benefit.
+
+    task_dispositions, three_prd_gaps, board_obligations, retirements, g1, g2, g3,
+    g4, paper_ready, unmet_gates: principle: Reconcile all scheduled work against
+    stable claim and publication rules.
+
+    Run command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python
+    -u scripts/experiments/experiment_8233_v711_capstone.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Reconcile fourteen outcomes and decide whether each PRD gap moved
+  track: synthesis
