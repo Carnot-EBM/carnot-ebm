@@ -21644,3 +21644,4 @@ Recorded 2 completed experiments in 13.2 minutes (0.2 hours), with 0 compute-bou
 - 2026-10-07: Inspect new environment-grounded supervisor outcomes for cross-game selection (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8229_v711_arc_outcome_delta.json
 - 2026-10-07: Bound KV260 utility-kernel work and whole-request acceleration (⚠️ Blocked) — honest_verdict=complete_blocked_service_spans_or_external_operand; results/experiment_8230_v711_kv260_workload_boundary.json
 - 2026-10-07: Specify PolarFire transfer and persistence for the learned correction state (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_checks; results/experiment_8231_v711_polarfire_state_boundary.json
+- 2026-10-07: Preserve the GateMate physical blocker and freeze conditions for reopening (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_physical_change; results/experiment_8232_v711_gatemate_continuity.json
