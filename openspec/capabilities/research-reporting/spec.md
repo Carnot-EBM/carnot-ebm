@@ -95057,3 +95057,32 @@ can reuse an explicit prior full-suite diagnostic receipt. Authenticate its
 exact bytes and full output hashes, preserve the original clocks and exits,
 and declare its source separately from current validation. No global pass is
 inferred and the broad suite is not rerun to repair owned command arguments.
+## REQ-REPORT-8232: GateMate continuity without a repeated probe
+
+Exp8232 authenticates Exp8216's one GateMate row and its byte-bound historical
+source, then audits the existing operator receipt locations in dry-run mode.
+It emits one board obligation and `complete_blocked_gatemate_physical_change`
+when no accepted dated cable, port, power, board or DirtyJTAG change exists.
+Missing source evidence has its own `complete_blocked_<operand>` disposition.
+Current model and device calls are zero. Audit readiness is separate from device
+readiness, scientific benefit and the two generalization scores, which stay zero.
+The frozen reopening note requires physical-change custody, valid GM1Ax IDCODE,
+and authenticated n16 flash/readout/hash smoke evidence. Host files cannot satisfy
+flash or execution. A recorded change only opens future device preflight.
+
+SCENARIO-REPORT-8232-CLI: Private changed/unchanged/missing-source cases use the
+real CLI outside the checkout, reject invalid dates and production fixture
+outputs, and cold-replay in a fresh process. Rehashed aggregate or source drift
+fails replay. Unchanged primary publication and terminal auditors check exact
+candidate bytes before atomic publication; historical source bytes are preserved.
+
+SCENARIO-REPORT-8232-CHECKS: Freeze exact commands before reduction, preserve
+bounded child exits, stream hashes and clocks, require scoped 100% statement
+coverage including CLI children, Ruff, strict mypy, spec references and private
+E2E-015/019. Failed owned checks disqualify and zero audit readiness. Run the full
+Python suite once as a separate bounded repository-health diagnostic.
+
+Implementation: `gatemate_execution_8232.py` freezes scoped checks and uses the
+qualified process supervisor, unchanged terminal auditors and primary publisher.
+`test_gatemate_continuity_8232.py` measures all added statements, including real
+script children and failure paths, through private Coverage.py subprocess data.

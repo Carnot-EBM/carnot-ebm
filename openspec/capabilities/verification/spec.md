@@ -50712,3 +50712,20 @@ and measures canonical host bytes and local durable parity. Versioned envelope
 and fresh replay checks reject changed bytes. The raw transfer contract retains
 all durable/network costs and symbolic bandwidth. Requirement-linked tests
 exercise ordered clipping, mixtures, global parameters and missing operands.
+## REQ-VERIFY-8232: Freeze GateMate physical reopening operands
+
+Authenticate the historical `0xffffffff` row, source SHA256 and terminal receipt
+independently of software science branches. Use the qualified structured,
+operator-authored receipt parser with a strict date after Exp6559 (20260823) and
+no future date. Preserve every accepted and rejected receipt; absence differs
+from measured zero. No JTAG subprocess or inferred wall-clock change is allowed.
+
+SCENARIO-VERIFY-8232-RECEIPTS: Changed, unchanged, missing, stale, future,
+agent-authored and wrong-board private receipts cannot promote hardware status.
+Even an accepted receipt leaves IDCODE, flash and n16 device hash smoke pending.
+Missing or modified historical bytes block independently and retain one explicit
+excluded board row with flags, paths, hashes and required next evidence.
+
+Implementation: `gatemate_continuity_8232.py` authenticates the pinned Exp8216 /
+Exp6559 lineage and reuses Exp7146's dry-run operator receipt parser. Its single
+board row retains device acceptance flags and the frozen V711 reopening note.
