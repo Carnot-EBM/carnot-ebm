@@ -1,0 +1,1992 @@
+{
+  "MODEL_SPECS": [
+    {
+      "backend": "llama.cpp CUDA",
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "quantization": "Q4_K_M",
+      "role": "headline"
+    }
+  ],
+  "acceptance_gates": {
+    "generation_floor": false,
+    "owned_validation": false,
+    "real_qwen_slots": false,
+    "request_isolation": false,
+    "required_inputs": true,
+    "three_complete_pairs": false
+  },
+  "actual_launch_order": [],
+  "benefit_claim": false,
+  "canary_pairs": [
+    {
+      "completed": false,
+      "request_ids": [
+        "canary_serial-00",
+        "canary_concurrent-00"
+      ],
+      "source_cluster_id": "sha256:007166f948ac40cecb7ad1b23ad5ac3b0ddf57399bd7492abd77fbbb2bf53c33"
+    },
+    {
+      "completed": false,
+      "request_ids": [
+        "canary_serial-01",
+        "canary_concurrent-01"
+      ],
+      "source_cluster_id": "sha256:0192bc1a081136b2481a802cfb677fbe298b2ca7bbcf013c57aa304ceb807fcd"
+    },
+    {
+      "completed": false,
+      "request_ids": [
+        "canary_serial-02",
+        "canary_concurrent-02"
+      ],
+      "source_cluster_id": "sha256:03d0eeadb123741a1b093494ba7b4d1e62aa170eff9f513b0632843197a8baf4"
+    },
+    {
+      "completed": false,
+      "request_ids": [
+        "canary_serial-03",
+        "canary_concurrent-03"
+      ],
+      "source_cluster_id": "sha256:05af6134eec80c91e92de6cc83e4c96a4e7fe5992ce19bcc42c796600711b85b"
+    }
+  ],
+  "censored_count": 8,
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/6f0f6f3dd5c1b067ab50040a3ce9bc3358a48dee2e71180cf91b3c335bdbcf19.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8182_v707_fit_sentence_capture.json",
+      "sha256": "sha256:6f0f6f3dd5c1b067ab50040a3ce9bc3358a48dee2e71180cf91b3c335bdbcf19"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/594d5af31bec5f8cb164b0bb49e2351874adcae90851c3cfb3fab835efd481c9.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8182_v707_fit_sentence_capture/invocations/1791255483042495166/source_plan.json",
+      "sha256": "sha256:594d5af31bec5f8cb164b0bb49e2351874adcae90851c3cfb3fab835efd481c9"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/15a13284335442ff04a491c6683d825e2b4d96de3950e6aa602a7c0afa1a252f.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8174_v706_complete_request_cost.json",
+      "sha256": "sha256:15a13284335442ff04a491c6683d825e2b4d96de3950e6aa602a7c0afa1a252f"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/dba306aff6f66cd2282c3c1e49a061c849dee746be56f5203c4d2c602285542e.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8174_v706_complete_request_cost/invocations/1791234035274744088/input_data.json",
+      "sha256": "sha256:dba306aff6f66cd2282c3c1e49a061c849dee746be56f5203c4d2c602285542e"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/3fdeab97ced0b8b8dfc6f7960eedf01980c0ffa9d2712b48cdd5a79f1a54e1f1.so",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8105_v701_native_radial_kernel/_rust.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "sha256:3fdeab97ced0b8b8dfc6f7960eedf01980c0ffa9d2712b48cdd5a79f1a54e1f1"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "sha256": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "sha256": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/47b7112b8307604c983afb90c624fdd34441b982f19ab9e9839e657c386c7646.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "sha256": "sha256:47b7112b8307604c983afb90c624fdd34441b982f19ab9e9839e657c386c7646"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/949933b6599d1213f7462de2fb9325e175ed8e0ac0611b0cc24e5056076cee9f.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:949933b6599d1213f7462de2fb9325e175ed8e0ac0611b0cc24e5056076cee9f"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/98328bf99dba2098954675dc909b8a82eacd9075a0c714f352533dbcc752da19.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/verification/spec.md",
+      "sha256": "sha256:98328bf99dba2098954675dc909b8a82eacd9075a0c714f352533dbcc752da19"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py",
+      "sha256": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "sha256": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/b1cfab18a916244148f85d8037531bbbacb1accc14cd7544fadcdc9953a86b63.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:b1cfab18a916244148f85d8037531bbbacb1accc14cd7544fadcdc9953a86b63"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/b1640a2063c933abd45c922f71a113bcf0c62085d707576bb606c687263cf6e6.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/request_recorder_8213.py",
+      "sha256": "sha256:b1640a2063c933abd45c922f71a113bcf0c62085d707576bb606c687263cf6e6"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/36e53995029ca84e6830c03d6ec02c670d856468184802d127671197523bb108.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/prospective_service_8214.py",
+      "sha256": "sha256:36e53995029ca84e6830c03d6ec02c670d856468184802d127671197523bb108"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/d7054b4064431ee58c3df2e6b8b7723005d6e924205a489faf5991071e9f4a1c.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/prospective_service_execution_8214.py",
+      "sha256": "sha256:d7054b4064431ee58c3df2e6b8b7723005d6e924205a489faf5991071e9f4a1c"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/32092d4a3b6c06b2bb02e1496079fb7511335460e0ba1301dd11ffc7bce54c81.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_prospective_request_recorder_8213.py",
+      "sha256": "sha256:32092d4a3b6c06b2bb02e1496079fb7511335460e0ba1301dd11ffc7bce54c81"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/sota_models.py",
+      "sha256": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/6e64b515e25598844d287b06aa2ba7324caf2bb4603b925179457438ccf3233a.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8214_v709_prospective_service_measurement.json",
+      "sha256": "sha256:6e64b515e25598844d287b06aa2ba7324caf2bb4603b925179457438ccf3233a"
+    },
+    {
+      "fields_imported": [
+        "source identities",
+        "model/template identity",
+        "historical disposition"
+      ],
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/sealed_protocol/inputs/0e01b49eaab42e5fc87c8cae18e864457276ad2d41bd2a5643a34e7b49282b53.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v711-concurrent-acquisition-protocol.json",
+      "sha256": "sha256:0e01b49eaab42e5fc87c8cae18e864457276ad2d41bd2a5643a34e7b49282b53"
+    }
+  ],
+  "code_config_hashes": [
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/code/inputs/093ec600f68f58e2f74b37fce6b683aba1045b1eac74bb4b8c954d3c78f0ca55.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/concurrency_canary_8227.py",
+      "sha256": "sha256:093ec600f68f58e2f74b37fce6b683aba1045b1eac74bb4b8c954d3c78f0ca55"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/code/inputs/7089eb0444a031e042c62ceb4c14c90a40fdabc8f3f1088b773f7b40751457b3.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/concurrency_execution_8227.py",
+      "sha256": "sha256:7089eb0444a031e042c62ceb4c14c90a40fdabc8f3f1088b773f7b40751457b3"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/code/inputs/a9103c2c1c245666a1240f1d4199d885ad29187cab0f7165cd4ca64692b0aaf5.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/concurrency_runtime_8227.py",
+      "sha256": "sha256:a9103c2c1c245666a1240f1d4199d885ad29187cab0f7165cd4ca64692b0aaf5"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/code/inputs/b37a4e3c62d39c821b24e1833bc849a586160357f9620c4e9d57c75a9161d97e.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8227_v711_concurrency_canary.py",
+      "sha256": "sha256:b37a4e3c62d39c821b24e1833bc849a586160357f9620c4e9d57c75a9161d97e"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/code/inputs/bac9706ed14f0072778e5397d20ca978641e99de8597ee155f249182a422c32e.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_concurrency_canary_8227.py",
+      "sha256": "sha256:bac9706ed14f0072778e5397d20ca978641e99de8597ee155f249182a422c32e"
+    }
+  ],
+  "completed_count": 0,
+  "concurrent_canary_ready_score": 0,
+  "concurrent_protocol_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v711-concurrent-acquisition-protocol.json",
+  "concurrent_protocol_sha256": "sha256:0e01b49eaab42e5fc87c8cae18e864457276ad2d41bd2a5643a34e7b49282b53",
+  "context_per_slot": 4096,
+  "declared_live_substrate": "live_llm_inference",
+  "declared_live_substrate_class": "model_bounded_generation",
+  "deployment_demand_observed": false,
+  "duration_s": 247.29271750804037,
+  "excluded_count": 0,
+  "experiment": 8227,
+  "experiment_id": 8227,
+  "exposure_scope": "public_fit_development",
+  "failed_count": 0,
+  "field_principles": {
+    "MODEL_SPECS": "Actual calls select the duration class; cached provenance earns zero calls.",
+    "acceptance_gates": "Current owned checks and byte-bound terminal receipts govern safe publication.",
+    "actual_launch_order": "Bind sealed workload, two-slot context, model bytes, ownership and future launch obligations before performance evidence.",
+    "benefit_claim": "Development and oracle-defined readiness cannot establish generalization or scientific benefit.",
+    "canary_pairs": "Keep every arm obligation and distinguish repeated calls from independent source pairs.",
+    "censored_count": "Keep every arm obligation and distinguish repeated calls from independent source pairs.",
+    "cited_upstream_artifacts": "Preserve exact inputs, code, primitive bytes, commands and observed work clocks for cold replay.",
+    "code_config_hashes": "Preserve exact inputs, code, primitive bytes, commands and observed work clocks for cold replay.",
+    "completed_count": "Keep every arm obligation and distinguish repeated calls from independent source pairs.",
+    "concurrent_canary_ready_score": "One requires qualified request isolation, genuine Qwen calls and both observed slots.",
+    "concurrent_protocol_path": "Bind sealed workload, two-slot context, model bytes, ownership and future launch obligations before performance evidence.",
+    "concurrent_protocol_sha256": "Bind sealed workload, two-slot context, model bytes, ownership and future launch obligations before performance evidence.",
+    "context_per_slot": "Bind sealed workload, two-slot context, model bytes, ownership and future launch obligations before performance evidence.",
+    "declared_live_substrate": "Actual calls select the duration class; cached provenance earns zero calls.",
+    "declared_live_substrate_class": "Actual calls select the duration class; cached provenance earns zero calls.",
+    "deployment_demand_observed": "Designed canary work and bounded repository diagnostics supply no deployment or global-pass claim.",
+    "duration_s": "Preserve exact inputs, code, primitive bytes, commands and observed work clocks for cold replay.",
+    "excluded_count": "Keep every arm obligation and distinguish repeated calls from independent source pairs.",
+    "experiment": "Identify this producer, protocol version and actual invocation date.",
+    "experiment_id": "Identify this producer, protocol version and actual invocation date.",
+    "exposure_scope": "Development and oracle-defined readiness cannot establish generalization or scientific benefit.",
+    "failed_count": "Keep every arm obligation and distinguish repeated calls from independent source pairs.",
+    "flagged_adversarial": "Current owned checks and byte-bound terminal receipts govern safe publication.",
+    "future_benchmark_intended_count": "Bind sealed workload, two-slot context, model bytes, ownership and future launch obligations before performance evidence.",
+    "gate_check_summary": "Terminal outcome follows exact authenticated blockers and owned failures.",
+    "generalized_learning_benefit_score": "Development and oracle-defined readiness cannot establish generalization or scientific benefit.",
+    "generated_tokens": "Retain tokens and current measured generation spans, including failed completions.",
+    "gpu_lease": "Bind sealed workload, two-slot context, model bytes, ownership and future launch obligations before performance evidence.",
+    "honest_verdict": "Terminal outcome follows exact authenticated blockers and owned failures.",
+    "independent_count": "Keep every arm obligation and distinguish repeated calls from independent source pairs.",
+    "independent_generalization_score": "Development and oracle-defined readiness cannot establish generalization or scientific benefit.",
+    "inference_substrate": "Actual calls select the duration class; cached provenance earns zero calls.",
+    "inference_substrate_class": "Actual calls select the duration class; cached provenance earns zero calls.",
+    "intended_count": "Keep every arm obligation and distinguish repeated calls from independent source pairs.",
+    "measured_generation_s": "Retain tokens and current measured generation spans, including failed completions.",
+    "measured_repeat_frequency": "Designed canary work and bounded repository diagnostics supply no deployment or global-pass claim.",
+    "methodology_note": "Development and oracle-defined readiness cannot establish generalization or scientific benefit.",
+    "milestone": "Identify this producer, protocol version and actual invocation date.",
+    "model_invocation_counts": "Actual calls select the duration class; cached provenance earns zero calls.",
+    "model_path_sha256": "Bind sealed workload, two-slot context, model bytes, ownership and future launch obligations before performance evidence.",
+    "nfr01_met": "Designed canary work and bounded repository diagnostics supply no deployment or global-pass claim.",
+    "phase_spans": "Preserve exact inputs, code, primitive bytes, commands and observed work clocks for cold replay.",
+    "preconditions_checked": "Preserve exact inputs, code, primitive bytes, commands and observed work clocks for cold replay.",
+    "random_seed": "Preserve exact inputs, code, primitive bytes, commands and observed work clocks for cold replay.",
+    "raw_shard_hashes": "Preserve exact inputs, code, primitive bytes, commands and observed work clocks for cold replay.",
+    "replay_inputs": "Preserve exact inputs, code, primitive bytes, commands and observed work clocks for cold replay.",
+    "repository_health": "Designed canary work and bounded repository diagnostics supply no deployment or global-pass claim.",
+    "reproducibility_checksum": "Preserve exact inputs, code, primitive bytes, commands and observed work clocks for cold replay.",
+    "required_checks_passed": "Current owned checks and byte-bound terminal receipts govern safe publication.",
+    "rows": "Keep every arm obligation and distinguish repeated calls from independent source pairs.",
+    "run_date": "Identify this producer, protocol version and actual invocation date.",
+    "schema": "Identify this producer, protocol version and actual invocation date.",
+    "server_argv": "Bind sealed workload, two-slot context, model bytes, ownership and future launch obligations before performance evidence.",
+    "source_artifact_hashes": "Preserve exact inputs, code, primitive bytes, commands and observed work clocks for cold replay.",
+    "task_id": "Identify this producer, protocol version and actual invocation date.",
+    "terminal_validation_sidecar_path": "Current owned checks and byte-bound terminal receipts govern safe publication.",
+    "title": "Identify this producer, protocol version and actual invocation date.",
+    "validation_receipts": "Current owned checks and byte-bound terminal receipts govern safe publication.",
+    "verdict_class": "Terminal outcome follows exact authenticated blockers and owned failures.",
+    "verifier_is_oracle": "Development and oracle-defined readiness cannot establish generalization or scientific benefit."
+  },
+  "flagged_adversarial": false,
+  "future_benchmark_intended_count": 96,
+  "gate_check_summary": [],
+  "generalized_learning_benefit_score": 0,
+  "generated_tokens": 0,
+  "gpu_lease": {},
+  "honest_verdict": "complete_disqualified_owned_validation",
+  "independent_count": 0,
+  "independent_generalization_score": 0,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "no_model_load",
+  "intended_count": 8,
+  "measured_generation_s": 0,
+  "measured_repeat_frequency": null,
+  "methodology_note": "Independent requests change client concurrency only. Four exposed fit sources qualify transport readiness; they establish no accuracy, latency improvement, deployment benefit or independent generalization. Fixture evidence is circular.",
+  "milestone": "2026.10.711",
+  "model_invocation_counts": {
+    "generation_calls": 0,
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "model_path_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+  "nfr01_met": false,
+  "phase_spans": [],
+  "preconditions_checked": [
+    {
+      "artifact_field": "fit_roster_exists",
+      "check": "fit_roster_exists",
+      "expected": true,
+      "hash": "sha256:6f0f6f3dd5c1b067ab50040a3ce9bc3358a48dee2e71180cf91b3c335bdbcf19",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8182_v707_fit_sentence_capture.json",
+      "upstream": "experiment_8182_v707_fit_sentence_capture"
+    },
+    {
+      "artifact_field": "fit_primary_sha256",
+      "check": "fit_primary_sha256",
+      "expected": "sha256:6f0f6f3dd5c1b067ab50040a3ce9bc3358a48dee2e71180cf91b3c335bdbcf19",
+      "hash": "sha256:6f0f6f3dd5c1b067ab50040a3ce9bc3358a48dee2e71180cf91b3c335bdbcf19",
+      "observed": "sha256:6f0f6f3dd5c1b067ab50040a3ce9bc3358a48dee2e71180cf91b3c335bdbcf19",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8182_v707_fit_sentence_capture.json",
+      "upstream": "experiment_8182_v707_fit_sentence_capture"
+    },
+    {
+      "artifact_field": "fit_capture_ready_score",
+      "check": "fit_capture_ready_score",
+      "expected": 1,
+      "hash": "sha256:6f0f6f3dd5c1b067ab50040a3ce9bc3358a48dee2e71180cf91b3c335bdbcf19",
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8182_v707_fit_sentence_capture.json",
+      "upstream": "experiment_8182_v707_fit_sentence_capture"
+    },
+    {
+      "artifact_field": "required_checks_passed",
+      "check": "required_checks_passed",
+      "expected": true,
+      "hash": "sha256:6f0f6f3dd5c1b067ab50040a3ce9bc3358a48dee2e71180cf91b3c335bdbcf19",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8182_v707_fit_sentence_capture.json",
+      "upstream": "experiment_8182_v707_fit_sentence_capture"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check": "flagged_adversarial",
+      "expected": false,
+      "hash": "sha256:6f0f6f3dd5c1b067ab50040a3ce9bc3358a48dee2e71180cf91b3c335bdbcf19",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8182_v707_fit_sentence_capture.json",
+      "upstream": "experiment_8182_v707_fit_sentence_capture"
+    },
+    {
+      "artifact_field": "source_plan_sha256",
+      "check": "source_plan_sha256",
+      "expected": "sha256:594d5af31bec5f8cb164b0bb49e2351874adcae90851c3cfb3fab835efd481c9",
+      "hash": "sha256:594d5af31bec5f8cb164b0bb49e2351874adcae90851c3cfb3fab835efd481c9",
+      "observed": "sha256:594d5af31bec5f8cb164b0bb49e2351874adcae90851c3cfb3fab835efd481c9",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8182_v707_fit_sentence_capture/invocations/1791255483042495166/source_plan.json",
+      "upstream": "source_plan"
+    },
+    {
+      "artifact_field": "service_primary_sha256",
+      "check": "service_primary_sha256",
+      "expected": "sha256:15a13284335442ff04a491c6683d825e2b4d96de3950e6aa602a7c0afa1a252f",
+      "hash": "sha256:15a13284335442ff04a491c6683d825e2b4d96de3950e6aa602a7c0afa1a252f",
+      "observed": "sha256:15a13284335442ff04a491c6683d825e2b4d96de3950e6aa602a7c0afa1a252f",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8174_v706_complete_request_cost.json",
+      "upstream": "experiment_8174_v706_complete_request_cost"
+    },
+    {
+      "artifact_field": "service_config_sha256",
+      "check": "service_config_sha256",
+      "expected": "sha256:dba306aff6f66cd2282c3c1e49a061c849dee746be56f5203c4d2c602285542e",
+      "hash": "sha256:dba306aff6f66cd2282c3c1e49a061c849dee746be56f5203c4d2c602285542e",
+      "observed": "sha256:dba306aff6f66cd2282c3c1e49a061c849dee746be56f5203c4d2c602285542e",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8174_v706_complete_request_cost/invocations/1791234035274744088/input_data.json",
+      "upstream": "input_data"
+    },
+    {
+      "artifact_field": "native_library_sha256",
+      "check": "native_library_sha256",
+      "expected": "sha256:3fdeab97ced0b8b8dfc6f7960eedf01980c0ffa9d2712b48cdd5a79f1a54e1f1",
+      "hash": "sha256:3fdeab97ced0b8b8dfc6f7960eedf01980c0ffa9d2712b48cdd5a79f1a54e1f1",
+      "observed": "sha256:3fdeab97ced0b8b8dfc6f7960eedf01980c0ffa9d2712b48cdd5a79f1a54e1f1",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8105_v701_native_radial_kernel/_rust.cpython-312-x86_64-linux-gnu.so",
+      "upstream": "_rust.cpython-312-x86_64-linux-gnu"
+    },
+    {
+      "artifact_field": "named_input_AGENTS",
+      "check": "named_input_AGENTS",
+      "expected": true,
+      "hash": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "upstream": "AGENTS"
+    },
+    {
+      "artifact_field": "named_input_CLAUDE",
+      "check": "named_input_CLAUDE",
+      "expected": true,
+      "hash": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "upstream": "CLAUDE"
+    },
+    {
+      "artifact_field": "named_input_CODEX",
+      "check": "named_input_CODEX",
+      "expected": true,
+      "hash": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "upstream": "CODEX"
+    },
+    {
+      "artifact_field": "named_input_e2e-test-plan",
+      "check": "named_input_e2e-test-plan",
+      "expected": true,
+      "hash": "sha256:47b7112b8307604c983afb90c624fdd34441b982f19ab9e9839e657c386c7646",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "upstream": "e2e-test-plan"
+    },
+    {
+      "artifact_field": "named_input_spec",
+      "check": "named_input_spec",
+      "expected": true,
+      "hash": "sha256:949933b6599d1213f7462de2fb9325e175ed8e0ac0611b0cc24e5056076cee9f",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "upstream": "spec"
+    },
+    {
+      "artifact_field": "named_input_spec",
+      "check": "named_input_spec",
+      "expected": true,
+      "hash": "sha256:98328bf99dba2098954675dc909b8a82eacd9075a0c714f352533dbcc752da19",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/verification/spec.md",
+      "upstream": "spec"
+    },
+    {
+      "artifact_field": "named_input_experiment_template",
+      "check": "named_input_experiment_template",
+      "expected": true,
+      "hash": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "upstream": "experiment_template"
+    },
+    {
+      "artifact_field": "named_input_primary_publication",
+      "check": "named_input_primary_publication",
+      "expected": true,
+      "hash": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py",
+      "upstream": "primary_publication"
+    },
+    {
+      "artifact_field": "named_input_exclusion_manifest",
+      "check": "named_input_exclusion_manifest",
+      "expected": true,
+      "hash": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "exclusion_manifest"
+    },
+    {
+      "artifact_field": "named_input_research-roadmap-vNEXT",
+      "check": "named_input_research-roadmap-vNEXT",
+      "expected": true,
+      "hash": "sha256:b1cfab18a916244148f85d8037531bbbacb1accc14cd7544fadcdc9953a86b63",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+      "upstream": "research-roadmap-vNEXT"
+    },
+    {
+      "artifact_field": "named_input_request_recorder_8213",
+      "check": "named_input_request_recorder_8213",
+      "expected": true,
+      "hash": "sha256:b1640a2063c933abd45c922f71a113bcf0c62085d707576bb606c687263cf6e6",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/request_recorder_8213.py",
+      "upstream": "request_recorder_8213"
+    },
+    {
+      "artifact_field": "named_input_prospective_service_8214",
+      "check": "named_input_prospective_service_8214",
+      "expected": true,
+      "hash": "sha256:36e53995029ca84e6830c03d6ec02c670d856468184802d127671197523bb108",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/prospective_service_8214.py",
+      "upstream": "prospective_service_8214"
+    },
+    {
+      "artifact_field": "named_input_prospective_service_execution_8214",
+      "check": "named_input_prospective_service_execution_8214",
+      "expected": true,
+      "hash": "sha256:d7054b4064431ee58c3df2e6b8b7723005d6e924205a489faf5991071e9f4a1c",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/prospective_service_execution_8214.py",
+      "upstream": "prospective_service_execution_8214"
+    },
+    {
+      "artifact_field": "named_input_test_prospective_request_recorder_8213",
+      "check": "named_input_test_prospective_request_recorder_8213",
+      "expected": true,
+      "hash": "sha256:32092d4a3b6c06b2bb02e1496079fb7511335460e0ba1301dd11ffc7bce54c81",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_prospective_request_recorder_8213.py",
+      "upstream": "test_prospective_request_recorder_8213"
+    },
+    {
+      "artifact_field": "named_input_sota_models",
+      "check": "named_input_sota_models",
+      "expected": true,
+      "hash": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/sota_models.py",
+      "upstream": "sota_models"
+    },
+    {
+      "artifact_field": "named_input_experiment_8214_v709_prospective_service_measurement",
+      "check": "named_input_experiment_8214_v709_prospective_service_measurement",
+      "expected": true,
+      "hash": "sha256:6e64b515e25598844d287b06aa2ba7324caf2bb4603b925179457438ccf3233a",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8214_v709_prospective_service_measurement.json",
+      "upstream": "experiment_8214_v709_prospective_service_measurement"
+    },
+    {
+      "artifact_field": "exp8214_schema",
+      "check": "exp8214_schema",
+      "expected": true,
+      "hash": "sha256:6e64b515e25598844d287b06aa2ba7324caf2bb4603b925179457438ccf3233a",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8214_v709_prospective_service_measurement.json",
+      "upstream": "experiment_8214_v709_prospective_service_measurement"
+    },
+    {
+      "artifact_field": "cached_current_model",
+      "check": "cached_current_model",
+      "expected": true,
+      "hash": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "upstream": "llama-server"
+    },
+    {
+      "artifact_field": "model_sha256",
+      "check": "model_sha256",
+      "expected": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "observed": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "upstream": "Qwen3.8-27B-Q4_K_M"
+    },
+    {
+      "artifact_field": "chat_template_sha256",
+      "check": "chat_template_sha256",
+      "expected": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+      "hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "observed": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "upstream": "Qwen3.8-27B-Q4_K_M"
+    },
+    {
+      "artifact_field": "quantization",
+      "check": "quantization",
+      "expected": "Q4_K_M",
+      "hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "observed": "Q4_K_M",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "upstream": "Qwen3.8-27B-Q4_K_M"
+    },
+    {
+      "artifact_field": "runtime_sha256",
+      "check": "runtime_sha256",
+      "expected": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "hash": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "observed": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "upstream": "llama-server"
+    },
+    {
+      "artifact_field": "gpu_memory",
+      "check": "gpu_memory",
+      "expected": 0,
+      "hash": "sha256:8bffe9823c5ea69a8c84bddeb7bdc0074919c855c76bf113fb09745ac81b221d",
+      "observed": 0,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/resources/gpu_memory.stdout",
+      "upstream": "gpu_memory"
+    },
+    {
+      "artifact_field": "server_help",
+      "check": "server_help",
+      "expected": 0,
+      "hash": "sha256:88e17500075c10c631ea6867dd8108fb77a345ae0d6dbf454b94646dc2445c96",
+      "observed": 0,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/resources/server_help.stdout",
+      "upstream": "server_help"
+    },
+    {
+      "artifact_field": "free_rtx3090_two_slot_memory",
+      "check": "free_rtx3090_two_slot_memory",
+      "expected": true,
+      "hash": "sha256:8bffe9823c5ea69a8c84bddeb7bdc0074919c855c76bf113fb09745ac81b221d",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/resources/gpu_memory.stdout",
+      "upstream": "gpu_memory"
+    },
+    {
+      "artifact_field": "two_slot_cache_off_flags",
+      "check": "two_slot_cache_off_flags",
+      "expected": true,
+      "hash": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "upstream": "llama-server"
+    }
+  ],
+  "producer_normalizer_receipts": {
+    "ready_for_gated_consumers": false,
+    "safe_repairs": [],
+    "unsafe_rejections": [
+      {
+        "detail": "missing model_specs/target_model, reproducibility_checksum",
+        "field": "methodology",
+        "kind": "missing_methodology_receipt"
+      }
+    ]
+  },
+  "random_seed": 7118227,
+  "raw_shard_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/input.json",
+      "sha256": "sha256:065073cf350558a209c1d7eea2e41bb84689d813a2ffd9cf9bd34ce68ad06bad"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/15a13284335442ff04a491c6683d825e2b4d96de3950e6aa602a7c0afa1a252f.json",
+      "sha256": "sha256:15a13284335442ff04a491c6683d825e2b4d96de3950e6aa602a7c0afa1a252f"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/3fdeab97ced0b8b8dfc6f7960eedf01980c0ffa9d2712b48cdd5a79f1a54e1f1.so",
+      "sha256": "sha256:3fdeab97ced0b8b8dfc6f7960eedf01980c0ffa9d2712b48cdd5a79f1a54e1f1"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/594d5af31bec5f8cb164b0bb49e2351874adcae90851c3cfb3fab835efd481c9.json",
+      "sha256": "sha256:594d5af31bec5f8cb164b0bb49e2351874adcae90851c3cfb3fab835efd481c9"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/6f0f6f3dd5c1b067ab50040a3ce9bc3358a48dee2e71180cf91b3c335bdbcf19.json",
+      "sha256": "sha256:6f0f6f3dd5c1b067ab50040a3ce9bc3358a48dee2e71180cf91b3c335bdbcf19"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/dba306aff6f66cd2282c3c1e49a061c849dee746be56f5203c4d2c602285542e.json",
+      "sha256": "sha256:dba306aff6f66cd2282c3c1e49a061c849dee746be56f5203c4d2c602285542e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_0.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_0.stdout",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_1.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_1.stdout",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_2.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_2.stdout",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_3.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_3.stdout",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_4.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_4.stdout",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_5.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_5.stdout",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_6.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_6.stdout",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_7.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_7.stdout",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_8.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/operand_8.stdout",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/private_scratch.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/private_scratch.stdout",
+      "sha256": "sha256:e9edf18672cae394a185c2bdf7ea294f89eec18ede9b36e1a71bbd13336a22dc"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/python_environment.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/preflight/python_environment.stdout",
+      "sha256": "sha256:08a43c05b82ce41c30f2eac28c015d86709e94e3138457e957229d54605c032d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/schedule.json",
+      "sha256": "sha256:721b7adbcec239b3ae530c316999212dfd89003d72afdf79549d6a9d3114a20b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/code/inputs/093ec600f68f58e2f74b37fce6b683aba1045b1eac74bb4b8c954d3c78f0ca55.py",
+      "sha256": "sha256:093ec600f68f58e2f74b37fce6b683aba1045b1eac74bb4b8c954d3c78f0ca55"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/code/inputs/7089eb0444a031e042c62ceb4c14c90a40fdabc8f3f1088b773f7b40751457b3.py",
+      "sha256": "sha256:7089eb0444a031e042c62ceb4c14c90a40fdabc8f3f1088b773f7b40751457b3"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/code/inputs/a9103c2c1c245666a1240f1d4199d885ad29187cab0f7165cd4ca64692b0aaf5.py",
+      "sha256": "sha256:a9103c2c1c245666a1240f1d4199d885ad29187cab0f7165cd4ca64692b0aaf5"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/code/inputs/b37a4e3c62d39c821b24e1833bc849a586160357f9620c4e9d57c75a9161d97e.py",
+      "sha256": "sha256:b37a4e3c62d39c821b24e1833bc849a586160357f9620c4e9d57c75a9161d97e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/code/inputs/bac9706ed14f0072778e5397d20ca978641e99de8597ee155f249182a422c32e.py",
+      "sha256": "sha256:bac9706ed14f0072778e5397d20ca978641e99de8597ee155f249182a422c32e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/data.json",
+      "sha256": "sha256:f1561f8cf4c70bc196e720d5517b0719d4baaec62d840dbc7a939ebe7fd7eb21"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/health/repository_health_once.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/health/repository_health_once.stdout",
+      "sha256": "sha256:e091f254673c78c3b00f675345ee7ced07d4dcd2a5f54f914d80b28748e9276a"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "sha256": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc.md",
+      "sha256": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78.md",
+      "sha256": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/32092d4a3b6c06b2bb02e1496079fb7511335460e0ba1301dd11ffc7bce54c81.py",
+      "sha256": "sha256:32092d4a3b6c06b2bb02e1496079fb7511335460e0ba1301dd11ffc7bce54c81"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/36e53995029ca84e6830c03d6ec02c670d856468184802d127671197523bb108.py",
+      "sha256": "sha256:36e53995029ca84e6830c03d6ec02c670d856468184802d127671197523bb108"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/47b7112b8307604c983afb90c624fdd34441b982f19ab9e9839e657c386c7646.md",
+      "sha256": "sha256:47b7112b8307604c983afb90c624fdd34441b982f19ab9e9839e657c386c7646"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/6e64b515e25598844d287b06aa2ba7324caf2bb4603b925179457438ccf3233a.json",
+      "sha256": "sha256:6e64b515e25598844d287b06aa2ba7324caf2bb4603b925179457438ccf3233a"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310.py",
+      "sha256": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/949933b6599d1213f7462de2fb9325e175ed8e0ac0611b0cc24e5056076cee9f.md",
+      "sha256": "sha256:949933b6599d1213f7462de2fb9325e175ed8e0ac0611b0cc24e5056076cee9f"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/98328bf99dba2098954675dc909b8a82eacd9075a0c714f352533dbcc752da19.md",
+      "sha256": "sha256:98328bf99dba2098954675dc909b8a82eacd9075a0c714f352533dbcc752da19"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/b1640a2063c933abd45c922f71a113bcf0c62085d707576bb606c687263cf6e6.py",
+      "sha256": "sha256:b1640a2063c933abd45c922f71a113bcf0c62085d707576bb606c687263cf6e6"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/b1cfab18a916244148f85d8037531bbbacb1accc14cd7544fadcdc9953a86b63.md",
+      "sha256": "sha256:b1cfab18a916244148f85d8037531bbbacb1accc14cd7544fadcdc9953a86b63"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/d7054b4064431ee58c3df2e6b8b7723005d6e924205a489faf5991071e9f4a1c.py",
+      "sha256": "sha256:d7054b4064431ee58c3df2e6b8b7723005d6e924205a489faf5991071e9f4a1c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719.py",
+      "sha256": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/resource_commands.json",
+      "sha256": "sha256:c80590d4a1d400703f6aaf381a6c407a4b766892d2cc41c7f7f79abd9289703c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/resources/gpu_memory.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/resources/gpu_memory.stdout",
+      "sha256": "sha256:8bffe9823c5ea69a8c84bddeb7bdc0074919c855c76bf113fb09745ac81b221d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/resources/server_help.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/resources/server_help.stdout",
+      "sha256": "sha256:88e17500075c10c631ea6867dd8108fb77a345ae0d6dbf454b94646dc2445c96"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/resources.json",
+      "sha256": "sha256:11e70aad536662fb55216246cde71b333e33f6cbb004c308cb73f54a9a600265"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/result.json",
+      "sha256": "sha256:ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/sealed_protocol/inputs/0e01b49eaab42e5fc87c8cae18e864457276ad2d41bd2a5643a34e7b49282b53.json",
+      "sha256": "sha256:0e01b49eaab42e5fc87c8cae18e864457276ad2d41bd2a5643a34e7b49282b53"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/affected_consumers.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/affected_consumers.stdout",
+      "sha256": "sha256:b4fbba833dbfb8f3cfd82f018d8a98a65ce214a27a37e8a6b3379645705d1167"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/changed_module_coverage.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/changed_module_coverage.stdout",
+      "sha256": "sha256:cce38179ae2e1243847b07bdf8b4e3e01bfd41fde3272caff399ac2075d2aabf"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/changed_module_coverage_report.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/changed_module_coverage_report.stdout",
+      "sha256": "sha256:14b51b74da59428f8e6e113f24c6c1c4b4973708045ef7c65ed0c6d117f36541"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/changed_module_mypy.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/changed_module_mypy.stdout",
+      "sha256": "sha256:d1bb7886fec465f132639acb4d03ade5eeb8bbcebdb292db323a48699b0d6cc1"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/coverage_combine.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/coverage_combine.stdout",
+      "sha256": "sha256:936dfd7ffaa9129918f616ec3a2d2fa9696b8985949e4b1b41a1f9c7664428c0"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/e2e015.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/e2e015.stdout",
+      "sha256": "sha256:6ce4ad38c588cef7b7def6d10ff364974119c1c4ab3ab62d327047ea422eddfa"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/e2e019.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/e2e019.stdout",
+      "sha256": "sha256:6f6b789b77bd0a5b2485b5a3ed624a80eda880c511b7bb85c59a72e82a59778b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/e2e022.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/e2e022.stdout",
+      "sha256": "sha256:73dff577bc6395ad949611508364c33d571e7d3af9970451c875b97a6b108827"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/focused_pytest.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/focused_pytest.stdout",
+      "sha256": "sha256:01feede9442eebf87bd3fdae0a297c3e1be3e78e51f4565aad3efab161d0c206"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/ruff_check.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/ruff_check.stdout",
+      "sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/ruff_format.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/ruff_format.stdout",
+      "sha256": "sha256:f114d83b30c5c657ee43a847a45bafccaea255d82673feb87c26d252c61e29c1"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/scoped_spec_coverage.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/scoped_spec_coverage.stdout",
+      "sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/worktree_imports.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/worktree_imports.stdout",
+      "sha256": "sha256:8bdc95dca27e234ea2f8adecad415eee4e5d1f19900876b13d5ea1e03a51bdcc"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation_commands.json",
+      "sha256": "sha256:ae5c8d6c09c67ca5dacbaa6de1facc9c9b1e22c218bde038ef648f7f905d82de"
+    }
+  ],
+  "replay_inputs": {
+    "data_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/data.json",
+    "fixture": false,
+    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/result.json"
+  },
+  "repository_health": [
+    {
+      "actual_exit": -9,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "duration_s": 600.034572576,
+      "ended_monotonic_ns": 1022321715997491,
+      "exit_code": -9,
+      "expected_exit": 0,
+      "name": "repository_health_once",
+      "normal_exit": false,
+      "passed": false,
+      "scope": "repository_health_not_owned",
+      "started_monotonic_ns": 1021721681424915,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/health/repository_health_once.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/health/repository_health_once.stdout",
+      "stdout_sha256": "sha256:e091f254673c78c3b00f675345ee7ced07d4dcd2a5f54f914d80b28748e9276a",
+      "timed_out": true
+    }
+  ],
+  "reproducibility_checksum": "sha256:9d51ffdd4b39d06358aaf5b2aa0ba5ac45f2f541872965f22daf3870019e86ac",
+  "required_checks_passed": false,
+  "rows": [
+    {
+      "arm": "serial",
+      "censored": true,
+      "clocks": null,
+      "completed": false,
+      "completion_evidence_score": 0,
+      "condition": "original",
+      "denominator": 1,
+      "excluded": false,
+      "failed": false,
+      "metric": "durable_isolated_completion",
+      "missing_status": true,
+      "numerator": null,
+      "output_token_count": null,
+      "request_id": "canary_serial-00",
+      "seed": 7118227,
+      "slot": null,
+      "source_cluster_id": "sha256:007166f948ac40cecb7ad1b23ad5ac3b0ddf57399bd7492abd77fbbb2bf53c33",
+      "status": "censored"
+    },
+    {
+      "arm": "serial",
+      "censored": true,
+      "clocks": null,
+      "completed": false,
+      "completion_evidence_score": 0,
+      "condition": "original",
+      "denominator": 1,
+      "excluded": false,
+      "failed": false,
+      "metric": "durable_isolated_completion",
+      "missing_status": true,
+      "numerator": null,
+      "output_token_count": null,
+      "request_id": "canary_serial-01",
+      "seed": 7118227,
+      "slot": null,
+      "source_cluster_id": "sha256:0192bc1a081136b2481a802cfb677fbe298b2ca7bbcf013c57aa304ceb807fcd",
+      "status": "censored"
+    },
+    {
+      "arm": "serial",
+      "censored": true,
+      "clocks": null,
+      "completed": false,
+      "completion_evidence_score": 0,
+      "condition": "original",
+      "denominator": 1,
+      "excluded": false,
+      "failed": false,
+      "metric": "durable_isolated_completion",
+      "missing_status": true,
+      "numerator": null,
+      "output_token_count": null,
+      "request_id": "canary_serial-02",
+      "seed": 7118227,
+      "slot": null,
+      "source_cluster_id": "sha256:03d0eeadb123741a1b093494ba7b4d1e62aa170eff9f513b0632843197a8baf4",
+      "status": "censored"
+    },
+    {
+      "arm": "serial",
+      "censored": true,
+      "clocks": null,
+      "completed": false,
+      "completion_evidence_score": 0,
+      "condition": "original",
+      "denominator": 1,
+      "excluded": false,
+      "failed": false,
+      "metric": "durable_isolated_completion",
+      "missing_status": true,
+      "numerator": null,
+      "output_token_count": null,
+      "request_id": "canary_serial-03",
+      "seed": 7118227,
+      "slot": null,
+      "source_cluster_id": "sha256:05af6134eec80c91e92de6cc83e4c96a4e7fe5992ce19bcc42c796600711b85b",
+      "status": "censored"
+    },
+    {
+      "arm": "concurrent",
+      "censored": true,
+      "clocks": null,
+      "completed": false,
+      "completion_evidence_score": 0,
+      "condition": "original",
+      "denominator": 1,
+      "excluded": false,
+      "failed": false,
+      "metric": "durable_isolated_completion",
+      "missing_status": true,
+      "numerator": null,
+      "output_token_count": null,
+      "request_id": "canary_concurrent-00",
+      "seed": 7118227,
+      "slot": null,
+      "source_cluster_id": "sha256:007166f948ac40cecb7ad1b23ad5ac3b0ddf57399bd7492abd77fbbb2bf53c33",
+      "status": "censored"
+    },
+    {
+      "arm": "concurrent",
+      "censored": true,
+      "clocks": null,
+      "completed": false,
+      "completion_evidence_score": 0,
+      "condition": "original",
+      "denominator": 1,
+      "excluded": false,
+      "failed": false,
+      "metric": "durable_isolated_completion",
+      "missing_status": true,
+      "numerator": null,
+      "output_token_count": null,
+      "request_id": "canary_concurrent-01",
+      "seed": 7118227,
+      "slot": null,
+      "source_cluster_id": "sha256:0192bc1a081136b2481a802cfb677fbe298b2ca7bbcf013c57aa304ceb807fcd",
+      "status": "censored"
+    },
+    {
+      "arm": "concurrent",
+      "censored": true,
+      "clocks": null,
+      "completed": false,
+      "completion_evidence_score": 0,
+      "condition": "original",
+      "denominator": 1,
+      "excluded": false,
+      "failed": false,
+      "metric": "durable_isolated_completion",
+      "missing_status": true,
+      "numerator": null,
+      "output_token_count": null,
+      "request_id": "canary_concurrent-02",
+      "seed": 7118227,
+      "slot": null,
+      "source_cluster_id": "sha256:03d0eeadb123741a1b093494ba7b4d1e62aa170eff9f513b0632843197a8baf4",
+      "status": "censored"
+    },
+    {
+      "arm": "concurrent",
+      "censored": true,
+      "clocks": null,
+      "completed": false,
+      "completion_evidence_score": 0,
+      "condition": "original",
+      "denominator": 1,
+      "excluded": false,
+      "failed": false,
+      "metric": "durable_isolated_completion",
+      "missing_status": true,
+      "numerator": null,
+      "output_token_count": null,
+      "request_id": "canary_concurrent-03",
+      "seed": 7118227,
+      "slot": null,
+      "source_cluster_id": "sha256:05af6134eec80c91e92de6cc83e4c96a4e7fe5992ce19bcc42c796600711b85b",
+      "status": "censored"
+    }
+  ],
+  "run_date": "20261007",
+  "schema": "carnot.v711.concurrency-canary.v1",
+  "server_argv": {
+    "canary_concurrent": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "54087",
+      "-c",
+      "8192",
+      "-ngl",
+      "99",
+      "--parallel",
+      "2",
+      "--alias",
+      "unsloth/Qwen3.8-27B-GGUF",
+      "--jinja",
+      "-lv",
+      "5",
+      "--cache-ram",
+      "0",
+      "--cache-reuse",
+      "0",
+      "--no-cache-prompt",
+      "--no-cache-idle-slots",
+      "--slots"
+    ],
+    "canary_serial": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "47807",
+      "-c",
+      "8192",
+      "-ngl",
+      "99",
+      "--parallel",
+      "2",
+      "--alias",
+      "unsloth/Qwen3.8-27B-GGUF",
+      "--jinja",
+      "-lv",
+      "5",
+      "--cache-ram",
+      "0",
+      "--cache-reuse",
+      "0",
+      "--no-cache-prompt",
+      "--no-cache-idle-slots",
+      "--slots"
+    ],
+    "s1_concurrent": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "44949",
+      "-c",
+      "8192",
+      "-ngl",
+      "99",
+      "--parallel",
+      "2",
+      "--alias",
+      "unsloth/Qwen3.8-27B-GGUF",
+      "--jinja",
+      "-lv",
+      "5",
+      "--cache-ram",
+      "0",
+      "--cache-reuse",
+      "0",
+      "--no-cache-prompt",
+      "--no-cache-idle-slots",
+      "--slots"
+    ],
+    "s1_serial": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "44555",
+      "-c",
+      "8192",
+      "-ngl",
+      "99",
+      "--parallel",
+      "2",
+      "--alias",
+      "unsloth/Qwen3.8-27B-GGUF",
+      "--jinja",
+      "-lv",
+      "5",
+      "--cache-ram",
+      "0",
+      "--cache-reuse",
+      "0",
+      "--no-cache-prompt",
+      "--no-cache-idle-slots",
+      "--slots"
+    ],
+    "s2_concurrent": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "57245",
+      "-c",
+      "8192",
+      "-ngl",
+      "99",
+      "--parallel",
+      "2",
+      "--alias",
+      "unsloth/Qwen3.8-27B-GGUF",
+      "--jinja",
+      "-lv",
+      "5",
+      "--cache-ram",
+      "0",
+      "--cache-reuse",
+      "0",
+      "--no-cache-prompt",
+      "--no-cache-idle-slots",
+      "--slots"
+    ],
+    "s2_serial": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "53211",
+      "-c",
+      "8192",
+      "-ngl",
+      "99",
+      "--parallel",
+      "2",
+      "--alias",
+      "unsloth/Qwen3.8-27B-GGUF",
+      "--jinja",
+      "-lv",
+      "5",
+      "--cache-ram",
+      "0",
+      "--cache-reuse",
+      "0",
+      "--no-cache-prompt",
+      "--no-cache-idle-slots",
+      "--slots"
+    ]
+  },
+  "source_artifact_hashes": [
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/6f0f6f3dd5c1b067ab50040a3ce9bc3358a48dee2e71180cf91b3c335bdbcf19.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8182_v707_fit_sentence_capture.json",
+      "sha256": "sha256:6f0f6f3dd5c1b067ab50040a3ce9bc3358a48dee2e71180cf91b3c335bdbcf19"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/594d5af31bec5f8cb164b0bb49e2351874adcae90851c3cfb3fab835efd481c9.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8182_v707_fit_sentence_capture/invocations/1791255483042495166/source_plan.json",
+      "sha256": "sha256:594d5af31bec5f8cb164b0bb49e2351874adcae90851c3cfb3fab835efd481c9"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/15a13284335442ff04a491c6683d825e2b4d96de3950e6aa602a7c0afa1a252f.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8174_v706_complete_request_cost.json",
+      "sha256": "sha256:15a13284335442ff04a491c6683d825e2b4d96de3950e6aa602a7c0afa1a252f"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/dba306aff6f66cd2282c3c1e49a061c849dee746be56f5203c4d2c602285542e.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8174_v706_complete_request_cost/invocations/1791234035274744088/input_data.json",
+      "sha256": "sha256:dba306aff6f66cd2282c3c1e49a061c849dee746be56f5203c4d2c602285542e"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/authenticated/inputs/3fdeab97ced0b8b8dfc6f7960eedf01980c0ffa9d2712b48cdd5a79f1a54e1f1.so",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8105_v701_native_radial_kernel/_rust.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "sha256:3fdeab97ced0b8b8dfc6f7960eedf01980c0ffa9d2712b48cdd5a79f1a54e1f1"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "sha256": "sha256:2e5971aea33ea18d635eebad97c6a0ca4eadd66f2a1421485dbb473c93898b78"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "sha256": "sha256:227bf72d8d45fbf9da3af2ff7ed6e176400e4c25c0282de2780c587b377da3dc"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/47b7112b8307604c983afb90c624fdd34441b982f19ab9e9839e657c386c7646.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "sha256": "sha256:47b7112b8307604c983afb90c624fdd34441b982f19ab9e9839e657c386c7646"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/949933b6599d1213f7462de2fb9325e175ed8e0ac0611b0cc24e5056076cee9f.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:949933b6599d1213f7462de2fb9325e175ed8e0ac0611b0cc24e5056076cee9f"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/98328bf99dba2098954675dc909b8a82eacd9075a0c714f352533dbcc752da19.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/verification/spec.md",
+      "sha256": "sha256:98328bf99dba2098954675dc909b8a82eacd9075a0c714f352533dbcc752da19"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py",
+      "sha256": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "sha256": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/b1cfab18a916244148f85d8037531bbbacb1accc14cd7544fadcdc9953a86b63.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:b1cfab18a916244148f85d8037531bbbacb1accc14cd7544fadcdc9953a86b63"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/b1640a2063c933abd45c922f71a113bcf0c62085d707576bb606c687263cf6e6.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/request_recorder_8213.py",
+      "sha256": "sha256:b1640a2063c933abd45c922f71a113bcf0c62085d707576bb606c687263cf6e6"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/36e53995029ca84e6830c03d6ec02c670d856468184802d127671197523bb108.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/prospective_service_8214.py",
+      "sha256": "sha256:36e53995029ca84e6830c03d6ec02c670d856468184802d127671197523bb108"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/d7054b4064431ee58c3df2e6b8b7723005d6e924205a489faf5991071e9f4a1c.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/prospective_service_execution_8214.py",
+      "sha256": "sha256:d7054b4064431ee58c3df2e6b8b7723005d6e924205a489faf5991071e9f4a1c"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/32092d4a3b6c06b2bb02e1496079fb7511335460e0ba1301dd11ffc7bce54c81.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_prospective_request_recorder_8213.py",
+      "sha256": "sha256:32092d4a3b6c06b2bb02e1496079fb7511335460e0ba1301dd11ffc7bce54c81"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/sota_models.py",
+      "sha256": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/named_inputs/inputs/6e64b515e25598844d287b06aa2ba7324caf2bb4603b925179457438ccf3233a.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8214_v709_prospective_service_measurement.json",
+      "sha256": "sha256:6e64b515e25598844d287b06aa2ba7324caf2bb4603b925179457438ccf3233a"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/sealed_protocol/inputs/0e01b49eaab42e5fc87c8cae18e864457276ad2d41bd2a5643a34e7b49282b53.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v711-concurrent-acquisition-protocol.json",
+      "sha256": "sha256:0e01b49eaab42e5fc87c8cae18e864457276ad2d41bd2a5643a34e7b49282b53"
+    }
+  ],
+  "task_id": "exp8227-concurrency-canary",
+  "terminal_validation_sidecar_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/terminal_receipt.json",
+  "title": "Bounded two-slot Qwen canary",
+  "validation_receipts": [
+    {
+      "actual_exit": 0,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.verify.concurrency_canary_8227",
+        "carnot.reporting.concurrency_execution_8227",
+        "carnot.inference.concurrency_runtime_8227"
+      ],
+      "duration_s": 1.616912401,
+      "ended_monotonic_ns": 1021523370204946,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "name": "worktree_imports",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "changed_modules",
+      "started_monotonic_ns": 1021521753292545,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/worktree_imports.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/worktree_imports.stdout",
+      "stdout_sha256": "sha256:8bdc95dca27e234ea2f8adecad415eee4e5d1f19900876b13d5ea1e03a51bdcc",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8227-validation-o6858_jo/focused",
+        "tests/python/test_concurrency_canary_8227.py",
+        "-q"
+      ],
+      "duration_s": 32.773806593,
+      "ended_monotonic_ns": 1021556144212848,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "name": "focused_pytest",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "explicit_tests",
+      "started_monotonic_ns": 1021523370406255,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/focused_pytest.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/focused_pytest.stdout",
+      "stdout_sha256": "sha256:01feede9442eebf87bd3fdae0a297c3e1be3e78e51f4565aad3efab161d0c206",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8227-validation-o6858_jo/coverage.ini",
+        "--data-file=/tmp/carnot-8227-validation-o6858_jo/.coverage",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8227-validation-o6858_jo/coverage",
+        "tests/python/test_concurrency_canary_8227.py",
+        "-q"
+      ],
+      "duration_s": 57.574701832,
+      "ended_monotonic_ns": 1021613719123823,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "name": "changed_module_coverage",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_monotonic_ns": 1021556144421991,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/changed_module_coverage.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/changed_module_coverage.stdout",
+      "stdout_sha256": "sha256:cce38179ae2e1243847b07bdf8b4e3e01bfd41fde3272caff399ac2075d2aabf",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8227-validation-o6858_jo/.coverage",
+        "/tmp/carnot-8227-validation-o6858_jo"
+      ],
+      "duration_s": 0.065288407,
+      "ended_monotonic_ns": 1021613784662730,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "name": "coverage_combine",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1021613719374323,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/coverage_combine.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/coverage_combine.stdout",
+      "stdout_sha256": "sha256:936dfd7ffaa9129918f616ec3a2d2fa9696b8985949e4b1b41a1f9c7664428c0",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 2,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8227-validation-o6858_jo/.coverage",
+        "--include=*/python/carnot/verify/concurrency_canary_8227.py,*/python/carnot/reporting/concurrency_execution_8227.py,*/python/carnot/inference/concurrency_runtime_8227.py,*/scripts/experiments/experiment_8227_v711_concurrency_canary.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.115120937,
+      "ended_monotonic_ns": 1021613899917479,
+      "exit_code": 2,
+      "expected_exit": 0,
+      "name": "changed_module_coverage_report",
+      "normal_exit": true,
+      "passed": false,
+      "scope": "changed_modules",
+      "started_monotonic_ns": 1021613784796542,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/changed_module_coverage_report.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/changed_module_coverage_report.stdout",
+      "stdout_sha256": "sha256:14b51b74da59428f8e6e113f24c6c1c4b4973708045ef7c65ed0c6d117f36541",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/concurrency_canary_8227.py",
+        "python/carnot/reporting/concurrency_execution_8227.py",
+        "python/carnot/inference/concurrency_runtime_8227.py",
+        "scripts/experiments/experiment_8227_v711_concurrency_canary.py",
+        "tests/python/test_concurrency_canary_8227.py"
+      ],
+      "duration_s": 0.033001349,
+      "ended_monotonic_ns": 1021613933385744,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "name": "ruff_check",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "changed_files",
+      "started_monotonic_ns": 1021613900384395,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/ruff_check.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/ruff_check.stdout",
+      "stdout_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/concurrency_canary_8227.py",
+        "python/carnot/reporting/concurrency_execution_8227.py",
+        "python/carnot/inference/concurrency_runtime_8227.py",
+        "scripts/experiments/experiment_8227_v711_concurrency_canary.py",
+        "tests/python/test_concurrency_canary_8227.py"
+      ],
+      "duration_s": 0.016353103,
+      "ended_monotonic_ns": 1021613949958169,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "name": "ruff_format",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "changed_files",
+      "started_monotonic_ns": 1021613933605066,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/ruff_format.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/ruff_format.stdout",
+      "stdout_sha256": "sha256:f114d83b30c5c657ee43a847a45bafccaea255d82673feb87c26d252c61e29c1",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/verify/concurrency_canary_8227.py",
+        "python/carnot/reporting/concurrency_execution_8227.py",
+        "python/carnot/inference/concurrency_runtime_8227.py",
+        "--strict",
+        "--follow-imports=silent"
+      ],
+      "duration_s": 1.11586198,
+      "ended_monotonic_ns": 1021615065867668,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "name": "changed_module_mypy",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "changed_modules",
+      "started_monotonic_ns": 1021613950005688,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/changed_module_mypy.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/changed_module_mypy.stdout",
+      "stdout_sha256": "sha256:d1bb7886fec465f132639acb4d03ade5eeb8bbcebdb292db323a48699b0d6cc1",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_concurrency_canary_8227.py"
+      ],
+      "duration_s": 0.033217756,
+      "ended_monotonic_ns": 1021615099272265,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "name": "scoped_spec_coverage",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "explicit_tests",
+      "started_monotonic_ns": 1021615066054509,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/scoped_spec_coverage.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/scoped_spec_coverage.stdout",
+      "stdout_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8227-validation-o6858_jo/e2e015",
+        "tests/python/test_source_boundary_7852.py",
+        "-q"
+      ],
+      "duration_s": 12.535658694,
+      "ended_monotonic_ns": 1021627634971425,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "name": "e2e015",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "private_e2e",
+      "started_monotonic_ns": 1021615099312731,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/e2e015.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/e2e015.stdout",
+      "stdout_sha256": "sha256:6ce4ad38c588cef7b7def6d10ff364974119c1c4ab3ab62d327047ea422eddfa",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8227-validation-o6858_jo/e2e019",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "duration_s": 50.499922649,
+      "ended_monotonic_ns": 1021678134998009,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "name": "e2e019",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "private_e2e",
+      "started_monotonic_ns": 1021627635075360,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/e2e019.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/e2e019.stdout",
+      "stdout_sha256": "sha256:6f6b789b77bd0a5b2485b5a3ed624a80eda880c511b7bb85c59a72e82a59778b",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8227-validation-o6858_jo/affected_consumers",
+        "tests/python/test_primary_publication_7928.py",
+        "-q"
+      ],
+      "duration_s": 9.031375921,
+      "ended_monotonic_ns": 1021687166780514,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "name": "affected_consumers",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "private_e2e",
+      "started_monotonic_ns": 1021678135404593,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/affected_consumers.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/affected_consumers.stdout",
+      "stdout_sha256": "sha256:b4fbba833dbfb8f3cfd82f018d8a98a65ce214a27a37e8a6b3379645705d1167",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8227-validation-o6858_jo/e2e022",
+        "tests/python/test_prospective_request_recorder_8213.py",
+        "-q"
+      ],
+      "duration_s": 34.475067633,
+      "ended_monotonic_ns": 1021721642095451,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "name": "e2e022",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "private_e2e",
+      "started_monotonic_ns": 1021687167027818,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/e2e022.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8227_v711_concurrency_canary/invocations/1791360566178092024/validation/e2e022.stdout",
+      "stdout_sha256": "sha256:73dff577bc6395ad949611508364c33d571e7d3af9970451c875b97a6b108827",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": true
+}
