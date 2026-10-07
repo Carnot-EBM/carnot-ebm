@@ -50865,3 +50865,29 @@ all126 solves, preserves source weights and gradients, calibrates temperature
 on the original separate role, and exposes a public-input typed scoring API.
 The linked tests cover numerical parity, permissions, missing inputs, restart
 binding and fresh-process replay with changed and rehashed primitives.
+
+## REQ-VERIFY-8238: Seal frozen margin decisions on all original reserved slots
+
+Authenticate V712 methods, all six complete head bytes, roles, comparator and
+public source hashes before scoring. A separate bounded public-input-only worker
+receives no evaluator-label operand. Apply the frozen Exp8237 API to all128
+original slots, retaining missing, failed, censored and excluded evidence.
+Save every arm/source probability, native public margin, feasible expected loss,
+action, original V707 permission, missing reason and source hash. Missing evidence
+and ties escalate. Acceptance remains a subset of original V707 acceptance.
+Seal predictions and head bytes before any separate audit opens labels.
+Exposure remains development; H1 and generalization benefit are unmeasured.
+
+### SCENARIO-VERIFY-8238-SEAL
+
+Private fixtures reject missing identities, duplicate identities, reordered slots,
+mutated heads, comparator/role drift and nested label injection. Missing features
+preserve the original slot with escalation. Fresh-process replay authenticates
+primitive custody and recomputes every prediction, including negative/tamper cases.
+
+REQ-VERIFY-8238 implementation2026-10-07: the public scorer authenticates all
+six margin/uniform heads, original roles and frozen energy_global comparator.
+It retains97 completed,30 failed and one excluded source across1152 decisions.
+Private tests exercise missing probabilities, duplicate/missing/reordered sources,
+head and role drift, nested evaluator labels, numerical parity and permission
+violations. Replay reconstructs the public projection from immutable source copies.

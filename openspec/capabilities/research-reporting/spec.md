@@ -95257,3 +95257,31 @@ process-group supervisor and unchanged primary publisher. Frozen validation
 includes owned coverage, strict types, scoped lint/spec checks, consumers and
 private E2E-015/019/021. Both generalization scores stay zero. The conductor
 reconciles ops and traceability after this task, per the operator instruction.
+
+## REQ-REPORT-8238: Publish prediction readiness separately from benefit
+
+Freeze bounded validation commands before measurement. Empty MODEL_SPECS,
+no_model_load and zero current LLM calls describe this invocation. Private writable
+scratch, clocks, exact argv/exits and full stream hashes bind evidence. Flush phase
+and child boundaries with heartbeats at most60 seconds and process-group cleanup.
+Missing external operands block with exact path/hash/field/operator/expected/observed;
+failed owned checks disqualify and zero margin_predictions_ready_score.
+Run private E2E-019/021, consumers, scoped Ruff, strict mypy, spec coverage and
+100 percent newly owned statements including real CLI children. Run the full
+Python suite once as a separate bounded health diagnostic. Both generalization
+scores remain zero. Unchanged primary publication and terminal validators precede
+atomic publication. The conductor owns ops and traceability reconciliation.
+
+### SCENARIO-REPORT-8238-CLI
+
+Private CLI publication, blocked operands, invalid dates/destinations, scoring
+children and cold replay retain honest terminal evidence and historical bytes.
+The access manifest names only public worker inputs; predictions and complete
+head bytes are immutable before evaluator access. Rehashed tampering fails replay.
+
+REQ-REPORT-8238 implementation2026-10-07: the thin runner reuses the qualified
+bounded child supervisor and unchanged atomic primary publisher. A separate
+public payload child seals every original slot before evaluator access. Frozen
+validation includes owned coverage, CLI/consumer checks, private E2E-019/021,
+Ruff, strict mypy, spec coverage and one bounded repository-health invocation.
+The conductor owns ops and traceability reconciliation under the final task rule.
