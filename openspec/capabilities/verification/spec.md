@@ -51062,3 +51062,39 @@ bounds, raw and guarded actions, false-accept changes per original source and
 all missing-feature conditions. Request bounds include issue-to-durability and
 separate cold costs, preserve failed requests and claim no concurrent throughput
 or hardware improvement. The research note states the missing deployment work.
+
+## REQ-VERIFY-8245: Qualify exact PolarFire state dispatch independently of benefit
+
+Exp8245 SHALL authenticate Exp8240 learner qualification and terminal bytes before
+selecting the first seed's local_only state and every original query. If unavailable,
+a qualified Exp8221 static fixture MAY prove mechanics only; retain the learner
+block and do not import Exp8231 state. Freeze versioned state/query bytes, their
+hashes, an exact standalone evaluator and reference prediction hashes. Compare
+host child output with the existing evaluator before board contact. No model is
+loaded or fitted. Historical Qwen provenance gives no current call or benefit.
+Owned failures zero readiness. Schema, host parity and board execution are separate.
+
+### SCENARIO-VERIFY-8245-PACKET
+
+Private fixtures SHALL exercise input/patch/mixture/global leaves, ordered clipping,
+missing probabilities, permissions, unsupported schemas and state/query/source
+hash tampering. Source qualification and terminal tampering block independently.
+Fresh-process replay rejects rehashed prediction, count and board-output drift.
+
+### SCENARIO-VERIFY-8245-BOARD
+
+After every owned check passes, attempt exactly one SSH reachability command with
+ConnectTimeout=5 and BatchMode=yes. Preflight Python and a private task-owned
+board temporary directory. Transfer only the packet and evaluator. Bound each
+child and evaluation to60 seconds, preserve full streams and hashes, and clean
+only the validated task-owned directory. An unavailable operand is terminal
+blocked with exact expected and observed fields, never a retry or measured zero.
+Linux CPU parity supplies no FPGA acceleration, speedup or learning gain.
+
+Implementation2026-10-07: `polarfire_state_dispatch_8245.py` authenticates current
+qualification and exact terminal/source bytes. `polarfire_packet_evaluator_8245.py`
+is the standalone receiver. The selected workload is seed101/local_only with256
+queries; all packet bytes match the existing host evaluator. Nine private tests
+exercise valid/fallback/missing/tampered inputs, ordered arithmetic, real children,
+bounded board commands and task-only cleanup. Device results remain a separate
+current invocation receipt; no benefit or fabric support follows.

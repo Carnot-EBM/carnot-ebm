@@ -1,0 +1,29 @@
+.F.......                                                                [100%]
+=================================== FAILURES ===================================
+__________________________ test_frozen_mypy_executes ___________________________
+
+tmp_path = PosixPath('/tmp/carnot8245-npuv4tls/checks/coverage/test_frozen_mypy_executes0')
+
+    def test_frozen_mypy_executes(tmp_path):
+        """SCENARIO-REPORT-8245-CLI: the frozen argv must parse and type check real files."""
+        plan = cli.commands(tmp_path)
+        typed = next(s for s in plan if s.name == "changed_module_mypy")
+        run = subprocess.run(typed.argv, cwd=d.ROOT, capture_output=True, text=True, timeout=60)
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: python/carnot/reporting/polarfire_dispatch_execution_8245.py:234: error: Expected iterable as variadic argument  [misc]
+E         Found 1 error in 1 file (checked 4 source files)
+E         /dev/null: No [mypy] section in config file
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=('/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy', '--config-file=/dev/null', '--str...t  [misc]\nFound 1 error in 1 file (checked 4 source files)\n', stderr='/dev/null: No [mypy] section in config file\n').returncode
+
+tests/python/test_polarfire_state_dispatch_8245.py:94: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_polarfire_state_dispatch_8245.py::test_frozen_mypy_executes
+1 failed, 8 passed, 1 warning in 53.04s

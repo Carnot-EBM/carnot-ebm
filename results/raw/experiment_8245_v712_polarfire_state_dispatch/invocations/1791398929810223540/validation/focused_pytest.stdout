@@ -1,0 +1,73 @@
+.F...F...                                                                [100%]
+=================================== FAILURES ===================================
+__________________________ test_frozen_mypy_executes ___________________________
+
+tmp_path = PosixPath('/tmp/carnot8245-npuv4tls/checks/focused/test_frozen_mypy_executes0')
+
+    def test_frozen_mypy_executes(tmp_path):
+        """SCENARIO-REPORT-8245-CLI: the frozen argv must parse and type check real files."""
+        plan = cli.commands(tmp_path)
+        typed = next(s for s in plan if s.name == "changed_module_mypy")
+        run = subprocess.run(typed.argv, cwd=d.ROOT, capture_output=True, text=True, timeout=60)
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: python/carnot/reporting/polarfire_dispatch_execution_8245.py:234: error: Expected iterable as variadic argument  [misc]
+E         Found 1 error in 1 file (checked 4 source files)
+E         /dev/null: No [mypy] section in config file
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=('/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy', '--config-file=/dev/null', '--str...t  [misc]\nFound 1 error in 1 file (checked 4 source files)\n', stderr='/dev/null: No [mypy] section in config file\n').returncode
+
+tests/python/test_polarfire_state_dispatch_8245.py:94: AssertionError
+______________________ test_reductions_and_owned_barrier _______________________
+
+tmp_path = PosixPath('/tmp/carnot8245-npuv4tls/checks/focused/test_reductions_and_owned_barr0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f58045f7080>
+
+    def test_reductions_and_owned_barrier(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8245-CLI: an owned failure forbids actual board contact."""
+        data = panel()
+        empty = dict(ready=False, executed=False, output=None, block=None, receipts=[])
+        host = d.expected(data)
+        assert d.reduce(data, host, empty, True)["verdict_class"] == "null"
+        assert d.reduce(data, {}, empty, True)["polarfire_validation_ready_score"] == 0
+        device = dict(empty, ready=True, executed=True, output=host)
+        assert d.reduce(data, host, device, True)["verdict_class"] == "circular_positive"
+        assert d.reduce(data, host, dict(device, output={}), True)["verdict_class"] == "disqualified"
+        monkeypatch.setattr(cli, "commands", lambda p: [])
+        monkeypatch.setattr(cli, "validators", lambda p: [])
+        monkeypatch.setattr(cli, "historical", lambda raw: dict(receipts=[], reproduced=True))
+        monkeypatch.setattr(d, "load", lambda root, raw: panel())
+        monkeypatch.setattr(
+            d, "board", lambda raw: dict(empty, block=d.operand("board_ssh.actual_exit", raw, 0, 255))
+        )
+        execute = cli.execute
+    
+        def checks(plan, raw):
+            if plan and plan[0].name == "repository_health_once":
+                return []
+            return execute(plan, raw)
+    
+        monkeypatch.setattr(cli, "execute", checks)
+        output = tmp_path / (d.NAME + ".json")
+>       assert cli.main(["--root", str(tmp_path), "--output", str(output)]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7f58045b2fc0>(['--root', '/tmp/carnot8245-npuv4tls/checks/focused/test_reductions_and_owned_barr0', '--output', '/tmp/carnot8245-npuv4tls/checks/focused/test_reductions_and_owned_barr0/experiment_8245_v712_polarfire_state_dispatch.json'])
+E        +    where <function main at 0x7f58045b2fc0> = cli.main
+
+tests/python/test_polarfire_state_dispatch_8245.py:322: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8245] phase=start_no_model_load completed=0 pending=1
+[exp8245] phase=preconditions_before completed=0 pending=0
+[8200] 8213_subprocess_before_resources_and_scratch completed=0 pending=1
+[8200] 8213_subprocess_after_resources_and_scratch completed=1 pending=0
+{"passed": false, "error": "'primary'"}
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_polarfire_state_dispatch_8245.py::test_frozen_mypy_executes
+FAILED tests/python/test_polarfire_state_dispatch_8245.py::test_reductions_and_owned_barrier
+2 failed, 7 passed, 1 warning in 29.36s

@@ -95461,3 +95461,41 @@ exercise real CLI publication/replay, blocked inputs, rejected dates/destination
 byte and rehashed aggregate tampering, failed checks and consumer boundaries.
 The primary retains measured coverage and a separate full-suite health receipt.
 Ops status, changelog and traceability reconciliation remain conductor-owned.
+
+## REQ-REPORT-8245: Publish qualified PolarFire transfer and bounded device evidence
+
+Exp8245 SHALL freeze distinct valid mypy file arguments and executable regression
+coverage before measurement, reproduce Exp8231's format and argv failures without
+changing its primary, and format only current owned files. All owned unit, CLI,
+100percent statement coverage, Ruff check/format, strict mypy, explicit spec
+coverage, consumer and private E2E-015/019 checks precede board contact. A separate
+bounded full Python suite diagnostic retains its actual failures and clocks.
+
+Publish the exact terminal candidate atomically through unchanged primary
+publication, adversarial and strict row validators after cold primitive replay.
+Record no_model_load, MODEL_SPECS=[], zero calls, complete row dispositions,
+upstream/code/raw hashes, readiness separately from scientific benefit, and exact
+external blockers. Current hardware dispatch uses hardware_smoke; no dispatch
+uses aggregation_from_upstream_artifacts. Both generalization scores stay zero.
+The conductor owns ops/status, changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8245-CLI
+
+The real private CLI SHALL publish and cold-replay qualified, missing-operand and
+owned-disqualified fixtures. Reject invalid dates, protected fixture destinations,
+missing private fixtures, rehashed reductions and primitive changes. Execute the
+frozen strict mypy argv in a regression. No board contact follows owned failure.
+Retain terminal rejection logs and historical primary bytes.
+
+Implementation2026-10-07: `polarfire_dispatch_execution_8245.py` freezes current
+owned commands, reproduces archived format failure and original mypy argv failure,
+and gates contact on normal passing exits. The real private CLI and fresh-process
+replay pass. Measured coverage reaches100percent across new modules and thin CLI,
+including child statements. Historical Exp8231 primary bytes remain unchanged.
+The required current invocation publishes its terminal outcome below the named
+Exp8245 primary, with board results and repository health separately recorded.
+
+SCENARIO-REPORT-8245-CLI also covers an explicit `--health-receipt` retry after
+owned corrections. Authenticate the previous diagnostic and both full streams;
+retain its argv, clocks and actual exit. Reuse grants no global pass and cannot
+replace current owned validation. Missing or malformed reuse evidence is rejected.
