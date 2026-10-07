@@ -2,6 +2,41 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8248: Select complete source views without human labels
+
+Freeze the complete answer sentence with maximum cached V707 p_unsupported;
+ties use original sentence index. Select the complete source sentence with
+maximum casefolded Unicode word-set Jaccard overlap; ties use original index,
+including zero overlaps. Choose a different complete sentence with nearest
+embedded-token length; ties use original index. The control is nonselected and
+has no certified irrelevance. Keep original complete answer bytes in every
+qualified sentence-transport request. Missing second complete sentences produce
+named unavailable rows. Record overlap, match distance and signed selected
+minus control removed-token count divided by original source token count.
+Freeze five model prediction features beside the sixteen historical features.
+Freeze21-input radial, linear and additive22-coefficient heads; use21 fit-only
+centers for each independent16-input and19-input radial ablation. Use unweighted
+log loss and exact inherited solver constants. Preserve frozen V707 decisions.
+Freeze restricted expected-cost actions, escalate ties and shared fallback with
+zero treatment gain. H1 and H2 each reserve alpha.025,10000 draws, fixed seeds,
+all-slot denominators, class floors, safety controls and development-only scope.
+Freeze delayed Beta group soft constraints with global backoff. Keys contain
+only coarse bins of three view probabilities and relation type. Exp8255 implements
+this mechanism; Exp8256 audits it. Retention targets cannot fit either learner.
+
+### SCENARIO-VERIFY-8248-VIEWS
+
+Private Unicode, zero-overlap, length-tie, incomplete-sentence and missing-cache
+cases verify deterministic views and unchanged complete answer bytes. Human
+labels and cached citation addresses cannot alter selection. Missing model
+predictions remain unavailable; synthetic fixture predictions grant no benefit.
+
+REQ-VERIFY-8248 implementation2026-10-07: `evidence_intervention_8248.py`
+uses complete sentence partitions, Unicode lexical overlap and embedded-token
+length matching. Public rows contain no targets. Fit and tune labels reside in
+a separate hashed seal. Tests cover role overlap, deterministic views, missing
+operands, genuine CLI execution and rehashed source or aggregate rejection.
+
 ## REQ-VERIFY-8243: Replay the current supervisor frontier primitives
 
 Fresh replay authenticates actual input, primitive, code and command bytes and

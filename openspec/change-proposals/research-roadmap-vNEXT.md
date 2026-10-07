@@ -1,5 +1,7 @@
 # Carnot Research Roadmap v713 — Source-evidence interventions
 
+Canonical full-task SHA-256: `72cbedd3aebae12e162f230a1138478b6ada1fdb8ff87724e2908e1765e16fea`
+
 **Created:** 2026-10-07. **Milestone:** 2026.10.713.
 **Title:** Source-evidence interventions, continuous constraint admission, and complete request accounting.
 **Status:** Proposed. Planning does not activate or execute experiments.

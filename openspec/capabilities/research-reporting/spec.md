@@ -2,6 +2,43 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8248: Freeze matched evidence interventions before capture
+
+Bind exactly fourteen full V713 task objects, Exp8248 through Exp8261, with
+the existing canonical digest and independent authority reader. Snapshot
+design, active and available staged bytes. Execution requires actual activation.
+Preserve V712's fourteen original dispositions and authenticated terminal reports.
+Use aggregation_from_upstream_artifacts, no_model_load, an empty MODEL_SPECS
+and zero current LLM calls. Protocol readiness grants no scientific benefit.
+Freeze original V707 fit128, tune64 and evaluation128 source slots. Sort tune
+by original source_cluster_id into calibration32 and selection32. Sort evaluation
+into stream96 and retention32. Prove disjoint original source hashes. Keep
+labels sealed separately; static and online fitting cannot read retention targets.
+Freeze all feature, optimizer, action, hypothesis and delayed group constants
+in openspec/change-proposals/v713-evidence-intervention-protocol.json before capture.
+
+### SCENARIO-REPORT-8248-CUSTODY
+
+Private tests reject missing inputs, stale terminal hashes, changed task objects,
+role overlap and rehashed primitive or aggregate tampering. All original slots
+remain visible. Missing external operands block; failed owned checks disqualify
+and zero readiness. Cold replay runs in a fresh process outside the checkout.
+
+### SCENARIO-REPORT-8248-CLI
+
+The thin CLI emits flushed start and phase counts. Reuse bounded child execution
+with process group cleanup and at most60-second heartbeats. Freeze validation
+argv before measurement. Require100 percent added statement coverage, actual
+CLI statements, private E2E-018/021, consumer checks, Ruff, strict mypy and traced
+spec checks. Run the full Python suite once as bounded separate repository
+health. Publish only unchanged terminal-validated candidate bytes atomically.
+
+REQ-REPORT-8248 implementation2026-10-07: the reporting module and thin CLI
+freeze320 original source slots and fourteen full task objects. The qualified
+parent records bounded validators, raw custody, cold replay and atomic publication.
+The protocol contains the exact head inputs, role hashes and hypothesis constants.
+Operational status and traceability reconciliation belong to the conductor.
+
 ## Planned V713 contract and evidence work — 2026-10-07
 
 The proposed V713 milestone has exactly fourteen tasks, Exp8248–Exp8261.
