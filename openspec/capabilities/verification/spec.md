@@ -50891,3 +50891,36 @@ It retains97 completed,30 failed and one excluded source across1152 decisions.
 Private tests exercise missing probabilities, duplicate/missing/reordered sources,
 head and role drift, nested evaluator labels, numerical parity and permission
 violations. Replay reconstructs the public projection from immutable source copies.
+
+
+## REQ-VERIFY-8239: Audit margin-trained decision value from primitive sources
+
+Authenticate the public Exp8238 seal, V712 protocol and calibration-selected
+comparator before opening original evaluator annotations in a fresh process.
+Recompute all actions, all-slot costs, complete-case Brier and false accepts.
+Retain all128 slots with fixed missing masks. Run10000 paired source-cluster
+draws with seed7128239 and97.5 percent confidence. Apply every frozen H1 gate,
+including96 complete sources,12/class,9500 valid draws and five improved sources.
+Compare weighted energy with the primary, uniform energy, equally weighted
+additive/logistic, energy_global and historical accepted baseline. Report all
+source deltas, action-switch matrices, public-margin strata and shared weighting.
+Probability movement alone cannot pass H1. A null retires this exact margin-only
+objective on this exposed cohort. Require independent sources or a different
+extraction mechanism before another calibration variant. Generalization scores
+remain zero; no broad impossibility follows.
+
+### SCENARIO-VERIFY-8239-REDUCTION
+
+Private natural evidence retains97 complete,30 failed and one excluded source.
+Missing decisions cost0.5. Duplicate/unpaired sources, changed predictions,
+role/comparator drift, missing annotations and changed bytes fail authentication.
+Synthetic equal-cost controls fail H1; each frozen harm gate remains binding.
+Rehashed prediction and aggregate changes fail cold replay independently of
+producer headline aggregates.
+
+REQ-VERIFY-8239 implementation2026-10-07: `margin_decision_audit_8239.py`
+recomputes evaluator costs across1152 arm/source rows. The registered bootstrap
+uses10000 draws and97 complete sources (46/class0,51/class1). Two sources improve
+and seven worsen against energy_global. H1 fails the lower gain, five-source and
+historical-baseline cost safeguards. This retires only the tested margin objective
+on this exposed cohort; both generalization scores remain zero.

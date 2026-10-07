@@ -95285,3 +95285,33 @@ public payload child seals every original slot before evaluator access. Frozen
 validation includes owned coverage, CLI/consumer checks, private E2E-019/021,
 Ruff, strict mypy, spec coverage and one bounded repository-health invocation.
 The conductor owns ops and traceability reconciliation under the final task rule.
+
+
+## REQ-REPORT-8239: Publish qualified margin audit separately from benefit
+
+Freeze audit-specific commands before measurement. Empty MODEL_SPECS,
+no_model_load and zero current LLM calls describe actual work. Use private
+writable scratch and bounded children with process-group cleanup and heartbeats
+at most60 seconds. Retain argv, exits, clocks and full stdout/stderr hashes.
+Missing external operands block with exact path/hash/field/operator/expected/
+observed evidence; owned failures disqualify and zero margin_audit_ready_score.
+Run owned unit/consumer checks, private E2E-019/021, scoped Ruff, strict mypy,
+requirement-linked spec coverage and100 percent added statements including CLI.
+Run the full Python suite once as a separate bounded repository-health check.
+Cold replay and unchanged terminal validators precede atomic publication.
+Readiness, H1 development signal and energy-specific advantage stay separate.
+The conductor owns ops/status/changelog/traceability reconciliation.
+
+### SCENARIO-REPORT-8239-CLI
+
+Freeze this audit's CLI and restore upstream manifest bindings after use.
+Private success, external blocking, invalid date/destination, worker, external-CWD
+replay and rehashed tamper checks execute the real CLI. Preserve historical
+primary bytes and honest failed-attempt evidence.
+
+REQ-REPORT-8239 implementation2026-10-07: the thin runner uses
+`margin_decision_audit_execution_8239.py` to pin public seal and evaluator bytes.
+Private CLI tests exercise blocked operands, source/aggregate tampering and
+external-directory replay. Frozen commands retain owned coverage, type/lint/spec,
+consumer/E2E and terminal receipts. Repository-health checks remain separate.
+The conductor reconciles ops and traceability under the final operator rule.
