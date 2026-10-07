@@ -95022,3 +95022,38 @@ bounded process supervision and unchanged primary publication. The thin CLI,
 private terminal checks, rehashed primitive/summary rejection and exact owned
 statement coverage are exercised by `test_kv260_workload_boundary_8230.py`.
 Operational and traceability reconciliation remains owned by the conductor.
+
+## REQ-REPORT-8231: Publish the V711 PolarFire state boundary
+
+Exp8231 SHALL freeze commands before host measurement, authenticate each named
+producer independently and retain exact missing or disqualified operands. Use
+no_model_load, MODEL_SPECS=[], zero current calls and separate trained head
+provenance. Readiness qualifies the state boundary only; generalization and
+learning benefit remain zero. Owned failures disqualify and zero readiness.
+Publish atomically after private cold replay, unchanged primary terminal checks,
+adversarial verification and strict row lint. Preserve hashes, clocks, full
+streams and exits. Require 100 percent added statements including real CLI,
+scoped Ruff, strict mypy, spec coverage, consumers and private E2E-015/019.
+Keep one bounded full-suite diagnostic separate. The conductor owns ops and
+traceability reconciliation after exit.
+
+### SCENARIO-REPORT-8231-CLI
+
+Private CLI publication and fresh-process replay SHALL pass. Invalid dates,
+fixture destinations, source schemas, version/checksum changes, rehashed
+primitive or aggregate mutations and failed owned checks SHALL be rejected.
+An unchanged external learning block SHALL retain its exact upstream verdict
+and failed fields while the existing board and kernel inventory completes.
+
+REQ-REPORT-8231 implementation: `polarfire_boundary_execution_8231.py` freezes
+scoped commands and uses qualified bounded child supervision and unchanged
+atomic primary publication. `test_polarfire_state_boundary_8231.py` exercises
+the real CLI, failure paths and fresh replay; measured coverage includes all
+added statements in both modules and the thin CLI. The conductor owns ops and
+traceability reconciliation.
+
+SCENARIO-REPORT-8231-CLI also verifies that corrected owned command retries
+can reuse an explicit prior full-suite diagnostic receipt. Authenticate its
+exact bytes and full output hashes, preserve the original clocks and exits,
+and declare its source separately from current validation. No global pass is
+inferred and the broad suite is not rerun to repair owned command arguments.

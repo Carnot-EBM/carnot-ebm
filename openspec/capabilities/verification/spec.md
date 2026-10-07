@@ -50675,3 +50675,40 @@ branch independently, retains historical fabric hashes, preserves ordered
 Q16.16 clipping, and requires complete same-request spans for Amdahl bounds.
 `test_kv260_workload_boundary_8230.py` covers rounding, permission, missing rows,
 private authenticated branches, practical transfer obligations and failure paths.
+
+## REQ-VERIFY-8231: Bound portable correction state and durable transfer
+
+Authenticate Exp8216 PolarFire source and transcript hashes independently of
+Exp8221 kernel and Exp8225 learning readiness. Preserve Linux CPU-only dispatch
+history. Do not probe reachability, install, flash or claim fabric execution.
+Inventory frozen predicates, ordered corrections, global parameters, exact
+mixtures and checksum fields. Preserve full restart state when available.
+Measure canonical serialized bytes, host encode/decode and local durable
+roundtrip parity on qualified frozen examples. Distinguish natural states from
+private fixtures; natural probabilities crossed with a fixture model remain
+fixtures. Local clocks never represent board performance.
+
+### SCENARIO-VERIFY-8231-STATE
+
+Versioned envelopes SHALL reject unknown versions and unequal payload hashes.
+Roundtrip preserves all ordered clipping, exact final-probability mixtures,
+global corrections, missing probabilities and original acceptance permission.
+Inventory includes full causal pending/release/RNG fields without treating a
+private fixture as a natural learned state.
+
+### SCENARIO-VERIFY-8231-CONTRACT
+
+The follow-up contract SHALL require sender/receiver payload hash equality,
+schema rejection before activation, temporary write, flush, fsync, atomic rename,
+directory fsync, acknowledgement after durable commit, fresh-process restart
+and prediction/action parity. Charge host encoding, hashing, queuing, network
+setup and transfer, device decoding, durable commit, readout and host validation.
+Bandwidth and latency remain symbolic without measured board clocks. Separate
+completed host inventory, blocked learning evidence and future device work.
+
+REQ-VERIFY-8231 implementation: `polarfire_state_boundary_8231.py` authenticates
+PolarFire CPU history independently, inventories exact static and causal state,
+and measures canonical host bytes and local durable parity. Versioned envelope
+and fresh replay checks reject changed bytes. The raw transfer contract retains
+all durable/network costs and symbolic bandwidth. Requirement-linked tests
+exercise ordered clipping, mixtures, global parameters and missing operands.

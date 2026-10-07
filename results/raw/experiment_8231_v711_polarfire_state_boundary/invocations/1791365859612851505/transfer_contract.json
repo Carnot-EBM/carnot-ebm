@@ -1,0 +1,42 @@
+{
+  "accounting": "same-request disjoint clocks, acknowledgement and retransmits; charge acquisition/model work and all persistence outside eligible device work",
+  "authorization": "future separately authorized device work only",
+  "bandwidth_domain": "B_measured > 0, unknown; no advertised link rate substituted",
+  "cost_fields": [
+    "host_encode_ns",
+    "host_hash_ns",
+    "host_queue_ns",
+    "connection_setup_ns",
+    "network_send_ns",
+    "network_receive_ns",
+    "device_decode_ns",
+    "device_hash_ns",
+    "device_write_ns",
+    "device_file_fsync_ns",
+    "device_rename_ns",
+    "device_directory_fsync_ns",
+    "restart_read_ns",
+    "restart_decode_ns",
+    "readout_ns",
+    "host_validation_ns"
+  ],
+  "current_ssh_reachability": "not_probed",
+  "device_speedup": null,
+  "durable_commit_steps": [
+    "private_temporary_write",
+    "flush",
+    "file_fsync",
+    "atomic_rename",
+    "directory_fsync",
+    "acknowledge_after_commit"
+  ],
+  "measured_board_bandwidth_bytes_s": null,
+  "measured_board_latency_ns": null,
+  "payload": "exact versioned canonical UTF-8 JSON envelope; no tree flattening",
+  "payload_hash_equality": "sender envelope and state SHA256 equal receiver before activation and after restart",
+  "restart": "fresh receiver process reads durable bytes and reproduces tree, pending/release/RNG state and frozen prediction/action parity",
+  "substrate": "PolarFire Linux CPU; fabric unsupported",
+  "symbolic_transport": "T_network >= (payload_bytes + protocol_bytes + readout_bytes)/B_measured + L_setup + L_ack + T_queue + T_retries",
+  "version": 1,
+  "version_rejection": "reject unknown envelope/state versions before writing active state"
+}
