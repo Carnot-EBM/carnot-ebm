@@ -21642,3 +21642,4 @@ Recorded 2 completed experiments in 13.2 minutes (0.2 hours), with 0 compute-bou
 - 2026-10-07: Learn persistent group corrections from causally released feedback (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8225_v711_delayed_utility_learning.json
 - 2026-10-07: Freeze request isolation and qualify a bounded two-slot Qwen canary (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8227_v711_concurrency_canary.json
 - 2026-10-07: Inspect new environment-grounded supervisor outcomes for cross-game selection (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8229_v711_arc_outcome_delta.json
+- 2026-10-07: Bound KV260 utility-kernel work and whole-request acceleration (⚠️ Blocked) — honest_verdict=complete_blocked_service_spans_or_external_operand; results/experiment_8230_v711_kv260_workload_boundary.json
