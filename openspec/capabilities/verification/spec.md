@@ -50729,3 +50729,26 @@ excluded board row with flags, paths, hashes and required next evidence.
 Implementation: `gatemate_continuity_8232.py` authenticates the pinned Exp8216 /
 Exp6559 lineage and reuses Exp7146's dry-run operator receipt parser. Its single
 board row retains device acceptance flags and the frozen V711 reopening note.
+## REQ-VERIFY-8233: Qualify current capstone ownership before atomic publication
+
+Freeze an explicit bounded consumer and command manifest before measurement.
+Retain private writable scratch through child completion; reuse the qualified
+process-group supervisor with flushed progress and heartbeats at most60 seconds.
+Save exact argv, expected/actual exits, full stream hashes and real clocks.
+Owned failure disqualifies and zeroes readiness. External absence blocks;
+finished nulls are terminal. Repository health remains a separate bounded
+diagnostic. Measure100 percent newly added module and real CLI statements;
+run scoped Ruff, strict mypy, spec coverage and private E2E-015/018/019/021.
+
+### SCENARIO-VERIFY-8233-TERMINAL
+
+In a fresh process reduce frozen primitives and authenticate receipts before
+unchanged primary_publication, adversarial_verify and strict row consistency
+checks atomically expose candidate bytes. Historical primary bytes remain intact.
+Private fixture validation precedes natural aggregation; no external publication.
+
+Implementation2026-10-07: the current capstone reuses the qualified process-group
+supervisor, current audit-specific replay pattern and unchanged primary publisher.
+The frozen invocation manifest names only owned modules/tests, explicit consumers,
+the four private E2E suites, scoped lint/types/spec coverage and bounded repository
+health. Coverage includes actual script-path and child statements without exclusions.

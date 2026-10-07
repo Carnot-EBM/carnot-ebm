@@ -95086,3 +95086,52 @@ Implementation: `gatemate_execution_8232.py` freezes scoped checks and uses the
 qualified process supervisor, unchanged terminal auditors and primary publisher.
 `test_gatemate_continuity_8232.py` measures all added statements, including real
 script children and failure paths, through private Coverage.py subprocess data.
+## REQ-REPORT-8233: Reconcile the exact fourteen V711 outcomes
+
+The unconditional capstone binds Exp8220–8233 from immutable current contract
+bytes. Thirteen upstream dispositions and one owned execution row remain even
+when outputs are missing, conductor gates block execution, or checks disqualify
+an upstream producer. Missing metrics remain null; measured zero stays zero.
+Execution readiness is separate from benefit. Current substrate is
+aggregation_from_upstream_artifacts / no_model_load, MODEL_SPECS=[], with zero
+current model calls and separately declared trained_head_specs.
+
+Eligible H1 is recomputed using the qualified V711 utility audit reducer from
+its frozen measurement evidence. H2 requires an eligible current audit and
+trajectory; unavailable audit operands remain blocked rather than importing
+V709 statistics. Alpha stays .025 per family member. Both generalization scores
+stay zero. Three explicit PRD gaps, separate KV260/PolarFire/GateMate obligations,
+ARC zero solve credit, all request slots, exact prior verdict retirement and
+falsifiable reopening conditions must be reported. Historical failures remain
+historical. G1–G4 come from the unchanged publication gate.
+
+Current consumer schema: terminal primaries require integer experiment_id,
+exact contract task_id, complete_* verdict, legal verdict_class, boolean
+required_checks_passed/flagged_adversarial, numeric source counts and array rows.
+Unchanged publisher sidecars bind path, primary_sha256 and report.passed=true.
+Conductor blocked_gate_check_v1 is a distinct schema: experiment identity,
+blocked_at_layer=conductor_pre_gate and exact gates_evaluated operands. H1
+measurement.json contains evidence consumed by utility_audit_8224.reduce;
+its recomputed rows and H1 must match the authenticated current primary.
+The96 planned service slots remain unexecuted obligations, with null metrics.
+The local outcome note is derived only from atomically published artifact bytes
+and names that artifact's exact hash. No external publication is authorized.
+
+Implementation2026-10-07: `v711_capstone_evidence.py`, `v711_capstone.py` and
+the Exp8233 thin runner implement these requirements. The owned tests cover
+private complete/null accounting, blocked publication, source and aggregate
+tampering, authority/schema drift and real failure paths. Invocation-specific
+qualification, current readiness, source custody and remaining limitations are
+recorded in `results/experiment_8233_v711_capstone.json` and its raw sidecars.
+
+### SCENARIO-REPORT-8233-ACCOUNTING
+
+Private complete and all-null fixtures retain fourteen rows and distinguish
+producer execution from disposition completion. Blocked/missing/malformed
+inputs retain named paths, hashes and failed operands without retrying producers.
+
+### SCENARIO-REPORT-8233-CLI
+
+The real CLI publishes private null and blocked candidates, rejects unsafe
+fixture destinations and wrong dates, and cold-replays immutable evidence.
+Aggregate tampering, rehashed work tampering and stream drift are rejected.
