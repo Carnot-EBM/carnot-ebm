@@ -87590,6 +87590,34 @@ A qualified empty audit may be ready but establishes no scientific benefit.
 An unchanged qualified null is retired as new evidence under retire_if_same_verdict.
 The conductor owns ops and traceability reconciliation.
 
+## REQ-REPORT-8241: Publish a byte-bound delayed benefit audit
+
+Freeze current owned commands before measurement. Declare no_model_load, empty
+MODEL_SPECS and zero current calls; historical Qwen provenance grants no call.
+Use private fixtures and writable scratch outside the repository root. Bounded
+children retain argv, expected/actual exits, clocks and complete stream hashes,
+with flushed phase counts and heartbeats within60 seconds. Run owned tests,
+private E2E-020/021, consumers, scoped Ruff, strict mypy, spec coverage and measured
+100 percent added statements including real CLI. Keep one bounded full-suite
+diagnostic separate. Exact operand failures block; failed owned checks disqualify
+and zero readiness. Cold replay and unchanged terminal validators precede atomic
+publication. Preserve negative upstream dispositions and historical primary bytes.
+The conductor owns ops/status/changelog/traceability reconciliation.
+
+### SCENARIO-REPORT-8241-CLI
+
+Real private CLI tests cover natural primitives, external blocking, bad date,
+private destination enforcement, worker execution, replay from outside the
+checkout without PYTHONPATH, rehashed tamper and frozen manifest restoration.
+
+Implementation2026-10-07: the thin Exp8241 runner freezes owned validation before
+measurement and reuses bounded supervision and the unchanged atomic publisher.
+It binds qualified Exp8240, preserves Exp8225 disqualification and the original
+Exp8226 gate artifact, seals heads/predictions before retention labels, and keeps
+audit readiness separate from the terminal H2 null. Unit/CLI evidence and one
+bounded full-suite diagnostic use separate receipts. The conductor owns ops and
+traceability reconciliation under the final task instruction.
+
 
 ### REQ-REPORT-8021: Independently reduce frozen typed decision policies
 

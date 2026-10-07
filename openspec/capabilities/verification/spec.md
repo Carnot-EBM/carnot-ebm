@@ -50951,3 +50951,37 @@ arms. Both real exit73 recoveries match uninterrupted state exactly. CPU timing,
 file bytes and logical lookup coefficient reads are recorded; optimizer internal
 traffic and Rust/FPGA execution remain explicitly unmeasured. Benefit is reserved
 for Exp8241 and retention labels remain unopened.
+
+## REQ-VERIFY-8241: Audit delayed decision benefit and separate retention
+
+Authenticate the qualified Exp8240 primary, terminal seal, primitive heads,
+protocol and original feature/label hashes. Cold reconstruct every issue from
+committed state with strictly earlier feedback. Retain all192 later slots65..256,
+original missing masks, sources and equal label access across all five arms.
+Authenticate final heads and all64 sealed retention predictions before opening
+retention labels. Retention sources must be separate; historical exposure remains.
+Report cost, Brier, signed calibration residual and false accepts separately.
+Apply unchanged H2 with10000 moving original-slot draws, block16 and8/32,
+seed7108225,9500 valid draws, lower97.5 percent gain>.02, five improved sources,
+128 complete sources, eight/class and eight nonoverlapping blocks. Average seeds
+within source. Apply per-seed cost/Brier/false-accept safety and retention gates
+against frozen/global-only, with48/64 retained and eight/class. Record install
+slots and later predictions reached. Readiness and probability movement cannot
+satisfy H2. A qualified null is terminal; generalization scores remain zero.
+
+### SCENARIO-VERIFY-8241-REPLAY
+
+Private fixtures exercise equal-cost null, measurable cost gain, missing masks,
+duplicate or unpaired sources, future releases, head/prediction drift, retention
+access order and disjoint sources. Fresh-process replay rejects changed primitive
+bytes and rehashed aggregates. External absence blocks; owned failure disqualifies.
+
+Implementation2026-10-07: `delayed_benefit_audit_8241.py` reconstructs25600
+primitive decision rows from20 seeds and five arms. H2 retains158 complete later
+sources,77/class0 and81/class1, with11 supported blocks. All10000 draws at each
+block length16/8/32 yield zero gain and no improved source. Retention retains61
+complete independent stream-disjoint sources; local-only exceeds cost/Brier and
+false-accept limits against global-only. Historical exposure grants no independent
+generalization. Seven private tests exercise actual CLI, blocked operands, causal
+tampering, positive cost controls and per-seed safety. Ops reconciliation is owned
+by the conductor under the final task instruction.
