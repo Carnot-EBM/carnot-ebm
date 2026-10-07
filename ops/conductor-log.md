@@ -19749,3 +19749,4 @@ code |
 | 2026-10-07 22:41 UTC | Learn reusable soft constraints from delayed attri | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8253-reserved-view-seal) |
 | 2026-10-07 22:41 UTC | Audit later constraint benefit and sealed retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8255-continuous-constraint-admission) |
 | 2026-10-07 23:04 UTC | Inspect new live supervisor outcomes for cross-gam | OK | 91 passed, 1 warning in 52.81s |
+| 2026-10-07 23:26 UTC | Bound new evidence and learning costs against the  | OK | 88 passed, 1 warning in 28.11s |
