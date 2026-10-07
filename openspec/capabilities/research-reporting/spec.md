@@ -54,6 +54,39 @@ requires qualified controls and action headroom. Hardware evidence keeps
 current device work separate from historical receipts and CPU calculations.
 
 
+## REQ-REPORT-8257: Inspect the authenticated Exp8243 outcome frontier
+
+Authenticate the Exp8243 primary, hash-bound terminal sidecar and qualified reader
+bytes before adapting its stored frontier to the unchanged Exp8243 reader interface.
+An explicitly labelled private qualification projection carries the authenticated
+signature, clocks and event/receipt IDs; it is never a new scientific source.
+Only changed source hashes and events after Exp8243 may enter current rows.
+Unchanged authority completes complete_null_no_new_outcomes without games or models.
+Missing operands produce complete_blocked_<operand> with exact gate operands.
+
+### SCENARIO-REPORT-8257-DELTA
+
+Private controls retain duplicates, censored outcomes and metric missingness using
+the original environment join. Leave-one-game-out ordering requires three shared
+games, two arms and five grounded firings per compared arm; insufficient support
+selects no arm. A supported proposal is falsifiable and observational only.
+Both generalization scores, new solve credit and current model calls remain zero.
+
+### SCENARIO-REPORT-8257-CLI
+
+Freeze owned argv before measurement. Real private null/blocked/new controls and
+external-CWD cold replay cover all new statements, including CLI children.
+Run private E2E-015/019, consumers, scoped Ruff/format, strict mypy and explicit
+spec coverage. Run one bounded full Python suite as separate repository health.
+Atomic publication follows normal validator exit. Conductor owns ops reconciliation.
+
+Implementation2026-10-07: `arc_outcome_frontier_8257.py` authenticates Exp8243 and
+adapts its sealed frontier through the unchanged qualified reader;
+`arc_outcome_execution_8257.py` and the thin runner freeze checks, retain primitive
+and child evidence, cold-replay and publish atomically. Private controls measure
+all new statements including CLI children. The primary records actual validation
+and separate bounded repository health; no live arm or solve registry changes.
+
 ## REQ-REPORT-8243: Inspect only the sealed Exp8229 supervisor frontier
 
 Authenticate Exp8229 primary and bound terminal bytes, producer contracts,

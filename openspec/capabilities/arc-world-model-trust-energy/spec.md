@@ -37695,6 +37695,22 @@ correctly, since the panel never finished. No promotion decision can be made
 from this data. A future task should re-run the missing games/arms with a
 per-generation (not per-game) wall-clock guard, given how much longer each
 induction call took than expected.
+## REQ-ARC-WMTE-8257: Preserve the live supervisor evidence boundary
+
+Only authenticated post-Exp8243 live environment outcomes support observational
+arm ordering. Keep the live arm table, Qwen3.8 generator pin and solve registry
+unchanged. An empty frontier satisfies the standing floor with no arm proposal.
+
+### SCENARIO-ARC-WMTE-8257-JOIN
+
+The unchanged Exp8243 gateway level/action join rejects ungrounded help claims.
+Support across three games and two arms with five firings per arm permits a
+future matched prospective comparison, never a causal superiority claim.
+
+Implementation2026-10-07: the Exp8257 adapter retains the exact Exp8243 environment
+join and applies the five-firing overlap gate before observational ordering.
+Unsupported and empty evidence grants no arm proposal or new solve credit.
+
 ## REQ-ARC-WMTE-8243: Ground current supervisor arm observations
 
 Only post-Exp8229 changed producer receipts with original live provenance and

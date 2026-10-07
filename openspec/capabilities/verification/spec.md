@@ -37,6 +37,24 @@ length matching. Public rows contain no targets. Fit and tune labels reside in
 a separate hashed seal. Tests cover role overlap, deterministic views, missing
 operands, genuine CLI execution and rehashed source or aggregate rejection.
 
+## REQ-VERIFY-8257: Replay authenticated frontier adapters and current checks
+
+Reconstruct the qualification projection from authenticated Exp8243 bytes in a
+fresh process. Reject negative and rehashed primitive/aggregate tampering,
+changed qualified code and invented current model/solve claims. Actual argv,
+exits, clocks and stream hashes determine readiness; owned failures disqualify
+and zero readiness, while unchanged external missing operands block.
+
+### SCENARIO-VERIFY-8257-COLD
+
+Private CLI null and blocked outputs cold-replay. Rehashed aggregate or primitive
+changes and stale terminal sidecars fail. Unchanged primary_publication,
+adversarial_verify and strict row consistency checks precede atomic publication.
+
+Implementation2026-10-07: private controls authenticate missing/stale authority,
+reject rehashed projection/primitive/aggregate tampering, cover actual child
+failures and cold replay, and preserve complete blocked/null/disqualified states.
+
 ## REQ-VERIFY-8243: Replay the current supervisor frontier primitives
 
 Fresh replay authenticates actual input, primitive, code and command bytes and
