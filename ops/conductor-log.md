@@ -19741,3 +19741,10 @@ code |
 | 2026-10-07 21:40 UTC | Milestone 2026.10.713 activated | OK | 14 tasks queued |
 | 2026-10-07 22:12 UTC | Bind fourteen tasks and freeze matched source-evid | OK | 88 passed, 1 warning in 56.15s |
 | 2026-10-07 22:36 UTC | Qualify complete-sentence views and delayed constr | OK | 87 passed, 1 warning in 20.47s |
+| 2026-10-07 22:39 UTC | Measure bounded Qwen response to selected and leng | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8249-evidence-view-kernel.view_kernel_ready_score (actual=0 == expected=1) |
+| 2026-10-07 22:41 UTC | Capture source-intervention features on frozen fit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8250-evidence-view-canary, exp8250-evidence-view-canary) |
+| 2026-10-07 22:41 UTC | Train calibrated energy decisions from evidence-de | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8251-fit-view-capture) |
+| 2026-10-07 22:41 UTC | Capture and seal intervention decisions for every | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8252-intervention-energy-fit) |
+| 2026-10-07 22:41 UTC | Independently test source-intervention decision be | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8253-reserved-view-seal) |
+| 2026-10-07 22:41 UTC | Learn reusable soft constraints from delayed attri | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8253-reserved-view-seal) |
+| 2026-10-07 22:41 UTC | Audit later constraint benefit and sealed retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8255-continuous-constraint-admission) |
