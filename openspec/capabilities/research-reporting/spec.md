@@ -95518,3 +95518,38 @@ adversarial verification and strict row checks before atomic publication. Measur
 mypy, scoped Ruff/spec references, private E2E-015/019 and one separately bounded
 full-suite diagnostic. Preserve argv, expected/actual exits, clocks and stream
 hashes. The conductor owns status/changelog/traceability reconciliation.
+
+## REQ-REPORT-8247: Terminal V712 outcome reconciliation
+
+The zero-model capstone SHALL retain exactly Exp8234–8247 as thirteen upstream
+dispositions and one owned execution row. Resolve declared deliverables first;
+accept alternate conductor receipts only by authenticated experiment identity,
+matching scheduled gate operands and exact task identity when present. Bind the
+full current task objects, activation snapshots, source bytes and source rows.
+Preserve V711's twelve executed and two pre-gate outcomes and original failures.
+Recompute qualified H1/H2 and equal-information controls from audit primitives
+at alpha=.025 each. Readiness SHALL NOT grant benefit or independent generalization.
+Retire the failed exact margin-only objective on the exposed cohort; reopening
+requires materially different extraction or independent sources. Keep unchanged
+delayed protocol, request cold costs, limited sweeps, ARC support and three board
+obligations separate. NFR-01 requires actual matched Rust/Python10x evidence.
+
+### SCENARIO-REPORT-8247-OUTCOMES
+
+Private complete-null, mixed, missing, conductor-blocked and wrong-identity cases
+retain fourteen dispositions; missing operands block and failed owned checks
+ disqualify. Cached provenance grants zero current model calls.
+
+### SCENARIO-REPORT-8247-REPLAY
+
+A fresh process reconstructs audit primitives and task/row reductions. Rehashed
+aggregate, source, stream and contract tampering fail. Private CLI candidates
+pass unchanged publication validators before atomic publication. No external
+publication, active roadmap edit or historical primary overwrite occurs.
+
+REQ-REPORT-8247 implementation2026-10-07: `v712_capstone_evidence.py` freezes
+full source rows and current authority; `v712_capstone.py` runs owned commands,
+primitive audit replay and terminal consumers. The thin Exp8247 CLI and
+`test_v712_capstone_8247.py` cover private null, blocked and tampered outcomes.
+Ops/status/traceability reconciliation is delegated to the conductor by the
+explicit final task instruction; historical primaries and active YAML stay intact.

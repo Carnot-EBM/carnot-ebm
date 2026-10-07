@@ -51115,3 +51115,18 @@ stale, future, same-day ambiguous, timestamped, wrong-board and agent-authored
 receipts SHALL retain exact dispositions. Missing/tampered prior evidence retains
 one excluded obligation with missing evidence distinct from a measured zero.
 Fresh replay reconstructs the frontier and receipts from authenticated primitives.
+
+## REQ-VERIFY-8247: Measured capstone qualification
+
+Freeze owned argv before measurement; preserve expected/actual exits, clocks,
+complete stdout/stderr hashes, bounded process groups and <=60s heartbeats.
+Measure100 percent newly added statements including real standalone CLI children;
+run scoped Ruff, strict mypy, explicit spec coverage and private E2E-018/021.
+Keep bounded full-suite diagnostics separate from owned checks. Failed owned
+checks disqualify with zero readiness; external unavailable inputs block.
+
+### SCENARIO-VERIFY-8247-CLI
+
+Private fixtures remain outside results. Real CLI and cold child statements,
+negative replay, missing inputs and normal terminal publication are measured.
+All-null outcomes are terminal and never trigger additional model work.
