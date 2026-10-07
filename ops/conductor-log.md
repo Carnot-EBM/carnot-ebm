@@ -19733,3 +19733,4 @@ code |
 | 2026-10-07 16:52 UTC | Measure later decision benefit and independent ret | OK | 88 passed, 1 warning in 36.19s |
 | 2026-10-07 17:25 UTC | Measure independent serial and concurrent Qwen req | OK | 107 passed, 1 warning in 29.99s |
 | 2026-10-07 17:51 UTC | Inspect new supervisor outcomes for transferable c | OK | 98 passed, 1 warning in 53.87s |
+| 2026-10-07 18:18 UTC | Bound KV260 precision effects on new decision head | OK | 86 passed, 1 warning in 37.47s |
