@@ -95135,3 +95135,45 @@ inputs retain named paths, hashes and failed operands without retrying producers
 The real CLI publishes private null and blocked candidates, rejects unsafe
 fixture destinations and wrong dates, and cold-replays immutable evidence.
 Aggregate tampering, rehashed work tampering and stream drift are rejected.
+
+## REQ-REPORT-8234: Bind V712 authority and freeze decision-margin methods
+
+Bind the visible fourteen-task table, complete JSON and canonical task digest
+for Exp8234–8247. Compare staged authority when present and actual active
+V712 authority after activation without changing research-roadmap.yaml. Preserve
+the dated V711 design and snapshot current owned code. Administrative readiness
+and margin-method readiness are distinct from benefit. Authenticate original
+V707/V709 sixteen-feature inputs, native uncalibrated Qwen probabilities,
+head_fit/temperature_fit/calibration roles and all128 reserved slots. Preserve
+missing slots and exposed-development status; do not open official test data.
+Freeze v712-decision-margin-protocol.json before any fit. Current MODEL_SPECS=[]
+and model calls are zero. Terminal primaries retain exact failed operands,
+source/code/raw hashes, receipt clocks and every task row. Generalization scores
+remain zero. The conductor owns ops and traceability reconciliation after exit.
+
+### SCENARIO-REPORT-8234-CLI
+
+Private CLI execution and fresh-process replay SHALL publish valid and blocked
+results, reject unsafe fixture destinations, bad dates, source/schema drift,
+receipt drift and rehashed primitive or aggregate tampering. Unchanged primary
+publication, adversarial verification and strict row consistency check actual
+candidate bytes before atomic publication. Historical primary bytes stay intact.
+
+## REQ-VERIFY-8234-EXECUTION: Qualify owned V712 methods
+
+Freeze bounded commands before measurement. Preserve argv, expected/actual exits,
+full stdout/stderr hashes, clocks and process-group cleanup. Flush each phase and
+child boundary with heartbeats at most60 seconds. Run private E2E-018/021,
+consumer checks, scoped Ruff, strict mypy and requirement-linked spec coverage.
+Measure100 percent newly owned statements including real CLI children. Run the
+full Python suite once as a separate bounded repository-health diagnostic;
+external unchanged failures do not become a global pass. Failed owned checks
+zero both readiness scores and disqualify the result.
+
+REQ-REPORT-8234 implementation2026-10-07: `decision_margin_methods_8234.py`
+authenticates declared original operands, snapshots actual V712 authority and
+preserved V711 history, and retains all task and missing source slots. The thin
+runner uses qualified bounded child supervision and unchanged atomic publication.
+Requirement-linked private tests cover real CLI and replay, source and aggregate
+tampering, external blocks and failed owned checks. Ops/traceability reconciliation
+is delegated to the conductor as requested by the task's final instruction.

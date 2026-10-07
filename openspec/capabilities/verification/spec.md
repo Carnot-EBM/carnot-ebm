@@ -50752,3 +50752,37 @@ supervisor, current audit-specific replay pattern and unchanged primary publishe
 The frozen invocation manifest names only owned modules/tests, explicit consumers,
 the four private E2E suites, scoped lint/types/spec coverage and bounded repository
 health. Coverage includes actual script-path and child statements without exclusions.
+
+## REQ-VERIFY-8234: Executable decision-sensitive training controls
+
+Use native p0 before label-trained calibration. Feasible losses are5*p0 for
+accept,1-p0 for reject and.5 for escalate; accept requires original V707
+membership. With d=second-smallest minus smallest feasible loss, set
+w=1+4*exp(-d/.05), bounded[1,5], without labels. Missing p0 or features stays
+missing. This arXiv:2606.10187-inspired heuristic is not conformal inference.
+Freeze six energy/additive/logistic uniform/margin fits with original17-column
+bases, zero initialization, ridge objective, fold geometry, candidates and
+budgets. Temperature loss is unweighted; no post-fit utility patch is added.
+Select the primary on calibration cost, unweighted Brier and fixed arm order
+among four simple variants, uniform energy and frozen V711 energy_global.
+Require comparisons to both margin-trained simple heads. Freeze H1 lower97.5%
+source-bootstrap gain>.02,>=5 improvements,>=96/128 complete,>=12/class,
+10000 draws,seed7128239 and>=9500 valid draws; harm limits are Brier<=.01,
+zero extra false accepts and cost<=.02 against registered controls/baseline.
+H2 and independent retention remain the unchanged V710/V711 protocol.
+Each hypothesis spends alpha=.025. Executable methods do not imply benefit.
+
+### SCENARIO-VERIFY-8234-NUMERICS
+
+Private finite differences verify the weighted objective derivative and exact
+uniform limit. Weights are label independent, roles reject duplicates and
+reserved contamination, action permissions never widen, paired fits share
+geometry/budgets, calibration selection rejects reserved targets, and constant
+null controls do not fire benefit gates. Preserve all original assertions.
+
+REQ-VERIFY-8234 implementation2026-10-07: `decision_margin_8234.py` implements
+native margin weights, the normalized weighted objective, six matched fitting
+arms, calibration-only comparator selection and a non-firing equal-cost control.
+The V712 protocol binds original source roles and exact qualified constants.
+Private tests verify derivatives, the constant-weight uniform limit, disjoint
+roles, missing inputs, failed optimizers and all newly owned CLI statements.

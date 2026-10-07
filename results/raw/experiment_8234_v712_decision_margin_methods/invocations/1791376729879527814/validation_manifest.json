@@ -1,0 +1,263 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.verify.decision_margin_8234",
+        "carnot.reporting.decision_margin_methods_8234",
+        "carnot.reporting.decision_margin_runner_8234"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "worktree_imports",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot8234-nyybqnd3/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_decision_margin_methods_8234.py",
+        "--basetemp=/tmp/carnot8234-nyybqnd3/covered"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "changed_module_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot8234-nyybqnd3/coverage.ini"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "changed_module_coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/decision_margin_8234.py",
+        "python/carnot/reporting/decision_margin_methods_8234.py",
+        "python/carnot/reporting/decision_margin_runner_8234.py",
+        "scripts/experiments/experiment_8234_v712_decision_margin_methods.py",
+        "tests/python/test_decision_margin_methods_8234.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/decision_margin_8234.py",
+        "python/carnot/reporting/decision_margin_methods_8234.py",
+        "python/carnot/reporting/decision_margin_runner_8234.py",
+        "scripts/experiments/experiment_8234_v712_decision_margin_methods.py",
+        "tests/python/test_decision_margin_methods_8234.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/verify/decision_margin_8234.py",
+        "python/carnot/reporting/decision_margin_methods_8234.py",
+        "python/carnot/reporting/decision_margin_runner_8234.py",
+        "scripts/experiments/experiment_8234_v712_decision_margin_methods.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "changed_module_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_decision_margin_methods_8234.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "scoped_spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot8234-nyybqnd3/coverage.ini",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot8234-nyybqnd3/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "--basetemp=/tmp/carnot8234-nyybqnd3/consumers"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "consumers_E2E018",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "full_python_suite",
+      "scope": "repository_health"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_restricted_decision_audit_8210.py",
+        "--basetemp=/tmp/carnot8234-nyybqnd3/e2e021"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E021",
+      "scope": "owned"
+    }
+  ],
+  "controls": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-c",
+        "/dev/null",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/tmp/carnot8234-nyybqnd3/controls/tiny_pass.py",
+        "--basetemp=/tmp/carnot8234-nyybqnd3/controls/tiny_pass_temp"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "tiny_pass",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-c",
+        "/dev/null",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/tmp/carnot8234-nyybqnd3/controls/tiny_fail.py",
+        "--basetemp=/tmp/carnot8234-nyybqnd3/controls/tiny_fail_temp"
+      ],
+      "deadline": 180,
+      "expected": 1,
+      "name": "tiny_fail",
+      "scope": "owned"
+    }
+  ],
+  "frozen_before_measurement_ns": 1037638091147724,
+  "owned": [
+    "python/carnot/verify/decision_margin_8234.py",
+    "python/carnot/reporting/decision_margin_methods_8234.py",
+    "python/carnot/reporting/decision_margin_runner_8234.py",
+    "scripts/experiments/experiment_8234_v712_decision_margin_methods.py"
+  ],
+  "runtime": {
+    "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "free_bytes": 20534554624,
+    "mode": "0o700",
+    "path": "/tmp/carnot8234-nyybqnd3",
+    "writable": true
+  },
+  "terminal": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8234_v712_decision_margin_methods.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8234_v712_decision_margin_methods/terminal_candidate.json"
+      ],
+      "deadline": 120,
+      "expected": 0,
+      "name": "cold_replay",
+      "scope": "terminal"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8234_v712_decision_margin_methods/terminal_candidate.json"
+      ],
+      "deadline": 120,
+      "expected": 0,
+      "name": "adversarial_verify",
+      "scope": "terminal"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8234_v712_decision_margin_methods/terminal_candidate.json"
+      ],
+      "deadline": 120,
+      "expected": 0,
+      "name": "strict_rows",
+      "scope": "terminal"
+    }
+  ]
+}
