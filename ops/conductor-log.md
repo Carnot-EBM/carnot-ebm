@@ -19731,3 +19731,4 @@ code |
 | 2026-10-07 15:44 UTC | Test margin-trained decision value against equally | OK | 87 passed, 1 warning in 44.63s |
 | 2026-10-07 16:17 UTC | Run the unchanged continuous learner after complet | OK | 85 passed, 1 warning in 48.81s |
 | 2026-10-07 16:52 UTC | Measure later decision benefit and independent ret | OK | 88 passed, 1 warning in 36.19s |
+| 2026-10-07 17:25 UTC | Measure independent serial and concurrent Qwen req | OK | 107 passed, 1 warning in 29.99s |
