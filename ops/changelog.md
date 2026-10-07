@@ -21600,3 +21600,4 @@ Recorded 10 completed experiments in 25 minutes, including 1 compute-bound task.
 ### Milestone 2026.10.709 — operational retrospective
 
 Recorded 13 completed experiments in 43.9 minutes (0.7 hours), including 2 compute-bound tasks. Bounded Qwen acquisition (11.17 min) and synthesis reconciliation (10.24 min) led the listed timings. Proposed phase-level execution receipts, incremental evidence reduction for synthesis reconciliation, and interval-joined GPU telemetry. Locked artifact fields remain unchanged; GPU idle on compute-bound tasks is false, parallel-model dispatch had no data available this milestone, and estimated time savings remain 0%. Artifact: `results/operational_retro_2026_10_709.json`.
+- 2026-10-07: Bind fourteen tasks and qualify immutable historical replay (⚠️ Research Finding) — honest_verdict=complete_disqualified_original_code_bytes; results/experiment_8218_v710_contract_replay_qualification.json
