@@ -50355,3 +50355,23 @@ both primary alpha allocations, source missingness, calibration and structural
 memory effects, ARC custody and board/access obligations. Designed shared
 acquisition cannot close independent cold-inclusive deployment or NFR-01.
 The Exp8217 artifact records terminal scientific scope and current owned validity.
+
+
+## REQ-VERIFY-V710-PLAN: Test useful energy corrections and delayed retention
+
+The successor plan SHALL compare trained utility corrections with global
+calibration and equally corrected simple heads. It SHALL preserve the original
+acceptance permission, source roles, missing slots and exposure limits.
+Continuous learning SHALL use only released update labels. Future admission
+labels SHALL never fit corrections. Independent later-cost and retention
+measurements SHALL determine learning benefit. Concurrency experiments SHALL
+measure complete Qwen acquisition instead of claiming scoring-kernel speed as
+service speed. The mandated model is unsloth/Qwen3.8-27B-GGUF.
+
+### SCENARIO-VERIFY-V710-PLAN-BOUNDARIES
+
+The plan declares two scientific hypotheses with separate support and safety
+checks. Cached learning uses no_model_load. Both bounded Qwen experiments use
+model_bounded_generation. ARC receipt review grants no level-solve credit.
+Hardware review preserves separate KV260, PolarFire and GateMate obligations.
+All experiment behavior remains proposed until its spec-first implementation.

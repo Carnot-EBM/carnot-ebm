@@ -94682,3 +94682,23 @@ configuration matches. `v709_capstone.py` reuses qualified bounded supervision
 and unchanged atomic publication. The standalone Exp8217 runner records separate
 repository health. The invocation artifact owns measured validation status.
 The conductor owns ops and traceability reconciliation.
+
+
+## REQ-REPORT-V710-PLAN: Bind all fourteen successor experiments
+
+Milestone 2026.10.710 SHALL stage exactly fourteen tasks, Exp8218 through Exp8231.
+The visible design table, full JSON task contract, digest and staged YAML SHALL
+agree in order and content. Preserve the V709 design before replacement.
+The active roadmap and conductor source SHALL remain unchanged during planning.
+Every gate SHALL reference an earlier task and a required producer field.
+Every repeated scope SHALL name its actual prior verdict, changed mechanism and
+retirement condition. Plans SHALL declare actual model substrates and progress
+steps, including bounded file writes and loop heartbeats.
+
+### SCENARIO-REPORT-V710-PLAN-CONTRACT
+
+The existing parameterized contract and authority readers accept the staged
+V710 pair and a private matching activation copy. They reject count, order,
+title, prompt, gate, model, deliverable and digest mutations. Planning checks
+SHALL preserve real historical science dispositions and existing workspace edits.
+Status: planned contract only; no experiment implementation or activation.

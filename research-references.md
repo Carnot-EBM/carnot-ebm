@@ -50850,3 +50850,103 @@ documents saving coverage before the original hard exit. This is a concrete
 replacement for V708's unmeasured `sys.setprofile` callback. Qualify it using a
 real exit status and resumed pending-state equality; do not mock the crash or
 edit coverage counts. This is tooling evidence, not a learning result.
+
+## 2026-10-06 — V710 source scan, before milestone design
+
+This scan follows the completed V709 schedule. Archive entries stop at V708;
+the active task list, thirteen result files and conductor log document V709.
+Some completion timestamps fall on October 7 UTC. This scan uses the planning
+session date. Completion does not imply a positive scientific result.
+
+### Promising methods
+
+- **Scalable Utility-Aware Multiclass Calibration**, Hegazy, Jordan and
+  Dieuleveut, [arXiv:2510.25458](https://arxiv.org/abs/2510.25458), October 29,
+  2025; [AISTATS 2026 proceedings](https://proceedings.mlr.press/v300/hegazy26a.html).
+  The [full paper](https://arxiv.org/html/2510.25458v1) evaluates calibration
+  against downstream utilities. Appendix A describes post-hoc patching.
+  The [author implementation](https://github.com/mahegz/Scalable-Calibration)
+  includes calibration and patching code. Candidate adaptation: measure the
+  difference between predicted and observed accept/reject costs. Learn bounded
+  corrections on predefined public feature groups. Compare against global
+  calibration with identical data and action permissions. This is a small
+  conditional-energy experiment, not a claim to reproduce every theorem.
+  Keep Brier score and actual decision cost as separate checks.
+- **How Global Calibration Strengthens Multiaccuracy**, Casacuberta et al.,
+  [arXiv:2504.15206](https://arxiv.org/abs/2504.15206), April 21, 2025.
+  The paper studies the complementary roles of group residual accuracy and
+  global calibration. Candidate adaptation: retain a global intercept when
+  adding local energy corrections. Compare local-only, global-only and combined
+  updates. Restrict corrections to released labels and evaluate later issues.
+  Its learning assumptions do not establish guarantees on Carnot's exposed,
+  delayed and dependent development stream.
+- **Dimension-Free Decision Calibration for Nonlinear Loss Functions**,
+  [arXiv:2504.15615](https://arxiv.org/abs/2504.15615), April 22, 2025.
+  Smooth best responses are central to its stated guarantee. Carnot's hard
+  accept/reject/escalate rule does not inherit that result. Retain as a method
+  reference; do not call an empirical hard-threshold correction theorem-backed.
+- **Continual Calibration: Coverage Can Collapse Before Accuracy in Lifelong
+  LLM Fine-Tuning**, [arXiv:2604.23987](https://arxiv.org/abs/2604.23987),
+  April 27, 2026. Separate retention of uncertainty from accuracy retention.
+  Its task-specific calibration buffers motivate independent retention labels.
+  Carnot will not fine-tune the mandated generator or transfer exchangeability
+  guarantees to its chronological replay.
+- **Constraint acquisition needs better benchmarks**,
+  [arXiv:2605.26279](https://arxiv.org/abs/2605.26279), May 25, 2026.
+  MPMMine supplies structured models and domain knowledge for acquisition
+  evaluation. Deferred corpus lead: source semantics and model feasibility are
+  different targets. Check licensing, prior exposure and local availability
+  before scheduling a new dataset experiment.
+- **HalluTruthQA-4K**, [arXiv:2608.03966](https://arxiv.org/abs/2608.03966),
+  August 4, 2026, discovered through [Hugging Face Papers](https://huggingface.co/papers/2608.03966).
+  Expert annotations include error spans and verified answers in Arabic.
+  [HalluScoring 2026](https://arxiv.org/abs/2609.38355), September 29, examines
+  unseen questions and generator shift. These are later corpus leads.
+  New language, evidence retrieval and exposure checks need their own protocol;
+  downloading a dataset does not make it a suitable unexposed Carnot benchmark.
+
+### All requested primary topics checked
+
+| Topic | Source | Consequence for planning |
+|---|---|---|
+| Energy reasoning and verification | [EBT 2507.02092](https://arxiv.org/abs/2507.02092), July 2025; [ARM/EBM 2512.15605](https://arxiv.org/abs/2512.15605), revised May 25, 2026 | Keep equivalent-logistic controls; energy notation alone supplies no advantage. |
+| Neural constraints | [NSVIF 2601.17789](https://arxiv.org/abs/2601.17789); [symbolic constraint acquisition 2609.12267](https://arxiv.org/abs/2609.12267) | Symbolic consistency cannot certify the semantic truth of model extraction. |
+| Ising in ML | [Neural Ising Machines 2602.00302](https://arxiv.org/abs/2602.00302) | Learned solver dynamics are separate from the measured decision-calibration failure. |
+| Hallucination detection | HalluTruthQA-4K and HalluScoring above | Preserve independent labels and explicit shift tests; no automatic corpus migration. |
+| KAN and continual learning | [KAC 2503.21076](https://arxiv.org/abs/2503.21076); [KAN-CL 2605.12306](https://arxiv.org/abs/2605.12306) | Compare memory construction against simple calibration; do not reopen the retired unchanged importance-anchor mechanism. |
+| Energy-guided generation | [ETS 2601.21484](https://arxiv.org/abs/2601.21484) | Defer steering until the decision mechanism demonstrates safe utility. |
+| FPGA sampling | [FPGA decomposition 2602.15985](https://arxiv.org/abs/2602.15985) | Include orchestration, communication and storage in service bounds. |
+| Continual constraint learning | Utility calibration, calibrated multiaccuracy and Continual Calibration above | Test persistent released-feedback corrections and subsequent decisions, with separate retention. |
+
+### Secondary channels and access limits
+
+- **OpenReview:** searched ICLR 2026 EBM reasoning and utility calibration.
+  The [utility-calibration forum](https://openreview.net/forum?id=VkXyaqhD0P)
+  presented a browser challenge. The AISTATS proceedings and author paper were
+  accessible. An EBM [ICLR PDF](https://openreview.net/pdf?id=8ta0xgtsJK)
+  request failed; no submission status is inferred from that failure.
+- **Semantic Scholar:** attempted citation endpoints for both
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM/EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both returned browser-tool errors. Exact-ID searches did not yield an
+  authenticated citing-paper inventory. Citation coverage remains incomplete.
+- **Hugging Face:** checked current verification discovery and HalluTruthQA-4K.
+  Checked its primary arXiv record rather than relying on generated summaries.
+- **GitHub:** checked [Python Trending](https://github.com/trending/python?since=weekly)
+  and [Rust Trending](https://github.com/trending/rust?since=weekly). Returned
+  pages were crawled three weeks earlier. No current EBM trending rank is claimed.
+  The utility-calibration author repository is a concrete implementation lead.
+- **Extropic:** checked [Writing](https://extropic.ai/writing),
+  [Z1T](https://extropic.ai/writing/z1t/) and
+  [thermodynamic research agents](https://extropic.ai/writing/baby-thermo-rsi/).
+  Z1T, dated September 4, describes sparse probabilistic computation with FPGA
+  coprocessing. The article labels energy and latency figures as estimates.
+  This motivates whole-workload accounting, not a Carnot hardware claim.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  The public architecture describes latent constraint reasoning. No new
+  reproducible training recipe or local execution access was established.
+
+Local motivation is distinct from paper evidence. V709's center-growth audit
+reports worse later cost than fixed centers. Its service audit puts the scoring
+share near 0.008 percent. Group corrections and request-level acquisition work
+are candidate changes to those mechanisms; neither is an observed improvement.
