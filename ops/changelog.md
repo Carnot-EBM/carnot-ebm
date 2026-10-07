@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-07 — Operational retrospective for milestone 2026.10.709
+
+- Wrote `results/operational_retro_2026_10_709.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.709`. Authoritative disk-mtime fallback data records 13 experiments completed (2 compute-bound, 11 synthesis-only) across 43.9 total wall-time minutes (average 3 minutes per experiment).
+- Execution wall time was led by compute-bound task 'Measure bounded Qwen acquisition and complete durable service branches' (11.17 minutes), followed by synthesis tasks 'Reconcile thirteen outcomes without conflating execution and science' (10.24 minutes), 'Bind thirteen tasks and qualify authority and terminal readers' (9.39 minutes), 'Resolve actual supervisor receipt authority and inspect new outcomes' (5.65 minutes), and 'Bound available workloads and preserve separate obligations for every board' (2.86 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs; `gpu_idle_on_compute_bound_tasks` is false as no compute-bound idle anomalies or multi-model parallel dispatch requirements were present.
+- Recommended operational improvements: instrument compute-bound tasks with sub-phase timers to isolate model loading vs inference vs serialization, implement incremental outcome reduction and caching for synthesis reconciliation, capture execution-window GPU telemetry joined directly to active compute intervals, and restrict DualGPURunner to confirmed concurrent multi-model pipelines.
+
 ## 2026-10-06 — Repair Exp8210 frozen terminal replay
 
 - Bind the audit CLI through the upstream manifest adapter so standalone
@@ -21589,3 +21596,7 @@ Recorded 10 completed experiments in 25 minutes, including 1 compute-bound task.
 - 2026-10-06: Resolve actual supervisor receipt authority and inspect new outcomes (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8215_v709_arc_authoritative_frontier.json
 - 2026-10-06: Bound available workloads and preserve separate obligations for every board (⚠️ Research Finding) — honest_verdict=complete_null_hardware_workload_obligations; results/experiment_8216_v709_hardware_workload_obligations.json
 - 2026-10-07: Reconcile thirteen outcomes without conflating execution and science (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8217_v709_capstone.json
+
+### Milestone 2026.10.709 — operational retrospective
+
+Recorded 13 completed experiments in 43.9 minutes (0.7 hours), including 2 compute-bound tasks. Bounded Qwen acquisition (11.17 min) and synthesis reconciliation (10.24 min) led the listed timings. Proposed phase-level execution receipts, incremental evidence reduction for synthesis reconciliation, and interval-joined GPU telemetry. Locked artifact fields remain unchanged; GPU idle on compute-bound tasks is false, parallel-model dispatch had no data available this milestone, and estimated time savings remain 0%. Artifact: `results/operational_retro_2026_10_709.json`.

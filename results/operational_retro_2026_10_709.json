@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.709",
+  "generated_at": "2026-10-07T00:13:34Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 43.9,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure bounded Qwen acquisition and complete durable service branches",
+      "duration_minutes": 11.17,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile thirteen outcomes without conflating execution and science",
+      "duration_minutes": 10.24,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind thirteen tasks and qualify authority and terminal readers",
+      "duration_minutes": 9.39,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Resolve actual supervisor receipt authority and inspect new outcomes",
+      "duration_minutes": 5.65,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bound available workloads and preserve separate obligations for every board",
+      "duration_minutes": 2.86,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 13 experiments in 43.9 minutes (averaging 3 minutes per experiment), including 2 compute-bound tasks and 11 synthesis-only tasks. Wall time was led by bounded Qwen acquisition (11.17 minutes) and synthesis reconciliation (10.24 minutes). GPU idle on compute-bound tasks is recorded as false, with intra-task GPU utilization efficiency and parallel-model dispatch unverified by the supplied snapshot evidence.",
+  "bottlenecks_identified": [
+    "The compute-bound task 'Measure bounded Qwen acquisition and complete durable service branches' took 11.17 minutes (11 minutes in TIMING DATA) and is the longest listed experiment; without sub-phase instrumentation (model loading vs inference vs branch persistence), the execution driver cannot be isolated.",
+    "Synthesis-only tasks 'Reconcile thirteen outcomes without conflating execution and science' (10.24 minutes) and 'Bind thirteen tasks and qualify authority and terminal readers' (9.39 minutes) consumed substantial wall time without phase receipts indicating avoidable reduction or validation overhead.",
+    "Disk-mtime reconstruction provides aggregate task durations without lifecycle receipts, phase breakdowns, or dependency waiting times, limiting critical-path scheduling analysis."
+  ],
+  "improvements_suggested": [
+    "Instrument compute-bound tasks with structured sub-phase timers to isolate model weight loading, prompt evaluation, token generation, and durable service branch writes.",
+    "Implement incremental caching and source-linked outcome reduction for synthesis reconciliation and task binding to avoid re-evaluating unchanged task receipts.",
+    "Capture continuous execution-window GPU utilization telemetry tied directly to active compute intervals rather than point-in-time post-run snapshots.",
+    "Reserve DualGPURunner strictly for verified concurrent multi-model workloads; single-model GGUF inference tasks correctly utilize a single GPU, and synthesis-only 0% GPU utilization is expected behavior."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add fine-grained sub-phase telemetry to compute-bound service acquisition tasks to distinguish model loading, inference, and I/O bottlenecks.",
+    "Implement incremental evidence reduction and caching for multi-outcome synthesis reconciliation tasks.",
+    "Correlate GPU monitor timeseries telemetry directly with active task execution intervals to verify in-flight hardware utilization."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Across 13 completed experiments and 43.9 minutes of wall time, latency was dominated by single-model Qwen service acquisition (11.17 minutes) alongside large synthesis reconciliation and contract binding tasks (10.24 and 9.39 minutes). The locked indicator records gpu_idle_on_compute_bound_tasks as false, and the point-in-time monitor snapshot showing 0% utilization with 4MB allocated is unlinked to active compute intervals. Parallel-model overlap and DualGPURunner dispatch have no data available this milestone, so estimated savings remain a conservative 0%."
+}
