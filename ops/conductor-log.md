@@ -19735,3 +19735,4 @@ code |
 | 2026-10-07 17:51 UTC | Inspect new supervisor outcomes for transferable c | OK | 98 passed, 1 warning in 53.87s |
 | 2026-10-07 18:18 UTC | Bound KV260 precision effects on new decision head | OK | 86 passed, 1 warning in 37.47s |
 | 2026-10-07 19:05 UTC | Qualify PolarFire transfer validation and attempt  | OK | 92 passed, 1 warning in 47.90s |
+| 2026-10-07 19:30 UTC | Carry GateMate physical-change evidence into the n | OK | 100 passed, 1 warning in 60.21s (0:01:00) |
