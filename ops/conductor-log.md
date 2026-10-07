@@ -19712,3 +19712,4 @@ code |
 | 2026-10-07 05:28 UTC | Fit matched energy and simple corrections on the o | OK | 87 passed, 1 warning in 64.94s (0:01:04) |
 | 2026-10-07 05:54 UTC | Seal corrected predictions for every original rese | OK | 87 passed, 1 warning in 102.18s (0:01:42) |
 | 2026-10-07 06:38 UTC | Test corrected decision utility against equally ad | OK | 87 passed, 1 warning in 144.98s (0:02:24) |
+| 2026-10-07 07:46 UTC | Learn persistent group corrections from causally r | OK | 115 passed, 1 warning in 200.14s (0:03:20) |
