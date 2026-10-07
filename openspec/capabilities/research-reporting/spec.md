@@ -95672,3 +95672,19 @@ Ops and traceability reconciliation belongs to the conductor for this task.
 Private CLI fixtures cover normal blocked publication, malformed input, date
 rejection, cold replay and rehashed tampering through fresh processes.
 The frozen command receipts distinguish owned checks from repository diagnostics.
+# REQ-REPORT-8259: Qualify the existing PolarFire dispatch before one board attempt
+
+Preserve Exp8245 primary and failure bytes. Run its unchanged owned manifest,
+then current adapter tests, real CLI coverage, Ruff, strict types and spec checks.
+Freeze every command before measurement. Publish one checked Exp8259 primary
+through unchanged terminal validators. Record exact coverage counts and CPU and
+transfer clocks separately from zero scientific benefit and current model calls.
+Private E2E-015/019 and consumer checks remain required. Full Python health runs
+once with a bounded deadline; its actual failures do not establish a global pass.
+The conductor owns status, changelog and traceability reconciliation.
+
+## SCENARIO-REPORT-8259-CLI
+
+Private real CLI publication and cold replay accept qualified and blocked inputs.
+Invalid date, missing fixture and rehashed summary or primitive tampering fail.
+Current identity, empty MODEL_SPECS and zero calls survive publication and replay.

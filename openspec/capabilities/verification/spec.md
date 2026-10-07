@@ -51252,3 +51252,20 @@ When natural admitted state is absent, keep numerical fixtures separate.
 Private fixtures exercise overlapping requests, cold charging, missing clocks,
 fixed-point rounding, overflow, action changes and missing source features.
 Absent V713 science cannot erase authenticated board custody or imply benefit.
+# REQ-VERIFY-8259: Cover authenticated schema failure and dispatch qualified state
+
+Use the qualified Exp8240 natural state and existing packet and evaluator only.
+An authenticated private producer with an unsupported state schema must pass all
+earlier byte and terminal checks. Its first failed operand must be
+required_input_schema_and_hash. Cover the original exception statement without
+exclusions and retain every original test and assertion.
+Only passing owned checks permit one bounded PolarFire SSH attempt. Require
+board Python and private storage, a 60-second CPU evaluation, exact fixed-query
+hash parity and task-owned cleanup. Missing resources block by operand. SSH alone
+does not validate a workload. No FPGA acceleration, speedup or learning claim.
+
+## SCENARIO-VERIFY-8259-SCHEMA
+
+A hash-bound unsupported state raises state_version after passing every earlier
+check. Preserve its explicit schema row and unavailable state. Reject rehashed
+transport drift in a fresh process and retain all missing query dispositions.
