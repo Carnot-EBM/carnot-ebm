@@ -95315,3 +95315,29 @@ Private CLI tests exercise blocked operands, source/aggregate tampering and
 external-directory replay. Frozen commands retain owned coverage, type/lint/spec,
 consumer/E2E and terminal receipts. Repository-health checks remain separate.
 The conductor reconciles ops and traceability under the final operator rule.
+## REQ-REPORT-8240: Publish a current qualified trajectory separately from benefit
+
+Freeze current validation commands before measurement. Use no_model_load,
+empty MODEL_SPECS and zero current LLM calls. Run private E2E-020/021, consumers,
+owned unit tests,100 percent added statements including actual CLI children,
+scoped Ruff, strict mypy and requirement-linked spec coverage. Keep one bounded
+full-suite diagnostic separate. Save argv, exits, clocks and full stream hashes.
+Use flushed phase/count progress, bounded children and process-group cleanup.
+Missing operands block with exact path/hash/field/operator/expected/observed.
+Owned failures disqualify and zero readiness. Cold replay and unchanged terminal
+validators precede atomic publication. Preserve Exp8225 failed primary and timings.
+Reserve benefit/retention for Exp8241. The conductor reconciles ops and traceability.
+
+### SCENARIO-REPORT-8240-CLI
+
+Private success, missing operands, invalid date/destination, seed workers,
+genuine crash/recovery, external-directory replay and tamper cases cross the
+real CLI. Validation includes only newly owned code while qualification binds
+unchanged historical code. No generator updates or external publication occur.
+
+Implementation2026-10-07: the thin runner uses unchanged supervision and primary
+publication. All13 owned/kernel tests and40 consumer/E2E tests pass, including
+E2E-020/021. Current unit and actual child shards cover all137 added statements.
+Scoped Ruff, strict mypy and spec references pass. The single bounded full-suite
+health check is separate from readiness. Exp8225 primary bytes and timings stay
+unchanged. The conductor owns ops and traceability reconciliation.

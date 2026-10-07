@@ -50924,3 +50924,30 @@ uses10000 draws and97 complete sources (46/class0,51/class1). Two sources improv
 and seven worsen against energy_global. H1 fails the lower gain, five-source and
 historical-baseline cost safeguards. This retires only the tested margin objective
 on this exposed cohort; both generalization scores remain zero.
+## REQ-VERIFY-8240: Execute the unchanged qualified delayed learner
+
+Authenticate Exp8235 readiness, its terminal binding, complete owned coverage,
+unchanged learner bytes and the V712 execution binding before natural work.
+Preserve V710/V707 protocols, seeds101..120, all256 slots, delay20, warmup1..64,
+original hash roles, opportunities64/144, expiry144/224 and newest64 released
+update rows. Fit only update labels; commit before twelve future admission labels.
+Keep the original interpolation and safety gates. Run all five arms equally.
+Persist issue probabilities, pending releases, consumed IDs, global parameters,
+ordered patches, mixture and RNG. Require real exit73 at90/170 and exact recovery.
+Seal original64-source retention predictions without opening retention labels.
+Measure CPU times and durable bytes; distinguish portable coefficient counts
+from unmeasured Rust/FPGA execution. H2 and generalization remain unmeasured here.
+
+### SCENARIO-VERIFY-8240-QUALIFICATION
+
+Missing or changed qualification, protocol, code, log or terminal bytes block
+before fitting. Real private trajectories retain rejected candidates and missing
+slots. Rehashed state, aggregate and receipt tampering fail fresh-process replay.
+
+Implementation2026-10-07: `qualified_delayed_learning_8240.py` binds Exp8235
+and V712 before reusing the unchanged continuous learner. The current run retains
+25600 issue rows and6400 sealed retention predictions across20 seeds and five
+arms. Both real exit73 recoveries match uninterrupted state exactly. CPU timing,
+file bytes and logical lookup coefficient reads are recorded; optimizer internal
+traffic and Rust/FPGA execution remain explicitly unmeasured. Benefit is reserved
+for Exp8241 and retention labels remain unopened.
