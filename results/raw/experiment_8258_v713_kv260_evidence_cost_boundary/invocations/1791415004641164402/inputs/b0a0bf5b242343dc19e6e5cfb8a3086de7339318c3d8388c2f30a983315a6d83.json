@@ -1,0 +1,253 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.reporting.kv260_decision_boundary_8244",
+        "carnot.reporting.kv260_decision_execution_8244"
+      ],
+      "name": "worktree_imports",
+      "scope": "changed_modules",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8244-vanmga29/checks/focused",
+        "tests/python/test_kv260_decision_boundary_8244.py",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "explicit_tests",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot8244-vanmga29/checks/coverage.ini",
+        "--data-file=/tmp/carnot8244-vanmga29/checks/.coverage",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8244-vanmga29/checks/coverage",
+        "tests/python/test_kv260_decision_boundary_8244.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "explicit_tests_and_changed_modules",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot8244-vanmga29/checks/.coverage",
+        "/tmp/carnot8244-vanmga29/checks"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot8244-vanmga29/checks/.coverage",
+        "--include=*/python/carnot/reporting/kv260_decision_boundary_8244.py,*/python/carnot/reporting/kv260_decision_execution_8244.py,*/scripts/experiments/experiment_8244_v712_kv260_decision_boundary.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "changed_modules",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/kv260_decision_boundary_8244.py",
+        "python/carnot/reporting/kv260_decision_execution_8244.py",
+        "scripts/experiments/experiment_8244_v712_kv260_decision_boundary.py",
+        "tests/python/test_kv260_decision_boundary_8244.py"
+      ],
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/kv260_decision_boundary_8244.py",
+        "python/carnot/reporting/kv260_decision_execution_8244.py",
+        "scripts/experiments/experiment_8244_v712_kv260_decision_boundary.py",
+        "tests/python/test_kv260_decision_boundary_8244.py"
+      ],
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/reporting/kv260_decision_boundary_8244.py",
+        "python/carnot/reporting/kv260_decision_execution_8244.py",
+        "--strict",
+        "--follow-imports=silent"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_kv260_decision_boundary_8244.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8244-vanmga29/checks/e2e015",
+        "tests/python/test_source_boundary_7852.py",
+        "-q"
+      ],
+      "name": "e2e015",
+      "scope": "private_e2e",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8244-vanmga29/checks/e2e019",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "e2e019",
+      "scope": "private_e2e",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8244-vanmga29/checks/affected_consumers",
+        "tests/python/test_primary_publication_7928.py",
+        "-q"
+      ],
+      "name": "affected_consumers",
+      "scope": "private_e2e",
+      "timeout_s": 180
+    }
+  ],
+  "config": {
+    "approximation_deployed": false,
+    "arithmetic": "float64 CPU; signed coefficient storage only",
+    "bits": [
+      8,
+      16
+    ],
+    "rounding": "nearest ties to even",
+    "seed": 7128244,
+    "thresholds": [
+      0.1,
+      0.16666666666666666,
+      0.5
+    ]
+  },
+  "frozen_before_measurement": true,
+  "preconditions": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import pathlib,sys,shutil,pytest,coverage,ruff,mypy,numpy,scipy; p=pathlib.Path(sys.argv[1]);p.write_bytes(b\"private scratch\");assert p.read_bytes()==b\"private scratch\";print(sys.version);print(shutil.disk_usage(p.parent))",
+        "/tmp/carnot8244-vanmga29/writable"
+      ],
+      "name": "resources_and_scratch",
+      "scope": "preconditions",
+      "timeout_s": 15
+    }
+  ],
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "name": "repository_health_once",
+    "scope": "unrelated_repository_health",
+    "timeout_s": 180
+  },
+  "terminal": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8244_v712_kv260_decision_boundary.py",
+        "--cold-replay",
+        "/tmp/carnot8244-vanmga29/experiment_8244_v712_kv260_decision_boundary.json"
+      ],
+      "name": "cold_replay",
+      "scope": "terminal",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot8244-vanmga29/experiment_8244_v712_kv260_decision_boundary.json"
+      ],
+      "name": "adversarial",
+      "scope": "terminal",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot8244-vanmga29/experiment_8244_v712_kv260_decision_boundary.json"
+      ],
+      "name": "strict_rows",
+      "scope": "terminal",
+      "timeout_s": 60
+    }
+  ]
+}
