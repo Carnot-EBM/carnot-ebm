@@ -21657,3 +21657,4 @@ Recorded 2 completed experiments in 13.2 minutes (0.2 hours), with 0 compute-bou
 ### Milestone 2026.10.711 — operational retrospective
 
 Recorded 12 completed experiments in 44.0 minutes (0.7 hours), including 1 compute-bound task. PRD gap reconciliation (8.54 min) and GateMate physical blocker preservation (6.75 min) led the listed timings. Proposed sub-phase execution timers for synthesis tasks, incremental outcome reduction and caching for PRD gap reconciliation, and active-interval GPU telemetry sampling. Locked artifact fields remain unchanged; GPU idle on compute-bound tasks is false, parallel-model dispatch had no data available this milestone, and estimated time savings remain 0%. Artifact: `results/operational_retro_2026_10_711.json`.
+- 2026-10-07: Bind fourteen tasks and freeze decision-margin training controls (⚠️ Research Finding) — honest_verdict=complete_null_decision_margin_methods; results/experiment_8234_v712_decision_margin_methods.json
