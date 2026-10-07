@@ -95369,3 +95369,28 @@ E2E-020/021. Current unit and actual child shards cover all137 added statements.
 Scoped Ruff, strict mypy and spec references pass. The single bounded full-suite
 health check is separate from readiness. Exp8225 primary bytes and timings stay
 unchanged. The conductor owns ops and traceability reconciliation.
+# REQ-REPORT-8242: Publish authenticated independent request evidence
+
+Freeze owned commands before measurement. Require unit/consumer checks, private
+E2E-022 (and its E2E-015/019 dependencies), scoped Ruff, strict mypy, requirement
+coverage and 100 percent added statements including real CLI children. Run the
+full Python suite once as a separate bounded health diagnostic. Preserve command
+argv, expected/actual exits, clocks and complete stdout/stderr hashes. Current
+calls alone select live_llm_inference/model_bounded_generation with a natural
+10-second floor; zero calls retain no_model_load and planned MODEL_SPECS separately.
+Owned failures disqualify and zero readiness. Execution readiness does not require
+a speed win. Cold replay reconstructs primitives and rejects rehashed aggregate
+tampering. Unchanged primary publication and terminal validators precede atomic
+publication. The conductor owns ops/status/changelog/traceability reconciliation.
+
+## SCENARIO-REPORT-8242-CLI
+
+Private CLI publication, missing operands, invalid date/destination, external-CWD
+fresh replay and byte/aggregate tampering cross the actual thin runner. Historical
+primary bytes and honest failed validation evidence remain available.
+
+Implementation2026-10-07: the thin runner freezes14 owned commands and uses the
+unchanged bounded supervisor, terminal auditors and atomic primary publisher.
+All26 focused tests pass; unit and actual CLI children cover378/378 new statements.
+Ruff, strict mypy, spec links, consumers and private E2E-015/019/022 pass. The
+full-suite diagnostic remains separate. The conductor owns ops reconciliation.

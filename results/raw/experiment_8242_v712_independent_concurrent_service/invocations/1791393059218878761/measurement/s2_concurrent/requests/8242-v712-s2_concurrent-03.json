@@ -1,0 +1,439 @@
+{
+  "arm": "concurrent",
+  "clocks": {
+    "durability": 1054333982730004,
+    "end": 1054333981305489,
+    "first_token": 1054332628482748,
+    "issue": 1054328460728000,
+    "queue": 1054328461733118,
+    "start": 1054331300331037
+  },
+  "denominator": 1,
+  "envelope": {
+    "answer_bytes": "506c617a612044656c6920697320612063617375616c2064696e696e672072657374617572616e74206c6f636174656420617420313430205320486f7065204176652c2053616e746120426172626172612c2043412e20546869732065737461626c6973686d656e74206973206b6e6f776e20666f72206974732073616e647769636865732c2073616c6164732c20686f7420646f67732c20616e642064656c69206974656d732e204f70656e207468726f7567686f757420746865207765656b2c206974206f6666657273206f7574646f6f722073656174696e6720616e64206973207375697461626c6520666f722067726f7570732e2054686f75676820697420646f65736e2774206f666665722057692d4669206f72206d757369632c20697420646f65732070726f76696465207061726b696e6720696e207468656972206c6f7420616e642074616b652d6f7574206f7074696f6e732e20546865206f766572616c6c20627573696e65737320726174696e67207374616e647320617420342e302073746172732e20566172696f7573207265766965777320686967686c6967687420746865207175616c69747920616e64207175616e74697479206f6620746865697220666f6f642c20706172746963756c61726c79207468652064656c69207665676769652073616e64776963682c207475726b65792f6368656573652f61766f6361646f2073616e64776963682c20616e64204974616c69616e207375622e205468652073746166662c20696e636c7564696e67204c6172727920616e64204a6f6e617468616e2c2061726520617070726563696174656420666f7220746865697220667269656e646c792064656d65616e6f722e20536f6d6520637573746f6d65727320686176652065787072657373656420746865697220636f6e6365726e732061626f757420726563656e74206368616e67657320696e20746865207175616c697479206f6620666f6f6420616e6420637573746f6d657220736572766963652e20546865792072656d61696e20686f706566756c2c20686f77657665722c2074686174207468657365206172652074656d706f726172792069737375657320616e642077696c6c20726576697369742074686520706c6163652e",
+    "answer_sha256": "sha256:d0f1a0a948aa2ecad92c4dfcfb550ff48c836df4f507b164d71221aeba8b58cc",
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "condition": "original",
+    "condition_sha256": "sha256:4d60935329041e3d1b4fe23e4176dd769a0bedf3788f0c853b1da9ca5cf149a5",
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "grammar": "root ::= r0\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+      "max_tokens": 128,
+      "model": "unsloth/Qwen3.8-27B-GGUF",
+      "seed": 7118227,
+      "stream": false,
+      "temperature": 0
+    },
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "model_gguf_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "payload": {
+      "cache_prompt": false,
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "grammar": "root ::= r0\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "{\"instruction\": \"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\", \"source\": \"{\\\"address\\\":\\\"140 S Hope Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Sandwiches, Restaurants, Salad, Hot Dogs, Delis\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-17:30\\\",\\\"Monday\\\":\\\"10:0-17:30\\\",\\\"Saturday\\\":\\\"10:0-16:30\\\",\\\"Sunday\\\":\\\"11:0-16:30\\\",\\\"Thursday\\\":\\\"10:0-17:30\\\",\\\"Tuesday\\\":\\\"10:0-17:30\\\",\\\"Wednesday\\\":\\\"10:0-17:30\\\"},\\\"name\\\":\\\"Plaza Deli\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-01 00:23:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The deli veggie sandwich is really good!! I get this everyday for lunch. It's a fat sandwich! So fresh so good. Larry and Jonathon are super nice! Always a good lunch at the plaza deli. Recommend 10/10 go here!\\\"},{\\\"review_date\\\":\\\"2021-11-27 23:08:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We stopped to grab a quick bite on our road trip home.  The Plaza Deli didn't disappoint and I know first hand why all the great reviews.   The Turkey/Cheese/ Avocado sandwich and Italian sub were loaded with meats and very very good.  They carried a load of great sodas - birch beer you don't find often.  The owner couldn't be any nicer, chatting it up with us and giving our dog Frankie water and biscuits.  Highly recommend supporting this local business .\\\"},{\\\"review_date\\\":\\\"2021-10-30 15:45:45\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I've been going to Plaza Deli since I was child in the 90's. The place has always been a good place to go for a quality sandwich at a fair price. But, we have noticed lately the quality of ingredients/preparation isn't up to the same standards and the customer service has been hit or miss. I realize Covid has been hard on us all and businesses but it still feels like something changed with the vibe and quality. After a couple sub-par experiences we may try it again. We hope this is just been a hiccup.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Plaza Deli is a casual dining restaurant located at 140 S Hope Ave, Santa Barbara, CA. This establishment is known for its sandwiches, salads, hot dogs, and deli items. Open throughout the week, it offers outdoor seating and is suitable for groups. Though it doesn't offer Wi-Fi or music, it does provide parking in their lot and take-out options. The overall business rating stands at 4.0 stars. Various reviews highlight the quality and quantity of their food, particularly the deli veggie sandwich, turkey/cheese/avocado sandwich, and Italian sub. The staff, including Larry and Jonathan, are appreciated for their friendly demeanor. Some customers have expressed their concerns about recent changes in the quality of food and customer service. They remain hopeful, however, that these are temporary issues and will revisit the place.\", \"source_segments\": [{\"index\": 0, \"byte_start\": 0, \"byte_end\": 854}, {\"index\": 1, \"byte_start\": 854, \"byte_end\": 885}, {\"index\": 2, \"byte_start\": 885, \"byte_end\": 906}, {\"index\": 3, \"byte_start\": 906, \"byte_end\": 924}, {\"index\": 4, \"byte_start\": 924, \"byte_end\": 959}, {\"index\": 5, \"byte_start\": 959, \"byte_end\": 998}, {\"index\": 6, \"byte_start\": 998, \"byte_end\": 1152}, {\"index\": 7, \"byte_start\": 1152, \"byte_end\": 1236}, {\"index\": 8, \"byte_start\": 1236, \"byte_end\": 1332}, {\"index\": 9, \"byte_start\": 1332, \"byte_end\": 1403}, {\"index\": 10, \"byte_start\": 1403, \"byte_end\": 1507}, {\"index\": 11, \"byte_start\": 1507, \"byte_end\": 1691}, {\"index\": 12, \"byte_start\": 1691, \"byte_end\": 1776}, {\"index\": 13, \"byte_start\": 1776, \"byte_end\": 1921}, {\"index\": 14, \"byte_start\": 1921, \"byte_end\": 2045}, {\"index\": 15, \"byte_start\": 2045, \"byte_end\": 2101}, {\"index\": 16, \"byte_start\": 2101, \"byte_end\": 2153}], \"answer_sentence_indices\": [0], \"answer_offsets\": [{\"index\": 0, \"byte_start\": 0, \"byte_end\": 87}]}",
+          "role": "user"
+        }
+      ],
+      "model": "unsloth/Qwen3.8-27B-GGUF",
+      "seed": 7118227,
+      "stream": false,
+      "temperature": 0
+    },
+    "prompt_bytes": "5b7b22636f6e74656e74223a20227b5c22696e737472756374696f6e5c223a205c22466f7220656163682072657175657374656420616e737765722073656e74656e636520656d697420696e6465787c452f432f427c705f756e737570706f7274656420776974682074776f20646563696d616c737c5b7a65726f20746f2074776f20736f75726365207365676d656e7420696e64696365735d2e204f6e65207265636f726420706572206c696e6520696e20696e707574206f726465723b206e6f206f7468657220746578742e2052656c6174696f6e7320616e6420616464726573736573206172652070726564696374696f6e732e5c222c205c22736f757263655c223a205c227b5c5c5c22616464726573735c5c5c223a5c5c5c22313430205320486f7065204176655c5c5c222c5c5c5c22617474726962757465735c5c5c223a7b5c5c5c22416d6269656e63655c5c5c223a7b5c5c5c2263617375616c5c5c5c223a747275652c5c5c5c22636c617373795c5c5c223a66616c73652c5c5c5c2264697665795c5c5c223a66616c73652c5c5c5c22686970737465725c5c5c223a66616c73652c5c5c5c22696e74696d6174655c5c5c223a66616c73652c5c5c5c22726f6d616e7469635c5c5c223a66616c73652c5c5c5c22746f7572697374795c5c5c223a66616c73652c5c5c5c227472656e64795c5c5c223a66616c73652c5c5c5c2275707363616c655c5c5c223a66616c73657d2c5c5c5c22427573696e6573735061726b696e675c5c5c223a7b5c5c5c226761726167655c5c5c223a66616c73652c5c5c5c226c6f745c5c5c223a747275652c5c5c5c227374726565745c5c5c223a66616c73652c5c5c5c2276616c65745c5c5c223a66616c73652c5c5c5c2276616c6964617465645c5c5c223a66616c73657d2c5c5c5c224d757369635c5c5c223a6e756c6c2c5c5c5c224f7574646f6f7253656174696e675c5c5c223a747275652c5c5c5c2252657374617572616e7473476f6f64466f7247726f7570735c5c5c223a747275652c5c5c5c2252657374617572616e74735265736572766174696f6e735c5c5c223a66616c73652c5c5c5c2252657374617572616e747354616b654f75745c5c5c223a747275652c5c5c5c22576946695c5c5c223a5c5c5c226e6f5c5c5c227d2c5c5c5c22627573696e6573735f73746172735c5c5c223a342e302c5c5c5c2263617465676f726965735c5c5c223a5c5c5c2253616e647769636865732c2052657374617572616e74732c2053616c61642c20486f7420446f67732c2044656c69735c5c5c222c5c5c5c22636974795c5c5c223a5c5c5c2253616e746120426172626172615c5c5c222c5c5c5c22686f7572735c5c5c223a7b5c5c5c224672696461795c5c5c223a5c5c5c2231303a302d31373a33305c5c5c222c5c5c5c224d6f6e6461795c5c5c223a5c5c5c2231303a302d31373a33305c5c5c222c5c5c5c2253617475726461795c5c5c223a5c5c5c2231303a302d31363a33305c5c5c222c5c5c5c2253756e6461795c5c5c223a5c5c5c2231313a302d31363a33305c5c5c222c5c5c5c2254687572736461795c5c5c223a5c5c5c2231303a302d31373a33305c5c5c222c5c5c5c22547565736461795c5c5c223a5c5c5c2231303a302d31373a33305c5c5c222c5c5c5c225765646e65736461795c5c5c223a5c5c5c2231303a302d31373a33305c5c5c227d2c5c5c5c226e616d655c5c5c223a5c5c5c22506c617a612044656c695c5c5c222c5c5c5c227265766965775f696e666f5c5c5c223a5b7b5c5c5c227265766965775f646174655c5c5c223a5c5c5c22323032312d31322d30312030303a32333a34395c5c5c222c5c5c5c227265766965775f73746172735c5c5c223a352e302c5c5c5c227265766965775f746578745c5c5c223a5c5c5c225468652064656c69207665676769652073616e6477696368206973207265616c6c7920676f6f642121204920676574207468697320657665727964617920666f72206c756e63682e20497427732061206661742073616e64776963682120536f20667265736820736f20676f6f642e204c6172727920616e64204a6f6e6174686f6e20617265207375706572206e6963652120416c77617973206120676f6f64206c756e63682061742074686520706c617a612064656c692e205265636f6d6d656e642031302f313020676f2068657265215c5c5c227d2c7b5c5c5c227265766965775f646174655c5c5c223a5c5c5c22323032312d31312d32372032333a30383a33315c5c5c222c5c5c5c227265766965775f73746172735c5c5c223a352e302c5c5c5c227265766965775f746578745c5c5c223a5c5c5c2257652073746f7070656420746f2067726162206120717569636b2062697465206f6e206f757220726f6164207472697020686f6d652e202054686520506c617a612044656c69206469646e2774206469736170706f696e7420616e642049206b6e6f772066697273742068616e642077687920616c6c2074686520677265617420726576696577732e202020546865205475726b65792f4368656573652f2041766f6361646f2073616e647769636820616e64204974616c69616e207375622077657265206c6f616465642077697468206d6561747320616e642076657279207665727920676f6f642e20205468657920636172726965642061206c6f6164206f6620677265617420736f646173202d206269726368206265657220796f7520646f6e27742066696e64206f6674656e2e2020546865206f776e657220636f756c646e277420626520616e79206e696365722c206368617474696e67206974207570207769746820757320616e6420676976696e67206f757220646f67204672616e6b696520776174657220616e642062697363756974732e2020486967686c79207265636f6d6d656e6420737570706f7274696e672074686973206c6f63616c20627573696e657373202e5c5c5c227d2c7b5c5c5c227265766965775f646174655c5c5c223a5c5c5c22323032312d31302d33302031353a34353a34355c5c5c222c5c5c5c227265766965775f73746172735c5c5c223a332e302c5c5c5c227265766965775f746578745c5c5c223a5c5c5c2249277665206265656e20676f696e6720746f20506c617a612044656c692073696e6365204920776173206368696c6420696e2074686520393027732e2054686520706c6163652068617320616c77617973206265656e206120676f6f6420706c61636520746f20676f20666f722061207175616c6974792073616e6477696368206174206120666169722070726963652e204275742c2077652068617665206e6f7469636564206c6174656c7920746865207175616c697479206f6620696e6772656469656e74732f7072657061726174696f6e2069736e277420757020746f207468652073616d65207374616e646172647320616e642074686520637573746f6d6572207365727669636520686173206265656e20686974206f72206d6973732e2049207265616c697a6520436f76696420686173206265656e2068617264206f6e20757320616c6c20616e6420627573696e657373657320627574206974207374696c6c206665656c73206c696b6520736f6d657468696e67206368616e676564207769746820746865207669626520616e64207175616c6974792e204166746572206120636f75706c65207375622d70617220657870657269656e636573207765206d61792074727920697420616761696e2e20576520686f70652074686973206973206a757374206265656e2061206869636375702e5c5c5c227d5d2c5c5c5c2273746174655c5c5c223a5c5c5c2243415c5c5c227d5c222c205c22616e737765725c223a205c22506c617a612044656c6920697320612063617375616c2064696e696e672072657374617572616e74206c6f636174656420617420313430205320486f7065204176652c2053616e746120426172626172612c2043412e20546869732065737461626c6973686d656e74206973206b6e6f776e20666f72206974732073616e647769636865732c2073616c6164732c20686f7420646f67732c20616e642064656c69206974656d732e204f70656e207468726f7567686f757420746865207765656b2c206974206f6666657273206f7574646f6f722073656174696e6720616e64206973207375697461626c6520666f722067726f7570732e2054686f75676820697420646f65736e2774206f666665722057692d4669206f72206d757369632c20697420646f65732070726f76696465207061726b696e6720696e207468656972206c6f7420616e642074616b652d6f7574206f7074696f6e732e20546865206f766572616c6c20627573696e65737320726174696e67207374616e647320617420342e302073746172732e20566172696f7573207265766965777320686967686c6967687420746865207175616c69747920616e64207175616e74697479206f6620746865697220666f6f642c20706172746963756c61726c79207468652064656c69207665676769652073616e64776963682c207475726b65792f6368656573652f61766f6361646f2073616e64776963682c20616e64204974616c69616e207375622e205468652073746166662c20696e636c7564696e67204c6172727920616e64204a6f6e617468616e2c2061726520617070726563696174656420666f7220746865697220667269656e646c792064656d65616e6f722e20536f6d6520637573746f6d65727320686176652065787072657373656420746865697220636f6e6365726e732061626f757420726563656e74206368616e67657320696e20746865207175616c697479206f6620666f6f6420616e6420637573746f6d657220736572766963652e20546865792072656d61696e20686f706566756c2c20686f77657665722c2074686174207468657365206172652074656d706f726172792069737375657320616e642077696c6c20726576697369742074686520706c6163652e5c222c205c22736f757263655f7365676d656e74735c223a205b7b5c22696e6465785c223a20302c205c22627974655f73746172745c223a20302c205c22627974655f656e645c223a203835347d2c207b5c22696e6465785c223a20312c205c22627974655f73746172745c223a203835342c205c22627974655f656e645c223a203838357d2c207b5c22696e6465785c223a20322c205c22627974655f73746172745c223a203838352c205c22627974655f656e645c223a203930367d2c207b5c22696e6465785c223a20332c205c22627974655f73746172745c223a203930362c205c22627974655f656e645c223a203932347d2c207b5c22696e6465785c223a20342c205c22627974655f73746172745c223a203932342c205c22627974655f656e645c223a203935397d2c207b5c22696e6465785c223a20352c205c22627974655f73746172745c223a203935392c205c22627974655f656e645c223a203939387d2c207b5c22696e6465785c223a20362c205c22627974655f73746172745c223a203939382c205c22627974655f656e645c223a20313135327d2c207b5c22696e6465785c223a20372c205c22627974655f73746172745c223a20313135322c205c22627974655f656e645c223a20313233367d2c207b5c22696e6465785c223a20382c205c22627974655f73746172745c223a20313233362c205c22627974655f656e645c223a20313333327d2c207b5c22696e6465785c223a20392c205c22627974655f73746172745c223a20313333322c205c22627974655f656e645c223a20313430337d2c207b5c22696e6465785c223a2031302c205c22627974655f73746172745c223a20313430332c205c22627974655f656e645c223a20313530377d2c207b5c22696e6465785c223a2031312c205c22627974655f73746172745c223a20313530372c205c22627974655f656e645c223a20313639317d2c207b5c22696e6465785c223a2031322c205c22627974655f73746172745c223a20313639312c205c22627974655f656e645c223a20313737367d2c207b5c22696e6465785c223a2031332c205c22627974655f73746172745c223a20313737362c205c22627974655f656e645c223a20313932317d2c207b5c22696e6465785c223a2031342c205c22627974655f73746172745c223a20313932312c205c22627974655f656e645c223a20323034357d2c207b5c22696e6465785c223a2031352c205c22627974655f73746172745c223a20323034352c205c22627974655f656e645c223a20323130317d2c207b5c22696e6465785c223a2031362c205c22627974655f73746172745c223a20323130312c205c22627974655f656e645c223a20323135337d5d2c205c22616e737765725f73656e74656e63655f696e64696365735c223a205b305d2c205c22616e737765725f6f6666736574735c223a205b7b5c22696e6465785c223a20302c205c22627974655f73746172745c223a20302c205c22627974655f656e645c223a2038377d5d7d222c2022726f6c65223a202275736572227d5d",
+    "prompt_encoding": "UTF-8 canonical wire messages; template bound separately",
+    "request_schema_version": "carnot.prospective_request.v1",
+    "runtime_identity": {
+      "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+      "fixture": false,
+      "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "reasoning_interface": {
+        "enable_thinking": false
+      },
+      "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "tokenizer_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+    },
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "source_bytes": "7b2261646472657373223a22313430205320486f706520417665222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a747275652c22636c61737379223a66616c73652c226469766579223a66616c73652c2268697073746572223a66616c73652c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a66616c73652c227472656e6479223a66616c73652c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a7b22676172616765223a66616c73652c226c6f74223a747275652c22737472656574223a66616c73652c2276616c6574223a66616c73652c2276616c696461746564223a66616c73657d2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a747275652c2252657374617572616e7473476f6f64466f7247726f757073223a747275652c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a747275652c2257694669223a226e6f227d2c22627573696e6573735f7374617273223a342e302c2263617465676f72696573223a2253616e647769636865732c2052657374617572616e74732c2053616c61642c20486f7420446f67732c2044656c6973222c2263697479223a2253616e74612042617262617261222c22686f757273223a7b22467269646179223a2231303a302d31373a3330222c224d6f6e646179223a2231303a302d31373a3330222c225361747572646179223a2231303a302d31363a3330222c2253756e646179223a2231313a302d31363a3330222c225468757273646179223a2231303a302d31373a3330222c2254756573646179223a2231303a302d31373a3330222c225765646e6573646179223a2231303a302d31373a3330227d2c226e616d65223a22506c617a612044656c69222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323032312d31322d30312030303a32333a3439222c227265766965775f7374617273223a352e302c227265766965775f74657874223a225468652064656c69207665676769652073616e6477696368206973207265616c6c7920676f6f642121204920676574207468697320657665727964617920666f72206c756e63682e20497427732061206661742073616e64776963682120536f20667265736820736f20676f6f642e204c6172727920616e64204a6f6e6174686f6e20617265207375706572206e6963652120416c77617973206120676f6f64206c756e63682061742074686520706c617a612064656c692e205265636f6d6d656e642031302f313020676f206865726521227d2c7b227265766965775f64617465223a22323032312d31312d32372032333a30383a3331222c227265766965775f7374617273223a352e302c227265766965775f74657874223a2257652073746f7070656420746f2067726162206120717569636b2062697465206f6e206f757220726f6164207472697020686f6d652e202054686520506c617a612044656c69206469646e2774206469736170706f696e7420616e642049206b6e6f772066697273742068616e642077687920616c6c2074686520677265617420726576696577732e202020546865205475726b65792f4368656573652f2041766f6361646f2073616e647769636820616e64204974616c69616e207375622077657265206c6f616465642077697468206d6561747320616e642076657279207665727920676f6f642e20205468657920636172726965642061206c6f6164206f6620677265617420736f646173202d206269726368206265657220796f7520646f6e27742066696e64206f6674656e2e2020546865206f776e657220636f756c646e277420626520616e79206e696365722c206368617474696e67206974207570207769746820757320616e6420676976696e67206f757220646f67204672616e6b696520776174657220616e642062697363756974732e2020486967686c79207265636f6d6d656e6420737570706f7274696e672074686973206c6f63616c20627573696e657373202e227d2c7b227265766965775f64617465223a22323032312d31302d33302031353a34353a3435222c227265766965775f7374617273223a332e302c227265766965775f74657874223a2249277665206265656e20676f696e6720746f20506c617a612044656c692073696e6365204920776173206368696c6420696e2074686520393027732e2054686520706c6163652068617320616c77617973206265656e206120676f6f6420706c61636520746f20676f20666f722061207175616c6974792073616e6477696368206174206120666169722070726963652e204275742c2077652068617665206e6f7469636564206c6174656c7920746865207175616c697479206f6620696e6772656469656e74732f7072657061726174696f6e2069736e277420757020746f207468652073616d65207374616e646172647320616e642074686520637573746f6d6572207365727669636520686173206265656e20686974206f72206d6973732e2049207265616c697a6520436f76696420686173206265656e2068617264206f6e20757320616c6c20616e6420627573696e657373657320627574206974207374696c6c206665656c73206c696b6520736f6d657468696e67206368616e676564207769746820746865207669626520616e64207175616c6974792e204166746572206120636f75706c65207375622d70617220657870657269656e636573207765206d61792074727920697420616761696e2e20576520686f70652074686973206973206a757374206265656e2061206869636375702e227d5d2c227374617465223a224341227d",
+    "source_cluster_id": "sha256:0f09117d97a39e2c66c7f9d26ed4d0d33f110b4d28dad44065b3562eba1aecb8",
+    "source_sha256": "sha256:ed57d0664c2cf3298c32a40fbd0553d9cfea27e9943837b64fde0901a120f3cc"
+  },
+  "metric": "prospective_request_scheduled",
+  "numerator": 1,
+  "original_slot": 34,
+  "request_id": "8242-v712-s2_concurrent-03",
+  "response_id": null,
+  "result": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "0|C|1.00|[]"
+        }
+      }
+    ],
+    "first_token_monotonic_ns": 1054332628482748,
+    "generation_end_ns": 1054333767024231,
+    "id": "sha256:6627ad4e256955bdd06cd6668e0a1b786a7cd341cec5fc85081b0d638b2bae84",
+    "id_slot": 1,
+    "native_events": [
+      {
+        "content": "0",
+        "id_slot": -1,
+        "index": 0,
+        "stop": false,
+        "tokens": [
+          15
+        ],
+        "tokens_evaluated": 1357,
+        "tokens_predicted": 1
+      },
+      {
+        "content": "|",
+        "id_slot": -1,
+        "index": 0,
+        "stop": false,
+        "tokens": [
+          91
+        ],
+        "tokens_evaluated": 1357,
+        "tokens_predicted": 2
+      },
+      {
+        "content": "C",
+        "id_slot": -1,
+        "index": 0,
+        "stop": false,
+        "tokens": [
+          34
+        ],
+        "tokens_evaluated": 1357,
+        "tokens_predicted": 3
+      },
+      {
+        "content": "|",
+        "id_slot": -1,
+        "index": 0,
+        "stop": false,
+        "tokens": [
+          91
+        ],
+        "tokens_evaluated": 1357,
+        "tokens_predicted": 4
+      },
+      {
+        "content": "1",
+        "id_slot": -1,
+        "index": 0,
+        "stop": false,
+        "tokens": [
+          16
+        ],
+        "tokens_evaluated": 1357,
+        "tokens_predicted": 5
+      },
+      {
+        "content": ".",
+        "id_slot": -1,
+        "index": 0,
+        "stop": false,
+        "tokens": [
+          13
+        ],
+        "tokens_evaluated": 1357,
+        "tokens_predicted": 6
+      },
+      {
+        "content": "0",
+        "id_slot": -1,
+        "index": 0,
+        "stop": false,
+        "tokens": [
+          15
+        ],
+        "tokens_evaluated": 1357,
+        "tokens_predicted": 7
+      },
+      {
+        "content": "0",
+        "id_slot": -1,
+        "index": 0,
+        "stop": false,
+        "tokens": [
+          15
+        ],
+        "tokens_evaluated": 1357,
+        "tokens_predicted": 8
+      },
+      {
+        "content": "|",
+        "id_slot": -1,
+        "index": 0,
+        "stop": false,
+        "tokens": [
+          91
+        ],
+        "tokens_evaluated": 1357,
+        "tokens_predicted": 9
+      },
+      {
+        "content": "[]",
+        "id_slot": -1,
+        "index": 0,
+        "stop": false,
+        "tokens": [
+          1249
+        ],
+        "tokens_evaluated": 1357,
+        "tokens_predicted": 10
+      },
+      {
+        "content": "",
+        "id_slot": -1,
+        "index": 0,
+        "stop": false,
+        "tokens": [
+          248046
+        ],
+        "tokens_evaluated": 1357,
+        "tokens_predicted": 11
+      },
+      {
+        "content": "",
+        "generation_settings": {
+          "backend_sampling": false,
+          "chat_format": "Content-only",
+          "dry_allowed_length": 2,
+          "dry_base": 1.75,
+          "dry_multiplier": 0.0,
+          "dry_penalty_last_n": 4096,
+          "dry_sequence_breakers": [
+            "\n",
+            ":",
+            "\"",
+            "*"
+          ],
+          "dynatemp_exponent": 1.0,
+          "dynatemp_range": 0.0,
+          "frequency_penalty": 0.0,
+          "generation_prompt": "",
+          "grammar": "root ::= r0\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+          "grammar_lazy": false,
+          "grammar_triggers": [],
+          "ignore_eos": false,
+          "logit_bias": [],
+          "lora": [],
+          "max_tokens": 128,
+          "min_keep": 0,
+          "min_p": 0.05000000074505806,
+          "mirostat": 0,
+          "mirostat_eta": 0.10000000149011612,
+          "mirostat_tau": 5.0,
+          "n_discard": 0,
+          "n_keep": 0,
+          "n_predict": 128,
+          "n_probs": 0,
+          "post_sampling_probs": false,
+          "presence_penalty": 0.0,
+          "preserved_tokens": [],
+          "reasoning_format": "deepseek",
+          "reasoning_in_content": false,
+          "repeat_last_n": 64,
+          "repeat_penalty": 1.0,
+          "samplers": [
+            "penalties",
+            "dry",
+            "top_n_sigma",
+            "top_k",
+            "typ_p",
+            "top_p",
+            "min_p",
+            "xtc",
+            "temperature"
+          ],
+          "seed": 7118227,
+          "speculative.types": "none",
+          "stop": [],
+          "stream": true,
+          "temperature": 0.0,
+          "timings_per_token": false,
+          "top_k": 20,
+          "top_n_sigma": -1.0,
+          "top_p": 0.949999988079071,
+          "typical_p": 1.0,
+          "xtc_probability": 0.0,
+          "xtc_threshold": 0.10000000149011612
+        },
+        "has_new_line": false,
+        "id_slot": 1,
+        "index": 0,
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "prompt": "<|im_start|>user\n{\"instruction\": \"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\", \"source\": \"{\\\"address\\\":\\\"140 S Hope Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Sandwiches, Restaurants, Salad, Hot Dogs, Delis\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-17:30\\\",\\\"Monday\\\":\\\"10:0-17:30\\\",\\\"Saturday\\\":\\\"10:0-16:30\\\",\\\"Sunday\\\":\\\"11:0-16:30\\\",\\\"Thursday\\\":\\\"10:0-17:30\\\",\\\"Tuesday\\\":\\\"10:0-17:30\\\",\\\"Wednesday\\\":\\\"10:0-17:30\\\"},\\\"name\\\":\\\"Plaza Deli\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-01 00:23:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The deli veggie sandwich is really good!! I get this everyday for lunch. It's a fat sandwich! So fresh so good. Larry and Jonathon are super nice! Always a good lunch at the plaza deli. Recommend 10/10 go here!\\\"},{\\\"review_date\\\":\\\"2021-11-27 23:08:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We stopped to grab a quick bite on our road trip home.  The Plaza Deli didn't disappoint and I know first hand why all the great reviews.   The Turkey/Cheese/ Avocado sandwich and Italian sub were loaded with meats and very very good.  They carried a load of great sodas - birch beer you don't find often.  The owner couldn't be any nicer, chatting it up with us and giving our dog Frankie water and biscuits.  Highly recommend supporting this local business .\\\"},{\\\"review_date\\\":\\\"2021-10-30 15:45:45\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I've been going to Plaza Deli since I was child in the 90's. The place has always been a good place to go for a quality sandwich at a fair price. But, we have noticed lately the quality of ingredients/preparation isn't up to the same standards and the customer service has been hit or miss. I realize Covid has been hard on us all and businesses but it still feels like something changed with the vibe and quality. After a couple sub-par experiences we may try it again. We hope this is just been a hiccup.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Plaza Deli is a casual dining restaurant located at 140 S Hope Ave, Santa Barbara, CA. This establishment is known for its sandwiches, salads, hot dogs, and deli items. Open throughout the week, it offers outdoor seating and is suitable for groups. Though it doesn't offer Wi-Fi or music, it does provide parking in their lot and take-out options. The overall business rating stands at 4.0 stars. Various reviews highlight the quality and quantity of their food, particularly the deli veggie sandwich, turkey/cheese/avocado sandwich, and Italian sub. The staff, including Larry and Jonathan, are appreciated for their friendly demeanor. Some customers have expressed their concerns about recent changes in the quality of food and customer service. They remain hopeful, however, that these are temporary issues and will revisit the place.\", \"source_segments\": [{\"index\": 0, \"byte_start\": 0, \"byte_end\": 854}, {\"index\": 1, \"byte_start\": 854, \"byte_end\": 885}, {\"index\": 2, \"byte_start\": 885, \"byte_end\": 906}, {\"index\": 3, \"byte_start\": 906, \"byte_end\": 924}, {\"index\": 4, \"byte_start\": 924, \"byte_end\": 959}, {\"index\": 5, \"byte_start\": 959, \"byte_end\": 998}, {\"index\": 6, \"byte_start\": 998, \"byte_end\": 1152}, {\"index\": 7, \"byte_start\": 1152, \"byte_end\": 1236}, {\"index\": 8, \"byte_start\": 1236, \"byte_end\": 1332}, {\"index\": 9, \"byte_start\": 1332, \"byte_end\": 1403}, {\"index\": 10, \"byte_start\": 1403, \"byte_end\": 1507}, {\"index\": 11, \"byte_start\": 1507, \"byte_end\": 1691}, {\"index\": 12, \"byte_start\": 1691, \"byte_end\": 1776}, {\"index\": 13, \"byte_start\": 1776, \"byte_end\": 1921}, {\"index\": 14, \"byte_start\": 1921, \"byte_end\": 2045}, {\"index\": 15, \"byte_start\": 2045, \"byte_end\": 2101}, {\"index\": 16, \"byte_start\": 2101, \"byte_end\": 2153}], \"answer_sentence_indices\": [0], \"answer_offsets\": [{\"index\": 0, \"byte_start\": 0, \"byte_end\": 87}]}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+        "stop": true,
+        "stop_type": "eos",
+        "stopping_word": "",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 1137.689,
+          "predicted_n": 11,
+          "predicted_per_second": 9.668723174786782,
+          "predicted_per_token_ms": 103.42627272727273,
+          "prompt_ms": 1293.166,
+          "prompt_n": 1357,
+          "prompt_per_second": 1049.3625721678422,
+          "prompt_per_token_ms": 0.9529594694178334
+        },
+        "tokens": [],
+        "tokens_cached": 1367,
+        "tokens_evaluated": 1357,
+        "tokens_predicted": 11,
+        "truncated": false
+      }
+    ],
+    "native_response_id": null,
+    "rendered_prompt_sha256": "sha256:0513220d2ebff9b2367cddc857b31f9143bd9973646dc1c97be100fdc94c6e4e",
+    "service": {
+      "action": "reject",
+      "arithmetic_end_ns": 1054333842017034,
+      "arithmetic_start_ns": 1054333841314153,
+      "arm": "native_atomic_batch",
+      "arrival_ns": 1054333768079193,
+      "batch_start_ns": 1054333841267035,
+      "boundary_crossing_end_ns": 1054333842017034,
+      "boundary_crossing_start_ns": 1054333841314153,
+      "commit_end_ns": 1054333980587761,
+      "commit_start_ns": 1054333842096723,
+      "conversion_end_ns": 1054333838397156,
+      "end_ns": 1054333981277406,
+      "latency_ns": 212516874,
+      "numerator": 212516874,
+      "pending_end_ns": 1054333840867344,
+      "probability": 0.9999990455342844,
+      "readout_start_ns": 1054333980729457,
+      "request": {
+        "cache_prompt": false,
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= r0\nr0 ::= \"0|\" relation \"|\" probability \"|\" refs\nrelation ::= \"E\" | \"C\" | \"B\"\nprobability ::= \"0.\" [0-9] [0-9] | \"1.00\"\nrefs ::= \"[]\" | \"[\" source \"]\" | \"[\" source \",\" source \"]\"\nsource ::= \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" | \"10\" | \"11\" | \"12\" | \"13\" | \"14\" | \"15\" | \"16\"\n",
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "{\"instruction\": \"For each requested answer sentence emit index|E/C/B|p_unsupported with two decimals|[zero to two source segment indices]. One record per line in input order; no other text. Relations and addresses are predictions.\", \"source\": \"{\\\"address\\\":\\\"140 S Hope Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Sandwiches, Restaurants, Salad, Hot Dogs, Delis\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-17:30\\\",\\\"Monday\\\":\\\"10:0-17:30\\\",\\\"Saturday\\\":\\\"10:0-16:30\\\",\\\"Sunday\\\":\\\"11:0-16:30\\\",\\\"Thursday\\\":\\\"10:0-17:30\\\",\\\"Tuesday\\\":\\\"10:0-17:30\\\",\\\"Wednesday\\\":\\\"10:0-17:30\\\"},\\\"name\\\":\\\"Plaza Deli\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-01 00:23:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The deli veggie sandwich is really good!! I get this everyday for lunch. It's a fat sandwich! So fresh so good. Larry and Jonathon are super nice! Always a good lunch at the plaza deli. Recommend 10/10 go here!\\\"},{\\\"review_date\\\":\\\"2021-11-27 23:08:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We stopped to grab a quick bite on our road trip home.  The Plaza Deli didn't disappoint and I know first hand why all the great reviews.   The Turkey/Cheese/ Avocado sandwich and Italian sub were loaded with meats and very very good.  They carried a load of great sodas - birch beer you don't find often.  The owner couldn't be any nicer, chatting it up with us and giving our dog Frankie water and biscuits.  Highly recommend supporting this local business .\\\"},{\\\"review_date\\\":\\\"2021-10-30 15:45:45\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I've been going to Plaza Deli since I was child in the 90's. The place has always been a good place to go for a quality sandwich at a fair price. But, we have noticed lately the quality of ingredients/preparation isn't up to the same standards and the customer service has been hit or miss. I realize Covid has been hard on us all and businesses but it still feels like something changed with the vibe and quality. After a couple sub-par experiences we may try it again. We hope this is just been a hiccup.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"answer\": \"Plaza Deli is a casual dining restaurant located at 140 S Hope Ave, Santa Barbara, CA. This establishment is known for its sandwiches, salads, hot dogs, and deli items. Open throughout the week, it offers outdoor seating and is suitable for groups. Though it doesn't offer Wi-Fi or music, it does provide parking in their lot and take-out options. The overall business rating stands at 4.0 stars. Various reviews highlight the quality and quantity of their food, particularly the deli veggie sandwich, turkey/cheese/avocado sandwich, and Italian sub. The staff, including Larry and Jonathan, are appreciated for their friendly demeanor. Some customers have expressed their concerns about recent changes in the quality of food and customer service. They remain hopeful, however, that these are temporary issues and will revisit the place.\", \"source_segments\": [{\"index\": 0, \"byte_start\": 0, \"byte_end\": 854}, {\"index\": 1, \"byte_start\": 854, \"byte_end\": 885}, {\"index\": 2, \"byte_start\": 885, \"byte_end\": 906}, {\"index\": 3, \"byte_start\": 906, \"byte_end\": 924}, {\"index\": 4, \"byte_start\": 924, \"byte_end\": 959}, {\"index\": 5, \"byte_start\": 959, \"byte_end\": 998}, {\"index\": 6, \"byte_start\": 998, \"byte_end\": 1152}, {\"index\": 7, \"byte_start\": 1152, \"byte_end\": 1236}, {\"index\": 8, \"byte_start\": 1236, \"byte_end\": 1332}, {\"index\": 9, \"byte_start\": 1332, \"byte_end\": 1403}, {\"index\": 10, \"byte_start\": 1403, \"byte_end\": 1507}, {\"index\": 11, \"byte_start\": 1507, \"byte_end\": 1691}, {\"index\": 12, \"byte_start\": 1691, \"byte_end\": 1776}, {\"index\": 13, \"byte_start\": 1776, \"byte_end\": 1921}, {\"index\": 14, \"byte_start\": 1921, \"byte_end\": 2045}, {\"index\": 15, \"byte_start\": 2045, \"byte_end\": 2101}, {\"index\": 16, \"byte_start\": 2101, \"byte_end\": 2153}], \"answer_sentence_indices\": [0], \"answer_offsets\": [{\"index\": 0, \"byte_start\": 0, \"byte_end\": 87}]}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 7118227,
+        "stream": false,
+        "temperature": 0
+      },
+      "response_ns": 1054333980596067,
+      "serialization_end_ns": 1054333842096062,
+      "serialization_start_ns": 1054333842061267,
+      "source_cluster_id": "sha256:0f09117d97a39e2c66c7f9d26ed4d0d33f110b4d28dad44065b3562eba1aecb8",
+      "stages": {
+        "arm": "native_atomic_batch",
+        "commit_fsync_ns": 138491038,
+        "conversion_ns": 70317963,
+        "other_host_ns": 633399,
+        "pending_state_ns": 2470188,
+        "readout_ns": 547949,
+        "request_id": "8242-v712-s2_concurrent-03",
+        "scoring_ns": 702881,
+        "serialization_ns": 34795
+      },
+      "start_ns": 1054333768079193,
+      "state": {
+        "causal_hash": "sha256:12b56f6c32645675beab4227681cccae8b6e7c79f9dd31af03578f08ae4eb247",
+        "head_hash": "sha256:7928c7a654a03ed3a0d3cd0d71b40de6e2d13b041c737be6690e7c876f608014",
+        "records": [
+          {
+            "action": "reject",
+            "head_hash": "sha256:7928c7a654a03ed3a0d3cd0d71b40de6e2d13b041c737be6690e7c876f608014",
+            "input_hash": "sha256:4db815b1e5f4fd806e361eaf7caacc2ab3c5ed1dad6e775785779de7c83f7a17",
+            "previous_hash": "sha256:7928c7a654a03ed3a0d3cd0d71b40de6e2d13b041c737be6690e7c876f608014",
+            "probability": 0.9999990455342844,
+            "request_id": "8242-v712-s2_concurrent-03",
+            "sequence": 1,
+            "source_cluster_id": "sha256:0f09117d97a39e2c66c7f9d26ed4d0d33f110b4d28dad44065b3562eba1aecb8",
+            "values": [
+              13.815509557935018,
+              0.2168633257174924,
+              0.3943091194902789,
+              0.0625,
+              1.0,
+              0.2222222222222222,
+              0.2222222222222222,
+              0.7831366742825077,
+              0.9655345727809497
+            ]
+          }
+        ]
+      },
+      "status": "completed",
+      "store": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8242_v712_independent_concurrent_service/invocations/1791393059218878761/measurement/s2_concurrent/8242-v712-s2_concurrent-03/store.json",
+        "sha256": "sha256:3a2be7699d43565bc768d6eaf45c677c5eb72d71adbe07abf28a8659a9d09c91"
+      },
+      "unit_id": "8242-v712-s2_concurrent-03",
+      "values": [
+        13.815509557935018,
+        0.2168633257174924,
+        0.3943091194902789,
+        0.0625,
+        1.0,
+        0.2222222222222222,
+        0.2222222222222222,
+        0.7831366742825077,
+        0.9655345727809497
+      ]
+    },
+    "usage": {
+      "completion_tokens": 11,
+      "prompt_tokens": 1357
+    },
+    "wire_bytes_hex": [
+      "646174613a207b22696e646578223a302c22636f6e74656e74223a2230222c22746f6b656e73223a5b31355d2c2273746f70223a66616c73652c2269645f736c6f74223a2d312c22746f6b656e735f707265646963746564223a312c22746f6b656e735f6576616c7561746564223a313335377d0a",
+      "0a",
+      "646174613a207b22696e646578223a302c22636f6e74656e74223a227c222c22746f6b656e73223a5b39315d2c2273746f70223a66616c73652c2269645f736c6f74223a2d312c22746f6b656e735f707265646963746564223a322c22746f6b656e735f6576616c7561746564223a313335377d0a",
+      "0a",
+      "646174613a207b22696e646578223a302c22636f6e74656e74223a2243222c22746f6b656e73223a5b33345d2c2273746f70223a66616c73652c2269645f736c6f74223a2d312c22746f6b656e735f707265646963746564223a332c22746f6b656e735f6576616c7561746564223a313335377d0a",
+      "0a",
+      "646174613a207b22696e646578223a302c22636f6e74656e74223a227c222c22746f6b656e73223a5b39315d2c2273746f70223a66616c73652c2269645f736c6f74223a2d312c22746f6b656e735f707265646963746564223a342c22746f6b656e735f6576616c7561746564223a313335377d0a",
+      "0a",
+      "646174613a207b22696e646578223a302c22636f6e74656e74223a2231222c22746f6b656e73223a5b31365d2c2273746f70223a66616c73652c2269645f736c6f74223a2d312c22746f6b656e735f707265646963746564223a352c22746f6b656e735f6576616c7561746564223a313335377d0a",
+      "0a",
+      "646174613a207b22696e646578223a302c22636f6e74656e74223a222e222c22746f6b656e73223a5b31335d2c2273746f70223a66616c73652c2269645f736c6f74223a2d312c22746f6b656e735f707265646963746564223a362c22746f6b656e735f6576616c7561746564223a313335377d0a",
+      "0a",
+      "646174613a207b22696e646578223a302c22636f6e74656e74223a2230222c22746f6b656e73223a5b31355d2c2273746f70223a66616c73652c2269645f736c6f74223a2d312c22746f6b656e735f707265646963746564223a372c22746f6b656e735f6576616c7561746564223a313335377d0a",
+      "0a",
+      "646174613a207b22696e646578223a302c22636f6e74656e74223a2230222c22746f6b656e73223a5b31355d2c2273746f70223a66616c73652c2269645f736c6f74223a2d312c22746f6b656e735f707265646963746564223a382c22746f6b656e735f6576616c7561746564223a313335377d0a",
+      "0a",
+      "646174613a207b22696e646578223a302c22636f6e74656e74223a227c222c22746f6b656e73223a5b39315d2c2273746f70223a66616c73652c2269645f736c6f74223a2d312c22746f6b656e735f707265646963746564223a392c22746f6b656e735f6576616c7561746564223a313335377d0a",
+      "0a",
+      "646174613a207b22696e646578223a302c22636f6e74656e74223a225b5d222c22746f6b656e73223a5b313234395d2c2273746f70223a66616c73652c2269645f736c6f74223a2d312c22746f6b656e735f707265646963746564223a31302c22746f6b656e735f6576616c7561746564223a313335377d0a",
+      "0a",
+      "646174613a207b22696e646578223a302c22636f6e74656e74223a22222c22746f6b656e73223a5b3234383034365d2c2273746f70223a66616c73652c2269645f736c6f74223a2d312c22746f6b656e735f707265646963746564223a31312c22746f6b656e735f6576616c7561746564223a313335377d0a",
+      "0a",
+      "646174613a207b22696e646578223a302c22636f6e74656e74223a22222c22746f6b656e73223a5b5d2c2269645f736c6f74223a312c2273746f70223a747275652c226d6f64656c223a22756e736c6f74682f5177656e332e382d3237422d47475546222c22746f6b656e735f707265646963746564223a31312c22746f6b656e735f6576616c7561746564223a313335372c2267656e65726174696f6e5f73657474696e6773223a7b2273656564223a373131383232372c2274656d7065726174757265223a302e302c2264796e6174656d705f72616e6765223a302e302c2264796e6174656d705f6578706f6e656e74223a312e302c22746f705f6b223a32302c22746f705f70223a302e3934393939393938383037393037312c226d696e5f70223a302e30353030303030303037343530353830362c22746f705f6e5f7369676d61223a2d312e302c227874635f70726f626162696c697479223a302e302c227874635f7468726573686f6c64223a302e31303030303030303134393031313631322c227479706963616c5f70223a312e302c227265706561745f6c6173745f6e223a36342c227265706561745f70656e616c7479223a312e302c2270726573656e63655f70656e616c7479223a302e302c226672657175656e63795f70656e616c7479223a302e302c226472795f6d756c7469706c696572223a302e302c226472795f62617365223a312e37352c226472795f616c6c6f7765645f6c656e677468223a322c226472795f70656e616c74795f6c6173745f6e223a343039362c226472795f73657175656e63655f627265616b657273223a5b225c6e222c223a222c225c22222c222a225d2c226d69726f73746174223a302c226d69726f737461745f746175223a352e302c226d69726f737461745f657461223a302e31303030303030303134393031313631322c2273746f70223a5b5d2c226d61785f746f6b656e73223a3132382c226e5f70726564696374223a3132382c226e5f6b656570223a302c226e5f64697363617264223a302c2269676e6f72655f656f73223a66616c73652c2273747265616d223a747275652c226c6f6769745f62696173223a5b5d2c226e5f70726f6273223a302c226d696e5f6b656570223a302c226772616d6d6172223a22726f6f74203a3a3d2072305c6e7230203a3a3d205c22307c5c222072656c6174696f6e205c227c5c222070726f626162696c697479205c227c5c2220726566735c6e72656c6174696f6e203a3a3d205c22455c22207c205c22435c22207c205c22425c225c6e70726f626162696c697479203a3a3d205c22302e5c22205b302d395d205b302d395d207c205c22312e30305c225c6e72656673203a3a3d205c225b5d5c22207c205c225b5c2220736f75726365205c225d5c22207c205c225b5c2220736f75726365205c222c5c2220736f75726365205c225d5c225c6e736f75726365203a3a3d205c22305c22207c205c22315c22207c205c22325c22207c205c22335c22207c205c22345c22207c205c22355c22207c205c22365c22207c205c22375c22207c205c22385c22207c205c22395c22207c205c2231305c22207c205c2231315c22207c205c2231325c22207c205c2231335c22207c205c2231345c22207c205c2231355c22207c205c2231365c225c6e222c226772616d6d61725f6c617a79223a66616c73652c226772616d6d61725f7472696767657273223a5b5d2c227072657365727665645f746f6b656e73223a5b5d2c22636861745f666f726d6174223a22436f6e74656e742d6f6e6c79222c22726561736f6e696e675f666f726d6174223a22646565707365656b222c22726561736f6e696e675f696e5f636f6e74656e74223a66616c73652c2267656e65726174696f6e5f70726f6d7074223a22222c2273616d706c657273223a5b2270656e616c74696573222c22647279222c22746f705f6e5f7369676d61222c22746f705f6b222c227479705f70222c22746f705f70222c226d696e5f70222c22787463222c2274656d7065726174757265225d2c2273706563756c61746976652e7479706573223a226e6f6e65222c2274696d696e67735f7065725f746f6b656e223a66616c73652c22706f73745f73616d706c696e675f70726f6273223a66616c73652c226261636b656e645f73616d706c696e67223a66616c73652c226c6f7261223a5b5d7d2c2270726f6d7074223a223c7c696d5f73746172747c3e757365725c6e7b5c22696e737472756374696f6e5c223a205c22466f7220656163682072657175657374656420616e737765722073656e74656e636520656d697420696e6465787c452f432f427c705f756e737570706f7274656420776974682074776f20646563696d616c737c5b7a65726f20746f2074776f20736f75726365207365676d656e7420696e64696365735d2e204f6e65207265636f726420706572206c696e6520696e20696e707574206f726465723b206e6f206f7468657220746578742e2052656c6174696f6e7320616e6420616464726573736573206172652070726564696374696f6e732e5c222c205c22736f757263655c223a205c227b5c5c5c22616464726573735c5c5c223a5c5c5c22313430205320486f7065204176655c5c5c222c5c5c5c22617474726962757465735c5c5c223a7b5c5c5c22416d6269656e63655c5c5c223a7b5c5c5c2263617375616c5c5c5c223a747275652c5c5c5c22636c617373795c5c5c223a66616c73652c5c5c5c2264697665795c5c5c223a66616c73652c5c5c5c22686970737465725c5c5c223a66616c73652c5c5c5c22696e74696d6174655c5c5c223a66616c73652c5c5c5c22726f6d616e7469635c5c5c223a66616c73652c5c5c5c22746f7572697374795c5c5c223a66616c73652c5c5c5c227472656e64795c5c5c223a66616c73652c5c5c5c2275707363616c655c5c5c223a66616c73657d2c5c5c5c22427573696e6573735061726b696e675c5c5c223a7b5c5c5c226761726167655c5c5c223a66616c73652c5c5c5c226c6f745c5c5c223a747275652c5c5c5c227374726565745c5c5c223a66616c73652c5c5c5c2276616c65745c5c5c223a66616c73652c5c5c5c2276616c6964617465645c5c5c223a66616c73657d2c5c5c5c224d757369635c5c5c223a6e756c6c2c5c5c5c224f7574646f6f7253656174696e675c5c5c223a747275652c5c5c5c2252657374617572616e7473476f6f64466f7247726f7570735c5c5c223a747275652c5c5c5c2252657374617572616e74735265736572766174696f6e735c5c5c223a66616c73652c5c5c5c2252657374617572616e747354616b654f75745c5c5c223a747275652c5c5c5c22576946695c5c5c223a5c5c5c226e6f5c5c5c227d2c5c5c5c22627573696e6573735f73746172735c5c5c223a342e302c5c5c5c2263617465676f726965735c5c5c223a5c5c5c2253616e647769636865732c2052657374617572616e74732c2053616c61642c20486f7420446f67732c2044656c69735c5c5c222c5c5c5c22636974795c5c5c223a5c5c5c2253616e746120426172626172615c5c5c222c5c5c5c22686f7572735c5c5c223a7b5c5c5c224672696461795c5c5c223a5c5c5c2231303a302d31373a33305c5c5c222c5c5c5c224d6f6e6461795c5c5c223a5c5c5c2231303a302d31373a33305c5c5c222c5c5c5c2253617475726461795c5c5c223a5c5c5c2231303a302d31363a33305c5c5c222c5c5c5c2253756e6461795c5c5c223a5c5c5c2231313a302d31363a33305c5c5c222c5c5c5c2254687572736461795c5c5c223a5c5c5c2231303a302d31373a33305c5c5c222c5c5c5c22547565736461795c5c5c223a5c5c5c2231303a302d31373a33305c5c5c222c5c5c5c225765646e65736461795c5c5c223a5c5c5c2231303a302d31373a33305c5c5c227d2c5c5c5c226e616d655c5c5c223a5c5c5c22506c617a612044656c695c5c5c222c5c5c5c227265766965775f696e666f5c5c5c223a5b7b5c5c5c227265766965775f646174655c5c5c223a5c5c5c22323032312d31322d30312030303a32333a34395c5c5c222c5c5c5c227265766965775f73746172735c5c5c223a352e302c5c5c5c227265766965775f746578745c5c5c223a5c5c5c225468652064656c69207665676769652073616e6477696368206973207265616c6c7920676f6f642121204920676574207468697320657665727964617920666f72206c756e63682e20497427732061206661742073616e64776963682120536f20667265736820736f20676f6f642e204c6172727920616e64204a6f6e6174686f6e20617265207375706572206e6963652120416c77617973206120676f6f64206c756e63682061742074686520706c617a612064656c692e205265636f6d6d656e642031302f313020676f2068657265215c5c5c227d2c7b5c5c5c227265766965775f646174655c5c5c223a5c5c5c22323032312d31312d32372032333a30383a33315c5c5c222c5c5c5c227265766965775f73746172735c5c5c223a352e302c5c5c5c227265766965775f746578745c5c5c223a5c5c5c2257652073746f7070656420746f2067726162206120717569636b2062697465206f6e206f757220726f6164207472697020686f6d652e202054686520506c617a612044656c69206469646e2774206469736170706f696e7420616e642049206b6e6f772066697273742068616e642077687920616c6c2074686520677265617420726576696577732e202020546865205475726b65792f4368656573652f2041766f6361646f2073616e647769636820616e64204974616c69616e207375622077657265206c6f616465642077697468206d6561747320616e642076657279207665727920676f6f642e20205468657920636172726965642061206c6f6164206f6620677265617420736f646173202d206269726368206265657220796f7520646f6e27742066696e64206f6674656e2e2020546865206f776e657220636f756c646e277420626520616e79206e696365722c206368617474696e67206974207570207769746820757320616e6420676976696e67206f757220646f67204672616e6b696520776174657220616e642062697363756974732e2020486967686c79207265636f6d6d656e6420737570706f7274696e672074686973206c6f63616c20627573696e657373202e5c5c5c227d2c7b5c5c5c227265766965775f646174655c5c5c223a5c5c5c22323032312d31302d33302031353a34353a34355c5c5c222c5c5c5c227265766965775f73746172735c5c5c223a332e302c5c5c5c227265766965775f746578745c5c5c223a5c5c5c2249277665206265656e20676f696e6720746f20506c617a612044656c692073696e6365204920776173206368696c6420696e2074686520393027732e2054686520706c6163652068617320616c77617973206265656e206120676f6f6420706c61636520746f20676f20666f722061207175616c6974792073616e6477696368206174206120666169722070726963652e204275742c2077652068617665206e6f7469636564206c6174656c7920746865207175616c697479206f6620696e6772656469656e74732f7072657061726174696f6e2069736e277420757020746f207468652073616d65207374616e646172647320616e642074686520637573746f6d6572207365727669636520686173206265656e20686974206f72206d6973732e2049207265616c697a6520436f76696420686173206265656e2068617264206f6e20757320616c6c20616e6420627573696e657373657320627574206974207374696c6c206665656c73206c696b6520736f6d657468696e67206368616e676564207769746820746865207669626520616e64207175616c6974792e204166746572206120636f75706c65207375622d70617220657870657269656e636573207765206d61792074727920697420616761696e2e20576520686f70652074686973206973206a757374206265656e2061206869636375702e5c5c5c227d5d2c5c5c5c2273746174655c5c5c223a5c5c5c2243415c5c5c227d5c222c205c22616e737765725c223a205c22506c617a612044656c6920697320612063617375616c2064696e696e672072657374617572616e74206c6f636174656420617420313430205320486f7065204176652c2053616e746120426172626172612c2043412e20546869732065737461626c6973686d656e74206973206b6e6f776e20666f72206974732073616e647769636865732c2073616c6164732c20686f7420646f67732c20616e642064656c69206974656d732e204f70656e207468726f7567686f757420746865207765656b2c206974206f6666657273206f7574646f6f722073656174696e6720616e64206973207375697461626c6520666f722067726f7570732e2054686f75676820697420646f65736e2774206f666665722057692d4669206f72206d757369632c20697420646f65732070726f76696465207061726b696e6720696e207468656972206c6f7420616e642074616b652d6f7574206f7074696f6e732e20546865206f766572616c6c20627573696e65737320726174696e67207374616e647320617420342e302073746172732e20566172696f7573207265766965777320686967686c6967687420746865207175616c69747920616e64207175616e74697479206f6620746865697220666f6f642c20706172746963756c61726c79207468652064656c69207665676769652073616e64776963682c207475726b65792f6368656573652f61766f6361646f2073616e64776963682c20616e64204974616c69616e207375622e205468652073746166662c20696e636c7564696e67204c6172727920616e64204a6f6e617468616e2c2061726520617070726563696174656420666f7220746865697220667269656e646c792064656d65616e6f722e20536f6d6520637573746f6d65727320686176652065787072657373656420746865697220636f6e6365726e732061626f757420726563656e74206368616e67657320696e20746865207175616c697479206f6620666f6f6420616e6420637573746f6d657220736572766963652e20546865792072656d61696e20686f706566756c2c20686f77657665722c2074686174207468657365206172652074656d706f726172792069737375657320616e642077696c6c20726576697369742074686520706c6163652e5c222c205c22736f757263655f7365676d656e74735c223a205b7b5c22696e6465785c223a20302c205c22627974655f73746172745c223a20302c205c22627974655f656e645c223a203835347d2c207b5c22696e6465785c223a20312c205c22627974655f73746172745c223a203835342c205c22627974655f656e645c223a203838357d2c207b5c22696e6465785c223a20322c205c22627974655f73746172745c223a203838352c205c22627974655f656e645c223a203930367d2c207b5c22696e6465785c223a20332c205c22627974655f73746172745c223a203930362c205c22627974655f656e645c223a203932347d2c207b5c22696e6465785c223a20342c205c22627974655f73746172745c223a203932342c205c22627974655f656e645c223a203935397d2c207b5c22696e6465785c223a20352c205c22627974655f73746172745c223a203935392c205c22627974655f656e645c223a203939387d2c207b5c22696e6465785c223a20362c205c22627974655f73746172745c223a203939382c205c22627974655f656e645c223a20313135327d2c207b5c22696e6465785c223a20372c205c22627974655f73746172745c223a20313135322c205c22627974655f656e645c223a20313233367d2c207b5c22696e6465785c223a20382c205c22627974655f73746172745c223a20313233362c205c22627974655f656e645c223a20313333327d2c207b5c22696e6465785c223a20392c205c22627974655f73746172745c223a20313333322c205c22627974655f656e645c223a20313430337d2c207b5c22696e6465785c223a2031302c205c22627974655f73746172745c223a20313430332c205c22627974655f656e645c223a20313530377d2c207b5c22696e6465785c223a2031312c205c22627974655f73746172745c223a20313530372c205c22627974655f656e645c223a20313639317d2c207b5c22696e6465785c223a2031322c205c22627974655f73746172745c223a20313639312c205c22627974655f656e645c223a20313737367d2c207b5c22696e6465785c223a2031332c205c22627974655f73746172745c223a20313737362c205c22627974655f656e645c223a20313932317d2c207b5c22696e6465785c223a2031342c205c22627974655f73746172745c223a20313932312c205c22627974655f656e645c223a20323034357d2c207b5c22696e6465785c223a2031352c205c22627974655f73746172745c223a20323034352c205c22627974655f656e645c223a20323130317d2c207b5c22696e6465785c223a2031362c205c22627974655f73746172745c223a20323130312c205c22627974655f656e645c223a20323135337d5d2c205c22616e737765725f73656e74656e63655f696e64696365735c223a205b305d2c205c22616e737765725f6f6666736574735c223a205b7b5c22696e6465785c223a20302c205c22627974655f73746172745c223a20302c205c22627974655f656e645c223a2038377d5d7d3c7c696d5f656e647c3e5c6e3c7c696d5f73746172747c3e617373697374616e745c6e3c7468696e6b3e5c6e5c6e3c2f7468696e6b3e5c6e5c6e222c226861735f6e65775f6c696e65223a66616c73652c227472756e6361746564223a66616c73652c2273746f705f74797065223a22656f73222c2273746f7070696e675f776f7264223a22222c22746f6b656e735f636163686564223a313336372c2274696d696e6773223a7b2263616368655f6e223a302c2270726f6d70745f6e223a313335372c2270726f6d70745f6d73223a313239332e3136362c2270726f6d70745f7065725f746f6b656e5f6d73223a302e393532393539343639343137383333342c2270726f6d70745f7065725f7365636f6e64223a313034392e333632353732313637383432322c227072656469637465645f6e223a31312c227072656469637465645f6d73223a313133372e3638392c227072656469637465645f7065725f746f6b656e5f6d73223a3130332e34323632373237323732373237332c227072656469637465645f7065725f7365636f6e64223a392e3636383732333137343738363738327d7d0a",
+      "0a"
+    ]
+  },
+  "sentence_index": 0,
+  "slot": 1,
+  "source_cluster_id": "sha256:0f09117d97a39e2c66c7f9d26ed4d0d33f110b4d28dad44065b3562eba1aecb8",
+  "source_id": "15073",
+  "status": "completed",
+  "terminal_sequence": 28,
+  "transport_attempts": 1,
+  "workload": "s2_concurrent"
+}

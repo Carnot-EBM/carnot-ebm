@@ -50985,3 +50985,31 @@ false-accept limits against global-only. Historical exposure grants no independe
 generalization. Seven private tests exercise actual CLI, blocked operands, causal
 tampering, positive cost controls and per-seed safety. Ops reconciliation is owned
 by the conductor under the final task instruction.
+# REQ-VERIFY-8242: Independent serial and concurrent request costs
+
+Authenticate Exp8236, its terminal receipts, execution code and sealed V712
+protocol before model work. Retain the original 24 sources and all 96 requests
+in counterbalanced serial/concurrent sweeps. Fresh two-slot Qwen servers use
+the embedded template, disabled caches, 128-token limits and 120-second calls.
+Charge startup and shutdown to each workload. Hold the qualified Rust durable
+service fixed. Preserve queue, native prefill/decode, normalization, dispatch,
+fsync, persistence, cold costs and active-process GPU telemetry. Bound total
+measurement at 3000 seconds with durable checkpoints and visible heartbeats.
+Missing operands block; no replacement responses or sources are permitted.
+At least 20 paired sources support descriptive latency intervals. Repeated
+sweeps do not support a population throughput interval. Fewer completions cannot
+qualify an improvement. Parse success supplies no answer-quality evidence.
+Generalization scores remain zero; NFR-01 Rust10x remains untested.
+
+## SCENARIO-VERIFY-8242-MEASURE
+
+Private fixtures retain independent IDs, errors, censoring and startup failures;
+all four workloads charge fresh cold costs. Reduction checks paired support,
+completion safety, token/output differences, acquisition and measured Amdahl
+bounds. Authentication rejects protocol, runtime and terminal-byte drift.
+
+Implementation2026-10-07: `independent_concurrent_service_8242.py` runs the sealed
+four workloads with independent request queues and fresh server ownership.
+Generation and service validity are counted separately; missing lexical features
+remain failed rows. Source intervals average sweeps within each original source.
+Cold makespans, token/output differences and the scoring bound remain descriptive.
