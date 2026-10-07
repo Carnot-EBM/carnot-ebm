@@ -51098,3 +51098,20 @@ queries; all packet bytes match the existing host evaluator. Nine private tests
 exercise valid/fallback/missing/tampered inputs, ordered arithmetic, real children,
 bounded board commands and task-only cleanup. Device results remain a separate
 current invocation receipt; no benefit or fabric support follows.
+# REQ-VERIFY-8246: Admit only new physical receipts after Exp8232
+
+Authenticate Exp8232 SHA256 and schema, then compare current established operator
+documents with its immutable hashes. Unchanged documents SHALL not be parsed
+again. Changed documents use the qualified dry-run GateMate receipt parser;
+previously seen receipts cannot count again. Date-only receipts must postdate
+Exp8232's date. Same-day receipts require a timezone-bearing receipt_timestamp
+strictly after Exp8232's recorded end and no later than this invocation.
+Prose, agent plans, elapsed time, software and host bitstreams are insufficient.
+Keep GM1Ax IDCODE 0x20000001 and authenticated n16 flash/device hash-smoke parity
+as future gates, with no JTAG retry or board command in this task.
+
+SCENARIO-VERIFY-8246-FRONTIER: Private changed/unchanged documents, duplicate,
+stale, future, same-day ambiguous, timestamped, wrong-board and agent-authored
+receipts SHALL retain exact dispositions. Missing/tampered prior evidence retains
+one excluded obligation with missing evidence distinct from a measured zero.
+Fresh replay reconstructs the frontier and receipts from authenticated primitives.

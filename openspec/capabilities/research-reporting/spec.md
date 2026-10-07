@@ -95499,3 +95499,22 @@ SCENARIO-REPORT-8245-CLI also covers an explicit `--health-receipt` retry after
 owned corrections. Authenticate the previous diagnostic and both full streams;
 retain its argv, clocks and actual exit. Reuse grants no global pass and cannot
 replace current owned validation. Missing or malformed reuse evidence is rejected.
+# REQ-REPORT-8246: GateMate change ledger closes without device execution
+
+Exp8246 SHALL authenticate the exact Exp8232 primary, bound terminal receipt and
+stored receipt frontier. Reuse its qualified reader and retain one GateMate
+obligation. Freeze private validation commands before reduction. Declare
+aggregation_from_upstream_artifacts, no_model_load, empty MODEL_SPECS and zero
+current model/device calls. Unchanged setup yields
+complete_blocked_gatemate_physical_change; missing operands block by name.
+Audit readiness, future probe eligibility and scientific benefit are separate.
+Owned check failures disqualify and zero readiness. Keep historical primary bytes.
+
+SCENARIO-REPORT-8246-CLI: Real private CLI publication and fresh-process replay
+SHALL accept unchanged/changed/missing fixtures and reject summary, primitive,
+hash, date and destination tampering. Use unchanged primary publication,
+adversarial verification and strict row checks before atomic publication. Measure
+100 percent coverage of added statements, including CLI children; run strict
+mypy, scoped Ruff/spec references, private E2E-015/019 and one separately bounded
+full-suite diagnostic. Preserve argv, expected/actual exits, clocks and stream
+hashes. The conductor owns status/changelog/traceability reconciliation.
