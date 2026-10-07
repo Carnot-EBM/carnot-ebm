@@ -50480,3 +50480,29 @@ precedes expiry144/224. Rejected writes leave installed state unchanged. Private
 fixtures install before32 later changed decisions and grant circular mechanics
 credit only. Use unchanged qualified hard-exit callback and Coverage.py patch=_exit
 for genuine exits73 at90/170 and exact resumed pending/RNG/feedback state.
+
+## REQ-VERIFY-8222: Fit matched static utility corrections on original roles
+
+Authenticate the qualified current static kernel and V709 base heads. Fit only
+finite probability corrections on head_fit; never refit base weights, temperature
+or set calibration. Fit all fifteen frozen arms with four-step budgets and the
+original action permissions. Local excludes global. Random uses seeds101..120
+and selects supported predicates without using residual magnitudes to choose.
+Seeds add no independent sources. Preserve missing rows in every denominator.
+Bound fitting to600seconds and checkpoint each completed arm and seed.
+
+### SCENARIO-VERIFY-8222-FIT
+
+Only head_fit labels affect deltas. Calibration rows select depths0..4 by all-slot
+cost, complete-label Brier and depth. A zero-depth optimum is valid. Select the
+primary comparator from the exact Exp8219 eligible list, including energy_global,
+by cost, Brier and fixed name. Keep additive_group and logistic_group mandatory.
+Freeze selected trees before any reserved evaluation. Retain per-source/arm/seed
+probabilities, normalized energies, actions, residuals, deltas and actual clocks.
+Reserved and retention targets remain closed. Fresh replay rebuilds fitted trees
+and selection from authenticated primitive rows; rehashed changes fail.
+
+REQ-VERIFY-8222 implementation: utility_fit_8222.py reuses the qualified static
+kernel for72 arm/seed runs. Each completion has a byte-bound checkpoint and
+actual fit clock. Original calibration rows select depth and the frozen eligible
+comparator; missing targets retain unavailable metrics and zero residual weight.

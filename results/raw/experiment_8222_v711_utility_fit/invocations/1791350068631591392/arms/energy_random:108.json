@@ -1,0 +1,69 @@
+{
+  "cost": {
+    "arm": "energy_random",
+    "available_count": 79,
+    "duration_s": 0.000407265,
+    "ended_monotonic_ns": 1010978220368883,
+    "fitted_operations": 2,
+    "seed": 108,
+    "started_monotonic_ns": 1010978219961618,
+    "started_wall_ns": 1791350070009131732,
+    "training_count": 96
+  },
+  "input_sha256": "sha256:b329db2dbe3c376c16e77511f93d6d1332443bc6739572ba532ebac3f4665139",
+  "model": {
+    "base": {
+      "kind": "input"
+    },
+    "kind": "patch",
+    "patches": [
+      {
+        "delta": -0.02723252452425013,
+        "group": {
+          "distinct_fit_members": 20,
+          "fit_membership_sha256": "sha256:33398acae493183383a368785fedf571fa8160ca533dbe7ddd14b9df770e0fd9",
+          "interval": [
+            0.1,
+            0.25
+          ],
+          "name": "bin_1",
+          "reject_only": false
+        },
+        "witness": {
+          "accept_cost_residual": -0.05673442609218777,
+          "available_members": 20,
+          "denominator": 96,
+          "distinct_members": 20,
+          "eligible": true,
+          "escalate_cost_residual": 0,
+          "group": "bin_1",
+          "numerator": -1.0893009809700052,
+          "probability_residual": -0.011346885218437554,
+          "reject_cost_residual": 0.011346885218437554
+        }
+      },
+      {
+        "delta": 0.013624883840517502,
+        "group": {
+          "distinct_fit_members": 96,
+          "fit_membership_sha256": "sha256:5e345b7dc598645d1df865819e0ff9edb77383e3d5e3aa6d352d94a02a6c429d",
+          "interval": null,
+          "name": "global",
+          "reject_only": false
+        },
+        "witness": {
+          "accept_cost_residual": 0.1107021812042047,
+          "available_members": 78,
+          "denominator": 96,
+          "distinct_members": 78,
+          "eligible": true,
+          "escalate_cost_residual": 0,
+          "group": "global",
+          "numerator": 2.12548187912073,
+          "probability_residual": 0.02214043624084094,
+          "reject_cost_residual": -0.02214043624084094
+        }
+      }
+    ]
+  }
+}

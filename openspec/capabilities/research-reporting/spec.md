@@ -94820,3 +94820,29 @@ readiness require their own mechanics. MODEL_SPECS=[]; no current LLM calls;
 trained heads are separate. Fixture oracle success is circular_positive and both
 generalization scores stay zero. H1/H2 remain unmeasured. Operational documents
 and traceability are reconciled by the conductor after this task exits.
+
+## REQ-REPORT-8222: Publish reproducible utility fitting without benefit credit
+
+Exp8222 SHALL publish one atomic primary after normal worker exit and unchanged
+primary_publication, adversarial and strict row checks. Declare no_model_load,
+MODEL_SPECS=[] and zero current LLM calls. Seal trained_head_specs, fitted trees,
+base heads, role hashes, current execution code and primitive evidence below raw/.
+utility_fit_ready_score means complete reproducible fitting and selection with
+passing owned checks. H1 is unmeasured; both generalization scores remain zero.
+External missing operands block with path/hash/field/operator/expected/observed;
+owned failures disqualify and zero readiness. Operational reconciliation belongs
+to the conductor, including ops/status.md, ops/changelog.md and traceability.
+
+### SCENARIO-REPORT-8222-CLI
+
+Tests precede implementation and exercise real private CLI, worker, cold replay,
+invalid dates, forbidden fixture destinations, missing/schema operands, numeric
+deadline, checkpoint resume and tampering. Freeze exact commands before measuring
+100percent newly owned statements including CLI children. Run scoped Ruff,
+strict mypy, explicit spec tracing and private E2E-015/019. Run the full Python
+suite once as bounded repository health and preserve its actual failures separately.
+
+REQ-REPORT-8222 implementation: utility_fit_execution_8222.py authenticates
+upstream terminal receipts, current kernel snapshots and pinned V709 evidence.
+The thin runner uses the existing bounded supervisor and atomic publication
+checks. Primitive rows, role hashes and fitted trees remain below the raw path.
