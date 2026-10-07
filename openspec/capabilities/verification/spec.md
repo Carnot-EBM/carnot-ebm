@@ -2,6 +2,27 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8224: Audit corrected utility against equally adapted controls
+
+Authenticate the V711 prediction seal before opening original evaluator labels.
+Rebuild all128 intended source outcomes independently; unavailable decisions cost
+0.5 escalation. H1 remains energy_group versus the frozen tune comparator, with
+96 complete paired sources,12 per class,10000 source bootstrap draws,9500 valid
+draws, protocol seed7108223 and one-sided alpha0.025. Require lower gain>0.02,
+five improved sources, Brier increase<=0.01 and zero extra false accepts against
+both primary comparator and original baseline. Cost increase<=0.02 against
+original baseline and additive_group/logistic_group is mandatory. Optional arms
+cannot replace H1. Complete cases, energy-specific advantage and shared
+calibration effects have separate denominators. Both generalization scores are0.
+
+### SCENARIO-VERIFY-8224-REDUCTION
+
+Tests preserve missing slots, original byte/label joins and frozen permissions;
+reject duplicate or absent arms, changed protocol, label order and source drift.
+Positive diagnostic controls must satisfy every registered gate separately.
+Immutable current producer snapshots suffice; historical code originals are
+provenance only. Cold replay rejects rehashed primitive and aggregate tampering.
+
 ## REQ-VERIFY-8217: Reduce V709 scientific branches independently
 
 Recompute H1 from qualified sealed source rows even if the upstream audit is

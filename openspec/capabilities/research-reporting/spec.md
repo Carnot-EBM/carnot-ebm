@@ -2,6 +2,31 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8224: Publish a qualified V711 utility audit
+
+Freeze the audit CLI and exact owned commands before measurement. Declare
+aggregation_from_upstream_artifacts, no_model_load, MODEL_SPECS=[] and zero
+current LLM calls; list imported numerical heads separately. Preserve actual
+argv, exits, full separate stream hashes and clocks with bounded process-group
+children and heartbeat<=60s. External absence is complete_blocked_<operand>;
+owned failure disqualifies readiness. utility_audit_ready_score is execution
+readiness; h1_development_signal_score requires all benefit gates. Validate a
+private candidate by fresh-process replay, unchanged primary_publication,
+adversarial verification and strict row lint before atomic publication. Preserve
+historical primary bytes. Conductor owns ops/status/changelog/traceability.
+
+### SCENARIO-REPORT-8224-CLI
+
+Outside-checkout CLI without PYTHONPATH exercises valid replay, rehashed tamper,
+missing input and owned failure. Run private E2E-015/019/021, affected consumers,
+100 percent newly owned statement coverage including real CLI/child paths,
+scoped Ruff/format, strict mypy and explicit-file spec coverage. One bounded full
+Python suite is separate health and cannot become a global pass on existing
+failures. Private fixtures write outside results; no model or generator changes,
+external publication, conductor edits or active roadmap edits occur.
+Owned unit coverage runs in two disjoint bounded batches covering every owned
+test; combine their real unit and CLI shards before enforcing100 percent.
+
 ## REQ-REPORT-8217: Account for the exact thirteen V709 outcomes
 
 Freeze the qualified Exp8205 activation authorities. If qualification is absent,
