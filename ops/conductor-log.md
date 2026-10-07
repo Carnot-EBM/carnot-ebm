@@ -19714,3 +19714,4 @@ code |
 | 2026-10-07 06:38 UTC | Test corrected decision utility against equally ad | OK | 87 passed, 1 warning in 144.98s (0:02:24) |
 | 2026-10-07 07:46 UTC | Learn persistent group corrections from causally r | OK | 115 passed, 1 warning in 200.14s (0:03:20) |
 | 2026-10-07 07:49 UTC | Audit later utility proper loss and retention from | GATE_BLOCK | gate-unsat(final): 3 of 4 gate(s) failed; first failure: exp8225-delayed-utility-learning.utility_trajectory_ready_score (actual=0 == expected=1) |
+| 2026-10-07 08:29 UTC | Freeze request isolation and qualify a bounded two | OK | 105 passed, 1 warning in 41.27s |
