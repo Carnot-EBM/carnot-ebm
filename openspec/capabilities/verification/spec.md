@@ -50454,3 +50454,29 @@ expected-success/failure child receipts. Coverage.py subprocess instrumentation
 measures only the two current modules and direct script. Independent replay
 recomputes authority and historical excerpts from saved input bytes. Unrelated
 repository health retains its literal exits and cannot supply owned readiness.
+## REQ-VERIFY-8221: Execute the frozen utility correction kernel
+
+V711 SHALL preserve the byte-identical V710 protocol, witness order, source
+roles, comparator eligibility and H1/H2 seeds. Baseline membership stays fixed;
+eligible residuals require eight distinct sources and divide by all training
+rows. Fixed-order maximum absolute residuals choose at most four sequential
+patches, stopping at .01. Delta is clip(.5*group mean residual,-.05,.05);
+each step clips probabilities to [1e-6,1-1e-6]. Normalized energies agree at
+1e-10. Freeze a probability-tree API and JSON state schema for both consumers.
+
+### SCENARIO-VERIFY-8221-KERNEL
+
+Test endpoints, duplicate sources, unsupported and empty groups, fixed ties,
+sequential clipping, missing rows, residual stopping and energy equivalence.
+Tests precede implementation. Static qualification has its own real checks.
+
+### SCENARIO-VERIFY-8221-CAUSAL
+
+Public warmup1..64 precedes delayed20 feedback; opportunities64/144 use newest64
+released update rows with two labels/class. Twelve unused later admission labels
+never fit. Final probabilities interpolate at1/.5/.25/.125 and retain the exact
+mixture tree. Preserve permission, cost, Brier and false-accept gates. Admission
+precedes expiry144/224. Rejected writes leave installed state unchanged. Private
+fixtures install before32 later changed decisions and grant circular mechanics
+credit only. Use unchanged qualified hard-exit callback and Coverage.py patch=_exit
+for genuine exits73 at90/170 and exact resumed pending/RNG/feedback state.

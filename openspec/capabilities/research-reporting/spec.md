@@ -94799,3 +94799,24 @@ and twelve preserved design excerpts. `v711_current_runner.py` freezes current
 checks and atomically publishes only unchanged-terminal-validated candidates.
 Private CLI, staged-only, missing/schema and rehashed tamper cases are covered by
 `test_v711_current_contract_8220.py`. No active YAML or historical primary is edited.
+## REQ-REPORT-8221: Publish separate utility kernel readiness
+
+Authenticate Exp8219, its original protocol and named primitive bytes. Historical
+planning prose is reference material; snapshot current sources separately.
+Execution bindings contain only the protocol hash and task ownership mapping.
+Freeze literal owned commands before measurement. Retain real exits, complete
+stream hashes, clocks, primitive states and 100percent newly owned statements,
+including direct CLI and crash children. Run strict typing, scoped Ruff, spec
+tracing and private E2E-015/019/020; separate bounded repository health.
+
+### SCENARIO-REPORT-8221-CLI
+
+Private direct CLI success, worker, invalid date, missing/schema operands and
+cold replay SHALL be exercised. Replay independently rebuilds fixture states;
+rehashed aggregate or primitive edits fail. Normal worker exit and unchanged
+primary publication, adversarial and strict row checks precede atomic publication.
+Failed owned checks disqualify and zero readiness. Separate static and causal
+readiness require their own mechanics. MODEL_SPECS=[]; no current LLM calls;
+trained heads are separate. Fixture oracle success is circular_positive and both
+generalization scores stay zero. H1/H2 remain unmeasured. Operational documents
+and traceability are reconciled by the conductor after this task exits.
