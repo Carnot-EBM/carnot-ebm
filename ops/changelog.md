@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-08 — Operational retrospective for milestone 2026.10.717
+
+- Wrote `results/operational_retro_2026_10_717.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.717`. Authoritative disk-mtime fallback data records 8 experiments completed (1 compute-bound, 7 synthesis-only) across 40.0 total wall-time minutes (average 5 minutes per experiment).
+- Execution wall time was led by synthesis tasks 'Qualify exact spline update isolation and durable recovery' (11.34 minutes), 'Close the ARC reader coverage gap and inspect new supervisor outcomes' (8.99 minutes), 'Reconcile fourteen outcomes and decide local-learning and runtime continuation' (5.24 minutes), and 'Preserve GateMate reopening evidence without repeating an unchanged probe' (4.07 minutes), alongside compute-bound task 'Reconstruct source-disjoint sentence features from existing live receipts' (4.42 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization on the RTX 3090 with 4MB allocated outside active runs; `gpu_idle_on_compute_bound_tasks` is false as no compute-bound idle anomalies or multi-model parallel dispatch requirements were present, and 0% GPU utilization is expected behavior for synthesis tasks.
+- Recommended operational improvements: deploy incremental receipt caching and memoization for spline qualification, ARC reader checks, and outcome reconciliations when upstream inputs remain static; instrument compute-bound feature reconstruction with granular intra-task phase timers; and persist structured start and end lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-08 — Fix V717 legacy retirement reconciliation
 
 - Fixed `reconcile_manifest` raising `KeyError: 'id'` on historical retirement

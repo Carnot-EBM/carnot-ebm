@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.717",
+  "generated_at": "2026-10-08T22:36:30Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 40.0,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify exact spline update isolation and durable recovery",
+      "duration_minutes": 11.34,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Close the ARC reader coverage gap and inspect new supervisor outcomes",
+      "duration_minutes": 8.99,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and decide local-learning and runtime continuation",
+      "duration_minutes": 5.24,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconstruct source-disjoint sentence features from existing live receipts",
+      "duration_minutes": 4.42,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Preserve GateMate reopening evidence without repeating an unchanged probe",
+      "duration_minutes": 4.07,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.717 completed 8 experiments (1 compute-bound, 7 synthesis-only) across 40.0 total wall-time minutes (averaging 5 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was dominated by synthesis-only tasks accounting for four of the top 5 slowest runs—qualifying exact spline update isolation (11.34 minutes), closing the ARC reader coverage gap (8.99 minutes), reconciling fourteen outcomes (5.24 minutes), and preserving GateMate evidence (4.07 minutes)—alongside the sole compute-bound task reconstructing sentence features (4.42 minutes). With gpu_idle_on_compute_bound_tasks recorded as false, the snapshot of 0% GPU utilization on the NVIDIA GeForce RTX 3090 represents expected idle state for non-GPU synthesis tasks rather than an accelerator stall, and single-model workloads correctly avoided multi-model DualGPURunner dispatch.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks accounted for the majority of milestone wall time (four of the top five slowest runs totaled 29.64 minutes out of 40.0 total wall-time minutes), led by exact spline update qualification (11.34 minutes) and ARC reader coverage gap closure (8.99 minutes).",
+    "The sole compute-bound task ('Reconstruct source-disjoint sentence features from existing live receipts') required 4.42 minutes, but lacks intra-task sub-phase telemetry (receipt parsing, feature extraction, tensor encoding) to diagnose execution duration.",
+    "Synthesis tasks executed serially across spline qualification, ARC reader inspections, and GateMate evidence checks without incremental receipt caching or evidence memoization when upstream dependencies were unchanged.",
+    "Milestone timing analysis relied on disk-mtime fallback reconstruction due to the live git-log path finding 0 commits in the milestone interval."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and evidence memoization for exact spline qualification, ARC reader inspections, and fourteen-outcome reconciliations when upstream inputs remain static.",
+    "Instrument compute-bound feature reconstruction tasks with granular intra-phase execution timers (receipt loading, feature extraction, tensor formatting).",
+    "Persist explicit synchronous execution timestamps (start, completion, duration) directly into experiment receipt artifacts to avoid reliance on disk-mtime fallback reconstruction.",
+    "Sample continuous in-flight accelerator utilization and memory metrics during compute-bound workloads rather than relying solely on post-run point-in-time GPU monitor polling.",
+    "Maintain strict DualGPURunner dispatch boundaries to concurrent multi-model pipelines, avoiding unwarranted overhead for single-model or receipt-based feature extraction tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and evidence memoization for spline qualification and ARC reader checks when upstream evidence remains unchanged.",
+    "Instrument compute-bound feature reconstruction and lengthy synthesis tasks with granular intra-task phase timers.",
+    "Persist explicit synchronous start and end lifecycle timestamps in experiment receipts and capture continuous in-flight GPU telemetry during active runs."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Across 8 completed experiments and 40.0 minutes of milestone wall time, execution latency was primarily driven by synthesis tasks led by spline isolation qualification (11.34 minutes) and ARC reader gap closure (8.99 minutes), while the sole compute-bound task took 4.42 minutes to reconstruct sentence features from receipts. Post-milestone GPU utilization registered 0% on the RTX 3090 as expected for synthesis-only workloads with gpu_idle_on_compute_bound_tasks verified as false. Future tooling should prioritize incremental receipt caching and evidence memoization for static artifact checks alongside granular intra-task phase timers, with estimated time savings conservatively held at 0% pending empirical validation."
+}

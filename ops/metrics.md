@@ -4019,3 +4019,13 @@ One adversarial reviewer checked the retrospective and verified compliance again
 
 One adversarial reviewer checked the retrospective and verified compliance against locked fields, authoritative numbers, and repo rules.
 
+## Session: 2026-10-08 Milestone 2026.10.717 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|---|---|---|---|---|
+| 1 | 2026-10-08T22:36:36Z | 2026-10-08T22:38:27Z | Wrote operational retro for milestone 2026.10.717; ran adversarial reviewer subagent (approved clean) | ~22k |
+
+One adversarial reviewer checked the retrospective and verified compliance against locked fields, authoritative numbers, and repo rules.
+
