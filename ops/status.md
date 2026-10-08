@@ -1,5 +1,29 @@
 # Carnot — Operational Status
 
+## 2026-10-08 — V716 research plan staged
+
+Next milestone `2026.10.716` has fourteen tasks, Exp8290–Exp8303, in four
+phases. Its matching design and YAML are
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. V715's full design is preserved separately.
+
+V715 qualified contract/mechanics, then native llama.cpp enumeration failed
+with invalid device ordinal before any model load. Eight science tasks did
+not execute; H1/H2 remain unmeasured. ARC's required consumer timeout remains
+disqualified; KV260 lacked current capture costs; GateMate remains unchanged.
+
+V716 adds direct driver/context/copy fault localization and an independent
+CPU dependency-scoped admission study. It retains frozen evidence-intervention
+and delayed-learning experiments behind actual readiness/budget gates. Four
+LLM tasks explicitly use Qwen3.8-27B Q4_K_M bounded generation. ARC retains the
+same consumer tests with separate deadlines; KV260 gains independent CPU cost
+evidence; GateMate requires dated physical change. PolarFire graduation is
+reauthenticated with board-local CPU scope. No new experiment is activated.
+
+Planning validation is recorded in the V716 changelog entry. Scoped passes
+are not a global repository-health claim. No active roadmap or conductor edit,
+generator training, external publication, or push is part of this work.
+
 ## 2026-10-07 — V713 research plan staged
 
 Milestone `2026.10.713` proposes exactly fourteen tasks, Exp8248–Exp8261,

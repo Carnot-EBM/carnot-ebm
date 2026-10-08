@@ -1,5 +1,27 @@
 # Carnot — Changelog
 
+## 2026-10-08 — Plan milestone 2026.10.716
+
+- Added a dated primary/secondary research scan before experiment design,
+  including GRACE dependency checks, delayed feedback, KAN locality and
+  hardware cost boundaries; recorded source-access limits.
+- Created matching fourteen-task design/YAML, Exp8290–Exp8303, with a complete
+  task contract, structured gates, mandatory model/substrate declarations,
+  progress requirements, failure lineage and explicit deliverables.
+- Added independent CPU constraint-admission research and direct CUDA layer
+  diagnosis. Preserved the unmeasured H1/H2 protocol, historical failed
+  artifacts, ARC consumer obligations and precise hardware claim boundaries.
+- Preserved V715's full design and reconciled the planning spec, traceability
+  and status. Planning only; active roadmap, conductor and frozen science
+  remain unchanged. No experiment was activated and nothing was pushed.
+
+Validation: 105 selected tests including private E2E-018 passed; exact full
+contract/digest, schema, gate, retirement, execution-fit, ARC and overdue-priority
+checks passed, as did scoped Ruff/spec coverage and diff whitespace checks.
+Global reconciliation retains the documented 1,142 unrelated missing test
+references; documentation freshness passed. Details:
+`docs/research-notes/v716-plan-validation.md`.
+
 ## 2026-10-07 — Plan milestone 2026.10.713
 
 - Recorded a current primary/secondary research scan before experiment design.

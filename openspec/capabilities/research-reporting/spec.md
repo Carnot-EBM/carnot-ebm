@@ -96108,3 +96108,33 @@ Stale terminal evidence retains its exact failed operand and prevents graduation
 Private CLI evidence cold-replays outside the checkout. Negative and rehashed
 aggregate/primitive mutations fail. No fixture is written below live results/.
 The conductor owns ops/status, changelog and traceability reconciliation.
+
+## V716 staged research contract (2026-10-08)
+
+### REQ-REPORT-V716-PLAN: Independent CPU learning checks and qualified live continuation
+
+The staged V716 planning artifacts shall describe exactly fourteen ordered
+experiments, Exp8290 through Exp8303, in four phases. The visible task table,
+complete embedded JSON task objects, canonical digest and next-roadmap YAML
+shall agree. This is a planning requirement, not an implemented experiment or
+an activation receipt. Preserve the active roadmap, conductor and frozen V713
+scientific protocol. Preserve V715's design and failure evidence separately.
+
+Every prompt shall require bounded tool calls, flushed phase/child/loop
+progress, exact gate fields, per-unit evidence, closed verdict classes and
+four-field failure lineage. Qwen3.8-27B Q4_K_M bounded generation is declared
+only by the four actual LLM tasks. A CPU dependency-closure study runs without
+CUDA or natural-study gates; its fixture success cannot establish natural
+learning or independent generalization. V715 native CUDA failure and ARC
+consumer timeout remain failures until new current evidence qualifies.
+
+### SCENARIO-REPORT-V716-PLAN: Validate staged agreement without activation
+
+Given the V716 design and next-roadmap YAML, existing schema, gate, retirement,
+execution-fit and ARC policy validators shall pass. The existing authority
+reader shall verify staged agreement with explicit milestone/range arguments;
+using staged bytes in both comparison slots does not establish activation.
+Private authority-lifecycle CLI tests shall check positive and negative paths.
+Scoped spec coverage and documentation reconciliation shall record the actual
+validation scope and any unrelated repository-health failures. The future
+experiment agents add their own REQ/SCENARIO and failing tests before code.

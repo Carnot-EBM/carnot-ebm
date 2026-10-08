@@ -51371,3 +51371,99 @@ Paper results remain external evidence; no Carnot benefit was measured here.
 The experiment implications are better evidence tracing and asymmetric-error /
 feedback-delay diagnostics. They do not alter the frozen scientific thresholds,
 add outcome-selected arms, or justify reopening retired mechanisms.
+
+## V716 planning research — 2026-10-08, before experiment design
+
+V715 qualified its execution contract. Its native llama.cpp device enumeration
+then reproduced CUDA Error 101, before loading Qwen. Eight science tasks did
+not execute. The cause remains unproved. Another ordinal-only retry would not
+change that evidence. Current literature supports keeping the unmeasured source
+intervention study fixed and testing one independent CPU learning mechanism.
+
+### Promising findings and proposed experimental use
+
+- **Scoped Verification for Reliable Long-Horizon Agentic Context Evolution
+  under Distribution Shift (GRACE)**, Hsu and Lu, July 2026, revised September 21.
+  [Primary v2 methods](https://arxiv.org/html/2607.09175v2),
+  [author code](https://github.com/RedMind-Research/GRACE).
+  Typed dependencies make local update checks possible. Consolidation and
+  contradiction checks have separate roles. The revised paper limits its
+  evidence to one telecom harness and acknowledges unmatched internal budgets.
+  Test a narrower deterministic adaptation on Carnot's constraint admission:
+  compare complete dependency closure with full rescanning and an unsafe local
+  truncation control. Measure missed conflicts, later decisions, touched state,
+  persistence and full update cost. This is a software mechanism study, not a
+  GRACE reproduction or evidence of natural-language learning benefit.
+- **Evidence-Aligned Entity Verification for Hallucination Detection in RAG**,
+  September 2026, [paper](https://arxiv.org/abs/2609.08267).
+  Preserve the registered original/selected-deletion/control-deletion study.
+  Source sensitivity is an input feature, not a truth label. Actual CUDA context
+  qualification must precede the bounded Qwen canary; measured canary throughput
+  must qualify each larger capture budget separately.
+- **Adaptive Conformal Inference Under Delayed Feedback**, September 2026,
+  [paper](https://arxiv.org/abs/2609.07251).
+  Preserve issue-before-release ordering and compare later, distinct-source
+  decisions. The existing Beta-count learner is not ACI and inherits no coverage
+  guarantee. Dependency pruning must not bypass delayed-label boundaries.
+- **Ultrafast On-Chip Online Learning via Spline Locality in KANs**, revised
+  June 2026, [paper](https://arxiv.org/abs/2602.02056).
+  Locality motivates measuring state touches and quantization, separately from
+  complete transaction latency. This supports a CPU adjacency-index prototype
+  and a future FPGA lookup path; it does not establish speed on Carnot boards.
+- **Ontology-Mediated Neurosymbolic Constraint Acquisition from Multiple
+  Stakeholders**, September 24, 2026,
+  [paper](https://arxiv.org/abs/2609.29876).
+  The distinction between hard specifications and soft learned preferences is
+  useful for the admission stress test. Learned suggestions must never remove
+  static hard constraints. Do not import an OWL subsystem for this narrow test.
+- **Constraint acquisition needs better benchmarks**, May 2026,
+  [paper](https://arxiv.org/abs/2605.26279).
+  MPMMine pairs formal models with domain artifacts. Keep this as a future
+  extraction benchmark after license, data and exposure checks. A generated
+  dependency fixture cannot establish semantic extraction accuracy.
+
+### Requested primary-source coverage
+
+| Area | Primary source checked | Decision |
+|---|---|---|
+| EBM reasoning and verification | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM/EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605) | Keep small verification heads and equal-information probability controls. No energy-as-generator revival. |
+| Neural constraints | [HardNet++, 2604.19669](https://arxiv.org/abs/2604.19669); ontology acquisition above | Formal validity applies to the encoded problem; faithful extraction remains separate. The retired repair stack stays closed. |
+| Ising in ML | [Neural Ising Machines, 2602.00302](https://arxiv.org/abs/2602.00302) | Learned local dynamics remain a future sampler lead; not a replacement for evidence extraction. |
+| Hallucination detection | Evidence-aligned verification above; [counterfactual probing, 2508.01862](https://arxiv.org/abs/2508.01862) | Keep perturbation effects separate from correctness and include matched deletion controls. |
+| KAN and continual learning | Online KAN, delayed feedback and GRACE above | Test bounded updates, causal reuse, conflicts and retention separately. |
+| Energy-guided decoding | [ETS, 2601.21484](https://arxiv.org/abs/2601.21484) | Defer steering until useful verifier decisions qualify. |
+| FPGA/thermodynamic sampling | [FPGA–ASIC co-design, 2602.15985](https://arxiv.org/abs/2602.15985); [Scaling Up Thermodynamic AI Models, 2607.00170](https://arxiv.org/abs/2607.00170) | Account for compatible operations, sample correlation, host work and transfer. Do not equate sample rate with useful service throughput. |
+
+### Secondary sources checked and access limits
+
+- **OpenReview:** searched ICLR/ICML 2026 and NeurIPS 2025 EBM submissions.
+  Indexed [EBT proceedings](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  and a [reasoning-verification paper](https://openreview.net/pdf/91870c1fe75134b7dc25ff28dc74b4434d060b51.pdf)
+  surfaced. The latter's direct PDF request reached a browser challenge.
+  [Energy Matching](https://openreview.net/pdf?id=WYSCCw7mCe) surfaced in the
+  NeurIPS search. No uninspected submission changes the experimental method.
+- **Semantic Scholar:** attempted Graph API citation lists for ARXIV:2507.02092
+  and ARXIV:2512.15605, plus indexed searches. Both API reads returned tool errors.
+  No verified citing-paper inventory was recovered. Citation coverage is
+  incomplete; this does not imply either anchor has no citations.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification)
+  and followed [GRACE](https://huggingface.co/papers/2607.09175) to its primary
+  v2 paper. The feed's abstract retains an earlier result. Use the primary
+  version for scope and method; do not copy feed performance numbers.
+- **Extropic:** checked [Writing](https://extropic.ai/writing),
+  [Z1T](https://extropic.ai/writing/z1t/) and the
+  [author implementation](https://github.com/extropic-ai/sparse-transformers).
+  Z1T's headline estimates exclude final vocabulary readout and inter-chip
+  movement. Its full-readout example materially changes the energy boundary.
+  This reinforces complete-service accounting, not a local TSU performance claim.
+- **GitHub Trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned snapshots
+  were three weeks old. No current trending rank or newly trending EBM/KAN
+  repository is asserted. GRACE and Extropic code were checked separately.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  It describes an energy-based constraint layer but supplies no inspected local
+  training or benchmark recipe. It remains architectural context.
+
+These findings support bounded experiments and explicit claim limits. They do
+not authorize generator training, hardware purchases, external publication,
+relabeling exposed data, or changes to the frozen intervention thresholds.

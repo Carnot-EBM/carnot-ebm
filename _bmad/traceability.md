@@ -1,5 +1,28 @@
 # Carnot — Traceability Matrix
 
+## Planned V716 research mapping — 2026-10-08
+
+Milestone `2026.10.716` stages fourteen tasks, Exp8290–Exp8303, across four
+phases. The design and complete machine contract are in
+`openspec/change-proposals/research-roadmap-vNEXT.md`; execution prompts are in
+`research-roadmap-next.yaml`. These are planned experiments, not implemented
+capabilities or new findings. REQ-REPORT-V716-PLAN binds planning validation.
+
+| PRD requirement | Planned tasks | Existing capability anchor |
+|---|---|---|
+| FR-06 training, FR-12 verifiable reasoning | Exp8292–Exp8297 | verification/spec.md; REQ-VERIFY-8263 and frozen V713 science |
+| FR-11 continuous self-learning | Exp8291, Exp8298–Exp8299 | typed_admission_8263; causal-memory and crash-resume requirements |
+| FR-05 dual-language, FR-08 interoperability, NFR-01 performance | Exp8290, Exp8292 capture costs, Exp8301–Exp8302 | verification/spec.md and research-reporting/spec.md; hardware boundaries |
+| FR-09, FR-10 reproducibility and integration | Exp8290, Exp8303; every task's owned checks | REQ-REPORT-7837, REQ-REPORT-7891-V685, REQ-REPORT-V716-PLAN |
+| ARC generalization standing floor | Exp8300 | arc-world-model-trust-energy/spec.md; supervisor outcome authority |
+| Attached-board continuity | Exp8301–Exp8303 | KV260 costs; GateMate dated changes; authenticated Exp8259 PolarFire graduation |
+
+V715's complete design is preserved at
+`openspec/change-proposals/research-roadmap-v715-preserved-20261008.md`.
+H1/H2 remain unmeasured after native CUDA failure. H3 is an independent CPU
+fixture study, not a substitute natural-benefit claim. The active roadmap,
+conductor and frozen scientific protocol remain unchanged.
+
 ## Planned V713 research mapping — 2026-10-07
 
 The staged contract contains fourteen tasks, Exp8248–Exp8261. Its complete
