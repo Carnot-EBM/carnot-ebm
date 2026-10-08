@@ -427,3 +427,9 @@ Additional official ARC-AGI-3 Semi-Private results absent from your supplied fin
 
 - **September 29 — GPT-6.1 Sol verified results:** ARC-AGI-3 Semi-Private scores reached **52.7%** with the Standard harness at max reasoning and **96.4%** with the Provider Adapter harness at xhigh reasoning. [Official results](https://arcprize.org/results/openai-gpt-6-1-sol).
 
+## 2026-10-08 13:10 UTC -- NEW
+
+- **September 3 — GPT-6 Astra verified results:** **62.7%** on ARC-AGI-3 Semi-Private with the Standard harness (max reasoning), and **99.9%** with the Provider Adapter harness (high reasoning). ARC Prize also announced separate, labeled reporting of both harnesses. [Official announcement](https://arcprize.org/blog/astra)
+
+- **October 23 — Research Summit:** ARC Prize announced a Boston research summit hosted with MIT; attendance and presentation applications are available. [Official event page](https://arcprize.org/events/research-summit-2026)
+

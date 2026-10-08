@@ -51674,3 +51674,45 @@ Freeze validation argv. Run current private coverage and protocol tests, embedde
 token counts, focal <=64 token controls, independent view/admission, genuine
 crash resume and private E2E-015/019. All added statements, CLI and children
 must be covered. Retain full-suite diagnostics separately from owned validation.
+
+## REQ-VERIFY-8291: Exact dependency-scoped admission fixture
+
+Freeze seeds 7161/7162/7163, 32/128 immutable hard constraints, chain/sparse DAG/
+cyclic/dense graphs and 64 ordered proposals per graph before timing. Declare
+Boolean, equality and implication semantics and every dependency. Compare an
+independent full rescan, fixed-point dependency closure with absent-metadata full
+fallback, and unsafe one-hop negative control on identical events. Eligible
+feedback follows an fsynced issue at delay eight; source duplicates, stale
+feedback and contradictory additions cannot mutate committed state. Derived
+state and invalidations propagate through transitive/cyclic components. Retention
+constraints never receive updates. Do not change the natural V713/V714 protocol.
+
+### SCENARIO-VERIFY-8291-STATE
+
+The scoped arm matches full rescan at every issue/release and detects planted
+transitive conflicts; the unsafe one-hop arm misses at least one. Genuine owned
+children die after issues 24/48 before due feedback, then resume with identical
+IDs, decisions, admissions, retractions, conflicts and final state. Rehashed
+primitive mutations fail causal replay. Five paired timings alternate order after
+one uncounted warm-up; independent units are graphs, with no confidence claim.
+
+### SCENARIO-VERIFY-8291-VALIDATION
+
+Trace tests before implementation. Measure all added statements including CLI
+and real children. Freeze commands/deadlines; run scoped lint/format, strict
+mypy, spec coverage, affected consumers, private E2E-015/019 and the full Python
+suite once. Preserve repository-health failure separately from owned validation.
+CPU measurement <=600 seconds and validation <=900 seconds. No model loads or
+LLM calls; generator weights remain frozen.
+
+Implementation 2026-10-08: `dependency_scoped_admission_8291.py` owns exact
+Boolean/equality/implication equations, conservative closure, independent full
+rescan, delayed unique-source admission/retraction and fsynced recovery. Eight
+traced private tests cover the real CLI and killed children. The frozen workload
+includes a safe derived component whose invalidation retracts transitive truth;
+whole-graph costs also include the first eight issue-only transactions.
+
+The ninth traced regression requires zero dependency-closure traversal in the
+full-rescan arm. The first production timing attempt was invalidated and retained
+with code snapshots and termination evidence because that baseline also traversed
+closure. The rerun keeps all graph sizes, event streams and thresholds unchanged.

@@ -96161,3 +96161,36 @@ own gates. Missing historical primaries retain cascade skips without verdicts.
 Private durable coverage and protocol checks pass through the current thin CLI.
 Deletion of scratch and later roadmap changes do not invalidate frozen replay.
 Tampered primitive or stream bytes fail. Private fixture success is circular.
+
+## REQ-REPORT-8291: Primitive-bound CPU mechanics evidence
+
+Authenticate V714 typed-admission and durable-coverage primitives and their
+terminal bindings directly, without CUDA, Exp8290 or natural-study gates. Record
+exact operands and missing observations; external failures complete blocked and
+owned failures disqualify, with zero readiness. Persist every graph/event/arm,
+unique sources, dependency/fallback sets, admissions/retractions/conflicts, later
+issues, scan counts, monotonic closure/replay/persistence/total spans and hashes.
+Freeze the workload and validation argv before timing, recording the manifest
+hash in docs/research-notes/v716-dependency-scoped-admission.md. Fresh-process
+reduction and causal cold replay must reject rehashed tampering. Publish checked
+bytes atomically using unchanged primary_publication and terminal validators.
+
+### SCENARIO-REPORT-8291-TERMINAL
+
+H3 requires zero scoped/full disagreements, no hard violations, crash parity
+and planted-conflict sensitivity. Sparse efficiency additionally requires median
+constraint fraction <=0.5 and paired whole-transaction time <=full scan. Dense,
+cyclic and fallback costs remain visible. No measured advantage reports null;
+fixture success is circular_positive, verifier_is_oracle=true and both
+ generalization scores zero. Soundness readiness is separate from efficiency.
+Private fixtures remain outside results; the conductor owns ops/status,
+changelog and traceability reconciliation. Future natural adoption needs a
+separate preregistration.
+
+Implementation 2026-10-08: `dependency_admission_execution_8291.py` and the thin
+Exp8291 runner bind V714 primitives, the preregistered manifest, per-event byte
+hashes, graph-unit paired costs, crash receipts and unchanged terminal validators.
+The result lives at `results/experiment_8291_v716_dependency_scoped_admission.json`;
+its raw invocation contains frozen argv, journal/cost primitives, fresh reduction,
+measured statement custody and separate repository-health diagnostics. Fixture
+controls use private scratch. The conductor owns ops/status/traceability updates.
