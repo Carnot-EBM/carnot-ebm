@@ -51467,3 +51467,21 @@ Implementation: `kv260_evidence_cost_boundary_8273.py` authenticates current
 producer operands independently, reuses qualified fixed-point mechanics, and
 keeps Exp8242/8258 costs in explicitly historical rows. The focused Exp8273
 tests cover overlap, absent clocks, custody drift and synthetic fallback.
+## REQ-VERIFY-8274: Only post-Exp8260 physical evidence can reopen GateMate
+
+Reuse the qualified physical-change ledger and advance its evidence boundary to
+Exp8260's actual end clock, retaining every previously seen receipt hash. Scan
+only changed established operator receipt documents for dated cable, port, power,
+board or DirtyJTAG changes. Plans, milestones and elapsed time do not qualify.
+Preserve the exact original 0xffffffff transcript/hash. Absent new evidence emit
+one complete_blocked_gatemate_physical_change result. A change permits only a
+frozen future probe contract: documented setup change, authenticated GM1Ax IDCODE
+0x20000001, then flashed n16 tile with device sample/hash smoke. A host bitstream
+does not establish board execution. Execute no JTAG retry or new device claim.
+
+## SCENARIO-VERIFY-8274-FRONTIER
+
+Test receipts before/equal/after the end-clock frontier, invalid timestamps,
+duplicates, unauthored plans, wrong boards, future dates and authenticated changed
+documents. Cold replay rebuilds the frontier and parser rows from frozen bytes
+and rejects rehashed tampering rather than trusting claimed physical progress.

@@ -95869,3 +95869,26 @@ Implementation: `kv260_evidence_cost_execution_8273.py` and the thin Exp8273
 CLI reuse qualified bounded supervision and unchanged terminal publication.
 `test_kv260_evidence_cost_boundary_8273.py` exercises private children, replay,
 owned failures and terminal rejection with 100 percent new statement coverage.
+## REQ-REPORT-8274: Carry the V714 GateMate physical obligation
+
+Authenticate pinned Exp8260 primary and its byte-bound terminal sidecar before
+comparing operator evidence. Preserve original transcript/hash and one excluded
+board obligation. Declare aggregation_from_upstream_artifacts, no_model_load,
+MODEL_SPECS=[], no trained heads and zero current model, device and JTAG calls.
+Audit readiness is separate from execution readiness and scientific benefit;
+both generalization scores remain zero. Freeze private validation commands before
+measurement; require real CLI and child statement coverage at 100 percent, scoped
+Ruff/format, strict mypy, explicit spec checks, consumers and E2E-015/019.
+Run the full Python health command once, bounded and separately, preserving its
+actual exit and stream hashes. Missing external operands block by name; failed
+owned checks disqualify and zero readiness. Cold-replay primitives, authenticate
+negative and rehashed-tamper cases and publish only atomically after normal exit
+through unchanged primary/terminal checks. The conductor reconciles ops and
+traceability; this producer does not edit those three files.
+
+## SCENARIO-REPORT-8274-CLI
+
+Private changed, unchanged and missing-input runs preserve unavailable evidence,
+exact identity, one excluded unit and zero device success. Fresh-process replay
+rejects altered identity, summary or rehashed primitives. Failed validation leaves
+historical primary bytes intact and preserves honest failure artifacts.
