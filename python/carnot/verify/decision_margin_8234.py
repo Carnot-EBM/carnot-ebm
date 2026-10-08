@@ -10,7 +10,7 @@ import hashlib
 import math
 import time
 from collections.abc import Callable
-from typing import Any, cast
+from typing import Any
 from unittest.mock import patch
 
 import numpy as np
@@ -76,7 +76,7 @@ def objective(
     if w.shape != y.shape or not np.isfinite(w).all() or np.any(w <= 0):
         raise ValueError("weights")
     if np.all(w == w[0]):
-        return cast(tuple[float, base.Array], BASE_OBJECTIVE(theta, phi, y, ridge))
+        return BASE_OBJECTIVE(theta, phi, y, ridge)
     penalty = theta.copy()
     penalty[0] = 0
     z, total = phi @ theta, float(w.sum())

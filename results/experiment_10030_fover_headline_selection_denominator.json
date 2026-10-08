@@ -1,0 +1,1579 @@
+{
+ "schema": "carnot.fover_headline_selection_denominator_v1",
+ "experiment": "experiment_10030_fover_headline_selection_denominator",
+ "honest_verdict": "complete: headline_survives_held_out_but_learning_contribution_not_established_on_clean_rows",
+ "inference_substrate": "verifier_ensemble_against_cached_candidates",
+ "verifier_is_oracle": false,
+ "solve_provenance_not_applicable": "not an ARC solve",
+ "model_specs": {
+  "live_model_invoked": false,
+  "note": "CPU verifier scoring of a cached labeled corpus; no LLM is loaded."
+ },
+ "random_seed": 10030,
+ "random_seeds_used": [
+  42,
+  137,
+  271,
+  314,
+  1729
+ ],
+ "reproducibility_checksum": "d6dac92f1f15774fb2085c3d1ac8f3e866b479f046372d0b16197efe3771b3c9",
+ "duration_s": 430.4738365650177,
+ "stage_wall_times": {
+  "variants_and_constants_log_first_last": [
+   "15:08:47",
+   "exited w"
+  ],
+  "prior_stage_seconds_from_run_logs": {
+   "scoring_and_statistics": 13.7,
+   "memory_effect": 8.0,
+   "variants_and_constants": 407.7
+  },
+  "final_stage_seconds": 1.0738394260406494
+ },
+ "preconditions_checked": [
+  {
+   "resource": "data/fover_corpus.jsonl",
+   "available": true
+  },
+  {
+   "resource": "results/experiment_2837_fover_memory_leakage_v3.json",
+   "available": true
+  }
+ ],
+ "corpus": {
+  "path": "data/fover_corpus.jsonl",
+  "sha256": "585a4b8099fae140b850e10d36f121e0a25e645c8d0d264936d5efa0a62b330f",
+  "n_rows": 8829,
+  "n_positive": 1659
+ },
+ "control_reproduces_published": {
+  "A": {
+   "per_seed": [
+    0.914952,
+    0.908738,
+    0.90145,
+    0.917102,
+    0.923426
+   ],
+   "mean": 0.9131335999999999,
+   "published_mean": 0.9131335999999999,
+   "abs_diff": 0.0
+  },
+  "B": {
+   "per_seed": [
+    0.897008,
+    0.897914,
+    0.881334,
+    0.893026,
+    0.90403
+   ],
+   "mean": 0.8946624,
+   "published_mean": 0.8946624,
+   "abs_diff": 0.0
+  },
+  "reproduces_published_to_1e-4": true
+ },
+ "variant_definition_text": "A variant counts if it produced a stored or reported AUROC on FoVer-derived rows AND differs from the headline in at least one of: (1) verifier set or score formula; (2) corpus file or label definition; (3) subset size, sampling method or seed list; (4) state condition. Abandoned variants count. Tags: NOT_LABEL_INFORMED needs written evidence of a fixed rule; LABEL_INFORMED means chosen after seeing FoVer AUROC; UNKNOWN is counted as LABEL_INFORMED. Frozen before counting.",
+ "n_variants_total": 68,
+ "n_not_label_informed": 13,
+ "n_label_informed": 2,
+ "n_unknown": 53,
+ "n_counted_as_label_informed": 55,
+ "n_candidates_scanned": 214,
+ "n_counted_before_headline_date": 31,
+ "headline_artifact_first_commit_date_used": "2026-05-21T21:49:47-04:00",
+ "variant_table": [
+  {
+   "artifact": "experiment_1003_spilled_energy_live_gpu_v4.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-04-28T10:25:26-04:00",
+   "auroc_fields": {
+    "spilled_energy_live_auroc": 0.5,
+    "nup_probe_live_auroc": 0.6111
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_1168_sc_energy_7th_verifier.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-02T21:50:45-04:00",
+   "auroc_fields": {
+    "sc_energy_7th_verifier_auroc": 1.0,
+    "sc_energy_auroc": 1.0,
+    "sc_energy_auroc_above_threshold": true
+   },
+   "corpus_files_referenced": [
+    "fover_corpus_v4.json",
+    "fover_labeled_steps"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_1171_diffusion_of_thought_inference_v1.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-02T21:50:45-04:00",
+   "auroc_fields": {
+    "baseline_energy_auroc": 0.5,
+    "dot_t125_auroc": 0.5,
+    "dot_t1_auroc": 0.5,
+    "dot_t25_auroc": 0.5,
+    "dot_t5_auroc": 0.5
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_1211_fover_expansion_v7_hard_negatives.json",
+   "found_by": "filename",
+   "first_commit_date": "2026-05-03T14:26:00-04:00",
+   "auroc_fields": {
+    "k5_auroc_delta": 0.033575,
+    "k5_auroc_post_expansion": 0.963925,
+    "k5_auroc_pre_expansion": 0.93035
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_1365_eidoku_csp_neuro_symbolic_verification_probe.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-05T12:21:10-04:00",
+   "auroc_fields": {
+    "eidoku_auroc_proxy": 0.614
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_1367_diffutruth_energy_of_falsehood_probe.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-05T12:53:29-04:00",
+   "auroc_fields": {
+    "detection_auroc_proxy": 0.866841
+   },
+   "corpus_files_referenced": [
+    "fover_corpus_v4.json",
+    "fover_corpus_v5.json"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_1415_dvi_v3_1508_fresh_cases.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-06T02:32:07-04:00",
+   "auroc_fields": {
+    "dvi_v2_auroc_delta_baseline": 0.011458,
+    "dvi_v3_auroc_delta": 0.011842,
+    "dvi_v3_baseline_auroc": 0.405984,
+    "dvi_v3_trained_auroc": 0.417826
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_1420_dpo_verified_pairs_1508.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-06T04:29:46-04:00",
+   "auroc_fields": {
+    "dpo_vs_baseline_auroc": 1.0
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_1423_process_reward_model_v1_fover_1508.json",
+   "found_by": "filename",
+   "first_commit_date": "2026-05-06T06:21:32-04:00",
+   "auroc_fields": {
+    "prmv1_auroc": 0.832874
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_1432_dvi_v3_nonforgetting_replay_balanced.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-06T13:06:23-04:00",
+   "auroc_fields": {
+    "dvi_v2_auroc_delta_baseline": 0.011458,
+    "dvi_v3_auroc_delta": 0.011842,
+    "dvi_v3_auroc_nonregression_gate": true,
+    "dvi_v3_baseline_auroc": 0.405984,
+    "dvi_v3_trained_auroc": 0.417826
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_1434_fover_prm_label_completion_v2.json",
+   "found_by": "filename",
+   "first_commit_date": "2026-05-06T13:47:26-04:00",
+   "auroc_fields": {
+    "prmv2_auroc": 0.851789
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2548_real_corpus_validation.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-19T19:25:25-04:00",
+   "auroc_fields": {
+    "tier0r_real_auroc": 0.9413750415828194,
+    "tier0s_real_auroc": 0.3758077973921437,
+    "tier0u_real_auroc": 0.535990952669208
+   },
+   "corpus_files_referenced": [
+    "fover_corpus_v4.json"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2596_tier0s_real_retrain.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-20T00:48:51-04:00",
+   "auroc_fields": {
+    "tier0s_real_auroc": 0.0
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2597_tier0u_real_fix.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-20T00:59:59-04:00",
+   "auroc_fields": {
+    "tier0u_real_auroc": 0.0
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2703_tier0f_semantic_calibration.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-20T15:49:18-04:00",
+   "auroc_fields": {
+    "tier0f_auroc": 0.9914783693451962,
+    "auroc_delta": 0.00046365403784998094
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2704_multi_agent_scaling_audit.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-20T15:54:48-04:00",
+   "auroc_fields": {
+    "saturation_auroc": 0.9928401156580431
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2716_tier0f_semantic_calibration_v2.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-20T17:58:02-04:00",
+   "auroc_fields": {
+    "tier0f_auroc": 0.9923183148522198,
+    "auroc_delta": 0.0013035995448735793
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2718_linear_probe_calibration_v2.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-20T18:08:06-04:00",
+   "auroc_fields": {
+    "probe_auroc": 0.9904838051242351
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2723_behavioral_entanglement_reweighting.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-20T18:55:16-04:00",
+   "auroc_fields": {
+    "uniform_auroc": 0.7235840456202024,
+    "reweighted_auroc": 0.7153729168120854,
+    "auroc_lift": -0.00821112880811703
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2731_semantic_energy_tier0g.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-20T20:29:39-04:00",
+   "auroc_fields": {
+    "tier0g_auroc": 0.28839527637999635
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2732_entanglement_retirement_diversity_audit.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-20T20:34:38-04:00",
+   "auroc_fields": {
+    "uniform_auroc": 0.7235840456202024,
+    "diversity_selected_auroc": 0.723575584900153
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2743_tier0v_set_consistency.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-20T22:55:15-04:00",
+   "auroc_fields": {
+    "tier0v_auroc": 0.8183140495867768
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2746_paraphrastic_consistency_verifier.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-20T23:13:01-04:00",
+   "auroc_fields": {
+    "tier0w_auroc": 0.695494732372458
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2747_fr11_tier4_learning_benchmark.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-20T23:16:59-04:00",
+   "auroc_fields": {
+    "auroc_cycle1": 0.755,
+    "auroc_cycle2": 1.0,
+    "auroc_cycle3": 1.0
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2748_phase4_fep_factor_graph.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-20T23:23:39-04:00",
+   "auroc_fields": {
+    "fep_auroc": 0.48888888888888893
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2753_phase4_fep_redesign_v2.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-21T01:35:28-04:00",
+   "auroc_fields": {
+    "best_fep_auroc": 0.9947089947089947,
+    "strategy1_auroc": 0.544973544973545,
+    "strategy2_auroc": 0.9947089947089947,
+    "strategy3_auroc": 0.9788359788359788
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2755_fr11_tier4_adversarial_recheck_v2.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-21T02:01:25-04:00",
+   "auroc_fields": {
+    "auroc_cycle1": 0.5675,
+    "auroc_cycle2": 0.8049999999999999,
+    "auroc_cycle3": 0.9275
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2756_ensemble_v12_integration.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-21T02:11:28-04:00",
+   "auroc_fields": {
+    "ensemble_v12_auroc": 0.6124708624708625,
+    "ensemble_v11_auroc": 0.6013986013986015,
+    "auroc_lift": 0.011072261072261003
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2759_differentiable_conformal_calibration.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-21T02:34:53-04:00",
+   "auroc_fields": {
+    "tier0y_auroc": 0.8794642857142857
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2766_phase4_fep_adversarial_recheck.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-21T03:54:54-04:00",
+   "auroc_fields": {
+    "in_sample_auroc": 0.9947,
+    "loo_auroc": 0.9953374145473894,
+    "held_out_auroc": 0.9989917322040734
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_2769_ensemble_v13_tier0z.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-21T05:07:55-04:00",
+   "auroc_fields": {
+    "tier0z_auroc": 0.5065146535990241
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3439_verifier_ensemble_lambda_min_diversity_audit_v3.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-05-30T06:46:49-04:00",
+   "auroc_fields": {
+    "full_ensemble_auroc": 0.68865371
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3508_fover_step_to_final_aggregation_close_gap_v1.json",
+   "found_by": "filename",
+   "first_commit_date": "2026-05-31T01:52:02-04:00",
+   "auroc_fields": {
+    "fover_step_error_auroc_reference": 0.9131,
+    "unaggregated_process_energy_auroc_reference": 0.601,
+    "step_error_auroc": 0.9131,
+    "step_error_auroc_local_proxy": 0.68216,
+    "corpus_local_mean_auroc": 0.770396,
+    "unaggregated_final_correctness_auroc": 0.601,
+    "best_aggregation_final_correctness_auroc": 0.902632,
+    "recalibration_baseline_auroc": 0.625
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3520_fover_step_to_final_gap_deflag_verify_v2.json",
+   "found_by": "filename",
+   "first_commit_date": "2026-05-31T05:17:22-04:00",
+   "auroc_fields": {
+    "unaggregated_final_correctness_auroc": 0.719208,
+    "best_aggregation_final_correctness_auroc": 0.905535,
+    "shuffle_control_auroc": 0.452403
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3532_fover_step_aggregation_promote_n80_multiseed_ci_v1.json",
+   "found_by": "filename",
+   "first_commit_date": "2026-05-31T08:57:35-04:00",
+   "auroc_fields": {
+    "mean_final_correctness_auroc": 0.923444,
+    "unaggregated_final_correctness_auroc": 0.719208,
+    "mean_shuffle_control_auroc": 0.473802
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3543_fover_step_aggregation_cross_corpus_generalize_v1.json",
+   "found_by": "filename",
+   "first_commit_date": "2026-05-31T11:42:42-04:00",
+   "auroc_fields": {
+    "within_corpus_auroc": 0.905535,
+    "transfer_auroc": 0.861026,
+    "unaggregated_transfer_auroc": 0.749231,
+    "transfer_shuffle_control_auroc": 0.49641
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [
+    "fit on"
+   ],
+   "tag": "LABEL_INFORMED",
+   "tag_evidence_words": [
+    "fit on"
+   ],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3565_fover_step_aggregation_secondary_headline_multiseed_third_corpus_v3.json",
+   "found_by": "filename",
+   "first_commit_date": "2026-05-31T16:24:14-04:00",
+   "auroc_fields": {
+    "within_corpus_auroc": 0.5,
+    "transfer_auroc_b": 0.5,
+    "transfer_auroc_c": 0.903857
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3644_weaver_peer_comparison_v3.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-01T05:57:10-04:00",
+   "auroc_fields": {
+    "auroc_delta_correlation_aware_vs_weaver": -0.236268,
+    "ensemble_auroc_carnot": 0.919446,
+    "ensemble_auroc_correlation_aware": 0.635312,
+    "ensemble_auroc_unweighted": 0.736244,
+    "ensemble_auroc_weaver_style": 0.87158
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3646_trained_ebm_judge_ood_counterpoint_v2.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-01T07:15:48-04:00",
+   "auroc_fields": {
+    "confidence_only_baseline_auroc": 0.882162,
+    "fixed_ensemble_ood_reference_auroc": 0.331,
+    "in_domain_judge_auroc": 0.992504,
+    "ood_judge_auroc": 0.673554,
+    "shuffled_label_control_auroc": 0.423293
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3647_fr11_continuous_self_learning_v8.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-01T07:34:16-04:00",
+   "auroc_fields": {
+    "correlation_aware_auroc_gain": -0.002222
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3656_correlation_aware_weighting_paradox_diagnosis.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-01T11:05:39-04:00",
+   "auroc_fields": {
+    "dependency_aware_auroc_delta_vs_carnot": 0.013116,
+    "dependency_aware_auroc_gain_vs_naive": 0.29725,
+    "ensemble_auroc_carnot": 0.919446,
+    "ensemble_auroc_correlation_aware": 0.635312,
+    "ensemble_auroc_dependency_aware_proper": 0.932562,
+    "ensemble_auroc_naive_correlation_aware": 0.635312,
+    "ensemble_auroc_unweighted": 0.736244,
+    "ensemble_auroc_weaver_style": 0.87158,
+    "naive_auroc_delta_vs_weaver": -0.236268
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3659_trained_ebm_judge_ood_real_substrate_v3.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-01T11:56:50-04:00",
+   "auroc_fields": {
+    "confidence_only_baseline_auroc": 0.882162,
+    "in_domain_judge_auroc": 0.978741,
+    "ood_judge_auroc": 0.572465,
+    "shuffled_label_control_auroc": 0.500374,
+    "toy_head_ood_reference_auroc": 0.673554
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "NOT_LABEL_INFORMED",
+   "tag_evidence_words": [
+    "frozen"
+   ],
+   "counts_as_label_informed": false
+  },
+  {
+   "artifact": "experiment_3660_fr11_continuous_self_learning_v9.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-01T12:15:10-04:00",
+   "auroc_fields": {
+    "online_fusion_auroc_gain": 0.168457
+   },
+   "corpus_files_referenced": [
+    "fover_corpus_v4.json"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3667_dependency_aware_weighting_clean.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-01T14:24:05-04:00",
+   "auroc_fields": {
+    "auroc_carnot_current": 0.919446,
+    "auroc_dependency_aware_proper": 0.933238,
+    "auroc_unweighted": 0.736244,
+    "auroc_weaver_style": 0.87158
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3668_dependency_aware_weighting_heldout.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-01T14:38:44-04:00",
+   "auroc_fields": {
+    "heldout_auroc_carnot": 0.919964,
+    "heldout_auroc_dependency_aware": 0.933224
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [
+    "fit on"
+   ],
+   "tag": "LABEL_INFORMED",
+   "tag_evidence_words": [
+    "fit on"
+   ],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3693_external_comparator_dependency_vs_deentangled.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-02T00:19:30-04:00",
+   "auroc_fields": {
+    "carnot_current_auroc": 0.91303,
+    "dependency_aware_auroc": 0.924869,
+    "external_comparator_auroc": 0.928737,
+    "weaver_style_baseline_auroc": 0.743816
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3704_refreeze_disambiguate_dependency_vs_external_vs_fusion.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-02T05:07:35-04:00",
+   "auroc_fields": {
+    "carnot_current_auroc": 0.91303,
+    "dependency_aware_auroc": 0.924869,
+    "external_comparator_auroc": 0.928737,
+    "frozen_headline_auroc": 0.9131,
+    "fusion_auroc": 0.928462,
+    "strongest_candidate_auroc": 0.928737
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "NOT_LABEL_INFORMED",
+   "tag_evidence_words": [
+    "frozen"
+   ],
+   "counts_as_label_informed": false
+  },
+  {
+   "artifact": "experiment_3718_risk_coverage_abstention_characterization.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-02T12:08:38-04:00",
+   "auroc_fields": {
+    "baseline_auroc": 0.5,
+    "energy_auroc": 0.970578
+   },
+   "corpus_files_referenced": [
+    "fover_corpus_v4.json"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3772_fr11_self_learning_v17_verifier_precision_tracker.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-03T14:36:14-04:00",
+   "auroc_fields": {
+    "ensemble_auroc_under_learned_weighting": 0.881682
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-04T01:00:04-04:00",
+   "auroc_fields": {
+    "auroc_within_frozen_ci": true,
+    "ensemble_auroc_under_consolidation": 0.909748
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "NOT_LABEL_INFORMED",
+   "tag_evidence_words": [
+    "frozen"
+   ],
+   "counts_as_label_informed": false
+  },
+  {
+   "artifact": "experiment_3788_fr11_self_learning_v19_tier3_predictive.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-04T04:20:50-04:00",
+   "auroc_fields": {
+    "frozen_headline_ensemble_auroc": 0.9131335999999999,
+    "predictive_auroc": 0.9715
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "NOT_LABEL_INFORMED",
+   "tag_evidence_words": [
+    "frozen"
+   ],
+   "counts_as_label_informed": false
+  },
+  {
+   "artifact": "experiment_3800_gaming_resistance_mitigation_v2.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-04T08:18:11-04:00",
+   "auroc_fields": {
+    "clean_auroc_preserved": true
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "NOT_LABEL_INFORMED",
+   "tag_evidence_words": [
+    "frozen"
+   ],
+   "counts_as_label_informed": false
+  },
+  {
+   "artifact": "experiment_3803_fr11_v20_tier3_fast_path_gate.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-04T09:48:28-04:00",
+   "auroc_fields": {
+    "effective_auroc_at_operating_point": 0.92275,
+    "fallthrough_full_ensemble_auroc_all_scored_rows": 0.910346,
+    "fallthrough_full_ensemble_auroc_held_out": 0.89055,
+    "frozen_headline_ensemble_auroc": 0.9131335999999999
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "NOT_LABEL_INFORMED",
+   "tag_evidence_words": [
+    "frozen"
+   ],
+   "counts_as_label_informed": false
+  },
+  {
+   "artifact": "experiment_3813_fr11_v21_fast_path_robustness.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-04T13:19:33-04:00",
+   "auroc_fields": {
+    "effective_auroc_in_frozen_ci": false,
+    "effective_auroc_second_split": 0.9594,
+    "fallthrough_full_ensemble_auroc_second_split": 0.9196,
+    "frozen_headline_ensemble_auroc": 0.9131335999999999,
+    "v20_reported_effective_auroc": 0.92275
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "NOT_LABEL_INFORMED",
+   "tag_evidence_words": [
+    "frozen"
+   ],
+   "counts_as_label_informed": false
+  },
+  {
+   "artifact": "experiment_3820_fover_formal_vs_learned_ablation.json",
+   "found_by": "filename",
+   "first_commit_date": "2026-06-04T15:34:39-04:00",
+   "auroc_fields": {
+    "full_ensemble_auroc": 0.8928656,
+    "formal_only_auroc": 0.9612012,
+    "learned_only_auroc": 0.8897999999999999
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "NOT_LABEL_INFORMED",
+   "tag_evidence_words": [
+    "frozen"
+   ],
+   "counts_as_label_informed": false
+  },
+  {
+   "artifact": "experiment_3826_fover_ablation_faithful.json",
+   "found_by": "filename",
+   "first_commit_date": "2026-06-04T20:22:48-04:00",
+   "auroc_fields": {
+    "full_ensemble_auroc": 0.9131335999999999,
+    "formal_only_auroc": 0.8946624,
+    "learned_only_auroc": 0.8699464000000001
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "NOT_LABEL_INFORMED",
+   "tag_evidence_words": [
+    "frozen"
+   ],
+   "counts_as_label_informed": false
+  },
+  {
+   "artifact": "experiment_3835_formal_core_5seed_ci.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-04T22:28:32-04:00",
+   "auroc_fields": {
+    "full_ensemble_auroc_mean": 0.913134,
+    "formal_only_auroc_mean": 0.894662,
+    "learned_only_auroc_mean": 0.869946
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3864_fr11_self_learning_v23_independence_reweighting.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-05T09:25:20-04:00",
+   "auroc_fields": {
+    "auroc_in_frozen_ci": true,
+    "frozen_headline_ensemble_auroc": 0.9131,
+    "reweighted_ensemble_auroc": 0.90592
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "NOT_LABEL_INFORMED",
+   "tag_evidence_words": [
+    "frozen"
+   ],
+   "counts_as_label_informed": false
+  },
+  {
+   "artifact": "experiment_3884_in_distribution_error_rich_corpus.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-06T05:10:55-04:00",
+   "auroc_fields": {
+    "carnot_ensemble_auroc_on_corpus": 0.9666888888888889
+   },
+   "corpus_files_referenced": [
+    "fover_corpus_v4.json"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3885_moat_scissor_in_distribution.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-06T05:28:33-04:00",
+   "auroc_fields": {
+    "carnot_ensemble_auroc": 0.9666888888888889,
+    "reasoner_self_verify_auroc": 0.5
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3888_fr11_v24_independence_reweighting.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-06T06:24:17-04:00",
+   "auroc_fields": {
+    "frozen_headline_ensemble_auroc": 0.9131,
+    "learned_ensemble_auroc": 0.907548
+   },
+   "corpus_files_referenced": [
+    "fover_corpus_v4.json"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "NOT_LABEL_INFORMED",
+   "tag_evidence_words": [
+    "frozen"
+   ],
+   "counts_as_label_informed": false
+  },
+  {
+   "artifact": "experiment_3895_moat_scissor_tested_harness.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-06T22:18:37-04:00",
+   "auroc_fields": {
+    "carnot_ensemble_auroc": 0.9666888888888889,
+    "reasoner_self_verify_auroc": 0.5463111111111111
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3916_moat_scissor_accuracy.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-07T03:59:11-04:00",
+   "auroc_fields": {
+    "carnot_ensemble_auroc": 0.9666888888888889,
+    "harness_fixture_auroc": 0.9166666666666666,
+    "reasoner_auroc_strong": 0.6626666666666666,
+    "reasoner_auroc_weak": 0.44226666666666664
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3917_efficiency_head_to_head.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-07T05:38:37-04:00",
+   "auroc_fields": {
+    "energy_auroc": 0.8100177915518825,
+    "llm_judge_auroc": 0.4423209366391185
+   },
+   "corpus_files_referenced": [
+    "fover_corpus_v4.json"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_3921_fr11_v25_independence_reweighting.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-07T07:56:56-04:00",
+   "auroc_fields": {
+    "frozen_headline_ensemble_auroc": 0.9131,
+    "learned_ensemble_auroc": 0.907824
+   },
+   "corpus_files_referenced": [
+    "fover_corpus_v4.json"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "NOT_LABEL_INFORMED",
+   "tag_evidence_words": [
+    "frozen"
+   ],
+   "counts_as_label_informed": false
+  },
+  {
+   "artifact": "experiment_3930_fr11_v26_cascade_band_online_learning.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-07T20:13:55-04:00",
+   "auroc_fields": {
+    "frozen_headline_ensemble_auroc": 0.9131,
+    "learned_ensemble_auroc": 0.908036
+   },
+   "corpus_files_referenced": [
+    "fover_corpus_v4.json"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "NOT_LABEL_INFORMED",
+   "tag_evidence_words": [
+    "frozen"
+   ],
+   "counts_as_label_informed": false
+  },
+  {
+   "artifact": "experiment_4375_verifier_as_detector_measurement.json",
+   "found_by": "references_fover_corpus_file",
+   "first_commit_date": "2026-06-18T04:26:14-04:00",
+   "auroc_fields": {
+    "detector_auroc": 0.918304
+   },
+   "corpus_files_referenced": [
+    "fover_corpus.jsonl"
+   ],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  },
+  {
+   "artifact": "experiment_fover_stepverifier_vs_cheap_baseline.json",
+   "found_by": "filename",
+   "first_commit_date": "2026-07-01T12:34:27-04:00",
+   "auroc_fields": {
+    "verifier_auroc": 0.9663,
+    "cheap_baseline_auroc": 0.9635,
+    "delta_auroc": 0.0028
+   },
+   "corpus_files_referenced": [],
+   "tuning_words_in_text": [],
+   "tag": "UNKNOWN",
+   "tag_evidence_words": [],
+   "counts_as_label_informed": true
+  }
+ ],
+ "not_counted_table_summary": {
+  "no stored AUROC field": 131,
+  "the headline artifact itself": 1,
+  "restatement or re-run of the headline (name rule)": 14
+ },
+ "variant_count_limits": "Counts are an upper bound on candidates. 'Differs from the headline in at least one class' was NOT checked per artifact; only restatements (name rule) and artifacts with no stored AUROC field were excluded. Tags come from keyword evidence in the artifact text only; commit messages were not read. UNKNOWN is counted as label-informed by the frozen definition.",
+ "constants_provenance": {
+  "weight_0.9_r_score": {
+   "needle": "0.9 * r_score",
+   "n_commits": 9,
+   "earliest": "0e0b0d557e 2026-05-21T21:49:47-04:00 [conductor] FoVer Memory-Leakage Isolation v3 (gated on exp2836 SOTA runtime)",
+   "latest": "7d5545c118 2026-06-18T04:26:14-04:00 [conductor] PHASE D1 (ORACLE-DISTINCT ACCURACY complementary measurement; 2026-06-14 P0 MANDATORY) -- the verifier-as-DETECTOR measurement. The standing P0 directive: HEADLINE = an oracle-distinct learned/energy verifier (the in-generation moat, Phase C); COMPLEMENTARY = the verifier-as-DETECTOR measurement (cheap; cached data) -- detection AUROC where SELECTION headroom is ~0. This is the cheap, infra-INDEPENDENT probe of the oracle-distinct ACCURACY frontier that is NOT hostage to the DiffusionGemma infra (which has blocked 3x), diversifying the 'verifier earns its place' bet across THREE vehicles (efficiency/Phase A, in-generation/Phase C, detection/here). Per the spec (docs/research-notes/verifier-as-detector-measurement-spec.md): measure whether the verifier ensemble DETECTS step-errors (AUROC) on corpora where it cannot SELECT a better answer (oracle@K == vote@1, ~0 selection headroom). Emit detector_auroc BARE float + detector_beats_chance BARE bool (AUROC CI95 lower bound > 0.5). verifier_is_oracle=false (a learned/energy detection signal, oracle-distinct). Cached candidates, no live LLM. If a prior detector measurement exists, EXTEND it to a NEW corpus/condition (no churn). NO TRM training.",
+   "first_five": [
+    "0e0b0d557e 2026-05-21T21:49:47-04:00 [conductor] FoVer Memory-Leakage Isolation v3 (gated on exp2836 SOTA runtime)",
+    "9408d74773 2026-05-23T15:44:02-04:00 [conductor] Verifier Ensemble AUPRC on Code Corpora at 92.5% Negative Base Rate (Deep Think FATAL #5 Rescue)",
+    "15102b46e2 2026-06-04T20:22:48-04:00 [conductor] FoVer formal-vs-learned ablation FAITHFUL re-run: fix the harness so full_ensemble reproduces 0.9131 \u00b10.01, then trust formal_only (the provisional 0.9612 contamination-free-core finding).",
+    "1a402f45b4 2026-06-04T21:37:33-04:00 [conductor] Operational retrospective for milestone 2026.06.352",
+    "89732c4715 2026-06-05T02:27:59-04:00 [conductor] Verifier error-INDEPENDENCE scissor AT SCALE (DT-P2 moat-durability): of the gold step-errors a strong SOTA reasoner (Qwen3.6-35B) self-verification MISSES, what fraction does Carnot's k=15 ensemble independently catch? N>=1000, bootstrap CI95, two positive controls. Confirms or refutes exp3827's small-sample 'moat survives'."
+   ]
+  },
+  "weight_0.1_u_score": {
+   "needle": "0.1 * u_score",
+   "n_commits": 10,
+   "earliest": "0e0b0d557e 2026-05-21T21:49:47-04:00 [conductor] FoVer Memory-Leakage Isolation v3 (gated on exp2836 SOTA runtime)",
+   "latest": "7d5545c118 2026-06-18T04:26:14-04:00 [conductor] PHASE D1 (ORACLE-DISTINCT ACCURACY complementary measurement; 2026-06-14 P0 MANDATORY) -- the verifier-as-DETECTOR measurement. The standing P0 directive: HEADLINE = an oracle-distinct learned/energy verifier (the in-generation moat, Phase C); COMPLEMENTARY = the verifier-as-DETECTOR measurement (cheap; cached data) -- detection AUROC where SELECTION headroom is ~0. This is the cheap, infra-INDEPENDENT probe of the oracle-distinct ACCURACY frontier that is NOT hostage to the DiffusionGemma infra (which has blocked 3x), diversifying the 'verifier earns its place' bet across THREE vehicles (efficiency/Phase A, in-generation/Phase C, detection/here). Per the spec (docs/research-notes/verifier-as-detector-measurement-spec.md): measure whether the verifier ensemble DETECTS step-errors (AUROC) on corpora where it cannot SELECT a better answer (oracle@K == vote@1, ~0 selection headroom). Emit detector_auroc BARE float + detector_beats_chance BARE bool (AUROC CI95 lower bound > 0.5). verifier_is_oracle=false (a learned/energy detection signal, oracle-distinct). Cached candidates, no live LLM. If a prior detector measurement exists, EXTEND it to a NEW corpus/condition (no churn). NO TRM training.",
+   "first_five": [
+    "0e0b0d557e 2026-05-21T21:49:47-04:00 [conductor] FoVer Memory-Leakage Isolation v3 (gated on exp2836 SOTA runtime)",
+    "9408d74773 2026-05-23T15:44:02-04:00 [conductor] Verifier Ensemble AUPRC on Code Corpora at 92.5% Negative Base Rate (Deep Think FATAL #5 Rescue)",
+    "15102b46e2 2026-06-04T20:22:48-04:00 [conductor] FoVer formal-vs-learned ablation FAITHFUL re-run: fix the harness so full_ensemble reproduces 0.9131 \u00b10.01, then trust formal_only (the provisional 0.9612 contamination-free-core finding).",
+    "1a402f45b4 2026-06-04T21:37:33-04:00 [conductor] Operational retrospective for milestone 2026.06.352",
+    "89732c4715 2026-06-05T02:27:59-04:00 [conductor] Verifier error-INDEPENDENCE scissor AT SCALE (DT-P2 moat-durability): of the gold step-errors a strong SOTA reasoner (Qwen3.6-35B) self-verification MISSES, what fraction does Carnot's k=15 ensemble independently catch? N>=1000, bootstrap CI95, two positive controls. Confirms or refutes exp3827's small-sample 'moat survives'."
+   ]
+  },
+  "FR11_MEMORY_BOOST": {
+   "needle": "FR11_MEMORY_BOOST",
+   "n_commits": 6,
+   "earliest": "0e0b0d557e 2026-05-21T21:49:47-04:00 [conductor] FoVer Memory-Leakage Isolation v3 (gated on exp2836 SOTA runtime)",
+   "latest": "7d5545c118 2026-06-18T04:26:14-04:00 [conductor] PHASE D1 (ORACLE-DISTINCT ACCURACY complementary measurement; 2026-06-14 P0 MANDATORY) -- the verifier-as-DETECTOR measurement. The standing P0 directive: HEADLINE = an oracle-distinct learned/energy verifier (the in-generation moat, Phase C); COMPLEMENTARY = the verifier-as-DETECTOR measurement (cheap; cached data) -- detection AUROC where SELECTION headroom is ~0. This is the cheap, infra-INDEPENDENT probe of the oracle-distinct ACCURACY frontier that is NOT hostage to the DiffusionGemma infra (which has blocked 3x), diversifying the 'verifier earns its place' bet across THREE vehicles (efficiency/Phase A, in-generation/Phase C, detection/here). Per the spec (docs/research-notes/verifier-as-detector-measurement-spec.md): measure whether the verifier ensemble DETECTS step-errors (AUROC) on corpora where it cannot SELECT a better answer (oracle@K == vote@1, ~0 selection headroom). Emit detector_auroc BARE float + detector_beats_chance BARE bool (AUROC CI95 lower bound > 0.5). verifier_is_oracle=false (a learned/energy detection signal, oracle-distinct). Cached candidates, no live LLM. If a prior detector measurement exists, EXTEND it to a NEW corpus/condition (no churn). NO TRM training.",
+   "first_five": [
+    "0e0b0d557e 2026-05-21T21:49:47-04:00 [conductor] FoVer Memory-Leakage Isolation v3 (gated on exp2836 SOTA runtime)",
+    "9408d74773 2026-05-23T15:44:02-04:00 [conductor] Verifier Ensemble AUPRC on Code Corpora at 92.5% Negative Base Rate (Deep Think FATAL #5 Rescue)",
+    "15102b46e2 2026-06-04T20:22:48-04:00 [conductor] FoVer formal-vs-learned ablation FAITHFUL re-run: fix the harness so full_ensemble reproduces 0.9131 \u00b10.01, then trust formal_only (the provisional 0.9612 contamination-free-core finding).",
+    "d64dca5618 2026-06-05T02:08:40-04:00 [conductor] Verifier-ensemble-as-sound-abstraction-lattice: measure elimination SOUNDNESS (never reject a correct candidate) + INFORMATIVENESS (shrink the wrong set) on FoVer math, the two properties LDT's hand-built lattice provides.",
+    "bdc7235449 2026-06-05T09:46:06-04:00 [conductor] LDT-lattice margin sharpening (re-issue of exp3853): exp3833 landed LATTICE_VIABLE but ensemble_vs_random_soundness_margin=0.010 (razor-thin vs a COUNT-matched random control). Is the sound-elimination edge REAL? Re-test against a SCORE-MATCHED (stratified) random control with a bootstrap CI on the margin."
+   ]
+  }
+ },
+ "held_out": {
+  "n_rows_used_by_any_seed": 3549,
+  "n_positive_used": 1390,
+  "n_positive_total": 1659,
+  "all_rows": {
+   "n": 8829,
+   "n_positive": 1659,
+   "n_negative": 7170,
+   "A": {
+    "auroc": 0.9183035688014238,
+    "ci95": {
+     "mean": 0.9182140322680984,
+     "low": 0.9089672167703655,
+     "high": 0.9265401432362929,
+     "half_width": 0.00878646323296367
+    }
+   },
+   "B": {
+    "auroc": 0.9015981044183999,
+    "ci95": {
+     "mean": 0.9014835109915653,
+     "low": 0.8910606950970279,
+     "high": 0.9114314865115934,
+     "half_width": 0.010185395707282774
+    }
+   }
+  },
+  "H0_never_sampled_rows": {
+   "n": 5280,
+   "n_positive": 269,
+   "n_negative": 5011,
+   "A": {
+    "auroc": 0.9216812232419532,
+    "ci95": {
+     "mean": 0.9219864866067885,
+     "low": 0.9023843455179276,
+     "high": 0.9399763364464349,
+     "half_width": 0.018795995464253645
+    }
+   },
+   "B": {
+    "auroc": 0.902751493183398,
+    "ci95": {
+     "mean": 0.9035008429410687,
+     "low": 0.8801726350727285,
+     "high": 0.9260819691103365,
+     "half_width": 0.022954667018803998
+    }
+   }
+  },
+  "H1_never_sampled_and_not_memory_flagged": {
+   "n": 5231,
+   "n_positive": 226,
+   "n_negative": 5005,
+   "A": {
+    "auroc": 0.9082382219550361,
+    "ci95": {
+     "mean": 0.9080252899755112,
+     "low": 0.8840563418882003,
+     "high": 0.9284659477690451,
+     "half_width": 0.02220480294042243
+    }
+   },
+   "B": {
+    "auroc": 0.8969039809747774,
+    "ci95": {
+     "mean": 0.8967025602715869,
+     "low": 0.8679890795045663,
+     "high": 0.9227839306710988,
+     "half_width": 0.027397425583266244
+    }
+   }
+  },
+  "H2_question_never_sampled_and_not_memory_flagged": {
+   "n": 5068,
+   "n_positive": 113,
+   "n_negative": 4955,
+   "A": {
+    "auroc": 0.872168096943286,
+    "ci95": {
+     "mean": 0.8720575578436012,
+     "low": 0.8309459918023272,
+     "high": 0.9076807640445425,
+     "half_width": 0.03836738612110763
+    }
+   },
+   "B": {
+    "auroc": 0.8515846155219988,
+    "ci95": {
+     "mean": 0.8514050713054659,
+     "low": 0.803169119419912,
+     "high": 0.8973838216515007,
+     "half_width": 0.04710735111579434
+    }
+   }
+  },
+  "corpus_minus_memory_flagged": {
+   "n": 8591,
+   "n_positive": 1431,
+   "n_negative": 7160,
+   "A": {
+    "auroc": 0.9068201515524168,
+    "ci95": {
+     "mean": 0.9066912016053157,
+     "low": 0.8965415429593713,
+     "high": 0.9164137401473361,
+     "half_width": 0.009936098593982423
+    }
+   },
+   "B": {
+    "auroc": 0.8971254523734232,
+    "ci95": {
+     "mean": 0.8970171013501907,
+     "low": 0.8846977174418014,
+     "high": 0.9085467979574388,
+     "half_width": 0.011924540257818694
+    }
+   }
+  },
+  "memory_flagged_only": {
+   "n": 238,
+   "n_positive": 228,
+   "n_negative": 10,
+   "A": {
+    "auroc": 0.9407894736842105,
+    "ci95": {
+     "mean": 0.9411418859649122,
+     "low": 0.8899122807017544,
+     "high": 0.980701754385965,
+     "half_width": 0.045394736842105265
+    }
+   },
+   "B": {
+    "auroc": 0.9407894736842105,
+    "ci95": {
+     "mean": 0.9411418859649122,
+     "low": 0.8899122807017544,
+     "high": 0.980701754385965,
+     "half_width": 0.045394736842105265
+    }
+   }
+  }
+ },
+ "full_corpus_bootstrap": {
+  "A": {
+   "auroc_full_corpus": 0.9183035688014238,
+   "bootstrap_ci95": {
+    "mean": 0.9182140322680984,
+    "low": 0.9089672167703655,
+    "high": 0.9265401432362929,
+    "half_width": 0.00878646323296367
+   },
+   "published_ci_half_width": 0.010401966546691677,
+   "half_width_ratio_bootstrap_over_published": 0.844692510163685
+  },
+  "B": {
+   "auroc_full_corpus": 0.9015981044183999,
+   "bootstrap_ci95": {
+    "mean": 0.9014835109915653,
+    "low": 0.8910606950970279,
+    "high": 0.9114314865115934,
+    "half_width": 0.010185395707282774
+   },
+   "published_ci_half_width": 0.010463545009953612,
+   "half_width_ratio_bootstrap_over_published": 0.9734172976361029
+  }
+ },
+ "tuning_optimism": {
+  "grid": "w_r in 0..1 step 0.1 with w_u=1-w_r; boost in {0,0.5,1,2}; 44 combinations",
+  "tuned": {
+   "w_r": 1.0,
+   "boost": 1.0,
+   "auroc_in_sample_union": 0.9173045074824809,
+   "auroc_held_out_H1": 0.9087447950279809,
+   "optimism_gap": 0.008559712454500046
+  },
+  "frozen_formula": {
+   "auroc_in_sample_union": 0.9167823499421861,
+   "auroc_held_out_H1": 0.9082382219550361,
+   "gap": 0.008544127987149985
+  },
+  "n_in_sample_union": 3549,
+  "n_held_out_H1": 5231
+ },
+ "memory_effect": {
+  "published_learning_contribution": 0.0184712,
+  "n_flagged_rows": 238,
+  "n_flagged_positive": 228,
+  "n_flagged_negative": 10,
+  "share_of_positives_flagged": 0.13743218806509946,
+  "per_seed_flagged": [
+   {
+    "seed": 42,
+    "flagged_in_subset": 66,
+    "flagged_positive_in_subset": 64
+   },
+   {
+    "seed": 137,
+    "flagged_in_subset": 62,
+    "flagged_positive_in_subset": 59
+   },
+   {
+    "seed": 271,
+    "flagged_in_subset": 73,
+    "flagged_positive_in_subset": 72
+   },
+   {
+    "seed": 314,
+    "flagged_in_subset": 67,
+    "flagged_positive_in_subset": 67
+   },
+   {
+    "seed": 1729,
+    "flagged_in_subset": 63,
+    "flagged_positive_in_subset": 62
+   }
+  ],
+  "all_rows": {
+   "point": 0.016705464383023894,
+   "low": 0.012328888619868916,
+   "high": 0.021560958652479218
+  },
+  "corpus_minus_memory_flagged": {
+   "point": 0.009694699178993571,
+   "low": 0.005027976880643731,
+   "high": 0.014401399429628857
+  },
+  "H1_never_sampled_and_not_memory_flagged": {
+   "point": 0.011334240980258703,
+   "low": -0.0019785082174461704,
+   "high": 0.026521631023843424
+  },
+  "_unused": 8829
+ },
+ "per_component_auroc_full_corpus": {
+  "r": 0.9016862925104014,
+  "u": 0.5098671461946712,
+  "s": 0.3016179446373822,
+  "mem": 0.8713817031146621,
+  "base": 0.9015981044183999,
+  "A": 0.9183035688014238,
+  "B": 0.9015981044183999
+ },
+ "ensemble_vs_best_single_component": {
+  "tier0r_alone": 0.9016862925104014,
+  "base_formula_minus_tier0r_alone": -8.818809200150657e-05,
+  "condition_B_minus_tier0r_alone": -8.818809200150657e-05,
+  "condition_A_minus_tier0r_alone": 0.016617276291022387,
+  "memory_term_alone": 0.8713817031146621,
+  "reading": "On the full corpus the 0.9*tier0r + 0.1*tier0u base formula scores within 0.0001 of tier0r alone (slightly below it). The second component adds nothing measurable. All of condition A's lift over tier0r comes from the memory term."
+ },
+ "headline_text_vs_formula_discrepancy": {
+  "north_star_text": "4-verifier score (fr11_session_memory, tier0r_curry_howard, tier0s_arithmetic_gap, tier0u_logical_consistency)",
+  "formula": "0.9*tier0r + 0.1*tier0u + FR11_MEMORY_BOOST(=1.0)*memory_score",
+  "tier0s_in_formula": false,
+  "tier0s_scored_but_unused_full_corpus_auroc": 0.3016179446373822
+ },
+ "gates": {
+  "gate1_survives": {
+   "H0_never_sampled_rows": {
+    "n_positive": 269,
+    "A_overlaps_published": true,
+    "B_overlaps_published": true,
+    "A_upper_below_published_lower": false,
+    "B_upper_below_published_lower": false,
+    "A_point_minus_published": 0.00854762324195335,
+    "B_point_minus_published": 0.00808909318339801,
+    "powered_at_200_error_rows": true
+   },
+   "H1_never_sampled_and_not_memory_flagged": {
+    "n_positive": 226,
+    "A_overlaps_published": true,
+    "B_overlaps_published": true,
+    "A_upper_below_published_lower": false,
+    "B_upper_below_published_lower": false,
+    "A_point_minus_published": -0.004895378044963761,
+    "B_point_minus_published": 0.0022415809747774462,
+    "powered_at_200_error_rows": true
+   },
+   "H2_question_never_sampled_and_not_memory_flagged": {
+    "n_positive": 113,
+    "A_overlaps_published": true,
+    "B_overlaps_published": true,
+    "A_upper_below_published_lower": false,
+    "B_upper_below_published_lower": false,
+    "A_point_minus_published": -0.04096550305671387,
+    "B_point_minus_published": -0.043077784478001147,
+    "powered_at_200_error_rows": false
+   }
+  },
+  "gate1_primary_sets": [
+   "H0_never_sampled_rows",
+   "H1_never_sampled_and_not_memory_flagged"
+  ],
+  "gate1_survives_verdict": true,
+  "gate1_narrowed_verdict": false,
+  "gate2_power_note": "H0 and H1 have >=200 error rows. H2 has fewer than 200 and is underpowered: its CI half-width is about 0.04.",
+  "gate3_denominator_stated": true
+ },
+ "methodology_note": "FoVer labels come from formal tools. The verifier ensemble does not produce them. The frozen formula was not changed. The control re-derives the published per-seed means before any other stage is trusted. The memory term is built from labels of earlier FoVer rows, so condition A contains label-derived information by design.",
+ "independent_reviewer_check": {
+  "source": "reviewer agent, own AUROC/set/bootstrap code, did not read this artifact or script",
+  "rows_used_by_seeds": 3549,
+  "error_rows_used": 1390,
+  "error_rows_never_used": 269,
+  "memory_ids": 252,
+  "memory_matched_rows": 238,
+  "memory_matched_error_rows": 228,
+  "auroc_A_B_all_rows": [
+   0.9183,
+   0.9016
+  ],
+  "auroc_A_B_never_used": [
+   0.9217,
+   0.9028
+  ],
+  "auroc_A_B_never_used_unmatched": [
+   0.9082,
+   0.8969
+  ],
+  "tier0r_alone": 0.9017,
+  "base_formula": 0.9016,
+  "tier0u_alone": 0.5099,
+  "memory_score_rows_exactly_1": 256,
+  "memory_score_rows_between_0_and_1": 7668,
+  "memory_score_rows_0": 905,
+  "mean_memory_score_correct_rows": 0.208,
+  "mean_memory_score_error_rows": 0.507,
+  "agrees_with_this_artifact": true,
+  "not_rederived": "the 0.9131 per-seed mean (the control stage does that)",
+  "refinement": "the memory score is mostly soft token overlap, not an id lookup; both parts come from entries recorded as incorrect"
+ },
+ "honest_limits": [
+  "Never-sampled rows were not seen by the headline seeds. An earlier experiment may still have tuned on them. The constants trace is in constants_provenance.",
+  "H2 (questions never sampled) has about 113 error rows. Its point estimates are about 0.04 below the headline and its CI overlaps. This is underpowered, not a pass.",
+  "The tuning grid has 44 combinations. A wider search could find more optimism."
+ ]
+}
