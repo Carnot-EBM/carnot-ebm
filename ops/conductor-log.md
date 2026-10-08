@@ -19878,3 +19878,4 @@ code |
 | 2026-10-08 21:12 UTC | Close the ARC reader coverage gap and inspect new  | OK | 98 passed, 1 warning in 66.80s (0:01:06) |
 | 2026-10-08 21:27 UTC | Measure complete local-update costs and map the KV | OK | 86 passed, 1 warning in 13.41s |
 | 2026-10-08 21:45 UTC | Preserve GateMate reopening evidence without repea | OK | 94 passed, 1 warning in 49.54s |
+| 2026-10-08 22:31 UTC | Reconcile fourteen outcomes and decide local-learn | OK | 89 passed, 1 warning in 90.01s (0:01:30) |
