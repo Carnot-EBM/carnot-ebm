@@ -1,0 +1,4510 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/env",
+        "COVERAGE_RCFILE=/tmp/carnot-8291-0gdyawt0/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8291-0gdyawt0/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "tests/python/test_dependency_scoped_admission_8291.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "unit"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_protocol_conformance_8263.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "consumers_E2E015_019"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8291-0gdyawt0/coverage.ini"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot-8291-0gdyawt0/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8291-0gdyawt0/coverage.ini",
+        "-o",
+        "/tmp/carnot-8291-0gdyawt0/coverage.json"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/dependency_scoped_admission_8291.py",
+        "python/carnot/reporting/dependency_admission_execution_8291.py",
+        "scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "tests/python/test_dependency_scoped_admission_8291.py"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/dependency_scoped_admission_8291.py",
+        "python/carnot/reporting/dependency_admission_execution_8291.py",
+        "scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "tests/python/test_dependency_scoped_admission_8291.py"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/verify/dependency_scoped_admission_8291.py",
+        "python/carnot/reporting/dependency_admission_execution_8291.py",
+        "scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_dependency_scoped_admission_8291.py"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "spec_coverage"
+    }
+  ],
+  "measurement_children": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/0-full.jsonl",
+        "--graph",
+        "0",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-0-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/0-full.jsonl",
+        "--graph",
+        "0",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-0-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/0-full.jsonl",
+        "--graph",
+        "0",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-0-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/0-scoped.jsonl",
+        "--graph",
+        "0",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-0-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/0-scoped.jsonl",
+        "--graph",
+        "0",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-0-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/0-scoped.jsonl",
+        "--graph",
+        "0",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-0-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/0-one_hop.jsonl",
+        "--graph",
+        "0",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-0-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/0-one_hop.jsonl",
+        "--graph",
+        "0",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-0-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/0-one_hop.jsonl",
+        "--graph",
+        "0",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-0-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/1-full.jsonl",
+        "--graph",
+        "1",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-1-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/1-full.jsonl",
+        "--graph",
+        "1",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-1-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/1-full.jsonl",
+        "--graph",
+        "1",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-1-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/1-scoped.jsonl",
+        "--graph",
+        "1",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-1-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/1-scoped.jsonl",
+        "--graph",
+        "1",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-1-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/1-scoped.jsonl",
+        "--graph",
+        "1",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-1-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/1-one_hop.jsonl",
+        "--graph",
+        "1",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-1-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/1-one_hop.jsonl",
+        "--graph",
+        "1",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-1-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/1-one_hop.jsonl",
+        "--graph",
+        "1",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-1-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/2-full.jsonl",
+        "--graph",
+        "2",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-2-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/2-full.jsonl",
+        "--graph",
+        "2",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-2-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/2-full.jsonl",
+        "--graph",
+        "2",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-2-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/2-scoped.jsonl",
+        "--graph",
+        "2",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-2-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/2-scoped.jsonl",
+        "--graph",
+        "2",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-2-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/2-scoped.jsonl",
+        "--graph",
+        "2",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-2-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/2-one_hop.jsonl",
+        "--graph",
+        "2",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-2-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/2-one_hop.jsonl",
+        "--graph",
+        "2",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-2-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/2-one_hop.jsonl",
+        "--graph",
+        "2",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-2-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/3-full.jsonl",
+        "--graph",
+        "3",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-3-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/3-full.jsonl",
+        "--graph",
+        "3",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-3-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/3-full.jsonl",
+        "--graph",
+        "3",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-3-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/3-scoped.jsonl",
+        "--graph",
+        "3",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-3-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/3-scoped.jsonl",
+        "--graph",
+        "3",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-3-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/3-scoped.jsonl",
+        "--graph",
+        "3",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-3-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/3-one_hop.jsonl",
+        "--graph",
+        "3",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-3-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/3-one_hop.jsonl",
+        "--graph",
+        "3",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-3-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/3-one_hop.jsonl",
+        "--graph",
+        "3",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-3-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/4-full.jsonl",
+        "--graph",
+        "4",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-4-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/4-full.jsonl",
+        "--graph",
+        "4",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-4-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/4-full.jsonl",
+        "--graph",
+        "4",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-4-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/4-scoped.jsonl",
+        "--graph",
+        "4",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-4-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/4-scoped.jsonl",
+        "--graph",
+        "4",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-4-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/4-scoped.jsonl",
+        "--graph",
+        "4",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-4-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/4-one_hop.jsonl",
+        "--graph",
+        "4",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-4-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/4-one_hop.jsonl",
+        "--graph",
+        "4",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-4-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/4-one_hop.jsonl",
+        "--graph",
+        "4",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-4-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/5-full.jsonl",
+        "--graph",
+        "5",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-5-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/5-full.jsonl",
+        "--graph",
+        "5",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-5-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/5-full.jsonl",
+        "--graph",
+        "5",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-5-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/5-scoped.jsonl",
+        "--graph",
+        "5",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-5-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/5-scoped.jsonl",
+        "--graph",
+        "5",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-5-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/5-scoped.jsonl",
+        "--graph",
+        "5",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-5-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/5-one_hop.jsonl",
+        "--graph",
+        "5",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-5-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/5-one_hop.jsonl",
+        "--graph",
+        "5",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-5-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/5-one_hop.jsonl",
+        "--graph",
+        "5",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-5-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/6-full.jsonl",
+        "--graph",
+        "6",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-6-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/6-full.jsonl",
+        "--graph",
+        "6",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-6-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/6-full.jsonl",
+        "--graph",
+        "6",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-6-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/6-scoped.jsonl",
+        "--graph",
+        "6",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-6-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/6-scoped.jsonl",
+        "--graph",
+        "6",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-6-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/6-scoped.jsonl",
+        "--graph",
+        "6",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-6-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/6-one_hop.jsonl",
+        "--graph",
+        "6",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-6-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/6-one_hop.jsonl",
+        "--graph",
+        "6",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-6-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/6-one_hop.jsonl",
+        "--graph",
+        "6",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-6-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/7-full.jsonl",
+        "--graph",
+        "7",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-7-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/7-full.jsonl",
+        "--graph",
+        "7",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-7-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/7-full.jsonl",
+        "--graph",
+        "7",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-7-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/7-scoped.jsonl",
+        "--graph",
+        "7",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-7-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/7-scoped.jsonl",
+        "--graph",
+        "7",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-7-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/7-scoped.jsonl",
+        "--graph",
+        "7",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-7-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/7-one_hop.jsonl",
+        "--graph",
+        "7",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-7-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/7-one_hop.jsonl",
+        "--graph",
+        "7",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-7-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/7-one_hop.jsonl",
+        "--graph",
+        "7",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-7-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/8-full.jsonl",
+        "--graph",
+        "8",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-8-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/8-full.jsonl",
+        "--graph",
+        "8",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-8-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/8-full.jsonl",
+        "--graph",
+        "8",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-8-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/8-scoped.jsonl",
+        "--graph",
+        "8",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-8-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/8-scoped.jsonl",
+        "--graph",
+        "8",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-8-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/8-scoped.jsonl",
+        "--graph",
+        "8",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-8-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/8-one_hop.jsonl",
+        "--graph",
+        "8",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-8-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/8-one_hop.jsonl",
+        "--graph",
+        "8",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-8-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/8-one_hop.jsonl",
+        "--graph",
+        "8",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-8-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/9-full.jsonl",
+        "--graph",
+        "9",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-9-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/9-full.jsonl",
+        "--graph",
+        "9",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-9-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/9-full.jsonl",
+        "--graph",
+        "9",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-9-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/9-scoped.jsonl",
+        "--graph",
+        "9",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-9-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/9-scoped.jsonl",
+        "--graph",
+        "9",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-9-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/9-scoped.jsonl",
+        "--graph",
+        "9",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-9-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/9-one_hop.jsonl",
+        "--graph",
+        "9",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-9-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/9-one_hop.jsonl",
+        "--graph",
+        "9",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-9-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/9-one_hop.jsonl",
+        "--graph",
+        "9",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-9-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/10-full.jsonl",
+        "--graph",
+        "10",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-10-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/10-full.jsonl",
+        "--graph",
+        "10",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-10-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/10-full.jsonl",
+        "--graph",
+        "10",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-10-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/10-scoped.jsonl",
+        "--graph",
+        "10",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-10-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/10-scoped.jsonl",
+        "--graph",
+        "10",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-10-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/10-scoped.jsonl",
+        "--graph",
+        "10",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-10-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/10-one_hop.jsonl",
+        "--graph",
+        "10",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-10-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/10-one_hop.jsonl",
+        "--graph",
+        "10",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-10-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/10-one_hop.jsonl",
+        "--graph",
+        "10",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-10-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/11-full.jsonl",
+        "--graph",
+        "11",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-11-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/11-full.jsonl",
+        "--graph",
+        "11",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-11-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/11-full.jsonl",
+        "--graph",
+        "11",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-11-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/11-scoped.jsonl",
+        "--graph",
+        "11",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-11-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/11-scoped.jsonl",
+        "--graph",
+        "11",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-11-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/11-scoped.jsonl",
+        "--graph",
+        "11",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-11-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/11-one_hop.jsonl",
+        "--graph",
+        "11",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-11-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/11-one_hop.jsonl",
+        "--graph",
+        "11",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-11-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/11-one_hop.jsonl",
+        "--graph",
+        "11",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-11-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/12-full.jsonl",
+        "--graph",
+        "12",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-12-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/12-full.jsonl",
+        "--graph",
+        "12",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-12-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/12-full.jsonl",
+        "--graph",
+        "12",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-12-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/12-scoped.jsonl",
+        "--graph",
+        "12",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-12-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/12-scoped.jsonl",
+        "--graph",
+        "12",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-12-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/12-scoped.jsonl",
+        "--graph",
+        "12",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-12-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/12-one_hop.jsonl",
+        "--graph",
+        "12",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-12-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/12-one_hop.jsonl",
+        "--graph",
+        "12",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-12-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/12-one_hop.jsonl",
+        "--graph",
+        "12",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-12-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/13-full.jsonl",
+        "--graph",
+        "13",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-13-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/13-full.jsonl",
+        "--graph",
+        "13",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-13-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/13-full.jsonl",
+        "--graph",
+        "13",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-13-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/13-scoped.jsonl",
+        "--graph",
+        "13",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-13-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/13-scoped.jsonl",
+        "--graph",
+        "13",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-13-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/13-scoped.jsonl",
+        "--graph",
+        "13",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-13-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/13-one_hop.jsonl",
+        "--graph",
+        "13",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-13-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/13-one_hop.jsonl",
+        "--graph",
+        "13",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-13-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/13-one_hop.jsonl",
+        "--graph",
+        "13",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-13-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/14-full.jsonl",
+        "--graph",
+        "14",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-14-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/14-full.jsonl",
+        "--graph",
+        "14",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-14-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/14-full.jsonl",
+        "--graph",
+        "14",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-14-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/14-scoped.jsonl",
+        "--graph",
+        "14",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-14-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/14-scoped.jsonl",
+        "--graph",
+        "14",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-14-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/14-scoped.jsonl",
+        "--graph",
+        "14",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-14-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/14-one_hop.jsonl",
+        "--graph",
+        "14",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-14-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/14-one_hop.jsonl",
+        "--graph",
+        "14",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-14-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/14-one_hop.jsonl",
+        "--graph",
+        "14",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-14-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/15-full.jsonl",
+        "--graph",
+        "15",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-15-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/15-full.jsonl",
+        "--graph",
+        "15",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-15-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/15-full.jsonl",
+        "--graph",
+        "15",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-15-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/15-scoped.jsonl",
+        "--graph",
+        "15",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-15-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/15-scoped.jsonl",
+        "--graph",
+        "15",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-15-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/15-scoped.jsonl",
+        "--graph",
+        "15",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-15-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/15-one_hop.jsonl",
+        "--graph",
+        "15",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-15-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/15-one_hop.jsonl",
+        "--graph",
+        "15",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-15-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/15-one_hop.jsonl",
+        "--graph",
+        "15",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-15-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/16-full.jsonl",
+        "--graph",
+        "16",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-16-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/16-full.jsonl",
+        "--graph",
+        "16",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-16-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/16-full.jsonl",
+        "--graph",
+        "16",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-16-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/16-scoped.jsonl",
+        "--graph",
+        "16",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-16-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/16-scoped.jsonl",
+        "--graph",
+        "16",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-16-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/16-scoped.jsonl",
+        "--graph",
+        "16",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-16-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/16-one_hop.jsonl",
+        "--graph",
+        "16",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-16-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/16-one_hop.jsonl",
+        "--graph",
+        "16",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-16-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/16-one_hop.jsonl",
+        "--graph",
+        "16",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-16-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/17-full.jsonl",
+        "--graph",
+        "17",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-17-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/17-full.jsonl",
+        "--graph",
+        "17",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-17-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/17-full.jsonl",
+        "--graph",
+        "17",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-17-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/17-scoped.jsonl",
+        "--graph",
+        "17",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-17-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/17-scoped.jsonl",
+        "--graph",
+        "17",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-17-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/17-scoped.jsonl",
+        "--graph",
+        "17",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-17-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/17-one_hop.jsonl",
+        "--graph",
+        "17",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-17-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/17-one_hop.jsonl",
+        "--graph",
+        "17",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-17-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/17-one_hop.jsonl",
+        "--graph",
+        "17",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-17-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/18-full.jsonl",
+        "--graph",
+        "18",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-18-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/18-full.jsonl",
+        "--graph",
+        "18",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-18-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/18-full.jsonl",
+        "--graph",
+        "18",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-18-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/18-scoped.jsonl",
+        "--graph",
+        "18",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-18-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/18-scoped.jsonl",
+        "--graph",
+        "18",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-18-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/18-scoped.jsonl",
+        "--graph",
+        "18",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-18-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/18-one_hop.jsonl",
+        "--graph",
+        "18",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-18-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/18-one_hop.jsonl",
+        "--graph",
+        "18",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-18-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/18-one_hop.jsonl",
+        "--graph",
+        "18",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-18-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/19-full.jsonl",
+        "--graph",
+        "19",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-19-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/19-full.jsonl",
+        "--graph",
+        "19",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-19-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/19-full.jsonl",
+        "--graph",
+        "19",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-19-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/19-scoped.jsonl",
+        "--graph",
+        "19",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-19-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/19-scoped.jsonl",
+        "--graph",
+        "19",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-19-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/19-scoped.jsonl",
+        "--graph",
+        "19",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-19-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/19-one_hop.jsonl",
+        "--graph",
+        "19",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-19-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/19-one_hop.jsonl",
+        "--graph",
+        "19",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-19-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/19-one_hop.jsonl",
+        "--graph",
+        "19",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-19-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/20-full.jsonl",
+        "--graph",
+        "20",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-20-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/20-full.jsonl",
+        "--graph",
+        "20",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-20-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/20-full.jsonl",
+        "--graph",
+        "20",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-20-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/20-scoped.jsonl",
+        "--graph",
+        "20",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-20-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/20-scoped.jsonl",
+        "--graph",
+        "20",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-20-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/20-scoped.jsonl",
+        "--graph",
+        "20",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-20-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/20-one_hop.jsonl",
+        "--graph",
+        "20",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-20-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/20-one_hop.jsonl",
+        "--graph",
+        "20",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-20-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/20-one_hop.jsonl",
+        "--graph",
+        "20",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-20-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/21-full.jsonl",
+        "--graph",
+        "21",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-21-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/21-full.jsonl",
+        "--graph",
+        "21",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-21-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/21-full.jsonl",
+        "--graph",
+        "21",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-21-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/21-scoped.jsonl",
+        "--graph",
+        "21",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-21-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/21-scoped.jsonl",
+        "--graph",
+        "21",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-21-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/21-scoped.jsonl",
+        "--graph",
+        "21",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-21-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/21-one_hop.jsonl",
+        "--graph",
+        "21",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-21-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/21-one_hop.jsonl",
+        "--graph",
+        "21",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-21-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/21-one_hop.jsonl",
+        "--graph",
+        "21",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-21-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/22-full.jsonl",
+        "--graph",
+        "22",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-22-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/22-full.jsonl",
+        "--graph",
+        "22",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-22-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/22-full.jsonl",
+        "--graph",
+        "22",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-22-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/22-scoped.jsonl",
+        "--graph",
+        "22",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-22-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/22-scoped.jsonl",
+        "--graph",
+        "22",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-22-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/22-scoped.jsonl",
+        "--graph",
+        "22",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-22-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/22-one_hop.jsonl",
+        "--graph",
+        "22",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-22-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/22-one_hop.jsonl",
+        "--graph",
+        "22",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-22-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/22-one_hop.jsonl",
+        "--graph",
+        "22",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-22-one_hop--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/23-full.jsonl",
+        "--graph",
+        "23",
+        "--arm",
+        "full",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-23-full-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/23-full.jsonl",
+        "--graph",
+        "23",
+        "--arm",
+        "full",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-23-full-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/23-full.jsonl",
+        "--graph",
+        "23",
+        "--arm",
+        "full",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-23-full--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/23-scoped.jsonl",
+        "--graph",
+        "23",
+        "--arm",
+        "scoped",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-23-scoped-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/23-scoped.jsonl",
+        "--graph",
+        "23",
+        "--arm",
+        "scoped",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-23-scoped-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/23-scoped.jsonl",
+        "--graph",
+        "23",
+        "--arm",
+        "scoped",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-23-scoped--1"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/23-one_hop.jsonl",
+        "--graph",
+        "23",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "24"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-23-one_hop-24"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/23-one_hop.jsonl",
+        "--graph",
+        "23",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "48"
+      ],
+      "deadline_s": 30,
+      "expected_exit": -9,
+      "name": "crash-23-one_hop-48"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--worker",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/manifest.json",
+        "--journal",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/crashes/23-one_hop.jsonl",
+        "--graph",
+        "23",
+        "--arm",
+        "one_hop",
+        "--crash",
+        "-1"
+      ],
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "crash-23-one_hop--1"
+    }
+  ],
+  "reduction": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+      "--reduce",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/work.json",
+      "--reduction",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/invocations/1791464085823956992/reduction.json"
+    ],
+    "deadline_s": 90,
+    "name": "fresh_reduction"
+  },
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "deadline_s": 120,
+    "expected_exit": 0,
+    "name": "repository_full_suite"
+  },
+  "terminal": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8291_v716_dependency_scoped_admission.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/terminal_candidate.json"
+      ],
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/terminal_candidate.json"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "adversarial"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8291_v716_dependency_scoped_admission/terminal_candidate.json"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_rows"
+    }
+  ]
+}

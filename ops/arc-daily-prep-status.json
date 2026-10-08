@@ -1,8 +1,8 @@
 {
-  "kernel_version": "88",
+  "kernel_version": "89",
   "note": "v53 verified by hand (2026-09-03) after the prep script's own short poll exited with save_run='?' and parquet=MISSING -- the same false alarm seen on v9/v22/v27/v37. Ground truth from `kaggle kernels status` (COMPLETE) and `kaggle kernels output` (submission.parquet present, 2648 bytes, 1x4, columns row_id/game_id/end_of_game/score). The kernel log shows the save-run took ~770s, so the old 24x15s (6 min) poll could never see it finish. Root cause fixed the same day: poll_save_run now waits up to 3600s and records an explicit still_running_after_<N>s instead of '?' (REQ-HARNESS-6054). Prepared only -- submission is operator-only per CLAUDE.md Operator-Only External Publication.",
-  "parquet_ok": false,
-  "prepped_at": "2026-10-07T13:37Z",
+  "parquet_ok": true,
+  "prepped_at": "2026-10-08T13:37Z",
   "prior_submission_scores": {
     "2026-06-30": 0.08,
     "2026-07-15": 0.12,
@@ -10,8 +10,8 @@
     "2026-08-11": 0.09,
     "2026-09-24": 0.09
   },
-  "ready_for_operator_submit": false,
-  "save_run": "still_running_after_3600s",
+  "ready_for_operator_submit": true,
+  "save_run": "complete",
   "score_note_2026_09_24": "v75 public 0.09. The last completed submission before it, v37 on 2026-08-19 (first vLLM backend), scored 0.02; the 2026-08-21 submission ended in ERROR. A month of other changes landed between v37 and v75, so this score does not isolate the vLLM answer-channel fix. Best prior public score: 0.12 (2026-07-15).",
   "submission_history": [
     {
@@ -76,5 +76,5 @@
     }
   ],
   "submission_note": "Kernel v75: first submission with REQ-ARC-WMTE-10011 (vLLM answer-channel fix). Save-run confirmed --reasoning-parser qwen3 on vLLM 0.27.1, server_up=True in 445 s. The operator issued the submit command explicitly on 2026-09-24; the command as typed did not execute, so the outer loop ran it on that instruction.",
-  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 88"
+  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 89"
 }
