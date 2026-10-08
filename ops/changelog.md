@@ -21710,3 +21710,4 @@ Recorded 7 completed experiments in 50.7 minutes (0.8 hours), including 0 comput
 - 2026-10-08: Bind the current contract and retain coverage evidence through cold replay (⚠️ Research Finding) — honest_verdict=complete_null_coverage_custody; results/experiment_8262_v714_coverage_custody.json
 - 2026-10-08: Qualify focal GGUF-tokenized requests and causal typed-decision controls (⚠️ Research Finding) — honest_verdict=complete_circular_positive_protocol_conformance; results/experiment_8263_v714_protocol_conformance.json
 - 2026-10-08: Measure bounded Qwen response to selected and length-controlled deletions (⚠️ Blocked) — honest_verdict=complete_blocked_CUDA_runtime_available; results/experiment_8264_v714_evidence_view_canary.json
+- 2026-10-08: Inspect new live supervisor outcomes for cross-game arm selection (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8272_v714_arc_outcome_frontier.json
