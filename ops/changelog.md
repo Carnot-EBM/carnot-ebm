@@ -21701,3 +21701,4 @@ Recorded 14 completed experiments in 101.3 minutes (1.7 hours), including 2 comp
 - 2026-10-07: Inspect new live supervisor outcomes for cross-game arm selection (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8257_v713_arc_outcome_frontier.json
 - 2026-10-07: Bound new evidence and learning costs against the KV260 operation set (⚠️ Blocked) — honest_verdict=complete_blocked_capture; results/experiment_8258_v713_kv260_evidence_cost_boundary.json
 - 2026-10-07: Cover the known PolarFire schema path and dispatch qualified state (⚠️ Research Finding) — honest_verdict=complete_circular_positive_polarfire_state_dispatch; results/experiment_8259_v713_polarfire_dispatch_qualification.json
+- 2026-10-08: Carry GateMate physical-change evidence and its exact reopening condition (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_physical_change; results/experiment_8260_v713_gatemate_physical_delta.json
