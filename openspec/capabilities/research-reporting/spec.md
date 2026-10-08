@@ -96452,3 +96452,33 @@ A disqualified Exp8306 and absent Exp8310 produce a stable blocked primary.
 Private CLI, child, recovery and valid cold replay pass. Negative and rehashed
 tamper controls fail. Owned checks must cover all newly owned statements.
 Failed owned checks disqualify and zero readiness. No full repository suite runs.
+
+## REQ-REPORT-8316: Preserve GateMate reopening obligations without another probe
+
+Exp8316 SHALL authenticate the exact Exp8302 primary, byte-bound publication and
+terminal/adversarial sidecars, original transcript and operator-evidence frontier.
+Publish one terminal obligation using the qualified ledger and unchanged primary
+publication checks. Declare aggregation_from_upstream_artifacts, no_model_load,
+MODEL_SPECS=[] and zero current model/device/JTAG calls. Successful owned audit
+readiness is distinct from blocked hardware execution. Missing operands produce
+complete_blocked_<operand> with exact path/hash/field/operator/expected/observed
+receipts; failed owned checks disqualify readiness. No full repository health
+suite is launched. The conductor owns ops/status/changelog/traceability updates.
+
+### SCENARIO-REPORT-8316-CLI
+
+Real private CLI publication and fresh-process replay SHALL cover unchanged,
+changed, absent history, failed checks, recovery and rehashed tampering. Freeze
+private validation argv before reduction. Require E2E-018 authenticated-history
+cases, applicable E2E-015/019, unchanged consumers, scoped Ruff/format, strict
+mypy, test spec references and 100 percent newly owned statement coverage,
+including CLI children. Preserve clocks, exit codes, output hashes, bounded
+children with at most 60-second heartbeats and owned process-group cleanup.
+
+Implementation 2026-10-08: `gatemate_obligation_execution_8316.py` and the thin
+Exp8316 runner reuse the qualified child supervisor and atomic publication.
+`test_gatemate_obligation_8316.py` passes 13 private cases, including real CLI,
+negative replay, owned failure and unchanged-primary recovery. Measured new
+statement coverage is 197/197 across the two modules and runner; scoped Ruff,
+format, strict mypy and spec references pass. Repository health is explicitly
+not run. Frozen private E2E and terminal receipts accompany the published result.

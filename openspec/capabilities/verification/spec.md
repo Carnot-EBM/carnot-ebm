@@ -51951,3 +51951,28 @@ Keep historical transcript hashes and hardware obligations in blocked output.
 Report zero current board executions and unavailable live acquisition spans.
 Private cost gates reject failed readiness, stale sidecars and primitive drift.
 Require fresh-process replay and unchanged publication validators.
+
+## REQ-VERIFY-8316: Physical evidence is required to reopen GateMate
+
+Retain Exp8302's original transcript/hash and advance its operator frontier using
+authenticated end clocks and previously seen receipt hashes. Only dated operator
+cable, port, power or board receipts after that frontier qualify. Plans, new run
+dates and rebuilt host bitstreams do not qualify. Make no JTAG call even when
+change evidence exists. Preserve exactly one excluded hardware obligation with
+unavailable missing observations, audit readiness and execution_ready_score=0.
+Both generalization scores remain zero on exposed development history.
+
+### SCENARIO-VERIFY-8316-FRONTIER
+
+Cold replay SHALL reconstruct parser rows and the frontier, rejecting forged
+operator authorship, stale/same-boundary receipts, rehashed primitive drift and
+incorrect history identity or sidecars. The reopening contract names actual
+change evidence, authenticated GM1Ax IDCODE 0x20000001, then n16 tile flash and
+device sample/hash smoke. Unchanged evidence closes once with
+complete_blocked_gatemate_physical_change; external incompleteness is blocked.
+
+Implementation 2026-10-08: `gatemate_obligation_8316.py` pins Exp8302's primary,
+publication sidecar and terminal receipts, carries its operator frontier and
+reuses the qualified physical parser. Private cases reject stale or rehashed
+sidecars and forged receipt semantics. Original GateMate history authenticates;
+no new physical change qualifies and no model, device or JTAG call is made.
