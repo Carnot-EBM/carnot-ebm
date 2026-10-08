@@ -19851,3 +19851,11 @@ code |
 | 2026-10-08 11:34 UTC | Milestone 2026.10.716 activated | OK | 14 tasks queued |
 | 2026-10-08 12:11 UTC | Localize CUDA failure and bind the current qualifi | OK | 105 passed, 1 warning in 105.47s (0:01:45) |
 | 2026-10-08 13:16 UTC | Test dependency-scoped checks for continuous const | OK | 90 passed, 1 warning in 71.07s (0:01:11) |
+| 2026-10-08 13:20 UTC | Measure bounded Qwen response to selected and leng | GATE_BLOCK | gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp8290-runtime-localization.cuda_context_ready_score (actual=0 == expected=1) |
+| 2026-10-08 13:22 UTC | Capture evidence views on one hundred twenty-eight | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8292-evidence-view-canary, exp8292-evidence-view-canary) |
+| 2026-10-08 13:22 UTC | Capture calibration and selection views on sixty-f | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8292-evidence-view-canary, exp8292-evidence-view-canary) |
+| 2026-10-08 13:22 UTC | Train calibrated energy decisions from evidence-de | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8293-fit-view-capture, exp8294-tune-view-capture) |
+| 2026-10-08 13:22 UTC | Capture and seal intervention decisions for every | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8295-intervention-energy-fit, exp8292-evidence-view-canary) |
+| 2026-10-08 13:22 UTC | Independently test source-intervention decision be | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8296-reserved-view-seal) |
+| 2026-10-08 13:22 UTC | Learn reusable soft constraints from delayed attri | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8296-reserved-view-seal) |
+| 2026-10-08 13:22 UTC | Audit later constraint benefit and sealed retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8298-continuous-constraint-admission) |
