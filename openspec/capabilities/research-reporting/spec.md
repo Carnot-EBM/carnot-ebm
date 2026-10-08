@@ -95743,3 +95743,25 @@ the fourteen dispositions from immutable inputs; `v713_capstone.py` publishes
 the current identity and derives `docs/research-notes/v713-outcomes.md` from the
 checked primary. `tests/python/test_v713_capstone_8261.py` covers missing and zero
 operands, owned failures, historical custody, authority drift and retirement limits.
+## REQ-REPORT-8262: Bind current authority without refreezing science
+
+Exp8262 SHALL compare the fourteen full Exp8262–Exp8275 task objects, visible
+table, embedded JSON, canonical digest and actual active authority. Planning
+agreement alone cannot qualify activation. Bind the unchanged V713 science
+SHA-256 f4c06e17a9f8eb72f1be80b265ab7e3507cbc5f6f3b918df6421fe49dae02018
+in a separate V714 execution contract containing current producer paths and
+gate fields. Historical task numbers remain provenance. Preserve V713 bytes
+and every historical disposition, including six unavailable science outputs.
+No model loads or generator calls occur; administrative readiness grants no
+scientific or generalization benefit. The conductor owns ops and traceability.
+
+### SCENARIO-REPORT-8262-AUTHORITY
+
+Private current-authority tests SHALL accept matching active tasks, distinguish
+consumed staging, and reject changed prompts, lineage, count, order, gates,
+visible table or digest. Missing required inputs block by exact operand.
+
+Implementation: `v714_coverage_custody.py` binds the fourteen current tasks to
+independent authority snapshots and the unchanged science protocol. The V714
+execution JSON and `v714-coverage-custody.md` document producer paths, current
+gates and all historical dispositions. Ops and traceability remain conductor-owned.

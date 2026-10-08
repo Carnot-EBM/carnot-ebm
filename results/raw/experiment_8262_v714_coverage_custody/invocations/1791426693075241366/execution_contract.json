@@ -1,0 +1,186 @@
+{
+  "canonical_tasks_sha256": "1fd11d14182fd3e4b8a53abcb2eb8c8c98c4690309178788bb39ff17386a2686",
+  "historical_task_numbers": "provenance_only",
+  "milestone": "2026.10.714",
+  "producer_consumer_contract": {
+    "cleanup": "Copy both primitives before scratch deletion; read only durable paths.",
+    "consumer": "Fresh process recomputes statements from saved code and durable JSON.",
+    "durable_receipt": "coverage/coverage_command_receipt.json",
+    "durable_report": "coverage/coverage.json",
+    "producer": "Explicit coverage json -o operand from frozen validation argv."
+  },
+  "producers": [
+    {
+      "current_gate_fields": [],
+      "producer_path": "results/experiment_8262_v714_coverage_custody.json",
+      "task_id": "exp8262-coverage-custody"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "coverage_custody_ready_score",
+          "op": "==",
+          "upstream": "exp8262-coverage-custody",
+          "value": 1
+        },
+        {
+          "artifact_field": "current_contract_ready_score",
+          "op": "==",
+          "upstream": "exp8262-coverage-custody",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8263_v714_protocol_conformance.json",
+      "task_id": "exp8263-protocol-conformance"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "view_kernel_ready_score",
+          "op": "==",
+          "upstream": "exp8263-protocol-conformance",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8264_v714_evidence_view_canary.json",
+      "task_id": "exp8264-evidence-view-canary"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "view_canary_ready_score",
+          "op": "==",
+          "upstream": "exp8264-evidence-view-canary",
+          "value": 1
+        },
+        {
+          "artifact_field": "fit_capture_budget_ready_score",
+          "op": "==",
+          "upstream": "exp8264-evidence-view-canary",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8265_v714_fit_view_capture.json",
+      "task_id": "exp8265-fit-view-capture"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "view_canary_ready_score",
+          "op": "==",
+          "upstream": "exp8264-evidence-view-canary",
+          "value": 1
+        },
+        {
+          "artifact_field": "tune_capture_budget_ready_score",
+          "op": "==",
+          "upstream": "exp8264-evidence-view-canary",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8266_v714_tune_view_capture.json",
+      "task_id": "exp8266-tune-view-capture"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "fit_views_ready_score",
+          "op": "==",
+          "upstream": "exp8265-fit-view-capture",
+          "value": 1
+        },
+        {
+          "artifact_field": "tune_views_ready_score",
+          "op": "==",
+          "upstream": "exp8266-tune-view-capture",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8267_v714_intervention_energy_fit.json",
+      "task_id": "exp8267-intervention-energy-fit"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "intervention_fit_ready_score",
+          "op": "==",
+          "upstream": "exp8267-intervention-energy-fit",
+          "value": 1
+        },
+        {
+          "artifact_field": "reserved_capture_budget_ready_score",
+          "op": "==",
+          "upstream": "exp8264-evidence-view-canary",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8268_v714_reserved_view_seal.json",
+      "task_id": "exp8268-reserved-view-seal"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "reserved_views_ready_score",
+          "op": "==",
+          "upstream": "exp8268-reserved-view-seal",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8269_v714_intervention_benefit_audit.json",
+      "task_id": "exp8269-intervention-benefit-audit"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "admission_kernel_ready_score",
+          "op": "==",
+          "upstream": "exp8263-protocol-conformance",
+          "value": 1
+        },
+        {
+          "artifact_field": "reserved_views_ready_score",
+          "op": "==",
+          "upstream": "exp8268-reserved-view-seal",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8270_v714_continuous_constraint_admission.json",
+      "task_id": "exp8270-continuous-constraint-admission"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "constraint_trajectory_ready_score",
+          "op": "==",
+          "upstream": "exp8270-continuous-constraint-admission",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8271_v714_constraint_learning_audit.json",
+      "task_id": "exp8271-constraint-learning-audit"
+    },
+    {
+      "current_gate_fields": [],
+      "producer_path": "results/experiment_8272_v714_arc_outcome_frontier.json",
+      "task_id": "exp8272-arc-outcome-frontier"
+    },
+    {
+      "current_gate_fields": [],
+      "producer_path": "results/experiment_8273_v714_kv260_evidence_cost_boundary.json",
+      "task_id": "exp8273-kv260-evidence-cost-boundary"
+    },
+    {
+      "current_gate_fields": [],
+      "producer_path": "results/experiment_8274_v714_gatemate_physical_delta.json",
+      "task_id": "exp8274-gatemate-physical-delta"
+    },
+    {
+      "current_gate_fields": [],
+      "producer_path": "results/experiment_8275_v714_capstone.json",
+      "task_id": "exp8275-capstone"
+    }
+  ],
+  "science_choices": "Unchanged roles, thresholds, costs, seeds and missing-view fallback.",
+  "science_protocol_path": "openspec/change-proposals/v713-evidence-intervention-protocol.json",
+  "science_protocol_sha256": "sha256:f4c06e17a9f8eb72f1be80b265ab7e3507cbc5f6f3b918df6421fe49dae02018"
+}

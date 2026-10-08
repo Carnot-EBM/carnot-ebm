@@ -51320,3 +51320,29 @@ bounded supervisor and unchanged publication validators. All seven focused tests
 72 consumer/E2E-018 tests and seven private E2E-021 tests passed. Current owned
 statement coverage, scoped Ruff, strict mypy and spec coverage passed. The one
 bounded full Python suite remains a separate repository-health receipt.
+## REQ-VERIFY-8262: Durable measured coverage survives scratch cleanup
+
+Freeze validation commands before measurement. Read the explicit coverage JSON
+output operand, atomically preserve the report and actual child receipt before
+temporary cleanup, and bind both hashes plus complete owned code identity.
+Require real zero exits, fresh report bytes, nonzero statement sets, complete
+coverage and zero exclusions for every owned file. Recompute statement totals
+in a fresh process after scratch deletion. Missing counts never imply success.
+The reusable hook SHALL qualify the next thin runner independently of science.
+Failed owned checks disqualify and zero both readiness scores. Retain bounded
+full-suite health separately, scoped lint, strict types, spec coverage and
+private E2E-018 evidence. Unchanged terminal validators precede publication.
+
+### SCENARIO-VERIFY-8262-CUSTODY
+
+Real non-fixture orchestration with private scripted children SHALL preserve
+measured positive coverage after cleanup, and reject missing, stale, foreign
+owned-file, partial, excluded, failed-child and rehashed-tampered reports.
+Fresh-process cold replay SHALL reject changed headlines and primitive counts.
+Fixtures stay outside results; fixture readiness shortcuts cannot pass.
+
+Implementation: `coverage_custody_8262.py` preserves the explicit report operand,
+command receipt and owned source bytes before cleanup. `v714_coverage_runner.py`
+executes the normal branch and fresh-process controls before unchanged terminal
+publication checks. `test_coverage_custody_8262.py` covers measured positive,
+missing, stale, foreign, partial, excluded, failed and rehashed tamper cases.
