@@ -3831,3 +3831,8 @@ Research findings were recorded before design. V716 is preserved verbatim.
 The plan adds no experimental result, independent-generalization claim or
 activation. Existing focused tests/private E2E-018 exercise the authority
 reader; 105 tests pass. Global spec-reference debt remains outside this plan.
+
+| Requirement / Scenario | Status | Evidence |
+|---|---|---|
+| REQ-REPORT-8304 / SCENARIO-REPORT-8304-AUTHORITY / SCENARIO-REPORT-8304-REPLAY | Scaffolding | Exp8304: honest_verdict=complete_circular_positive_contract_methods; 14/14 task comparisons; contract/protocol readiness=1; learning benefit and independent generalization=0; [artifact](../results/experiment_8304_v717_contract_methods.json) |
+| REQ-VERIFY-8304 / SCENARIO-VERIFY-8304-CHECKS | Scaffolding | Exp8304: honest_verdict=complete_circular_positive_contract_methods; required_checks_passed=true; owned validation establishes structural readiness; [artifact](../results/experiment_8304_v717_contract_methods.json) |
