@@ -51631,3 +51631,20 @@ Implementation 2026-10-08: `kv260_evidence_cost_boundary_8287.py` reuses the
 qualified V712/V713/V714 numerical readers. Current cost rows bind producer
 invocations. Historical Exp8242 bounds, CPU fixtures and board custody retain
 their separate scopes. No device timing or model invocation is scheduled.
+
+## REQ-VERIFY-8289: Qualify owned capstone code and preserve command evidence
+
+Write traced tests before implementation. Freeze owned validation argv before
+measurement; use private scratch and bounded process-group supervision with
+flushed phase lines and heartbeats within60 seconds. Run unit/consumer tests,
+private E2E-018/021, scoped Ruff, strict mypy and spec coverage. Require100 percent
+added statement coverage including real CLI children. Run the full Python suite
+once, retaining actual exits separately from owned checks. Failed owned checks
+disqualify readiness; missing external operands complete blocked. No model loads,
+generator updates, hardware reruns or external publication are authorized.
+
+### SCENARIO-VERIFY-8289-CLI
+
+The actual thin CLI writes a terminal private candidate, passes unchanged
+adversarial/strict-row validators and atomic publication, and rejects rehashed
+replay tampering. Stream hashes and clocks remain replayable after scratch ends.

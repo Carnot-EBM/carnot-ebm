@@ -96082,3 +96082,29 @@ Exp8287 CLI freeze commands, preserve primitive custody and publish checked byte
 `test_kv260_evidence_cost_boundary_8287.py` exercises private CLI, terminal
 operand failures, missing science and rehashed replay controls. Exact validation
 outcomes reside in the primary's command receipts, with repository health separate.
+
+## REQ-REPORT-8289: Reconcile fourteen V715 outcomes without inventing benefit
+
+Exp8289 SHALL authenticate the exact Exp8276–Exp8289 contract, primaries,
+conductor pre-gate receipts and byte-bound terminal sidecars. Preserve missing
+producer verdicts as unavailable. Execution readiness is independent of positive
+science. H1/H2 retain the frozen V713 denominators, comparator, fallback and
+alpha=.025 each; unavailable evidence is not a measured null. Authenticate
+Exp8259 before confirming board-local Linux CPU graduation. Preserve exact
+KV260/GateMate obligations, ARC outcomes, archive lag and current call costs.
+Retire science only for supported informative nulls with typed-action controls
+and oracle headroom. Publish primitive-bound bytes atomically after fresh replay
+and unchanged terminal checks. Both generalization scores remain zero.
+
+### SCENARIO-REPORT-8289-OUTCOMES
+
+Exactly fourteen dispositions include missing primaries, a differently named
+bound pre-gate receipt, executed CUDA blocks and independent board reports.
+Absent science remains unmeasured; inherited PolarFire parity is CPU-only.
+Stale terminal evidence retains its exact failed operand and prevents graduation.
+
+### SCENARIO-REPORT-8289-REPLAY
+
+Private CLI evidence cold-replays outside the checkout. Negative and rehashed
+aggregate/primitive mutations fail. No fixture is written below live results/.
+The conductor owns ops/status, changelog and traceability reconciliation.
