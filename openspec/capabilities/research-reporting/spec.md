@@ -408,6 +408,11 @@ blocks terminate complete_blocked with exact operands; owned failures disqualify
 Generalization and generalized learning benefit remain zero. The conductor owns
 ops/status, ops/changelog and traceability reconciliation.
 
+Implementation 2026-10-08: the thin Exp8307 runner freezes bounded private
+validation, preserves primitive and coverage custody, and uses unchanged
+terminal auditors and atomic primary publication. The current read-only pass
+found all seven runtime operands unchanged and scheduled zero CUDA probes.
+
 ### SCENARIO-REPORT-8145: Private CLI and independent replay
 
 Outside-checkout script execution without PYTHONPATH must exercise private
@@ -96370,3 +96375,22 @@ No full repository suite runs inside this bounded experiment.
 Cold replay independently reduces primitive rows in a fresh process. Valid and
 blocked private primaries pass; planted stale cache, negative and rehashed
 tamper controls fail. Owned check failure disqualifies and zeros readiness.
+## REQ-REPORT-8307: Publish a replayable runtime anti-repeat boundary
+
+Publish Exp8307 with no_model_load, aggregation_from_upstream_artifacts, empty
+MODEL_SPECS and zero current calls. Bind actual invocation authority, imported
+failure layers, every changed/unchanged operand, hashes, clocks and exact gates.
+Unchanged CUDA yields complete_blocked_cuda_runtime, verdict_class=blocked,
+runtime_changed_score=0 and cuda_context_ready_score=0. Missing operands block;
+failed owned checks disqualify and clear context readiness. Preserve intended
+denominators and distinguish absent probes from measured failures. Both
+generalization scores remain zero. Freeze the exact future reopen contract.
+
+### SCENARIO-REPORT-8307-REPLAY
+
+Fresh-process replay reconstructs primitive deltas and scores. Valid evidence
+passes; negative and rehashed headline/primitive tampering fail. Authenticate
+source, code, stream and binding bytes. Private candidate validation uses
+unchanged primary publication, adversarial and strict-row checks before atomic
+publication. Historical primary bytes remain unchanged. The conductor owns
+ops/status, ops/changelog and traceability reconciliation.

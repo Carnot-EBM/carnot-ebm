@@ -51871,3 +51871,36 @@ through the existing atomic JSON writer. Cohort worker deaths preserve every
 trajectory at both issue boundaries. Full/indexed/truncated arms and scalar
 finite differences qualify constructed mechanics; primitive replay rejects
 rehashed state, receipt and clock changes. Timing includes real checkpoints.
+## REQ-VERIFY-8307: Reopen CUDA only after authenticated causal change
+
+Authenticate Exp8290 primary, terminal auditors, primitive streams and runtime
+binding. Compare read-only driver/library hashes, kernel version, visible
+devices, masks, lease mapping and dated operator repair receipts. Ignore time,
+mtime, task numbers and UUID spelling. An unchanged boundary SHALL run zero
+context/native probes and zero model calls. Root cause remains unproved.
+Only a documented causal delta permits one exclusive UUID lease and one driver
+context/32-byte-copy, runtime-enumeration and native child each. Bound each
+child to60 seconds and all probes to360 seconds. Readiness requires successful
+initialization, actual context/copy parity, runtime/native compatibility under
+the same leased environment, cleanup and owned checks. Exp8313 SHALL revalidate
+the binding immediately before load. No resets or unrelated process signals.
+
+### SCENARIO-VERIFY-8307-BOUNDARY
+
+Unchanged identities and UUID formatting changes block without probing.
+Missing or invalid authority, receipts or tools remain exact external blocks.
+Changed identities permit a single bounded matrix; native inventory alone,
+context/copy failures and occupied leases keep readiness zero.
+
+### SCENARIO-VERIFY-8307-VALIDATION
+
+Private tests SHALL precede implementation and exercise real CLI, changed-child,
+failure and recovery paths. Freeze private argv before measurement. Run private
+E2E-018, relevant consumers, scoped Ruff, strict mypy and spec coverage. Require
+100 percent newly owned statement coverage, including real CLI children.
+Do not run the full repository suite within this bounded experiment.
+
+Implementation 2026-10-08: the runtime-change adapter authenticates Exp8290
+failure primitives and performs a read-only identity comparison. Private tests
+cover receipt authority/dates, inherited restrictions, single-lease cleanup,
+exact context/copy prerequisites, real CLI and rehashed replay controls.
