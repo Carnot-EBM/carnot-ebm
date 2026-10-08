@@ -1,0 +1,85 @@
+.......F.....                                                            [100%]
+=================================== FAILURES ===================================
+___________________________________ test_cli ___________________________________
+
+tmp_path = PosixPath('/tmp/carnot-8286-np9qe946/unit/test_cli0')
+
+    def test_cli(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-8286-CLI / SCENARIO-VERIFY-8286-COLD: private real child replay."""
+        locator = fixture(tmp_path, [current()])
+        prior = frontier(tmp_path, locator)
+        output = tmp_path / task.OUTPUT.name
+        args = [
+            "--locator",
+            str(locator),
+            "--frontier",
+            str(prior),
+            "--output",
+            str(output),
+            "--fixture-e2e",
+        ]
+        result = invoke(tmp_path, *args)
+        assert result.returncode == 0, result.stdout + result.stderr
+        value = json.loads(output.read_text())
+        assert value["new_outcome_count"] == 0 and value["fixture_result"]["new_outcome_count"] == 1
+        assert value["proposed_arm_change"] is None and value["credited_new_levels"] == 0
+        upstream = next(r for r in value["cited_upstream_artifacts"] if r["path"] == str(prior))
+        assert {"finished_at", "current_frontier", "qualified_authority_signature"} <= set(
+            upstream["fields_imported"]
+        )
+        assert invoke(tmp_path, "--cold-replay", str(output)).returncode == 0
+        value["credited_new_levels"] = 1
+        atomic_json(output, value)
+        assert invoke(tmp_path, "--cold-replay", str(output)).returncode == 1
+        assert invoke(tmp_path, "--date", "20261006").returncode == 2
+        assert invoke(tmp_path, "--fixture-e2e").returncode == 2
+        assert invoke(tmp_path, "--frontier", str(prior)).returncode == 2
+        args[1] = str(tmp_path / "missing.json")
+        result = invoke(tmp_path, *args)
+        assert result.returncode == 1, result.stdout + result.stderr
+        assert json.loads(output.read_text())["verdict_class"] == "blocked"
+        assert invoke(tmp_path, "--cold-replay", str(output)).returncode == 0
+>       result = invoke(tmp_path, "--output", str(output), "--fixture-e2e")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_outcome_frontier_8286.py:167: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_arc_outcome_frontier_8286.py:122: in invoke
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....>
+endtime = 1109316.019425562, orig_timeout = 60
+stdout_seq = [b'[exp8286] start no_model_load current_llm_calls=0\n', b'[exp8205] phase=exp8286_preconditions completed=0 pending=1...validation completed=0 pending=0\n', b'[exp8205] phase=before_subprocess_terminal_adversarial completed=0 pending=1\n']
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() > endtime:
+>           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8286_v715_arc_outcome_frontier.py', '--output', '/tmp/carnot-8286-np9qe946/unit/test_cli0/experiment_8286_v715_arc_outcome_frontier.json', '--fixture-e2e']' timed out after 60 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_outcome_frontier_8286.py::test_cli - subprocess....
+1 failed, 12 passed, 1 warning in 155.51s (0:02:35)
