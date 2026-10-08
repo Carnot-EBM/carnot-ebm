@@ -1,5 +1,21 @@
 # Carnot — Operational Status
 
+## 2026-10-08 — V717 capstone retirement compatibility repair
+
+Capstone reconciliation now accepts historical `retired_extras` entries without
+an `id`, retaining them while using identified entries for duplicate detection.
+The original append-only regression passes with stronger full-prefix and
+legacy-entry preservation checks. Repeated reconciliation and failed append
+validation retain the original bytes. All 140 relevant tests pass: 49 capstone,
+consumer and private E2E-018/E2E-021 tests, 81 conductor core tests and 10
+fix-erasure gate tests. Both capstone modules and the direct CLI have 281/281
+statement coverage. Scoped lint, format, strict mypy and spec references pass;
+published experimental evidence is unchanged.
+
+Documentation freshness passes. Final repository reconciliation retains the
+pre-existing 1,142 test-spec reference gaps; the affected files all pass scoped
+spec checks. This validation does not establish full repository health.
+
 ## 2026-10-08 — V717 research plan staged
 
 Next milestone `2026.10.717` contains exactly fourteen tasks, Exp8304–Exp8317,

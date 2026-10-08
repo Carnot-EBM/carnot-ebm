@@ -1,5 +1,29 @@
 # Carnot — Changelog
 
+## 2026-10-08 — Fix V717 legacy retirement reconciliation
+
+- Fixed `reconcile_manifest` raising `KeyError: 'id'` on historical retirement
+  entries that have no identifier. Duplicate detection uses identified entries;
+  historical rows and authenticated append validation remain intact.
+- Strengthened the existing regression to verify the entire original byte
+  prefix, the preserved legacy row and exactly one appended retirement.
+  Its existing repeat and rejected-append assertions remain in place.
+- Added `SCENARIO-REPORT-8317-LEGACY-RETIREMENT` and linked the repair to
+  traceability. No historical primary or conductor code was changed.
+
+Validation: 140 relevant tests passed, including both private E2Es and the
+fix-erasure gate; owned capstone/CLI coverage is 281/281 statements (100%).
+Scoped Ruff check/format, strict mypy and spec-reference checks passed.
+The test mutation monitor recorded only these concurrently authored ops and
+traceability edits, with no writes attributed to pytest. Its single marker
+was archived under `/tmp/carnot-8317-fix-t3jp1567/` and cleared deliberately;
+all authored documentation was preserved.
+
+Final reconciliation passes documentation freshness and retains one existing
+global issue: 1,142 tests lack spec references. All repair and consumer tests
+pass scoped spec checks. Coverage and audit evidence is in the private scratch
+directory above.
+
 ## 2026-10-08 — Plan milestone 2026.10.717
 
 - Added a dated primary/secondary research scan before experiment design,

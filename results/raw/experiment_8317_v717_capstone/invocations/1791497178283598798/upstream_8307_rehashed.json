@@ -1,0 +1,3566 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gates": {
+    "authenticated_change": false,
+    "cuda_context_ready": false,
+    "owned_checks": false
+  },
+  "censored_count": 0,
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "failure_layer",
+        "device_inventory",
+        "runtime_binding_path",
+        "lease_receipt",
+        "work_reference"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8290_v716_runtime_localization.json",
+      "sha256": "sha256:62875d880623865338f7d6b85e1caa82ed388cb0b94b4402f0457245361a0b1f"
+    }
+  ],
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/runtime_change_boundary_8307.py",
+      "sha256": "sha256:297bb0dc00a2216035c9e32dc1395f8bf69c6cdbd868b47b7853f2c71ab31dae"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/runtime_change_execution_8307.py",
+      "sha256": "sha256:f3a2b4b3df6aedebb6735b610abe45622778bbe687f567a8a1b8d01eb01e4843"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8307_v717_runtime_change_boundary.py",
+      "sha256": "sha256:0672b0e544e82a3f44417f92ffe52fd9bc4de4efa2de6c7c435069c5495e7079"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_runtime_change_boundary_8307.py",
+      "sha256": "sha256:75de5e1843d60e8138c3e9ffc45a737e4110781929601a52cf9c576a525936a2"
+    }
+  ],
+  "completed_count": 8,
+  "cuda_context_ready_score": 0,
+  "cuda_probe_rows": [],
+  "current_model_calls": 0,
+  "current_probe_count": 0,
+  "duration_s": 164.435971251,
+  "environment_delta_rows": [
+    {
+      "available": true,
+      "changed": false,
+      "field": "driver",
+      "observed": "615.71.09",
+      "potentially_causal": false,
+      "previous": "615.71.09",
+      "status": "completed",
+      "unit_id": "driver"
+    },
+    {
+      "available": true,
+      "changed": false,
+      "field": "kernel",
+      "observed": "NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  615.71.09  Release Build  (root@icbfl1)  \nGCC version:  Found HIP installation: /opt/rocm, version 7.2.53211\n",
+      "potentially_causal": false,
+      "previous": "NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  615.71.09  Release Build  (root@icbfl1)  \nGCC version:  Found HIP installation: /opt/rocm, version 7.2.53211\n",
+      "status": "completed",
+      "unit_id": "kernel"
+    },
+    {
+      "available": true,
+      "changed": false,
+      "field": "devices",
+      "observed": [
+        {
+          "driver_version": "615.71.09",
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "potentially_causal": false,
+      "previous": [
+        {
+          "driver_version": "615.71.09",
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "status": "completed",
+      "unit_id": "devices"
+    },
+    {
+      "available": true,
+      "changed": false,
+      "field": "masks",
+      "observed": {
+        "CUDA_PATH": "/opt/cuda"
+      },
+      "potentially_causal": false,
+      "previous": {
+        "CUDA_PATH": "/opt/cuda"
+      },
+      "status": "completed",
+      "unit_id": "masks"
+    },
+    {
+      "available": true,
+      "changed": false,
+      "field": "libraries",
+      "observed": [
+        {
+          "path": "/usr/lib/libcuda.so.615.71.09",
+          "sha256": "sha256:85a8cc8cf00419ceb295ec62c481d05b4cdbdab10f25c5375d6d24bdbe00b4d9"
+        },
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+          "sha256": "sha256:c3a75b33af334a3486d197dbd1584a2985183ba4688d237a2be5f2f679329920"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so",
+          "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0",
+          "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0.14.0",
+          "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so",
+          "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0",
+          "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0.14.0",
+          "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so",
+          "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0",
+          "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0.14.0",
+          "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so",
+          "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0",
+          "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0.14.0",
+          "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-batched-bench-impl.so",
+          "sha256": "sha256:23795359a9a6c63be47d924faaa5e99b46e4c85b2a16821c4f541eb8e8278a66"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-bench-impl.so",
+          "sha256": "sha256:a378abd7a8990d6a886e6d0dd1e613a7a2abd381578bcf9ba2389bf0c7f1837a"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-cli-impl.so",
+          "sha256": "sha256:39d490db9a43d609c5f4a711a79e14dc39dd11f0b91a05d3f2d616c0951eda84"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so",
+          "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0",
+          "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0.0.9606",
+          "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-completion-impl.so",
+          "sha256": "sha256:e2c9d53a9669c52a4574ced4ac19656a571045f88d9d324d44b90af0d6482c4f"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-fit-params-impl.so",
+          "sha256": "sha256:163e5ab106d3b1c2d69bd5456aa118456018dfe91bc997a8fdf3b74b50e673b6"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-perplexity-impl.so",
+          "sha256": "sha256:307d8bd0bf027cff546638e79357afb0d88f5005653e51cb9de90446bbea8dc6"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-quantize-impl.so",
+          "sha256": "sha256:f2e0718c18975500981d71172f082ca58b6daa3087da8de163adace50c997493"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so",
+          "sha256": "sha256:35a77374d80a3b6774b9dfc95a01158d489309ccbfbc7f66dc6a747127af7c92"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so",
+          "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0",
+          "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0.0.9606",
+          "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so",
+          "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0",
+          "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0.0.9606",
+          "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+        }
+      ],
+      "potentially_causal": false,
+      "previous": [
+        {
+          "path": "/usr/lib/libcuda.so.615.71.09",
+          "sha256": "sha256:85a8cc8cf00419ceb295ec62c481d05b4cdbdab10f25c5375d6d24bdbe00b4d9"
+        },
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+          "sha256": "sha256:c3a75b33af334a3486d197dbd1584a2985183ba4688d237a2be5f2f679329920"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so",
+          "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0",
+          "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0.14.0",
+          "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so",
+          "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0",
+          "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0.14.0",
+          "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so",
+          "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0",
+          "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0.14.0",
+          "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so",
+          "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0",
+          "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0.14.0",
+          "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-batched-bench-impl.so",
+          "sha256": "sha256:23795359a9a6c63be47d924faaa5e99b46e4c85b2a16821c4f541eb8e8278a66"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-bench-impl.so",
+          "sha256": "sha256:a378abd7a8990d6a886e6d0dd1e613a7a2abd381578bcf9ba2389bf0c7f1837a"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-cli-impl.so",
+          "sha256": "sha256:39d490db9a43d609c5f4a711a79e14dc39dd11f0b91a05d3f2d616c0951eda84"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so",
+          "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0",
+          "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0.0.9606",
+          "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-completion-impl.so",
+          "sha256": "sha256:e2c9d53a9669c52a4574ced4ac19656a571045f88d9d324d44b90af0d6482c4f"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-fit-params-impl.so",
+          "sha256": "sha256:163e5ab106d3b1c2d69bd5456aa118456018dfe91bc997a8fdf3b74b50e673b6"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-perplexity-impl.so",
+          "sha256": "sha256:307d8bd0bf027cff546638e79357afb0d88f5005653e51cb9de90446bbea8dc6"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-quantize-impl.so",
+          "sha256": "sha256:f2e0718c18975500981d71172f082ca58b6daa3087da8de163adace50c997493"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so",
+          "sha256": "sha256:35a77374d80a3b6774b9dfc95a01158d489309ccbfbc7f66dc6a747127af7c92"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so",
+          "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0",
+          "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0.0.9606",
+          "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so",
+          "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0",
+          "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0.0.9606",
+          "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+        }
+      ],
+      "status": "completed",
+      "unit_id": "libraries"
+    },
+    {
+      "available": true,
+      "changed": false,
+      "field": "nodes",
+      "observed": [
+        {
+          "exists": true,
+          "path": "/dev/nvidia-caps",
+          "read_write": false
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia-modeset",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia-uvm",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia-uvm-tools",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia0",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia1",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidiactl",
+          "read_write": true
+        }
+      ],
+      "potentially_causal": false,
+      "previous": [
+        {
+          "exists": true,
+          "path": "/dev/nvidia-caps",
+          "read_write": false
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia-modeset",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia-uvm",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia-uvm-tools",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia0",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia1",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidiactl",
+          "read_write": true
+        }
+      ],
+      "status": "completed",
+      "unit_id": "nodes"
+    },
+    {
+      "available": true,
+      "changed": false,
+      "field": "permitted_uuid",
+      "observed": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "potentially_causal": false,
+      "previous": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "status": "completed",
+      "unit_id": "permitted_uuid"
+    },
+    {
+      "available": true,
+      "changed": false,
+      "field": "operator_repair",
+      "observed": [],
+      "potentially_causal": false,
+      "previous": null,
+      "status": "completed",
+      "unit_id": "operator_repair"
+    }
+  ],
+  "excluded_count": 0,
+  "execution_authority": {
+    "activated": true,
+    "checks": [
+      {
+        "expected": {
+          "MODEL_SPECS": [],
+          "deliverable": "results/experiment_8307_v717_runtime_change_boundary.json",
+          "estimated_wall_time_min": 35,
+          "gated_on": [],
+          "id": "exp8307-runtime-change-boundary",
+          "inference_substrate_class": "no_model_load",
+          "max_turns": 100,
+          "milestone": "2026.10.717",
+          "model": "opus",
+          "per_unit_rows": true,
+          "phase": 1,
+          "prior_failures": [
+            {
+              "addressed_by": "The root cause remains unproved. This task only compares environment evidence and permits the existing probe once after a real driver/device/lease correction; unchanged state triggers no CUDA matrix or model load.",
+              "experiment_id": "exp8290-runtime-localization",
+              "retire_if_same_verdict": true,
+              "verdict": "complete_blocked_cuda_runtime"
+            },
+            {
+              "addressed_by": "Driver-level failure invalidated a backend-only repair. Require an authenticated changed execution substrate before testing native enumeration.",
+              "experiment_id": "exp8277-lease-backend-qualification",
+              "retire_if_same_verdict": true,
+              "verdict": "complete_blocked_gguf_backend"
+            }
+          ],
+          "priority": "high",
+          "prompt": "CONTEXT:\nWork in {project_root} on {date}. V716 finished with six executed primaries, one separate pre-gate record and seven absent producer primaries. Exp8290 localized CUDA error 101 below the model but did not prove its root cause. Exp8291 qualified constructed dependency mechanics only. V717 tests a bounded changed mechanism on exposed cached development data; no independent generalization claim.\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; results/experiment_8290_v716_runtime_localization.json; scripts/experiments/experiment_8290_v716_runtime_localization.py; scripts/experiments/experiment_8277_v715_lease_backend_qualification.py; ops/hardware-bringup-prep.md; ops/operator-followup.md\nTASK:\nReopen CUDA qualification only on authenticated environment change. Deliver results/experiment_8307_v717_runtime_change_boundary.json. Create the thin runner scripts/experiments/experiment_8307_v717_runtime_change_boundary.py. Store primitive evidence under results/raw/experiment_8307_v717_runtime_change_boundary/. Read current upstream tasks by their exact declared deliverables; paths not yet produced are dependencies, not historical files.\nCONCRETE STEPS:\n1. PRECONDITIONS: Emit a flushed start line. Authenticate input bytes and terminal/adversarial sidecars. Check private scratch, tools and required resources before measurement. Missing external operands produce complete_blocked_<operand>, verdict_class=blocked and exact gate_check_summary; never substitute simulated observations.\n2. Emit a flushed progress line at every phase boundary and before and after every model load, generation, benchmark and subprocess. Print completed/pending counts inside long loops and a heartbeat at least every 60 seconds while children run; keep every gap below 600 seconds. Use unbuffered output, deadlines and owned process-group cleanup. Write any file over about 200 lines in several tool calls of at most about 150 lines, with a progress message between calls. Split commands and file creation into resumable batches; no single huge tool call and no padded runtime.\n3. Spec first: add relevant REQ-* and SCENARIO-* before implementation. Write focused failing tests first. Preserve existing tests, validators and historical primary bytes. Reuse existing numeric and reporting modules through small adapters. Freeze owned validation argv and private fixture paths. Scratch belongs in /tmp; real runners in scripts/experiments/. No generator-weight updates or external publication.\n4. Use no_model_load, inference_substrate=aggregation_from_upstream_artifacts, MODEL_SPECS=[] and zero model calls. Read the recorded failure-layer rows and driver/library/lease identities. Driver cuInit and runtime enumeration both returned101 under inherited and explicit UUID bindings; root cause is unproved.\n5. Compare bounded read-only current driver/library hashes, kernel-driver version, device visibility, lease mapping and dated operator repair receipts to Exp8290. Mere elapsed time, file mtime, UUID reformatting or another task number is not a corrective change. Do not reset GPUs, unload drivers, install packages or interrupt unrelated workloads.\n6. If no potentially causal change is authenticated, write complete_blocked_cuda_runtime with cuda_context_ready_score=0, runtime_changed_score=0 and an exact reopen contract. Run no native/context probe and no model load. This is an anti-repeat audit, not another attempted repair.\n7. Only on a changed driver/device/lease condition, acquire the existing exclusive lease and run the existing bounded driver/context/32-byte-copy and native-enumeration children once: <=60 seconds per child, <=360 seconds total, owned cleanup. Record changed and unchanged operands plus current device UUID. No search over mappings. A native listing alone cannot set readiness.\n8. Set runtime_changed_score=1 only for the documented corrective delta. Set cuda_context_ready_score=1 only for driver init, actual context and byte-copy parity plus native compatibility under the exact leased child environment, with required checks passed. Exp8313 must revalidate the binding immediately before load. Write docs/research-notes/v717-runtime-reopen.md with failure layer and required next evidence.\n9. Run applicable E2E-018 private receipt/authority cases. Run the specified private E2E checks from ops/e2e-test-plan.md and relevant unit/consumer tests. Require 100 percent newly owned statement coverage including real CLI, child, failure and recovery paths. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>. Keep exact argv, exit codes, clocks and output hashes. Use pytest -n 0 -o addopts= with private scratch. Do not launch the full repository test suite inside this bounded experiment.\n10. Cold-replay primitive rows in a fresh process, including valid, negative and rehashed-tamper controls. Validate a private candidate with unchanged primary_publication checks, scripts/adversarial_verify.py --json <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>. Publish the terminal primary atomically after normal completion and required checks. Failed owned checks disqualify and set readiness to zero. External incompleteness is blocked, not partial. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not modify research-roadmap.yaml.\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date: principle: Identify the actual invocation and its execution authority.\nhonest_verdict, verdict_class: principle: Terminal honest_verdict starts complete_; verdict_class is positive | circular_positive | null | blocked | disqualified | partial. Partial is only retryable unfinished owned work, never an unchanged external block.\ngate_check_summary: principle: Every block names the upstream, actual path/hash, exact field, operator, expected and observed values; absent evidence differs from measured zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, historical_model_provenance: principle: Separate current model execution from imported observations; do not apply a generation floor to cached scoring.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, sample_size_budget: principle: Preserve every intended source/condition/arm with numerator and denominator; repetitions are not independent samples.\nverifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score: principle: Oracle-defined success is circular_positive. Reused cohorts are exposed development; both generalization scores stay zero.\nrequired_checks_passed, flagged_adversarial, acceptance_gates, validation_receipts, terminal_validation_sidecar_path: principle: Readiness requires owned checks and byte-bound validation; it does not require a scientific win.\npreconditions_checked, duration_s, phase_spans, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes: principle: Bind conclusions to measured work, configuration and replayable evidence.\ncited_upstream_artifacts, field_principles: principle: Name imported fields and hashes and explain every added field's evidentiary purpose.\nruntime_changed_score, cuda_context_ready_score, environment_delta_rows, runtime_binding_path, runtime_binding_sha256, reopen_contract: principle: A changed precondition and measured context distinguish progress from identical runtime retries.\ncurrent_probe_count, current_model_calls, failure_layer, root_cause_status, lease_receipt: principle: Inventory is not model readiness or an established root cause.\nRun command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8307_v717_runtime_change_boundary.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+          "requires_gpu": false,
+          "title": "Reopen CUDA qualification only on authenticated environment change",
+          "track": "infrastructure"
+        },
+        "field": "full_activated_task",
+        "observed": {
+          "MODEL_SPECS": [],
+          "deliverable": "results/experiment_8307_v717_runtime_change_boundary.json",
+          "estimated_wall_time_min": 35,
+          "gated_on": [],
+          "id": "exp8307-runtime-change-boundary",
+          "inference_substrate_class": "no_model_load",
+          "max_turns": 100,
+          "milestone": "2026.10.717",
+          "model": "opus",
+          "per_unit_rows": true,
+          "phase": 1,
+          "prior_failures": [
+            {
+              "addressed_by": "The root cause remains unproved. This task only compares environment evidence and permits the existing probe once after a real driver/device/lease correction; unchanged state triggers no CUDA matrix or model load.",
+              "experiment_id": "exp8290-runtime-localization",
+              "retire_if_same_verdict": true,
+              "verdict": "complete_blocked_cuda_runtime"
+            },
+            {
+              "addressed_by": "Driver-level failure invalidated a backend-only repair. Require an authenticated changed execution substrate before testing native enumeration.",
+              "experiment_id": "exp8277-lease-backend-qualification",
+              "retire_if_same_verdict": true,
+              "verdict": "complete_blocked_gguf_backend"
+            }
+          ],
+          "priority": "high",
+          "prompt": "CONTEXT:\nWork in {project_root} on {date}. V716 finished with six executed primaries, one separate pre-gate record and seven absent producer primaries. Exp8290 localized CUDA error 101 below the model but did not prove its root cause. Exp8291 qualified constructed dependency mechanics only. V717 tests a bounded changed mechanism on exposed cached development data; no independent generalization claim.\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; results/experiment_8290_v716_runtime_localization.json; scripts/experiments/experiment_8290_v716_runtime_localization.py; scripts/experiments/experiment_8277_v715_lease_backend_qualification.py; ops/hardware-bringup-prep.md; ops/operator-followup.md\nTASK:\nReopen CUDA qualification only on authenticated environment change. Deliver results/experiment_8307_v717_runtime_change_boundary.json. Create the thin runner scripts/experiments/experiment_8307_v717_runtime_change_boundary.py. Store primitive evidence under results/raw/experiment_8307_v717_runtime_change_boundary/. Read current upstream tasks by their exact declared deliverables; paths not yet produced are dependencies, not historical files.\nCONCRETE STEPS:\n1. PRECONDITIONS: Emit a flushed start line. Authenticate input bytes and terminal/adversarial sidecars. Check private scratch, tools and required resources before measurement. Missing external operands produce complete_blocked_<operand>, verdict_class=blocked and exact gate_check_summary; never substitute simulated observations.\n2. Emit a flushed progress line at every phase boundary and before and after every model load, generation, benchmark and subprocess. Print completed/pending counts inside long loops and a heartbeat at least every 60 seconds while children run; keep every gap below 600 seconds. Use unbuffered output, deadlines and owned process-group cleanup. Write any file over about 200 lines in several tool calls of at most about 150 lines, with a progress message between calls. Split commands and file creation into resumable batches; no single huge tool call and no padded runtime.\n3. Spec first: add relevant REQ-* and SCENARIO-* before implementation. Write focused failing tests first. Preserve existing tests, validators and historical primary bytes. Reuse existing numeric and reporting modules through small adapters. Freeze owned validation argv and private fixture paths. Scratch belongs in /tmp; real runners in scripts/experiments/. No generator-weight updates or external publication.\n4. Use no_model_load, inference_substrate=aggregation_from_upstream_artifacts, MODEL_SPECS=[] and zero model calls. Read the recorded failure-layer rows and driver/library/lease identities. Driver cuInit and runtime enumeration both returned101 under inherited and explicit UUID bindings; root cause is unproved.\n5. Compare bounded read-only current driver/library hashes, kernel-driver version, device visibility, lease mapping and dated operator repair receipts to Exp8290. Mere elapsed time, file mtime, UUID reformatting or another task number is not a corrective change. Do not reset GPUs, unload drivers, install packages or interrupt unrelated workloads.\n6. If no potentially causal change is authenticated, write complete_blocked_cuda_runtime with cuda_context_ready_score=0, runtime_changed_score=0 and an exact reopen contract. Run no native/context probe and no model load. This is an anti-repeat audit, not another attempted repair.\n7. Only on a changed driver/device/lease condition, acquire the existing exclusive lease and run the existing bounded driver/context/32-byte-copy and native-enumeration children once: <=60 seconds per child, <=360 seconds total, owned cleanup. Record changed and unchanged operands plus current device UUID. No search over mappings. A native listing alone cannot set readiness.\n8. Set runtime_changed_score=1 only for the documented corrective delta. Set cuda_context_ready_score=1 only for driver init, actual context and byte-copy parity plus native compatibility under the exact leased child environment, with required checks passed. Exp8313 must revalidate the binding immediately before load. Write docs/research-notes/v717-runtime-reopen.md with failure layer and required next evidence.\n9. Run applicable E2E-018 private receipt/authority cases. Run the specified private E2E checks from ops/e2e-test-plan.md and relevant unit/consumer tests. Require 100 percent newly owned statement coverage including real CLI, child, failure and recovery paths. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>. Keep exact argv, exit codes, clocks and output hashes. Use pytest -n 0 -o addopts= with private scratch. Do not launch the full repository test suite inside this bounded experiment.\n10. Cold-replay primitive rows in a fresh process, including valid, negative and rehashed-tamper controls. Validate a private candidate with unchanged primary_publication checks, scripts/adversarial_verify.py --json <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>. Publish the terminal primary atomically after normal completion and required checks. Failed owned checks disqualify and set readiness to zero. External incompleteness is blocked, not partial. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not modify research-roadmap.yaml.\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date: principle: Identify the actual invocation and its execution authority.\nhonest_verdict, verdict_class: principle: Terminal honest_verdict starts complete_; verdict_class is positive | circular_positive | null | blocked | disqualified | partial. Partial is only retryable unfinished owned work, never an unchanged external block.\ngate_check_summary: principle: Every block names the upstream, actual path/hash, exact field, operator, expected and observed values; absent evidence differs from measured zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, historical_model_provenance: principle: Separate current model execution from imported observations; do not apply a generation floor to cached scoring.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, sample_size_budget: principle: Preserve every intended source/condition/arm with numerator and denominator; repetitions are not independent samples.\nverifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score: principle: Oracle-defined success is circular_positive. Reused cohorts are exposed development; both generalization scores stay zero.\nrequired_checks_passed, flagged_adversarial, acceptance_gates, validation_receipts, terminal_validation_sidecar_path: principle: Readiness requires owned checks and byte-bound validation; it does not require a scientific win.\npreconditions_checked, duration_s, phase_spans, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes: principle: Bind conclusions to measured work, configuration and replayable evidence.\ncited_upstream_artifacts, field_principles: principle: Name imported fields and hashes and explain every added field's evidentiary purpose.\nruntime_changed_score, cuda_context_ready_score, environment_delta_rows, runtime_binding_path, runtime_binding_sha256, reopen_contract: principle: A changed precondition and measured context distinguish progress from identical runtime retries.\ncurrent_probe_count, current_model_calls, failure_layer, root_cause_status, lease_receipt: principle: Inventory is not model readiness or an established root cause.\nRun command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8307_v717_runtime_change_boundary.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+          "requires_gpu": false,
+          "title": "Reopen CUDA qualification only on authenticated environment change",
+          "track": "infrastructure"
+        },
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+        "sha256": "sha256:9b1076e9495e696c55d13b00ac77a276a0c709fec4ce7ec787e091f1fe069656",
+        "upstream_id": "exp8290"
+      },
+      {
+        "expected": "2026.10.717",
+        "field": "milestone",
+        "observed": "2026.10.717",
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+        "sha256": "sha256:9b1076e9495e696c55d13b00ac77a276a0c709fec4ce7ec787e091f1fe069656",
+        "upstream_id": "exp8290"
+      }
+    ],
+    "refs": [
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+        "role": "research-roadmap-vNEXT",
+        "sha256": "sha256:adbaf7582e050d67beb74842e8d8d450b279fd5d6595c12751c046138bd6aca3",
+        "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/authority/research-roadmap-vNEXT-adbaf7582e050d67beb74842e8d8d450b279fd5d6595c12751c046138bd6aca3.bin",
+        "snapshot_sha256": "sha256:adbaf7582e050d67beb74842e8d8d450b279fd5d6595c12751c046138bd6aca3",
+        "source_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md"
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+        "role": "research-roadmap",
+        "sha256": "sha256:9b1076e9495e696c55d13b00ac77a276a0c709fec4ce7ec787e091f1fe069656",
+        "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/authority/research-roadmap-9b1076e9495e696c55d13b00ac77a276a0c709fec4ce7ec787e091f1fe069656.bin",
+        "snapshot_sha256": "sha256:9b1076e9495e696c55d13b00ac77a276a0c709fec4ce7ec787e091f1fe069656",
+        "source_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+      }
+    ],
+    "task": {
+      "MODEL_SPECS": [],
+      "deliverable": "results/experiment_8307_v717_runtime_change_boundary.json",
+      "estimated_wall_time_min": 35,
+      "gated_on": [],
+      "id": "exp8307-runtime-change-boundary",
+      "inference_substrate_class": "no_model_load",
+      "max_turns": 100,
+      "milestone": "2026.10.717",
+      "model": "opus",
+      "per_unit_rows": true,
+      "phase": 1,
+      "prior_failures": [
+        {
+          "addressed_by": "The root cause remains unproved. This task only compares environment evidence and permits the existing probe once after a real driver/device/lease correction; unchanged state triggers no CUDA matrix or model load.",
+          "experiment_id": "exp8290-runtime-localization",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_cuda_runtime"
+        },
+        {
+          "addressed_by": "Driver-level failure invalidated a backend-only repair. Require an authenticated changed execution substrate before testing native enumeration.",
+          "experiment_id": "exp8277-lease-backend-qualification",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_gguf_backend"
+        }
+      ],
+      "priority": "high",
+      "prompt": "CONTEXT:\nWork in {project_root} on {date}. V716 finished with six executed primaries, one separate pre-gate record and seven absent producer primaries. Exp8290 localized CUDA error 101 below the model but did not prove its root cause. Exp8291 qualified constructed dependency mechanics only. V717 tests a bounded changed mechanism on exposed cached development data; no independent generalization claim.\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; results/experiment_8290_v716_runtime_localization.json; scripts/experiments/experiment_8290_v716_runtime_localization.py; scripts/experiments/experiment_8277_v715_lease_backend_qualification.py; ops/hardware-bringup-prep.md; ops/operator-followup.md\nTASK:\nReopen CUDA qualification only on authenticated environment change. Deliver results/experiment_8307_v717_runtime_change_boundary.json. Create the thin runner scripts/experiments/experiment_8307_v717_runtime_change_boundary.py. Store primitive evidence under results/raw/experiment_8307_v717_runtime_change_boundary/. Read current upstream tasks by their exact declared deliverables; paths not yet produced are dependencies, not historical files.\nCONCRETE STEPS:\n1. PRECONDITIONS: Emit a flushed start line. Authenticate input bytes and terminal/adversarial sidecars. Check private scratch, tools and required resources before measurement. Missing external operands produce complete_blocked_<operand>, verdict_class=blocked and exact gate_check_summary; never substitute simulated observations.\n2. Emit a flushed progress line at every phase boundary and before and after every model load, generation, benchmark and subprocess. Print completed/pending counts inside long loops and a heartbeat at least every 60 seconds while children run; keep every gap below 600 seconds. Use unbuffered output, deadlines and owned process-group cleanup. Write any file over about 200 lines in several tool calls of at most about 150 lines, with a progress message between calls. Split commands and file creation into resumable batches; no single huge tool call and no padded runtime.\n3. Spec first: add relevant REQ-* and SCENARIO-* before implementation. Write focused failing tests first. Preserve existing tests, validators and historical primary bytes. Reuse existing numeric and reporting modules through small adapters. Freeze owned validation argv and private fixture paths. Scratch belongs in /tmp; real runners in scripts/experiments/. No generator-weight updates or external publication.\n4. Use no_model_load, inference_substrate=aggregation_from_upstream_artifacts, MODEL_SPECS=[] and zero model calls. Read the recorded failure-layer rows and driver/library/lease identities. Driver cuInit and runtime enumeration both returned101 under inherited and explicit UUID bindings; root cause is unproved.\n5. Compare bounded read-only current driver/library hashes, kernel-driver version, device visibility, lease mapping and dated operator repair receipts to Exp8290. Mere elapsed time, file mtime, UUID reformatting or another task number is not a corrective change. Do not reset GPUs, unload drivers, install packages or interrupt unrelated workloads.\n6. If no potentially causal change is authenticated, write complete_blocked_cuda_runtime with cuda_context_ready_score=0, runtime_changed_score=0 and an exact reopen contract. Run no native/context probe and no model load. This is an anti-repeat audit, not another attempted repair.\n7. Only on a changed driver/device/lease condition, acquire the existing exclusive lease and run the existing bounded driver/context/32-byte-copy and native-enumeration children once: <=60 seconds per child, <=360 seconds total, owned cleanup. Record changed and unchanged operands plus current device UUID. No search over mappings. A native listing alone cannot set readiness.\n8. Set runtime_changed_score=1 only for the documented corrective delta. Set cuda_context_ready_score=1 only for driver init, actual context and byte-copy parity plus native compatibility under the exact leased child environment, with required checks passed. Exp8313 must revalidate the binding immediately before load. Write docs/research-notes/v717-runtime-reopen.md with failure layer and required next evidence.\n9. Run applicable E2E-018 private receipt/authority cases. Run the specified private E2E checks from ops/e2e-test-plan.md and relevant unit/consumer tests. Require 100 percent newly owned statement coverage including real CLI, child, failure and recovery paths. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>. Keep exact argv, exit codes, clocks and output hashes. Use pytest -n 0 -o addopts= with private scratch. Do not launch the full repository test suite inside this bounded experiment.\n10. Cold-replay primitive rows in a fresh process, including valid, negative and rehashed-tamper controls. Validate a private candidate with unchanged primary_publication checks, scripts/adversarial_verify.py --json <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>. Publish the terminal primary atomically after normal completion and required checks. Failed owned checks disqualify and set readiness to zero. External incompleteness is blocked, not partial. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not modify research-roadmap.yaml.\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date: principle: Identify the actual invocation and its execution authority.\nhonest_verdict, verdict_class: principle: Terminal honest_verdict starts complete_; verdict_class is positive | circular_positive | null | blocked | disqualified | partial. Partial is only retryable unfinished owned work, never an unchanged external block.\ngate_check_summary: principle: Every block names the upstream, actual path/hash, exact field, operator, expected and observed values; absent evidence differs from measured zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, historical_model_provenance: principle: Separate current model execution from imported observations; do not apply a generation floor to cached scoring.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, sample_size_budget: principle: Preserve every intended source/condition/arm with numerator and denominator; repetitions are not independent samples.\nverifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score: principle: Oracle-defined success is circular_positive. Reused cohorts are exposed development; both generalization scores stay zero.\nrequired_checks_passed, flagged_adversarial, acceptance_gates, validation_receipts, terminal_validation_sidecar_path: principle: Readiness requires owned checks and byte-bound validation; it does not require a scientific win.\npreconditions_checked, duration_s, phase_spans, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes: principle: Bind conclusions to measured work, configuration and replayable evidence.\ncited_upstream_artifacts, field_principles: principle: Name imported fields and hashes and explain every added field's evidentiary purpose.\nruntime_changed_score, cuda_context_ready_score, environment_delta_rows, runtime_binding_path, runtime_binding_sha256, reopen_contract: principle: A changed precondition and measured context distinguish progress from identical runtime retries.\ncurrent_probe_count, current_model_calls, failure_layer, root_cause_status, lease_receipt: principle: Inventory is not model readiness or an established root cause.\nRun command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8307_v717_runtime_change_boundary.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+      "requires_gpu": false,
+      "title": "Reopen CUDA qualification only on authenticated environment change",
+      "track": "infrastructure"
+    }
+  },
+  "experiment_id": 8307,
+  "exposure_scope": "exposed development: historical runtime receipts; private controls are constructed mechanics",
+  "failed_count": 0,
+  "failure_layer": [
+    {
+      "binding": "inherited",
+      "error": null,
+      "failed_api": {
+        "cuInit": 101
+      },
+      "layer": "driver",
+      "native_stderr": null
+    },
+    {
+      "binding": "inherited",
+      "error": null,
+      "failed_api": {
+        "cudaGetDeviceCount": 101
+      },
+      "layer": "runtime",
+      "native_stderr": null
+    },
+    {
+      "binding": "inherited",
+      "error": null,
+      "failed_api": {},
+      "layer": "native",
+      "native_stderr": "0.00.003.924 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+    },
+    {
+      "binding": "explicit_uuid",
+      "error": null,
+      "failed_api": {
+        "cuInit": 101
+      },
+      "layer": "driver",
+      "native_stderr": null
+    },
+    {
+      "binding": "explicit_uuid",
+      "error": null,
+      "failed_api": {
+        "cudaGetDeviceCount": 101
+      },
+      "layer": "runtime",
+      "native_stderr": null
+    },
+    {
+      "binding": "explicit_uuid",
+      "error": null,
+      "failed_api": {},
+      "layer": "native",
+      "native_stderr": "0.00.003.361 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+    }
+  ],
+  "field_principles": {
+    "MODEL_SPECS": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "acceptance_gates": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "censored_count": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "cited_upstream_artifacts": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "code_config_hashes": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "completed_count": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "cuda_context_ready_score": "Actual driver initialization, context and32-byte parity plus native compatibility and owned checks are required.",
+    "cuda_probe_rows": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "current_model_calls": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "current_probe_count": "Zero denotes no attempted probe, not a measured CUDA result.",
+    "duration_s": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "environment_delta_rows": "Preserve every changed, unchanged and unavailable operand.",
+    "excluded_count": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "execution_authority": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "experiment_id": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "exposure_scope": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "failed_count": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "failure_layer": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "fixture_mode": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "flagged_adversarial": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "gate_check_summary": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "generalized_learning_benefit_score": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "historical_model_provenance": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "honest_verdict": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "independent_count": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "independent_generalization_score": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "inference_substrate": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "inference_substrate_class": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "intended_count": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "invocation": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "lease_receipt": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "methodology": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "milestone": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "model_invocation_counts": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "model_invoked": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "no_model_load": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "observation_receipts": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "owned_statement_counts": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "owned_statement_coverage": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "phase_spans": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "precondition_receipts": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "preconditions_checked": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "primitive_reference": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "random_seed": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "raw_shard_hashes": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "reopen_contract": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "reproducibility_checksum": "Bind all recorded fields while excluding the checksum itself.",
+    "required_checks_passed": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "root_cause_status": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "rows": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "run_date": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "runtime_binding_path": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "runtime_binding_sha256": "Exp8313 must revalidate these exact operands immediately before load.",
+    "runtime_changed_score": "Only an authenticated causal operand delta permits a new attempt.",
+    "sample_size_budget": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "source_artifact_hashes": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "task_id": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "terminal_validation_sidecar_path": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "validation_receipts": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "verdict_class": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+    "verifier_is_oracle": "Bind the current invocation and its primitive evidence; no independent science claim follows."
+  },
+  "fixture_mode": false,
+  "flagged_adversarial": false,
+  "gate_check_summary": [],
+  "generalized_learning_benefit_score": 0,
+  "historical_model_provenance": {
+    "current_calls_imported": false,
+    "exp8290_primary_sha256": "sha256:62875d880623865338f7d6b85e1caa82ed388cb0b94b4402f0457245361a0b1f",
+    "failure_layers": [
+      {
+        "binding": "inherited",
+        "error": null,
+        "failed_api": {
+          "cuInit": 101
+        },
+        "layer": "driver",
+        "native_stderr": null
+      },
+      {
+        "binding": "inherited",
+        "error": null,
+        "failed_api": {
+          "cudaGetDeviceCount": 101
+        },
+        "layer": "runtime",
+        "native_stderr": null
+      },
+      {
+        "binding": "inherited",
+        "error": null,
+        "failed_api": {},
+        "layer": "native",
+        "native_stderr": "0.00.003.924 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+      },
+      {
+        "binding": "explicit_uuid",
+        "error": null,
+        "failed_api": {
+          "cuInit": 101
+        },
+        "layer": "driver",
+        "native_stderr": null
+      },
+      {
+        "binding": "explicit_uuid",
+        "error": null,
+        "failed_api": {
+          "cudaGetDeviceCount": 101
+        },
+        "layer": "runtime",
+        "native_stderr": null
+      },
+      {
+        "binding": "explicit_uuid",
+        "error": null,
+        "failed_api": {},
+        "layer": "native",
+        "native_stderr": "0.00.003.361 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+      }
+    ]
+  },
+  "honest_verdict": "complete_disqualified_cuda_runtime",
+  "independent_count": 0,
+  "independent_generalization_score": 0,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "no_model_load",
+  "intended_count": -1,
+  "invocation": {
+    "argv": [
+      "--date",
+      "20261008"
+    ],
+    "ended_monotonic_ns": 1149982809949468,
+    "pid": 1281240,
+    "started_monotonic_ns": 1149818373978217,
+    "started_wall_ns": 1791488910163148702
+  },
+  "lease_receipt": {},
+  "methodology": "Byte-authenticated read-only runtime identity comparison; unchanged conditions prohibit probes. No model or generalization measurement.",
+  "milestone": "2026.10.717",
+  "model_invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "model_invoked": false,
+  "no_model_load": true,
+  "observation_receipts": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "nvidia-smi",
+        "--query-gpu=index,uuid,name,driver_version",
+        "--format=csv,noheader,nounits"
+      ],
+      "command": "nvidia-smi --query-gpu=index,uuid,name,driver_version --format=csv,noheader,nounits",
+      "deadline_s": 15,
+      "duration_s": 0.015889289,
+      "ended_monotonic_ns": 1149819488221360,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inventory/read_only_inventory.stdout",
+      "log_sha256": "sha256:00d774b1fcd08e735b5bf374ab1f83b544eba004c31fccfe3f8e3ee5df34b4f6",
+      "name": "read_only_inventory",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "external_inventory",
+      "started_monotonic_ns": 1149819472332071,
+      "started_wall_ns": 1791488911261502736,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inventory/read_only_inventory.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inventory/read_only_inventory.stdout",
+      "stdout_sha256": "sha256:00d774b1fcd08e735b5bf374ab1f83b544eba004c31fccfe3f8e3ee5df34b4f6",
+      "timed_out": false
+    }
+  ],
+  "owned_statement_counts": {
+    "python/carnot/verify/runtime_change_boundary_8307.py": {
+      "classes": {
+        "": {
+          "excluded_lines": [],
+          "executed_lines": [
+            7,
+            9,
+            10,
+            11,
+            12,
+            13,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            34,
+            36,
+            39,
+            41,
+            53,
+            55,
+            56,
+            57,
+            58,
+            59,
+            76,
+            78,
+            89,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            103,
+            104,
+            105,
+            118,
+            121,
+            123,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            157,
+            158,
+            159,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            172,
+            173,
+            174,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            186,
+            187,
+            190,
+            191,
+            192,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            206,
+            207,
+            208,
+            209,
+            212,
+            214,
+            221,
+            223,
+            232,
+            234,
+            235,
+            236,
+            237,
+            238,
+            239,
+            240,
+            243,
+            245,
+            246,
+            247,
+            248,
+            249,
+            250,
+            251,
+            263,
+            275,
+            278,
+            280,
+            281,
+            282,
+            283,
+            284,
+            285,
+            286,
+            298,
+            299,
+            307,
+            308,
+            309,
+            310,
+            311,
+            326,
+            334,
+            335,
+            338,
+            343,
+            344,
+            345,
+            346,
+            348,
+            349,
+            350,
+            351,
+            352,
+            353,
+            356,
+            358,
+            359,
+            360,
+            361,
+            368,
+            369,
+            370,
+            371,
+            372,
+            375,
+            376,
+            383,
+            384,
+            389,
+            390,
+            395,
+            396,
+            397,
+            398,
+            399,
+            409,
+            455,
+            457,
+            458,
+            459,
+            460,
+            461,
+            462,
+            467,
+            468,
+            469,
+            470,
+            471,
+            472,
+            473,
+            478,
+            479,
+            480,
+            481,
+            482,
+            483,
+            484,
+            485,
+            486,
+            487,
+            491
+          ],
+          "missing_lines": [],
+          "start_line": 1,
+          "summary": {
+            "covered_lines": 201,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 201,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        }
+      },
+      "excluded_lines": [],
+      "executed_lines": [
+        7,
+        9,
+        10,
+        11,
+        12,
+        13,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        34,
+        36,
+        39,
+        41,
+        53,
+        55,
+        56,
+        57,
+        58,
+        59,
+        76,
+        78,
+        89,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        103,
+        104,
+        105,
+        118,
+        121,
+        123,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        157,
+        158,
+        159,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        172,
+        173,
+        174,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        186,
+        187,
+        190,
+        191,
+        192,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        206,
+        207,
+        208,
+        209,
+        212,
+        214,
+        221,
+        223,
+        232,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        243,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        263,
+        275,
+        278,
+        280,
+        281,
+        282,
+        283,
+        284,
+        285,
+        286,
+        298,
+        299,
+        307,
+        308,
+        309,
+        310,
+        311,
+        326,
+        334,
+        335,
+        338,
+        343,
+        344,
+        345,
+        346,
+        348,
+        349,
+        350,
+        351,
+        352,
+        353,
+        356,
+        358,
+        359,
+        360,
+        361,
+        368,
+        369,
+        370,
+        371,
+        372,
+        375,
+        376,
+        383,
+        384,
+        389,
+        390,
+        395,
+        396,
+        397,
+        398,
+        399,
+        409,
+        455,
+        457,
+        458,
+        459,
+        460,
+        461,
+        462,
+        467,
+        468,
+        469,
+        470,
+        471,
+        472,
+        473,
+        478,
+        479,
+        480,
+        481,
+        482,
+        483,
+        484,
+        485,
+        486,
+        487,
+        491
+      ],
+      "functions": {
+        "": {
+          "excluded_lines": [],
+          "executed_lines": [
+            7,
+            9,
+            10,
+            11,
+            12,
+            13,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            34,
+            39,
+            53,
+            76,
+            121,
+            212,
+            221,
+            232,
+            243,
+            278,
+            356,
+            455
+          ],
+          "missing_lines": [],
+          "start_line": 1,
+          "summary": {
+            "covered_lines": 34,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 34,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "delta_rows": {
+          "excluded_lines": [],
+          "executed_lines": [
+            245,
+            246,
+            247,
+            248,
+            249,
+            250,
+            251,
+            263,
+            275
+          ],
+          "missing_lines": [],
+          "start_line": 243,
+          "summary": {
+            "covered_lines": 9,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 9,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "eligible_repair": {
+          "excluded_lines": [],
+          "executed_lines": [
+            223
+          ],
+          "missing_lines": [],
+          "start_line": 221,
+          "summary": {
+            "covered_lines": 1,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "frontier_wall_ns": {
+          "excluded_lines": [],
+          "executed_lines": [
+            214
+          ],
+          "missing_lines": [],
+          "start_line": 212,
+          "summary": {
+            "covered_lines": 1,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "gate": {
+          "excluded_lines": [],
+          "executed_lines": [
+            41
+          ],
+          "missing_lines": [],
+          "start_line": 39,
+          "summary": {
+            "covered_lines": 1,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "historical_identity": {
+          "excluded_lines": [],
+          "executed_lines": [
+            55,
+            56,
+            57,
+            58,
+            59
+          ],
+          "missing_lines": [],
+          "start_line": 53,
+          "summary": {
+            "covered_lines": 5,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 5,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "inventory": {
+          "excluded_lines": [],
+          "executed_lines": [
+            78,
+            89,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            103,
+            104,
+            105,
+            118
+          ],
+          "missing_lines": [],
+          "start_line": 76,
+          "summary": {
+            "covered_lines": 13,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 13,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "load": {
+          "excluded_lines": [],
+          "executed_lines": [
+            123,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            157,
+            158,
+            159,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            172,
+            173,
+            174,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            186,
+            187,
+            190,
+            191,
+            192,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            206,
+            207,
+            208,
+            209
+          ],
+          "missing_lines": [],
+          "start_line": 121,
+          "summary": {
+            "covered_lines": 56,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 56,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "normalized": {
+          "excluded_lines": [],
+          "executed_lines": [
+            234,
+            235,
+            236,
+            237,
+            238,
+            239,
+            240
+          ],
+          "missing_lines": [],
+          "start_line": 232,
+          "summary": {
+            "covered_lines": 7,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 7,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "probe_changed": {
+          "excluded_lines": [],
+          "executed_lines": [
+            280,
+            281,
+            282,
+            283,
+            284,
+            285,
+            286,
+            298,
+            299,
+            307,
+            308,
+            309,
+            310,
+            311,
+            326,
+            334,
+            335,
+            338,
+            343,
+            344,
+            345,
+            346,
+            348,
+            349,
+            350,
+            351,
+            352,
+            353
+          ],
+          "missing_lines": [],
+          "start_line": 278,
+          "summary": {
+            "covered_lines": 28,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 28,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "progress": {
+          "excluded_lines": [],
+          "executed_lines": [
+            36
+          ],
+          "missing_lines": [],
+          "start_line": 34,
+          "summary": {
+            "covered_lines": 1,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "reduce": {
+          "excluded_lines": [],
+          "executed_lines": [
+            358,
+            359,
+            360,
+            361,
+            368,
+            369,
+            370,
+            371,
+            372,
+            375,
+            376,
+            383,
+            384,
+            389,
+            390,
+            395,
+            396,
+            397,
+            398,
+            399,
+            409
+          ],
+          "missing_lines": [],
+          "start_line": 356,
+          "summary": {
+            "covered_lines": 21,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 21,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "verify_primitives": {
+          "excluded_lines": [],
+          "executed_lines": [
+            457,
+            458,
+            459,
+            460,
+            461,
+            462,
+            467,
+            468,
+            469,
+            470,
+            471,
+            472,
+            473,
+            478,
+            479,
+            480,
+            481,
+            482,
+            483,
+            484,
+            485,
+            486,
+            487,
+            491
+          ],
+          "missing_lines": [],
+          "start_line": 455,
+          "summary": {
+            "covered_lines": 24,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 24,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        }
+      },
+      "missing_lines": [],
+      "summary": {
+        "covered_lines": 201,
+        "excluded_lines": 0,
+        "missing_lines": 0,
+        "num_statements": 201,
+        "percent_covered": 100.0,
+        "percent_covered_display": "100",
+        "percent_statements_covered": 100.0,
+        "percent_statements_covered_display": "100"
+      }
+    },
+    "python/carnot/verify/runtime_change_execution_8307.py": {
+      "classes": {
+        "": {
+          "excluded_lines": [],
+          "executed_lines": [
+            7,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            19,
+            21,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            35,
+            36,
+            37,
+            44,
+            46,
+            49,
+            51,
+            52,
+            53,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            66,
+            67,
+            68,
+            71,
+            74,
+            76,
+            77,
+            78,
+            81,
+            82,
+            83,
+            174,
+            186,
+            188,
+            189,
+            194,
+            197,
+            200,
+            202,
+            203,
+            204,
+            205,
+            211,
+            212,
+            215,
+            216,
+            217,
+            218,
+            219,
+            220,
+            221,
+            224,
+            225,
+            226,
+            227,
+            228,
+            229,
+            230,
+            231,
+            236,
+            238,
+            239,
+            240,
+            241,
+            242,
+            243,
+            244,
+            245,
+            246,
+            247,
+            248,
+            249,
+            250,
+            251,
+            252,
+            253,
+            254,
+            255,
+            256,
+            257,
+            258,
+            259,
+            260,
+            261,
+            262,
+            263,
+            264,
+            265,
+            266,
+            305,
+            306,
+            307,
+            312,
+            321,
+            326,
+            327,
+            328,
+            329,
+            330,
+            331,
+            332,
+            333,
+            334,
+            339,
+            340,
+            341,
+            342,
+            343,
+            344,
+            345,
+            346,
+            347,
+            352,
+            353,
+            354,
+            355,
+            356,
+            357,
+            358,
+            359,
+            360,
+            361,
+            362,
+            363,
+            436,
+            440,
+            447,
+            450,
+            451,
+            452,
+            453,
+            454,
+            455,
+            456,
+            457,
+            460,
+            461,
+            462,
+            477,
+            478,
+            479,
+            480,
+            481,
+            482,
+            488,
+            489,
+            493,
+            494,
+            495,
+            502,
+            511,
+            512,
+            513,
+            514,
+            515
+          ],
+          "missing_lines": [],
+          "start_line": 1,
+          "summary": {
+            "covered_lines": 169,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 169,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        }
+      },
+      "excluded_lines": [],
+      "executed_lines": [
+        7,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        19,
+        21,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        35,
+        36,
+        37,
+        44,
+        46,
+        49,
+        51,
+        52,
+        53,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        66,
+        67,
+        68,
+        71,
+        74,
+        76,
+        77,
+        78,
+        81,
+        82,
+        83,
+        174,
+        186,
+        188,
+        189,
+        194,
+        197,
+        200,
+        202,
+        203,
+        204,
+        205,
+        211,
+        212,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        236,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        305,
+        306,
+        307,
+        312,
+        321,
+        326,
+        327,
+        328,
+        329,
+        330,
+        331,
+        332,
+        333,
+        334,
+        339,
+        340,
+        341,
+        342,
+        343,
+        344,
+        345,
+        346,
+        347,
+        352,
+        353,
+        354,
+        355,
+        356,
+        357,
+        358,
+        359,
+        360,
+        361,
+        362,
+        363,
+        436,
+        440,
+        447,
+        450,
+        451,
+        452,
+        453,
+        454,
+        455,
+        456,
+        457,
+        460,
+        461,
+        462,
+        477,
+        478,
+        479,
+        480,
+        481,
+        482,
+        488,
+        489,
+        493,
+        494,
+        495,
+        502,
+        511,
+        512,
+        513,
+        514,
+        515
+      ],
+      "functions": {
+        "": {
+          "excluded_lines": [],
+          "executed_lines": [
+            7,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            19,
+            21,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            35,
+            36,
+            37,
+            44,
+            49,
+            74,
+            186,
+            200,
+            236
+          ],
+          "missing_lines": [],
+          "start_line": 1,
+          "summary": {
+            "covered_lines": 28,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 28,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "authority": {
+          "excluded_lines": [],
+          "executed_lines": [
+            51,
+            52,
+            53,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            66,
+            67,
+            68,
+            71
+          ],
+          "missing_lines": [],
+          "start_line": 49,
+          "summary": {
+            "covered_lines": 13,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 13,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "checksum": {
+          "excluded_lines": [],
+          "executed_lines": [
+            46
+          ],
+          "missing_lines": [],
+          "start_line": 44,
+          "summary": {
+            "covered_lines": 1,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "main": {
+          "excluded_lines": [],
+          "executed_lines": [
+            238,
+            239,
+            240,
+            241,
+            242,
+            243,
+            244,
+            245,
+            246,
+            247,
+            248,
+            249,
+            250,
+            251,
+            252,
+            253,
+            254,
+            255,
+            256,
+            257,
+            258,
+            259,
+            260,
+            261,
+            262,
+            263,
+            264,
+            265,
+            266,
+            305,
+            306,
+            307,
+            312,
+            321,
+            326,
+            327,
+            328,
+            329,
+            330,
+            331,
+            332,
+            333,
+            334,
+            339,
+            340,
+            341,
+            342,
+            343,
+            344,
+            345,
+            346,
+            347,
+            352,
+            353,
+            354,
+            355,
+            356,
+            357,
+            358,
+            359,
+            360,
+            361,
+            362,
+            363,
+            436,
+            440,
+            447,
+            450,
+            451,
+            452,
+            453,
+            454,
+            455,
+            456,
+            457,
+            460,
+            461,
+            462,
+            477,
+            478,
+            479,
+            480,
+            481,
+            482,
+            488,
+            489,
+            493,
+            494,
+            495,
+            502,
+            511,
+            512,
+            513,
+            514,
+            515
+          ],
+          "missing_lines": [],
+          "start_line": 236,
+          "summary": {
+            "covered_lines": 95,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 95,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "plan": {
+          "excluded_lines": [],
+          "executed_lines": [
+            76,
+            77,
+            78,
+            81,
+            82,
+            83,
+            174
+          ],
+          "missing_lines": [],
+          "start_line": 74,
+          "summary": {
+            "covered_lines": 7,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 7,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "replay": {
+          "excluded_lines": [],
+          "executed_lines": [
+            202,
+            203,
+            204,
+            205,
+            211,
+            212,
+            215,
+            216,
+            217,
+            218,
+            219,
+            220,
+            221,
+            224,
+            225,
+            226,
+            227,
+            228,
+            229,
+            230,
+            231
+          ],
+          "missing_lines": [],
+          "start_line": 200,
+          "summary": {
+            "covered_lines": 21,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 21,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        },
+        "validate": {
+          "excluded_lines": [],
+          "executed_lines": [
+            188,
+            189,
+            194,
+            197
+          ],
+          "missing_lines": [],
+          "start_line": 186,
+          "summary": {
+            "covered_lines": 4,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 4,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        }
+      },
+      "missing_lines": [],
+      "summary": {
+        "covered_lines": 169,
+        "excluded_lines": 0,
+        "missing_lines": 0,
+        "num_statements": 169,
+        "percent_covered": 100.0,
+        "percent_covered_display": "100",
+        "percent_statements_covered": 100.0,
+        "percent_statements_covered_display": "100"
+      }
+    },
+    "scripts/experiments/experiment_8307_v717_runtime_change_boundary.py": {
+      "classes": {
+        "": {
+          "excluded_lines": [],
+          "executed_lines": [
+            4,
+            5,
+            7,
+            8,
+            10,
+            12,
+            13
+          ],
+          "missing_lines": [],
+          "start_line": 1,
+          "summary": {
+            "covered_lines": 7,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 7,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        }
+      },
+      "excluded_lines": [],
+      "executed_lines": [
+        4,
+        5,
+        7,
+        8,
+        10,
+        12,
+        13
+      ],
+      "functions": {
+        "": {
+          "excluded_lines": [],
+          "executed_lines": [
+            4,
+            5,
+            7,
+            8,
+            10,
+            12,
+            13
+          ],
+          "missing_lines": [],
+          "start_line": 1,
+          "summary": {
+            "covered_lines": 7,
+            "excluded_lines": 0,
+            "missing_lines": 0,
+            "num_statements": 7,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "percent_statements_covered": 100.0,
+            "percent_statements_covered_display": "100"
+          }
+        }
+      },
+      "missing_lines": [],
+      "summary": {
+        "covered_lines": 7,
+        "excluded_lines": 0,
+        "missing_lines": 0,
+        "num_statements": 7,
+        "percent_covered": 100.0,
+        "percent_covered_display": "100",
+        "percent_statements_covered": 100.0,
+        "percent_statements_covered_display": "100"
+      }
+    }
+  },
+  "owned_statement_coverage": {
+    "covered_lines": 377,
+    "excluded_lines": 0,
+    "missing_lines": 0,
+    "num_statements": 377,
+    "percent_covered": 100.0,
+    "percent_covered_display": "100",
+    "percent_statements_covered": 100.0,
+    "percent_statements_covered_display": "100"
+  },
+  "phase_spans": [
+    {
+      "duration_s": 1.489787277,
+      "ended_monotonic_ns": 1149819863765494,
+      "phase": "preconditions",
+      "started_monotonic_ns": 1149818373978217
+    },
+    {
+      "duration_s": 162.946183974,
+      "ended_monotonic_ns": 1149982809949468,
+      "phase": "audit_and_validation",
+      "started_monotonic_ns": 1149819863765494
+    }
+  ],
+  "precondition_receipts": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import pytest,coverage,ruff,mypy,shutil,pathlib,sys;p=pathlib.Path(sys.argv[1]);p.write_bytes(b'private');assert p.read_bytes()==b'private';assert shutil.disk_usage(p.parent).free>10000000;print(sys.version)",
+        "/tmp/carnot8307-v3g_4wno/checks/probe"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c 'import pytest,coverage,ruff,mypy,shutil,pathlib,sys;p=pathlib.Path(sys.argv[1]);p.write_bytes(b'\"'\"'private'\"'\"');assert p.read_bytes()==b'\"'\"'private'\"'\"';assert shutil.disk_usage(p.parent).free>10000000;print(sys.version)' /tmp/carnot8307-v3g_4wno/checks/probe",
+      "deadline_s": 15,
+      "duration_s": 0.114375666,
+      "ended_monotonic_ns": 1149818490267055,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/preconditions/tools_and_private_scratch.stdout",
+      "log_sha256": "sha256:08a43c05b82ce41c30f2eac28c015d86709e94e3138457e957229d54605c032d",
+      "name": "tools_and_private_scratch",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "external_preconditions",
+      "started_monotonic_ns": 1149818375891389,
+      "started_wall_ns": 1791488910165062274,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/preconditions/tools_and_private_scratch.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/preconditions/tools_and_private_scratch.stdout",
+      "stdout_sha256": "sha256:08a43c05b82ce41c30f2eac28c015d86709e94e3138457e957229d54605c032d",
+      "timed_out": false
+    }
+  ],
+  "preconditions_checked": true,
+  "primitive_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/primitive_rows.json",
+    "sha256": "sha256:90858da078c5b5253b551eeb438a781e619e6827baba9c4d25398a0046c5987e"
+  },
+  "random_seed": 7178307,
+  "raw_shard_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/primitive_rows.json",
+      "sha256": "sha256:90858da078c5b5253b551eeb438a781e619e6827baba9c4d25398a0046c5987e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/runtime_binding.json",
+      "sha256": "sha256:d8a163de59b6da2d8ad261a277b50ac796370e3ddce9c9b0a547002890d7275b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation_commands.json",
+      "sha256": "sha256:d5ecb12bdf472a598fa1120fe5db9dcc636578f052a3f8b28a3cfd1c0c693380"
+    },
+    {
+      "exists": true,
+      "path": "/tmp/carnot8307-v3g_4wno/checks/.coverage",
+      "role": ".coverage",
+      "sha256": "sha256:f2160cc0af831bfd3d59f886874e1f962dbdd5ae8079213f04fc428cb2163af0",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/coverage/.coverage-f2160cc0af831bfd3d59f886874e1f962dbdd5ae8079213f04fc428cb2163af0.bin",
+      "snapshot_sha256": "sha256:f2160cc0af831bfd3d59f886874e1f962dbdd5ae8079213f04fc428cb2163af0",
+      "source_path": "/tmp/carnot8307-v3g_4wno/checks/.coverage"
+    },
+    {
+      "exists": true,
+      "path": "/tmp/carnot8307-v3g_4wno/checks/coverage.json",
+      "role": "report",
+      "sha256": "sha256:d6435223944e8acd7e1d9c9ff41e3cc80cb831a340a51a18a3d22e652d15bfc4",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/coverage/report-d6435223944e8acd7e1d9c9ff41e3cc80cb831a340a51a18a3d22e652d15bfc4.bin",
+      "snapshot_sha256": "sha256:d6435223944e8acd7e1d9c9ff41e3cc80cb831a340a51a18a3d22e652d15bfc4",
+      "source_path": "/tmp/carnot8307-v3g_4wno/checks/coverage.json"
+    }
+  ],
+  "reopen_contract": {
+    "eligible": false,
+    "next_consumer": "exp8313-changed-runtime-canary",
+    "previous_primary_sha256": "sha256:62875d880623865338f7d6b85e1caa82ed388cb0b94b4402f0457245361a0b1f",
+    "probe_budget": {
+      "attempts_per_layer": 1,
+      "per_child_s": 60,
+      "total_s": 360
+    },
+    "required_delta": "Byte-bound corrective driver/library, kernel, device visibility or lease condition, or dated operator repair receipt.",
+    "required_measurements": [
+      "driver initialization",
+      "actual context",
+      "32-byte host/device/host parity",
+      "runtime enumeration",
+      "native compatibility",
+      "owned cleanup"
+    ],
+    "revalidate_immediately_before_load": true
+  },
+  "reproducibility_checksum": "sha256:5385f5d335abe71a643f2869b1b8f6d19c32f64cfb4e5324aded2cab218a20cd",
+  "required_checks_passed": false,
+  "root_cause_status": "unproved",
+  "rows": [
+    {
+      "available": true,
+      "changed": false,
+      "field": "driver",
+      "observed": "615.71.09",
+      "potentially_causal": false,
+      "previous": "615.71.09",
+      "status": "completed",
+      "unit_id": "driver"
+    },
+    {
+      "available": true,
+      "changed": false,
+      "field": "kernel",
+      "observed": "NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  615.71.09  Release Build  (root@icbfl1)  \nGCC version:  Found HIP installation: /opt/rocm, version 7.2.53211\n",
+      "potentially_causal": false,
+      "previous": "NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  615.71.09  Release Build  (root@icbfl1)  \nGCC version:  Found HIP installation: /opt/rocm, version 7.2.53211\n",
+      "status": "completed",
+      "unit_id": "kernel"
+    },
+    {
+      "available": true,
+      "changed": false,
+      "field": "devices",
+      "observed": [
+        {
+          "driver_version": "615.71.09",
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "potentially_causal": false,
+      "previous": [
+        {
+          "driver_version": "615.71.09",
+          "index": "0",
+          "name": "NVIDIA GeForce RTX 3090",
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "status": "completed",
+      "unit_id": "devices"
+    },
+    {
+      "available": true,
+      "changed": false,
+      "field": "masks",
+      "observed": {
+        "CUDA_PATH": "/opt/cuda"
+      },
+      "potentially_causal": false,
+      "previous": {
+        "CUDA_PATH": "/opt/cuda"
+      },
+      "status": "completed",
+      "unit_id": "masks"
+    },
+    {
+      "available": true,
+      "changed": false,
+      "field": "libraries",
+      "observed": [
+        {
+          "path": "/usr/lib/libcuda.so.615.71.09",
+          "sha256": "sha256:85a8cc8cf00419ceb295ec62c481d05b4cdbdab10f25c5375d6d24bdbe00b4d9"
+        },
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+          "sha256": "sha256:c3a75b33af334a3486d197dbd1584a2985183ba4688d237a2be5f2f679329920"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so",
+          "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0",
+          "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0.14.0",
+          "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so",
+          "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0",
+          "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0.14.0",
+          "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so",
+          "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0",
+          "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0.14.0",
+          "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so",
+          "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0",
+          "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0.14.0",
+          "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-batched-bench-impl.so",
+          "sha256": "sha256:23795359a9a6c63be47d924faaa5e99b46e4c85b2a16821c4f541eb8e8278a66"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-bench-impl.so",
+          "sha256": "sha256:a378abd7a8990d6a886e6d0dd1e613a7a2abd381578bcf9ba2389bf0c7f1837a"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-cli-impl.so",
+          "sha256": "sha256:39d490db9a43d609c5f4a711a79e14dc39dd11f0b91a05d3f2d616c0951eda84"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so",
+          "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0",
+          "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0.0.9606",
+          "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-completion-impl.so",
+          "sha256": "sha256:e2c9d53a9669c52a4574ced4ac19656a571045f88d9d324d44b90af0d6482c4f"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-fit-params-impl.so",
+          "sha256": "sha256:163e5ab106d3b1c2d69bd5456aa118456018dfe91bc997a8fdf3b74b50e673b6"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-perplexity-impl.so",
+          "sha256": "sha256:307d8bd0bf027cff546638e79357afb0d88f5005653e51cb9de90446bbea8dc6"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-quantize-impl.so",
+          "sha256": "sha256:f2e0718c18975500981d71172f082ca58b6daa3087da8de163adace50c997493"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so",
+          "sha256": "sha256:35a77374d80a3b6774b9dfc95a01158d489309ccbfbc7f66dc6a747127af7c92"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so",
+          "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0",
+          "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0.0.9606",
+          "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so",
+          "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0",
+          "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0.0.9606",
+          "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+        }
+      ],
+      "potentially_causal": false,
+      "previous": [
+        {
+          "path": "/usr/lib/libcuda.so.615.71.09",
+          "sha256": "sha256:85a8cc8cf00419ceb295ec62c481d05b4cdbdab10f25c5375d6d24bdbe00b4d9"
+        },
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12",
+          "sha256": "sha256:c3a75b33af334a3486d197dbd1584a2985183ba4688d237a2be5f2f679329920"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so",
+          "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0",
+          "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0.14.0",
+          "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so",
+          "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0",
+          "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0.14.0",
+          "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so",
+          "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0",
+          "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0.14.0",
+          "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so",
+          "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0",
+          "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0.14.0",
+          "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-batched-bench-impl.so",
+          "sha256": "sha256:23795359a9a6c63be47d924faaa5e99b46e4c85b2a16821c4f541eb8e8278a66"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-bench-impl.so",
+          "sha256": "sha256:a378abd7a8990d6a886e6d0dd1e613a7a2abd381578bcf9ba2389bf0c7f1837a"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-cli-impl.so",
+          "sha256": "sha256:39d490db9a43d609c5f4a711a79e14dc39dd11f0b91a05d3f2d616c0951eda84"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so",
+          "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0",
+          "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0.0.9606",
+          "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-completion-impl.so",
+          "sha256": "sha256:e2c9d53a9669c52a4574ced4ac19656a571045f88d9d324d44b90af0d6482c4f"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-fit-params-impl.so",
+          "sha256": "sha256:163e5ab106d3b1c2d69bd5456aa118456018dfe91bc997a8fdf3b74b50e673b6"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-perplexity-impl.so",
+          "sha256": "sha256:307d8bd0bf027cff546638e79357afb0d88f5005653e51cb9de90446bbea8dc6"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-quantize-impl.so",
+          "sha256": "sha256:f2e0718c18975500981d71172f082ca58b6daa3087da8de163adace50c997493"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so",
+          "sha256": "sha256:35a77374d80a3b6774b9dfc95a01158d489309ccbfbc7f66dc6a747127af7c92"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so",
+          "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0",
+          "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0.0.9606",
+          "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so",
+          "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0",
+          "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0.0.9606",
+          "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+        },
+        {
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+        }
+      ],
+      "status": "completed",
+      "unit_id": "libraries"
+    },
+    {
+      "available": true,
+      "changed": false,
+      "field": "nodes",
+      "observed": [
+        {
+          "exists": true,
+          "path": "/dev/nvidia-caps",
+          "read_write": false
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia-modeset",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia-uvm",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia-uvm-tools",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia0",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia1",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidiactl",
+          "read_write": true
+        }
+      ],
+      "potentially_causal": false,
+      "previous": [
+        {
+          "exists": true,
+          "path": "/dev/nvidia-caps",
+          "read_write": false
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia-modeset",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia-uvm",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia-uvm-tools",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia0",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidia1",
+          "read_write": true
+        },
+        {
+          "exists": true,
+          "path": "/dev/nvidiactl",
+          "read_write": true
+        }
+      ],
+      "status": "completed",
+      "unit_id": "nodes"
+    },
+    {
+      "available": true,
+      "changed": false,
+      "field": "permitted_uuid",
+      "observed": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "potentially_causal": false,
+      "previous": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "status": "completed",
+      "unit_id": "permitted_uuid"
+    },
+    {
+      "available": true,
+      "changed": false,
+      "field": "operator_repair",
+      "observed": [],
+      "potentially_causal": false,
+      "previous": null,
+      "status": "completed",
+      "unit_id": "operator_repair"
+    }
+  ],
+  "run_date": "20261008",
+  "runtime_binding_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/runtime_binding.json",
+  "runtime_binding_sha256": "sha256:d8a163de59b6da2d8ad261a277b50ac796370e3ddce9c9b0a547002890d7275b",
+  "runtime_changed_score": 0,
+  "sample_size_budget": {
+    "independent_scientific_samples": 0,
+    "intended_operands": 8
+  },
+  "source_artifact_hashes": [
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8290_v716_runtime_localization.json",
+      "role": "primary",
+      "sha256": "sha256:62875d880623865338f7d6b85e1caa82ed388cb0b94b4402f0457245361a0b1f",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/primary-62875d880623865338f7d6b85e1caa82ed388cb0b94b4402f0457245361a0b1f.bin",
+      "snapshot_sha256": "sha256:62875d880623865338f7d6b85e1caa82ed388cb0b94b4402f0457245361a0b1f",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8290_v716_runtime_localization.json"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/validators/62875d880623865338f7d6b85e1caa82ed388cb0b94b4402f0457245361a0b1f.json",
+      "role": "validator",
+      "sha256": "sha256:3eace4fa568eaf3026b9f483945894ce23a7356287964f746846a21123da4a32",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/validator-3eace4fa568eaf3026b9f483945894ce23a7356287964f746846a21123da4a32.bin",
+      "snapshot_sha256": "sha256:3eace4fa568eaf3026b9f483945894ce23a7356287964f746846a21123da4a32",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/validators/62875d880623865338f7d6b85e1caa82ed388cb0b94b4402f0457245361a0b1f.json"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/terminal_validation.json",
+      "role": "terminal",
+      "sha256": "sha256:f48f6c212d27638555edf03c44d2268ab6e41b1d403743e8ed3293a4dab9c7d7",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/terminal-f48f6c212d27638555edf03c44d2268ab6e41b1d403743e8ed3293a4dab9c7d7.bin",
+      "snapshot_sha256": "sha256:f48f6c212d27638555edf03c44d2268ab6e41b1d403743e8ed3293a4dab9c7d7",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/terminal_validation.json"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/measurement.json",
+      "role": "primitive",
+      "sha256": "sha256:32b3c124f879f1102511be970877db046d144234242c51d82058ec8211bf5022",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/primitive-32b3c124f879f1102511be970877db046d144234242c51d82058ec8211bf5022.bin",
+      "snapshot_sha256": "sha256:32b3c124f879f1102511be970877db046d144234242c51d82058ec8211bf5022",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/measurement.json"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/runtime_binding.json",
+      "role": "primitive",
+      "sha256": "sha256:88a3a2ac95ee0fc12e34da619d72d4a9e251bd12d5cf312622a57aee29591312",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/primitive-88a3a2ac95ee0fc12e34da619d72d4a9e251bd12d5cf312622a57aee29591312.bin",
+      "snapshot_sha256": "sha256:88a3a2ac95ee0fc12e34da619d72d4a9e251bd12d5cf312622a57aee29591312",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/runtime_binding.json"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/inherited_driver.stdout",
+      "role": "stdout",
+      "sha256": "sha256:7dafbc1f757677774d6f3affa7457fed462c7dc770274331ca0f04e315984569",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/stdout-7dafbc1f757677774d6f3affa7457fed462c7dc770274331ca0f04e315984569.bin",
+      "snapshot_sha256": "sha256:7dafbc1f757677774d6f3affa7457fed462c7dc770274331ca0f04e315984569",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/inherited_driver.stdout"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/inherited_driver.stderr",
+      "role": "stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/stderr-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.bin",
+      "snapshot_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/inherited_driver.stderr"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/inherited_runtime.stdout",
+      "role": "stdout",
+      "sha256": "sha256:330e449439b41b36c30c6dd7ea931b5d4026cfcb73f970f4673d3266910b0638",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/stdout-330e449439b41b36c30c6dd7ea931b5d4026cfcb73f970f4673d3266910b0638.bin",
+      "snapshot_sha256": "sha256:330e449439b41b36c30c6dd7ea931b5d4026cfcb73f970f4673d3266910b0638",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/inherited_runtime.stdout"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/inherited_runtime.stderr",
+      "role": "stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/stderr-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.bin",
+      "snapshot_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/inherited_runtime.stderr"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/inherited_native.stdout",
+      "role": "stdout",
+      "sha256": "sha256:bf582a3acd3c4595281933aeae4e5beb0f337b7303110a21110615f5f91de6c8",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/stdout-bf582a3acd3c4595281933aeae4e5beb0f337b7303110a21110615f5f91de6c8.bin",
+      "snapshot_sha256": "sha256:bf582a3acd3c4595281933aeae4e5beb0f337b7303110a21110615f5f91de6c8",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/inherited_native.stdout"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/inherited_native.stderr",
+      "role": "stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/stderr-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.bin",
+      "snapshot_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/inherited_native.stderr"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/explicit_uuid_driver.stdout",
+      "role": "stdout",
+      "sha256": "sha256:bde1015ae398c1935043e90f130d8a54518d4eed13b9c6e9999676bc65334a72",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/stdout-bde1015ae398c1935043e90f130d8a54518d4eed13b9c6e9999676bc65334a72.bin",
+      "snapshot_sha256": "sha256:bde1015ae398c1935043e90f130d8a54518d4eed13b9c6e9999676bc65334a72",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/explicit_uuid_driver.stdout"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/explicit_uuid_driver.stderr",
+      "role": "stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/stderr-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.bin",
+      "snapshot_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/explicit_uuid_driver.stderr"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/explicit_uuid_runtime.stdout",
+      "role": "stdout",
+      "sha256": "sha256:20ecaf315301ac262022c508cb2cee6f4815f601f6087e5ecbdd8b4d75eac156",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/stdout-20ecaf315301ac262022c508cb2cee6f4815f601f6087e5ecbdd8b4d75eac156.bin",
+      "snapshot_sha256": "sha256:20ecaf315301ac262022c508cb2cee6f4815f601f6087e5ecbdd8b4d75eac156",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/explicit_uuid_runtime.stdout"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/explicit_uuid_runtime.stderr",
+      "role": "stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/stderr-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.bin",
+      "snapshot_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/explicit_uuid_runtime.stderr"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/explicit_uuid_native.stdout",
+      "role": "stdout",
+      "sha256": "sha256:2a797c04c42b0426c66d14934210b728647ddad00f8fb42d3743fe6f21189eed",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/stdout-2a797c04c42b0426c66d14934210b728647ddad00f8fb42d3743fe6f21189eed.bin",
+      "snapshot_sha256": "sha256:2a797c04c42b0426c66d14934210b728647ddad00f8fb42d3743fe6f21189eed",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/explicit_uuid_native.stdout"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/explicit_uuid_native.stderr",
+      "role": "stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/stderr-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.bin",
+      "snapshot_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/cuda/explicit_uuid_native.stderr"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/terminal_logs/1791460981179275988/cold_replay.stdout",
+      "role": "terminal_stdout",
+      "sha256": "sha256:efde889667d07cbe206fb0ffe766580ad737eba004f5a074151411cbb06f4617",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/terminal_stdout-efde889667d07cbe206fb0ffe766580ad737eba004f5a074151411cbb06f4617.bin",
+      "snapshot_sha256": "sha256:efde889667d07cbe206fb0ffe766580ad737eba004f5a074151411cbb06f4617",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/terminal_logs/1791460981179275988/cold_replay.stdout"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/terminal_logs/1791460981179275988/cold_replay.stderr",
+      "role": "terminal_stderr",
+      "sha256": "sha256:975617f9883b7af11976429b6b1650af0bbf9f97551a5b641acc61f489717084",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/terminal_stderr-975617f9883b7af11976429b6b1650af0bbf9f97551a5b641acc61f489717084.bin",
+      "snapshot_sha256": "sha256:975617f9883b7af11976429b6b1650af0bbf9f97551a5b641acc61f489717084",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/terminal_logs/1791460981179275988/cold_replay.stderr"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/terminal_logs/1791460993664688538/adversarial_verify.stdout",
+      "role": "terminal_stdout",
+      "sha256": "sha256:03c76242bb5e59c3e50ef14d755703e01750cb87e2fa818ac37bb4afccbb4edc",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/terminal_stdout-03c76242bb5e59c3e50ef14d755703e01750cb87e2fa818ac37bb4afccbb4edc.bin",
+      "snapshot_sha256": "sha256:03c76242bb5e59c3e50ef14d755703e01750cb87e2fa818ac37bb4afccbb4edc",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/terminal_logs/1791460993664688538/adversarial_verify.stdout"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/terminal_logs/1791460993664688538/adversarial_verify.stderr",
+      "role": "terminal_stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/terminal_stderr-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.bin",
+      "snapshot_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/terminal_logs/1791460993664688538/adversarial_verify.stderr"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/terminal_logs/1791461035182710509/strict_rows.stdout",
+      "role": "terminal_stdout",
+      "sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/terminal_stdout-ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.bin",
+      "snapshot_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/terminal_logs/1791461035182710509/strict_rows.stdout"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/terminal_logs/1791461035182710509/strict_rows.stderr",
+      "role": "terminal_stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/inputs/terminal_stderr-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.bin",
+      "snapshot_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8290_v716_runtime_localization/invocations/1791460599022488349/terminal_logs/1791461035182710509/strict_rows.stderr"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+      "role": "research-roadmap-vNEXT",
+      "sha256": "sha256:adbaf7582e050d67beb74842e8d8d450b279fd5d6595c12751c046138bd6aca3",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/authority/research-roadmap-vNEXT-adbaf7582e050d67beb74842e8d8d450b279fd5d6595c12751c046138bd6aca3.bin",
+      "snapshot_sha256": "sha256:adbaf7582e050d67beb74842e8d8d450b279fd5d6595c12751c046138bd6aca3",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "role": "research-roadmap",
+      "sha256": "sha256:9b1076e9495e696c55d13b00ac77a276a0c709fec4ce7ec787e091f1fe069656",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/authority/research-roadmap-9b1076e9495e696c55d13b00ac77a276a0c709fec4ce7ec787e091f1fe069656.bin",
+      "snapshot_sha256": "sha256:9b1076e9495e696c55d13b00ac77a276a0c709fec4ce7ec787e091f1fe069656",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+    }
+  ],
+  "task_id": "exp8307-runtime-change-boundary",
+  "terminal_validation_sidecar_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/terminal_validation.json",
+  "validation_receipts": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import pytest,coverage,ruff,mypy,shutil,pathlib,sys;p=pathlib.Path(sys.argv[1]);p.write_bytes(b'private');assert p.read_bytes()==b'private';assert shutil.disk_usage(p.parent).free>10000000;print(sys.version)",
+        "/tmp/carnot8307-v3g_4wno/checks/probe"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c 'import pytest,coverage,ruff,mypy,shutil,pathlib,sys;p=pathlib.Path(sys.argv[1]);p.write_bytes(b'\"'\"'private'\"'\"');assert p.read_bytes()==b'\"'\"'private'\"'\"';assert shutil.disk_usage(p.parent).free>10000000;print(sys.version)' /tmp/carnot8307-v3g_4wno/checks/probe",
+      "deadline_s": 15,
+      "duration_s": 0.114375666,
+      "ended_monotonic_ns": 1149818490267055,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/preconditions/tools_and_private_scratch.stdout",
+      "log_sha256": "sha256:08a43c05b82ce41c30f2eac28c015d86709e94e3138457e957229d54605c032d",
+      "name": "tools_and_private_scratch",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "external_preconditions",
+      "started_monotonic_ns": 1149818375891389,
+      "started_wall_ns": 1791488910165062274,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/preconditions/tools_and_private_scratch.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/preconditions/tools_and_private_scratch.stdout",
+      "stdout_sha256": "sha256:08a43c05b82ce41c30f2eac28c015d86709e94e3138457e957229d54605c032d",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/usr/bin/env",
+        "CARNOT8307_COVERAGE_CONFIG=/tmp/carnot8307-v3g_4wno/checks/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "-p",
+        "--rcfile",
+        "/tmp/carnot8307-v3g_4wno/checks/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_runtime_change_boundary_8307.py",
+        "--basetemp=/tmp/carnot8307-v3g_4wno/checks/owned"
+      ],
+      "command": "/usr/bin/env CARNOT8307_COVERAGE_CONFIG=/tmp/carnot8307-v3g_4wno/checks/coverage.ini /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run -p --rcfile /tmp/carnot8307-v3g_4wno/checks/coverage.ini -m pytest -n 0 -o addopts= --no-cov -q tests/python/test_runtime_change_boundary_8307.py --basetemp=/tmp/carnot8307-v3g_4wno/checks/owned",
+      "deadline_s": 180,
+      "duration_s": 78.749370136,
+      "ended_monotonic_ns": 1149899698621247,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/owned_coverage.stdout",
+      "log_sha256": "sha256:0aced49e4e0906976afec33ff035fb833ef69777cae4b2295e3bc952aa2ca1e9",
+      "name": "owned_coverage",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1149820949251111,
+      "started_wall_ns": 1791488912738422097,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/owned_coverage.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/owned_coverage.stdout",
+      "stdout_sha256": "sha256:0aced49e4e0906976afec33ff035fb833ef69777cae4b2295e3bc952aa2ca1e9",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile",
+        "/tmp/carnot8307-v3g_4wno/checks/coverage.ini",
+        "--keep"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage combine --rcfile /tmp/carnot8307-v3g_4wno/checks/coverage.ini --keep",
+      "deadline_s": 20,
+      "duration_s": 0.114310204,
+      "ended_monotonic_ns": 1149899814103131,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/coverage_combine.stdout",
+      "log_sha256": "sha256:0119c19dcaac435ffd892fb4a07675d76e3f610602532462a50865d02ce3a502",
+      "name": "coverage_combine",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1149899699792927,
+      "started_wall_ns": 1791488991488963622,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/coverage_combine.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/coverage_combine.stdout",
+      "stdout_sha256": "sha256:0119c19dcaac435ffd892fb4a07675d76e3f610602532462a50865d02ce3a502",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile",
+        "/tmp/carnot8307-v3g_4wno/checks/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/runtime_change_boundary_8307.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/runtime_change_execution_8307.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8307_v717_runtime_change_boundary.py",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot8307-v3g_4wno/checks/coverage.json"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage json --rcfile /tmp/carnot8307-v3g_4wno/checks/coverage.ini --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/runtime_change_boundary_8307.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/runtime_change_execution_8307.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8307_v717_runtime_change_boundary.py --fail-under=100 -o /tmp/carnot8307-v3g_4wno/checks/coverage.json",
+      "deadline_s": 20,
+      "duration_s": 0.166501813,
+      "ended_monotonic_ns": 1149899981690502,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/coverage_json.stdout",
+      "log_sha256": "sha256:38b9bf26f1aa84d00718343d8da94d9f4dd73c0f266858e47cc38611ae920986",
+      "name": "coverage_json",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1149899815188689,
+      "started_wall_ns": 1791488991604359224,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/coverage_json.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/coverage_json.stdout",
+      "stdout_sha256": "sha256:38b9bf26f1aa84d00718343d8da94d9f4dd73c0f266858e47cc38611ae920986",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "--basetemp=/tmp/carnot8307-v3g_4wno/checks/authority_cases"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov -q tests/python/test_experiment_7891_v685_authority_lifecycle.py --basetemp=/tmp/carnot8307-v3g_4wno/checks/authority_cases",
+      "deadline_s": 180,
+      "duration_s": 21.103295395,
+      "ended_monotonic_ns": 1149921086622299,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/e2e_018_private.stdout",
+      "log_sha256": "sha256:020415fe85d3f6ea08f09b0f4876f30e5e1796f9a8e7212c13af7da6cb2b5a9f",
+      "name": "e2e_018_private",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1149899983326904,
+      "started_wall_ns": 1791488991772497839,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/e2e_018_private.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/e2e_018_private.stdout",
+      "stdout_sha256": "sha256:020415fe85d3f6ea08f09b0f4876f30e5e1796f9a8e7212c13af7da6cb2b5a9f",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_runtime_localization_8290.py",
+        "tests/python/test_primary_publication_7928.py",
+        "--basetemp=/tmp/carnot8307-v3g_4wno/checks/consumers"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov -q tests/python/test_runtime_localization_8290.py tests/python/test_primary_publication_7928.py --basetemp=/tmp/carnot8307-v3g_4wno/checks/consumers",
+      "deadline_s": 180,
+      "duration_s": 60.865457797,
+      "ended_monotonic_ns": 1149981953614878,
+      "exit_code": 1,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/runtime_and_publication_consumers.stdout",
+      "log_sha256": "sha256:cf775560c229bbe9179956b93d9d377767c3396c77e63e711ad3cc1b5e8a76b6",
+      "name": "runtime_and_publication_consumers",
+      "normal_exit": true,
+      "passed": false,
+      "scope": "owned",
+      "started_monotonic_ns": 1149921088157081,
+      "started_wall_ns": 1791489012877327626,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/runtime_and_publication_consumers.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/runtime_and_publication_consumers.stdout",
+      "stdout_sha256": "sha256:cf775560c229bbe9179956b93d9d377767c3396c77e63e711ad3cc1b5e8a76b6",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/runtime_change_boundary_8307.py",
+        "python/carnot/verify/runtime_change_execution_8307.py",
+        "scripts/experiments/experiment_8307_v717_runtime_change_boundary.py",
+        "tests/python/test_runtime_change_boundary_8307.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/verify/runtime_change_boundary_8307.py python/carnot/verify/runtime_change_execution_8307.py scripts/experiments/experiment_8307_v717_runtime_change_boundary.py tests/python/test_runtime_change_boundary_8307.py",
+      "deadline_s": 20,
+      "duration_s": 0.015623561,
+      "ended_monotonic_ns": 1149981970267250,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/ruff_check.stdout",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1149981954643689,
+      "started_wall_ns": 1791489073743814315,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/ruff_check.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/ruff_check.stdout",
+      "stdout_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/runtime_change_boundary_8307.py",
+        "python/carnot/verify/runtime_change_execution_8307.py",
+        "scripts/experiments/experiment_8307_v717_runtime_change_boundary.py",
+        "tests/python/test_runtime_change_boundary_8307.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/verify/runtime_change_boundary_8307.py python/carnot/verify/runtime_change_execution_8307.py scripts/experiments/experiment_8307_v717_runtime_change_boundary.py tests/python/test_runtime_change_boundary_8307.py",
+      "deadline_s": 20,
+      "duration_s": 0.015512372,
+      "ended_monotonic_ns": 1149981986465599,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/ruff_format.stdout",
+      "log_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "name": "ruff_format",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1149981970953227,
+      "started_wall_ns": 1791489073760123412,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/ruff_format.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/ruff_format.stdout",
+      "stdout_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "--config-file=/dev/null",
+        "python/carnot/verify/runtime_change_boundary_8307.py",
+        "python/carnot/verify/runtime_change_execution_8307.py",
+        "scripts/experiments/experiment_8307_v717_runtime_change_boundary.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy --strict --follow-imports=silent --config-file=/dev/null python/carnot/verify/runtime_change_boundary_8307.py python/carnot/verify/runtime_change_execution_8307.py scripts/experiments/experiment_8307_v717_runtime_change_boundary.py",
+      "deadline_s": 60,
+      "duration_s": 0.614556028,
+      "ended_monotonic_ns": 1149982601580706,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/strict_mypy.stdout",
+      "log_sha256": "sha256:8228fcc5ce46d42d01caf3cd941f4e9c5f2bcc372bb5b147a2f0572d2dd675a8",
+      "name": "strict_mypy",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1149981987024678,
+      "started_wall_ns": 1791489073776194883,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/strict_mypy.stderr",
+      "stderr_sha256": "sha256:7e8d701e15061b0e9a0dda89e1f9efa18bd1b9f2645e8367af04cb7cb07bc4b9",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/strict_mypy.stdout",
+      "stdout_sha256": "sha256:8228fcc5ce46d42d01caf3cd941f4e9c5f2bcc372bb5b147a2f0572d2dd675a8",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_runtime_change_boundary_8307.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py --files tests/python/test_runtime_change_boundary_8307.py",
+      "deadline_s": 20,
+      "duration_s": 0.032323841,
+      "ended_monotonic_ns": 1149982808740037,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/spec_coverage.stdout",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "spec_coverage",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1149982776416196,
+      "started_wall_ns": 1791489074565587111,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/spec_coverage.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8307_v717_runtime_change_boundary/invocations/1791488910163148702/validation/spec_coverage.stdout",
+      "stdout_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false
+}

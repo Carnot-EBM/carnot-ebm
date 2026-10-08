@@ -96482,3 +96482,36 @@ negative replay, owned failure and unchanged-primary recovery. Measured new
 statement coverage is 197/197 across the two modules and runner; scoped Ruff,
 format, strict mypy and spec references pass. Repository health is explicitly
 not run. Frozen private E2E and terminal receipts accompany the published result.
+## REQ-REPORT-8317: V717 terminal evidence reconciliation
+
+Account for exactly Exp8304 through Exp8317 using full task authorities and
+byte-bound primary, terminal and adversarial receipts. Keep absent producers,
+conductor pre-gates, authenticated failures and current reader failures distinct.
+Retain intended source denominators and frozen H1/H2 descriptive thresholds.
+Missing science closes once as complete_blocked_upstream_evidence. Qualified
+null science may close as a terminal null; owned failures disqualify readiness.
+Declare no_model_load and zero current calls. Imported calls count once. Keep
+V713 source deletion parked. Preserve authenticated PolarFire board-local Linux
+CPU graduation. Retire exact same-verdict predecessor scopes under normal policy;
+unmeasured science and unmet hardware obligations remain separate.
+
+### SCENARIO-REPORT-8317-DISPOSITIONS
+
+Private missing, malformed, pre-gate and failed-primary controls retain all
+fourteen slots. Authenticate activation separately from the canonical contract.
+Reconstruct available primitive branch reductions with fresh children. Absent
+H1/H2 statistics remain unavailable; logistic spline equivalence grants no
+architecture-specific or generalization claim. Both generalization scores are zero.
+
+### SCENARIO-REPORT-8317-LEGACY-RETIREMENT
+
+Historical `retired_extras` entries without an `id` remain valid and retain
+their exact bytes. Duplicate detection considers only existing entries with
+an `id`. Append an authenticated exact repeat once, preserve the complete
+original manifest as a byte prefix, and leave it unchanged on repeated
+reconciliation or a failed append-schema check.
+
+Implementation 2026-10-08: `v717_capstone.reconcile_manifest` filters the
+deduplication set to rows containing `id`. The existing regression now also
+checks the full historical byte prefix, the complete legacy row and exactly
+one appended retirement; its original repeat and rejected-append checks pass.

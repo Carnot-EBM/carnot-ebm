@@ -3836,3 +3836,14 @@ reader; 105 tests pass. Global spec-reference debt remains outside this plan.
 |---|---|---|
 | REQ-REPORT-8304 / SCENARIO-REPORT-8304-AUTHORITY / SCENARIO-REPORT-8304-REPLAY | Scaffolding | Exp8304: honest_verdict=complete_circular_positive_contract_methods; 14/14 task comparisons; contract/protocol readiness=1; learning benefit and independent generalization=0; [artifact](../results/experiment_8304_v717_contract_methods.json) |
 | REQ-VERIFY-8304 / SCENARIO-VERIFY-8304-CHECKS | Scaffolding | Exp8304: honest_verdict=complete_circular_positive_contract_methods; required_checks_passed=true; owned validation establishes structural readiness; [artifact](../results/experiment_8304_v717_contract_methods.json) |
+
+## 2026-10-08 — V717 capstone legacy retirement repair
+
+| Requirement / Scenario | Implementation | Regression evidence |
+|---|---|---|
+| REQ-REPORT-8317 / SCENARIO-REPORT-8317-LEGACY-RETIREMENT | `v717_capstone.reconcile_manifest` uses existing IDs for deduplication and retains historical entries without IDs | `test_append_only_retirement` passes; complete original byte prefix, legacy row, one append, repeat stability and rejected-append stability are checked |
+| REQ-VERIFY-8317 / SCENARIO-VERIFY-8317-CLI | Original private publication, negative replay and owned-failure recovery paths remain in scope | 49 capstone/consumer/private E2E-018/E2E-021 tests pass; 281/281 owned statements including real CLI; 81 conductor core and 10 fix-erasure tests pass; scoped Ruff, strict mypy and spec references pass |
+
+Documentation freshness and the test mutation gate pass. Repository-wide
+reconciliation retains the previously recorded 1,142 missing spec references;
+the scoped repair adds no untraced tests or repository-health claim.

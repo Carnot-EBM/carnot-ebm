@@ -51976,3 +51976,27 @@ publication sidecar and terminal receipts, carries its operator frontier and
 reuses the qualified physical parser. Private cases reject stale or rehashed
 sidecars and forged receipt semantics. Original GateMate history authenticates;
 no new physical change qualifies and no model, device or JTAG call is made.
+## REQ-VERIFY-8317: Bounded private capstone validation
+
+Freeze private validation argv before measurement. Use unchanged publication
+checks, adversarial audit and strict row consistency before atomic publication.
+Keep child deadlines, process-group cleanup, flushed boundaries and heartbeats.
+Run private E2E-018/E2E-021, affected consumers, scoped Ruff/format, strict mypy,
+spec coverage and 100 percent newly owned statements including real CLI paths.
+Do not run the full repository suite. The conductor owns ops and traceability.
+
+### SCENARIO-VERIFY-8317-CLI
+
+Real private publication and cold replay accept valid primitive evidence and
+reject negative and rehashed-tamper controls. Cover failed checks and recovery
+without changing historical primary bytes or public validators. Retain clocks,
+argv, exits and output hashes. Write all dispositions and falsifiable next
+conditions in the research note. No model, device probe or external publication.
+
+Verification 2026-10-08: the capstone and private E2E-018/E2E-021 consumer suite
+passes 49 tests; the conductor core suite passes 81 and the fix-erasure gate
+passes 10. Combined unit and real CLI coverage covers 281/281 owned statements
+across both capstone modules and its direct runner. Scoped Ruff check/format,
+strict mypy and spec-reference checks pass. Historical primaries remain intact.
+Documentation freshness passes; global reconciliation still reports the
+pre-existing 1,142 tests without spec references, outside this repair's scope.
