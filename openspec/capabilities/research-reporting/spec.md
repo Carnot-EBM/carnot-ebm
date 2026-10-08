@@ -2,6 +2,35 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8288: Carry GateMate's authenticated physical obligation
+
+Authenticate the Exp8274 primary and qualified terminal sidecar before advancing
+its physical evidence frontier. Reuse the qualified ledger and publication
+supervisor through small adapters. Declare aggregation_from_upstream_artifacts,
+no_model_load, MODEL_SPECS=[] and zero current calls, heads and device execution.
+Keep execution readiness separate from obligation custody and scientific benefit;
+both generalization scores remain zero on exposed development.
+Missing physical evidence completes complete_blocked_gatemate_physical_change.
+Missing external operands block with exact path/hash/field/operator/values;
+failed owned checks disqualify and zero readiness. Preserve every obligation.
+
+### SCENARIO-REPORT-8288-CLI
+
+Freeze validation commands before measurement; use private scratch and fixtures.
+The real CLI flushes start/phase counts and uses bounded process-group children
+with at most60-second heartbeats. Require private E2E-015/019, unit and consumer
+checks, scoped Ruff/format, strict mypy, explicit-file spec coverage and100 percent
+new statement coverage including real CLI children. Run the full Python suite
+once as separate bounded health; retain failures without claiming a global pass.
+Cold replay and unchanged primary/adversarial/row terminal checks precede atomic
+publication. Reject negative and rehashed tamper cases. Conductor owns ops/status,
+ops/changelog and traceability reconciliation after exit.
+
+Implementation2026-10-08: the Exp8288 adapters reuse the qualified ledger,
+bounded supervisor and unchanged atomic publisher. The thin CLI binds current
+identity, Exp8274 custody and private validation. The primary and raw receipts
+record measured check outcomes; the reopening note preserves the board obligation.
+
 ## REQ-REPORT-8286: Inspect only the authenticated Exp8272 outcome frontier
 
 Authenticate Exp8272 primary bytes, its bound terminal sidecar and exact qualified

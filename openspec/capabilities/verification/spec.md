@@ -2,6 +2,24 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8288: Advance only the Exp8274 physical evidence frontier
+
+Preserve the original 0xffffffff transcript and hash. Read only changed established
+operator receipt documents and accept only dated cable, port, power or board changes
+after Exp8274's recorded end clock. Time, milestone changes, plans and repeated
+receipts do not qualify. This audit runs no JTAG retry and makes no new device claim.
+Reopening requires a documented setup change, authenticated GM1Ax IDCODE
+0x20000001, then a flashed n16 tile with device sample/hash smoke evidence.
+A host bitstream does not prove board execution. New physical evidence only
+freezes an eligible future probe contract; bring-up remains unproved.
+
+### SCENARIO-VERIFY-8288-FRONTIER
+
+Private fixtures exercise missing history and documents, hash/sidecar identity,
+before/same/after-frontier clocks, repeated receipts and actual physical changes.
+Fresh replay reconstructs primitive parser/frontier/board/document rows and rejects
+rehashed primitive or aggregate tampering. Historical primary bytes stay immutable.
+
 ## REQ-VERIFY-8286: Cold-replay current outcome primitives and validation
 
 Recompute the Exp8272 frontier projection in a fresh process from exact primitive,
