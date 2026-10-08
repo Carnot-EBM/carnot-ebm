@@ -21796,3 +21796,4 @@ Recorded 6 completed experiments in 40.0 minutes (0.7 hours), including 1 comput
 - 2026-10-08: Reconstruct source-disjoint sentence features from existing live receipts (⚠️ Research Finding) — honest_verdict=complete_null_cached_sentence_custody; results/experiment_8305_v717_cached_sentence_custody.json
 - 2026-10-08: Qualify exact spline update isolation and durable recovery (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_checks; results/experiment_8306_v717_local_update_isolation.json
 - 2026-10-08: Reopen CUDA qualification only on authenticated environment change (⚠️ Research Finding) — honest_verdict=complete_disqualified_cuda_runtime; results/experiment_8307_v717_runtime_change_boundary.json
+- 2026-10-08: Close the ARC reader coverage gap and inspect new supervisor outcomes (⚠️ Research Finding) — honest_verdict=complete_null_no_supervisor_outcomes; results/experiment_8314_v717_arc_coverage_frontier.json
