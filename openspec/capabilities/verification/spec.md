@@ -51780,3 +51780,28 @@ Implementation 2026-10-08: `gatemate_physical_delta_8302.py` pins Exp8288 bytes
 and adapts the qualified physical-change ledger. Private tests retain negative
 receipt dates and rehashed tamper checks. The exact future detection/flash/smoke
 obligation is recorded in `docs/research-notes/v716-gatemate-physical-delta.md`.
+
+## REQ-VERIFY-8303: Independent current and historical replay
+
+Exp8303 SHALL freeze bounded validation commands before reduction. Replay each
+available branch in a fresh process with negative and rehashed controls. Retain
+the authenticated V715 branch_8286 exit1 receipt. A successful reader may report
+an upstream failure. Failed owned checks set readiness zero and disqualify.
+Reconstruct H3 event, crash/resume, full-scan, negative-control and paired-cost
+primitives independently. Sound slower closure is an informative fixture null;
+hard-constraint violations disqualify. Fixture success grants no natural benefit.
+
+### SCENARIO-VERIFY-8303-CLI
+
+Private CLI publication SHALL require unchanged terminal auditors, cold replay
+and tamper rejection. Measure 100 percent new statements including child CLI
+statements. Run scoped Ruff, strict mypy, spec coverage, consumer tests and private
+E2E-018/021. Retain actual argv, clocks, exits and stream hashes. A bounded full
+Python suite receipt is repository health, not an owned pass. The conductor owns
+ops/status/changelog/traceability reconciliation.
+
+Implementation 2026-10-08: Exp8303 reuses bounded process supervision and unchanged
+terminal publication auditors. Its tests execute real private CLI children and
+Exp8291's independent reconstruction. Rehashed aggregate, source, log, authority,
+slower-fixture and hard-violation cases preserve separate evidence dispositions.
+Owned statement coverage includes both added modules and the thin direct CLI.

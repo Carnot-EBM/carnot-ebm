@@ -96259,3 +96259,31 @@ Implementation 2026-10-08: `gatemate_delta_execution_8302.py` reuses the qualifi
 publication supervisor through scoped adapters. The thin Exp8302 CLI and
 `test_gatemate_physical_delta_8302.py` exercise terminal private publication,
 external blocking, owned failures and fresh-process replay/tamper rejection.
+
+## REQ-REPORT-8303: V716 evidence scope reconciliation
+
+Exp8303 SHALL reconcile exactly Exp8290 through Exp8303 using complete task
+objects, the visible table, canonical digest and activation bytes. Authenticate
+producer primaries and byte-bound terminal sidecars. Alternate pre-gate paths
+require exact identity and bound conductor operands. Missing primaries have no
+producer verdict. Preserve authenticated historical failures and their logs.
+Current reader exceptions disqualify; unchanged external failures are blocked.
+Keep H1/H2 unmeasured when their independent audits are absent. Preserve intended
+128/96/32 denominators, shared fallback, comparator and alpha .025 each.
+Authenticate inherited PolarFire CPU dispatch independently. Preserve ARC,
+KV260 and GateMate obligations without repeated hardware probes. Count imported
+calls once and keep unavailable capture costs explicit. No external publication.
+
+### SCENARIO-REPORT-8303-DISPOSITIONS
+
+Private tests SHALL distinguish authenticated success, authenticated failure,
+absent producer, bound pre-gate, corrupt bytes and owned reader exceptions.
+Fourteen reconciled dispositions do not imply fourteen measured outcomes.
+Execution readiness, evidence improvement and scientific benefit remain separate.
+
+Implementation 2026-10-08: `v716_capstone_evidence.py` adapts qualified source and
+full-task readers. `v716_capstone.py` and the thin Exp8303 runner preserve complete
+blocked outcomes, failed upstream receipts and inherited hardware scope.
+`test_v716_capstone_8303.py` uses private candidates and requirement-linked
+regressions. The capstone writes `docs/research-notes/v716-outcomes.md` with a
+falsifiable condition for each branch. It does not modify conductor machinery.
