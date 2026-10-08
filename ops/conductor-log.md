@@ -19829,3 +19829,4 @@ code |
 | 2026-10-08 04:24 UTC | Audit later constraint benefit and sealed retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8270-continuous-constraint-admission) |
 | 2026-10-08 04:44 UTC | Inspect new live supervisor outcomes for cross-gam | OK | 92 passed, 1 warning in 61.10s (0:01:01) |
 | 2026-10-08 05:06 UTC | Bound new evidence and learning costs against the  | OK | 86 passed, 1 warning in 30.10s |
+| 2026-10-08 05:24 UTC | Carry GateMate physical-change evidence and its ex | OK | 91 passed, 1 warning in 49.76s |
