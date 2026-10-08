@@ -51507,3 +51507,24 @@ Owned failures SHALL disqualify; external blocks SHALL remain terminal blocked.
 Implementation: the Exp8275 runner reuses bounded child supervision and unchanged
 atomic primary/terminal auditors. The nine focused tests qualify every added
 statement, including actual CLI children, source failures and rehashed controls.
+## REQ-VERIFY-8276: Requalify current coverage, focal and admission bindings
+
+Reuse the qualified coverage and protocol controls without scientific changes.
+Freeze owned argv before measurement. Measure all new statements, including
+real CLI children, and preserve coverage before deleting private scratch.
+Run scoped Ruff, strict mypy, spec coverage and private E2E-015/019 consumers.
+Run the full Python suite once as separate repository-health evidence.
+Retain actual exits, clocks and stream hashes. Bounded process groups SHALL
+emit heartbeats within sixty seconds. Fixture gains remain circular_positive.
+
+### SCENARIO-VERIFY-8276-COMPONENTS
+
+Current thin bindings retain exact embedded-token counts, one focal response
+within64 tokens, independent view/admission checks, issue-before-release and
+genuine crash resume at40/72. Coverage remains replayable after scratch removal.
+An admission failure SHALL not erase independently qualified view evidence.
+
+Implementation 2026-10-08: the current CLI reuses qualified scripted peers,
+actual embedded vocabulary, typed crash controls and durable coverage custody.
+Private custody tests retain their original assertions. Live V714 authority
+tests are outside this current scope; V715 authority has separate owned tests.

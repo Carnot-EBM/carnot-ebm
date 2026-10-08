@@ -1,0 +1,194 @@
+{
+  "canonical_tasks_sha256": "7f8dbb7ce0f041e136c54bcc49a75308ef6222f1bcecfbc50895b83a19636706",
+  "historical_task_numbers": "provenance_only",
+  "milestone": "2026.10.715",
+  "producers": [
+    {
+      "current_gate_fields": [],
+      "producer_path": "results/experiment_8276_v715_current_contract_readiness.json",
+      "task_id": "exp8276-current-contract-readiness"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "current_contract_ready_score",
+          "artifact_path": "results/experiment_8276_v715_current_contract_readiness.json",
+          "op": "==",
+          "upstream": "exp8276-current-contract-readiness",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8277_v715_lease_backend_qualification.json",
+      "task_id": "exp8277-lease-backend-qualification"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "view_kernel_ready_score",
+          "artifact_path": "results/experiment_8276_v715_current_contract_readiness.json",
+          "op": "==",
+          "upstream": "exp8276-current-contract-readiness",
+          "value": 1
+        },
+        {
+          "artifact_field": "gguf_backend_ready_score",
+          "artifact_path": "results/experiment_8277_v715_lease_backend_qualification.json",
+          "op": "==",
+          "upstream": "exp8277-lease-backend-qualification",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8278_v715_evidence_view_canary.json",
+      "task_id": "exp8278-evidence-view-canary"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "view_canary_ready_score",
+          "artifact_path": "results/experiment_8278_v715_evidence_view_canary.json",
+          "op": "==",
+          "upstream": "exp8278-evidence-view-canary",
+          "value": 1
+        },
+        {
+          "artifact_field": "fit_capture_budget_ready_score",
+          "artifact_path": "results/experiment_8278_v715_evidence_view_canary.json",
+          "op": "==",
+          "upstream": "exp8278-evidence-view-canary",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8279_v715_fit_view_capture.json",
+      "task_id": "exp8279-fit-view-capture"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "view_canary_ready_score",
+          "artifact_path": "results/experiment_8278_v715_evidence_view_canary.json",
+          "op": "==",
+          "upstream": "exp8278-evidence-view-canary",
+          "value": 1
+        },
+        {
+          "artifact_field": "tune_capture_budget_ready_score",
+          "artifact_path": "results/experiment_8278_v715_evidence_view_canary.json",
+          "op": "==",
+          "upstream": "exp8278-evidence-view-canary",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8280_v715_tune_view_capture.json",
+      "task_id": "exp8280-tune-view-capture"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "fit_views_ready_score",
+          "artifact_path": "results/experiment_8279_v715_fit_view_capture.json",
+          "op": "==",
+          "upstream": "exp8279-fit-view-capture",
+          "value": 1
+        },
+        {
+          "artifact_field": "tune_views_ready_score",
+          "artifact_path": "results/experiment_8280_v715_tune_view_capture.json",
+          "op": "==",
+          "upstream": "exp8280-tune-view-capture",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8281_v715_intervention_energy_fit.json",
+      "task_id": "exp8281-intervention-energy-fit"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "intervention_fit_ready_score",
+          "artifact_path": "results/experiment_8281_v715_intervention_energy_fit.json",
+          "op": "==",
+          "upstream": "exp8281-intervention-energy-fit",
+          "value": 1
+        },
+        {
+          "artifact_field": "reserved_capture_budget_ready_score",
+          "artifact_path": "results/experiment_8278_v715_evidence_view_canary.json",
+          "op": "==",
+          "upstream": "exp8278-evidence-view-canary",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8282_v715_reserved_view_seal.json",
+      "task_id": "exp8282-reserved-view-seal"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "reserved_views_ready_score",
+          "artifact_path": "results/experiment_8282_v715_reserved_view_seal.json",
+          "op": "==",
+          "upstream": "exp8282-reserved-view-seal",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8283_v715_intervention_benefit_audit.json",
+      "task_id": "exp8283-intervention-benefit-audit"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "admission_kernel_ready_score",
+          "artifact_path": "results/experiment_8276_v715_current_contract_readiness.json",
+          "op": "==",
+          "upstream": "exp8276-current-contract-readiness",
+          "value": 1
+        },
+        {
+          "artifact_field": "reserved_views_ready_score",
+          "artifact_path": "results/experiment_8282_v715_reserved_view_seal.json",
+          "op": "==",
+          "upstream": "exp8282-reserved-view-seal",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8284_v715_continuous_constraint_admission.json",
+      "task_id": "exp8284-continuous-constraint-admission"
+    },
+    {
+      "current_gate_fields": [
+        {
+          "artifact_field": "constraint_trajectory_ready_score",
+          "artifact_path": "results/experiment_8284_v715_continuous_constraint_admission.json",
+          "op": "==",
+          "upstream": "exp8284-continuous-constraint-admission",
+          "value": 1
+        }
+      ],
+      "producer_path": "results/experiment_8285_v715_constraint_learning_audit.json",
+      "task_id": "exp8285-constraint-learning-audit"
+    },
+    {
+      "current_gate_fields": [],
+      "producer_path": "results/experiment_8286_v715_arc_outcome_frontier.json",
+      "task_id": "exp8286-arc-outcome-frontier"
+    },
+    {
+      "current_gate_fields": [],
+      "producer_path": "results/experiment_8287_v715_kv260_evidence_cost_boundary.json",
+      "task_id": "exp8287-kv260-evidence-cost-boundary"
+    },
+    {
+      "current_gate_fields": [],
+      "producer_path": "results/experiment_8288_v715_gatemate_physical_delta.json",
+      "task_id": "exp8288-gatemate-physical-delta"
+    },
+    {
+      "current_gate_fields": [],
+      "producer_path": "results/experiment_8289_v715_capstone.json",
+      "task_id": "exp8289-capstone"
+    }
+  ],
+  "science_choices": "Unchanged V713 roles, grids, thresholds, costs, seeds and fallback.",
+  "science_protocol_path": "openspec/change-proposals/v713-evidence-intervention-protocol.json",
+  "science_protocol_sha256": "sha256:f4c06e17a9f8eb72f1be80b265ab7e3507cbc5f6f3b918df6421fe49dae02018"
+}

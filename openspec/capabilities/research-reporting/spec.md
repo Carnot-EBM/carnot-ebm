@@ -95939,3 +95939,35 @@ roadmap schema, gate audit, exclusion lint and standing-floor checks run,
 then they shall find fourteen identical task objects and no missing or
 forward gate field. Planning checks shall not activate the roadmap, rewrite
 historical results, or imply that scientific experiments have run.
+## REQ-REPORT-8276: Bind V715 execution without changing frozen science
+
+Use the existing full-task reader with milestone 2026.10.715 and range
+Exp8276 through Exp8289. Freeze design, activation, consumed staging absence,
+source roles, code and configuration bytes. Map each gate to its declared
+current primary. Staged agreement alone SHALL never qualify activation.
+Preserve the V713 science SHA256 f4c06e17a9f8eb72f1be80b265ab7e3507cbc5f6f3b918df6421fe49dae02018.
+Authenticate historical component primaries and their bound terminal sidecars.
+Keep the CUDA Error 101 canary and seven absent primaries distinct from nulls.
+Never invent a producer verdict for an absent primary. Emit four independent
+readiness scores from current checks and primitive evidence. Missing required
+external operands block only their components. Failed owned checks disqualify.
+No neural weights or generator updates; current model calls remain zero.
+
+### SCENARIO-REPORT-8276-AUTHORITY
+
+Full prompt or task drift fails activation. Frozen snapshot replay survives
+a later live roadmap. Private staged-only agreement fails current readiness.
+Missing terminal evidence reports its exact path, field and observed value.
+
+### SCENARIO-REPORT-8276-REPLAY
+
+A fresh process reconstructs contract, history, component and coverage evidence.
+Rehashed summaries and negative operands fail replay. Unchanged terminal
+auditors check a private candidate before atomic publication. Historical bytes
+remain unchanged. The conductor owns ops and traceability reconciliation.
+
+Implementation 2026-10-08: `current_contract_readiness_8276.py` binds frozen
+V715 task bytes through the existing authority reader and publication runner.
+When the design omits a printed digest, a derived reader copy adds the digest
+computed from its original JSON. The original authority bytes remain frozen.
+The eight adapter tests cover current components and rehashed replay failures.
