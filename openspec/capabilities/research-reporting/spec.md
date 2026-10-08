@@ -95791,3 +95791,32 @@ uses Exp8262 durable coverage custody through the unchanged supervisor and
 publisher. The thin Exp8263 CLI supports private publication and cold replay;
 `test_protocol_conformance_8263.py` binds current requests, causal controls,
 external blocking, subprocess failures and rehashed tamper cases.
+
+## REQ-REPORT-8264: Publish current canary readiness separately from benefit
+
+Publish one terminal primary with all intended source/view rows and primitive
+evidence. Missing external operands yield complete_blocked_<operand> with exact
+path, hash, field, operator, expected and observed operands. Owned failures
+disqualify readiness. Both generalization scores remain zero. Current model
+calls remain separate from historical provenance. Freeze validation argv before
+measurement. Preserve100 percent new statement coverage including CLI children.
+Run private E2E015/019, consumer tests, scoped Ruff, strict mypy and spec checks.
+Cold replay rebuilds reductions and rejects negative/rehashed tamper cases.
+Unchanged primary publication, adversarial and strict row checks precede atomic
+publication. Historical primary bytes stay intact. Conductor owns ops/status
+and traceability reconciliation.
+
+### SCENARIO-REPORT-8264-CLI
+
+The real CLI tests private publication, date rejection, external blocking,
+normal worker exit, durable coverage, valid cold replay and tamper rejection.
+Bounded full-suite diagnostics retain actual failures without a global-pass claim.
+
+Implementation: `evidence_view_execution_8264.py` freezes commands, preserves
+measured coverage and cold-rebuilds selectors and reductions before publication.
+The thin direct CLI and `test_evidence_view_canary_8264.py` cover private peers,
+external blocks, request custody, branch budgets and rehashed tamper rejection.
+
+Repair closeout may cite an unchanged failed health receipt with the exact frozen
+full-suite argv. This avoids repeating unrelated diagnostics. Reuse cannot claim
+a global pass and its old duration does not count as current execution.

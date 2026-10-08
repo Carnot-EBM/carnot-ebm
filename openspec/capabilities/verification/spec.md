@@ -51392,3 +51392,39 @@ role/request-bound capture through scripted subprocess peers.
 `typed_admission_8263.py` uses the qualified fsynced journal with typed costs,
 source-hash controls and compact atomic checkpoints whose full state is rebuilt
 from the journal. Tests cover genuine exits40/72 and private control rosters.
+
+## REQ-VERIFY-8264: Measure bounded live evidence views before scale-up
+
+Authenticate frozen V713 science and current V714 producer terminal bindings.
+Use the first twelve eligible fit sources in ascending original cluster order.
+Eligibility uses public complete answer offsets and cached probabilities only.
+Retain missing controls and all three intended views without replacement units.
+Reuse the qualified focal parser, capture journal and owned CUDA lifecycle.
+Use cached Qwen3.8 Q4_K_M, embedded vocabulary and chat template, temperature
+zero, seed7138250 and at most64 output tokens. Compute grammar token bounds
+before dispatch. Rotate view order by source index and bind unique request IDs,
+source-view bytes, unchanged answers, raw responses, clocks and GPU telemetry.
+Require nine complete triplets and exact request custody for transport readiness.
+Zero effects qualify as null evidence. Labels and favorable direction never gate
+readiness. Forecast fit128, tune64 and reserved128 separately from actual focal
+token counts and slower conservative tail timings, including setup, load,
+serialization, shutdown and retries. Each measurement budget is2400 seconds;
+validation is at most900 seconds and closeout reserves1200 seconds.
+
+### SCENARIO-VERIFY-8264-CUSTODY
+
+Private triplets test zero effects, partial/error responses, duplicate request
+IDs, changed answers, missing controls and rehashed primitive tampering.
+No-op deletions remain recorded. Repeats never increase independent sources.
+
+### SCENARIO-VERIFY-8264-BUDGET
+
+Embedded output bounds above64 block slots. Conservative projections retain
+the full rosters and gate each capture branch separately. Missing timings yield
+unavailable estimates, never zero-cost forecasts. Launch allowance includes
+elapsed time and cannot silently shrink a roster.
+
+Implementation: `evidence_view_canary_8264.py` freezes public rosters and reduces
+exact focal triplets. `evidence_view_live_8264.py` binds the qualified server,
+lease and capture journal to current bounded requests. Complete future rosters
+retain unavailable inputs; their measured cost estimates are lower bounds.
