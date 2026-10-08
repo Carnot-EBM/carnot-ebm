@@ -19869,3 +19869,8 @@ code |
 | 2026-10-08 18:40 UTC | Reconstruct source-disjoint sentence features from | OK | 98 passed, 1 warning in 111.20s (0:01:51) |
 | 2026-10-08 19:24 UTC | Qualify exact spline update isolation and durable  | OK | 89 passed, 1 warning in 79.16s (0:01:19) |
 | 2026-10-08 19:58 UTC | Reopen CUDA qualification only on authenticated en | OK | 98 passed, 1 warning in 58.46s |
+| 2026-10-08 20:01 UTC | Fit calibrated local sentence energies against mat | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8306-local-update-isolation.local_kernel_ready_score (actual=0 == expected=1) |
+| 2026-10-08 20:03 UTC | Seal every reserved decision before opening evalua | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8308-sentence-spline-fit) |
+| 2026-10-08 20:03 UTC | Learn local sentence corrections from delayed feed | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8308-sentence-spline-fit) |
+| 2026-10-08 20:03 UTC | Independently test decision benefit on the fixed d | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8309-reserved-prediction-seal, exp8310-continuous-local-learning) |
+| 2026-10-08 20:03 UTC | Audit later learning value and retention without s | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8310-continuous-local-learning) |
