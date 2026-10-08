@@ -95717,3 +95717,29 @@ and publication checks to the Exp8260 identity. The direct unbuffered runner and
 `test_gatemate_physical_delta_8260.py` cover private publication, missing inputs,
 identity drift, rehashed primitives, owned failures and real CLI child statements.
 All 10 focused tests passed; the private qualification measured 161/161 statements.
+## REQ-REPORT-8261: Preserve fourteen actual V713 dispositions
+
+The capstone SHALL enumerate Exp8248 through Exp8261, bind declared outputs and
+exact conductor identities, retain source rows and denominators by hashed byte
+reference, and distinguish measured zeros, missing operands and owned failures.
+Compare full activated task objects with design JSON and its visible table using
+the canonical digest. Preserve V712 bytes and its failed audit replay operand.
+Execution readiness SHALL remain separate from scientific benefit: absent H1/H2
+audits are blocked, exposed-development generalization scores remain zero, and
+all three PRD gaps remain separate. Carry hardware and ARC obligations without
+repeating probes. Retire only supported scope-matched informative nulls; missing
+science does not retire an unmeasured mechanism. Retain publication G1–G4 and
+historical paper readiness without treating either as V713 benefit.
+
+### SCENARIO-REPORT-8261-OUTCOMES
+
+Private fixtures preserve thirteen upstream dispositions plus the capstone,
+including a measured zero gate, absent output, owned disqualification, qualified
+null and circular hardware parity. Activation or table drift blocks readiness.
+No model loads, generator calls, weight updates or external publication occur.
+
+Implementation: `python/carnot/reporting/v713_capstone_evidence.py` reconstructs
+the fourteen dispositions from immutable inputs; `v713_capstone.py` publishes
+the current identity and derives `docs/research-notes/v713-outcomes.md` from the
+checked primary. `tests/python/test_v713_capstone_8261.py` covers missing and zero
+operands, owned failures, historical custody, authority drift and retirement limits.

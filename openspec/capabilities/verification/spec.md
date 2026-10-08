@@ -51294,3 +51294,29 @@ primary and merges its seen receipts with the new end-clock frontier. The tests
 exercise post-frontier selection, missing or invalid stamps, repeated receipts,
 wrong board identity and rehashed evidence. The exact reopening sequence is
 `docs/research-notes/v713-gatemate-physical-delta.md`; this task executes no probe.
+## REQ-VERIFY-8261: Freeze and cold replay the capstone's owned checks
+
+Before measurement freeze private scratch/tool checks, scoped unit/CLI coverage,
+Ruff, strict mypy, spec coverage, consumer and private E2E-018/021 commands.
+Measure 100 percent added statements including real CLI children. Run full Python
+health once with a bounded deadline and preserve its actual result separately.
+Freeze each science audit's own entrypoint and input schema; absent audit code or
+primitives cannot be replaced by a producer replay. Preserve argv, exits, clocks
+and stream hashes with heartbeats and process-group cleanup. Cold reconstruction
+SHALL reject rehashed aggregate and primitive tampering in fresh processes.
+Unchanged primary, adversarial and strict-row checks SHALL precede atomic
+publication. Failed owned checks disqualify with zero execution readiness.
+The conductor owns ops/status.md, ops/changelog.md and traceability reconciliation.
+
+### SCENARIO-VERIFY-8261-CLI
+
+Private real CLI fixtures accept complete terminal accounting and reject wrong
+identity, invalid dates, hash drift and rehashed summary/primitive changes.
+Bound current science audit commands separately from producer CLIs and test valid
+and tampered replay. Preserve historical failure receipts without rewriting them.
+
+Implementation: the Exp8261 thin CLI and `v713_capstone.py` reuse the qualified
+bounded supervisor and unchanged publication validators. All seven focused tests,
+72 consumer/E2E-018 tests and seven private E2E-021 tests passed. Current owned
+statement coverage, scoped Ruff, strict mypy and spec coverage passed. The one
+bounded full Python suite remains a separate repository-health receipt.
