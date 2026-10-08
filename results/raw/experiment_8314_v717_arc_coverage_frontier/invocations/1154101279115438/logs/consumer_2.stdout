@@ -1,0 +1,27 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 16 items
+
+tests/python/test_arc_supervisor_refinement.py::test_applied_only_evidence_filter PASSED [  6%]
+tests/python/test_arc_supervisor_refinement.py::test_classify_receipt_kinds PASSED [ 12%]
+tests/python/test_arc_supervisor_refinement.py::test_dedupe_and_ledger_survives_source_deletion PASSED [ 18%]
+tests/python/test_arc_supervisor_refinement.py::test_rerun_with_different_measurements_counts_as_new PASSED [ 25%]
+tests/python/test_arc_supervisor_refinement.py::test_current_live_shape_reads_insufficient PASSED [ 31%]
+tests/python/test_arc_supervisor_refinement.py::test_retire_at_floor_not_below PASSED [ 37%]
+tests/python/test_arc_supervisor_refinement.py::test_promotion_requires_interval_separation PASSED [ 43%]
+tests/python/test_arc_supervisor_refinement.py::test_wilson_bounds_shape PASSED [ 50%]
+tests/python/test_arc_supervisor_refinement.py::test_new_arm_specification_from_exhausted_receipt PASSED [ 56%]
+tests/python/test_arc_supervisor_refinement.py::test_no_new_arm_specification_without_stagnation PASSED [ 62%]
+tests/python/test_arc_supervisor_refinement.py::test_no_new_arm_specification_from_a_pooled_legacy_receipt PASSED [ 68%]
+tests/python/test_arc_supervisor_refinement.py::test_no_firings_and_no_receipts_exit_zero PASSED [ 75%]
+tests/python/test_arc_supervisor_refinement.py::test_directory_scan_prunes_nested_clones PASSED [ 81%]
+tests/python/test_arc_supervisor_refinement.py::test_missing_input_and_bad_ledger_fail_loud PASSED [ 87%]
+tests/python/test_arc_supervisor_refinement.py::test_bare_list_rows_document_shape PASSED [ 93%]
+tests/python/test_arc_supervisor_refinement.py::test_json_output_mode PASSED [100%]
+
+============================== 16 passed in 2.22s ==============================

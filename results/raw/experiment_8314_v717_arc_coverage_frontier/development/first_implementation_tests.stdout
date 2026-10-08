@@ -1,0 +1,122 @@
+FFFF.......F.                                                            [100%]
+=================================== FAILURES ===================================
+___________________________________ test_cli ___________________________________
+
+tmp_path = PosixPath('/tmp/carnot-8314-first/test_cli0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb5e5772600>
+
+    def test_cli(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        """SCENARIO-REPORT-8286-CLI / SCENARIO-VERIFY-8286-COLD: private real child replay."""
+        locator = fixture(tmp_path, [current()])
+        prior = frontier(tmp_path, locator)
+        output = tmp_path / task.OUTPUT.name
+        args = [
+            "--locator",
+            str(locator),
+            "--frontier",
+            str(prior),
+            "--output",
+            str(output),
+            "--fixture-e2e",
+        ]
+        result = invoke(tmp_path, *args)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8314] start no_model_load current_llm_calls=0
+E         [exp8205] phase=exp8314_preflight completed=0 pending=1
+E         [exp8205] phase=exp8314_coverage_complete completed=0 pending=1
+E         [exp8205] phase=exp8314_preconditions completed=0 pending=1
+E         [exp8205] phase=exp8314_frontier_delta completed=0 pending=1
+E         [exp8205] phase=exp8314_validation completed=0 pending=0
+E         [exp8205] phase=before_subprocess_terminal_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_terminal_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_terminal_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_terminal_rows completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=exp8314_published completed=0 pending=0
+E         complete_blocked_task_id
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...completed=1 pending=0\n[exp8205] phase=exp8314_published completed=0 pending=0\ncomplete_blocked_task_id\n', stderr='').returncode
+
+tests/python/test_arc_outcome_frontier_8286.py:148: AssertionError
+______________________ test_projection_and_object_tamper _______________________
+
+tmp_path = PosixPath('/tmp/carnot-8314-first/test_projection_and_object_tam0')
+
+    def test_projection_and_object_tamper(tmp_path: Path) -> None:
+        """SCENARIO-VERIFY-8286-COLD: adapter bytes cannot acquire authority through rehashing."""
+        locator = fixture(tmp_path)
+        prior = frontier(tmp_path, locator, unchanged=True)
+        adapter = tmp_path / "adapter"
+>       assert not reader.inspect(locator, prior, adapter)["failures"]
+E       AssertionError: assert not [{'artifact_field': 'task_id', 'expected': 'exp8300-arc-outcome-frontier', 'observed': 'exp8272-arc-outcome-frontier', 'op': '==', ...}]
+
+tests/python/test_arc_outcome_frontier_8286.py:266: AssertionError
+__________________________ test_current_date_boundary __________________________
+
+tmp_path = PosixPath('/tmp/carnot-8314-first/test_current_date_boundary0')
+
+    def test_current_date_boundary(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-8286-DELTA: current-day receipts are later, future dates stay excluded."""
+        row = current()
+        row["finished_at"] = "2026-10-08T00:01:00Z"
+        locator = fixture(tmp_path, [row])
+        prior = frontier(tmp_path, locator)
+        value = inspect(locator, prior)
+>       assert value["new_outcome_count"] == 1
+E       assert 0 == 1
+
+tests/python/test_arc_outcome_frontier_8286.py:283: AssertionError
+____________________________ test_five_firing_floor ____________________________
+
+tmp_path = PosixPath('/tmp/carnot-8314-first/test_five_firing_floor0')
+
+    def test_five_firing_floor(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-8286-DELTA: two arms across three games still need five firings."""
+        rows = [
+            current(game, arm, arm == "drop_goal_bias")
+            for game in ("cd82", "r11l", "ar25")
+            for arm in ("drop_goal_bias", "allow_reinduction")
+        ]
+        for index, row in enumerate(rows):
+            row["seed"] = index
+        locator = fixture(tmp_path, rows)
+        value = inspect(locator, frontier(tmp_path, locator))
+>       assert value["arm_overlap_games"] == 3 and len(value["shared_arms"]) == 2
+E       assert (0 == 3)
+
+tests/python/test_arc_outcome_frontier_8286.py:317: AssertionError
+_______________________________ test_cell_floor ________________________________
+
+tmp_path = PosixPath('/tmp/carnot-8314-first/test_cell_floor0')
+
+    def test_cell_floor(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-8314-CELLS: every game-arm cell must meet its own floor."""
+        events = [
+            previous.current(g, a, a == "drop_goal_bias")
+            for g in ("cd82", "r11l", "ar25")
+            for a in ("drop_goal_bias", "allow_reinduction")
+            for _ in range(5)
+        ]
+        for index, row in enumerate(events):
+            row["seed"] = index
+        locator = previous.fixture(tmp_path, events)
+        value = inspect(locator, frontier(tmp_path, locator))
+>       assert value["new_outcome_count"] == 30 and value["independent_count"] == 3
+E       assert (0 == 30)
+
+tests/python/test_arc_coverage_frontier_8314.py:81: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_coverage_frontier_8314.py::test_cli - AssertionE...
+FAILED tests/python/test_arc_coverage_frontier_8314.py::test_projection_and_object_tamper
+FAILED tests/python/test_arc_coverage_frontier_8314.py::test_current_date_boundary
+FAILED tests/python/test_arc_coverage_frontier_8314.py::test_five_firing_floor
+FAILED tests/python/test_arc_coverage_frontier_8314.py::test_cell_floor - ass...
+5 failed, 8 passed, 1 warning in 19.80s
