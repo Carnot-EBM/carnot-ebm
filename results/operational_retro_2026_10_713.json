@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.713",
+  "generated_at": "2026-10-08T00:53:17Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 50.7,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Cover the known PolarFire schema path and dispatch qualified state",
+      "duration_minutes": 10.05,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify complete-sentence views and delayed constraint admission mechanics",
+      "duration_minutes": 8.06,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Inspect new live supervisor outcomes for cross-game arm selection",
+      "duration_minutes": 7.33,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind fourteen tasks and freeze matched source-evidence interventions",
+      "duration_minutes": 6.78,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Carry GateMate physical-change evidence and its exact reopening condition",
+      "duration_minutes": 6.71,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.713 completed 7 experiments (0 compute-bound, 7 synthesis-only) across 50.7 total wall-time minutes (averaging 7 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was led by synthesis tasks 'Cover the known PolarFire schema path and dispatch qualified state' (10.05 minutes), 'Qualify complete-sentence views and delayed constraint admission mechanics' (8.06 minutes), and 'Inspect new live supervisor outcomes for cross-game arm selection' (7.33 minutes). With zero compute-bound tasks executed, gpu_idle_on_compute_bound_tasks is null, and the 0% GPU utilization snapshot on NVIDIA GeForce RTX 3090 reflects expected non-use for synthesis-only workloads rather than an operational stall.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks accounted for 100% of completed experiments (7 of 7) and all 50.7 wall-time minutes, led by PolarFire schema dispatch qualification (10.05 minutes) and complete-sentence view qualification (8.06 minutes), while lacking granular sub-phase execution telemetry.",
+    "Serial execution across recurring verification and outcome inspection tasks (including cross-game arm selection inspection at 7.33 minutes and fourteen-task binding at 6.78 minutes) operated without intermediate receipt caching or incremental change detection.",
+    "Milestone timing analysis relied on disk-mtime reconstruction fallbacks due to missing active in-flight sub-phase timers across synthesis tasks."
+  ],
+  "improvements_suggested": [
+    "Instrument long-running synthesis experiments (including PolarFire schema qualification and view mechanics) with granular sub-phase timers to isolate code generation, schema validation, and disk I/O latency.",
+    "Implement memoization and receipt caching for physical-change evidence and task-binding checks to skip redundant evaluation when upstream evidence remains unchanged.",
+    "Embed synchronous start and end execution timestamps directly into task result receipts to eliminate reliance on disk-mtime reconstruction fallbacks.",
+    "Introduce early fail-fast validation for schema paths prior to launching full multi-minute synthesis qualification routines."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add granular sub-phase timing breakdown to PolarFire schema path qualification to locate the primary driver of its 10.05-minute runtime.",
+    "Deploy incremental caching for GateMate physical-change evidence and task binding to avoid re-evaluating static preconditions.",
+    "Persist explicit start and end timestamps in experiment output receipts to replace disk-mtime timing reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.713 consisted entirely of 7 synthesis-only experiments consuming 50.7 total wall-time minutes without any compute-bound workloads. GPU resources were appropriately idle with gpu_idle_on_compute_bound_tasks recorded as null, confirming correct non-use rather than resource starvation. Future execution efficiency depends on instrumenting sub-phase telemetry in long-running schema and constraint qualification tasks and caching static physical-change evidence."
+}
