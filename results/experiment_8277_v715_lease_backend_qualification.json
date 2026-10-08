@@ -1,0 +1,1561 @@
+{
+  "MODEL_SPECS": [
+    {
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_path_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "quantization": "Q4_K_M"
+    }
+  ],
+  "acceptance_gates": {
+    "complete_lease_qualification": false,
+    "generation_attempts_zero": true,
+    "native_gpu_load": false,
+    "owned_checks": true,
+    "scientific_benefit": false
+  },
+  "backend_binding_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/backend_binding.json",
+  "backend_binding_sha256": "sha256:951302f93368873f466e698910b07d34390bb1ad2a33c8a45579c307505d35bf",
+  "backend_identity": {
+    "enumeration_receipt": {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "--list-devices"
+      ],
+      "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server --list-devices",
+      "deadline_s": 20,
+      "duration_s": 0.064164703,
+      "ended_monotonic_ns": 1108125943148184,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_devices.stdout",
+      "log_sha256": "sha256:a702175819497ac50def197b71959c912faa82af2a53c6f0aaa4f91171be6e42",
+      "name": "native_devices",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1108125878983481,
+      "started_wall_ns": 1791447217668154557,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_devices.stderr",
+      "stderr_sha256": "sha256:6558a69695e8c39a6e68e81275c7e165ac2b9b4bab28388cd558b3a359ac2084",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_devices.stdout",
+      "stdout_sha256": "sha256:a702175819497ac50def197b71959c912faa82af2a53c6f0aaa4f91171be6e42",
+      "timed_out": false
+    },
+    "help_receipt": {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "--help"
+      ],
+      "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server --help",
+      "deadline_s": 20,
+      "duration_s": 0.064076949,
+      "ended_monotonic_ns": 1108125877594148,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_help.stdout",
+      "log_sha256": "sha256:88e17500075c10c631ea6867dd8108fb77a345ae0d6dbf454b94646dc2445c96",
+      "name": "native_help",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1108125813517199,
+      "started_wall_ns": 1791447217602688245,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_help.stderr",
+      "stderr_sha256": "sha256:3085d53587e6083225c86f63aaa439b518bf8dfb1259568d63d8c47e0e8f8a9f",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_help.stdout",
+      "stdout_sha256": "sha256:88e17500075c10c631ea6867dd8108fb77a345ae0d6dbf454b94646dc2445c96",
+      "timed_out": false
+    },
+    "installed_library_hashes": [
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so",
+        "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0",
+        "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0.14.0",
+        "sha256": "sha256:9f8593f133b97a13d1b629489be8f13c5da5b1e0335213743e0546de89199162"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so",
+        "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0",
+        "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0.14.0",
+        "sha256": "sha256:1a45bce64f88d29dfb1f5221db68714f9703f249852cef9ef3190e8d037d1ad1"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so",
+        "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0",
+        "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0.14.0",
+        "sha256": "sha256:594726c77b47543579e4cbeb7a4c30c7ead8a71329956d750c0d26e792f68385"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so",
+        "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0",
+        "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0.14.0",
+        "sha256": "sha256:ec5fbb1dba8d36cf665088e2529f4f171b6cca26e1436cd2d37f5aba432c9825"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-batched-bench-impl.so",
+        "sha256": "sha256:23795359a9a6c63be47d924faaa5e99b46e4c85b2a16821c4f541eb8e8278a66"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-bench-impl.so",
+        "sha256": "sha256:a378abd7a8990d6a886e6d0dd1e613a7a2abd381578bcf9ba2389bf0c7f1837a"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-cli-impl.so",
+        "sha256": "sha256:39d490db9a43d609c5f4a711a79e14dc39dd11f0b91a05d3f2d616c0951eda84"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so",
+        "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0",
+        "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0.0.9606",
+        "sha256": "sha256:5d7c67260c69b1f036c415e913552af36f8c2626d263d9f75e4bedb72a548392"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-completion-impl.so",
+        "sha256": "sha256:e2c9d53a9669c52a4574ced4ac19656a571045f88d9d324d44b90af0d6482c4f"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-fit-params-impl.so",
+        "sha256": "sha256:163e5ab106d3b1c2d69bd5456aa118456018dfe91bc997a8fdf3b74b50e673b6"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-perplexity-impl.so",
+        "sha256": "sha256:307d8bd0bf027cff546638e79357afb0d88f5005653e51cb9de90446bbea8dc6"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-quantize-impl.so",
+        "sha256": "sha256:f2e0718c18975500981d71172f082ca58b6daa3087da8de163adace50c997493"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so",
+        "sha256": "sha256:35a77374d80a3b6774b9dfc95a01158d489309ccbfbc7f66dc6a747127af7c92"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so",
+        "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0",
+        "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0.0.9606",
+        "sha256": "sha256:4e1a1bdb8dfafe2661138655b0961355ff9ed8e7b02ad8608b23e2e372476ff1"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so",
+        "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0",
+        "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+      },
+      {
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0.0.9606",
+        "sha256": "sha256:93c1e60516ec0d6fb120e5e1f68ea853883ea67932b941d0344901089c111e27"
+      }
+    ],
+    "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+  },
+  "censored_count": 1,
+  "child_mask": {
+    "CARNOT_FORCE_LIVE": "1",
+    "CUDA_VISIBLE_DEVICES": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+  },
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "experiment_id",
+        "task_id",
+        "cuda_preflight_receipt"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8264_v714_evidence_view_canary.json",
+      "sha256": "sha256:6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5"
+    },
+    {
+      "fields_imported": [
+        "publication"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/invocations/1791432397793981429/terminal_validation.json",
+      "sha256": "sha256:a23111621a697347653b1f23f3c3672467edfc6ca898839e75cbed4362a4bdc6"
+    },
+    {
+      "fields_imported": [
+        "report.passed"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/validators/6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5.json",
+      "sha256": "sha256:b58a9436c820c691bb5e8cffe2003e80c527cf697e5f0d06735036edc6c8701f"
+    },
+    {
+      "fields_imported": [
+        "verbatim bytes"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/exp8264_preflight.stdout",
+      "sha256": "sha256:e14817ed5be5db9574535bfe7cdb27422f0fd935e1e2d1e1f84bcfa81afa0c4a"
+    },
+    {
+      "fields_imported": [
+        "verbatim bytes"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/exp8264_preflight.stderr",
+      "sha256": "sha256:43c0e2e20fed558fc9aa813f000334c657bfd364cc935071c83c43bcc0a5f38a"
+    },
+    {
+      "fields_imported": [
+        "experiment_id",
+        "task_id",
+        "cuda_preflight_receipt"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8276_v715_current_contract_readiness.json",
+      "sha256": "sha256:91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8"
+    },
+    {
+      "fields_imported": [
+        "publication"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8276_v715_current_contract_readiness/invocations/1791444499701637728/terminal_validation.json",
+      "sha256": "sha256:eac0051cbdeea1acbef0bec46d985e836e59867511b4261f0429af69db81ae89"
+    },
+    {
+      "fields_imported": [
+        "report.passed"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8276_v715_current_contract_readiness/validators/91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8.json",
+      "sha256": "sha256:da71cfd8d825873835723050857a3f72f27c896700371941f0b2a9264cf2e2bc"
+    },
+    {
+      "fields_imported": [
+        "frozen weights",
+        "embedded tokenizer/chat template"
+      ],
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+    },
+    {
+      "fields_imported": [
+        "argv",
+        "actual_exit",
+        "clocks",
+        "stream hashes",
+        "passed"
+      ],
+      "path": "results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791446385683241158/repository_health.json",
+      "sha256": "sha256:c8ee59cbddd4f28314c6651ef43d54ce6cd8a1c94a24478915f51cf17bcb2fb1"
+    }
+  ],
+  "cleanup_receipt": {
+    "action": "not_started",
+    "leak_free": true,
+    "unrelated_process_kill_count_delta": 0
+  },
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/lease_backend_8277.py",
+      "sha256": "sha256:69ba8bae8409d68c06f2d6ddd75da07b1b0adf9b9e73b80417b70b11b857e440"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8277_v715_lease_backend_qualification.py",
+      "sha256": "sha256:4f4f7f0778a4388cb1e7f7afa45971cb9cc410e5bfbef1a31ba89016ac5c00fe"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_lease_backend_8277.py",
+      "sha256": "sha256:bf0f356a301860ada2c46f33e76b7fe657afbf75b88e5da65cd180281cc3c4af"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/llama_cpp_process.py",
+      "sha256": "sha256:da24f1a661fe70e75169bf753f8a6f9811ac6051acb79b98e80b81d5239573e0"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/gpu_lease_phase_journal.py",
+      "sha256": "sha256:4308c325d2489c64503b9cbdbddc03ef3f02f422f746b77bf1a1ced461fbfa08"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/evidence_view_execution_8264.py",
+      "sha256": "sha256:7c005cf4d854fe2643afb48f70a4ab2b828a8fc688018aae12bdd7d4960095fe"
+    }
+  ],
+  "completed_count": 0,
+  "cuda_failure_comparison": {
+    "causality_proved": false,
+    "historical_receipt": {
+      "actual_exit": 1,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import torch,sys; ok=torch.cuda.is_available(); print('cuda_runtime_available='+str(ok),flush=True); sys.exit(0 if ok else 1)"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import torch,sys; ok=torch.cuda.is_available(); print('\"'\"'cuda_runtime_available='\"'\"'+str(ok),flush=True); sys.exit(0 if ok else 1)'",
+      "deadline_s": 20,
+      "duration_s": 1.417250495,
+      "ended_monotonic_ns": 1093323776903963,
+      "exit_code": 1,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/invocations/1791432397793981429/preflight/cuda_runtime_preflight.stdout",
+      "log_sha256": "sha256:e14817ed5be5db9574535bfe7cdb27422f0fd935e1e2d1e1f84bcfa81afa0c4a",
+      "name": "cuda_runtime_preflight",
+      "normal_exit": true,
+      "passed": false,
+      "scope": "external_operand",
+      "started_monotonic_ns": 1093322359653468,
+      "started_wall_ns": 1791432414148824414,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/invocations/1791432397793981429/preflight/cuda_runtime_preflight.stderr",
+      "stderr_sha256": "sha256:43c0e2e20fed558fc9aa813f000334c657bfd364cc935071c83c43bcc0a5f38a",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/invocations/1791432397793981429/preflight/cuda_runtime_preflight.stdout",
+      "stdout_sha256": "sha256:e14817ed5be5db9574535bfe7cdb27422f0fd935e1e2d1e1f84bcfa81afa0c4a",
+      "timed_out": false
+    },
+    "hypotheses": [
+      "Device ordinal/mask mismatch or CUDA runtime/driver state; Error101 cause is unproved."
+    ],
+    "native_observation": [
+      {
+        "artifact_field": "exists",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8264_v714_evidence_view_canary.json",
+        "sha256": "sha256:6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5",
+        "upstream": "experiment_8264_v714_evidence_view_canary"
+      },
+      {
+        "artifact_field": "publication.primary_sha256",
+        "expected": "sha256:6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5",
+        "observed": "sha256:6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5",
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/invocations/1791432397793981429/terminal_validation.json",
+        "sha256": "sha256:a23111621a697347653b1f23f3c3672467edfc6ca898839e75cbed4362a4bdc6",
+        "upstream": "experiment_8264_v714_evidence_view_canary"
+      },
+      {
+        "artifact_field": "report.passed",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/validators/6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5.json",
+        "sha256": "sha256:b58a9436c820c691bb5e8cffe2003e80c527cf697e5f0d06735036edc6c8701f",
+        "upstream": "experiment_8264_v714_evidence_view_canary"
+      },
+      {
+        "artifact_field": "stdout_sha256",
+        "expected": "sha256:e14817ed5be5db9574535bfe7cdb27422f0fd935e1e2d1e1f84bcfa81afa0c4a",
+        "observed": "sha256:e14817ed5be5db9574535bfe7cdb27422f0fd935e1e2d1e1f84bcfa81afa0c4a",
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/invocations/1791432397793981429/preflight/cuda_runtime_preflight.stdout",
+        "sha256": "sha256:e14817ed5be5db9574535bfe7cdb27422f0fd935e1e2d1e1f84bcfa81afa0c4a",
+        "upstream": "experiment_8264_v714_evidence_view_canary"
+      },
+      {
+        "artifact_field": "stderr_sha256",
+        "expected": "sha256:43c0e2e20fed558fc9aa813f000334c657bfd364cc935071c83c43bcc0a5f38a",
+        "observed": "sha256:43c0e2e20fed558fc9aa813f000334c657bfd364cc935071c83c43bcc0a5f38a",
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/invocations/1791432397793981429/preflight/cuda_runtime_preflight.stderr",
+        "sha256": "sha256:43c0e2e20fed558fc9aa813f000334c657bfd364cc935071c83c43bcc0a5f38a",
+        "upstream": "experiment_8264_v714_evidence_view_canary"
+      },
+      {
+        "artifact_field": "exists",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8276_v715_current_contract_readiness.json",
+        "sha256": "sha256:91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8",
+        "upstream": "experiment_8276_v715_current_contract_readiness"
+      },
+      {
+        "artifact_field": "publication.primary_sha256",
+        "expected": "sha256:91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8",
+        "observed": "sha256:91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8",
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8276_v715_current_contract_readiness/invocations/1791444499701637728/terminal_validation.json",
+        "sha256": "sha256:eac0051cbdeea1acbef0bec46d985e836e59867511b4261f0429af69db81ae89",
+        "upstream": "experiment_8276_v715_current_contract_readiness"
+      },
+      {
+        "artifact_field": "report.passed",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8276_v715_current_contract_readiness/validators/91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8.json",
+        "sha256": "sha256:da71cfd8d825873835723050857a3f72f27c896700371941f0b2a9264cf2e2bc",
+        "upstream": "experiment_8276_v715_current_contract_readiness"
+      },
+      {
+        "artifact_field": "gguf_cache",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "upstream": "qwen_cache"
+      },
+      {
+        "artifact_field": "backend_binary",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "upstream": "native_backend"
+      },
+      {
+        "artifact_field": "gguf_sha256",
+        "expected": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "observed": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "upstream": "qwen_cache"
+      },
+      {
+        "artifact_field": "quantization",
+        "expected": "Q4_K_M",
+        "observed": "Q4_K_M",
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "upstream": "qwen_cache"
+      },
+      {
+        "artifact_field": "device_inventory_exit",
+        "expected": 0,
+        "observed": 0,
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/device_inventory.stdout",
+        "sha256": "sha256:1cdaf8f8b9fb5b1152241595529b6b28de6d7731300034a25f8b8755befd4547",
+        "upstream": "nvidia-smi"
+      },
+      {
+        "artifact_field": "permitted_gpu_lease",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/device_inventory.stdout",
+        "sha256": "sha256:1cdaf8f8b9fb5b1152241595529b6b28de6d7731300034a25f8b8755befd4547",
+        "upstream": "gpu_lease"
+      },
+      {
+        "artifact_field": "gguf_backend",
+        "expected": true,
+        "observed": "ValueError:native_cuda_device_unavailable:Available devices:\n0.00.003.446 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n",
+        "op": "==",
+        "passed": false,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_devices.stderr",
+        "sha256": "sha256:6558a69695e8c39a6e68e81275c7e165ac2b9b4bab28388cd558b3a359ac2084",
+        "upstream": "native_backend"
+      },
+      {
+        "artifact_field": "owned_cleanup",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/server.log",
+        "sha256": null,
+        "upstream": "owned"
+      },
+      {
+        "artifact_field": "owned_child_normal_exit",
+        "expected": true,
+        "observed": true,
+        "op": "==",
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/leased_load_child.stdout",
+        "sha256": "sha256:a8df59c5bcc00894585689d7d8587460276fafbc658cc5ededbc9375df647b32",
+        "upstream": "owned"
+      }
+    ],
+    "observed_facts": [
+      "Exp8264 PyTorch preflight exited before llama-server launch."
+    ],
+    "stderr_verbatim": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py:180: UserWarning: CUDA initialization: Unexpected error from cudaGetDeviceCount(). Did you run some cuda functions before calling NumCudaDevices() that might have already set an error? Error 101: invalid device ordinal (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)\n  return torch._C._cuda_getDeviceCount() > 0\n",
+    "stdout_verbatim": "cuda_runtime_available=False\n"
+  },
+  "device_inventory": [
+    {
+      "index": 0,
+      "memory_free_mb": 24174,
+      "memory_used_mb": 4,
+      "name": "NVIDIA GeForce RTX 3090",
+      "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    }
+  ],
+  "duration_s": 131.137711066,
+  "excluded_count": 0,
+  "experiment_id": 8277,
+  "exposure_scope": "exposed_development",
+  "failed_count": 0,
+  "field_principles": {
+    "MODEL_SPECS": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "acceptance_gates": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "backend_binding_path": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "backend_binding_sha256": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "backend_identity": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "censored_count": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "child_mask": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "cited_upstream_artifacts": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "cleanup_receipt": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "code_config_hashes": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "completed_count": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "cuda_failure_comparison": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "device_inventory": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "duration_s": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "excluded_count": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "experiment_id": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "exposure_scope": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "failed_count": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "flagged_adversarial": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "gate_check_summary": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "generalized_learning_benefit_score": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "gguf_backend_ready_score": "Current execution qualification only; recheck lease and identity each run. No inference benefit or future capacity is promised.",
+    "gpu_lease_receipt": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "honest_verdict": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "independent_count": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "independent_generalization_score": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "inference_mode": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "inference_substrate": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "inference_substrate_class": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "inherited_mask": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "intended_count": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "invocation_argv": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "load_only_contract": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "load_spans": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "methodology_note": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "milestone": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "model_invocation_counts": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "offloaded_layers": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "phase_spans": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "preconditions_checked": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "producer_normalizer_receipts": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "random_seed": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "raw_shard_hashes": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "repository_health": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "repository_health_reused": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "required_checks_passed": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "resident_gpu_receipt": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "rows": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "run_date": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "source_artifact_hashes": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "task_id": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "terminal_validation_sidecar_path": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "uuid_to_local_index": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "validation_receipts": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "verdict_class": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero.",
+    "verifier_is_oracle": "Bind actual bytes, invocation and observed evidence; missing operands are not measured zero."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": [
+    {
+      "artifact_field": "exists",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8264_v714_evidence_view_canary.json",
+      "sha256": "sha256:6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5",
+      "upstream": "experiment_8264_v714_evidence_view_canary"
+    },
+    {
+      "artifact_field": "publication.primary_sha256",
+      "expected": "sha256:6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5",
+      "observed": "sha256:6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/invocations/1791432397793981429/terminal_validation.json",
+      "sha256": "sha256:a23111621a697347653b1f23f3c3672467edfc6ca898839e75cbed4362a4bdc6",
+      "upstream": "experiment_8264_v714_evidence_view_canary"
+    },
+    {
+      "artifact_field": "report.passed",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/validators/6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5.json",
+      "sha256": "sha256:b58a9436c820c691bb5e8cffe2003e80c527cf697e5f0d06735036edc6c8701f",
+      "upstream": "experiment_8264_v714_evidence_view_canary"
+    },
+    {
+      "artifact_field": "stdout_sha256",
+      "expected": "sha256:e14817ed5be5db9574535bfe7cdb27422f0fd935e1e2d1e1f84bcfa81afa0c4a",
+      "observed": "sha256:e14817ed5be5db9574535bfe7cdb27422f0fd935e1e2d1e1f84bcfa81afa0c4a",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/invocations/1791432397793981429/preflight/cuda_runtime_preflight.stdout",
+      "sha256": "sha256:e14817ed5be5db9574535bfe7cdb27422f0fd935e1e2d1e1f84bcfa81afa0c4a",
+      "upstream": "experiment_8264_v714_evidence_view_canary"
+    },
+    {
+      "artifact_field": "stderr_sha256",
+      "expected": "sha256:43c0e2e20fed558fc9aa813f000334c657bfd364cc935071c83c43bcc0a5f38a",
+      "observed": "sha256:43c0e2e20fed558fc9aa813f000334c657bfd364cc935071c83c43bcc0a5f38a",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/invocations/1791432397793981429/preflight/cuda_runtime_preflight.stderr",
+      "sha256": "sha256:43c0e2e20fed558fc9aa813f000334c657bfd364cc935071c83c43bcc0a5f38a",
+      "upstream": "experiment_8264_v714_evidence_view_canary"
+    },
+    {
+      "artifact_field": "exists",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8276_v715_current_contract_readiness.json",
+      "sha256": "sha256:91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8",
+      "upstream": "experiment_8276_v715_current_contract_readiness"
+    },
+    {
+      "artifact_field": "publication.primary_sha256",
+      "expected": "sha256:91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8",
+      "observed": "sha256:91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8276_v715_current_contract_readiness/invocations/1791444499701637728/terminal_validation.json",
+      "sha256": "sha256:eac0051cbdeea1acbef0bec46d985e836e59867511b4261f0429af69db81ae89",
+      "upstream": "experiment_8276_v715_current_contract_readiness"
+    },
+    {
+      "artifact_field": "report.passed",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8276_v715_current_contract_readiness/validators/91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8.json",
+      "sha256": "sha256:da71cfd8d825873835723050857a3f72f27c896700371941f0b2a9264cf2e2bc",
+      "upstream": "experiment_8276_v715_current_contract_readiness"
+    },
+    {
+      "artifact_field": "gguf_cache",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "upstream": "qwen_cache"
+    },
+    {
+      "artifact_field": "backend_binary",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "upstream": "native_backend"
+    },
+    {
+      "artifact_field": "gguf_sha256",
+      "expected": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "observed": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "upstream": "qwen_cache"
+    },
+    {
+      "artifact_field": "quantization",
+      "expected": "Q4_K_M",
+      "observed": "Q4_K_M",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "upstream": "qwen_cache"
+    },
+    {
+      "artifact_field": "device_inventory_exit",
+      "expected": 0,
+      "observed": 0,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/device_inventory.stdout",
+      "sha256": "sha256:1cdaf8f8b9fb5b1152241595529b6b28de6d7731300034a25f8b8755befd4547",
+      "upstream": "nvidia-smi"
+    },
+    {
+      "artifact_field": "permitted_gpu_lease",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/device_inventory.stdout",
+      "sha256": "sha256:1cdaf8f8b9fb5b1152241595529b6b28de6d7731300034a25f8b8755befd4547",
+      "upstream": "gpu_lease"
+    },
+    {
+      "artifact_field": "gguf_backend",
+      "expected": true,
+      "observed": "ValueError:native_cuda_device_unavailable:Available devices:\n0.00.003.446 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n",
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_devices.stderr",
+      "sha256": "sha256:6558a69695e8c39a6e68e81275c7e165ac2b9b4bab28388cd558b3a359ac2084",
+      "upstream": "native_backend"
+    },
+    {
+      "artifact_field": "owned_cleanup",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/server.log",
+      "sha256": null,
+      "upstream": "owned"
+    },
+    {
+      "artifact_field": "owned_child_normal_exit",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/leased_load_child.stdout",
+      "sha256": "sha256:a8df59c5bcc00894585689d7d8587460276fafbc658cc5ededbc9375df647b32",
+      "upstream": "owned"
+    }
+  ],
+  "generalized_learning_benefit_score": 0,
+  "gguf_backend_ready_score": 0,
+  "gpu_lease_receipt": {
+    "acquired_monotonic_ns": 1108116914350090,
+    "argv_digest": "sha256:96c6122802dd75a615d0ee5408a13265ae562cfbcc36ace300aa7d05220eda02",
+    "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+    "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+    "expires_monotonic_ns": 1109016914350090,
+    "lease_id": "lease:d340b137f553a055c7f02e4f2df0ce0d3d16ae1f72a30da44b3a32d92806fa06",
+    "pid": 951442,
+    "pid_start_ticks": 110807650,
+    "recovery": {
+      "performed": false,
+      "signals_sent": []
+    },
+    "release": {
+      "checksum": "sha256:63100b26ff6a5cec359538e9bf7066bfcfc5fb2c4395fbfd8dc0a3fc55001f8d",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:d340b137f553a055c7f02e4f2df0ce0d3d16ae1f72a30da44b3a32d92806fa06",
+      "phase": "terminal_blocked",
+      "pid": 951442,
+      "pid_start_ticks": 110807650,
+      "released": true,
+      "signals_sent": []
+    },
+    "signals_sent": [],
+    "task_id": "exp8277-lease-backend-qualification",
+    "token_digest": "sha256:e0e0080c494402941bce9dd447f86e933cd067e32d45c920ffdf08fdbeaee614",
+    "token_length": 43,
+    "token_opaque": true
+  },
+  "honest_verdict": "complete_blocked_gguf_backend",
+  "independent_count": 0,
+  "independent_generalization_score": 0,
+  "inference_mode": "no_gpu_load_confirmed",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "blocked_no_run",
+  "inherited_mask": {},
+  "intended_count": 1,
+  "invocation_argv": [
+    "scripts/experiments/experiment_8277_v715_lease_backend_qualification.py",
+    "--date",
+    "20261008",
+    "--repository-health-receipt",
+    "results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791446385683241158/repository_health.json"
+  ],
+  "load_only_contract": {
+    "class": "model_load_no_generation",
+    "generation_permitted": false,
+    "minimum_duration_s": 2
+  },
+  "load_spans": [
+    {
+      "duration_s": 7.903876975,
+      "ended_monotonic_ns": 1108126064392758,
+      "phase": "cold_load",
+      "started_monotonic_ns": 1108118160515783
+    },
+    {
+      "duration_s": 2.0849e-05,
+      "ended_monotonic_ns": 1108126064413547,
+      "phase": "shutdown",
+      "started_monotonic_ns": 1108126064392758
+    }
+  ],
+  "methodology_note": "One leased host GPU; native load-only qualification with no warm-up, completion or embedding. Real backend CUDA and PID-bound residency required. Error101 cause unproved. No scientific benefit or hardware-board claim.",
+  "milestone": "2026.10.715",
+  "model_invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "offloaded_layers": null,
+  "phase_spans": [
+    {
+      "duration_s": 48.496317431,
+      "ended_monotonic_ns": 1108126399014348,
+      "phase": "measurement",
+      "started_monotonic_ns": 1108077902696917,
+      "started_wall_ns": 1791447169691867712
+    },
+    {
+      "duration_s": 7.903876975,
+      "ended_monotonic_ns": 1108126064392758,
+      "phase": "cold_load",
+      "started_monotonic_ns": 1108118160515783
+    },
+    {
+      "duration_s": 2.0849e-05,
+      "ended_monotonic_ns": 1108126064413547,
+      "phase": "shutdown",
+      "started_monotonic_ns": 1108126064392758
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "exists",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8264_v714_evidence_view_canary.json",
+      "sha256": "sha256:6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5",
+      "upstream": "experiment_8264_v714_evidence_view_canary"
+    },
+    {
+      "artifact_field": "publication.primary_sha256",
+      "expected": "sha256:6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5",
+      "observed": "sha256:6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/invocations/1791432397793981429/terminal_validation.json",
+      "sha256": "sha256:a23111621a697347653b1f23f3c3672467edfc6ca898839e75cbed4362a4bdc6",
+      "upstream": "experiment_8264_v714_evidence_view_canary"
+    },
+    {
+      "artifact_field": "report.passed",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/validators/6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5.json",
+      "sha256": "sha256:b58a9436c820c691bb5e8cffe2003e80c527cf697e5f0d06735036edc6c8701f",
+      "upstream": "experiment_8264_v714_evidence_view_canary"
+    },
+    {
+      "artifact_field": "stdout_sha256",
+      "expected": "sha256:e14817ed5be5db9574535bfe7cdb27422f0fd935e1e2d1e1f84bcfa81afa0c4a",
+      "observed": "sha256:e14817ed5be5db9574535bfe7cdb27422f0fd935e1e2d1e1f84bcfa81afa0c4a",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/invocations/1791432397793981429/preflight/cuda_runtime_preflight.stdout",
+      "sha256": "sha256:e14817ed5be5db9574535bfe7cdb27422f0fd935e1e2d1e1f84bcfa81afa0c4a",
+      "upstream": "experiment_8264_v714_evidence_view_canary"
+    },
+    {
+      "artifact_field": "stderr_sha256",
+      "expected": "sha256:43c0e2e20fed558fc9aa813f000334c657bfd364cc935071c83c43bcc0a5f38a",
+      "observed": "sha256:43c0e2e20fed558fc9aa813f000334c657bfd364cc935071c83c43bcc0a5f38a",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/invocations/1791432397793981429/preflight/cuda_runtime_preflight.stderr",
+      "sha256": "sha256:43c0e2e20fed558fc9aa813f000334c657bfd364cc935071c83c43bcc0a5f38a",
+      "upstream": "experiment_8264_v714_evidence_view_canary"
+    },
+    {
+      "artifact_field": "exists",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8276_v715_current_contract_readiness.json",
+      "sha256": "sha256:91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8",
+      "upstream": "experiment_8276_v715_current_contract_readiness"
+    },
+    {
+      "artifact_field": "publication.primary_sha256",
+      "expected": "sha256:91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8",
+      "observed": "sha256:91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8276_v715_current_contract_readiness/invocations/1791444499701637728/terminal_validation.json",
+      "sha256": "sha256:eac0051cbdeea1acbef0bec46d985e836e59867511b4261f0429af69db81ae89",
+      "upstream": "experiment_8276_v715_current_contract_readiness"
+    },
+    {
+      "artifact_field": "report.passed",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8276_v715_current_contract_readiness/validators/91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8.json",
+      "sha256": "sha256:da71cfd8d825873835723050857a3f72f27c896700371941f0b2a9264cf2e2bc",
+      "upstream": "experiment_8276_v715_current_contract_readiness"
+    },
+    {
+      "artifact_field": "gguf_cache",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "upstream": "qwen_cache"
+    },
+    {
+      "artifact_field": "backend_binary",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "upstream": "native_backend"
+    },
+    {
+      "artifact_field": "gguf_sha256",
+      "expected": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "observed": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "upstream": "qwen_cache"
+    },
+    {
+      "artifact_field": "quantization",
+      "expected": "Q4_K_M",
+      "observed": "Q4_K_M",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "upstream": "qwen_cache"
+    },
+    {
+      "artifact_field": "device_inventory_exit",
+      "expected": 0,
+      "observed": 0,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/device_inventory.stdout",
+      "sha256": "sha256:1cdaf8f8b9fb5b1152241595529b6b28de6d7731300034a25f8b8755befd4547",
+      "upstream": "nvidia-smi"
+    },
+    {
+      "artifact_field": "permitted_gpu_lease",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/device_inventory.stdout",
+      "sha256": "sha256:1cdaf8f8b9fb5b1152241595529b6b28de6d7731300034a25f8b8755befd4547",
+      "upstream": "gpu_lease"
+    },
+    {
+      "artifact_field": "gguf_backend",
+      "expected": true,
+      "observed": "ValueError:native_cuda_device_unavailable:Available devices:\n0.00.003.446 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n",
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_devices.stderr",
+      "sha256": "sha256:6558a69695e8c39a6e68e81275c7e165ac2b9b4bab28388cd558b3a359ac2084",
+      "upstream": "native_backend"
+    },
+    {
+      "artifact_field": "owned_cleanup",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/server.log",
+      "sha256": null,
+      "upstream": "owned"
+    },
+    {
+      "artifact_field": "owned_child_normal_exit",
+      "expected": true,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/leased_load_child.stdout",
+      "sha256": "sha256:a8df59c5bcc00894585689d7d8587460276fafbc658cc5ededbc9375df647b32",
+      "upstream": "owned"
+    }
+  ],
+  "producer_normalizer_receipts": {
+    "ready_for_gated_consumers": false,
+    "safe_repairs": [],
+    "unsafe_rejections": [
+      {
+        "detail": "missing model_specs/target_model, reproducibility_checksum",
+        "field": "methodology",
+        "kind": "missing_methodology_receipt"
+      }
+    ]
+  },
+  "random_seed": 7158277,
+  "raw_shard_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/backend_binding.json",
+      "sha256": "sha256:951302f93368873f466e698910b07d34390bb1ad2a33c8a45579c307505d35bf"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/coverage.json",
+      "sha256": "sha256:6b33f47a523be41de88f6d1cbf08dd7296695b76ca6983cc02295db93040c559"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/device_inventory.receipt.json",
+      "sha256": "sha256:7f90fdfda402762aac4680a363e6108cd95ec1786f966191ff425015fa783f22"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/device_inventory.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/device_inventory.stdout",
+      "sha256": "sha256:1cdaf8f8b9fb5b1152241595529b6b28de6d7731300034a25f8b8755befd4547"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/exp8264_preflight.receipt.json",
+      "sha256": "sha256:107e96031cf448206edfb9e79cc57f5743a8ff83fde70dcfbdf6e74ba3ff6ec1"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/exp8264_preflight.stderr",
+      "sha256": "sha256:43c0e2e20fed558fc9aa813f000334c657bfd364cc935071c83c43bcc0a5f38a"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/exp8264_preflight.stdout",
+      "sha256": "sha256:e14817ed5be5db9574535bfe7cdb27422f0fd935e1e2d1e1f84bcfa81afa0c4a"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/gpu_lease_journal.json",
+      "sha256": "sha256:f9b06d83cbd5a8df28ad498fd20a5bb67663032966bf620df152d17162a6fc9b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/leased_load_child.receipt.json",
+      "sha256": "sha256:c4141176c818afddba1963ac6448aceae4bbfbcebc99184ec82a5f6beafb888e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/leased_load_child.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/leased_load_child.stdout",
+      "sha256": "sha256:a8df59c5bcc00894585689d7d8587460276fafbc658cc5ededbc9375df647b32"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/load_plan.json",
+      "sha256": "sha256:5f28861c887917badfe8759e154778981f07ea369ea8be02120a12fc51ef2ec4"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/load_result.json",
+      "sha256": "sha256:02dcc27c7f9987b3f451feae68349811436900e808559a4c98de26031aef2aee"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/measurement.json",
+      "sha256": "sha256:569e09d8f1485eafe98f65a2fa31794a6fe95eaeb0bf4155cc230f42e07c880d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_devices.receipt.json",
+      "sha256": "sha256:e1fbf5703461ca01c0f451787b594fc2677c1ef62b72e6fa80ab98e58b95c487"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_devices.stderr",
+      "sha256": "sha256:6558a69695e8c39a6e68e81275c7e165ac2b9b4bab28388cd558b3a359ac2084"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_devices.stdout",
+      "sha256": "sha256:a702175819497ac50def197b71959c912faa82af2a53c6f0aaa4f91171be6e42"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_help.receipt.json",
+      "sha256": "sha256:cbe1945f1ae03444dedb3ece381e8a9ba5566e5dc483ae91fcaa2806db743667"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_help.stderr",
+      "sha256": "sha256:3085d53587e6083225c86f63aaa439b518bf8dfb1259568d63d8c47e0e8f8a9f"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/native_help.stdout",
+      "sha256": "sha256:88e17500075c10c631ea6867dd8108fb77a345ae0d6dbf454b94646dc2445c96"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/repository_health.json",
+      "sha256": "sha256:c8ee59cbddd4f28314c6651ef43d54ce6cd8a1c94a24478915f51cf17bcb2fb1"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation_commands.json",
+      "sha256": "sha256:fe74850dafabb0a849e6ceb09a2949bba9a6d978bdcc66866104e14ec046ee8e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation_receipts.json",
+      "sha256": "sha256:1d4436093cf999d6e80f8fe5db9cf85726c4060d08a7b76651c7e3f7ed306448"
+    }
+  ],
+  "repository_health": {
+    "actual_exit": -9,
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+    "deadline_s": 180,
+    "duration_s": 180.037696508,
+    "ended_monotonic_ns": 1107607896625393,
+    "exit_code": -9,
+    "expected_exit": 0,
+    "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791446385683241158/health/full_python_suite.stdout",
+    "log_sha256": "sha256:3b58f4deb667e0858e4f59ab296a3ac0a7ae203feb0d95c63f9548bc3695b675",
+    "name": "full_python_suite",
+    "normal_exit": false,
+    "passed": false,
+    "scope": "repository_health",
+    "started_monotonic_ns": 1107427858928885,
+    "started_wall_ns": 1791446519648099850,
+    "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791446385683241158/health/full_python_suite.stderr",
+    "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791446385683241158/health/full_python_suite.stdout",
+    "stdout_sha256": "sha256:3b58f4deb667e0858e4f59ab296a3ac0a7ae203feb0d95c63f9548bc3695b675",
+    "timed_out": true
+  },
+  "repository_health_reused": true,
+  "reproducibility_checksum": "sha256:10a67b3a7744b35d80ced3a96226c0ed2f0d67b997263f5a0f316c36f2b98e24",
+  "required_checks_passed": true,
+  "resident_gpu_receipt": {},
+  "rows": [
+    {
+      "arm": "native_llama_server",
+      "condition": "cold_load_no_generation",
+      "denominator": 1,
+      "metric": "backend_ready",
+      "numerator": null,
+      "source_cluster_id": "host_gpu",
+      "status": "censored",
+      "unit_id": "leased_qwen_backend"
+    }
+  ],
+  "run_date": "20261008",
+  "source_artifact_hashes": [
+    {
+      "fields_imported": [
+        "experiment_id",
+        "task_id",
+        "cuda_preflight_receipt"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8264_v714_evidence_view_canary.json",
+      "sha256": "sha256:6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5"
+    },
+    {
+      "fields_imported": [
+        "publication"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/invocations/1791432397793981429/terminal_validation.json",
+      "sha256": "sha256:a23111621a697347653b1f23f3c3672467edfc6ca898839e75cbed4362a4bdc6"
+    },
+    {
+      "fields_imported": [
+        "report.passed"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8264_v714_evidence_view_canary/validators/6c317d9a10294b889a31c92b54e012b58aff4040075326f9b5f12856bee421d5.json",
+      "sha256": "sha256:b58a9436c820c691bb5e8cffe2003e80c527cf697e5f0d06735036edc6c8701f"
+    },
+    {
+      "fields_imported": [
+        "verbatim bytes"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/exp8264_preflight.stdout",
+      "sha256": "sha256:e14817ed5be5db9574535bfe7cdb27422f0fd935e1e2d1e1f84bcfa81afa0c4a"
+    },
+    {
+      "fields_imported": [
+        "verbatim bytes"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/exp8264_preflight.stderr",
+      "sha256": "sha256:43c0e2e20fed558fc9aa813f000334c657bfd364cc935071c83c43bcc0a5f38a"
+    },
+    {
+      "fields_imported": [
+        "experiment_id",
+        "task_id",
+        "cuda_preflight_receipt"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8276_v715_current_contract_readiness.json",
+      "sha256": "sha256:91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8"
+    },
+    {
+      "fields_imported": [
+        "publication"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8276_v715_current_contract_readiness/invocations/1791444499701637728/terminal_validation.json",
+      "sha256": "sha256:eac0051cbdeea1acbef0bec46d985e836e59867511b4261f0429af69db81ae89"
+    },
+    {
+      "fields_imported": [
+        "report.passed"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8276_v715_current_contract_readiness/validators/91d69446aff493dfabfc4837167037fe2db854f94731ce866138f66e1c8512f8.json",
+      "sha256": "sha256:da71cfd8d825873835723050857a3f72f27c896700371941f0b2a9264cf2e2bc"
+    },
+    {
+      "fields_imported": [
+        "frozen weights",
+        "embedded tokenizer/chat template"
+      ],
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+    },
+    {
+      "fields_imported": [
+        "argv",
+        "actual_exit",
+        "clocks",
+        "stream hashes",
+        "passed"
+      ],
+      "path": "results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791446385683241158/repository_health.json",
+      "sha256": "sha256:c8ee59cbddd4f28314c6651ef43d54ce6cd8a1c94a24478915f51cf17bcb2fb1"
+    }
+  ],
+  "task_id": "exp8277-lease-backend-qualification",
+  "terminal_validation_sidecar_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/terminal_validation.json",
+  "uuid_to_local_index": {
+    "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 0
+  },
+  "validation_receipts": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile",
+        "/tmp/carnot8277-validation-k2gzd3rc/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_lease_backend_8277.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --rcfile /tmp/carnot8277-validation-k2gzd3rc/coverage.ini -m pytest -n 0 -o addopts= --no-cov -q tests/python/test_lease_backend_8277.py",
+      "deadline_s": 300,
+      "duration_s": 23.509179687,
+      "ended_monotonic_ns": 1108149909578980,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/owned_unit_coverage.stdout",
+      "log_sha256": "sha256:6a0e2b7a1a362c94f74a8e4afea81e1fb58608dcbf49a10c6348df8eb7ddc1c2",
+      "name": "owned_unit_coverage",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1108126400399293,
+      "started_wall_ns": 1791447218189569778,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/owned_unit_coverage.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/owned_unit_coverage.stdout",
+      "stdout_sha256": "sha256:6a0e2b7a1a362c94f74a8e4afea81e1fb58608dcbf49a10c6348df8eb7ddc1c2",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile",
+        "/tmp/carnot8277-validation-k2gzd3rc/coverage.ini"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage combine --rcfile /tmp/carnot8277-validation-k2gzd3rc/coverage.ini",
+      "deadline_s": 300,
+      "duration_s": 0.063797848,
+      "ended_monotonic_ns": 1108149974588629,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/coverage_combine.stdout",
+      "log_sha256": "sha256:c3aaf6a9387557d3fe013d83c1ab0e4597f6181e68a1ceabf5f14ce32aad31e7",
+      "name": "coverage_combine",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1108149910790781,
+      "started_wall_ns": 1791447241699961386,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/coverage_combine.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/coverage_combine.stdout",
+      "stdout_sha256": "sha256:c3aaf6a9387557d3fe013d83c1ab0e4597f6181e68a1ceabf5f14ce32aad31e7",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile",
+        "/tmp/carnot8277-validation-k2gzd3rc/coverage.ini",
+        "-o",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/coverage.json"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage json --rcfile /tmp/carnot8277-validation-k2gzd3rc/coverage.ini -o /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/coverage.json",
+      "deadline_s": 300,
+      "duration_s": 0.114126378,
+      "ended_monotonic_ns": 1108150090023128,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/coverage_json.stdout",
+      "log_sha256": "sha256:5fe2bfa51743269b5c7e54eb5f8f126e46716212bdb44e625290cd2fc246b9ef",
+      "name": "coverage_json",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1108149975896750,
+      "started_wall_ns": 1791447241765067595,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/coverage_json.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/coverage_json.stdout",
+      "stdout_sha256": "sha256:5fe2bfa51743269b5c7e54eb5f8f126e46716212bdb44e625290cd2fc246b9ef",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile",
+        "/tmp/carnot8277-validation-k2gzd3rc/coverage.ini",
+        "--fail-under=100",
+        "-m"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --rcfile /tmp/carnot8277-validation-k2gzd3rc/coverage.ini --fail-under=100 -m",
+      "deadline_s": 300,
+      "duration_s": 0.113964275,
+      "ended_monotonic_ns": 1108150205125766,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/changed_statement_coverage.stdout",
+      "log_sha256": "sha256:7803527e9349a5a80c1e24601cfed87d890914d039f23cf2798ffd56a7e233b1",
+      "name": "changed_statement_coverage",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1108150091161491,
+      "started_wall_ns": 1791447241880331936,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/changed_statement_coverage.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/changed_statement_coverage.stdout",
+      "stdout_sha256": "sha256:7803527e9349a5a80c1e24601cfed87d890914d039f23cf2798ffd56a7e233b1",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov -q tests/python/test_primary_publication_7928.py tests/python/test_source_boundary_7852.py tests/python/test_experiment_7942_v689_sentence_labels.py",
+      "deadline_s": 300,
+      "duration_s": 58.663304849,
+      "ended_monotonic_ns": 1108208869962986,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/consumer_E2E015_019.stdout",
+      "log_sha256": "sha256:6e90e779d0a42109728eaf5d7938fad4dd3cfcfbbc7ab53589a0e775e02cd6b1",
+      "name": "consumer_E2E015_019",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1108150206658137,
+      "started_wall_ns": 1791447241995828772,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/consumer_E2E015_019.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/consumer_E2E015_019.stdout",
+      "stdout_sha256": "sha256:6e90e779d0a42109728eaf5d7938fad4dd3cfcfbbc7ab53589a0e775e02cd6b1",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/lease_backend_8277.py",
+        "scripts/experiments/experiment_8277_v715_lease_backend_qualification.py",
+        "tests/python/test_lease_backend_8277.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/verify/lease_backend_8277.py scripts/experiments/experiment_8277_v715_lease_backend_qualification.py tests/python/test_lease_backend_8277.py",
+      "deadline_s": 300,
+      "duration_s": 0.015708389,
+      "ended_monotonic_ns": 1108208886550463,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/ruff_check.stdout",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1108208870842074,
+      "started_wall_ns": 1791447300660012629,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/ruff_check.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/ruff_check.stdout",
+      "stdout_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/lease_backend_8277.py",
+        "scripts/experiments/experiment_8277_v715_lease_backend_qualification.py",
+        "tests/python/test_lease_backend_8277.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/verify/lease_backend_8277.py scripts/experiments/experiment_8277_v715_lease_backend_qualification.py tests/python/test_lease_backend_8277.py",
+      "deadline_s": 300,
+      "duration_s": 0.015552037,
+      "ended_monotonic_ns": 1108208902808633,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/ruff_format.stdout",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1108208887256596,
+      "started_wall_ns": 1791447300676427402,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/ruff_format.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/ruff_format.stdout",
+      "stdout_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/verify/lease_backend_8277.py",
+        "scripts/experiments/experiment_8277_v715_lease_backend_qualification.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy --config-file=/dev/null --strict --follow-imports=skip --ignore-missing-imports python/carnot/verify/lease_backend_8277.py scripts/experiments/experiment_8277_v715_lease_backend_qualification.py",
+      "deadline_s": 300,
+      "duration_s": 0.113774867,
+      "ended_monotonic_ns": 1108209017204223,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/strict_mypy.stdout",
+      "log_sha256": "sha256:f9b031e5c45aa702cd4fef028d465551cb20a2c4698e0913c7b00766b20ac4d8",
+      "name": "strict_mypy",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1108208903429356,
+      "started_wall_ns": 1791447300692600081,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/strict_mypy.stderr",
+      "stderr_sha256": "sha256:7e8d701e15061b0e9a0dda89e1f9efa18bd1b9f2645e8367af04cb7cb07bc4b9",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/strict_mypy.stdout",
+      "stdout_sha256": "sha256:f9b031e5c45aa702cd4fef028d465551cb20a2c4698e0913c7b00766b20ac4d8",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_lease_backend_8277.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py --files tests/python/test_lease_backend_8277.py",
+      "deadline_s": 300,
+      "duration_s": 0.031985305,
+      "ended_monotonic_ns": 1108209050507708,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/spec_coverage.stdout",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "spec_coverage",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 1108209018522403,
+      "started_wall_ns": 1791447300807693139,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/spec_coverage.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/validation/spec_coverage.stdout",
+      "stdout_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}

@@ -95971,3 +95971,22 @@ V715 task bytes through the existing authority reader and publication runner.
 When the design omits a printed digest, a derived reader copy adds the digest
 computed from its original JSON. The original authority bytes remain frozen.
 The eight adapter tests cover current components and rehashed replay failures.
+
+## REQ-REPORT-8277: Bind load-only backend qualification to primitive custody
+
+Exp8277 publishes the REQ-VERIFY-8277 native lease qualification. Preserve exact
+external failure fields, observed CUDA diagnostics, zero generation, exposed
+development scope and zero generalization scores. Failed owned checks disqualify
+readiness. Runtime receipts require fresh lease and identity checks on every
+subsequent run and never promise future capacity. Hardware boards are separate.
+
+### SCENARIO-REPORT-8277-REPLAY
+
+Authenticated private candidates replay in a fresh process; rehashed tampering
+and negative controls fail. Preserve historical primaries and publish atomically
+only after unchanged terminal validators pass.
+
+Exp8277 records the intended model_load_no_generation contract and its two-second
+floor separately from observed execution. A native initialization block before
+any model load has actual inference_substrate_class=blocked_no_run and exact
+zero load/generation counters, as required by the unchanged terminal verifier.

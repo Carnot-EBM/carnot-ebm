@@ -1,0 +1,27 @@
+{
+  "reports": [
+    {
+      "artifact": "/tmp/carnot8277-validation-sydfbskx/experiment_8277_v715_lease_backend_qualification.json",
+      "loaded": true,
+      "exp_id": 8277,
+      "title": "",
+      "honest_verdict": "complete_blocked_gguf_backend",
+      "flag_count": 2,
+      "max_severity": 2,
+      "flags": [
+        {
+          "kind": "SUBSTRATE_CLASS_MISMATCH",
+          "severity": "critical",
+          "detail": "inference_substrate_class=model_load_no_generation claims a model ran, but honest_verdict='complete_blocked_gguf_backend' is a blocked_* verdict. Declare blocked_no_run when preconditions failed."
+        },
+        {
+          "kind": "SUBSTRATE_CLASS_MISMATCH",
+          "severity": "critical",
+          "detail": "inference_substrate_class=model_load_no_generation claims a model ran, but typed invocation evidence says it did not (['generation_calls_attempted', 'generation_calls_completed', 'model_loads_attempted', 'model_loads_completed']). Contradictory."
+        }
+      ],
+      "gate_version": "38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e"
+    }
+  ],
+  "flagged_count": 1
+}

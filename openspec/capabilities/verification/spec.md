@@ -51528,3 +51528,45 @@ Implementation 2026-10-08: the current CLI reuses qualified scripted peers,
 actual embedded vocabulary, typed crash controls and durable coverage custody.
 Private custody tests retain their original assertions. Live V714 authority
 tests are outside this current scope; V715 authority has separate owned tests.
+
+## REQ-VERIFY-8277: Qualify the leased native GGUF backend without generation
+
+Use cached_current_model(), frozen Qwen3.8-27B Q4_K_M bytes, embedded tokenizer
+and template, and CARNOT_FORCE_LIVE=1. Respect inherited CUDA/NVIDIA resource
+masks. Acquire GpuLease on a permitted idle UUID with at least 20000 MiB free,
+bind that UUID in a fresh child, and derive CUDA local device flags from the
+actual binary help and device enumeration. Never assume historical ordinal 1.
+Use OwnedLlamaCppProcess, --no-warmup, a 600-second load deadline, heartbeats,
+health/metadata only, and zero completion, embedding or warm-up generation.
+Readiness requires model identity, CUDA libraries, nonzero offload, PID/start
+identity bound GPU residency, lease custody and owned cleanup. No reset,
+installation, reboot or unowned process signaling is authorized.
+
+### SCENARIO-VERIFY-8277-DEVICE
+
+One visible GPU maps to local index zero; reordered UUID masks preserve the
+selected UUID; stale ordinal or intentional empty/restricted masks block.
+An occupied lease blocks without stealing custody. CPU-only enumeration fails.
+
+### SCENARIO-VERIFY-8277-LOAD
+
+Wrong-model health, missing CUDA libraries, zero offload, mismatched residency,
+load timeout and native CUDA errors fail readiness while preserving diagnostics.
+Only the owned process group is cleaned, and the lease is released.
+
+## REQ-REPORT-8277: Publish auditable load-only qualification
+
+Authenticate imported primaries and hash-bound terminal sidecars; retain Exp8264
+preflight argv/stdout/stderr and Error101 verbatim. Distinguish observations from
+unproved causes. Persist primitive evidence, command receipts, runtime binding,
+current load counters and zero generation counters. Use model_load_no_generation
+with a two-second floor without padding. External missing operands complete
+blocked; owned failed checks disqualify. No generalization or benefit is claimed.
+
+### SCENARIO-REPORT-8277-REPLAY
+
+Fresh-process replay authenticates primitive/code/source/stream hashes and
+rebuilds all claims. Rehashed headline edits and negative controls fail. Private
+candidates pass unchanged publication, adversarial and strict row validators
+before atomic publication. Cover all new statements including CLI and child;
+keep repository-health diagnostics separate from scoped owned checks.

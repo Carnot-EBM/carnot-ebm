@@ -1,0 +1,128 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile",
+        "/tmp/carnot8277-validation-k2gzd3rc/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_lease_backend_8277.py"
+      ],
+      "deadline": 300,
+      "name": "owned_unit_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile",
+        "/tmp/carnot8277-validation-k2gzd3rc/coverage.ini"
+      ],
+      "deadline": 300,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile",
+        "/tmp/carnot8277-validation-k2gzd3rc/coverage.ini",
+        "-o",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8277_v715_lease_backend_qualification/invocations/1791447169689458066/coverage.json"
+      ],
+      "deadline": 300,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile",
+        "/tmp/carnot8277-validation-k2gzd3rc/coverage.ini",
+        "--fail-under=100",
+        "-m"
+      ],
+      "deadline": 300,
+      "name": "changed_statement_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "deadline": 300,
+      "name": "consumer_E2E015_019"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/lease_backend_8277.py",
+        "scripts/experiments/experiment_8277_v715_lease_backend_qualification.py",
+        "tests/python/test_lease_backend_8277.py"
+      ],
+      "deadline": 300,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/lease_backend_8277.py",
+        "scripts/experiments/experiment_8277_v715_lease_backend_qualification.py",
+        "tests/python/test_lease_backend_8277.py"
+      ],
+      "deadline": 300,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/verify/lease_backend_8277.py",
+        "scripts/experiments/experiment_8277_v715_lease_backend_qualification.py"
+      ],
+      "deadline": 300,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_lease_backend_8277.py"
+      ],
+      "deadline": 300,
+      "name": "spec_coverage"
+    }
+  ],
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "deadline_s": 180
+  },
+  "terminal_candidate": "/tmp/carnot8277-validation-k2gzd3rc/experiment_8277_v715_lease_backend_qualification.json"
+}
