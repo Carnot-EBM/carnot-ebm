@@ -51935,3 +51935,19 @@ Missing shards, failed children and invalid terminal checks cannot qualify
 readiness. Preserve failure evidence and recover through checked terminal
 publication. Cold replay rechecks real primitive reductions and command/log
 bindings rather than accepting rehashed claims.
+## REQ-VERIFY-8315: Unsupported local work stays on CPU
+
+Authenticate the latest preserved KV260 transcript and synthesis status.
+Quadratic Ising fabric with k_max<=5 does not execute spline construction,
+index invalidation, gradients, predictor calls, serialization, fsync or restart.
+Absent qualified costs have unavailable compatible fractions and Amdahl bounds.
+No board probe runs without a new compatible workload. No host removable
+storage is a precondition. Fixed-point emulation remains unavailable when its
+qualified operands fail; never report fabricated coefficient or action errors.
+
+### SCENARIO-VERIFY-8315-BOUNDARY
+
+Keep historical transcript hashes and hardware obligations in blocked output.
+Report zero current board executions and unavailable live acquisition spans.
+Private cost gates reject failed readiness, stale sidecars and primitive drift.
+Require fresh-process replay and unchanged publication validators.

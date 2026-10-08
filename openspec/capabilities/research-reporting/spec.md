@@ -96436,3 +96436,19 @@ raw audit. The primary SHALL carry scalar canonical digests for these repeated
 objects while retaining current outcome rows and all original decisions. Cold
 replay recomputes the original comparisons and their digests. This avoids an
 unbounded duplicate-history payload without changing any public validator.
+## REQ-REPORT-8315: Byte-bound local cost preconditions
+
+Exp8315 reads the exact declared Exp8306 fixture and Exp8310 natural primaries
+as separate dependencies. Authenticate terminal and adversarial sidecars before
+using costs. Disqualified or absent evidence yields complete_blocked with exact
+path, hash, field, operator, expected and observed gates. Never time unqualified
+updates. Preserve every intended branch and arm with unavailable cost values.
+Use no_model_load, empty MODEL_SPECS and zero current calls. Publish checked
+bytes atomically. The conductor owns ops and traceability reconciliation.
+
+### SCENARIO-REPORT-8315-BLOCKED
+
+A disqualified Exp8306 and absent Exp8310 produce a stable blocked primary.
+Private CLI, child, recovery and valid cold replay pass. Negative and rehashed
+tamper controls fail. Owned checks must cover all newly owned statements.
+Failed owned checks disqualify and zero readiness. No full repository suite runs.
