@@ -30045,3 +30045,18 @@ Implementation: `python/carnot/verify/causal_online_8025.py` uses calibrated spa
 writes and a synchronous SQLite issue/release/update ledger. Traced tests in
 `tests/python/test_causal_online_8025.py` cover delayed release, unknown slots,
 exact budgets, dense equivalence, causal mutation, checkpoints and CLI reload.
+
+## REQ-SELF-8306: Numeric recovery is distinct from natural online benefit
+
+The V717 local spline head SHALL freeze its statically learned holistic slope,
+knots and intercept during local online feedback, without global decay. Separate
+intercept-changing stress controls test global cache invalidation. Exactly-once
+feedback and immutable pending predictions SHALL survive hard worker death.
+Constructed oracle correctness earns circular_positive mechanics readiness only;
+independent generalization and generalized learning benefit remain zero.
+
+### SCENARIO-SELF-8306-CAUSAL
+
+Across48 trajectories, issue before delay8 release and reject duplicate/stale
+feedback. Two owned cohort children die after every trajectory's durable issue
+at24/48. Every resumed semantic state matches uninterrupted indexed execution.

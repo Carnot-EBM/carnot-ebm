@@ -96353,3 +96353,20 @@ validation commands and reuses bounded child supervision and atomic publication.
 The direct Exp8305 runner supports measurement, private fixtures and cold replay.
 `docs/research-notes/v717-cached-cohort.md` records exposure and missingness.
 Owned validation receipts determine readiness; no model or full suite is run.
+
+## REQ-REPORT-8306: Primitive-bound local mechanics readiness
+
+Exp8306 authenticates exact historical and current declared upstream paths and
+terminal/adversarial sidecars. Missing operands are complete_blocked with exact
+path/hash/field/operator/expected/observed gates. Constructed oracle success is
+circular_positive with both generalization scores zero. Local readiness depends
+on correctness, recovery and passing owned checks independently of speed.
+Freeze argv/private paths; publish checked terminal bytes atomically through
+unchanged validators. The conductor owns ops and traceability reconciliation.
+No full repository suite runs inside this bounded experiment.
+
+### SCENARIO-REPORT-8306-CLI
+
+Cold replay independently reduces primitive rows in a fresh process. Valid and
+blocked private primaries pass; planted stale cache, negative and rehashed
+tamper controls fail. Owned check failure disqualifies and zeros readiness.

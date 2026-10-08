@@ -3785,3 +3785,19 @@ one. The verifier remains an oracle, so the verdict cannot exceed
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-KAN-7506 and SCENARIO-KAN-7506-* | Implemented in `python/carnot/experiment_7506_v657_causal_prototype.py` with a thin script entrypoint. | Focused tests cover the smooth Brier derivative, matched controls, release-local shuffle, unavailable-label rejection, counterexample, and byte-equivalent restart. The terminal producer runs scoped validation and strict fresh readers. |
+
+## REQ-KAN-8306: Exact four-input spline isolation
+
+Exp8306 SHALL reuse the tested cubic basis with knots
+[0,0,0,0,.2,.4,.6,.8,1,1,1,1], natural [0,1] bounds and 34 ordered parameters
+[holistic slope, intercept, four groups of eight coefficients]. Static fixture
+fitting trains the slope; online local updates freeze slope, knots and intercept,
+use rate .01, one scalar norm cap1, coordinate projection [-4,4] and no decay.
+Dense and sparse logits and effective coefficients SHALL agree within1e-10.
+Intercept-changing stress events SHALL retain full cache invalidation costs.
+
+### SCENARIO-KAN-8306-NUMERIC
+
+An independent scalar basis and finite differences verify gradients at endpoints,
+interior knots and overlapping supports. Probability ties .25/.75 escalate.
+Projection and zero-step events retain exact changed-coordinate accounting.

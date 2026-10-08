@@ -51842,3 +51842,32 @@ checks the original roster and binary targets, and seals separate predictor and
 evaluator files. Replay follows pinned primary references to primitive copies;
 rehashed measurements cannot replace those operands. Structural canaries cover
 source-role collisions, target injection, changed replies and baseline drift.
+
+## REQ-VERIFY-8306: Exact cache dependencies and durable numeric transactions
+
+Register every nonzero basis dependency in a reverse index. Global slope or
+intercept changes invalidate all entries; zero changes invalidate none. Missing
+or stale metadata SHALL fall back to full invalidation. Issued probabilities
+remain immutable. Durable state includes coefficients, reverse index version,
+pending issues and applied feedback IDs; duplicate/stale feedback cannot update.
+
+### SCENARIO-VERIFY-8306-STATE
+
+Freeze48 trajectories: three seeds, four endpoint/knot/overlap patterns, four
+fault patterns and64 events. Full scan and exact index produce identical typed
+issues and states; an unsafe truncated index detects a planted stale decision.
+Owned workers die at events24/48 after durable issue and before due release.
+Resume SHALL match uninterrupted semantics exactly. Five alternating paired
+repetitions after one warmup measure issue/release/checkpoint costs within600s.
+
+### SCENARIO-VERIFY-8306-RECOVERY
+
+Private real CLI and child tests include failure, missing metadata, duplicate,
+stale, projection, global changes, exact resume and rehashed tamper rejection.
+Apply E2E-020 and E2E-015/019 privately. Cover100 percent newly owned statements.
+
+Implementation 2026-10-08: Exp8306 stores complete encoded transaction states
+through the existing atomic JSON writer. Cohort worker deaths preserve every
+trajectory at both issue boundaries. Full/indexed/truncated arms and scalar
+finite differences qualify constructed mechanics; primitive replay rejects
+rehashed state, receipt and clock changes. Timing includes real checkpoints.
