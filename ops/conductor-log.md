@@ -19821,3 +19821,9 @@ code |
 | 2026-10-08 03:29 UTC | Qualify focal GGUF-tokenized requests and causal t | OK | 92 passed, 1 warning in 111.51s (0:01:51) |
 | 2026-10-08 04:15 UTC | Measure bounded Qwen response to selected and leng | OK | 91 passed, 1 warning in 78.85s (0:01:18) |
 | 2026-10-08 04:18 UTC | Capture evidence views on one hundred twenty-eight | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8264-evidence-view-canary.view_canary_ready_score (actual=0 == expected=1) |
+| 2026-10-08 04:22 UTC | Capture calibration and selection views on sixty-f | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8264-evidence-view-canary.view_canary_ready_score (actual=0 == expected=1) |
+| 2026-10-08 04:24 UTC | Train calibrated energy decisions from evidence-de | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8265-fit-view-capture, exp8266-tune-view-capture) |
+| 2026-10-08 04:24 UTC | Capture and seal intervention decisions for every | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8267-intervention-energy-fit) |
+| 2026-10-08 04:24 UTC | Independently test source-intervention decision be | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8268-reserved-view-seal) |
+| 2026-10-08 04:24 UTC | Learn reusable soft constraints from delayed attri | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8268-reserved-view-seal) |
+| 2026-10-08 04:24 UTC | Audit later constraint benefit and sealed retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8270-continuous-constraint-admission) |
