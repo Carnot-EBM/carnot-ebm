@@ -21753,3 +21753,4 @@ Recorded 6 completed experiments in 40.0 minutes (0.7 hours), including 1 comput
 - 2026-10-08: Localize CUDA failure and bind the current qualified execution contract (⚠️ Blocked) — honest_verdict=complete_blocked_cuda_runtime; results/experiment_8290_v716_runtime_localization.json
 - 2026-10-08: Test dependency-scoped checks for continuous constraint admission (⚠️ Research Finding) — honest_verdict=complete_circular_positive_dependency_scoped_admission; results/experiment_8291_v716_dependency_scoped_admission.json
 - 2026-10-08: Validate the live ARC outcome frontier with bounded consumer receipts (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_checks; results/experiment_8300_v716_arc_outcome_frontier.json
+- 2026-10-08: Bound new evidence and learning costs against the KV260 operation set (⚠️ Blocked) — honest_verdict=complete_blocked_capture; results/experiment_8301_v716_kv260_evidence_cost_boundary.json
