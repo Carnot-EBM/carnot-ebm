@@ -21712,3 +21712,4 @@ Recorded 7 completed experiments in 50.7 minutes (0.8 hours), including 0 comput
 - 2026-10-08: Measure bounded Qwen response to selected and length-controlled deletions (⚠️ Blocked) — honest_verdict=complete_blocked_CUDA_runtime_available; results/experiment_8264_v714_evidence_view_canary.json
 - 2026-10-08: Inspect new live supervisor outcomes for cross-game arm selection (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8272_v714_arc_outcome_frontier.json
 - 2026-10-08: Bound new evidence and learning costs against the KV260 operation set (⚠️ Blocked) — honest_verdict=complete_blocked_capture; results/experiment_8273_v714_kv260_evidence_cost_boundary.json
+- 2026-10-08: Carry GateMate physical-change evidence and its exact reopening condition (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_physical_change; results/experiment_8274_v714_gatemate_physical_delta.json
