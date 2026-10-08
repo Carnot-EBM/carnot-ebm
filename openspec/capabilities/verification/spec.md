@@ -51485,3 +51485,25 @@ Test receipts before/equal/after the end-clock frontier, invalid timestamps,
 duplicates, unauthored plans, wrong boards, future dates and authenticated changed
 documents. Cold replay rebuilds the frontier and parser rows from frozen bytes
 and rejects rehashed tampering rather than trusting claimed physical progress.
+## REQ-VERIFY-8275: Validate and cold-replay current capstone evidence
+
+Freeze exact owned commands before measurement. Use private scratch, flushed
+phase/child progress, bounded deadlines, heartbeat and process-group cleanup.
+Require 100 percent new statement coverage including the real CLI, scoped Ruff,
+strict mypy, spec coverage, consumers and private E2E-018/021. Keep the one bounded
+full Python health diagnostic separate with actual argv/exits/clocks/stream
+hashes. Failed owned checks disqualify and zero readiness. Authenticate unchanged
+PolarFire primary, terminal/adversarial sidecars and real device parity before
+graduation; otherwise retain its exact failed obligation. Atomic publication
+requires fresh primitive replay, negative/rehashed controls and unchanged
+primary/adversarial/strict-row checks. Never rerun hardware in this capstone.
+
+### SCENARIO-VERIFY-8275-CLI
+
+Private real CLI runs SHALL publish and replay, reject date/identity drift,
+changed source/config/stream bytes and rehashed primitive/summary tampering.
+Owned failures SHALL disqualify; external blocks SHALL remain terminal blocked.
+
+Implementation: the Exp8275 runner reuses bounded child supervision and unchanged
+atomic primary/terminal auditors. The nine focused tests qualify every added
+statement, including actual CLI children, source failures and rehashed controls.

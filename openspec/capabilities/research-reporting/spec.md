@@ -95892,3 +95892,28 @@ Private changed, unchanged and missing-input runs preserve unavailable evidence,
 exact identity, one excluded unit and zero device success. Fresh-process replay
 rejects altered identity, summary or rehashed primitives. Failed validation leaves
 historical primary bytes intact and preserves honest failure artifacts.
+## REQ-REPORT-8275: Reconcile fourteen V714 dispositions without invented science
+
+Exp8275 SHALL enumerate Exp8262 through Exp8275 exactly, resolve declared paths
+before conductor pre-gate aliases, and retain actual paths, hashes and source
+rows. Missing primaries SHALL have no producer verdict. Archive lag, historical
+V713 outcomes and current full-task/table/digest/activation agreement SHALL be
+separate. Current model calls SHALL be zero. H1/H2 SHALL retain registered
+denominators, shared fallback, comparator and alpha=.025 each; absent audit
+primitives SHALL remain blocked_unmeasured. Execution readiness SHALL not imply
+scientific benefit. Independent ARC/KV260/GateMate obligations and byte-bound
+Exp8259 CPU-only PolarFire graduation SHALL remain distinct. Conductor owns ops,
+status and traceability reconciliation.
+
+### SCENARIO-REPORT-8275-OUTCOMES
+
+Private fixtures SHALL distinguish terminal producers, bound pre-gates, absent
+primaries and failed sidecars. Acquisition totals SHALL count imported canary
+calls once and leave missing current spans unavailable. Scientific retirement
+requires support, actual typed-action control and permissible oracle headroom;
+external absence never retires a hypothesis.
+
+Implementation: `v714_capstone_evidence.py` preserves fourteen dispositions,
+authenticated historical CPU graduation and frozen science denominators.
+`v714_capstone.py` and the thin Exp8275 CLI publish checked terminal bytes;
+`test_v714_capstone_8275.py` covers private source and accounting controls.
