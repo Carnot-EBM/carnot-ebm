@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.714",
+  "generated_at": "2026-10-08T05:58:40Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 49.2,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify focal GGUF-tokenized requests and causal typed-decision controls",
+      "duration_minutes": 13.12,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Inspect new live supervisor outcomes for cross-game arm selection",
+      "duration_minutes": 8.53,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and decide whether evidence or learning improved",
+      "duration_minutes": 6.84,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Carry GateMate physical-change evidence and its exact reopening condition",
+      "duration_minutes": 6.61,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bound new evidence and learning costs against the KV260 operation set",
+      "duration_minutes": 5.73,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.714 completed 7 experiments (2 compute-bound, 5 synthesis-only) across 49.2 total wall-time minutes (averaging 7 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was led by compute-bound task 'Qualify focal GGUF-tokenized requests and causal typed-decision controls' (13.12 minutes), followed by synthesis tasks for cross-game arm selection inspection (8.53 minutes) and fourteen-outcome reconciliation (6.84 minutes). With gpu_idle_on_compute_bound_tasks recorded as false, the snapshot of 0% GPU utilization on NVIDIA GeForce RTX 3090 reflects post-run idle state rather than an active compute stall, and single-model GGUF workloads correctly operated without DualGPURunner multi-model dispatch.",
+  "bottlenecks_identified": [
+    "The single slowest task was compute-bound 'Qualify focal GGUF-tokenized requests and causal typed-decision controls', consuming 13.12 minutes (over 26% of total milestone wall time) without granular sub-phase telemetry separating tokenization, model loading, and causal control validation.",
+    "Synthesis-only tasks accounted for 5 of 7 completed experiments and 4 of the top 5 slowest tasks (totaling 27.71 minutes among the top 5 alone), executing serially across recurring supervisor outcome inspections and fourteen-outcome reconciliations without receipt caching or change detection.",
+    "Milestone timing analysis relied on disk-mtime reconstruction fallbacks due to missing active in-flight sub-phase timers across synthesis and compute-bound tasks."
+  ],
+  "improvements_suggested": [
+    "Instrument long-running GGUF tokenization and causal typed-decision control tasks with granular sub-phase timers isolating model loading, tokenization latency, and decision control qualification.",
+    "Implement memoization and receipt caching for cross-game supervisor outcome inspections and fourteen-outcome reconciliations to avoid re-evaluating static upstream evidence.",
+    "Persist synchronous start and end execution timestamps directly into experiment result receipts to eliminate reliance on disk-mtime reconstruction fallbacks.",
+    "Capture continuous in-flight accelerator utilization and memory metrics during compute-bound execution to corroborate point-in-time GPU monitor reports."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add granular sub-phase timing breakdown to GGUF tokenized request qualification to isolate the primary driver of its 13.12-minute runtime.",
+    "Deploy incremental receipt caching for supervisor outcome inspections and fourteen-outcome reconciliations when upstream evidence remains unchanged.",
+    "Persist explicit start and end timestamps in experiment output receipts to replace disk-mtime timing reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.714 saw execution wall time driven primarily by a single 13.12-minute compute-bound GGUF qualification task and four recurring synthesis tasks totaling 27.71 minutes across 49.2 total wall-time minutes. Accelerator resources were utilized appropriately during compute-bound runs with gpu_idle_on_compute_bound_tasks recorded as false, and single-model workloads correctly avoided unnecessary DualGPURunner multi-model dispatch. Future execution efficiency will benefit from sub-phase instrumentation in GGUF tokenization harnesses and incremental receipt caching for static synthesis reconciliations."
+}
