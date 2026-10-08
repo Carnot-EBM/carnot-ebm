@@ -51759,3 +51759,24 @@ primitive reference. Its reducer checks nonnegative disjoint CPU spans, reports
 counter/check timer limits and per-condition compatible fractions, and uses the
 qualified Q8.8/Q16.16 reader. The new focused tests preserve overlap, overflow,
 fallback and unavailable-clock assertions without changing earlier tests.
+## REQ-VERIFY-8302: Post-Exp8288 physical changes only
+
+Exp8302 SHALL inspect only unseen dated operator cable, port, power or board
+changes after Exp8288's recorded evidence frontier. Calendar age, milestones,
+document edits and repeated receipts confer no physical progress. Unchanged
+evidence yields complete_blocked_gatemate_physical_change once. Changed evidence
+freezes a future probe contract independently of successful bring-up.
+
+### SCENARIO-VERIFY-8302-FRONTIER
+
+Missing, invalid, repeated, pre-frontier and future-dated receipts fail closed.
+Reopening requires a documented setup change, authenticated GM1Ax IDCODE
+0x20000001, then a flashed n16 tile with device sample/hash smoke evidence.
+A host bitstream grants no board execution. No JTAG retry is run. Evidence
+readiness is separate from execution and scientific benefit; both generalization
+scores remain zero. Cold replay rebuilds parser rows and the frontier.
+
+Implementation 2026-10-08: `gatemate_physical_delta_8302.py` pins Exp8288 bytes
+and adapts the qualified physical-change ledger. Private tests retain negative
+receipt dates and rehashed tamper checks. The exact future detection/flash/smoke
+obligation is recorded in `docs/research-notes/v716-gatemate-physical-delta.md`.

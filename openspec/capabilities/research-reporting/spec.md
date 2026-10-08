@@ -96237,3 +96237,25 @@ existing bounded publication runner. The thin Exp8301 CLI and
 `test_kv260_evidence_cost_boundary_8301.py` cover separate CPU/live readiness,
 private terminal publication, external blocks, owned failures and cold tamper
 rejection. `docs/research-notes/v716-kv260-evidence-cost.md` records hardware scope.
+## REQ-REPORT-8302: GateMate physical evidence continuity
+
+Exp8302 SHALL authenticate the exact Exp8288 primary and qualified terminal
+sidecar, freeze validation commands before reduction, and retain original
+transcript bytes/hash. Declare no_model_load, MODEL_SPECS=[], zero current LLM
+calls and device executions. Missing external operands yield complete_blocked_*
+and exact path/hash/field gates. Owned failures disqualify readiness. Publish
+only after private candidate validation and unchanged atomic terminal checks.
+The conductor owns ops/status/changelog/traceability reconciliation.
+
+### SCENARIO-REPORT-8302-CLI
+
+The direct unbuffered CLI SHALL cold-replay primitive evidence in a fresh process,
+reject negative and rehashed tampering, and preserve historical primary bytes.
+Private E2E-015/019, consumer tests, scoped Ruff, strict mypy, spec coverage and
+100 percent new statement coverage include real CLI children. Record actual
+argv, exits, clocks and stream hashes; bounded repository health is separate.
+
+Implementation 2026-10-08: `gatemate_delta_execution_8302.py` reuses the qualified
+publication supervisor through scoped adapters. The thin Exp8302 CLI and
+`test_gatemate_physical_delta_8302.py` exercise terminal private publication,
+external blocking, owned failures and fresh-process replay/tamper rejection.
