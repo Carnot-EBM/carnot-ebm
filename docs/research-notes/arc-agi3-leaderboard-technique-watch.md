@@ -470,3 +470,11 @@ No attributable public ARC implementation or technique writeup was found. **Clas
 
   **POSSIBLE CARNOT LEVER:** Trigger verifier-confirmed probes of newly appearing objects before transferring a previous level’s model or plan, catching changed mechanics before wasting actions.
 
+## 2026-10-08 13:37 UTC -- NEW
+
+- **Newly identified top-five team: dreach.ai — #5, 39.11**, confirmed on October 8. No attributable public ARC implementation or technique writeup was found. **Classification: unknown**—game-source exploitation versus general-purpose methods remains unresolved. [Live leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard).
+
+- **face-of-agi, now artificialagencylab.com — newly discovered compression variant.** Its published runtime combines **37.5% layer-aware expert pruning**, ranked by observed routing-weight mass, with **three-bit expert weights and FP8 scales per 16 weights**, packed through Humming’s W3A16 backend. **Classification: (b), general-purpose model compression**; these mechanisms contain no game-source reading or per-game rules. The manifest explicitly says **“prepared-not-launched”** with no smoke test; current-submission use and score benefit remain unverified. [Runtime, version 4](https://www.kaggle.com/datasets/richardcsaky/arc-arena-hero-v2-blocks2-p37-int3-runtime/versions/4), [expert checkpoint](https://www.kaggle.com/datasets/richardcsaky/arc-expert-int3-g16-v1).
+
+  **POSSIBLE CARNOT LEVER:** Benchmark three-bit expert packing combined with layer-aware pruning to free GPU memory for more generator candidates or longer contexts.
+
