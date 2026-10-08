@@ -19820,3 +19820,4 @@ code |
 | 2026-10-08 02:40 UTC | Bind the current contract and retain coverage evid | OK | 113 passed, 1 warning in 88.52s (0:01:28) |
 | 2026-10-08 03:29 UTC | Qualify focal GGUF-tokenized requests and causal t | OK | 92 passed, 1 warning in 111.51s (0:01:51) |
 | 2026-10-08 04:15 UTC | Measure bounded Qwen response to selected and leng | OK | 91 passed, 1 warning in 78.85s (0:01:18) |
+| 2026-10-08 04:18 UTC | Capture evidence views on one hundred twenty-eight | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8264-evidence-view-canary.view_canary_ready_score (actual=0 == expected=1) |
