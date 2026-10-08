@@ -51346,3 +51346,49 @@ command receipt and owned source bytes before cleanup. `v714_coverage_runner.py`
 executes the normal branch and fresh-process controls before unchanged terminal
 publication checks. `test_coverage_custody_8262.py` covers measured positive,
 missing, stale, foreign, partial, excluded, failed and rehashed tamper cases.
+
+## REQ-VERIFY-8263: Qualify focal transport and causal typed controls
+
+Reuse qualified original/view offset mapping and the fsynced issue/release
+journal. Exact Qwen3.8 GGUF vocabulary counts SHALL select distinct nearest
+length controls and admit intact prompts, never byte or word proxies. Each view
+SHALL request exactly the original focal index, with temperature zero, seed
+7138250 and at most64 output tokens. Structural validity supplies no semantic
+truth. Capture SHALL bind roles, full requests, one server lifetime, durable
+issues, all intended slots and atomic checkpoints each eight sources.
+Beta(1,1) counters use n/(n+16), eight public evidence groups and eight distinct
+released sources before admission. Random groups use SHA256 over canonical
+JSON [original_source_sha256, seed], UTF-8, integer big-endian modulo8, seeds
+101/102/103. Typed costs are accept5y, reject1-y, escalate.5; ties escalate and
+accept is restricted to baseline acceptance. Issue precedes release at t-8;
+missing features update only global counts; retention never updates.
+
+### SCENARIO-VERIFY-8263-REQUEST
+
+Unicode token/byte rank disagreement, original focal indices beyond eight,
+multiple answer sentences, ties, duplicates, negation, redundant evidence,
+bad addresses, absent second sentence, empty source and insufficient budgets
+SHALL preserve original answer bytes and original/view citation maps. Label
+swaps cannot alter requests, selectors or group keys.
+
+### SCENARIO-VERIFY-8263-CAUSAL
+
+Private96+32 natural-shape and384+32 learnable rosters are frozen before
+execution. Missingness and zero admission are valid natural outcomes. The same
+typed runtime tests later cost gain>.02, five improvements, no extra false
+accepts and retention cost/Brier worsening<=.02/.01. Identical-budget random
+and no-signal controls remain separate. Hard exits40/72 preserve pending
+feedback and resume exactly. Private gains are circular_positive mechanics.
+
+### SCENARIO-VERIFY-8263-CAPTURE
+
+Scripted peers exercise real request/parse paths, partial/duplicate replies,
+timeouts, dropped children and role drift. Exact resume identity and phase
+clocks SHALL survive private checkpoints without replacement units.
+
+Implementation: `focal_protocol_8263.py` adapts the qualified UTF-8 mapper and
+parser to single original focal records. `focal_capture_8263.py` qualifies
+role/request-bound capture through scripted subprocess peers.
+`typed_admission_8263.py` uses the qualified fsynced journal with typed costs,
+source-hash controls and compact atomic checkpoints whose full state is rebuilt
+from the journal. Tests cover genuine exits40/72 and private control rosters.

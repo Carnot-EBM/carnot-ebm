@@ -1,0 +1,267 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/env",
+        "COVERAGE_RCFILE=/tmp/carnot-8111-cz__hl3q/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8111-cz__hl3q/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "tests/python/test_protocol_conformance_8263.py"
+      ],
+      "classification": "required",
+      "deadline_s": 480,
+      "expected_exit": 0,
+      "name": "owned_unit_and_private_CLI"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_protocol_conformance_8263.py",
+        "-k",
+        "focal or capture"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "view_component"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_protocol_conformance_8263.py",
+        "-k",
+        "typed or hard_exit"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "admission_component"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "tests/python/test_hard_exit_learning_qualification_8206.py"
+      ],
+      "classification": "required",
+      "deadline_s": 900,
+      "expected_exit": 0,
+      "name": "consumer_E2E019_020"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8111-cz__hl3q/coverage.ini"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot-8111-cz__hl3q/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8111-cz__hl3q/coverage.ini",
+        "-o",
+        "/tmp/carnot-8111-cz__hl3q/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/protocol_conformance_8263.py",
+        "python/carnot/verify/focal_protocol_8263.py",
+        "python/carnot/verify/typed_admission_8263.py",
+        "python/carnot/verify/focal_capture_8263.py",
+        "scripts/experiments/experiment_8263_v714_protocol_conformance.py",
+        "tests/python/test_protocol_conformance_8263.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/protocol_conformance_8263.py",
+        "python/carnot/verify/focal_protocol_8263.py",
+        "python/carnot/verify/typed_admission_8263.py",
+        "python/carnot/verify/focal_capture_8263.py",
+        "scripts/experiments/experiment_8263_v714_protocol_conformance.py",
+        "tests/python/test_protocol_conformance_8263.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/verify/protocol_conformance_8263.py",
+        "python/carnot/verify/focal_protocol_8263.py",
+        "python/carnot/verify/typed_admission_8263.py",
+        "python/carnot/verify/focal_capture_8263.py",
+        "scripts/experiments/experiment_8263_v714_protocol_conformance.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_protocol_conformance_8263.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "spec_coverage"
+    }
+  ],
+  "execution_contract": {
+    "capture": {
+      "checkpoint_sources": 8,
+      "durable_issue_before_dispatch": true,
+      "server_lifetimes": 1
+    },
+    "generation": {
+      "max_tokens": 64,
+      "prompt_format": "raw_completion",
+      "seed": 7138250,
+      "temperature": 0
+    },
+    "random_group_encoding": "SHA256(UTF8(JSON([original_source_sha256, seed], ensure_ascii=False, separators=(',',':')))); unsigned big-endian integer modulo 8; seeds 101/102/103",
+    "science_protocol_sha256": "sha256:f4c06e17a9f8eb72f1be80b265ab7e3507cbc5f6f3b918df6421fe49dae02018",
+    "typed_feedback": {
+      "delay": 8,
+      "minimum_distinct_sources": 8,
+      "mixture": "n/(n+16)",
+      "prior": "Beta(1,1)"
+    }
+  },
+  "measurement": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8263_v714_protocol_conformance.py",
+      "--root",
+      "/home/ianblenke/github.com/ianblenke/carnot",
+      "--worker-output",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8263_v714_protocol_conformance/invocations/1791429056452345520/measurement.json"
+    ],
+    "classification": "required",
+    "deadline_s": 180,
+    "expected_exit": 0,
+    "name": "measurement"
+  },
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "classification": "diagnostic",
+    "deadline_s": 120,
+    "expected_exit": 0,
+    "name": "repository_full_suite"
+  },
+  "terminal_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8263_v714_protocol_conformance.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8263_v714_protocol_conformance/terminal_candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8263_v714_protocol_conformance/terminal_candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "adversarial_verify"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8263_v714_protocol_conformance/terminal_candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_row_lint"
+    }
+  ]
+}

@@ -95765,3 +95765,29 @@ Implementation: `v714_coverage_custody.py` binds the fourteen current tasks to
 independent authority snapshots and the unchanged science protocol. The V714
 execution JSON and `v714-coverage-custody.md` document producer paths, current
 gates and all historical dispositions. Ops and traceability remain conductor-owned.
+
+## REQ-REPORT-8263: Publish independently gated protocol readiness
+
+Exp8263 SHALL bind actual invocation, frozen science, tokenizer metadata,
+request schemas, private primitives and durable Exp8262 coverage custody.
+View readiness and causal admission readiness use separate validation receipts;
+a failed owned check disqualifies its claim and zeroes affected readiness.
+Missing external operands yield complete_blocked_<operand> with exact gates.
+Current LLM calls and MODEL_SPECS remain zero; no_model_load vocabulary access
+loads no neural weights. Both generalization scores remain zero. Freeze actual
+validation argv before measurement, run private E2E019/020 and100 percent newly
+owned statement coverage including CLI/children. Cold replay rejects rehashed
+primitive/aggregate tampering. Unchanged primary publication, adversarial and
+strict row checks precede atomic publication. Ops/traceability are conductor-owned.
+
+### SCENARIO-REPORT-8263-CLI
+
+Actual private CLI, date rejection, normal worker exit, external blocking,
+separate component failures, durable coverage, valid fresh replay and negative
+rehashed tamper cases SHALL be tested without historical primary changes.
+
+Implementation: `protocol_conformance_8263.py` freezes component validation and
+uses Exp8262 durable coverage custody through the unchanged supervisor and
+publisher. The thin Exp8263 CLI supports private publication and cold replay;
+`test_protocol_conformance_8263.py` binds current requests, causal controls,
+external blocking, subprocess failures and rehashed tamper cases.
