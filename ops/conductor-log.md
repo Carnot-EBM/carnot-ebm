@@ -19843,3 +19843,4 @@ code |
 | 2026-10-08 08:24 UTC | Independently test source-intervention decision be | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8282-reserved-view-seal) |
 | 2026-10-08 08:24 UTC | Learn reusable soft constraints from delayed attri | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8282-reserved-view-seal) |
 | 2026-10-08 08:24 UTC | Audit later constraint benefit and sealed retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8284-continuous-constraint-admission) |
+| 2026-10-08 08:55 UTC | Inspect new live supervisor outcomes for cross-gam | OK | 94 passed, 1 warning in 55.63s |
