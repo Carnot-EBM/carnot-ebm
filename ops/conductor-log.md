@@ -19877,3 +19877,4 @@ code |
 | 2026-10-08 20:05 UTC | Run a bounded Qwen evidence canary after a qualifi | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8307-runtime-change-boundary.runtime_changed_score (actual=0 == expected=1) |
 | 2026-10-08 21:12 UTC | Close the ARC reader coverage gap and inspect new  | OK | 98 passed, 1 warning in 66.80s (0:01:06) |
 | 2026-10-08 21:27 UTC | Measure complete local-update costs and map the KV | OK | 86 passed, 1 warning in 13.41s |
+| 2026-10-08 21:45 UTC | Preserve GateMate reopening evidence without repea | OK | 94 passed, 1 warning in 49.54s |
