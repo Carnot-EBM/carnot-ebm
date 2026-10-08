@@ -19751,3 +19751,4 @@ code |
 | 2026-10-07 23:04 UTC | Inspect new live supervisor outcomes for cross-gam | OK | 91 passed, 1 warning in 52.81s |
 | 2026-10-07 23:26 UTC | Bound new evidence and learning costs against the  | OK | 88 passed, 1 warning in 28.11s |
 | 2026-10-07 23:50 UTC | Cover the known PolarFire schema path and dispatch | OK | 87 passed, 1 warning in 41.77s |
+| 2026-10-08 00:15 UTC | Carry GateMate physical-change evidence and its ex | OK | 91 passed, 1 warning in 49.85s |
