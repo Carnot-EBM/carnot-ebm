@@ -1,6 +1,6 @@
 # Autoresearch conductor round
 
-- started: 2026-10-07T21:30:25.685670+00:00
+- started: 2026-10-08T01:23:19.197623+00:00
 - model: gpt-6-astra
 - max_iterations: 5
 
@@ -9,8 +9,8 @@
 - rejected: 5
 - pending_review: 0
 - circuit_breaker_tripped: False
-- breaker_invocation_start_position: 612
-- breaker_historical_tail_at_start: 2
+- breaker_invocation_start_position: 617
+- breaker_historical_tail_at_start: 7
 - breaker_invocation_local_tail_at_start: 0
 - breaker_invocation_local_tail_at_end: 5
 - generator_exhausted: False
@@ -18,12 +18,9 @@
 
 
 ## Generator failure reasons
-- Implementation: Sandbox failed: TypeError: Argument '<carnot.models.gibbs.GibbsModel object at 0x7fc2140787a0>' of type <class 'carnot.models.gibbs.GibbsModel'> is not a valid JAX type.
+- ---: Energy regression on: verifier_auroc
 - Optimization Procedure: Energy regression on: verifier_auroc
+- Hypothesis**: Prior iterations targeted `verifier_auroc` with direct probe weight searches that suffered from severe energy regressions due to held-out distribution shift and small-sample overfitting. We hypothesize that training the fixed-architecture `GibbsModel` (`input_dim=2, hidden_dims=[4]`) on `calibrated_decision` using Noise Contrastive Estimation (`nce_loss`) with Adam optimization will achieve substantial gains over the untrained baseline (baseline energy `0.293428` at `steps=0`). By treating correct PCIB signals (`[entity_uptake, falsifiability_score]`) as low-energy targets and incorrect signals as high-energy contrastive noise, real gradient updates with moderate step sizes regularize the energy landscape, directly optimizing both discrimination and calibration without degenerating or overfitting.: Sandbox failed: TypeError: Argument '<carnot.models.gibbs.GibbsModel object at 0x7fa93f17a840>' of type <class 'carnot.models.gibbs.GibbsModel'> is not a valid JAX type.
 - Implementation: Energy regression on: verifier_auroc
-- We resolve this with a three-stage procedure:
-1. **Dynamic Polarity Identification**: Evaluate the baseline probe $(0.5, 0.5)$ to determine whether `"incorrect"` or `"correct"` yields AUROC $> 0.5$, locking in the exact positive class expected by the harness.
-2. **PCIB Signal Extraction**: Test probe linearity and extract the constituent premise/claim signals, enabling rapid scoring across the candidate weight space.
-3. **Stratified K-Fold Cross-Validation Grid Search**: Search convex weight combinations $(w_{\text{entity}}, w_{\text{falsifiability}}) = (\alpha, 1 - \alpha)$ for $\alpha \in [0.05, 0.95]$ evaluated by out-of-fold validation AUROC with a gentle shrinkage penalty towards $(0.5, 0.5)$. This prevents degenerate states, guards against boundary overfitting, and selects weights with validated generalization.: Energy regression on: verifier_auroc
-- ---: Sandbox failed: TypeError: attribute name must be string, not 'NoneType'
+- ---: Energy regression on: verifier_auroc
 No hypothesis both won this round and committed cleanly.

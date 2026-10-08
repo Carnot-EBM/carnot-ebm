@@ -51205,3 +51205,79 @@ The following are research leads, not measured Carnot improvements.
 
 All adaptations need matched controls and independent labels. Reusing Carnot's
 exposed development sources does not establish independent generalization.
+
+## V714 planning refresh — 2026-10-07
+
+This source review precedes the V714 experiment design. It revisits the required
+2025–2026 research areas and distinguishes a new methodological lead from already
+known ideas. Literature results are external claims, not Carnot measurements.
+
+### New lead and immediate experimental implications
+
+- **Constrained Decoding Eliminates Structural Failures in Small LLMs but Reveals
+  a Scale-Dependent Semantic Gap**, Akash Chavan, 2026-09-20.
+  [arXiv](https://arxiv.org/abs/2609.23742),
+  [Hugging Face](https://huggingface.co/papers/2609.23742),
+  [author implementation](https://github.com/CruiseDevice/small-llm-structured-benchmark).
+  The study separates output structure from semantic task performance across small
+  models. Adapt that separation: independently qualify a focal-only constrained
+  response interface, then measure decision utility on independently released
+  labels. Its small-model findings do not establish any effect for Qwen3.8-27B.
+- **Evidence-Aligned Entity Verification**, 2026-09-08.
+  [Paper](https://arxiv.org/abs/2609.08267),
+  [full text](https://arxiv.org/html/2609.08267v1).
+  Counterfactual evidence stability remains a plausible feature family. Resume the
+  unmeasured, frozen matched-deletion protocol only after the actual tokenizer and
+  focal-output interface conform. This is a narrower adaptation, not a reproduction
+  of the paper, and deletion sensitivity is never a truth label.
+- **SEVA: Self-Evolving Verification Agent with Process Reward for Fact
+  Attribution**, 2026-06-29, [paper](https://arxiv.org/abs/2606.29713), and
+  **Adaptive Conformal Inference Under Delayed Feedback**, 2026-09-07,
+  [paper](https://arxiv.org/abs/2609.07251).
+  Keep issuance, delayed outcomes, and persistent updates causally separate.
+  Qualify the same cost-sensitive accept/reject/escalate decoder used by the real
+  learner; a binary accuracy fixture cannot establish decision benefit. The
+  proposed Beta-count learner inherits no conformal coverage guarantee and does
+  not train the language model.
+
+### Primary-source scan across all requested areas
+
+| Area | Verified primary source | Decision for the next milestone |
+|---|---|---|
+| Energy-based verification/reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092) | Small typed verification heads remain in scope; do not reopen energy-as-generator work. |
+| Autoregressive/energy equivalence | [ARM-EBM, 2512.15605, revised 2026-05-25](https://arxiv.org/abs/2512.15605) | Match information and parameter budgets with probability controls; energy form alone is not evidence of truth. |
+| Neural constraint satisfaction | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461), [probabilistic algebraic layer, 2503.19466](https://arxiv.org/abs/2503.19466) | Exact encoded constraints do not establish faithful extraction from text. Defer a new projection subsystem. |
+| Ising methods in ML | [Neural Ising Machines, 2602.00302](https://arxiv.org/abs/2602.00302) | Shared learned update rules are interesting; no new sampler without a compatible, useful local workload. |
+| Hallucination detection/mitigation | Evidence-Aligned Entity Verification and SEVA above | Test complete-source interventions with length-matched controls and independent labels. |
+| Energy-guided decoding | [ETS, 2601.21484, revised 2026-05-19](https://arxiv.org/abs/2601.21484), [DISC, 2504.09135](https://arxiv.org/abs/2504.09135) | Defer energy steering until verifier utility qualifies; constrained syntax is a separate endpoint. |
+| Other constrained generation | [Thinking Before Constraining, 2601.07525](https://arxiv.org/abs/2601.07525), [diffusion automata constraints, 2607.07026](https://arxiv.org/abs/2607.07026) | Changing reasoning budgets would change this frozen test; diffusion is not the mandated autoregressive GGUF substrate. |
+| KAN and online learning | [Spline-local online KAN, 2602.02056, revised 2026-06-19](https://arxiv.org/abs/2602.02056), [KAN forgetting, 2511.12828](https://arxiv.org/abs/2511.12828), [KAC, 2503.21076](https://arxiv.org/abs/2503.21076) | Count bounded state updates and test untouched retention; locality does not guarantee resistance to forgetting. |
+| Hardware-accelerated sampling | [FPGA–ASIC co-design, 2602.15985, revised 2026-09-04](https://arxiv.org/abs/2602.15985) | Include host, transfers, tokenization, and incompatible operations in complete-request bounds. No core-only speed claim. |
+
+### Secondary-source checks and access limits
+
+- **OpenReview:** searched EBM submissions; the indexed
+  [EBT conference PDF](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  labels itself ICLR 2026. Further indexed
+  [contextual-forgetting](https://openreview.net/pdf?id=GUNUfIO7hs) and
+  [cross-regressive energy](https://openreview.net/pdf?id=re2e15nmzt) PDFs reached
+  browser challenges. Do not infer acceptance or adopt an uninspected method.
+- **Extropic:** checked the [writing index](https://extropic.ai/writing) and
+  [Z1T page](https://extropic.ai/writing/z1t/). The index is sparse and the product
+  account is not an executable local Carnot benchmark or evidence of TSU access.
+- **Semantic Scholar:** attempted citation Graph API queries for both EBT and
+  ARM-EBM, plus indexed searches. The queries failed to provide an accessible
+  verified inventory. Citation discovery is incomplete, not evidence of no cites.
+- **Hugging Face:** checked the verification feed and the structured-generation
+  paper linked above; use the linked arXiv paper for methodological claims.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) Trending pages. Returned
+  snapshots were three weeks stale; no current ranking is claimed. Inspected the
+  structured-generation author repository separately; no dependency is proposed.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  The product page describes a constraint-energy layer but supplies no verified
+  local training/evaluation recipe. Retain as architectural context.
+
+The new actionable lead concerns structural-versus-semantic qualification. The
+remaining citations strengthen controls for an unmeasured existing hypothesis;
+they do not justify retuning it after observing evaluation labels.
