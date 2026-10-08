@@ -95688,3 +95688,32 @@ The conductor owns status, changelog and traceability reconciliation.
 Private real CLI publication and cold replay accept qualified and blocked inputs.
 Invalid date, missing fixture and rehashed summary or primitive tampering fail.
 Current identity, empty MODEL_SPECS and zero calls survive publication and replay.
+
+## REQ-REPORT-8260: Carry GateMate physical evidence beyond Exp8246
+
+Exp8260 SHALL authenticate the pinned Exp8246 primary and its terminal sidecar,
+retain its original transcript bytes/hash and one excluded board obligation,
+and publish a terminal physical-delta artifact through unchanged primary checks.
+Use aggregation_from_upstream_artifacts, no_model_load, MODEL_SPECS=[], no trained
+heads, zero current LLM/device/JTAG calls and zero generalization benefit.
+A documented physical change permits only a frozen future probe contract; successful
+GM1Ax detection and n16 flash/sample/hash smoke remain separate unexecuted gates.
+Freeze validation commands before measurement. Run private E2E-015/019, consumers,
+strict mypy, scoped Ruff/spec checks and 100 percent added statement coverage,
+including real CLI children. Run full Python health once, bounded and separately.
+Failed owned checks disqualify; missing external operands block by name. Preserve
+actual argv, exits, clocks and stream hashes; publish atomically after normal exit.
+The conductor owns ops/status.md, ops/changelog.md and traceability reconciliation.
+
+## SCENARIO-REPORT-8260-CLI
+
+Private changed, unchanged and missing-input CLI fixtures SHALL preserve one row
+and unavailable evidence. Cold replay SHALL reject rehashed primitive/summary
+changes and wrong identities. Failed checks SHALL zero readiness and preserve
+historical primary bytes. Fixtures SHALL remain outside repository results.
+
+Implementation: `gatemate_delta_execution_8260.py` binds the qualified supervisor
+and publication checks to the Exp8260 identity. The direct unbuffered runner and
+`test_gatemate_physical_delta_8260.py` cover private publication, missing inputs,
+identity drift, rehashed primitives, owned failures and real CLI child statements.
+All 10 focused tests passed; the private qualification measured 161/161 statements.

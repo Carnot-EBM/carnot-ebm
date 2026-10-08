@@ -51269,3 +51269,28 @@ does not validate a workload. No FPGA acceleration, speedup or learning claim.
 A hash-bound unsupported state raises state_version after passing every earlier
 check. Preserve its explicit schema row and unavailable state. Reject rehashed
 transport drift in a fresh process and retain all missing query dispositions.
+
+## REQ-VERIFY-8260: Physical change requires new operator evidence
+
+Use the qualified Exp8246 dry-run parser and document ledger. Advance the frontier
+to its actual end clock, retaining all previously seen receipt hashes. Inspect only
+changed established operator documents. Require a dated operator cable, port,
+power, board or DirtyJTAG change after that frontier and within the invocation.
+Elapsed time, milestones and rewritten plans SHALL never qualify. Preserve the
+historical 0xffffffff transcript/hash. No receipt yields exactly one
+complete_blocked_gatemate_physical_change result. Require documented setup change,
+authenticated GM1Ax IDCODE 0x20000001, then flashed n16 tile with sample/hash smoke
+before any board success claim. Host bitstreams SHALL not establish execution.
+
+## SCENARIO-VERIFY-8260-FRONTIER
+
+Private receipts before/equal/after the Exp8246 frontier, missing timestamps,
+repeated receipts, future dates, wrong boards and unauthored plans SHALL exercise
+the same qualified parser. Fresh-process replay SHALL reconstruct the boundary
+and document roster from frozen bytes, rejecting rehashed tampering.
+
+Implementation: `gatemate_physical_delta_8260.py` authenticates the pinned Exp8246
+primary and merges its seen receipts with the new end-clock frontier. The tests
+exercise post-frontier selection, missing or invalid stamps, repeated receipts,
+wrong board identity and rehashed evidence. The exact reopening sequence is
+`docs/research-notes/v713-gatemate-physical-delta.md`; this task executes no probe.
