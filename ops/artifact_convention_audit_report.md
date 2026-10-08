@@ -9,22 +9,22 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 3 |
-| CANNOT_DETERMINE | 5 |
+| CHECKABLE | 2 |
+| CANNOT_DETERMINE | 6 |
 
-## experiment_8248_v713_evidence_intervention_methods.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8249_v713_evidence_view_kernel.json
+## experiment_8263_v714_protocol_conformance.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8250_evidence_view_canary.json
+## experiment_8264_v714_evidence_view_canary.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8265_fit_view_capture.json
 
 **CHECKABLE**
 
@@ -32,7 +32,7 @@ reviewer call failed
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked prior to execution because the upstream gate check on exp8249-evidence-view-kernel.view_kernel_ready_score failed (observed 0, expected 1).
+The task was blocked at conductor pre-gate because two upstream canary gate checks in `exp8264-evidence-view-canary` failed (`view_canary_ready_score` and `fit_capture_budget_ready_score` were 0 instead of expected 1).
 
 ## WHAT IS MISSING
 nothing
@@ -40,13 +40,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8257_v713_arc_outcome_frontier.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8258_v713_kv260_evidence_cost_boundary.json
+## experiment_8266_tune_view_capture.json
 
 **CHECKABLE**
 
@@ -54,7 +48,7 @@ reviewer call failed
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run was blocked (`"honest_verdict": "complete_blocked_capture"`) due to missing upstream V713 artifacts, with no device speedup or learning benefit achieved, while numerical CPU fallback preserves actions across tested fixed-point fixtures.
+The experiment was blocked at conductor_pre_gate because upstream dependency exp8264-evidence-view-canary failed two gate checks (view_canary_ready_score and tune_capture_budget_ready_score both observed 0 instead of expected 1).
 
 ## WHAT IS MISSING
 nothing
@@ -62,29 +56,25 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8259_v713_polarfire_dispatch_qualification.json
+## experiment_8272_v714_arc_outcome_frontier.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8260_v713_gatemate_physical_delta.json
+## experiment_8273_v714_kv260_evidence_cost_boundary.json
 
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
-## VERDICT
-CHECKABLE
+reviewer call failed
 
-## WHAT THE CLAIM IS
-GateMate hardware execution remains blocked because no authenticated physical change has been recorded since Experiment 8246.
+## experiment_8274_v714_gatemate_physical_delta.json
 
-## WHAT IS MISSING
-nothing
+**CANNOT_DETERMINE**
 
-## THE CHECK A READER CANNOT DO
-none
+reviewer call failed
 
-## experiment_8261_v713_capstone.json
+## experiment_8275_v714_capstone.json
 
 **CANNOT_DETERMINE**
 

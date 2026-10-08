@@ -51281,3 +51281,93 @@ known ideas. Literature results are external claims, not Carnot measurements.
 The new actionable lead concerns structural-versus-semantic qualification. The
 remaining citations strengthen controls for an unmeasured existing hypothesis;
 they do not justify retuning it after observing evaluation labels.
+
+## V715 planning refresh — 2026-10-08
+
+This review was recorded before the V715 task design. It checks 2025–2026
+primary sources and the requested secondary discovery sources. Most relevant
+ideas already occur in this ledger. Rechecking them is not a novelty claim.
+Paper results remain external evidence; no Carnot benefit was measured here.
+
+### Leads to carry into experiments
+
+- **Verify to Amplify: Improving Reasoning via Learned Chain-of-Thought
+  Verification**, Balcan et al., March 2026, revised September 9.
+  [Primary paper](https://arxiv.org/abs/2603.03538v5).
+  Its online-verifier framework distinguishes accepting a wrong step from
+  rejecting a correct one and studies feedback-induced distribution shift.
+  Use separate false-accept, false-reject and abstention rows in the frozen
+  evidence and delayed-learning audits. Report later decisions after feedback,
+  not training accuracy. This is a reporting adaptation; Carnot's fixed-stream
+  Beta-count experiment does not inherit the paper's interactive guarantees.
+- **Retromorphic Testing with Hierarchical Verification for Hallucination
+  Detection in RAG**, Yu et al., 2026.
+  [Primary paper](https://arxiv.org/abs/2603.27752),
+  [inspected v1 full text](https://arxiv.org/html/2603.27752v1),
+  [Hugging Face discovery](https://huggingface.co/papers/2603.27752).
+  Claim-to-context traceability motivates keeping original answer spans and
+  complete source-sentence maps in the intervention capture. The paper also
+  raises annotation-completeness concerns. Keep Carnot's labels fixed; record
+  this limitation without relabeling after results. A focal-sentence experiment
+  is not a reproduction of the paper's hierarchical verifier.
+- **Evidence-Aligned Entity Verification**, September 2026.
+  [Primary paper](https://arxiv.org/abs/2609.08267).
+  Retain selected and token-length-matched source deletions as evidence features.
+  Compare equally informed simple and energy heads. Deletion sensitivity does
+  not certify truth. Resume the unmeasured V713 science after backend readiness.
+- **Adaptive Conformal Inference Under Delayed Feedback**, September 2026.
+  [Primary paper](https://arxiv.org/abs/2609.07251).
+  Feedback delay matters relative to persistence of useful information. Record
+  release-to-admission and admission-to-later-use intervals in the continuous
+  learner. Keep its registered delay and source order fixed. This is diagnostic
+  accounting, not a claim of conformal coverage for Beta-count memory.
+- **KAN-CL: Per-Knot Importance Regularization**, May 2026.
+  [Primary paper](https://arxiv.org/abs/2605.12306).
+  The method combines local spline-head regularization with a backbone defense.
+  It supports testing retention separately from current-stream improvement.
+  It does not reopen Carnot's retired unchanged importance-anchor construction.
+
+### Coverage of the requested research areas
+
+| Area | Primary source checked | Planning disposition |
+|---|---|---|
+| Energy models for reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM-EBM, 2512.15605](https://arxiv.org/abs/2512.15605) | Keep matched probability controls and distinguish learned compatibility from independent truth. |
+| Neural constraint satisfaction | [HardNet++, 2604.19669](https://arxiv.org/abs/2604.19669) | Enforcement assumes specified constraints and regularity conditions; it does not solve faithful text extraction. Defer a new projection layer. |
+| Ising applications in ML | [Neural Ising Machines, 2602.00302](https://arxiv.org/abs/2602.00302) | Learned local update rules merit future compatible-workload tests; no new sampler before useful verification qualifies. |
+| Hallucination detection | RT4CHART and evidence-aligned verification above; [HalluScoring, September 29](https://arxiv.org/abs/2609.38355) | Separate exposed development from unseen-question and unseen-generator claims. A new Arabic corpus needs its own access, label and model study. |
+| KAN and continual learning | KAN-CL and delayed feedback above; [SEVA, 2606.29713](https://arxiv.org/abs/2606.29713) | Preserve causal feedback, bounded state and untouched retention; generator weights stay frozen. |
+| Energy-guided decoding | [ETS, 2601.21484](https://arxiv.org/abs/2601.21484) | Reward-guided sampling presupposes a useful reward. Defer steering until the verifier passes independent utility checks. |
+| Constrained generation | [Structural-versus-semantic decoding study, 2609.23742](https://arxiv.org/abs/2609.23742) | Keep grammar success separate from semantic decision benefit and declare bounded generation honestly. |
+| FPGA/thermodynamic sampling | [FPGA–ASIC co-design, 2602.15985](https://arxiv.org/abs/2602.15985) | Include preprocessing, transfers and incompatible work in the full service boundary. |
+
+### Secondary-source checks and limits
+
+- **OpenReview:** searched 2026 EBM submissions and opened the
+  [EBT PDF](https://openreview.net/pdf/f9139bb41c8b7a03e09be518a71426bcbd061a3f.pdf)
+  and [Semantic Energy submission](https://openreview.net/pdf?id=E5mL07Fbq8).
+  Both direct opens reached a browser challenge. The
+  [official ICLR proceedings entry](https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html)
+  lists EBT; uninspected submissions supply no new method claim.
+- **Extropic:** checked [writing](https://extropic.ai/writing), the September 4
+  [Z1T article](https://extropic.ai/writing/z1t/) and its
+  [JAX implementation](https://github.com/extropic-ai/sparse-transformers).
+  The article explicitly describes sparse TSU operations plus digital companion
+  work and estimated hardware costs. This strengthens the operation-compatibility
+  ledger; it establishes neither local TSU access nor a measured Carnot speedup.
+- **Semantic Scholar:** indexed searches and Graph API citation-list requests
+  for `ARXIV:2507.02092` and `ARXIV:2512.15605` did not yield an accessible,
+  verified citation inventory. Citation discovery remains incomplete. Do not
+  infer that no papers cite either work.
+- **Hugging Face papers:** checked the RT4CHART page above and followed its
+  primary source. Feed publication dates can differ from arXiv version dates.
+- **GitHub Trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). The available
+  snapshots were three weeks old. No current rank or new trending EBM/KAN
+  repository is asserted; Extropic's author repository was inspected separately.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  It describes a constraint reasoning layer but provides no inspectable local
+  training or benchmark recipe on that page. Retain as architecture context.
+
+The experiment implications are better evidence tracing and asymmetric-error /
+feedback-delay diagnostics. They do not alter the frozen scientific thresholds,
+add outcome-selected arms, or justify reopening retired mechanisms.

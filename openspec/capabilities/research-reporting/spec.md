@@ -95917,3 +95917,25 @@ Implementation: `v714_capstone_evidence.py` preserves fourteen dispositions,
 authenticated historical CPU graduation and frozen science denominators.
 `v714_capstone.py` and the thin Exp8275 CLI publish checked terminal bytes;
 `test_v714_capstone_8275.py` covers private source and accounting controls.
+
+## V715 staged research contract (2026-10-08)
+
+### REQ-REPORT-V715-PLAN: Backend-qualified evidence continuation
+
+The V715 planning artifacts shall define exactly fourteen ordered tasks,
+Exp8276 through Exp8289, for milestone 2026.10.715. The visible design table,
+embedded full task contract and staged YAML shall agree. All gate operands
+shall name fields required by earlier producers in this roadmap. Existing
+V713 science choices remain immutable; V714 outcomes remain historical.
+A load-only native-backend qualification shall precede bounded Qwen3.8
+captures. The plan shall include calibrated energy-head training, delayed
+constraint admission and independent benefit/retention audits, ARC outcome
+review, hardware continuity and an unconditional capstone.
+
+### SCENARIO-REPORT-V715-PLAN: Validate before activation
+
+Given the staged V715 design and YAML, when the existing contract reader,
+roadmap schema, gate audit, exclusion lint and standing-floor checks run,
+then they shall find fourteen identical task objects and no missing or
+forward gate field. Planning checks shall not activate the roadmap, rewrite
+historical results, or imply that scientific experiments have run.
