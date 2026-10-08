@@ -7,12 +7,12 @@
 
 | Verdict | Count |
 |---|---|
-| `AUTHENTIC` | 5 |
-| `HONEST_HEURISTIC` | 3 |
+| `AUTHENTIC` | 3 |
+| `HONEST_HEURISTIC` | 2 |
 | `DISHONEST_NAMING` | 0 |
 | `ADVERSARIAL_GAMING` | 0 |
 | `CANNOT_DETERMINE` | 0 |
-| `UNKNOWN` | 12 |
+| `UNKNOWN` | 15 |
 | `OUTRIGHT_FAKE` | 0 |
 
 ---
@@ -32,29 +32,14 @@ reasoning effort: xhig)
 
 ## python/carnot/verify/abstention_calibrated_clean_verifier_v15.py
 
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-"The v14 rerun proved the local GGUF path was real but abstained on every exact row because the raw model text did not honor the strict verifier-output contract. This module keeps that conservative parser, adds the Exp 3286 calibrated policy around it, and records a repair-gate-ready artifact only when coverage is non-trivial and exact-authority scoring still finds zero false accepts."
-
-## IMPLEMENTATION_REALITY
-The module executes local GGUF models on GPU via `llama_cpp.Llama` using grammar-constrained chat completion (`LlamaGrammar`), strict token parsing, and physical VRAM usage verification via `nvidia-smi`. It evaluates exact test rows and enforces hard gate criteria requiring verified GPU offload, non-trivial coverage, and zero false accepts.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The implementation invokes real models via `llama_cpp` rather than faking inference with regex or heuristics. It enforces genuine hardware telemetry checks (torch CUDA probes, llama.cpp GPU offload checks, and `nvidia-smi` memory queries) without sleep-padding or score-capping. The code matches its stated contract and is suitable for production verification pipelines.
-
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
 
 ## python/carnot/verify/adaptive_conformal_calibration.py
 
@@ -75,12 +60,10 @@ reasoning effort: xhig)
 AUTHENTIC
 
 ## CLAIMS
-- "The policy is a deterministic scheduler over evidence that already exists in the repo. It decides how much checking a future verifier pass should spend per row, but it never lets an EBM score, LLM response, or receipt become answer authority."
-- "simulate routing from existing rows without new calls."
-- "State that the artifact is an offline policy simulation."
+"The policy is a deterministic scheduler over evidence that already exists in the repo. It decides how much checking a future verifier pass should spend per row, but it never lets an EBM score, LLM response, or receipt become answer authority. Exact rows, controlled-invariance evidence, and counterexample certificates remain the source of truth."
 
 ## IMPLEMENTATION_REALITY
-The code reads local experiment JSON files (`exp3180`, `exp3183`, `exp3189`) and routes rows using a deterministic rule table (`select_action`) based on boolean metadata and dictionary keys. It uses only standard library utilities (`hashlib`, `json`, `pathlib`) with zero model invocations, GPU requirements, or external calls.
+The module reads static JSON artifacts from disk (`exp3180`, `exp3183`, `exp3189`) and evaluates a fixed, deterministic decision table (`select_action`) over row metadata to schedule verification granularity. It performs zero neural network, LLM, or EBM invocations and explicitly enforces `promotion_allowed = False`.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -92,19 +75,34 @@ none
 KEEP
 
 ## RATIONALE
-The module makes no claims of implementing a research paper, neural network, or learned inference substrate, and explicitly declares itself an offline, deterministic scheduling simulation over existing artifacts. The implementation directly adheres to its docstring without sleep padding, score fabrication, or adversarial check evasion. It strictly enforces `promotion_allowed = False` and acts as a routing artifact rather than a fraudulent verifier.
+The module does not cite an arXiv paper, claim learned neural representations, or pretend to execute live inference. The implementation is an offline deterministic routing policy over existing artifact records that matches its docstring precisely. There is no evidence of sleep-padding, score-clipping, synthetic data generation, or adversarial check dodging.
 
 
 ## python/carnot/verify/additivity_second_pair_of_eyes_v4.py
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+"Exp 3643 additive second-pair-of-eyes remeasurement. Spec: REQ-VERIFY-3643, SCENARIO-VERIFY-3643." No academic papers, arXiv citations, neural architectures, or live inference substrates are claimed. The code explicitly disclaims live model execution: `"verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load)"`.
+
+## IMPLEMENTATION_REALITY
+The module loads cached experiment rows from upstream runs (Exp 3640–3642) and computes paired statistical comparisons—including exact McNemar tests, Wilson confidence intervals, and tail-calibrated fusion AUROC/recall metrics. It writes a validated evaluation artifact to determine whether the verifier ensemble provides statistically significant additive coverage over confidence scores.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The module does not masquerade as a neural verifier or cite papers it does not implement, explicitly stating that it scores cached corpora without live LLM load. It contains no sleep-padding, random data generation, or adversarial check evasion; the only bounds used are mathematical caps in standard Wilson binomial confidence intervals. Its implementation completely and honestly fulfills its stated purpose as an offline remeasurement and paired-significance evaluation harness.
+
 
 ## python/carnot/verify/admission_horizon_methods_8152.py
 
@@ -119,29 +117,14 @@ reasoning effort: xhig)
 
 ## python/carnot/verify/adversarial_verifier_evidence_corrigendum_v1.py
 
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-No paper, neural model, or live compute substrate is claimed. The module explicitly disclaims model execution in its docstring: "This module is a gate audit, not a verifier rerun. It reads the checked-in .292 evidence chain and separates deterministic exact-replay recovery from live-inference claims whose authenticity evidence is incomplete."
-
-## IMPLEMENTATION_REALITY
-The module reads checked-in JSON experiment artifacts from disk, validates file hashes, tallies authenticity/methodology audit flags, and outputs an Exp 3150 corrigendum report. It explicitly declares in `inference_substrate()` that `executes_models = False` and `no_live_llm_inference = True`.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The module honestly and explicitly defines itself as an audit gate and evidence corrigendum rather than an LLM verifier or model rerun. The implementation faithfully inspects checked-in metadata and artifact provenance without invoking models, simulating scores, or claiming external research papers. There are no sleep-padding, score-capping, or adversarial evasion patterns present.
-
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
 
 ## python/carnot/verify/and_composition_verifier.py
 
@@ -162,11 +145,11 @@ reasoning effort: xhig)
 HONEST_HEURISTIC
 
 ## CLAIMS
-- "AutoPyVerifier-inspired GAP-1 set search for ARC orientation."
-- "This module deliberately borrows only the cheap set-search idea from AutoPyVerifier. It does not synthesize verifier code with an LLM. Instead, a small deterministic library of spatial discriminators is searched over a cached ARC square-transpose distractor pool."
+"Exp 5205: AutoPyVerifier-inspired GAP-1 set search for ARC orientation."
+"This module deliberately borrows only the cheap set-search idea from AutoPyVerifier. It does not synthesize verifier code with an LLM. Instead, a small deterministic library of spatial discriminators is searched over a cached ARC square-transpose distractor pool. The scoring functions see only train pairs plus a candidate grid, so gold labels are used only for offline evaluation of the searched subset."
 
 ## IMPLEMENTATION_REALITY
-The implementation extracts hand-crafted 2D grid statistics (adjacency counters, edge/border profiles, quadrant histograms, run lengths) via pure Python `collections.Counter` and performs a brute-force combinatorial search over subsets to rank candidate grids. There are no model invocations, neural networks, or LLM-based verifier synthesis routines.
+The module implements 8 deterministic spatial feature extractors (color adjacencies, run-length profiles, quadrant counts, centroid bands) and scores candidate ARC grids via L1 distance to average training pair feature distributions. It performs an exhaustive subset search over these hand-authored heuristic discriminators against cached distractor pools with zero LLM, neural network, or learned model invocations.
 
 ## CLAIM_VS_REALITY_GAP
 DISCLOSED_PROXY
@@ -178,34 +161,19 @@ none
 KEEP
 
 ## RATIONALE
-The module explicitly and unambiguously disclaims LLM synthesis, noting that it only borrows the combinatorial set-search concept using deterministic, hand-authored spatial discriminators. No adversarial gaming patterns, artificial delay padding, or score capping mechanisms are present. Because the proxy implementation and its limitations are fully disclosed in both the title and docstring, the verifier operates honestly within its stated scope.
+The author explicitly disclaims LLM code synthesis in both the module docstring and the metadata principles, stating clearly that only the combinatorial set-search concept is borrowed from AutoPyVerifier. The implementation contains no sleep-padding, score-clamping, or adversarial evasion, and honestly records failure if the heuristic search does not beat the baseline. Because the heuristic proxy is fully disclosed and the experiment directly measures whether spatial heuristics resolve GAP-1, it is acceptable to retain.
 
 
 ## python/carnot/verify/arc_gap1_registry_promotion_decision.py
 
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-"This module is intentionally evidence-only. It reads the existing Exp 5209 hardening artifact, parses the upstream gate from ``gap1_hardened_positive.value``, and decides whether the GAP-1 set verifier is ready to become a frozen registry entry." (The docstring makes no claims of paper citations, neural architectures, learned embeddings, logprobs, or GPU inference.)
-
-## IMPLEMENTATION_REALITY
-The code reads and parses static JSON artifacts from a previous experiment (`EXP5209_RELATIVE_PATH`) to evaluate boolean leakage and stability flags, regex-checks entries in `ops/verifier_registry.yaml`, and writes a promotion decision artifact. It performs purely deterministic metadata auditing and file inspection with zero ML model invocations.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The module does not masquerade as an ML verifier or cite unfulfilled research papers, explicitly stating up front that it is an "evidence-only" gate. Its implementation performs exact, deterministic checks against upstream experiment outputs and the registry file without artificial sleep padding, score clamping, or random data injection. It is authentic to its declared purpose as an operational promotion decision script.
-
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
 
 ## python/carnot/verify/arc_gap1_set_search_holdout_hardening.py
 
@@ -253,14 +221,29 @@ reasoning effort: xhig)
 
 ## python/carnot/verify/ast_structure_verifier.py
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+None. The docstring makes no claims regarding an arXiv paper, a neural model, learned representations, or specialized compute substrates. It explicitly claims only: "Python-looking text is checked with ``ast.parse`` plus bracket balance. General prose is checked with cheap structural heuristics such as balanced brackets and sentence boundaries."
+
+## IMPLEMENTATION_REALITY
+The module parses Python code snippets using Python's standard library `ast.parse`, checks bracket balance using a standard character stack, and applies simple regex heuristics to prose. All operations are deterministic, lightweight structural checks with zero external model calls or unstated dependencies.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The implementation faithfully executes exactly what the docstring claims without masquerading as an ML model, neural kernel, or paper implementation. There is no evidence of adversarial benchmark gaming, sleep-padding, or artificial score-clamping to dodge audit thresholds. It functions authentically as a rule-based structural component for a verifier ensemble.
+
 
 ## python/carnot/verify/beaver_epr_bounded_probe.py
 
@@ -275,7 +258,7 @@ HONEST_HEURISTIC
 - "Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features. Missing top-k data is reported as unavailable rather than simulated."
 
 ## IMPLEMENTATION_REALITY
-The code evaluates arithmetic strings in text using regular expressions and Python's `ast` module to score samples by the ratio of false arithmetic equalities. It performs no live model inference or token-trie frontier proofs, extracting Shannon entropy and entropy deltas strictly from pre-existing static telemetry files when present.
+The module uses pure-Python regex matching and AST parsing (`ast.parse`) to evaluate arithmetic expressions in text prefixes, alongside calculating Shannon entropy deltas from offline JSONL telemetry logs when present. It imports no machine learning frameworks (no `torch`, `transformers`, `jax`, or `llama_cpp`) and executes no model inference or token-trie frontier proofs.
 
 ## CLAIM_VS_REALITY_GAP
 DISCLOSED_PROXY
@@ -287,35 +270,19 @@ none
 KEEP
 
 ## RATIONALE
-The module explicitly disclaims exact BEAVER v2 implementation in its docstring, metadata schema, and runtime validation assertions, candidly defining itself as a bounded-prefix feasibility proxy. It performs zero live neural inference, relying on AST-based equality evaluation and static telemetry without simulating missing data or employing sleep-padding or score-capping tricks. Because the proxy scope is fully disclosed and free of adversarial gaming, it is acceptable as a documented heuristic baseline so long as its `beaver_exact: False` designation prevents conflation with sound BEAVER proofs.
+The module explicitly disclaims exact BEAVER v2 execution in its docstring and programmatically enforces `beaver_exact: False` in its output artifact. It contains no sleep padding, score clamping, or synthetic telemetry generation, honestly marking missing top-k data as unavailable. Because the proxy heuristic is fully disclosed and free of adversarial gaming, it safely fulfills its stated role.
 
 
 ## python/carnot/verify/beaver_exact_tiny_frontier.py
 
-**Verdict:** `HONEST_HEURISTIC`
-
-## VERDICT
-HONEST_HEURISTIC
-
-## CLAIMS
-"Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset. The reported frontier is the first text prefix that ends at a solver-proved false completed equality."
-"This is not full BEAVER. It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model. Exp 2858 proxy scores are compared against the exact local arithmetic result, not promoted into exact BEAVER."
-
-## IMPLEMENTATION_REALITY
-The code parses regex-extracted arithmetic expressions into AST representations and evaluates their validity using genuine Z3 SMT solver queries across a 6-example subset of FoVer data. It compares these local solver outcomes against an imported bounded prefix proxy (`ArithmeticFalseClaimConstraint`) without executing language model inference, building token tries, or enumerating probability mass.
-
-## CLAIM_VS_REALITY_GAP
-DISCLOSED_PROXY
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The verifier explicitly and prominently discloses that it does not implement full BEAVER, detailing the absence of token-trie construction and model probability frontier proofs directly in the docstring and schema validations (`exact_beaver_implemented: False`). The underlying solver implementation genuinely executes Z3 SMT checks on ground arithmetic without any sleep-padding, score-clipping, or benchmark-gaming heuristics. Because the boundary between exact local solver verification and heuristic proxy comparison is fully transparent, the module is an honest experimental artifact suitable to keep in the repository.
-
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
 
 ## python/carnot/verify/beaver_lite.py
 
@@ -330,31 +297,14 @@ reasoning effort: xhig)
 
 ## python/carnot/verify/beaver_lite_live.py
 
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-- "BEAVER-lite live-or-Zipf logprob workflow for Exp 1158."
-- "llama.cpp completion provider that uses generated-token logprobs."
-- "Deterministic non-uniform fallback provider used without llama.cpp."
-
-## IMPLEMENTATION_REALITY
-The module implements genuine local inference via `llama_cpp.Llama` with `logits_all=True` and extracts real per-token logprobs from generation output. When dependencies or weights are absent, it routes to a Zipf distribution fallback and explicitly records mock provenance across all returned artifacts.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The implementation executes real `llama_cpp` model inference rather than heuristic regex masking as a neural model. Both the live and mock branches are explicitly disclosed in docstrings and tracked via runtime metadata (`mock_logprobs_used`, `zipf_mock_used`, `honest_verdict`), with zero evidence of adversarial gaming.
-
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
 
 ## python/carnot/verify/beaver_prefix_bound_contracts.py
 

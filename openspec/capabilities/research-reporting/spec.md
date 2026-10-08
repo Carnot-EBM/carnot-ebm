@@ -96287,3 +96287,30 @@ blocked outcomes, failed upstream receipts and inherited hardware scope.
 `test_v716_capstone_8303.py` uses private candidates and requirement-linked
 regressions. The capstone writes `docs/research-notes/v716-outcomes.md` with a
 falsifiable condition for each branch. It does not modify conductor machinery.
+
+## V717 staged research contract (2026-10-08)
+
+### REQ-REPORT-V717-PLAN: Cached evidence and local learning with independent runtime eligibility
+
+The V717 design and next-roadmap YAML shall contain exactly fourteen tasks,
+Exp8304 through Exp8317, in order across four phases. Full task objects,
+visible task rows, prompts and gates shall agree. Every gate shall name a field
+required by an earlier task in this roadmap. Existing historical artifacts
+remain immutable. The prior V716 design shall be preserved before replacement.
+
+The plan shall distinguish cached live-Qwen provenance from current inference,
+source-support labels from model judgments, and constructed mechanics from
+natural benefit. It shall include calibrated energy training, continuous
+self-learning, ARC supervisor generalization work, KV260 and GateMate obligations,
+and authenticated PolarFire terminal evidence. Unchanged CUDA failure shall not
+gate the cached-data branch. Previous spline, calibration and learning nulls
+shall have explicit changed mechanisms and same-verdict retirement entries.
+
+### SCENARIO-REPORT-V717-PLAN: Check a staged contract without activating it
+
+Given the staged V717 design and YAML, schema, exact contract, gate, exclusion,
+execution-fit and applicable private authority-lifecycle checks shall pass.
+A mutated title or missing task shall fail comparison. Both comparison inputs
+may use staged bytes only when the report explicitly says activation was not
+checked. Planning shall not alter the active roadmap or research conductor.
+No implementation, experimental outcome or global repository pass is implied.

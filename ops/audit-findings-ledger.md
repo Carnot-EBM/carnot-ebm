@@ -267,3 +267,4 @@ of truth, not this line.)
 | 2026-10-04 | experiment_claim_audit | experiment_8085_v700_radial_memory_kernel.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-10-07 | experiment_claim_audit | experiment_8213_v709_prospective_request_recorder.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-10-08 | experiment_claim_audit | experiment_8276_v715_current_contract_readiness.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-10-08 | experiment_claim_audit | experiment_8291_v716_dependency_scoped_admission.json | CLAIM_OVERSTATED | OPEN | |

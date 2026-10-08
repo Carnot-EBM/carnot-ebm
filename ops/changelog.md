@@ -1,5 +1,33 @@
 # Carnot — Changelog
 
+## 2026-10-08 — Plan milestone 2026.10.717
+
+- Added a dated primary/secondary research scan before experiment design,
+  including online KAN, SURE-RAG, constraint refinement, distributional EBMs,
+  Ising hardware and Extropic updates. Recorded incomplete Semantic Scholar
+  retrieval and stale Trending snapshots without inventing current findings.
+- Created matching fourteen-task design/YAML, Exp8304–Exp8317, across four
+  phases with architecture, hardware requirements,12 earlier-producer gates,
+  25 complete failure-lineage entries and concrete runner/primary paths.
+- Designed calibrated sentence heads, exact local-write recovery and continuous
+  delayed-feedback learning on authenticated cached live observations. Added
+  same-information controls, training-budget reachability checks, all-intended
+  rows and independent utility/retention audits. Both generalization scores
+  remain zero on this exposed development cohort.
+- Isolated runtime recovery from CPU science. The sole live canary declares
+  mandated Qwen3.8-27B GGUF and bounded generation. Preserved ARC coverage work,
+  KV260 operation boundaries, GateMate physical obligations and authenticated
+  PolarFire board-local CPU graduation.
+- Preserved V716's design verbatim and reconciled the planning requirement,
+  traceability and status. No active-roadmap/conductor edit, activation,
+  experiment execution or push occurred.
+
+Validation:105 focused tests including private E2E-018 passed. Full task/table/
+digest equality, schema, gates, exclusions, harness fit, ARC, overdue priorities,
+scoped Ruff and spec coverage passed. Global reconciliation still reports the
+pre-existing1,142 missing test-spec references; documentation freshness passed.
+Details: `docs/research-notes/v717-plan-validation.md`.
+
 ## 2026-10-08 — Operational retrospective for milestone 2026.10.716
 
 - Wrote `results/operational_retro_2026_10_716.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.716`. Authoritative disk-mtime fallback data records 6 experiments completed (1 compute-bound, 5 synthesis-only) across 69.0 total wall-time minutes (average 11 minutes per experiment).

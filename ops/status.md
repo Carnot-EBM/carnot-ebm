@@ -1,5 +1,37 @@
 # Carnot — Operational Status
 
+## 2026-10-08 — V717 research plan staged
+
+Next milestone `2026.10.717` contains exactly fourteen tasks, Exp8304–Exp8317,
+in four phases. The complete task objects, visible table and canonical digest
+agree between `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. V716's full design is preserved at
+`openspec/change-proposals/research-roadmap-v716-preserved-20261008.md`.
+
+V716 localized CUDA error101 without proving a root cause and qualified only
+constructed dependency-scoped admission mechanics. Seven producer primaries
+were absent; one canary was pre-gated. ARC qualification failed at84/85 owned
+executor statements. KV260 lacked live capture cost; GateMate had no physical
+change. No missing science is recast as a null.
+
+V717 tests local sentence calibration, exact sparse/dense continuous updates,
+later-source utility and fixed retention on authenticated cached observations.
+Static and learning predictions are sealed before evaluator access. The corpus
+is exposed development, with a23-source usable retention panel; no independent
+generalization is claimed. A single Qwen3.8-27B bounded-generation canary waits
+for authenticated runtime change and context/copy readiness. CPU research is
+independent of that gate. ARC, KV260, GateMate and PolarFire scope remain explicit.
+
+The dated literature scan preceded design. Adversarial review corrected an
+impossible support floor, unreachable fixed-offset risk and evaluator order.
+All14 task objects,12 gates and25 prior-failure entries pass staged checks;
+105 focused tests/private E2E-018 checks and scoped lint/spec coverage pass.
+Global reconciliation retains1,142 pre-existing spec-reference gaps. Full details
+are in `docs/research-notes/v717-plan-validation.md`.
+
+Planning does not activate the milestone. The active roadmap, conductor and
+frozen V713 protocol remain unchanged. No experiment result or push was made.
+
 ## 2026-10-08 — V716 research plan staged
 
 Next milestone `2026.10.716` has fourteen tasks, Exp8290–Exp8303, in four

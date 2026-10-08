@@ -12,25 +12,25 @@ evidence the reviewer could not have read -- do NOT act on them.
 | CHECKABLE | 1 |
 | CANNOT_DETERMINE | 7 |
 
-## experiment_8275_v714_capstone.json
+## experiment_8289_v715_capstone.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8276_v715_current_contract_readiness.json
+## experiment_8290_v716_runtime_localization.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8277_v715_lease_backend_qualification.json
+## experiment_8291_v716_dependency_scoped_admission.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8278_evidence_view_canary.json
+## experiment_8292_evidence_view_canary.json
 
 **CHECKABLE**
 
@@ -38,7 +38,7 @@ reviewer call failed
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+The experiment was blocked at conductor pre-gate because upstream dependency `exp8290-runtime-localization` failed the `cuda_context_ready_score` gate check (observed 0, expected 1).
 
 ## WHAT IS MISSING
 nothing
@@ -46,25 +46,25 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8286_v715_arc_outcome_frontier.json
+## experiment_8300_v716_arc_outcome_frontier.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8287_v715_kv260_evidence_cost_boundary.json
+## experiment_8301_v716_kv260_evidence_cost_boundary.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8288_v715_gatemate_physical_delta.json
+## experiment_8302_v716_gatemate_physical_delta.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8289_v715_capstone.json
+## experiment_8303_v716_capstone.json
 
 **CANNOT_DETERMINE**
 

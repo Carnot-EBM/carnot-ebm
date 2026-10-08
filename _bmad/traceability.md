@@ -3815,3 +3815,19 @@ consumer/fix-erasure/private E2E-018 tests; 81 conductor core tests; scoped Ruff
 formatting, strict mypy and spec coverage pass. The bounded full-suite diagnostic
 hit its 180-second collection deadline; global spec coverage retains 1,142
 existing gaps. Validation evidence is in `/tmp/carnot-8205-fix-validation/`.
+
+## 2026-10-08 — V717 staged research plan
+
+| Requirement / priority | Planned tasks | Evidence and boundary |
+|---|---|---|
+| REQ-REPORT-V717-PLAN / SCENARIO-REPORT-V717-PLAN | Exp8304–Exp8317 | Matching complete task objects, table, digest and staged-only negative controls; `docs/research-notes/v717-plan-validation.md` |
+| FR-06 / FR-12 calibrated verification | Exp8305, Exp8308–Exp8309, Exp8311 | Four local sentence features; human labels; matched RBF/linear controls; typed decisions and explicit exposed-development scope |
+| FR-11 continuous self-learning | Exp8306, Exp8310, Exp8312 | Actual local coefficient updates, issue-before-release, exact restart, later-source utility and fixed retention windows |
+| FR-05 / FR-08 / NFR-01 execution and cost | Exp8307, Exp8313, Exp8315 | Changed-runtime qualification, bounded mandated-Qwen canary, complete CPU transaction cost and supported-operation hardware boundary |
+| ARC generalization floor | Exp8314 | Close executor coverage gap; authenticate new supervisor outcomes only; no repeated public solve |
+| Hardware continuity | Exp8315–Exp8317 | KV260 capability mapping, GateMate physical-change obligation and byte-bound PolarFire CPU graduation |
+
+Research findings were recorded before design. V716 is preserved verbatim.
+The plan adds no experimental result, independent-generalization claim or
+activation. Existing focused tests/private E2E-018 exercise the authority
+reader; 105 tests pass. Global spec-reference debt remains outside this plan.

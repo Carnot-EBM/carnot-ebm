@@ -51467,3 +51467,95 @@ intervention study fixed and testing one independent CPU learning mechanism.
 These findings support bounded experiments and explicit claim limits. They do
 not authorize generator training, hardware purchases, external publication,
 relabeling exposed data, or changes to the frozen intervention thresholds.
+
+## V717 planning research — 2026-10-08, recorded before experiment design
+
+V716 established dependency-scoped admission soundness on constructed graphs.
+It did not establish natural verification or learning benefit. Driver, runtime
+and native CUDA probes all failed before model loading. These findings favor
+experiments that can use authenticated cached observations while preserving
+an explicit, separate condition for reopening live generation.
+
+### Promising methods and limits
+
+- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM
+  Reasoning**, May 15, 2026, [primary paper](https://arxiv.org/abs/2605.18871).
+  The authors combine learned quality estimates with explicit constraint terms
+  and use uncertainty for abstention. Their code-domain analysis identifies a
+  generator-identity shortcut. Research lead: compare an energy selector with
+  same-information controls; separate structural correctness from predictive
+  calibration and audit source/model shortcuts. This is not a local replication.
+- **SURE-RAG**, May 2026, revised July 24,
+  [primary v2](https://arxiv.org/abs/2605.03534v2), discovered through
+  [Hugging Face Papers](https://huggingface.co/papers/2605.03534).
+  Set-level sufficiency can depend on missing evidence and conflicts that
+  passage-wise scores miss. The paper also reports a reversed ranking on
+  natural hallucination data. Research lead: explicitly test missing evidence,
+  aggregate coverage and uncertainty; keep controlled mechanics distinct from
+  natural answer correctness. Existing binary human spans cannot be relabeled
+  as three-way support/refutation/insufficiency without new annotation.
+- **Overcoming Over-Fitting in Constraint Acquisition via Query-Driven
+  Interactive Refinement**, September 29, 2025,
+  [primary paper](https://arxiv.org/abs/2509.24489).
+  Passive candidates are challenged with queries and rejected candidates can
+  yield smaller valid subsets. Research lead: require counterexamples and
+  delayed feedback before admitting a learned constraint; test false admission
+  and later distinct-source use. A deterministic fixture oracle does not supply
+  independent natural-language truth.
+- **Ultrafast On-Chip Online Learning via Spline Locality in Kolmogorov-Arnold
+  Networks**, February 2026, v4 June 19, ICML 2026,
+  [primary v4](https://arxiv.org/abs/2602.02056v4).
+  Sparse local spline updates and fixed-point training suggest a small online
+  calibrator with measurable state touches. Research lead: compare local spline
+  and matched linear updates, audit retention, and measure complete durable
+  transactions. Published FPGA results do not establish Carnot board speed.
+- **KAC: Kolmogorov-Arnold Classifier for Continual Learning**, March 2025,
+  [paper](https://arxiv.org/abs/2503.21076). RBF-based classifier adaptation is
+  a useful alternative, but vision continual-learning results do not establish
+  hallucination calibration. Prefer one bounded local-spline question first.
+
+### Topic coverage and deferred methods
+
+| Requested topic | Primary source checked | Consequence for planning |
+|---|---|---|
+| EBM verification/reasoning | Distributional EBM above; [EBT ICLR 2026 paper](https://openreview.net/pdf?id=ZBj3Qp1bYg), [author code](https://github.com/alexiglad/EBT) | Train small decision energies; avoid inferring truth from low energy alone. |
+| Neural constraint satisfaction | [HardNet++, April 2026](https://arxiv.org/abs/2604.19669) | Feasibility and faithful extraction are separate. The retired repair stack remains closed. |
+| Ising in ML | [Neural Ising Machines, February 2026](https://arxiv.org/abs/2602.00302) | Keep learned dynamics as a later sampler candidate, outside this bounded study. |
+| Hallucination detection/mitigation | SURE-RAG and distributional EBM above; [HalluScoring 2026](https://arxiv.org/abs/2609.38355) | Preserve source and generator shift boundaries; do not claim generalization from exposed development data. |
+| KAN | Online KAN v4 and KAC above | Test sparse updates and fixed-point numerical behavior explicitly. |
+| Energy-guided/constrained generation | [ETS, January 2026](https://arxiv.org/abs/2601.21484); [Energy-Guided Decoding, July 2025](https://arxiv.org/abs/2507.07731) | Deferred until verifier utility and live execution qualify. The latter is a vision-language method. |
+| Hardware sampling | [FPGA/Ising co-design, February 2026](https://arxiv.org/abs/2602.15985); [Extropic Z1T, September 4, 2026](https://extropic.ai/writing/z1t/) | Include preprocessing, transfer and nonaccelerated operations. Vendor estimates are not local measurements. |
+| Continual constraint learning | Query-driven refinement and online KAN above; [GRACE v2](https://arxiv.org/html/2607.09175v2) carried from V716 | Separate safe admission, sparse validation, calibration retention and decision benefit. |
+
+### Secondary-source coverage and retrieval limits
+
+- **OpenReview:** inspected the ICLR 2026 EBT proceedings version above after
+  searching 2026 energy/reasoning submissions. The paper and author repository
+  support method discovery, not a claim that Carnot reproduced its scaling.
+- **Semantic Scholar:** searched both anchor IDs and attempted Graph API
+  citation lists for `ARXIV:2507.02092` and `ARXIV:2512.15605`. Both citation
+  endpoints were inaccessible through the browser tool. No complete citing-paper
+  list was recovered. Do not infer zero citations. The
+  [ARM/EBM primary v4](https://arxiv.org/abs/2512.15605) was checked separately;
+  its function-space bijection is not a guarantee of semantic correctness.
+- **Hugging Face:** searched verification papers and followed SURE-RAG to its
+  primary v2. Feed summaries and submission dates are discovery metadata.
+- **Extropic:** checked [Writing](https://extropic.ai/writing/), Z1T and the
+  [author training repository](https://github.com/extropic-ai/sparse-transformers).
+  The index returned little article content, so the dated Z1T page was inspected
+  directly. It describes sparse hardware/software co-design and estimated
+  heterogeneous execution; it supplies no Carnot TSU access or timing.
+- **GitHub Trending:** checked weekly
+  [Python](https://github.com/trending/python?since=weekly) and
+  [Rust](https://github.com/trending/rust?since=weekly). Returned snapshots were
+  weeks old. No current trend ranking or newly trending EBM/KAN repository is
+  asserted. Author repositories were checked separately.
+- **Logical Intelligence:** checked the [home page](https://logicalintelligence.com/)
+  and [Kona](https://logicalintelligence.com/kona). The site describes a latent
+  constraint reasoning architecture. No inspected reproducible local training
+  recipe changes this milestone; vendor framing is not independent validation.
+
+The experiment mapping will be frozen in the V717 design. Discovery and
+revalidation are distinguished here: several papers were already catalogued.
+No generator fine-tuning, external publication, hardware purchase or change to
+historical primary artifacts follows from this literature review.
