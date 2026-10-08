@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.716",
+  "generated_at": "2026-10-08T15:54:57Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 69.0,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Reconcile fourteen outcomes and decide whether evidence or learning improved",
+      "duration_minutes": 20.94,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Test dependency-scoped checks for continuous constraint admission",
+      "duration_minutes": 15.18,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Validate the live ARC outcome frontier with bounded consumer receipts",
+      "duration_minutes": 10.64,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Localize CUDA failure and bind the current qualified execution contract",
+      "duration_minutes": 8.29,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Carry GateMate physical-change evidence and its exact reopening condition",
+      "duration_minutes": 7.02,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.716 completed 6 experiments (1 compute-bound, 5 synthesis-only) across 69.0 total wall-time minutes (averaging 11 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was dominated by synthesis-only tasks accounting for four of the top 5 slowest runs—reconciling fourteen outcomes (20.94 minutes), dependency-scoped continuous constraint admission checks (15.18 minutes), validating the live ARC outcome frontier (10.64 minutes), and GateMate physical-change tracking (7.02 minutes)—alongside the sole compute-bound task localizing CUDA failure (8.29 minutes). With gpu_idle_on_compute_bound_tasks recorded as false, the snapshot of 0% GPU utilization on the NVIDIA GeForce RTX 3090 represents expected idle state for synthesis tasks rather than an accelerator stall, and single-model workloads correctly avoided multi-model DualGPURunner dispatch.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks accounted for the vast majority of wall time (four of the top five slowest experiments totaled 53.78 minutes of the 69.0 milestone wall-time minutes), led by fourteen-outcome reconciliation (20.94 minutes) and dependency-scoped constraint admission checks (15.18 minutes).",
+    "The single compute-bound task ('Localize CUDA failure and bind the current qualified execution contract') took 8.29 minutes, but lacks intra-task phase breakdown telemetry (driver verification, context initialization, memory transfer, contract qualification) to isolate execution latency.",
+    "Synthesis tasks executed serially across outcome reconciliation, ARC frontier validation, and GateMate evidence checks without incremental receipt caching or evidence memoization when upstream inputs were unchanged.",
+    "Milestone timing analysis relied on disk-mtime reconstruction fallbacks due to missing synchronous start and finish execution timestamps in experiment receipts."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and evidence memoization for fourteen-outcome reconciliation, continuous constraint admission checks, and ARC frontier validation when upstream dependencies remain unchanged.",
+    "Instrument the CUDA failure localization and qualification runner with granular intra-task phase timers (driver check, device context init, host-to-device transfer, contract binding).",
+    "Persist explicit synchronous start and end execution timestamps directly into experiment receipt artifacts during conductor execution to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Capture continuous in-flight accelerator utilization and memory metrics during compute-bound execution to corroborate point-in-time GPU monitor reports.",
+    "Maintain strict DualGPURunner dispatch boundaries to concurrent multi-model execution, avoiding misapplication to single-model or diagnostic workloads."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and memoization for fourteen-outcome reconciliation and dependency-scoped constraint admission checks when upstream evidence remains static.",
+    "Instrument compute-bound CUDA diagnostics and long synthesis validation routines with granular intra-task execution phase timers.",
+    "Persist explicit start and end lifecycle timestamps in experiment receipts and capture continuous in-flight GPU utilization telemetry."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Across 6 completed experiments and 69.0 minutes of wall time, execution latency was heavily concentrated in synthesis tasks led by fourteen-outcome reconciliation (20.94 minutes) and dependency-scoped constraint admission (15.18 minutes), while the sole compute-bound experiment required 8.29 minutes to localize CUDA failure and bind its qualified contract. GPU utilization was observed at 0% post-run on the RTX 3090 representing expected idle behavior for non-accelerated synthesis workloads with gpu_idle_on_compute_bound_tasks recorded as false. Tooling improvements should prioritize incremental receipt caching for repetitive synthesis reconciliations and fine-grained intra-task phase timers, with estimated time savings conservatively held at 0% pending empirical measurement."
+}

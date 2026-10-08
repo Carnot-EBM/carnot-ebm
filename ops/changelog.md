@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-08 — Operational retrospective for milestone 2026.10.716
+
+- Wrote `results/operational_retro_2026_10_716.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.716`. Authoritative disk-mtime fallback data records 6 experiments completed (1 compute-bound, 5 synthesis-only) across 69.0 total wall-time minutes (average 11 minutes per experiment).
+- Execution wall time was led by synthesis tasks 'Reconcile fourteen outcomes and decide whether evidence or learning improved' (20.94 minutes), 'Test dependency-scoped checks for continuous constraint admission' (15.18 minutes), and 'Validate the live ARC outcome frontier with bounded consumer receipts' (10.64 minutes), alongside compute-bound task 'Localize CUDA failure and bind the current qualified execution contract' (8.29 minutes) and synthesis task 'Carry GateMate physical-change evidence and its exact reopening condition' (7.02 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization on the RTX 3090 with 4MB allocated outside active runs; `gpu_idle_on_compute_bound_tasks` is false as no compute-bound idle anomalies or multi-model parallel dispatch requirements were present, and 0% GPU utilization is expected behavior for synthesis tasks.
+- Recommended operational improvements: implement incremental receipt caching and memoization for fourteen-outcome reconciliations and constraint admission checks, instrument CUDA failure localization and long synthesis runs with granular intra-task phase timers, and persist structured lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-08 — Plan milestone 2026.10.716
 
 - Added a dated primary/secondary research scan before experiment design,
