@@ -11,73 +11,51 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
+| CLAIM_SUPPORTED | 1 |
 | CLAIM_OVERSTATED | 1 |
-| NO_CLAIM | 4 |
-| CANNOT_DETERMINE | 3 |
+| NO_CLAIM | 2 |
+| CANNOT_DETERMINE | 4 |
 
-## experiment_8289_v715_capstone.json
+## experiment_8307_v717_runtime_change_boundary.json
 
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+CUDA runtime qualification remains disqualified from reopening because no authenticated causal changes occurred across the eight tracked runtime environment operands relative to upstream experiment exp8290.
 
 ## WHAT WOULD REFUTE IT
-Any comparative empirical or generalization claim being asserted from this artifact, as neither hypothesis was executed and no outcome rows were generated.
+The headline claim would be refuted if any row in `rows` or `environment_delta_rows` showed `changed: true` (or `potentially_causal: true`) for driver version, kernel module, device inventory, environment masks, library hashes, device node permissions, permitted UUID, or a valid operator repair receipt, resulting in `runtime_changed_score > 0` and `acceptance_gates.authenticated_change: true`.
 
 ## WAS THAT CHECKED
-No; both registered hypothesis protocols were halted prior to measurement due to missing prerequisite operands, leaving empirical verification unperformed.
+Yes; checked across all 8 rows in `environment_delta_rows` and `rows` (auditing `driver`, `kernel`, `devices`, `masks`, `libraries`, `nodes`, `permitted_uuid`, and `operator_repair`), where all items were evaluated against upstream baseline receipts from `/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8290_v716_runtime_localization.json` and confirmed available, completed, and unchanged.
 
 ## EVIDENCE
-`"status"`
-`"blocked_unmeasured"`
-`"failed_operand"`
-`"eligible_independent_audit_and_primitives"`
-`"completed_count"`
-`null`
-`"independent_science"`
-`false`
-`"supported_transferable_evidence"`
+- `"honest_verdict"`: `"complete_disqualified_cuda_runtime"`
+- `"verdict_class"`: `"disqualified"`
+- `"runtime_changed_score"`: `0`
+- `"completed_count"`: `8`
+- `"intended_count"`: `8`
+- `"excluded_count"`: `0`
+- `"failed_count"`: `0`
+- `"acceptance_gates"`: `"authenticated_change"`: `false`, `"cuda_context_ready"`: `false`, `"owned_checks"`: `false`
+- `"reopen_contract"`: `"eligible"`: `false`
+- `"rows"`:
+  - `"field"`: `"driver"`, `"changed"`: `false`, `"observed"`: `"615.71.09"`, `"previous"`: `"615.71.09"`
+  - `"field"`: `"kernel"`, `"changed"`: `false`
+  - `"field"`: `"devices"`, `"changed"`: `false`
+  - `"field"`: `"masks"`, `"changed"`: `false`
+  - `"field"`: `"libraries"`, `"changed"`: `false`
+  - `"field"`: `"nodes"`, `"changed"`: `false`
+  - `"field"`: `"permitted_uuid"`, `"changed"`: `false`, `"observed"`: `"GPU-7971baff-9583-eaa6-2292-393f930a28f9"`
+  - `"field"`: `"operator_repair"`, `"changed"`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8290_v716_runtime_localization.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-A finding of successful CUDA device initialization, allocation, and native execution (e.g., `cuInit` returning `0`, `cudaGetDeviceCount` > `0`, or `native_compatible` being `true`) would refute the diagnostic finding of an unavailable CUDA runtime. Furthermore, if a comparative scientific or learning claim were asserted, observing `cuda_context` as `false` or zero improvement over a baseline would refute it. However, the artifact makes no comparative or scientific claim to refute.
-
-## WAS THAT CHECKED
-No comparative hypothesis was checked because `H1` and `H2` were explicitly not measured (`measured_here` is `false`) and `scientific_benefit` was gated `false`. Hardware diagnostics and environment localization were executed (in `cuda_probe_rows` and `gate_check_summary`), confirming that the runtime is blocked across driver, runtime, and native layers.
-
-## EVIDENCE
-`"H1"`: `{"measured_here": false}`
-`"H2"`: `{"measured_here": false}`
-`"scientific_benefit"`: `false`
-`"cuda_context"`: `false`
-`"generalized_learning_benefit_score"`: `0`
-`"phase"`: `"terminal_blocked"`
-`"honest_verdict"`: `"complete_blocked_cuda_runtime"`
-`"inference_substrate"`: `"deterministic_runtime_receipt_validation_no_llm"`
-`"cuInit"`: `101`
-`"cudaGetDeviceCount"`: `101`
-`"native_compatible"`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8291_v716_dependency_scoped_admission.json
+## experiment_10030_fover_headline_selection_denominator.json
 
 **CLAIM_OVERSTATED**
 
@@ -85,66 +63,41 @@ KEEP
 CLAIM_OVERSTATED
 
 ## THE HEADLINE CLAIM
-Dependency-scoped transaction admission preserves soundness and provides an efficiency advantage over full constraint scans.
+A 4-verifier ensemble scoring formula incorporating session memory achieves ~0.913 AUROC on FoVer error detection, providing a ~0.018 learning contribution over base verifiers.
 
 ## WHAT WOULD REFUTE IT
-- Disagreement or constraint violations identified by an independent external oracle comparing post-state validity against true semantics rather than the verifier checking itself.
-- End-to-end transaction latency of dependency-scoped admission exceeding that of full constraint scans across general graph topologies (`paired_median_time_ratio > 1.0`).
+The claim is refuted if:
+1. The base multi-verifier ensemble fails to outperform the cheapest single-verifier baseline (`tier0r_alone`), demonstrating that multi-verifier combination provides no measurable synergy.
+2. The claimed 4-verifier formula does not actually utilize four valid verifiers (e.g., components omitted or scoring at chance).
+3. The session memory "learning contribution" fails to achieve statistical significance (95% bootstrap confidence interval spanning zero) once label-contaminated memory rows are excluded on clean held-out data.
 
 ## WAS THAT CHECKED
-No. Soundness refutation was not given a chance to happen because the verifier acts as its own oracle (`verifier_is_oracle = true`), making the soundness claim circular by construction. For efficiency, refutation was observed on chain and cyclic topologies where scoped admission was slower than full evaluation (`paired_median_time_ratio` of `1.1067801379041788` and `1.0396705054985425`), but the efficiency gate masked this by scoping the criterion strictly to the sparse DAG fixture.
+Yes. All three refutations were directly checked within the artifact:
+1. In `ensemble_vs_best_single_component`, the base formula was evaluated against `tier0r_alone`.
+2. In `headline_text_vs_formula_discrepancy` and `per_component_auroc_full_corpus`, the verifier formula was checked against the north star specification.
+3. In `memory_effect` under `H1_never_sampled_and_not_memory_flagged`, the learning contribution was measured with a 95% bootstrap confidence interval on clean held-out rows.
 
 ## EVIDENCE
-- `honest_verdict`: `"complete_circular_positive_dependency_scoped_admission"`
-- `verifier_is_oracle`: `true`
-- `efficiency_signal`: `true`
-- `dependency_efficiency_signal_score`: `1`
-- `dependency_efficiency_signal_score`: `"Sparse graph-unit median constraint fraction <=0.5 and paired median whole-transaction ratio <=1; repetitions add no independent sources."`
-- `paired_median_time_ratio`: `1.1067801379041788`
-- `paired_median_time_ratio`: `1.0396705054985425`
-- `paired_median_time_ratio`: `0.9507309161694101`
-- `scientific_benefit_measured`: `false`
+- `north_star_text`: `"4-verifier score (fr11_session_memory, tier0r_curry_howard, tier0s_arithmetic_gap, tier0u_logical_consistency)"`
+- `formula`: `"0.9*tier0r + 0.1*tier0u + FR11_MEMORY_BOOST(=1.0)*memory_score"`
+- `tier0s_in_formula`: `false`
+- `tier0s_scored_but_unused_full_corpus_auroc`: `0.3016179446373822`
+- `u`: `0.5098671461946712`
+- `tier0r_alone`: `0.9016862925104014`
+- `base`: `0.9015981044183999`
+- `base_formula_minus_tier0r_alone`: `-8.818809200150657e-05`
+- `reading`: `"On the full corpus the 0.9*tier0r + 0.1*tier0u base formula scores within 0.0001 of tier0r alone (slightly below it). The second component adds nothing measurable. All of condition A's lift over tier0r comes from the memory term."`
+- `published_learning_contribution`: `0.0184712`
+- `low`: `-0.0019785082174461704`
+- `high`: `0.026521631023843424`
+- `methodology_note`: `"The memory term is built from labels of earlier FoVer rows, so condition A contains label-derived information by design."`
+- `honest_verdict`: `"complete: headline_survives_held_out_but_learning_contribution_not_established_on_clean_rows"`
+- `gate1_survives_verdict`: `true`
 
 ## RECOMMENDATION
-NARROW_CLAIM
+CORRECT_THE_RECORD
 
-## experiment_8292_evidence_view_canary.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
-
-## experiment_8300_v716_arc_outcome_frontier.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
-
-## experiment_8301_v716_kv260_evidence_cost_boundary.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
-
-## experiment_8302_v716_gatemate_physical_delta.json
+## experiment_8308_sentence_spline_fit.json
 
 **NO_CLAIM**
 
@@ -155,31 +108,22 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Because the artifact is an audit receipt and evidence ledger making no comparative or empirical performance claim, there is no headline claim to refute. If the ledger's recording of blocked status were taken as a factual assertion, it would be refuted by an authenticated operator physical-change receipt, modified bringup documentation in the change ledger, or a live JTAG probe returning a valid GM1Ax IDCODE (`0x20000001`) instead of `0xffffffff`.
+None. The artifact is an operational gate-check receipt reporting that experiment execution was halted by an unsatisfied upstream prerequisite; it makes no empirical or comparative claim.
 
 ## WAS THAT CHECKED
-Yes, for document and ledger continuity: `change_ledger` checked document hashes against upstream experiment 8288 (all unchanged), and `physical_change_evidence` verified that no new physical change receipts exist. No comparative modeling or device execution was attempted.
+No. No experimental hypotheses or comparative metrics were evaluated because execution was blocked at the pre-gate layer prior to running.
 
 ## EVIDENCE
-`claim_scope`
-`"Evidence ledger; future physical preflight remains unexecuted"`
-`arm`
-`"documentation_audit"`
-`honest_verdict`
-`"complete_blocked_gatemate_physical_change"`
-`verdict_class`
-`"blocked"`
-`scientific_benefit_score`
-`0`
-`model_invoked`
-`false`
-`inference_substrate`
-`"aggregation_from_upstream_artifacts"`
+`schema` `blocked_gate_check_v1`
+`status` `blocked`
+`duration_s` `0.0`
+`honest_verdict` `blocked_gate_check_failed`
+`blocked_at_layer` `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8303_v716_capstone.json
+## experiment_8313_changed_runtime_canary.json
 
 **NO_CLAIM**
 
@@ -190,31 +134,70 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-A concrete observation demonstrating statistically significant independent scientific gain or advantage over baseline controls on the target tasks would refute the artifact's recorded blocked and null state; however, because this artifact is a receipt and status aggregation that advances no positive comparative claim, there is no performance claim to refute.
+None; the artifact is a gate check receipt recording an execution block rather than an experimental finding or comparative claim.
 
 ## WAS THAT CHECKED
-No; the artifact explicitly records H1 and H2 as unmeasured due to upstream prerequisite failures, ARC evaluations as disqualified with zero games executed, and hardware dispatch as execution mechanics only with zero benefit score, omitting unblocked comparative evaluations.
+No; execution was halted at `conductor_pre_gate` before any canary trial was executed.
 
 ## EVIDENCE
+`schema`
+`blocked_gate_check_v1`
 `status`
-`blocked_unmeasured`
-`failed_operand`
-`eligible_independent_audit_and_primitives`
-`energy_specific_advantage`
-`false`
-`natural_benefit`
-`circular_positive_fixture`
-`independent_science`
-`claim_scope`
-`execution mechanics and exact hashes only; independent benefit remains zero`
-`benefit_score`
-`0`
-`scientific_benefit`
-`verdict_class`
-`disqualified`
+`blocked`
 `honest_verdict`
-`complete_disqualified_owned_checks`
-`complete_circular_positive_polarfire_state_dispatch`
+`blocked_gate_check_failed`
+`blocked_reason`
+`actual=0 == expected=1`
+`blocked_at_layer`
+`conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
+
+## experiment_8314_v717_arc_coverage_frontier.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_8315_v717_kv260_local_cost_boundary.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_8316_v717_gatemate_obligation.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_8317_v717_capstone.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write

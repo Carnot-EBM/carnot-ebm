@@ -96515,3 +96515,36 @@ Implementation 2026-10-08: `v717_capstone.reconcile_manifest` filters the
 deduplication set to rows containing `id`. The existing regression now also
 checks the full historical byte prefix, the complete legacy row and exactly
 one appended retirement; its original repeat and rejected-append checks pass.
+
+
+## V718 staged research contract (2026-10-08)
+
+### REQ-REPORT-V718-PLAN: Finish qualified local measurements without changing the scientific question
+
+The V718 design and next-roadmap YAML shall contain exactly fourteen tasks,
+Exp8318 through Exp8331, in identical order across four phases. The visible
+table, complete JSON task objects and canonical task digest shall agree.
+Preserve the previous design. Preserve the active roadmap and conductor source.
+Record primary and secondary research findings before designing experiments.
+
+Carry the frozen V717 natural-data protocol without changing its thresholds,
+source roles, labels or seeds. Diagnose the exact informational-verdict,
+historical-authority and cold-replay failures before continuing. A separate
+bounded feedback-capacity experiment shall not alter H1 or H2. Static fitting
+shall not depend on durable online recovery or CUDA. All gates shall reference
+earlier current producers and identically named required fields.
+
+Every task shall declare substrate, verdict class, evidence purpose, file
+deliverable, progress and bounded-writing steps, and relevant failure lineage.
+The only current LLM experiment shall include unsloth/Qwen3.8-27B-GGUF and
+model_bounded_generation. Preserve continuous self-learning, ARC supervisor
+research, each unmet board obligation and the scope of PolarFire graduation.
+
+### SCENARIO-REPORT-V718-PLAN: Check staged authority and reject altered contracts
+
+Schema, full-object/table/digest equality, gate, exclusion, execution-fit, ARC
+and overdue-priority checks shall run on the staged files without activation.
+A changed title and removed task shall each fail contract comparison. Run
+existing focused unit tests and private E2E-018 authority lifecycle checks.
+Run scoped lint and spec coverage. Record global health separately. No
+experiment, external publication, conductor edit or push is authorized by planning.

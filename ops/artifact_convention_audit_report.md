@@ -9,28 +9,22 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 1 |
-| CANNOT_DETERMINE | 7 |
+| CHECKABLE | 2 |
+| CANNOT_DETERMINE | 6 |
 
-## experiment_8289_v715_capstone.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8290_v716_runtime_localization.json
+## experiment_8307_v717_runtime_change_boundary.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8291_v716_dependency_scoped_admission.json
+## experiment_10030_fover_headline_selection_denominator.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8292_evidence_view_canary.json
+## experiment_8308_sentence_spline_fit.json
 
 **CHECKABLE**
 
@@ -38,7 +32,7 @@ reviewer call failed
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked at conductor pre-gate because upstream dependency `exp8290-runtime-localization` failed the `cuda_context_ready_score` gate check (observed 0, expected 1).
+no claim
 
 ## WHAT IS MISSING
 nothing
@@ -46,25 +40,41 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8300_v716_arc_outcome_frontier.json
+## experiment_8313_changed_runtime_canary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked at the conductor pre-gate layer because upstream prerequisite checks for runtime change and CUDA context readiness failed (both evaluated to 0 instead of 1).
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8314_v717_arc_coverage_frontier.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8301_v716_kv260_evidence_cost_boundary.json
+## experiment_8315_v717_kv260_local_cost_boundary.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8302_v716_gatemate_physical_delta.json
+## experiment_8316_v717_gatemate_obligation.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8303_v716_capstone.json
+## experiment_8317_v717_capstone.json
 
 **CANNOT_DETERMINE**
 
