@@ -51648,3 +51648,29 @@ generator updates, hardware reruns or external publication are authorized.
 The actual thin CLI writes a terminal private candidate, passes unchanged
 adversarial/strict-row validators and atomic publication, and rejects rehashed
 replay tampering. Stream hashes and clocks remain replayable after scratch ends.
+## REQ-VERIFY-8290: Localize CUDA failure before any neural execution
+
+Use the existing UUID lease and fresh children for inherited and explicit UUID
+bindings. Within 60 seconds per child and 360 seconds for the matrix, measure
+driver initialization, count, UUID, permitted context, allocation, host-device-host
+byte parity and cleanup; separately measure runtime and native enumeration.
+Retain API codes, resolved libraries and hashes, relevant environment masks,
+driver versions, device access, binary hash, process identity and both streams.
+Inventory alone cannot qualify execution. Stop unchanged failure after this
+matrix. No reset, installation, permission change, unowned signals, model load,
+generation or embeddings. A launch adapter requires a measured successful
+binding change. Unresolved root cause remains unproved.
+
+### SCENARIO-VERIFY-8290-LAYERS
+
+Private subprocess libraries exercise stale ordinals, intentional masks, missing
+nodes, stub libraries, occupied lease, CPU-only native output, context/copy
+failures and timeout cleanup. Real probes remain separate from fixtures.
+Context readiness requires actual parity, native compatibility and owned cleanup.
+
+### SCENARIO-VERIFY-8290-VALIDATION
+
+Freeze validation argv. Run current private coverage and protocol tests, embedded
+token counts, focal <=64 token controls, independent view/admission, genuine
+crash resume and private E2E-015/019. All added statements, CLI and children
+must be covered. Retain full-suite diagnostics separately from owned validation.

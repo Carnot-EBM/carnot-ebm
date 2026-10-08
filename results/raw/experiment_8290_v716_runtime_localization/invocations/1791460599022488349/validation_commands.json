@@ -1,0 +1,229 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot8262-private-a7wjc6_7/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_runtime_localization_8290.py"
+      ],
+      "deadline": 480,
+      "expected": 0,
+      "name": "owned_unit_and_private_CLI",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_runtime_localization_8290.py",
+        "-k",
+        "authority"
+      ],
+      "deadline": 120,
+      "expected": 0,
+      "name": "current_contract_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_protocol_conformance_8263.py",
+        "-k",
+        "typed or hard_exit or admission"
+      ],
+      "deadline": 480,
+      "expected": 0,
+      "name": "admission_component",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_protocol_conformance_8263.py",
+        "-k",
+        "focal or capture"
+      ],
+      "deadline": 480,
+      "expected": 0,
+      "name": "view_component",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_coverage_custody_8262.py::test_durable_measured_report",
+        "tests/python/test_coverage_custody_8262.py::test_invalid_reports",
+        "tests/python/test_coverage_custody_8262.py::test_rehashed_primitive_rejected",
+        "tests/python/test_coverage_custody_8262.py::test_durable_provenance_negatives"
+      ],
+      "deadline": 480,
+      "expected": 0,
+      "name": "coverage_custody_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "deadline": 360,
+      "expected": 0,
+      "name": "consumer_E2E015_019",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot8262-private-a7wjc6_7/coverage.ini"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot8262-private-a7wjc6_7/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot8262-private-a7wjc6_7/coverage.ini",
+        "-o",
+        "/tmp/carnot8262-private-a7wjc6_7/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/runtime_localization_8290.py",
+        "python/carnot/verify/cuda_primitive_8290.py",
+        "scripts/experiments/experiment_8290_v716_runtime_localization.py",
+        "tests/python/test_runtime_localization_8290.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/runtime_localization_8290.py",
+        "python/carnot/verify/cuda_primitive_8290.py",
+        "scripts/experiments/experiment_8290_v716_runtime_localization.py",
+        "tests/python/test_runtime_localization_8290.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/verify/runtime_localization_8290.py",
+        "python/carnot/verify/cuda_primitive_8290.py",
+        "scripts/experiments/experiment_8290_v716_runtime_localization.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_runtime_localization_8290.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    }
+  ],
+  "owned": [
+    "python/carnot/verify/runtime_localization_8290.py",
+    "python/carnot/verify/cuda_primitive_8290.py",
+    "scripts/experiments/experiment_8290_v716_runtime_localization.py"
+  ],
+  "repository_health": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "deadline": 120,
+    "expected": 0,
+    "name": "repository_full_suite",
+    "scope": "diagnostic"
+  },
+  "repository_health_receipt": {
+    "path": "/tmp/carnot8290-work/health/repository_full_suite.receipt.json",
+    "sha256": "sha256:cbc626fe8279f051d4b22b71012b08a3eeb561d284210864b7a35a607cfbddca"
+  }
+}

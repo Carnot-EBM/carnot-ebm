@@ -96138,3 +96138,26 @@ Private authority-lifecycle CLI tests shall check positive and negative paths.
 Scoped spec coverage and documentation reconciliation shall record the actual
 validation scope and any unrelated repository-health failures. The future
 experiment agents add their own REQ/SCENARIO and failing tests before code.
+## REQ-REPORT-8290: Bind V716 runtime localization to frozen authority
+
+Exp8290 shall bind all fourteen full tasks, Exp8290 through Exp8303, with
+the existing authority reader and explicit milestone 2026.10.716. Save original
+authority, science, code, source roles, intended units and terminal sidecars.
+Staged agreement does not establish activation. Cold replay uses saved bytes,
+including rehashed negative controls, without requiring a later live milestone.
+Preserve the V713 science digest. Publish an atomic, checked complete terminal
+artifact. Keep four current component scores independent of CUDA. Missing
+external operands block; failed owned checks disqualify the affected readiness.
+Declare no_model_load, MODEL_SPECS=[], zero current calls and zero generalization.
+
+### SCENARIO-REPORT-8290-AUTHORITY
+
+Fourteen ordered complete tasks and exact gate paths agree at activation.
+Changed prompts, staged-only authority and rehashed replay changes fail their
+own gates. Missing historical primaries retain cascade skips without verdicts.
+
+### SCENARIO-REPORT-8290-REPLAY
+
+Private durable coverage and protocol checks pass through the current thin CLI.
+Deletion of scratch and later roadmap changes do not invalidate frozen replay.
+Tampered primitive or stream bytes fail. Private fixture success is circular.
