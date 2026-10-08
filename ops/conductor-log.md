@@ -19835,3 +19835,11 @@ code |
 | 2026-10-08 07:04 UTC | Milestone 2026.10.715 activated | OK | 14 tasks queued |
 | 2026-10-08 07:39 UTC | Bind fourteen tasks and reuse qualified evidence a | OK | 89 passed, 1 warning in 90.21s (0:01:30) |
 | 2026-10-08 08:19 UTC | Qualify the leased llama.cpp backend under explici | OK | 119 passed, 1 warning in 12.89s |
+| 2026-10-08 08:22 UTC | Measure bounded Qwen response to selected and leng | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8277-lease-backend-qualification.gguf_backend_ready_score (actual=0 == expected=1) |
+| 2026-10-08 08:24 UTC | Capture evidence views on one hundred twenty-eight | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8278-evidence-view-canary, exp8278-evidence-view-canary) |
+| 2026-10-08 08:24 UTC | Capture calibration and selection views on sixty-f | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8278-evidence-view-canary, exp8278-evidence-view-canary) |
+| 2026-10-08 08:24 UTC | Train calibrated energy decisions from evidence-de | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8279-fit-view-capture, exp8280-tune-view-capture) |
+| 2026-10-08 08:24 UTC | Capture and seal intervention decisions for every | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8281-intervention-energy-fit, exp8278-evidence-view-canary) |
+| 2026-10-08 08:24 UTC | Independently test source-intervention decision be | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8282-reserved-view-seal) |
+| 2026-10-08 08:24 UTC | Learn reusable soft constraints from delayed attri | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8282-reserved-view-seal) |
+| 2026-10-08 08:24 UTC | Audit later constraint benefit and sealed retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8284-continuous-constraint-admission) |
