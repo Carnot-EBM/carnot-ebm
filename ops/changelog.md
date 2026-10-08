@@ -21721,3 +21721,4 @@ Recorded 7 completed experiments in 49.2 minutes (0.8 hours), including 2 comput
 - 2026-10-08: Bind fourteen tasks and reuse qualified evidence and learning kernels (⚠️ Research Finding) — honest_verdict=complete_circular_positive_current_contract_readiness; results/experiment_8276_v715_current_contract_readiness.json
 - 2026-10-08: Qualify the leased llama.cpp backend under explicit device identity (⚠️ Blocked) — honest_verdict=complete_blocked_gguf_backend; results/experiment_8277_v715_lease_backend_qualification.json
 - 2026-10-08: Inspect new live supervisor outcomes for cross-game arm selection (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_checks; results/experiment_8286_v715_arc_outcome_frontier.json
+- 2026-10-08: Bound new evidence and learning costs against the KV260 operation set (⚠️ Blocked) — honest_verdict=complete_blocked_capture; results/experiment_8287_v715_kv260_evidence_cost_boundary.json
