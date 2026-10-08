@@ -21755,3 +21755,4 @@ Recorded 6 completed experiments in 40.0 minutes (0.7 hours), including 1 comput
 - 2026-10-08: Validate the live ARC outcome frontier with bounded consumer receipts (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_checks; results/experiment_8300_v716_arc_outcome_frontier.json
 - 2026-10-08: Bound new evidence and learning costs against the KV260 operation set (⚠️ Blocked) — honest_verdict=complete_blocked_capture; results/experiment_8301_v716_kv260_evidence_cost_boundary.json
 - 2026-10-08: Carry GateMate physical-change evidence and its exact reopening condition (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_physical_change; results/experiment_8302_v716_gatemate_physical_delta.json
+- 2026-10-08: Reconcile fourteen outcomes and decide whether evidence or learning improved (⚠️ Blocked) — honest_verdict=complete_blocked_upstream_evidence; results/experiment_8303_v716_capstone.json
