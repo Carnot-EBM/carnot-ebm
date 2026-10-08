@@ -6509,3 +6509,14 @@ assumptions and adaptation limits. Use probability-only class-conditional LAC.
 Author energy code has different softplus signs in single/all-label paths;
 no external code is installed. No exchangeability or fresh-data guarantee is
 established. KAC capacity and KANtize precision remain separate future tests.
+## 2026-10-08 — Exp8304 V717 focused primary methods ingested
+
+Ingested SURE-RAG 2605.03534v2 Sections IV.A–C/VI.G/VII; online KAN
+2602.02056v4 Sections 3.1–3.3/4/5.1; and query-driven constraint refinement
+2509.24489v1 Sections 4.1–4.2/Algorithm 1. Exact full-text bytes and hashes are
+bound in `openspec/change-proposals/v717-local-learning-protocol.json`.
+The refinement HTML request failed; the primary PDF supplied the methods.
+See `docs/research-notes/v717-method-ingestion.md` for adaptations, failure
+boundaries and distinctions from Exp7426/7427 and Exp7996/7998. Exposed cached
+development, immutable human labels and zero independent-generalization claims
+are preserved. V713 remains parked and unmeasured.

@@ -96314,3 +96314,20 @@ A mutated title or missing task shall fail comparison. Both comparison inputs
 may use staged bytes only when the report explicitly says activation was not
 checked. Planning shall not alter the active roadmap or research conductor.
 No implementation, experimental outcome or global repository pass is implied.
+## REQ-REPORT-8304: Bind complete V717 authority and immutable local methods
+
+Exp8304 SHALL compare all fourteen visible and executable tasks, preserve consumed
+staging absence, authenticate exact upstream primaries and terminal sidecars, and
+freeze the V707 source roster and scientific choices before outcome analysis.
+Readiness requires passing owned validation and never implies learning benefit.
+V713 remains parked and unmeasured. New producer paths are dependencies.
+
+### SCENARIO-REPORT-8304-AUTHORITY
+
+Matching activated authority passes; changed prompts, table rows or staging fail.
+Missing external evidence is blocked with exact path/hash/field operands.
+
+### SCENARIO-REPORT-8304-REPLAY
+
+A fresh CLI reconstructs contract rows from immutable input bytes, accepts valid
+and blocked candidates, and rejects rehashed changes to rows or readiness.

@@ -51805,3 +51805,16 @@ terminal publication auditors. Its tests execute real private CLI children and
 Exp8291's independent reconstruction. Rehashed aggregate, source, log, authority,
 slower-fixture and hard-violation cases preserve separate evidence dispositions.
 Owned statement coverage includes both added modules and the thin direct CLI.
+## REQ-VERIFY-8304: Bounded private validation and complete owned coverage
+
+Exp8304 SHALL freeze validation argv and private paths, use owned process-group
+deadlines and flushed progress, exercise real CLI and failure/recovery paths,
+and require 100 percent newly owned statement coverage. Failed owned checks
+disqualify and clear readiness. Atomic publication requires unchanged primary
+validation, adversarial verification, strict row lint and cold replay controls.
+
+### SCENARIO-VERIFY-8304-CHECKS
+
+Private tests execute successful publication, external blocking, rejected dates,
+validator failure and recovery, and valid/negative/rehashed cold replay children.
+Only invocation-owned coverage files count; existing modules are reused.
