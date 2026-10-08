@@ -19859,3 +19859,4 @@ code |
 | 2026-10-08 13:22 UTC | Independently test source-intervention decision be | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8296-reserved-view-seal) |
 | 2026-10-08 13:22 UTC | Learn reusable soft constraints from delayed attri | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8296-reserved-view-seal) |
 | 2026-10-08 13:22 UTC | Audit later constraint benefit and sealed retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8298-continuous-constraint-admission) |
+| 2026-10-08 13:50 UTC | Validate the live ARC outcome frontier with bounde | OK | 91 passed, 1 warning in 88.21s (0:01:28) |
