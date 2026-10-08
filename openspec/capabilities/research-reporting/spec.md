@@ -96331,3 +96331,25 @@ Missing external evidence is blocked with exact path/hash/field operands.
 
 A fresh CLI reconstructs contract rows from immutable input bytes, accepts valid
 and blocked candidates, and rejects rehashed changes to rows or readiness.
+
+## REQ-REPORT-8305: Publish bounded cached-development evidence
+
+Exp8305 SHALL declare no_model_load, zero current model calls and imported GPU
+provenance separately, authenticate primary and terminal sidecars, freeze exact
+private validation argv, and publish through unchanged primary validators.
+All intended slots retain explicit masks. Generalization scores remain zero.
+
+### SCENARIO-REPORT-8305-CLI
+
+Real private CLI and fresh-process replay accept valid and externally blocked
+artifacts, reject tampered bytes and aggregates, and recover validator failure
+by publishing a disqualified artifact with readiness zero. Newly owned statement
+coverage SHALL reach100 percent. E2E-015/019, scoped lint, strict types and spec
+coverage run under bounded process supervision. The conductor owns ops and
+traceability reconciliation; no full repository suite runs in this experiment.
+
+Implementation 2026-10-08: `cached_sentence_execution_8305.py` freezes private
+validation commands and reuses bounded child supervision and atomic publication.
+The direct Exp8305 runner supports measurement, private fixtures and cold replay.
+`docs/research-notes/v717-cached-cohort.md` records exposure and missingness.
+Owned validation receipts determine readiness; no model or full suite is run.

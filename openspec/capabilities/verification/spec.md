@@ -51818,3 +51818,27 @@ validation, adversarial verification, strict row lint and cold replay controls.
 Private tests execute successful publication, external blocking, rejected dates,
 validator failure and recovery, and valid/negative/rehashed cold replay children.
 Only invocation-owned coverage files count; existing modules are reused.
+
+## REQ-VERIFY-8305: Reconstruct cached sentence custody from primitive bytes
+
+Exp8305 SHALL preserve fit128, tune64 and reserved128 in original order, verify
+source and answer bytes, source-group disjointness and historical model identity,
+and reparse bound replies into sixteen finite features. Binary human targets
+remain in protected evaluator shards. Predictor shards use an exact allowlist,
+exclude targets and identity features, and freeze before downstream access.
+
+### SCENARIO-VERIFY-8305-CUSTODY
+
+Reconstruction independently counts transport, features and usable labels,
+including both tune halves, stream96, later9..96 and retention32. Target injection,
+source-role collision, changed replies and rehashed aggregate tampering fail.
+Insufficient class support clears fit support without clearing authenticated
+cached-cohort custody. Missing external operands block; failed owned checks
+ disqualify. Private fixtures grant only constructed mechanics credit.
+
+Implementation 2026-10-08: `cached_sentence_custody_8305.py` reparses primitive
+capture replies, computes public signals through the existing numeric adapters,
+checks the original roster and binary targets, and seals separate predictor and
+evaluator files. Replay follows pinned primary references to primitive copies;
+rehashed measurements cannot replace those operands. Structural canaries cover
+source-role collisions, target injection, changed replies and baseline drift.
