@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.715",
+  "generated_at": "2026-10-08T10:14:22Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 40.0,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Inspect new live supervisor outcomes for cross-game arm selection",
+      "duration_minutes": 9.13,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind fourteen tasks and reuse qualified evidence and learning kernels",
+      "duration_minutes": 8.58,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Carry GateMate physical-change evidence and its exact reopening condition",
+      "duration_minutes": 7.16,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and decide whether evidence or learning improved",
+      "duration_minutes": 6.97,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bound new evidence and learning costs against the KV260 operation set",
+      "duration_minutes": 5.95,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.715 completed 6 experiments (1 compute-bound, 5 synthesis-only) across 40.0 total wall-time minutes (averaging 7 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was dominated by synthesis-only tasks comprising all top 5 slowest experiments: supervisor outcome inspection (9.13 minutes), task binding and kernel reuse (8.58 minutes), GateMate physical-change evidence tracking (7.16 minutes), fourteen-outcome reconciliation (6.97 minutes), and KV260 operation cost bounding (5.95 minutes). With gpu_idle_on_compute_bound_tasks recorded as false, the snapshot of 0% GPU utilization on the NVIDIA GeForce RTX 3090 reflects expected post-run idle state for synthesis tasks rather than an accelerator stall, and single-model workloads correctly avoided multi-model DualGPURunner dispatch.",
+  "bottlenecks_identified": [
+    "The top 5 slowest experiments were all synthesis-only tasks accounting for 37.79 of the 40.0 total milestone wall-time minutes (over 94% of total milestone wall time), led by 'Inspect new live supervisor outcomes for cross-game arm selection' (9.13 minutes) and 'Bind fourteen tasks and reuse qualified evidence and learning kernels' (8.58 minutes).",
+    "The single compute-bound task completed in under 5.95 minutes outside the top 5 slowest tasks, but lack of phase-level instrumentation (model loading, tokenization, device transfer, evaluation) prevents isolating its internal execution profile.",
+    "All 5 synthesis-only tasks executed serially across recurring supervisor outcome inspections, task binding checks, and fourteen-outcome reconciliations without incremental receipt caching or evidence memoization when upstream inputs were unchanged.",
+    "Milestone timing analysis relied on disk-mtime reconstruction fallbacks due to missing synchronous start and finish execution timestamps in experiment receipts."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and memoization for supervisor outcome inspections, task binding, and fourteen-outcome reconciliations to avoid re-evaluating static upstream evidence.",
+    "Instrument synthesis tasks with fine-grained intra-task phase timers to isolate evidence collection, contract qualification, and receipt emission latencies.",
+    "Persist synchronous start and finish execution timestamps directly into experiment receipt artifacts during conductor execution to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Capture continuous in-flight accelerator utilization and memory metrics during compute-bound execution to corroborate point-in-time GPU monitor reports.",
+    "Restrict DualGPURunner multi-model dispatch strictly to concurrent multi-model execution, avoiding misapplication to single-model or synthesis-only workloads."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and memoization for recurring supervisor outcome inspections and fourteen-outcome reconciliations when upstream evidence remains static.",
+    "Instrument synthesis-only pipelines and compute-bound harnesses with granular intra-task execution phase timers.",
+    "Persist explicit start and end lifecycle timestamps in experiment receipts and capture continuous in-flight GPU utilization telemetry."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Across 6 completed experiments and 40.0 minutes of wall time, execution latency was heavily concentrated in synthesis tasks led by supervisor outcome inspection (9.13 minutes) and task binding (8.58 minutes), while the sole compute-bound experiment completed in under 5.95 minutes. GPU utilization was observed at 0% post-run on the RTX 3090 representing expected idle behavior for non-accelerated synthesis workloads with gpu_idle_on_compute_bound_tasks recorded as false. Tooling improvements should prioritize incremental receipt caching for repetitive synthesis reconciliations and fine-grained intra-task phase timers, with estimated time savings conservatively held at 0% pending empirical measurement."
+}

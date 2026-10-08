@@ -7331,3 +7331,10 @@ Operational evidence addendum: this entry supersedes earlier operational asserti
 - theme: Operational efficiency across 7 completed experiments (2 compute-bound, 5 synthesis-only) in 49 minutes of milestone wall time.
 - key result: honest operational negative — 7 experiments completed in 49.2 minutes led by GGUF tokenized request qualification (13.12 min), live supervisor outcome inspection (8.53 min), and fourteen-outcome reconciliation (6.84 min); GPU utilization was 0% post-run with gpu_idle_on_compute_bound_tasks recorded as false, and available records lack intra-task sub-phase telemetry and continuous in-flight accelerator sampling.
 - acceptance: no data available this milestone
+
+### Milestone 2026.10.715
+
+- exp_range: no data available this milestone
+- theme: Operational efficiency across 6 completed experiments (1 compute-bound, 5 synthesis-only) in 40 minutes of milestone wall time.
+- key result: honest operational negative — 6 experiments completed in 40.0 minutes led by live supervisor outcome inspection (9.13 min), task binding and kernel reuse (8.58 min), GateMate physical-change evidence tracking (7.16 min), and fourteen-outcome reconciliation (6.97 min); the single compute-bound task completed in under 5.95 minutes outside the top 5 slowest tasks, GPU utilization was 0% post-run with gpu_idle_on_compute_bound_tasks recorded as false, and available records lack intra-task sub-phase telemetry and continuous in-flight accelerator sampling.
+- acceptance: no data available this milestone

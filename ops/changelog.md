@@ -21724,3 +21724,7 @@ Recorded 7 completed experiments in 49.2 minutes (0.8 hours), including 2 comput
 - 2026-10-08: Bound new evidence and learning costs against the KV260 operation set (⚠️ Blocked) — honest_verdict=complete_blocked_capture; results/experiment_8287_v715_kv260_evidence_cost_boundary.json
 - 2026-10-08: Carry GateMate physical-change evidence and its exact reopening condition (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_physical_change; results/experiment_8288_v715_gatemate_physical_delta.json
 - 2026-10-08: Reconcile fourteen outcomes and decide whether evidence or learning improved (⚠️ Blocked) — honest_verdict=complete_blocked_upstream_evidence; results/experiment_8289_v715_capstone.json
+
+### Milestone 2026.10.715 — operational retrospective
+
+Recorded 6 completed experiments in 40.0 minutes (0.7 hours), including 1 compute-bound task. Inspect new live supervisor outcomes for cross-game arm selection (9.13 min) and Bind fourteen tasks and reuse qualified evidence and learning kernels (8.58 min) led the listed timings. Proposed incremental receipt caching for supervisor outcome inspections and fourteen-outcome reconciliations, granular intra-task phase timers for synthesis and compute-bound workloads, direct receipt timestamp logging, and continuous in-flight accelerator telemetry. Locked artifact fields remain unchanged; GPU idle on compute-bound tasks is false, parallel-model dispatch had no data available this milestone, and estimated time savings remain 0%. Artifact: `results/operational_retro_2026_10_715.json`.
