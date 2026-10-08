@@ -19875,3 +19875,4 @@ code |
 | 2026-10-08 20:03 UTC | Independently test decision benefit on the fixed d | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8309-reserved-prediction-seal, exp8310-continuous-local-learning) |
 | 2026-10-08 20:03 UTC | Audit later learning value and retention without s | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8310-continuous-local-learning) |
 | 2026-10-08 20:05 UTC | Run a bounded Qwen evidence canary after a qualifi | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8307-runtime-change-boundary.runtime_changed_score (actual=0 == expected=1) |
+| 2026-10-08 21:12 UTC | Close the ARC reader coverage gap and inspect new  | OK | 98 passed, 1 warning in 66.80s (0:01:06) |
