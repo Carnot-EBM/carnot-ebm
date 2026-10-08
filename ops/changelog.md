@@ -21798,3 +21798,4 @@ Recorded 6 completed experiments in 40.0 minutes (0.7 hours), including 1 comput
 - 2026-10-08: Reopen CUDA qualification only on authenticated environment change (⚠️ Research Finding) — honest_verdict=complete_disqualified_cuda_runtime; results/experiment_8307_v717_runtime_change_boundary.json
 - 2026-10-08: Close the ARC reader coverage gap and inspect new supervisor outcomes (⚠️ Research Finding) — honest_verdict=complete_null_no_supervisor_outcomes; results/experiment_8314_v717_arc_coverage_frontier.json
 - 2026-10-08: Measure complete local-update costs and map the KV260 operation boundary (⚠️ Blocked) — honest_verdict=complete_blocked_experiment_8306_v717_local_update_isolation; results/experiment_8315_v717_kv260_local_cost_boundary.json
+- 2026-10-08: Preserve GateMate reopening evidence without repeating an unchanged probe (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_physical_change; results/experiment_8316_v717_gatemate_obligation.json
