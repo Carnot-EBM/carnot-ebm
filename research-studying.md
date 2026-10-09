@@ -6529,3 +6529,11 @@ See `docs/research-notes/v717-method-ingestion.md` for adaptations, failure
 boundaries and distinctions from Exp7426/7427 and Exp7996/7998. Exposed cached
 development, immutable human labels and zero independent-generalization claims
 are preserved. V713 remains parked and unmeasured.
+
+## V719 current custody and method reuse — 2026-10-09
+
+Exp8332 reuses authenticated full methods for 2602.02056v4 and 2606.11711v1.
+See docs/research-notes/v719-method-ingestion.md and the V719 methods manifest.
+The V717 scientific protocol is unchanged; capacity remains a separate
+constructed study. CURRENT cached support is bound to existing shards and
+activated tasks. Historical failures stay separate from science and support.

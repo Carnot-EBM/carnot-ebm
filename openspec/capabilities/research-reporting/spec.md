@@ -96739,3 +96739,55 @@ artifact field. Static fitting, local numerical qualification and runtime
 reading shall have no historical-synthesis success gate. Existing schema,
 retirement, gate, harness-fit and ARC checks shall pass. Private E2E-018 tests
 shall exercise authority changes without publishing research evidence.
+
+## REQ-REPORT-8332: Separate V719 custody from historical synthesis
+
+Bind all fourteen complete activated V719 tasks, the visible table and canonical
+JSON digest. Preserve V716, V717 and V718 design bytes and the immutable V717
+scientific protocol. Authenticate Exp8304/8305 and recount their existing shards
+without requiring Exp8318 or Exp8331 success. Cached readiness requires current
+task agreement, authentic support and all owned checks. Historical readiness
+requires deterministic replay controls; authenticated failed science stays failed.
+Future deliverables are dependencies. No models, recapture or new H1/H2 algorithms.
+
+### SCENARIO-REPORT-8332-AUTHORITY
+
+Fresh processes select explicit historical design bytes even when vNEXT is V719.
+Matching authority passes; changed prompts and missing activation fail. Missing
+primaries and conductor pre-gates remain distinct from scientific nulls.
+
+### SCENARIO-REPORT-8332-REPLAY
+
+A self-consistently rehashed private measurement with changed refs reaches the
+existing rejection at v718_contract_replay.py:357 through the real cold CLI.
+Preserve both gate_check_summary[15].hash operands and the failed historical
+verdict. Further disagreement stops that historical branch, without invalidating
+independent current custody. Valid, missing and rehashed aggregate controls run.
+
+### SCENARIO-REPORT-8332-METHODS
+
+Authenticate and reuse full V718 paper methods for 2602.02056v4 and 2606.11711v1.
+Bind the dated V719 reference scan, unchanged science and separate capacity
+protocol in a methods manifest. Keep all exposed-development generalization zero.
+
+## REQ-VERIFY-8332: Qualify unchanged finding consumption before publication
+
+Freeze bounded execution commands separately from scientific parameters. Require
+100 percent newly owned statements, including CLI, failure and recovery. Run
+private E2E-018/021, strict types, scoped Ruff and spec references. Parse reports
+bound to candidate and verifier hashes. Exit one means findings; process errors,
+missing reports, unknown findings and warnings block readiness. Known info needs
+independent primitive arithmetic and deliberate-error rejection. Preserve findings.
+
+### SCENARIO-VERIFY-8332-FINDINGS
+
+The unchanged verifier reports both legitimate exact zero and false zero.
+Only independently recomputed exact zero passes the qualified consumer. Changed
+bindings, malformed reports, unknown severity and command errors fail closed.
+
+### SCENARIO-VERIFY-8332-CLI
+
+Actual private children preserve argv, clocks, exits and output hashes. Failed
+owned checks clear all readiness and publish a validated disqualification. Cold
+primitive replay and unchanged primary and strict-row checks precede atomic
+terminal publication. The conductor owns ops and traceability reconciliation.

@@ -1,0 +1,570 @@
+EEE.F.EF                                                                 [100%]
+==================================== ERRORS ====================================
+____________________ ERROR at setup of test_current_custody ____________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/exp8332-qualification/owned-tests'), _trace=<pluggy._tracing.TagTracer...63aab0>, _basetemp=PosixPath('/tmp/exp8332-qualification/owned-tests'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def current(tmp_path_factory):
+        private = tmp_path_factory.mktemp("v719")
+        output = private / (e.NAME + ".json")
+        result = cli("--date", "20261009", "--output", output, "--private-fixture")
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8332] phase=start completed=0 pending=0
+E         [exp8332] phase=start completed=0 pending=0
+E         [exp8332] phase=preconditions_checked completed=0 pending=0
+E         [exp8318] phase=authority_before completed=0 pending=0
+E         [exp8318] phase=authority_after completed=0 pending=0
+E         [exp8318] phase=history_before completed=0 pending=0
+E         [exp8318] phase=history_after completed=0 pending=0
+E         [exp8332] phase=current_support_bound completed=1 pending=0
+E         [exp8205] phase=validation completed=0 pending=1
+E         [exp8205] phase=before_subprocess_private_child completed=0 pending=1
+E         [exp8205] phase=after_subprocess_private_child completed=1 pending=0
+E         [exp8205] phase=validation_complete completed=1 pending=0
+E         [exp8205] phase=before_subprocess_original_reduction_drift completed=0 pending=1
+E         [exp8205] phase=after_subprocess_original_reduction_drift completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_valid completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_valid completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_negative completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_negative completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_rehashed_tamper completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_rehashed_tamper completed=1 pending=0
+E         [exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+E         [exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+E         [exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 134, in publish
+E             publication = publish_primary(output, value, validate)
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E         During handling of the above exception, another exception occurred:
+E         
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8332_v719_contract_replay.py", line 13, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v719_replay_runner.py", line 68, in main
+E             return int(qualified.main(args))
+E                        ^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 356, in main
+E             publish(value, output, raw)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 141, in publish
+E             publication = publish_primary(output, value, validate)
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...cation.py", line 73, in publish_primary\n    raise ValueError("candidate_rejected")\nValueError: candidate_rejected\n').returncode
+
+tests/python/test_v719_contract_replay_8332.py:34: AssertionError
+_____________ ERROR at setup of test_existing_uncovered_rejection ______________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/exp8332-qualification/owned-tests'), _trace=<pluggy._tracing.TagTracer...63aab0>, _basetemp=PosixPath('/tmp/exp8332-qualification/owned-tests'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def current(tmp_path_factory):
+        private = tmp_path_factory.mktemp("v719")
+        output = private / (e.NAME + ".json")
+        result = cli("--date", "20261009", "--output", output, "--private-fixture")
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8332] phase=start completed=0 pending=0
+E         [exp8332] phase=start completed=0 pending=0
+E         [exp8332] phase=preconditions_checked completed=0 pending=0
+E         [exp8318] phase=authority_before completed=0 pending=0
+E         [exp8318] phase=authority_after completed=0 pending=0
+E         [exp8318] phase=history_before completed=0 pending=0
+E         [exp8318] phase=history_after completed=0 pending=0
+E         [exp8332] phase=current_support_bound completed=1 pending=0
+E         [exp8205] phase=validation completed=0 pending=1
+E         [exp8205] phase=before_subprocess_private_child completed=0 pending=1
+E         [exp8205] phase=after_subprocess_private_child completed=1 pending=0
+E         [exp8205] phase=validation_complete completed=1 pending=0
+E         [exp8205] phase=before_subprocess_original_reduction_drift completed=0 pending=1
+E         [exp8205] phase=after_subprocess_original_reduction_drift completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_valid completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_valid completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_negative completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_negative completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_rehashed_tamper completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_rehashed_tamper completed=1 pending=0
+E         [exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+E         [exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+E         [exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 134, in publish
+E             publication = publish_primary(output, value, validate)
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E         During handling of the above exception, another exception occurred:
+E         
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8332_v719_contract_replay.py", line 13, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v719_replay_runner.py", line 68, in main
+E             return int(qualified.main(args))
+E                        ^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 356, in main
+E             publish(value, output, raw)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 141, in publish
+E             publication = publish_primary(output, value, validate)
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...cation.py", line 73, in publish_primary\n    raise ValueError("candidate_rejected")\nValueError: candidate_rejected\n').returncode
+
+tests/python/test_v719_contract_replay_8332.py:34: AssertionError
+___________________ ERROR at setup of test_gate_independence ___________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/exp8332-qualification/owned-tests'), _trace=<pluggy._tracing.TagTracer...63aab0>, _basetemp=PosixPath('/tmp/exp8332-qualification/owned-tests'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def current(tmp_path_factory):
+        private = tmp_path_factory.mktemp("v719")
+        output = private / (e.NAME + ".json")
+        result = cli("--date", "20261009", "--output", output, "--private-fixture")
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8332] phase=start completed=0 pending=0
+E         [exp8332] phase=start completed=0 pending=0
+E         [exp8332] phase=preconditions_checked completed=0 pending=0
+E         [exp8318] phase=authority_before completed=0 pending=0
+E         [exp8318] phase=authority_after completed=0 pending=0
+E         [exp8318] phase=history_before completed=0 pending=0
+E         [exp8318] phase=history_after completed=0 pending=0
+E         [exp8332] phase=current_support_bound completed=1 pending=0
+E         [exp8205] phase=validation completed=0 pending=1
+E         [exp8205] phase=before_subprocess_private_child completed=0 pending=1
+E         [exp8205] phase=after_subprocess_private_child completed=1 pending=0
+E         [exp8205] phase=validation_complete completed=1 pending=0
+E         [exp8205] phase=before_subprocess_original_reduction_drift completed=0 pending=1
+E         [exp8205] phase=after_subprocess_original_reduction_drift completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_valid completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_valid completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_negative completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_negative completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_rehashed_tamper completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_rehashed_tamper completed=1 pending=0
+E         [exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+E         [exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+E         [exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 134, in publish
+E             publication = publish_primary(output, value, validate)
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E         During handling of the above exception, another exception occurred:
+E         
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8332_v719_contract_replay.py", line 13, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v719_replay_runner.py", line 68, in main
+E             return int(qualified.main(args))
+E                        ^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 356, in main
+E             publish(value, output, raw)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 141, in publish
+E             publication = publish_primary(output, value, validate)
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...cation.py", line 73, in publish_primary\n    raise ValueError("candidate_rejected")\nValueError: candidate_rejected\n').returncode
+
+tests/python/test_v719_contract_replay_8332.py:34: AssertionError
+___________ ERROR at setup of test_primitive_and_aggregate_controls ____________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/exp8332-qualification/owned-tests'), _trace=<pluggy._tracing.TagTracer...63aab0>, _basetemp=PosixPath('/tmp/exp8332-qualification/owned-tests'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def current(tmp_path_factory):
+        private = tmp_path_factory.mktemp("v719")
+        output = private / (e.NAME + ".json")
+        result = cli("--date", "20261009", "--output", output, "--private-fixture")
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8332] phase=start completed=0 pending=0
+E         [exp8332] phase=start completed=0 pending=0
+E         [exp8332] phase=preconditions_checked completed=0 pending=0
+E         [exp8318] phase=authority_before completed=0 pending=0
+E         [exp8318] phase=authority_after completed=0 pending=0
+E         [exp8318] phase=history_before completed=0 pending=0
+E         [exp8318] phase=history_after completed=0 pending=0
+E         [exp8332] phase=current_support_bound completed=1 pending=0
+E         [exp8205] phase=validation completed=0 pending=1
+E         [exp8205] phase=before_subprocess_private_child completed=0 pending=1
+E         [exp8205] phase=after_subprocess_private_child completed=1 pending=0
+E         [exp8205] phase=validation_complete completed=1 pending=0
+E         [exp8205] phase=before_subprocess_original_reduction_drift completed=0 pending=1
+E         [exp8205] phase=after_subprocess_original_reduction_drift completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_valid completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_valid completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_negative completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_negative completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_rehashed_tamper completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_rehashed_tamper completed=1 pending=0
+E         [exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+E         [exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+E         [exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 134, in publish
+E             publication = publish_primary(output, value, validate)
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E         During handling of the above exception, another exception occurred:
+E         
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8332_v719_contract_replay.py", line 13, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v719_replay_runner.py", line 68, in main
+E             return int(qualified.main(args))
+E                        ^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 356, in main
+E             publish(value, output, raw)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 141, in publish
+E             publication = publish_primary(output, value, validate)
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...cation.py", line 73, in publish_primary\n    raise ValueError("candidate_rejected")\nValueError: candidate_rejected\n').returncode
+
+tests/python/test_v719_contract_replay_8332.py:34: AssertionError
+=================================== FAILURES ===================================
+_____________________ test_private_missing_and_cli_errors ______________________
+
+tmp_path = PosixPath('/tmp/exp8332-qualification/owned-tests/test_private_missing_and_cli_e0')
+
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((e.ROOT / name).read_bytes())
+    (root / e.STAGED).write_bytes((root / e.ACTIVE).read_bytes())
+    assert e.authority(root, tmp_path / "staged")["activated"]
+>   plan = yaml.safe_load((root / e.ACTIVE).read_text())
+E   AssertionError: [exp8332] phase=start completed=0 pending=0
+E     [exp8332] phase=start completed=0 pending=0
+E     [exp8332] phase=preconditions_checked completed=0 pending=0
+E     [exp8318] phase=authority_before completed=0 pending=0
+E     [exp8318] phase=authority_after completed=0 pending=0
+E     [exp8318] phase=history_before completed=0 pending=0
+E     [exp8318] phase=history_after completed=0 pending=0
+E     [exp8332] phase=current_support_bound completed=1 pending=0
+E     [exp8205] phase=validation completed=0 pending=1
+E     [exp8205] phase=before_subprocess_private_child completed=0 pending=1
+E     [exp8205] phase=after_subprocess_private_child completed=1 pending=0
+E     [exp8205] phase=validation_complete completed=1 pending=0
+E     [exp8205] phase=before_subprocess_cold_valid completed=0 pending=1
+E     [exp8205] phase=after_subprocess_cold_valid completed=1 pending=0
+E     [exp8205] phase=before_subprocess_cold_negative completed=0 pending=1
+E     [exp8205] phase=after_subprocess_cold_negative completed=1 pending=0
+E     [exp8205] phase=before_subprocess_cold_rehashed_tamper completed=0 pending=1
+E     [exp8205] phase=after_subprocess_cold_rehashed_tamper completed=1 pending=0
+E     [exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+E     [exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+E     [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E     [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E     [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E     [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E     [exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+E     [exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+E     [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E     [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E     [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E     [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E     Traceback (most recent call last):
+E       File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 134, in publish
+E         publication = publish_primary(output, value, validate)
+E                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E         raise ValueError("candidate_rejected")
+E     ValueError: candidate_rejected
+E     
+E     During handling of the above exception, another exception occurred:
+E     
+E     Traceback (most recent call last):
+E       File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8332_v719_contract_replay.py", line 13, in <module>
+E         raise SystemExit(main())
+E                          ^^^^^^
+E       File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v719_replay_runner.py", line 68, in main
+E         return int(qualified.main(args))
+E                    ^^^^^^^^^^^^^^^^^^^^
+E       File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 356, in main
+E         publish(value, output, raw)
+E       File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v718_replay_runner.py", line 141, in publish
+E         publication = publish_primary(output, value, validate)
+E                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E         raise ValueError("candidate_rejected")
+E     ValueError: candidate_rejected
+E     
+E   assert 1 == 0
+E    +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...cation.py", line 73, in publish_primary\n    raise ValueError("candidate_rejected")\nValueError: candidate_rejected\n').returncode
+
+tests/python/test_v719_contract_replay_8332.py:145: AssertionError
+_________________________ test_owned_failure_recovery __________________________
+
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'cached_support': False, 'current_authority': False, 'history_reader': False,...ch-roadmap-v717-preserved-20261008.md', 'role': 'research-roadmap-v717-preserved-20261008', 'sha256': None, ...}], ...}
+output = PosixPath('/tmp/exp8332-qualification/owned-tests/test_owned_failure_recovery0/experiment_8332_v719_contract_replay.json')
+raw = PosixPath('/tmp/exp8332-qualification/owned-tests/test_owned_failure_recovery0/raw')
+
+    def publish(value: Json, output: Path, raw: Path) -> None:
+        """Failed owned checks clear readiness before checked failure publication."""
+        attempts: list[Json] = []
+    
+        def validate(candidate: Path) -> Json:
+            logs = raw / "terminal" / str(len(attempts))
+            cold = child(
+                "terminal_cold",
+                [
+                    str(e.ROOT / ".venv/bin/python"),
+                    "-u",
+                    str(e.ROOT / e.CLI),
+                    "--cold-replay",
+                    str(candidate),
+                ],
+                logs,
+                deadline=60,
+                heartbeat=20,
+            )
+            found = audit(candidate, logs, {})
+            rows = child(
+                "strict_rows",
+                [
+                    str(e.ROOT / ".venv/bin/python"),
+                    "-u",
+                    "scripts/verdict_row_consistency_lint.py",
+                    "--strict",
+                    str(candidate),
+                ],
+                logs,
+                deadline=60,
+                heartbeat=20,
+            )
+            report = dict(
+                passed=all(r["passed"] for r in [cold, found["receipt"], rows]),
+                checks=[cold, found["receipt"], rows],
+                adversarial=found,
+            )
+            attempts.append(report)
+            return report
+    
+        try:
+>           publication = publish_primary(output, value, validate)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+python/carnot/reporting/v718_replay_runner.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/tmp/exp8332-qualification/owned-tests/test_owned_failure_recovery0/experiment_8332_v719_contract_replay.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'cached_support': False, 'current_authority': False, 'history_reader': False,...ch-roadmap-v717-preserved-20261008.md', 'role': 'research-roadmap-v717-preserved-20261008', 'sha256': None, ...}], ...}
+validator = <function publish.<locals>.validate at 0x7f6afd0db4c0>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/exp8332-qualification/owned-tests/test_owned_failure_recovery0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6afcf9c560>
+
+    """SCENARIO-REPORT-8332-REPLAY: missing primaries, pre-gates and tampering persist."""
+    output, value, work = current
+    assert value["historical_dispositions"]["missing_output_count"] == 4
+    assert value["historical_dispositions"]["pre_gate_count"] == 2
+    for field in ["missing_output_count", "pre_gate_count", "science_ready_score"]:
+        changed = deepcopy(value)
+        changed["historical_dispositions"][field] = 99
+        changed["reproducibility_checksum"] = canonical_hash(
+            {k: v for k, v in changed.items() if k != "reproducibility_checksum"}
+        )
+        candidate = tmp_path / (field + ".json")
+        atomic_json(candidate, changed)
+        assert cli("--cold-replay", candidate).returncode == 1
+    changed = deepcopy(work)
+    changed["support"]["counts"]["fit"]["usable"] += 1
+    assert not e.replay_operands(changed)
+>   changed = deepcopy(work)
+        ^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v719_contract_replay_8332.py:237: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v718_replay_runner.py:141: in publish
+    publication = publish_primary(output, value, validate)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/tmp/exp8332-qualification/owned-tests/test_owned_failure_recovery0/experiment_8332_v719_contract_replay.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'cached_support': False, 'current_authority': False, 'history_reader': False,...ch-roadmap-v717-preserved-20261008.md', 'role': 'research-roadmap-v717-preserved-20261008', 'sha256': None, ...}], ...}
+validator = <function publish.<locals>.validate at 0x7f6afd0db4c0>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8318] phase=authority_before completed=0 pending=0
+[exp8318] phase=authority_after completed=0 pending=0
+[exp8318] phase=history_before completed=0 pending=0
+[exp8318] phase=history_after completed=0 pending=0
+[exp8332] phase=current_support_bound completed=1 pending=0
+[exp8205] phase=before_subprocess_deliberate_error completed=0 pending=1
+[exp8205] phase=after_subprocess_deliberate_error completed=1 pending=0
+[exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v719_contract_replay_8332.py::test_private_missing_and_cli_errors
+FAILED tests/python/test_v719_contract_replay_8332.py::test_owned_failure_recovery
+ERROR tests/python/test_v719_contract_replay_8332.py::test_current_custody - ...
+ERROR tests/python/test_v719_contract_replay_8332.py::test_existing_uncovered_rejection
+ERROR tests/python/test_v719_contract_replay_8332.py::test_gate_independence
+ERROR tests/python/test_v719_contract_replay_8332.py::test_primitive_and_aggregate_controls
+2 failed, 2 passed, 1 warning, 4 errors in 218.80s (0:03:38)
