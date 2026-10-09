@@ -1,0 +1,75 @@
+...FF                                                                    [100%]
+=================================== FAILURES ===================================
+______________________ test_current_fourteen_and_science _______________________
+
+path = PosixPath('/tmp/exp8359-coverage-check/unit/test_current_fourteen_and_scie0/actual/branches/branch_8356_replay.receipt.json')
+value = {'actual_exit': 1, 'argv': ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/git..._scie0/actual/custody/49-0caf392aa696e79a1aa8ebbaa14b89deb40974466fbd4bb538813a7cd293e9e9.bin', 'deadline_s': 180, ...}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+        with temporary.open("w", encoding="utf-8") as stream:
+            json.dump(value, stream, indent=2, sort_keys=True)
+            stream.write("\n")
+>           stream.flush()
+E           OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:66: OSError
+
+During handling of the above exception, another exception occurred:
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 66, in atomic_json
+    stream.flush()
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/exp8359-coverage-check/unit/test_current_fourteen_and_scie0')
+
+    def test_current_fourteen_and_science(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8359-ACCOUNTING: sealed diagnostics preserve failures."""
+>       execute = e.execute
+               ^^^^^^^^^^^^^
+
+tests/python/test_v720_capstone_8359.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v720_capstone_evidence.py:237: in measure
+    deadline=180,
+python/carnot/reporting/v709_execution.py:100: in execute
+    child(
+python/carnot/reporting/v709_execution.py:90: in child
+    atomic_json(logs / (name + ".receipt.json"), receipt)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/tmp/exp8359-coverage-check/unit/test_current_fourteen_and_scie0/actual/branches/branch_8356_replay.receipt.json')
+value = {'actual_exit': 1, 'argv': ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/git..._scie0/actual/custody/49-0caf392aa696e79a1aa8ebbaa14b89deb40974466fbd4bb538813a7cd293e9e9.bin', 'deadline_s': 180, ...}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+>       with temporary.open("w", encoding="utf-8") as stream:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:63: OSError
+----------------------------- Captured stdout call -----------------------------
+[exp8359] phase=measurement_before completed=0 pending=14
+[exp8359] phase=input_before completed=0 pending=13
+[exp8205] phase=before_subprocess_input_8346 completed=0 pending=1
+[exp8205] phase=after_subprocess_input_8346 completed=1 pending=0
+[exp8359] phase=input_after completed=1 pending=12
+[exp8359] phase=input_before completed=1 pending=12
+[exp8205] phase=before_subprocess_input_8347 completed=0 pending=1
+[exp8205] phase=after_subprocess_input_8347 completed=1 pending=0
+[exp8359] phase=input_after completed=2 pending=11
+[exp8359] phase=input_before completed=2 pending=11
+[exp8205] phase=before_subprocess_input_8348 completed=0 pending=1
+[exp8205] phase=after_subprocess_input_834

@@ -1,0 +1,79 @@
+{
+  "item": {
+    "reference": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8350_v720_static_benefit_audit.json",
+      "role": "20",
+      "sha256": "sha256:57d2803d86f74a2983db76633f0ff426457b1dcba409b653b12cecfcbde91a5d",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8359_v720_capstone/invocations/1791583907747877722/custody/20-57d2803d86f74a2983db76633f0ff426457b1dcba409b653b12cecfcbde91a5d.bin",
+      "snapshot_sha256": "sha256:57d2803d86f74a2983db76633f0ff426457b1dcba409b653b12cecfcbde91a5d",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8350_v720_static_benefit_audit.json"
+    },
+    "sidecar": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8350_v720_static_benefit_audit/validators/57d2803d86f74a2983db76633f0ff426457b1dcba409b653b12cecfcbde91a5d.json",
+      "role": "22",
+      "sha256": "sha256:916719d4da738ea184ed4907f84a45c771946b42489cf63517af69847592be63",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8359_v720_capstone/invocations/1791583907747877722/custody/22-916719d4da738ea184ed4907f84a45c771946b42489cf63517af69847592be63.bin",
+      "snapshot_sha256": "sha256:916719d4da738ea184ed4907f84a45c771946b42489cf63517af69847592be63",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8350_v720_static_benefit_audit/validators/57d2803d86f74a2983db76633f0ff426457b1dcba409b653b12cecfcbde91a5d.json"
+    }
+  },
+  "task": {
+    "MODEL_SPECS": [],
+    "deliverable": "results/experiment_8350_v720_static_benefit_audit.json",
+    "estimated_wall_time_min": 45,
+    "gated_on": [
+      {
+        "artifact_field": "frozen_predictions_ready_score",
+        "op": "==",
+        "upstream": "exp8346-frozen-input-contract",
+        "value": 1
+      }
+    ],
+    "id": "exp8350-static-benefit-audit",
+    "inference_substrate_class": "no_model_load",
+    "max_turns": 50,
+    "milestone": "2026.10.720",
+    "model": "sonnet",
+    "per_unit_rows": true,
+    "phase": 2,
+    "prior_failures": [
+      {
+        "addressed_by": "Audit the frozen local spline representation against a comparator selected on separate tune slots. No new evidence or generalization is claimed; a same-mechanism null retires this four-feature static head.",
+        "experiment_id": "exp8185-sentence-decision-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_sentence_decision_null"
+      },
+      {
+        "addressed_by": "The current inputs include authenticated Qwen sentence relations, absent from the earlier lexical/scalar spline study; report earlier negative evidence explicitly.",
+        "experiment_id": "exp7428-decision-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_static_and_online_audits_reproduce_no_registered_benefit"
+      },
+      {
+        "addressed_by": "The prior static and online seals were absent. Require current complete seals, then run the unchanged H1 audit; this is first measurement, not a null rerun.",
+        "experiment_id": "exp8311-static-benefit-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "GATE_BLOCK (producer absent)"
+      },
+      {
+        "addressed_by": "No audit producer existed because prediction producers were skipped. Use both current immutable seals; a missing seal remains blocked, never a scientific null.",
+        "experiment_id": "exp8324-static-benefit-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "GATE_BLOCK (producer absent)"
+      },
+      {
+        "addressed_by": "Static predictions now exist. Replace preemptive online cascade gating with an unconditional seal-aware reader; missing retention seals still block full H1 and never authorize target leakage.",
+        "experiment_id": "exp8338-static-benefit-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "blocked_gate_check_failed"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. V719 wrote nine producer primaries and three conductor pre-gate receipts; two producer slots have neither. Static heads and reserved predictions qualified (Exp8334/8335). Local qualification failed three Exp8206 consumer assertions; runtime failed two Exp8307 authority assertions; ARC failed strict typing; cost consumers failed three Exp8329 assertions. GateMate history drifted. The capstone passed its memory checks but failed two branch replays. H1/H2 remain unmeasured. Preserve the frozen V717 science and historical outcomes. Cached observations are exposed development, not current model inference.\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; openspec/change-proposals/research-roadmap-v719-preserved-20261009.md; openspec/change-proposals/v717-local-learning-protocol.json; results/experiment_8335_v719_reserved_prediction_seal.json; python/carnot/verify/sentence_decision_audit_8185.py; results/experiment_8185_v707_sentence_decision_audit.json; results/experiment_7428_v651_decision_audit.json; scripts/verdict_row_consistency_lint.py\nTASK:\nAudit sealed static decisions while preserving every retention-label barrier. Deliver results/experiment_8350_v720_static_benefit_audit.json. Create the thin runner scripts/experiments/experiment_8350_v720_static_benefit_audit.py. Store primitive evidence under results/raw/experiment_8350_v720_static_benefit_audit/. Future deliverables are dependencies, not existing inputs.\nCONCRETE STEPS:\n1. PRECONDITIONS: Emit a flushed start line. Authenticate source bytes, terminal sidecars and task authority. Check private scratch, tools and resources before work. Name missing external operands in gate_check_summary. Do not replace natural evidence with fixtures.\n2. Emit a flushed progress line at every phase boundary. Emit one before and after every model load, generation, benchmark and subprocess. Print completed/pending counts inside long loops. Poll owned children at least every 60 seconds. Use unbuffered output and bounded deadlines. Keep every silence gap below 600 seconds. Write files over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between calls. No single huge tool call. Do not pad elapsed time.\n3. Spec first: add relevant REQ-* and SCENARIO-* before implementation. Write focused failing tests first. Reuse existing modules through small adapters. Preserve assertions, guard thresholds and old evidence. Keep scratch in /tmp and runners in scripts/experiments/. Do not modify research-roadmap.yaml. Freeze validation commands before measurement.\n4. Declare no_model_load, MODEL_SPECS=[] and zero current model calls. Identify cached verifier work or artifact aggregation as the inference_substrate. Training small numeric heads is not an LLM load.\n5. Authenticate Exp8346.frozen_predictions_ready_score and the original Exp8335 seal. There is no conductor gate on online success. Before opening ANY reserved target, inspect Exp8348 retention seals. If all windows are sealed, run the unchanged full H1 audit. If they are absent, keep retention targets sealed and leave H1 unmeasured. In this blocked path emit predictor-only action counts and margins on the first96 stream slots. Open no reserved targets at all. Label this a predictor-only diagnostic; never score utility or apply the128-slot H1 threshold to it. Set static_audit_ready_score=0 and verdict_class=blocked for the missing full-H1 seal. Do not retune H2 from this diagnostic.\n6. Use no_model_load, inference_substrate=aggregation_from_upstream_artifacts and MODEL_SPECS=[]. Open the evaluator shard only after authenticating Exp8346's static seal and Exp8348's complete learning and four-window retention seals. Targets may be read by this audit after all learner outputs are immutable; no target feedback enters the learner from this audit. Independently reduce rows rather than importing upstream means.\n7. H1 primary: mean intended-slot cost(selected comparator)-cost(spline34) across128 reserved sources. Missing features use the same escalation and .5 cost for all arms; unresolved targets cannot establish a correct accept/reject and receive explicit bounds. Report paired complete-case and all-intended results, Brier/log loss on qualified labels, risk at achieved coverage, and counts of changed decisions.\n8. Use10000 source-cluster bootstrap resamples with seed7178311 and nominal one-sided97.5 percent lower bound. These are descriptive development intervals because the cohort is already exposed; alpha=.025 is a frozen reporting threshold, not a fresh confirmatory test. Require >=80 qualified sources, >=8 per binary label, a working typed-action positive control and positive permissible-action oracle headroom before calling a scientific null informative.\n9. A representation-level informative null also requires the exact optimizer positive control and meaningful optimization residuals; otherwise classify optimization-limited evidence. A development signal requires mean cost gain>=.02, lower bound>0 and Brier degradation<=.01 versus the preselected comparator. Also show frozen-holistic, linear6, scalar2 and RBF34 results with no post-hoc comparator substitution. Equal-input gains over RBF concern the frozen training procedures; only qualified optimization can further support a geometry interpretation. Neither establishes independent truth, and sigmoid34 parity precludes energy-specific novelty.\n10. Audit input independence by varying withheld targets, source IDs and feature masks without changing issued predictions; run a label-only forbidden-feature control that must fail. Record all denominators and per-source paired costs. Set static_audit_ready_score=1 for a valid audit even when H1 is null; scientific support insufficiency is null_insufficient_support, while missing external artifacts are blocked.\n11. Write docs/research-notes/v720-static-benefit.md. Do not choose new features, knots, thresholds, role splits or samples after viewing these results. H1 cannot gate the online task.\n12. Run relevant unit and consumer tests, scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>. Require 100 percent newly owned statements, including real CLI, child and failure paths. Use pytest -n 0 -o addopts= with private scratch. Record argv, exit, timing and log hashes. Do not run the full repository suite inside this experiment.\n13. Cold-replay primitive evidence in a fresh process. Run valid, negative and self-consistently rehashed tamper controls. Use unchanged primary_publication checks, scripts/adversarial_verify.py --json <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>. Keep all findings. An exit1 requires the existing typed finding consumer: only independently recomputed informational findings with deliberate-error controls can resolve. Errors, unknown severity, warnings and critical findings block readiness. Do not edit those validators or exemption lists. Publish the terminal primary atomically after checks. Owned failures are disqualified; unchanged external blocks are blocked, never partial. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not update generator weights or publish externally.\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date: principle: Bind the invocation to its exact authority.\nhonest_verdict, verdict_class: principle: honest_verdict starts complete_. Class is positive | circular_positive | null | blocked | disqualified | partial. Partial means retryable unfinished owned work only.\ngate_check_summary: principle: A block names upstream, path/hash, field, operator, expected and observed values. Missing is distinct from zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, historical_model_provenance: principle: Separate current work from imported inference.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, sample_size_budget: principle: Retain every intended unit and condition. Repeated timings do not add independent sources.\nverifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score: principle: Oracle controls use circular_positive. Both generalization scores remain zero on exposed development.\nrequired_checks_passed, flagged_adversarial, acceptance_gates, validation_receipts, terminal_validation_sidecar_path, adversarial_findings: principle: Readiness requires byte-bound checks, not scientific success.\npreconditions_checked, duration_s, phase_spans, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes: principle: Bind claims to measured work and replayable inputs.\ncited_upstream_artifacts, field_principles: principle: List imported evidence and explain every added field.\nstatic_audit_ready_score, h1_development_signal_score, full_h1_measured, stream_diagnostic_only: principle: A stream diagnostic cannot substitute for the frozen128-slot H1.\nretention_seal_check, label_access_log, comparator_id, paired_cost_rows, bootstrap_summary, missing_bounds: principle: Verify target access and reduce all intended units independently.\nRun command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8350_v720_static_benefit_audit.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+    "requires_gpu": false,
+    "title": "Audit sealed static decisions while preserving every retention-label barrier",
+    "track": "evaluation"
+  }
+}

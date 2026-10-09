@@ -1,0 +1,183 @@
+{
+  "conductor_gates": [],
+  "failures": [
+    {
+      "artifact_field": "qualified_current_evidence",
+      "expected": true,
+      "hash": "sha256:0f50c66b383bdaa2f533407886ad9f908097907625680cbd9322c7eb7a96a36d",
+      "observed": {
+        "required_checks_passed": false,
+        "verdict_class": "disqualified"
+      },
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8353_v720_runtime_reader_qualification.json",
+      "upstream": "exp8353-runtime-reader-qualification",
+      "upstream_id": "exp8353-runtime-reader-qualification"
+    },
+    {
+      "expected": true,
+      "field": "historical_source_closure",
+      "hash": "sha256:0f50c66b383bdaa2f533407886ad9f908097907625680cbd9322c7eb7a96a36d",
+      "observed": "Bind the current invocation and its primitive evidence; no independent science claim follows.",
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8307_v717_runtime_change_boundary.json",
+      "sha256": "sha256:dc64000d6025f1339a4130c8527e83419861dfef1d0dea548f8e85bacd647fbd",
+      "upstream": "exp8353-runtime-reader-qualification",
+      "upstream_id": "exp8307-runtime-change-boundary"
+    },
+    {
+      "expected": true,
+      "field": "required_checks_passed",
+      "hash": "sha256:0f50c66b383bdaa2f533407886ad9f908097907625680cbd9322c7eb7a96a36d",
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8353_v720_runtime_reader_qualification/invocations/1791571393675777238/measurement.json",
+      "sha256": "sha256:4854e9ef4a2a1e39202a0380c86d9346185501b88d3a83757b3d45e279bb2f35",
+      "upstream": "exp8353-runtime-reader-qualification",
+      "upstream_id": "exp8353-runtime-reader-qualification"
+    }
+  ],
+  "memory": {
+    "after": {
+      "current_rss_mb": 352.18359375,
+      "peak_rss_mb": 492.140625
+    },
+    "before": {
+      "current_rss_mb": 351.76953125,
+      "peak_rss_mb": 492.140625
+    },
+    "growth_mb": 0.0,
+    "passed": true
+  },
+  "primitive_references": [],
+  "row": {
+    "arm": "task_disposition",
+    "censored": false,
+    "completed": true,
+    "condition": "terminal_accounting",
+    "denominator": 1,
+    "disposition": "authenticated_upstream_failure",
+    "eligible": false,
+    "evidence_type": "producer_primary",
+    "excluded": true,
+    "experiment_id": 8353,
+    "failed": true,
+    "honest_verdict": "complete_disqualified_owned_checks",
+    "metric": "authenticated_disposition",
+    "missing": false,
+    "numerator": 1,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8353_v720_runtime_reader_qualification.json",
+    "producer_executed": true,
+    "sha256": "sha256:0f50c66b383bdaa2f533407886ad9f908097907625680cbd9322c7eb7a96a36d",
+    "source_counts": {
+      "censored_count": 0,
+      "completed_count": 7,
+      "excluded_count": 0,
+      "failed_count": 0,
+      "intended_count": 7
+    },
+    "source_rows_reference": {
+      "artifact_field": "rows",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8359_v720_capstone/invocations/1791583907747877722/custody/36-0f50c66b383bdaa2f533407886ad9f908097907625680cbd9322c7eb7a96a36d.bin",
+      "row_count": 7,
+      "sha256": "sha256:0f50c66b383bdaa2f533407886ad9f908097907625680cbd9322c7eb7a96a36d"
+    },
+    "status": "completed",
+    "task_id": "exp8353-runtime-reader-qualification",
+    "unit_id": "exp8353-runtime-reader-qualification",
+    "verdict_class": "disqualified"
+  },
+  "selected": {
+    "current_model_calls": 0,
+    "historical_model_provenance": {
+      "current_calls_imported": false,
+      "failure_layer": [
+        {
+          "binding": "inherited",
+          "error": null,
+          "failed_api": {
+            "cuInit": 101
+          },
+          "layer": "driver",
+          "native_stderr": null
+        },
+        {
+          "binding": "inherited",
+          "error": null,
+          "failed_api": {
+            "cudaGetDeviceCount": 101
+          },
+          "layer": "runtime",
+          "native_stderr": null
+        },
+        {
+          "binding": "inherited",
+          "error": null,
+          "failed_api": {},
+          "layer": "native",
+          "native_stderr": "0.00.003.924 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+        },
+        {
+          "binding": "explicit_uuid",
+          "error": null,
+          "failed_api": {
+            "cuInit": 101
+          },
+          "layer": "driver",
+          "native_stderr": null
+        },
+        {
+          "binding": "explicit_uuid",
+          "error": null,
+          "failed_api": {
+            "cudaGetDeviceCount": 101
+          },
+          "layer": "runtime",
+          "native_stderr": null
+        },
+        {
+          "binding": "explicit_uuid",
+          "error": null,
+          "failed_api": {},
+          "layer": "native",
+          "native_stderr": "0.00.003.361 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+        }
+      ],
+      "imported_from": "results/experiment_8307_v717_runtime_change_boundary.json",
+      "model_invocation_counts": {
+        "generation_calls_attempted": 0,
+        "generation_calls_cancelled": 0,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 0,
+        "model_loads_cancelled": 0,
+        "model_loads_completed": 0,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0
+      }
+    },
+    "honest_verdict": "complete_disqualified_owned_checks",
+    "model_invocation_counts": {
+      "generation_calls_attempted": 0,
+      "generation_calls_cancelled": 0,
+      "generation_calls_completed": 0,
+      "generation_calls_failed": 0,
+      "generation_calls_in_flight": 0,
+      "model_loads_attempted": 0,
+      "model_loads_cancelled": 0,
+      "model_loads_completed": 0,
+      "model_loads_failed": 0,
+      "model_loads_in_flight": 0
+    },
+    "runtime_reader_ready_score": 0,
+    "sample_size_budget": {
+      "independent_scientific_samples": 0,
+      "intended_operands": 7
+    },
+    "verdict_class": "disqualified"
+  }
+}

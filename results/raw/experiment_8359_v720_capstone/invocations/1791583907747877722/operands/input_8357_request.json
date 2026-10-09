@@ -1,0 +1,61 @@
+{
+  "item": {
+    "reference": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8357_v720_gatemate_change_ledger.json",
+      "role": "53",
+      "sha256": "sha256:fe3e29d775966a50bef90040dbb64a0a492ef913d76ebf32389316af3ae35071",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8359_v720_capstone/invocations/1791583907747877722/custody/53-fe3e29d775966a50bef90040dbb64a0a492ef913d76ebf32389316af3ae35071.bin",
+      "snapshot_sha256": "sha256:fe3e29d775966a50bef90040dbb64a0a492ef913d76ebf32389316af3ae35071",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8357_v720_gatemate_change_ledger.json"
+    },
+    "sidecar": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8357_v720_gatemate_change_ledger/validators/fe3e29d775966a50bef90040dbb64a0a492ef913d76ebf32389316af3ae35071.json",
+      "role": "55",
+      "sha256": "sha256:dbc8723970fad720debe612489f414194c215cc0a4c8df226546f1ccc51e4fd4",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8359_v720_capstone/invocations/1791583907747877722/custody/55-dbc8723970fad720debe612489f414194c215cc0a4c8df226546f1ccc51e4fd4.bin",
+      "snapshot_sha256": "sha256:dbc8723970fad720debe612489f414194c215cc0a4c8df226546f1ccc51e4fd4",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8357_v720_gatemate_change_ledger/validators/fe3e29d775966a50bef90040dbb64a0a492ef913d76ebf32389316af3ae35071.json"
+    }
+  },
+  "task": {
+    "MODEL_SPECS": [],
+    "deliverable": "results/experiment_8357_v720_gatemate_change_ledger.json",
+    "estimated_wall_time_min": 35,
+    "gated_on": [],
+    "id": "exp8357-gatemate-change-ledger",
+    "inference_substrate_class": "no_model_load",
+    "max_turns": 30,
+    "milestone": "2026.10.720",
+    "model": "sonnet",
+    "operator_override": "2026-05-29 operator directive (standing): active hardware continuity vs exp8330/v717_exact_repeat_3a148a33941996ca and exp8344; resolve historical source/configuration drift with immutable custody and retain zero physical probes.",
+    "per_unit_rows": true,
+    "phase": 3,
+    "prior_failures": [
+      {
+        "addressed_by": "No physical remedy is asserted. Carry the mandatory board obligation with the qualified reader, checking only new dated evidence and making zero JTAG retries.",
+        "experiment_id": "exp8316-gatemate-obligation",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_blocked_gatemate_physical_change"
+      },
+      {
+        "addressed_by": "Standing hardware continuity requires an evidence-only obligation until physical change. Reuse the terminal ledger and inspect new dated inputs only; no repeat JTAG diagnosis or claim of newly unblocked hardware.",
+        "experiment_id": "exp8330-gatemate-change-ledger",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_blocked_gatemate_physical_change"
+      },
+      {
+        "addressed_by": "Use producer-bound immutable source/configuration instead of mutable module hashes. Distinguish history drift from the unchanged physical blocker; no new device probe.",
+        "experiment_id": "exp8344-gatemate-change-ledger",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_blocked_gatemate_history"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. V719 wrote nine producer primaries and three conductor pre-gate receipts; two producer slots have neither. Static heads and reserved predictions qualified (Exp8334/8335). Local qualification failed three Exp8206 consumer assertions; runtime failed two Exp8307 authority assertions; ARC failed strict typing; cost consumers failed three Exp8329 assertions. GateMate history drifted. The capstone passed its memory checks but failed two branch replays. H1/H2 remain unmeasured. Preserve the frozen V717 science and historical outcomes. Cached observations are exposed development, not current model inference.\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; openspec/change-proposals/research-roadmap-v719-preserved-20261009.md; openspec/change-proposals/v717-local-learning-protocol.json; results/experiment_8344_v719_gatemate_change_ledger.json; python/carnot/reporting/gatemate_change_ledger_8344.py; results/experiment_8316_v717_gatemate_obligation.json; scripts/experiments/experiment_8316_v717_gatemate_obligation.py; docs/jtag-wiring-gatemate-dirtyjtag.md; ops/operator-followup.md; research-hardware-wishlist.md; results/experiment_8330_v718_gatemate_change_ledger.json; python/carnot/reporting/gatemate_change_ledger_8330.py\nTASK:\nRecover immutable GateMate history and preserve the physical reopening condition. Deliver results/experiment_8357_v720_gatemate_change_ledger.json. Create the thin runner scripts/experiments/experiment_8357_v720_gatemate_change_ledger.py. Store primitive evidence under results/raw/experiment_8357_v720_gatemate_change_ledger/. Future deliverables are dependencies, not existing inputs.\nCONCRETE STEPS:\n1. PRECONDITIONS: Emit a flushed start line. Authenticate source bytes, terminal sidecars and task authority. Check private scratch, tools and resources before work. Name missing external operands in gate_check_summary. Do not replace natural evidence with fixtures.\n2. Emit a flushed progress line at every phase boundary. Emit one before and after every model load, generation, benchmark and subprocess. Print completed/pending counts inside long loops. Poll owned children at least every 60 seconds. Use unbuffered output and bounded deadlines. Keep every silence gap below 600 seconds. Write files over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between calls. No single huge tool call. Do not pad elapsed time.\n3. Spec first: add relevant REQ-* and SCENARIO-* before implementation. Write focused failing tests first. Reuse existing modules through small adapters. Preserve assertions, guard thresholds and old evidence. Keep scratch in /tmp and runners in scripts/experiments/. Do not modify research-roadmap.yaml. Freeze validation commands before measurement.\n4. Declare no_model_load, MODEL_SPECS=[] and zero current model calls. Identify cached verifier work or artifact aggregation as the inference_substrate. Training small numeric heads is not an LLM load.\n5. Read Exp8344 gate_check_summary: Exp8330 history failed identity_or_configuration_drift. Its later cold replay also detected changed gatemate_change_ledger_8344.py bytes. Locate the exact producer-bound source/configuration closure from terminal sidecars and custody. Replay that closure in private scratch; never compare historical authority to current vNEXT and call the mismatch a physical fault.\n6. If the historical closure is incomplete, emit complete_blocked_gatemate_history once with exact missing hashes. Never manufacture source bytes, replace old sidecars or overwrite historical primaries. Test a valid immutable private closure and real source/configuration drift; preserve every validator requirement.\n7. Once history authenticates, inspect only dated cable, port, power or board changes after its frontier. Make zero JTAG or board calls. Preserve the original0xffffffff transcript. No physical change means complete_blocked_gatemate_physical_change with verdict_class=blocked, not partial.\n8. Write docs/research-notes/v720-gatemate-obligation.md. Exact future sequence: authenticated physical change, GM1Ax IDCODE0x20000001, n16 tile flash, then device sample/hash smoke. Set gatemate_obligation_ready_score from authenticated ledger quality only; execution_ready_score remains0 without actual terminal board evidence. Run private E2E-018 historical controls.\n9. Run relevant unit and consumer tests, scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>. Require 100 percent newly owned statements, including real CLI, child and failure paths. Use pytest -n 0 -o addopts= with private scratch. Record argv, exit, timing and log hashes. Do not run the full repository suite inside this experiment.\n10. Cold-replay primitive evidence in a fresh process. Run valid, negative and self-consistently rehashed tamper controls. Use unchanged primary_publication checks, scripts/adversarial_verify.py --json <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>. Keep all findings. An exit1 requires the existing typed finding consumer: only independently recomputed informational findings with deliberate-error controls can resolve. Errors, unknown severity, warnings and critical findings block readiness. Do not edit those validators or exemption lists. Publish the terminal primary atomically after checks. Owned failures are disqualified; unchanged external blocks are blocked, never partial. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not update generator weights or publish externally.\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date: principle: Bind the invocation to its exact authority.\nhonest_verdict, verdict_class: principle: honest_verdict starts complete_. Class is positive | circular_positive | null | blocked | disqualified | partial. Partial means retryable unfinished owned work only.\ngate_check_summary: principle: A block names upstream, path/hash, field, operator, expected and observed values. Missing is distinct from zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, historical_model_provenance: principle: Separate current work from imported inference.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, sample_size_budget: principle: Retain every intended unit and condition. Repeated timings do not add independent sources.\nverifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score: principle: Oracle controls use circular_positive. Both generalization scores remain zero on exposed development.\nrequired_checks_passed, flagged_adversarial, acceptance_gates, validation_receipts, terminal_validation_sidecar_path, adversarial_findings: principle: Readiness requires byte-bound checks, not scientific success.\npreconditions_checked, duration_s, phase_spans, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes: principle: Bind claims to measured work and replayable inputs.\ncited_upstream_artifacts, field_principles: principle: List imported evidence and explain every added field.\ngatemate_obligation_ready_score, execution_ready_score, history_authentication, physical_change_rows, physical_change_frontier: principle: Historical source drift differs from missing physical change.\noriginal_transcript_sha256, current_jtag_retry_count, reopen_contract_path: principle: Carry the exact obligation without repeating an unchanged device probe.\nRun command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8357_v720_gatemate_change_ledger.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+    "requires_gpu": false,
+    "title": "Recover immutable GateMate history and preserve the physical reopening condition",
+    "track": "hardware"
+  }
+}

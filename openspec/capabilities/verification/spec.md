@@ -52588,3 +52588,27 @@ hashes. Require 100 percent newly owned statements including CLI and failures,
 consumer tests, private E2E-018/021, scoped Ruff, strict mypy and spec coverage.
 The typed finding consumer accepts only independently proven informational
 findings; errors, unknown severity, warnings and critical findings block readiness.
+
+## REQ-VERIFY-8359: Authenticate bounded V720 capstone execution
+
+Exp8359 SHALL preserve frozen historical verdicts, source closures and the V717
+scientific protocol. Current owned replay failures disqualify; missing external
+operands block and name path/hash, field, operator, expected and observed values.
+Use the qualified V719 memory reducer and Exp8358 terminal adapters without
+changing validators, exemptions, assertions, RSS guards or scientific thresholds.
+Freeze validation argv before measurement and require 100 percent newly owned
+statements, private CLI controls, E2E-018/021, consumer tests, strict types, scoped
+Ruff and spec coverage. Zero model loads and generation calls apply to this run.
+
+### SCENARIO-VERIFY-8359-REPLAY
+
+Valid primitive cold replay succeeds. Changed authority, failed owned checks,
+missing closure and self-consistently rehashed science/summary attacks remain
+observable and cannot earn readiness. Atomic publication checks exact bytes.
+
+Implementation 2026-10-09: Exp8359 retains the original memory guards and adds
+requirement-linked private CLI, failed-child and primitive-tamper controls.
+Validation commands and their byte-bound receipts are frozen per invocation.
+Failed historical audits remain failed; cached diagnostic nulls do not confer
+science or generalization readiness. The terminal primary and sidecar record
+actual coverage, consumers, E2Es, lint, strict types and cold replay.

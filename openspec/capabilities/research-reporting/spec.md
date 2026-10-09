@@ -97319,3 +97319,57 @@ The unchanged publisher and validators check private bytes before publication.
 Cold valid, negative and self-consistently rehashed controls use bounded real
 children. Every added field has a principle. H1/H2 remain unmeasured. The
 conductor owns ops/status/changelog and BMAD reconciliation after this task.
+
+## REQ-REPORT-8359: Reconcile fourteen V720 outcomes without promoting failures
+
+Exp8359 SHALL compare exactly Exp8346 through Exp8359 using visible order,
+complete task objects and the canonical digest. Authenticate producer primaries,
+terminal sidecars and conductor pre-gate receipts. Absent producer verdicts stay
+absent. Reuse the bounded V719 reducer and authenticated Exp8358 adapters.
+Independently recompute H1/H2 from sealed primitive rows under the unchanged V717
+protocol, retaining every arm, intended denominator, missing bound, retention
+window and optimizer/reachability control. Preserve historical disqualified
+outcomes; independently replayed diagnostics do not repair their qualification.
+A supported null differs from missing evidence. Constructed capacity, table
+fidelity, refresh costs and CPU timing remain separate engineering results.
+Report zero current model calls, no_model_load, MODEL_SPECS=[], both generalization
+scores zero, frozen V713 capture, ARC support and all three board boundaries.
+Import stable publication G1–G4 unchanged. Every branch and each of three PRD
+gaps gets a falsifiable next evidence condition. Exact repeated prior failures
+use the existing append-only scope policy; unmeasured hypotheses remain open.
+The conductor owns ops/status/changelog and BMAD reconciliation after this task.
+
+### SCENARIO-REPORT-8359-ACCOUNTING
+
+Private missing operands produce fourteen dispositions with absent verdicts;
+authenticated failed producers stay failed. Real cached primitive H1/H2 reductions
+report all arms and windows without new inference or generalization credit.
+Rehashed changes to summaries, authority or reported science fail cold replay.
+
+## REQ-VERIFY-8359: Qualify bounded capstone publication and failure paths
+
+Freeze scoped validation commands before measurement. Require 100 percent newly
+owned statements including real CLI, bounded children and failure paths, relevant
+consumers, private E2E-018/021, scoped Ruff, strict mypy and spec tracing. Preserve
+500 MB RSS growth and 8 MB retained-payload guards. New owned failures disqualify;
+missing external closure blocks. Cold replay valid, negative and rehashed controls
+in fresh processes. Use unchanged primary_publication and terminal validators;
+typed findings retain all findings and fail closed for non-informational severity.
+Publish checked terminal bytes atomically without activation, push or publication.
+
+### SCENARIO-VERIFY-8359-REPLAY
+
+Successful, blocked and disqualified private controls exercise real child and
+publication paths. Fresh reduction authenticates primitive meaning and receipt
+logs, rejects altered self rows and controls, and preserves legacy retirement
+entries without id. Validation and publication failures cannot grant readiness.
+
+Implementation 2026-10-09: `v720_capstone_evidence.py` reuses the bounded V719
+reader and authenticated terminal adapters. It keeps large inference receipts
+and timing arrays in sealed sources, preserving call counts and timing identity.
+`v720_capstone_reduction.py` recomputes H1/H2 primitive diagnostics while retaining
+failed producer qualification and all fourteen dispositions. `v720_capstone.py`
+and the thin runner freeze private checks, use the existing typed finding
+consumer and publish exact checked bytes. Requirement-linked tests cover real
+CLI, child failures, full-task authority, sealed science, mixed provenance and
+rehashed tampering. Terminal receipts record the final validation outcome.
