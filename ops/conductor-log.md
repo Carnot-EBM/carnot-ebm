@@ -19882,3 +19882,4 @@ code |
 | 2026-10-08 23:27 UTC | Plan milestone 2026.10.718 | OK | 14 tasks proposed |
 | 2026-10-08 23:39 UTC | Milestone 2026.10.718 activated | OK | 14 tasks queued |
 | 2026-10-09 00:20 UTC | Bind fourteen tasks and qualify deterministic hist | OK | 94 passed, 1 warning in 112.12s (0:01:52) |
+| 2026-10-09 00:23 UTC | Qualify exact local update evidence without suppre | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8318-contract-replay.history_reader_ready_score (actual=0 == expected=1) |
