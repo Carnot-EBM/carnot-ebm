@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-09 — Operational retrospective for milestone 2026.10.720
+
+- Wrote `results/operational_retro_2026_10_720.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.720`. Authoritative disk-mtime fallback data records 13 experiments completed (1 compute-bound, 12 synthesis-only) across 96.6 total wall-time minutes (average 7 minutes per experiment).
+- Execution wall time was led entirely by synthesis tasks: 'Measure finite feedback tracking with persistent admission and loss' (17.47 minutes), 'Measure delayed local learning from the already qualified sentence heads' (15.22 minutes), 'Qualify local learning after isolating historical consumer operands' (13.58 minutes), 'Audit later decision utility and all fixed retention windows' (11.36 minutes), and 'Reconcile fourteen outcomes and decide the next evidence condition for each PRD ' (9.95 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization on the RTX 3090 with 2MB allocated outside active runs; `gpu_idle_on_compute_bound_tasks` is false as no compute-bound idle anomalies or multi-model parallel dispatch requirements were present, and 0% GPU utilization is expected behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: implement incremental receipt caching and evidence memoization for finite feedback tracking, local learning qualification, retention window audits, and fourteen-outcome reconciliation when upstream inputs remain static; instrument multi-minute synthesis and compute-bound tasks with granular intra-phase timers; and persist synchronous start and end lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-09 — Fix V720 CPU cost repetition validation
 
 - Guarded arithmetic parity with the reducer's complete paired-repeat result,

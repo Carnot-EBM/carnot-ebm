@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.720",
+  "generated_at": "2026-10-09T22:35:49Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 96.6,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure finite feedback tracking with persistent admission and loss",
+      "duration_minutes": 17.47,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure delayed local learning from the already qualified sentence heads",
+      "duration_minutes": 15.22,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify local learning after isolating historical consumer operands",
+      "duration_minutes": 13.58,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Audit later decision utility and all fixed retention windows",
+      "duration_minutes": 11.36,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and decide the next evidence condition for each PRD ",
+      "duration_minutes": 9.95,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.720 completed 13 experiments (1 compute-bound, 12 synthesis-only) across 96.6 total wall-time minutes (averaging 7 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was led entirely by synthesis-only tasks accounting for all five slowest runs—measuring finite feedback tracking with persistent admission and loss (17.47 minutes), measuring delayed local learning from qualified sentence heads (15.22 minutes), qualifying local learning after isolating historical consumer operands (13.58 minutes), auditing decision utility and fixed retention windows (11.36 minutes), and reconciling fourteen outcomes for PRD evidence conditions (9.95 minutes). With gpu_idle_on_compute_bound_tasks recorded as false, the point-in-time monitor reading of 0% GPU utilization (2MB allocated) on the NVIDIA GeForce RTX 3090 reflects expected idle state for non-GPU synthesis workloads, and single-model compute execution correctly avoided multi-model DualGPURunner dispatch.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks accounted for the vast majority of milestone wall time (12 of 13 completed experiments, and all five of the top slowest runs totaling 67.58 minutes out of 96.6 total wall-time minutes), led by finite feedback tracking (17.47 minutes) and delayed local learning measurement (15.22 minutes).",
+    "The sole compute-bound experiment completed in under 9.95 minutes outside the top 5 slowest tasks, but individual experiment artifacts lack intra-task sub-phase telemetry (environment configuration, execution, verification, serialization) to analyze internal latency.",
+    "Long-running synthesis tasks (feedback tracking, local learning qualification, retention window audits, and outcome reconciliation) executed serially without incremental receipt caching or evidence memoization when upstream dependencies were unchanged.",
+    "Milestone timing analysis relied on disk-mtime fallback reconstruction due to the live git-log path finding 0 commits in the milestone interval."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and evidence memoization for finite feedback tracking, local learning qualification, retention window audits, and fourteen-outcome reconciliation when upstream inputs remain static.",
+    "Instrument multi-minute synthesis and compute-bound tasks with granular intra-phase execution timers (setup, test execution, artifact generation, serialization) to identify specific latency bottlenecks.",
+    "Persist explicit synchronous execution timestamps (start, completion, duration) directly into experiment receipt artifacts to prevent dependence on disk-mtime fallback reconstruction.",
+    "Sample continuous in-flight accelerator utilization and memory metrics during compute-bound execution intervals rather than relying solely on post-run point-in-time GPU monitor polling.",
+    "Maintain strict DualGPURunner dispatch criteria restricted to concurrent multi-model pipelines, avoiding unnecessary invocation overhead for single-model or synthesis workloads."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and evidence memoization for long-running synthesis tasks (feedback tracking, local learning qualification, retention audits, and outcome reconciliation) when upstream artifacts are unchanged.",
+    "Instrument long-running synthesis tasks and compute-bound workloads with granular intra-task phase timers.",
+    "Persist explicit synchronous start and completion lifecycle timestamps in experiment receipts and capture continuous in-flight accelerator telemetry during active runs."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Across 13 completed experiments and 96.6 minutes of milestone wall time, execution duration was driven predominantly by synthesis-only tasks averaging 7 minutes per experiment, led by finite feedback tracking (17.47 minutes) and delayed local learning (15.22 minutes), with the sole compute-bound task finishing outside the top 5 slowest runs. Point-in-time GPU monitoring showed 0% utilization on the RTX 3090 as expected for non-GPU synthesis workloads, with gpu_idle_on_compute_bound_tasks recorded as false. Operational improvements should target incremental receipt caching for unchanged upstream dependencies and granular intra-phase telemetry for multi-minute tasks, with estimated time savings conservatively held at 0% until empirically validated."
+}
