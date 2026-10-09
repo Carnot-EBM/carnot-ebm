@@ -52266,3 +52266,22 @@ publication. Unadjudicated findings and current execution errors block readiness
 Fresh processes accept valid primitive evidence and reject missing bytes,
 rehashed self rows, validation dispositions and primitive summary changes.
 Failed owned checks retain receipts and publish honest disqualification.
+## REQ-VERIFY-8346: Replay frozen custody with bounded qualified consumers
+
+Freeze argv and deadlines before measurement. Reuse qualified source custody,
+bounded children, typed finding consumption and atomic primary publication.
+Run owned tests, private E2E-018 and immutable consumer checks, scoped Ruff,
+strict mypy, spec coverage and 100 percent new statement coverage including
+actual CLI and failure paths. Cold replay recomputes from authenticated source
+bytes and rejects negative and self-consistently rehashed primitive controls.
+Keep all findings. Unresolved warnings, errors and unknown severities block.
+Emit flushed phase boundaries and child heartbeats within 60 seconds. Never
+change historical evidence, validators, exemptions or scientific thresholds.
+
+### SCENARIO-VERIFY-8346-REPLAY
+
+Fresh processes accept valid bytes and reject changed summaries, receipts,
+authority and primitives even after hashes are updated. Byte-bound terminal
+cold, unchanged adversarial and strict-row checks precede atomic publication.
+Missing natural inputs publish blocked evidence; owned errors retain failed
+receipts and publish disqualification. Private controls never replace science.

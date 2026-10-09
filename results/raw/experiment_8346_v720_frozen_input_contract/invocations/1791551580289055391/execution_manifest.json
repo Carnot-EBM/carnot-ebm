@@ -1,0 +1,194 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/exp8318-owned-vw8s21y7/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_v720_frozen_input_contract_8346.py",
+        "--basetemp=/tmp/exp8318-owned-vw8s21y7/owned-tests"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "--basetemp=/tmp/exp8318-owned-vw8s21y7/consumers"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E018_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/exp8318-owned-vw8s21y7/coverage.ini"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/exp8318-owned-vw8s21y7/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/exp8318-owned-vw8s21y7/coverage.ini",
+        "-o",
+        "/tmp/exp8318-owned-vw8s21y7/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v720_frozen_inputs.py",
+        "python/carnot/reporting/v720_frozen_input_contract.py",
+        "python/carnot/reporting/v720_frozen_input_runner.py",
+        "scripts/experiments/experiment_8346_v720_frozen_input_contract.py",
+        "tests/python/test_v720_frozen_input_contract_8346.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v720_frozen_inputs.py",
+        "python/carnot/reporting/v720_frozen_input_contract.py",
+        "python/carnot/reporting/v720_frozen_input_runner.py",
+        "scripts/experiments/experiment_8346_v720_frozen_input_contract.py",
+        "tests/python/test_v720_frozen_input_contract_8346.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/reporting/v720_frozen_inputs.py",
+        "python/carnot/reporting/v720_frozen_input_contract.py",
+        "python/carnot/reporting/v720_frozen_input_runner.py",
+        "scripts/experiments/experiment_8346_v720_frozen_input_contract.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_v720_frozen_input_contract_8346.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_v710_contract_replay_8218.py::test_contract_and_mutations",
+        "tests/python/test_v710_contract_replay_8218.py::test_snapshots_and_missing_bytes",
+        "tests/python/test_v718_contract_replay_8318.py::test_finding_policy",
+        "--basetemp=/tmp/exp8318-owned-vw8s21y7/frozen-consumers"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "frozen_input_consumers",
+      "scope": "owned"
+    }
+  ],
+  "finding_consumer_policy": {
+    "allowed_exit_codes": [
+      0,
+      1
+    ],
+    "allowed_info_kinds": [
+      "IMPLAUSIBLE_PERFECT"
+    ],
+    "blocked": [
+      "process_error",
+      "missing_report",
+      "unknown",
+      "warn",
+      "critical"
+    ],
+    "info_resolution": "independent primitives and deliberate error rejection",
+    "required_binding": [
+      "candidate_sha256",
+      "verifier_sha256"
+    ],
+    "version": "8318-v1"
+  },
+  "fixture": false,
+  "owned": [
+    "python/carnot/reporting/v720_frozen_inputs.py",
+    "python/carnot/reporting/v720_frozen_input_contract.py",
+    "python/carnot/reporting/v720_frozen_input_runner.py",
+    "scripts/experiments/experiment_8346_v720_frozen_input_contract.py"
+  ],
+  "private_scratch": "/tmp/exp8318-owned-vw8s21y7",
+  "scientific_protocol_sha256": "sha256:853709123024de763e96dd688e819f0430205ae6d97d6561a2b95cca23b81c6f",
+  "terminal_deadline_s": 60,
+  "terminal_heartbeat_s": 20,
+  "validation_heartbeat_s": 30
+}

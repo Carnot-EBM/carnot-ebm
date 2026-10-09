@@ -96995,3 +96995,33 @@ accept all fourteen complete task objects and the matching visible order.
 Deleting a task or changing its title fails contract comparison.
 Every gate resolves to an earlier task and an identically declared artifact field.
 The existing private authority-lifecycle E2E tests pass without publishing results.
+## REQ-REPORT-8346: Bind V720 authority and reuse immutable inputs
+
+Authenticate fourteen complete V720 tasks against the visible table and active
+YAML without activating or replacing a roadmap. Preserve V719 snapshots and
+the pinned V717 protocol. Independently authenticate Exp8305 shards, Exp8334
+checkpoint and Exp8335 seals; never refit, predict again or parse reserved
+targets. Recount fit/tune support and public reserved features while retaining
+authenticated reserved usable counts, missing slots and transport counts.
+Freeze comparator, temperatures, action rules, method hashes and immutable
+historical operand roots. Future outputs remain dependencies. Historical
+failures cannot grant readiness or suppress authentic frozen inputs.
+Declare no_model_load, empty MODEL_SPECS, zero current calls and exposed
+development with zero generalization scores. Publish separate authority,
+heads and prediction readiness. Missing external inputs block; failed owned
+checks disqualify. Every field has a principle and every failed gate its exact
+path/hash, field, operator, expected and observed operands.
+The conductor owns ops/status, ops/changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8346-INPUTS
+
+Natural frozen inputs qualify without training or label access. Changed/deleted
+task objects, changed input bytes, mismatched checkpoints and broken seals
+fail closed. Reserved evaluators are hashed without JSON decoding. A missing
+authority or failed historical audit leaves authentic input gates independent.
+
+### SCENARIO-REPORT-8346-METHODS
+
+Bind the V720 scan and complete primary methods for 2602.02056v4,
+2512.12850v3 and 2606.11711v1 with URLs, versions, hashes, assumptions and
+limits. Lookup fidelity and finite capacity are constructed studies outside H1/H2.

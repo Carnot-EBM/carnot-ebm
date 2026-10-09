@@ -433,3 +433,11 @@ Additional official ARC-AGI-3 Semi-Private results absent from your supplied fin
 
 - **October 23 — Research Summit:** ARC Prize announced a Boston research summit hosted with MIT; attendance and presentation applications are available. [Official event page](https://arcprize.org/events/research-summit-2026)
 
+## 2026-10-09 13:12 UTC -- NEW
+
+- **October 1 — Milestone #2 winners:** Daniel Franzen **27.9% ($25K)**; Lord Han Solo **23.8% ($7.5K)**; Lohit Siriki **22.5% ($5K)**. All three open-sourced their solutions. [Official announcement](https://x.com/arcprize/status/2105737436450201734), [archived text](https://postcutoff.com/p/x-arcprize-2105737436450201734/).
+
+- **October leaderboard snapshot:** Tufa Labs leads at **55.89%**, followed by Yi-Chia Chen at **48.59%**. Verified through a reachable [Kaggle standings mirror](https://clist.by/standings/arc-prize-2026-arc-agi-3-general-knowledge-and-reasoning-artificial-intelligence-custom-metric-66453356/).
+
+- **September 29 — GPT-6.1 Sol verified results:** **52.7%** on ARC-AGI-3 Semi-Private with the Standard harness at max reasoning; **96.4%** with the Provider Adapter harness at xhigh reasoning. [Official results](https://arcprize.org/results/openai-gpt-6-1-sol).
+

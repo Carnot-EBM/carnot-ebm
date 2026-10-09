@@ -1,5 +1,17 @@
 # Research Studying — Ranked Ideas for Future Experiments
 
+<!-- EXP8346-V720-METHOD-INGESTION-START -->
+## Exp8346 — V720 frozen input methods — INGESTED
+
+Read full methods for 2602.02056v4, 2512.12850v3 and 2606.11711v1 before
+execution. Versioned bytes, assumptions and limits are bound in
+`docs/research-notes/v720-method-ingestion.md`. Adopt authenticated head/seal
+reuse and separate constructed locality, table-fidelity and finite-feedback
+controls. Defer QAT/pruning, DW-FTRL/theorem transfer and hardware promotion.
+Keep the V717 science unchanged; constructed observations cannot enter H1/H2.
+No new generator inference or independent generalization is claimed.
+<!-- EXP8346-V720-METHOD-INGESTION-END -->
+
 <!-- EXP7837-V681-METHOD-INGESTION-START -->
 ## Exp7837 — V681 bounded method controls — INGESTED
 
