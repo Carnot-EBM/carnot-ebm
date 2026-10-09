@@ -97080,3 +97080,25 @@ Flushed phase boundaries and counted progress expose real work without delay
 padding. Primitive evidence stays below results/raw/experiment_8349_v720_bounded_feedback_capacity/.
 Generalization scores remain zero; oracle systems evidence is circular_positive.
 The conductor owns subsequent ops and traceability reconciliation.
+
+## REQ-REPORT-8350: Authority-bound static audit publication
+
+Exp8350 SHALL publish one terminal primary with replayable primitive evidence
+under results/raw/experiment_8350_v720_static_benefit_audit/. Declare no_model_load,
+aggregation_from_upstream_artifacts, MODEL_SPECS=[] and zero current model calls.
+Both generalization scores remain zero for exposed cached development.
+Freeze validation argv before measurement. Require100 percent new statements,
+real CLI and failure paths, scoped consumers, Ruff, strict mypy and spec coverage.
+Fresh-process valid, negative and rehashed-tamper controls precede unchanged
+adversarial, strict-row and atomic primary publication. Keep every finding.
+Owned failures disqualify; absent external artifacts block with exact operands.
+A valid scientific null may have static_audit_ready_score=1. Insufficient science
+is null_insufficient_support; incomplete retention seals block full H1.
+The conductor owns ops/status, ops/changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8350-CLI
+
+The thin CLI emits flushed boundaries and supervises bounded children with
+heartbeats. Private missing-input runs and cold replay exercise the real CLI.
+Label access records follow completed seal authentication. Future outputs are
+dependencies. No generator weights, roadmap, validators or exemptions change.

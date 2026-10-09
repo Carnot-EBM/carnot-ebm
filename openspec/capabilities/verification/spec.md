@@ -52352,3 +52352,32 @@ state, and match uninterrupted semantic output. Cold recomputation rejects
 changed primitives and self-consistently rehashed summaries or checkpoints.
 Capacity readiness requires every invariant and negative control, regardless
 of which scheduler has lower constructed utility cost.
+
+## REQ-VERIFY-8350: Seal-gated independent static benefit audit
+
+Authenticate the original Exp8335 prediction seal and Exp8346 static readiness.
+Before decoding reserved evaluator targets, authenticate complete Exp8348 learning
+and retention predictions at windows0/32/64/96. Missing seals block full H1.
+The blocked path may report only first96 predictor actions and margins, without
+utility or the128-slot threshold. No H1 result gates online learning or retunes H2.
+Independently reduce all128 original sources under the frozen V717 policy.
+Missing features escalate at cost.5 for every arm. Unresolved labels retain joint
+paired bounds. Use10000 source-cluster resamples, seed7178311, alpha.025.
+Report all arms, complete cases, intended slots, calibration, coverage and risk.
+Null support needs80 sources,8 per label, typed actions and positive oracle
+headroom. Representation claims also need the exact optimizer control and
+meaningful residuals; otherwise retain optimization-limited scope.
+
+### SCENARIO-VERIFY-8350-BARRIER
+
+Absent, incomplete, changed or foreign retention windows keep every evaluator
+target unopened. Source identity and withheld-label changes cannot change issued
+numeric predictions. Mask changes preserve issued bytes; new missing-input
+predictions escalate. A label-only predictor input must fail the allowlist.
+
+### SCENARIO-VERIFY-8350-REDUCTION
+
+Known wrong accept/reject costs1; correct costs0; escalation costs.5. Unknown
+labels cannot establish correctness. Coherent per-source bounds keep all slots.
+Frozen comparator selection never changes after audit results. Sigmoid parity
+precludes energy novelty. Cold replay rejects rehashed primitive tampering.
