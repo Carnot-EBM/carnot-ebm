@@ -7352,3 +7352,11 @@ Operational evidence addendum: this entry supersedes earlier operational asserti
 - theme: Operational efficiency across 8 completed experiments (1 compute-bound, 7 synthesis-only) in 40 minutes of milestone wall time.
 - key result: honest operational negative — 8 experiments completed in 40.0 minutes led by spline update isolation qualification (11.34 min), ARC reader coverage gap closure (8.99 min), fourteen-outcome reconciliation (5.24 min), and GateMate evidence preservation (4.07 min), alongside compute-bound sentence feature reconstruction (4.42 min); GPU utilization was 0% post-run with gpu_idle_on_compute_bound_tasks recorded as false, and available records lack intra-task sub-phase telemetry and continuous in-flight accelerator sampling.
 - acceptance: no data available this milestone
+
+### Milestone 2026.10.718
+
+- exp_range: no data available this milestone
+- theme: Operational efficiency across 5 completed experiments (0 compute-bound, 5 synthesis-only) in 17 minutes of milestone wall time.
+- key result: honest operational negative — 5 synthesis-only experiments completed in 16.8 wall-time minutes (averaging 3 minutes per experiment) led by outcome reconciliation (4.63 min), task binding and replay qualification (4.60 min), GateMate condition retention (4.10 min), and ARC reader inspection (3.42 min); zero compute-bound experiments were executed with gpu_idle_on_compute_bound_tasks recorded as null and 0% GPU utilization on the RTX 3090 reflecting expected idle state for non-GPU synthesis workloads.
+- acceptance: no data available this milestone
+
