@@ -21832,3 +21832,4 @@ Recorded 6 completed experiments in 40.0 minutes (0.7 hours), including 1 comput
 - 2026-10-08: Preserve GateMate reopening evidence without repeating an unchanged probe (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_physical_change; results/experiment_8316_v717_gatemate_obligation.json
 - 2026-10-08: Reconcile fourteen outcomes and decide local-learning and runtime continuation (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8317_v717_capstone.json
 - 2026-10-09: Bind fourteen tasks and qualify deterministic historical replay (⚠️ Research Finding) — honest_verdict=complete_disqualified_contract_replay; results/experiment_8318_v718_contract_replay.json
+- 2026-10-09: Inspect new live supervisor outcomes with the qualified ARC reader (⚠️ Research Finding) — honest_verdict=complete_disqualified_supervisor_frontier; results/experiment_8328_v718_arc_supervisor_frontier.json
