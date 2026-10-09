@@ -1,0 +1,181 @@
+................FFF                                                      [100%]
+=================================== FAILURES ===================================
+________________________ test_current_reader_and_replay ________________________
+
+tmp_path = PosixPath('/tmp/carnot-8355-wlgsjf9j/owned-tests/test_current_reader_and_replay0')
+
+    assert sha256_file(saved) == digest
+    target = root / label
+    target.parent.mkdir(parents=True, exist_ok=True)
+>   target.write_bytes(saved.read_bytes())
+       ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_supervisor_frontier_8355.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/arc_supervisor_frontier_8355.py:117: in measure
+    bind(prior.measure, authority=authority, progress=progress)(
+python/carnot/reporting/arc_supervisor_frontier_8342.py:96: in measure
+    bind(prior_reader.measure, authority=authority, progress=progress)(raw, private, failures),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/arc_supervisor_frontier_8328.py:151: in measure
+    contract = authority.authority(ROOT, raw / "authority")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+raw = PosixPath('/tmp/carnot-8355-wlgsjf9j/owned-tests/test_current_reader_and_replay0/raw/authority')
+milestone = '2026.10.720'
+
+    def authority(root: Path, raw: Path, milestone: str = MILESTONE) -> Json:
+        """Reuse the complete-object reader while explicitly selecting immutable history."""
+        with patch.object(history, "design", design):
+>           return dict(legacy.authority(root, raw, milestone))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: preserved_v718.<locals>.historical() takes 2 positional arguments but 3 were given
+
+python/carnot/reporting/v720_frozen_input_contract.py:67: TypeError
+----------------------------- Captured stdout call -----------------------------
+[exp8355] phase=preconditions_before
+__________________________ test_real_cli_and_failure ___________________________
+
+tmp_path = PosixPath('/tmp/carnot-8355-wlgsjf9j/owned-tests/test_real_cli_and_failure0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7eb56adf70>
+
+        assert value["arc_reader_ready_score"] == 1 and value["arc_outcome_support_score"] == 0
+        assert value["frontier_before"] == value["frontier_after"]
+        assert value["current_game_calls"] == value["current_model_calls"] == 0
+        assert value["solve_credit_claimed"] is False and value["MODEL_SPECS"] == []
+        assert e.replay(value) and not e.replay(dict(value, current_model_calls=1))
+        assert all(r["passed"] for r in e.controls(value, tmp_path / "controls"))
+        assert [d["verdict_class"] for d in work["historical_dispositions"]] == ["disqualified"] * 2
+        plan = e.plan(tmp_path)
+        assert {"strict_mypy", "private_E2E017", "private_E2E018_consumers"} <= {
+            r["name"] for r in plan
+        }
+        assert all(r["deadline"] <= 240 for r in plan)
+    
+    
+    def test_real_cli_and_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        """SCENARIO-VERIFY-8355-EXECUTION: actual CLI branches and failures retain evidence."""
+        main = runpy.run_path(str(e.ROOT / e.CLI))["main"]
+        for args in [["--date", "20261008"], ["--private-e2e", "--output", str(e.OUTPUT)]]:
+            with pytest.raises(SystemExit):
+                main(args)
+        output = tmp_path / e.OUTPUT.name
+        receipt = child(
+            "cli8355",
+            [sys.executable, "-u", str(e.ROOT / e.CLI), "--private-e2e", "--output", str(output)],
+            tmp_path / "children",
+            deadline=60,
+        )
+        assert receipt["passed"]
+        value = e.json_document(output)
+        assert value["fixture_claim_scope"] and value["arc_reader_ready_score"] == 0
+        assert main(["--cold-replay", str(output)]) == 0
+        atomic_json(output, dict(value, solve_credit_claimed=True))
+>       assert main(["--cold-replay", str(output)]) == 1
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_supervisor_frontier_8355.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/arc_supervisor_frontier_8355.py:222: in run
+    "--basetemp=" + str(private / "frozen-readers"),
+python/carnot/reporting/arc_supervisor_execution_8328.py:177: in run
+    work = m.measure(raw, private, failures)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/arc_supervisor_frontier_8355.py:117: in measure
+    bind(prior.measure, authority=authority, progress=progress)(
+python/carnot/reporting/arc_supervisor_frontier_8342.py:96: in measure
+    bind(prior_reader.measure, authority=authority, progress=progress)(raw, private, failures),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/arc_supervisor_frontier_8328.py:151: in measure
+    contract = authority.authority(ROOT, raw / "authority")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+raw = PosixPath('/tmp/carnot-8355-wlgsjf9j/owned-tests/test_real_cli_and_failure0/failed/raw/experiment_8355_v720_arc_supervisor_frontier/invocations/1234111761091951/authority')
+milestone = '2026.10.720'
+
+    def authority(root: Path, raw: Path, milestone: str = MILESTONE) -> Json:
+        """Reuse the complete-object reader while explicitly selecting immutable history."""
+        with patch.object(history, "design", design):
+>           return dict(legacy.authority(root, raw, milestone))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: preserved_v718.<locals>.historical() takes 2 positional arguments but 3 were given
+
+python/carnot/reporting/v720_frozen_input_contract.py:67: TypeError
+----------------------------- Captured stdout call -----------------------------
+[exp8355] start no_model_load current_game_calls=0 current_model_calls=0
+[exp8355] start no_model_load current_game_calls=0 current_model_calls=0
+[exp8205] phase=before_subprocess_cli8355 completed=0 pending=1
+[exp8205] phase=after_subprocess_cli8355 completed=1 pending=0
+[exp8355] start no_model_load current_game_calls=0 current_model_calls=0
+[exp8355] replay_passed=True
+[exp8355] start no_model_load current_game_calls=0 current_model_calls=0
+[exp8355] replay_passed=False
+[exp8355] phase=execution_preflight
+[exp8205] phase=validation completed=0 pending=1
+[exp8205] phase=before_subprocess_owned_failure completed=0 pending=1
+[exp8205] phase=after_subprocess_owned_failure completed=1 pending=0
+[exp8205] phase=validation_complete completed=1 pending=0
+[exp8355] phase=preconditions_before
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] [--date {20261009}] [--output OUTPUT] [--private-e2e]
+                   [--cold-replay COLD_REPLAY]
+__main__.py: error: argument --date: invalid choice: '20261008' (choose from 20261009)
+usage: __main__.py [-h] [--date {20261009}] [--output OUTPUT] [--private-e2e]
+                   [--cold-replay COLD_REPLAY]
+__main__.py: error: private E2E output requires /tmp scratch
+_______________________ test_block_and_rehashed_history ________________________
+
+tmp_path = PosixPath('/tmp/carnot-8355-wlgsjf9j/owned-tests/test_block_and_rehashed_histor0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7eb56ad2b0>
+
+            dict(
+                name="owned_failure",
+                argv=[sys.executable, "-u", "-c", "raise SystemExit(7)"],
+>               deadline=5,
+                expected=0,
+                scope="owned",
+            )
+        ],
+    )
+
+tests/python/test_arc_supervisor_frontier_8355.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/arc_supervisor_frontier_8355.py:117: in measure
+    bind(prior.measure, authority=authority, progress=progress)(
+python/carnot/reporting/arc_supervisor_frontier_8342.py:96: in measure
+    bind(prior_reader.measure, authority=authority, progress=progress)(raw, private, failures),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/arc_supervisor_frontier_8328.py:151: in measure
+    contract = authority.authority(ROOT, raw / "authority")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+raw = PosixPath('/tmp/carnot-8355-wlgsjf9j/owned-tests/test_block_and_rehashed_histor0/raw/authority')
+milestone = '2026.10.720'
+
+    def authority(root: Path, raw: Path, milestone: str = MILESTONE) -> Json:
+        """Reuse the complete-object reader while explicitly selecting immutable history."""
+        with patch.object(history, "design", design):
+>           return dict(legacy.authority(root, raw, milestone))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: preserved_v718.<locals>.historical() takes 2 positional arguments but 3 were given
+
+python/carnot/reporting/v720_frozen_input_contract.py:67: TypeError
+----------------------------- Captured stdout call -----------------------------
+[exp8355] phase=preconditions_before
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_supervisor_frontier_8355.py::test_current_reader_and_replay
+FAILED tests/python/test_arc_supervisor_frontier_8355.py::test_real_cli_and_failure
+FAILED tests/python/test_arc_supervisor_frontier_8355.py::test_block_and_rehashed_history
+3 failed, 16 passed, 1 warning in 221.52s (0:03:41)

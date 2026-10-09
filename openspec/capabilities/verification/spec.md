@@ -52482,3 +52482,23 @@ adapts the qualified reader and retains the historical runtime closure.
 `tests/python/test_runtime_reader_8353.py` checks versioned authority, source
 custody, probe ordering, missing evidence and real child failure paths.
 The original consumer assertions use private preserved V717 authority bytes.
+
+## REQ-VERIFY-8355: Frozen ARC execution checks
+
+Freeze validation argv before measurement. Reproduce historical strict import
+errors from authenticated historical source; import defining modules explicitly
+without ignores or weaker type checks. Preserve and qualify original reader
+assertions under frozen V718/V719 authority. Require focused tests, consumers,
+private E2E-017/018, scoped Ruff, strict mypy, explicit spec coverage and100 percent
+newly owned statements including real CLI, child and failure paths. Do not run
+the full repository suite inside this experiment.
+
+### SCENARIO-VERIFY-8355-EXECUTION
+
+Bounded children emit flushed boundaries and heartbeats at least every60 seconds.
+Record argv, exits, timing and stream hashes. Existing typed findings resolve
+only independently recomputed informational observations with deliberate-error
+controls; warnings, errors, unknown severity and critical findings block readiness.
+Use unchanged adversarial and strict row checks before atomic publication.
+
+Implementation for REQ-VERIFY-8355: `python/carnot/reporting/arc_supervisor_frontier_8355.py` adapts the existing readers and executor. The thin runner is `scripts/experiments/experiment_8355_v720_arc_supervisor_frontier.py`; requirement-linked tests are in `tests/python/test_arc_supervisor_frontier_8355.py`. `docs/research-notes/v720-arc-outcomes.md` records the separate import and replay diagnoses. The conductor owns ops and traceability reconciliation.

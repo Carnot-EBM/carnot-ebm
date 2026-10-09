@@ -14,9 +14,9 @@ from typing import Any, cast
 
 from carnot.reporting import arc_supervisor_artifact_8328 as prior_artifact
 from carnot.reporting import arc_supervisor_execution_8328 as prior_execution
-from carnot.reporting import arc_supervisor_frontier_8243 as native
 from carnot.reporting import arc_supervisor_frontier_8328 as prior_reader
 from carnot.reporting import v719_contract_replay as authority
+from carnot.reporting.arc_supervisor_v689_delta import operand
 from carnot.reporting.current_work_receipt import sha256_file
 
 Json = dict[str, Any]
@@ -81,7 +81,7 @@ def measure(raw: Path, private: Path, precondition_failures: list[Json] | None =
     except (OSError, ValueError) as error:
         failures.append(
             dict(
-                native.authority.operand(
+                operand(
                     private,
                     "private_scratch_rw",
                     True,
@@ -100,7 +100,7 @@ def measure(raw: Path, private: Path, precondition_failures: list[Json] | None =
     if digest != authority.base.PIN:
         work["failures"].append(
             dict(
-                native.authority.operand(
+                operand(
                     protocol,
                     "protocol_sha256",
                     authority.base.PIN,

@@ -97175,3 +97175,27 @@ owned commands and reuses bounded children, typed findings and atomic publicatio
 The thin runner is `experiment_8353_v720_runtime_reader_qualification.py`.
 `docs/research-notes/v720-runtime-readiness.md` describes the separate gates.
 Ops, changelog and traceability reconciliation remain conductor-owned.
+
+## REQ-REPORT-8355: Qualified ARC import boundary and new outcomes
+
+Exp8355 SHALL publish results/experiment_8355_v720_arc_supervisor_frontier.json
+through unchanged atomic primary publication. It SHALL authenticate Exp8314
+directly as the last qualified frontier. Exp8328 and Exp8342 remain failed
+historical evidence. Explicit imports must preserve runtime reader assertions.
+Current game/model calls are zero, MODEL_SPECS is empty, and aggregation uses
+exposed development. Both generalization scores remain zero. Preserve native
+receipt identities, game/run/PID source bytes, counters, level/action joins and
+all per-game results. No firings yields complete_null_no_supervisor_outcomes.
+Comparisons require three overlapping games and five firings per game in each
+of two shared curated arms. Missing propensity permits descriptive claims only.
+
+### SCENARIO-REPORT-8355-REPLAY
+
+Authenticate authority, protocol, sources and sidecars before inspection. Cold
+children accept valid candidates and reject negative and rehashed tampering.
+Record historical replay drift separately without rewriting old primaries.
+Owned failures disqualify; missing external operands block with exact gates.
+Primitive evidence lives under results/raw/experiment_8355_v720_arc_supervisor_frontier/.
+Ops, changelog and traceability reconciliation is conductor-owned.
+
+Implementation for REQ-REPORT-8355: `python/carnot/reporting/arc_supervisor_frontier_8355.py` adapts the existing readers and executor. The thin runner is `scripts/experiments/experiment_8355_v720_arc_supervisor_frontier.py`; requirement-linked tests are in `tests/python/test_arc_supervisor_frontier_8355.py`. `docs/research-notes/v720-arc-outcomes.md` records the separate import and replay diagnoses. The conductor owns ops and traceability reconciliation.
