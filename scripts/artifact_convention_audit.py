@@ -63,6 +63,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.append(str(Path(__file__).resolve().parent))  # find audit_reviewer_cli when imported
+from audit_reviewer_cli import chain_failure, codex_bin, failure_text  # noqa: E402
+
 REPO = Path(__file__).resolve().parents[1]
 REPORT = REPO / "ops" / "artifact_convention_audit_report.md"
 
@@ -136,19 +139,23 @@ def _call(agent: str, model: str, prompt: str, body: str) -> tuple[bool, str]:
                 timeout=300,
                 check=False,
             )
-            ok, output = r.returncode == 0 and bool(r.stdout.strip()), r.stdout or r.stderr
+            ok = r.returncode == 0 and bool(r.stdout.strip())
+            # agy can exit 0 with empty stdout (headless tool-permission denial); say so.
+            output = r.stdout if ok else failure_text("agy", r.returncode, r.stderr, binary=AGY_BIN)
         except Exception as exc:  # noqa: BLE001
-            ok, output = False, repr(exc)[:200]
+            ok, output = False, f"agy launch error: {repr(exc)[:200]}"
         if ok:
             return True, output
-        return _call(
+        fb_ok, fb_out = _call(
             "codex",
             os.environ.get("AGY_FALLBACK_CODEX_MODEL", "gpt-6.1-sol"),
             prompt,
             body,
         )
+        return (True, fb_out) if fb_ok else (False, chain_failure(output, fb_out))
     cmds = {
-        "codex": ["codex", "exec", "--model", model, "-"],
+        # codex_bin() honors CODEX_BIN, like the conductor (REQ-OPS-AUDIT-REVIEWER-1).
+        "codex": [codex_bin(), "exec", "--model", model, "-"],
         "claude": ["claude", "-p", "--model", model],
         "gemini": ["gemini", "-m", model, "-p", "-"],
     }
@@ -164,9 +171,11 @@ def _call(agent: str, model: str, prompt: str, body: str) -> tuple[bool, str]:
             timeout=300,
             check=False,
         )
-        return (r.returncode == 0, r.stdout or r.stderr)
+        if r.returncode == 0:
+            return True, r.stdout or r.stderr
+        return False, failure_text(agent, r.returncode, r.stderr, binary=cmd[0])
     except Exception as exc:  # noqa: BLE001
-        return False, repr(exc)[:200]
+        return False, f"{agent} launch error: {repr(exc)[:200]}"
 
 
 def parse_verdict(report: str) -> str:
@@ -236,7 +245,7 @@ def main(argv: list[str]) -> int:
             continue
         ok, report = _call(args.agent_type, args.model_name, PROMPT, body)
         if not ok:
-            rows.append((p.name, "CANNOT_DETERMINE", "reviewer call failed", []))
+            rows.append((p.name, "CANNOT_DETERMINE", f"reviewer call failed: {report[:600]}", []))
             counts["CANNOT_DETERMINE"] += 1
             continue
         verdict = parse_verdict(report)

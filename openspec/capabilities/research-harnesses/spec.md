@@ -12120,3 +12120,54 @@ a current import path.
 
 A stale staged milestone falls back to the matching active roadmap. Missing
 matching authority or a path reader finding closes contract readiness.
+
+## REQ-OPS-AUDIT-REVIEWER-1: Audit Reviewer Calls SHALL Run The Conductor's Codex Binary And Keep The Real Error
+
+Origin: on 2026-10-08 the claim-audit reviewer was found failing on 37 percent of
+reviews since 2026-09-26. Six hostile-reviewer audits launched plain `codex`. Under the
+conductor service that is the old system copy in `/usr/bin`, which rejects newer model
+names with HTTP 400. The conductor avoids that copy through `CODEX_BIN`, and the audits did
+not read it. The failure text was cut to the first 200 characters of stderr, which is only
+the startup banner, so the cause stayed hidden. Diagnosis:
+`docs/research-notes/claim-audit-reviewer-failure-diagnosis-2026-10-08.md`.
+
+Rules:
+
+1. Each of `experiment_claim_audit.py`, `artifact_convention_audit.py`,
+   `verifier_authenticity_audit.py`, `qa_layer_authenticity_audit.py`,
+   `pages_adversarial_audit.py` and `arc_self_solve_audit.py` SHALL start codex through
+   `scripts/audit_reviewer_cli.py:codex_bin()`, which returns `$CODEX_BIN` when set and
+   `codex` otherwise.
+2. A failed reviewer call SHALL report the END of stderr (the last 300 characters), the
+   exit code, the first stderr line (for codex, its version) and the binary path, with the
+   error before the identification.
+3. When a primary reviewer and its fallback both fail, the message SHALL carry both reasons.
+4. The claim-audit and artifact-convention report rows SHALL keep up to 600 characters of the
+   failure text.
+
+#### SCENARIO-OPS-AUDIT-REVIEWER-1-BIN
+
+With `CODEX_BIN` set, each of the six audits SHALL run that path as the command. With it
+unset, each SHALL run `codex`.
+
+#### SCENARIO-OPS-AUDIT-REVIEWER-1-TAIL
+
+Given stderr of a banner, a 65,000 character prompt echo and an error, the failure text
+SHALL show the error within its first 200 characters and SHALL be shorter than 900
+characters.
+
+#### SCENARIO-OPS-AUDIT-REVIEWER-1-CHAIN
+
+Given an `agy` call that exits 0 with empty output and a codex fallback that fails, the
+message SHALL contain the `agy` reason and the codex error, and the fallback SHALL run
+`CODEX_BIN`.
+
+#### SCENARIO-OPS-AUDIT-REVIEWER-1-GUARD
+
+A literal `codex` command list in any of the six scripts SHALL fail the test suite.
+
+### Implementation Status (REQ-OPS-AUDIT-REVIEWER-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-OPS-AUDIT-REVIEWER-1 | Implemented 2026-10-08 (`scripts/audit_reviewer_cli.py`: `codex_bin`, `failure_text`, `chain_failure`; wired into the six audit scripts). Not covered: the two daily watch scripts, whose units already put `~/.local/bin` first on PATH. Not changed: the `agy` primary still returns empty output in headless mode, and its routing is an operator decision | `tests/python/test_audit_reviewer_cli.py` |
