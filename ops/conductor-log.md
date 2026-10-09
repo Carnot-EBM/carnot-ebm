@@ -19922,3 +19922,4 @@ code |
 | 2026-10-09 06:54 UTC | Qualify local updates with independent arithmetic  | OK | 89 passed, 1 warning in 105.91s (0:01:45) |
 | 2026-10-09 07:20 UTC | Train the frozen sentence decision heads on direct | OK | 88 passed, 1 warning in 40.88s |
 | 2026-10-09 07:49 UTC | Seal all reserved decisions under the unchanged so | OK | 87 passed, 1 warning in 44.91s |
+| 2026-10-09 07:52 UTC | Measure delayed local learning and seal every rete | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8333-local-evidence-qualification.local_kernel_ready_score (actual=0 == expected=1) |

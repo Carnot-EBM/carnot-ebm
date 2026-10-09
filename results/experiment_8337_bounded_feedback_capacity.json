@@ -1,0 +1,51 @@
+{
+  "experiment": 8337,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-10-09",
+  "started_at": "2026-10-09T07:55:00.651034+00:00",
+  "finished_at": "2026-10-09T07:55:00.651034+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Test pending feedback capacity and delayed learning under bounded memory",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp8333-local-evidence-qualification",
+  "failed_field": "local_kernel_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8333_v719_local_evidence_qualification.json",
+  "failed_evidence_sha256": "sha256:57c88cbefc2798a7a29fdd739f2d58189826bab166d9dc48b7141f0e124b50f0",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp8333-local-evidence-qualification",
+    "failed_field": "local_kernel_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8333_v719_local_evidence_qualification.json",
+    "failed_evidence_sha256": "sha256:57c88cbefc2798a7a29fdd739f2d58189826bab166d9dc48b7141f0e124b50f0"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8333-local-evidence-qualification.local_kernel_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8333-local-evidence-qualification",
+      "artifact_field": "local_kernel_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8333_v719_local_evidence_qualification.json",
+      "artifact_sha256": "sha256:57c88cbefc2798a7a29fdd739f2d58189826bab166d9dc48b7141f0e124b50f0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
