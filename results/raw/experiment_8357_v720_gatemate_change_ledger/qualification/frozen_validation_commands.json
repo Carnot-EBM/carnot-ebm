@@ -1,0 +1,169 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot8357-20261009/qualification-final/coverage.ini",
+        "--data-file=/tmp/carnot8357-20261009/qualification-final/.coverage",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8357-20261009/qualification-final/coverage",
+        "tests/python/test_gatemate_change_ledger_8357.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "explicit_tests_and_changed_modules",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot8357-20261009/qualification-final/.coverage",
+        "/tmp/carnot8357-20261009/qualification-final"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot8357-20261009/qualification-final/.coverage",
+        "--include=*/python/carnot/reporting/gatemate_history_8357.py,*/python/carnot/reporting/gatemate_change_ledger_8357.py,*/python/carnot/reporting/gatemate_ledger_execution_8357.py,*/scripts/experiments/experiment_8357_v720_gatemate_change_ledger.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "changed_modules",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/gatemate_history_8357.py",
+        "python/carnot/reporting/gatemate_change_ledger_8357.py",
+        "python/carnot/reporting/gatemate_ledger_execution_8357.py",
+        "scripts/experiments/experiment_8357_v720_gatemate_change_ledger.py",
+        "tests/python/test_gatemate_change_ledger_8357.py"
+      ],
+      "name": "ruff_check",
+      "scope": "changed_files",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/gatemate_history_8357.py",
+        "python/carnot/reporting/gatemate_change_ledger_8357.py",
+        "python/carnot/reporting/gatemate_ledger_execution_8357.py",
+        "scripts/experiments/experiment_8357_v720_gatemate_change_ledger.py",
+        "tests/python/test_gatemate_change_ledger_8357.py"
+      ],
+      "name": "ruff_format",
+      "scope": "changed_files",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "scripts/experiments/experiment_8357_v720_gatemate_change_ledger.py",
+        "python/carnot/reporting/gatemate_history_8357.py",
+        "python/carnot/reporting/gatemate_change_ledger_8357.py",
+        "python/carnot/reporting/gatemate_ledger_execution_8357.py",
+        "--strict",
+        "--follow-imports=silent",
+        "--config-file=/dev/null"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "changed_modules",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_gatemate_change_ledger_8357.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "explicit_tests",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8357-20261009/qualification-final/e2e015",
+        "tests/python/test_source_boundary_7852.py",
+        "-q"
+      ],
+      "name": "e2e015",
+      "scope": "private_e2e",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8357-20261009/qualification-final/e2e019",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "e2e019",
+      "scope": "private_e2e",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8357-20261009/qualification-final/affected_consumers",
+        "tests/python/test_primary_publication_7928.py",
+        "-q"
+      ],
+      "name": "affected_consumers",
+      "scope": "private_e2e",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8357-20261009/qualification-final/e2e018",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "-q"
+      ],
+      "name": "e2e018",
+      "scope": "private_authenticated_history",
+      "timeout_s": 180
+    }
+  ],
+  "frozen_before_measurement": true
+}

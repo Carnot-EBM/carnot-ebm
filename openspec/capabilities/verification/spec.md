@@ -52538,3 +52538,31 @@ The 2026-10-09 clock identity and repetition repair retains real CLI execution
 and strengthens SCENARIO-VERIFY-8356-TAMPER. All 74 relevant scoped tests pass;
 fresh unit/child coverage for the three V720 reporting modules and direct CLI
 is 257/257 statements. Scoped Ruff, strict mypy and spec-reference checks pass.
+
+## REQ-VERIFY-8357: Authenticate producer closure before physical reopening
+
+Preserve every historical validator requirement and original 0xffffffff
+transcript. Resolve source/configuration custody at producer hashes rather than
+current vNEXT. Missing hashes block history without invented bytes or replacement
+sidecars. Inspect only unseen dated cable, port, power or board changes after an
+authenticated frontier. Exact future sequence: authenticated physical change,
+GM1Ax IDCODE0x20000001, n16 tile flash, then device sample/hash smoke.
+
+### SCENARIO-VERIFY-8357-CLOSURE
+
+Valid immutable private source closure passes; real source or configuration drift
+fails without changing historical primaries. Missing differs from zero. Primitive
+closure metadata cannot pass merely by being rehashed. No physical scan occurs
+when history is incomplete.
+
+### SCENARIO-VERIFY-8357-FINDINGS
+
+Reuse unchanged typed finding consumption. Errors, unknown severity, warnings and
+critical findings block readiness; only independently recomputed informational
+findings with deliberate-error rejection can resolve. Preserve every finding.
+
+Implementation 2026-10-09: Exp8357 authenticates both producer-sidecar seals,
+recovers source/configuration custody without editing history, and cold-replays
+complete closure separately from physical change. Exact missing hashes remain
+terminal external blocks. Terminal membership and replay claims are independently
+checked; exposure and device/model execution counts remain explicit.

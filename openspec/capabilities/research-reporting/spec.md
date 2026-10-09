@@ -97250,3 +97250,38 @@ in the same two modules. Requirement-linked regression cases retain the original
 consumer assertions and cover incomplete arithmetic pairs, duplicated table IDs
 and warmup substitution. The repair is reconciled in `_bmad/traceability.md`,
 `ops/status.md` and `ops/changelog.md`.
+
+## REQ-REPORT-8357: Recover immutable GateMate history without a device retry
+
+Bind V720 invocation authority separately from producer-bound V718/V719 source,
+configuration, original primaries, terminal sidecars and custody. Recover only
+exact hashed bytes into private scratch. Missing closure operands close once as
+complete_blocked_gatemate_history with exact hashes; source drift is an execution
+finding and never a physical fault. Preserve frozen V717 science and outcomes.
+Use no_model_load, aggregation_from_upstream_artifacts, MODEL_SPECS=[] and zero
+current model, JTAG or board calls. Future deliverables remain dependencies.
+
+### SCENARIO-REPORT-8357-CLI
+
+Freeze scoped validation argv/deadlines before inspection. Private CLI tests
+cover valid closure, missing bytes, source/configuration drift, bounded children,
+owned failure and atomic publication rejection. Require 100 percent newly owned
+statements, relevant consumers, private E2E-018, Ruff, strict mypy and spec tracing.
+The conductor owns ops/status/changelog and BMAD reconciliation after this task.
+
+### SCENARIO-REPORT-8357-REPLAY
+
+Cold replay authenticates original closure and primitive meaning in a fresh
+process; negative claims and self-consistently rehashed tampering fail. Unchanged
+physical evidence is complete_blocked_gatemate_physical_change, class blocked.
+Ledger quality alone sets obligation readiness; execution readiness stays zero.
+
+Implementation 2026-10-09: `gatemate_history_8357.py` copies exact producer seals
+and replays unchanged historical checks in private scratch;
+`gatemate_change_ledger_8357.py` separates history from current authority and
+physical receipt parsing. The thin runner and execution adapter reuse supervised
+children, typed findings and atomic publication. Private source and terminal
+mutations, CLI failures and self-consistently rehashed primitive controls are
+requirement-linked tests. Final byte-bound validation receipts and the terminal
+primary are the execution record. Unit tests run once under subprocess coverage
+in the frozen production plan; unrelated repository health runs once outside it.
