@@ -19941,3 +19941,4 @@ code |
 | 2026-10-09 16:20 UTC | Measure finite feedback tracking with persistent a | OK | 91 passed, 1 warning in 62.72s (0:01:02) |
 | 2026-10-09 16:51 UTC | Audit sealed static decisions while preserving eve | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 89 passed, 1 warning in 29.78s |
 | 2026-10-09 17:44 UTC | Audit later decision utility and all fixed retenti | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 100 passed, 1 warning in 125.33s (0:02:05) |
+| 2026-10-09 18:23 UTC | Test lookup-table fidelity and refresh cost for fr | OK | 91 passed, 1 warning in 137.51s (0:02:17) |
