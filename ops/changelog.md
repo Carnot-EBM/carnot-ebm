@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-09 — Operational retrospective for milestone 2026.10.719
+
+- Wrote `results/operational_retro_2026_10_719.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.719`. Authoritative disk-mtime fallback data records 9 experiments completed (1 compute-bound, 8 synthesis-only) across 41.7 total wall-time minutes (average 5 minutes per experiment).
+- Execution wall time was led by synthesis tasks: 'Qualify local updates with independent arithmetic and real restart controls' (8.12 minutes), 'Reconcile fourteen outcomes with bounded historical memory and independent scien' (6.3 minutes), 'Qualify current source custody and cover the historical replay rejection branch' (5.07 minutes), and 'Cover ARC reader failure branches and inspect only new supervisor outcomes' (4.91 minutes), alongside compute-bound task 'Qualify versioned runtime evidence independently and require a real CUDA change' (4.83 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization on the RTX 3090 with 2MB allocated outside active runs; `gpu_idle_on_compute_bound_tasks` is false as no compute-bound idle anomalies or multi-model parallel dispatch requirements were present, and 0% GPU utilization is expected behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: implement incremental receipt caching and evidence memoization for local update qualification, source custody, ARC reader checks, and fourteen-outcome reconciliations when upstream inputs remain static; instrument multi-minute synthesis and compute-bound tasks with granular intra-task phase timers; and persist synchronous start and end lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-09 — Plan milestone 2026.10.719
 
 - Recorded a primary/secondary literature scan before experiment design.
@@ -21878,3 +21885,7 @@ Recorded 5 completed experiments in 16.8 minutes (0.3 hours), including 0 comput
 - 2026-10-09: Measure independent spline operation costs and retain exact board boundaries (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_checks; results/experiment_8343_v719_kv260_workload_cost.json
 - 2026-10-09: Carry the GateMate physical reopening obligation through a bounded evidence delta (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_history; results/experiment_8344_v719_gatemate_change_ledger.json
 - 2026-10-09: Reconcile fourteen outcomes with bounded historical memory and independent science gates (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8345_v719_capstone.json
+
+### Milestone 2026.10.719 — operational retrospective
+
+Recorded 9 completed experiments in 41.7 minutes (0.7 hours), including 1 compute-bound task. Qualify local updates with independent arithmetic and real restart controls (8.12 min), Reconcile fourteen outcomes with bounded historical memory and independent scien (6.3 min), Qualify current source custody and cover the historical replay rejection branch (5.07 min), Cover ARC reader failure branches and inspect only new supervisor outcomes (4.91 min), and Qualify versioned runtime evidence independently and require a real CUDA change (4.83 min) led the listed timings. Proposed incremental receipt caching and evidence memoization for local update qualification, source custody, ARC reader checks, and outcome reconciliation, granular intra-task phase timers for synthesis and compute-bound tasks, direct receipt timestamp logging, continuous in-flight accelerator telemetry, and strict DualGPURunner boundaries for concurrent multi-model pipelines. Locked artifact fields remain unchanged; GPU idle on compute-bound tasks is false, parallel-model dispatch had no data available this milestone, and estimated time savings remain 0%. Artifact: `results/operational_retro_2026_10_719.json`.
