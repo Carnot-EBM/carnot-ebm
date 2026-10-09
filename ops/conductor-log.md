@@ -19926,3 +19926,4 @@ code |
 | 2026-10-09 07:56 UTC | Test pending feedback capacity and delayed learnin | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8333-local-evidence-qualification.local_kernel_ready_score (actual=0 == expected=1) |
 | 2026-10-09 07:58 UTC | Audit static decision benefit after all prediction | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8336-continuous-local-learning) |
 | 2026-10-09 07:58 UTC | Audit later learning utility and every fixed reten | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8336-continuous-local-learning) |
+| 2026-10-09 08:32 UTC | Qualify versioned runtime evidence independently a | OK | 109 passed, 1 warning in 53.84s |
