@@ -97057,3 +97057,26 @@ under results/raw/experiment_8348_v720_continuous_local_learning/.
 The real standalone CLI supports natural measurement, private external-block
 controls, workers and cold replay. Invalid dates and unsafe private output
 locations fail. Flushed phase counts and bounded child receipts remain auditable.
+# REQ-REPORT-8349: Authority-bound capacity publication
+
+Declare the established verifier_ensemble_against_cached_candidates substrate
+for cached qualification plus constructed numeric replay. MODEL_SPECS stays
+empty. An unrecognized substrate must fail the unchanged methodology consumer;
+correct metadata and revalidate, preserving rejected candidate bytes/findings.
+
+Authenticate Exp8347.local_kernel_ready_score and terminal bytes, current task
+authority, original source bytes, tools and private resources. Missing external
+operands block; failed owned checks disqualify. No model loads or calls occur.
+Freeze scoped validation argv before measurements; require100 percent new
+statements, strict typing, Ruff, spec coverage and private E2E-020. Publish
+atomically through unchanged primary, adversarial and strict row validators.
+Preserve all findings; only the existing typed informational consumer with
+independent arithmetic and deliberate-error controls can resolve exit1.
+
+### SCENARIO-REPORT-8349-CLI
+
+The thin CLI supports bounded workers, private controls and cold replay.
+Flushed phase boundaries and counted progress expose real work without delay
+padding. Primitive evidence stays below results/raw/experiment_8349_v720_bounded_feedback_capacity/.
+Generalization scores remain zero; oracle systems evidence is circular_positive.
+The conductor owns subsequent ops and traceability reconciliation.

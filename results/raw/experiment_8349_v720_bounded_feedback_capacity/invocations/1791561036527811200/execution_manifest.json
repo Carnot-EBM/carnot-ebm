@@ -1,0 +1,188 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/env",
+        "COVERAGE_RCFILE=/tmp/carnot-8349-lsjth_mx/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8349-lsjth_mx/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_bounded_feedback_capacity_8349.py",
+        "--basetemp=/tmp/carnot-8349-lsjth_mx/owned-tests"
+      ],
+      "classification": "required",
+      "deadline_s": 600,
+      "expected_exit": 0,
+      "name": "owned_unit_and_private_CLI"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-8349-lsjth_mx/consumers",
+        "tests/python/test_local_update_isolation_8306.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_hard_exit_learning_qualification_8206.py"
+      ],
+      "classification": "required",
+      "deadline_s": 600,
+      "expected_exit": 0,
+      "name": "consumer_private_E2E020"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8349-lsjth_mx/coverage.ini"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot-8349-lsjth_mx/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8349-lsjth_mx/coverage.ini",
+        "-o",
+        "/tmp/carnot-8349-lsjth_mx/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/bounded_feedback_capacity_8349.py",
+        "python/carnot/reporting/bounded_feedback_capacity_8349.py",
+        "python/carnot/reporting/bounded_feedback_execution_8349.py",
+        "scripts/experiments/experiment_8349_v720_bounded_feedback_capacity.py",
+        "tests/python/test_bounded_feedback_capacity_8349.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/bounded_feedback_capacity_8349.py",
+        "python/carnot/reporting/bounded_feedback_capacity_8349.py",
+        "python/carnot/reporting/bounded_feedback_execution_8349.py",
+        "scripts/experiments/experiment_8349_v720_bounded_feedback_capacity.py",
+        "tests/python/test_bounded_feedback_capacity_8349.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/verify/bounded_feedback_capacity_8349.py",
+        "python/carnot/reporting/bounded_feedback_capacity_8349.py",
+        "python/carnot/reporting/bounded_feedback_execution_8349.py",
+        "scripts/experiments/experiment_8349_v720_bounded_feedback_capacity.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_bounded_feedback_capacity_8349.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "spec_coverage"
+    }
+  ],
+  "heartbeat_s": 20,
+  "no_full_repository_suite": true,
+  "owned": [
+    "python/carnot/verify/bounded_feedback_capacity_8349.py",
+    "python/carnot/reporting/bounded_feedback_capacity_8349.py",
+    "python/carnot/reporting/bounded_feedback_execution_8349.py",
+    "scripts/experiments/experiment_8349_v720_bounded_feedback_capacity.py"
+  ],
+  "terminal_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8349_v720_bounded_feedback_capacity.py",
+        "--cold-replay",
+        "/tmp/carnot-8349-lsjth_mx/candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-8349-lsjth_mx/candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "adversarial_verify"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-8349-lsjth_mx/candidate.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_row_lint"
+    }
+  ]
+}

@@ -52324,3 +52324,31 @@ Valid primitive replay passes. Modified issue probabilities, checkpoint state,
 source hashes or readiness fail even with recomputed artifact hashes.
 Incomplete dependency metadata causes full invalidation; global intercept
 updates invalidate all unissued cached predictions and preserve hard bounds.
+# REQ-VERIFY-8349: Persistent bounded constructed feedback
+
+Exp8349 SHALL freeze three 512-event constructed traces before observations:
+local x[12:16]=((17*t+13*j)%101)/100, other coordinates zero, and the declared
+linear threshold with sign reversed after256. Delays are8, repeating1/8/32/64,
+or64 at129..256 and8 otherwise. Labels and delays open only at expiration.
+Issue and admission precede due processing, including the capacity64 boundary.
+Unlimited, first-admit and fixed independent random-priority tracking at4/16/64
+use seeds11/22/33. Random admission keeps the smallest pending priorities;
+drops permanently lose learner feedback. No propensity weighting is permitted.
+Reuse frozen spline basis, step.01, norm cap1, slope1/intercept0/T1 and zero
+local coefficients. Sparse and dense implementations receive identical labels.
+
+### SCENARIO-VERIFY-8349-CAPACITY
+
+Every issue, admission membership, priority, drop, due and update is logged.
+Every tick proves occupancy<=C. The evaluator retains lost labels. Report all
+126 arm rows, costs, loss, touches, bytes and complete update time; count only
+three constructed workloads as independent. Utility cannot qualify natural H2.
+Deliberate overflow, future leakage and lost-label resurrection must fail.
+
+### SCENARIO-VERIFY-8349-RECOVERY
+
+Private real children exit73 after durable slots128/256, resume the exact RNG
+state, and match uninterrupted semantic output. Cold recomputation rejects
+changed primitives and self-consistently rehashed summaries or checkpoints.
+Capacity readiness requires every invariant and negative control, regardless
+of which scheduler has lower constructed utility cost.
