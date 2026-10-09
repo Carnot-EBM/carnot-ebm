@@ -1,0 +1,84 @@
+{
+  "item": {
+    "reference": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8336_continuous_local_learning.json",
+      "role": "21",
+      "sha256": "sha256:83d9c066cef6ad162ac588775181402c0252752633d659ac2883d4f4a197210f",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8345_v719_capstone/invocations/1791541678305454065/custody/21-83d9c066cef6ad162ac588775181402c0252752633d659ac2883d4f4a197210f.bin",
+      "snapshot_sha256": "sha256:83d9c066cef6ad162ac588775181402c0252752633d659ac2883d4f4a197210f",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8336_continuous_local_learning.json"
+    },
+    "sidecar": {
+      "binding_error": "'terminal_validation_sidecar_path'",
+      "exists": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8336_continuous_local_learning/validators/83d9c066cef6ad162ac588775181402c0252752633d659ac2883d4f4a197210f.json",
+      "role": "22",
+      "sha256": null,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8336_continuous_local_learning/validators/83d9c066cef6ad162ac588775181402c0252752633d659ac2883d4f4a197210f.json"
+    }
+  },
+  "task": {
+    "MODEL_SPECS": [],
+    "deliverable": "results/experiment_8336_v719_continuous_local_learning.json",
+    "estimated_wall_time_min": 60,
+    "gated_on": [
+      {
+        "artifact_field": "heads_ready_score",
+        "op": "==",
+        "upstream": "exp8334-sentence-spline-fit",
+        "value": 1
+      },
+      {
+        "artifact_field": "local_kernel_ready_score",
+        "op": "==",
+        "upstream": "exp8333-local-evidence-qualification",
+        "value": 1
+      }
+    ],
+    "id": "exp8336-continuous-local-learning",
+    "inference_substrate_class": "no_model_load",
+    "max_turns": 50,
+    "milestone": "2026.10.719",
+    "model": "sonnet",
+    "per_unit_rows": true,
+    "phase": 2,
+    "prior_failures": [
+      {
+        "addressed_by": "Use authenticated sentence-local relations and a fixed local correction objective, rather than the nine-input selectively sampled spline chain. Feedback is released uniformly after eight slots with no selection bias or inverse-propensity estimate.",
+        "experiment_id": "exp7998-selective-feedback-learning",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_selective_feedback_learning"
+      },
+      {
+        "addressed_by": "Replace globally supported radial/Beta utility patches with bounded active spline-coordinate updates; freeze intercept and temperature online and independently compare actual later decisions.",
+        "experiment_id": "exp8240-qualified-delayed-learning",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_utility_trajectory_benefit_reserved_for_8241"
+      },
+      {
+        "addressed_by": "Changes the representation to local sentence relations, freezes global parameters after static calibration, and tests exact delayed local writes against dense, frozen and calibration-only controls on a fixed source stream.",
+        "experiment_id": "exp7427-randomized-feedback",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_no_registered_online_value"
+      },
+      {
+        "addressed_by": "The prior trajectory was never run. Current local evidence qualification resolves the exact-info consumer failure, and current static fitting supplies the previously absent head.",
+        "experiment_id": "exp8310-continuous-local-learning",
+        "retire_if_same_verdict": true,
+        "verdict": "GATE_BLOCK (producer absent)"
+      },
+      {
+        "addressed_by": "The producer was absent after both prerequisites retired. Current static fitting and independently qualified local updates replace that dead chain; the causal scientific protocol stays frozen.",
+        "experiment_id": "exp8322-continuous-local-learning",
+        "retire_if_same_verdict": true,
+        "verdict": "GATE_BLOCK (producer absent)"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. V718 has five producer primaries, three conductor pre-gate receipts and six absent producer primaries. Nine science/runtime tasks did not execute. Exp8318 failed 100-percent coverage at v718_contract_replay.py:357; Exp8328 missed five executor branches; Exp8331 failed the unchanged memory-leak guard (+596MB) at test_actual_mixed_history teardown. Historical reduction drift was localized to gate_check_summary[15].hash. These are execution findings, not H1/H2 nulls. V719 preserves the frozen V717 scientific protocol and exposed-development scope, fixes named execution defects, and separates independent inputs from historical synthesis. Never recast missing observations as negative science.\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; openspec/change-proposals/v717-local-learning-protocol.json; python/carnot/verify/sparse_energy_7996.py; python/carnot/verify/dependency_scoped_admission_8291.py; python/carnot/verify/calibrated_memory_trajectory_8211.py; results/experiment_7998_v693_selective_feedback_learning.json; results/experiment_8240_v712_qualified_delayed_learning.json; openspec/capabilities/self-learning/spec.md\nTASK:\nMeasure delayed local learning and seal every retention window. Deliver results/experiment_8336_v719_continuous_local_learning.json. Create the thin runner scripts/experiments/experiment_8336_v719_continuous_local_learning.py. Store primitive evidence under results/raw/experiment_8336_v719_continuous_local_learning/. Read current producers by exact declared deliverables. Future output paths are dependencies, not existing inputs.\nCONCRETE STEPS:\n1. PRECONDITIONS: Emit a flushed start line. Authenticate source bytes, terminal sidecars and actual authority. Check private scratch, tools and resources before measurement. Record missing external operands as complete_blocked_<operand> with verdict_class=blocked and exact gate_check_summary. Never replace missing observations with fixtures.\n2. Emit a flushed progress line at every phase boundary. Emit one before and after every model load, generation, benchmark and subprocess. Print completed/pending counts inside long loops. Poll owned children with a heartbeat at least every 60 seconds. Keep every silence gap below 600 seconds. Use unbuffered output and bounded child deadlines. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between calls. No single huge tool call. Use bounded child deadlines and poll commands in intervals of at most 60 seconds. Do not pad elapsed time.\n3. Spec first: add relevant REQ-* and SCENARIO-* before implementation. Write focused failing tests first. Reuse qualified modules through small adapters. Preserve old tests, source evidence and validator enforcement. Freeze execution argv and timeouts separately from scientific parameters. Use /tmp for scratch and scripts/experiments/ for real runners. Do not modify research-roadmap.yaml.\n4. This task is the required continuous self-learning experiment. Keep the entire frozen V717 delay8 study unchanged. Use the current Exp8333 qualification instead of the disqualified Exp8306 primary. The separate capacity experiment cannot change this trajectory or its labels.\n5. Seal all online issue rows and retention-window predictions before Exp8338 or Exp8339 opens evaluator targets. Expose only due stream labels through the release API. Include a mutation test that changes future labels and leaves all prior decisions unchanged.\n6. Declare no_model_load, inference_substrate=verifier_ensemble_against_cached_candidates, MODEL_SPECS=[] and generator_weight_updates=0. This is Tier1 continuous online learning on replayed natural observations, with Tier2 durable state; it is not autonomous acquisition of new semantic constraint types.\n7. Read only fit/tune-trained checkpoints and the stream96 predictor shard. Start each arm from the same frozen spline head. Arms: frozen_spline, online_sparse, mathematically identical online_dense, calibration_only (intercept update only), and shuffled_due_feedback negative control (seed7178310, draw with replacement only from labels already released at that slot; never build a permutation from future feedback). All arms receive the same available due feedback; no acceptance-selected labeling or future labels.\n8. For slot t, issue and durably record every arm's prediction and state hash FIRST; then release only the label from slot t-8. Apply at most one stable logistic SGD step with learning rate.01, active-coefficient gradient norm cap1 and coordinate bounds[-4,4]. Online sparse/dense freeze the intercept, temperature, holistic slope and knots; only active spline coordinates change. Use derivative of the deployed temperature-scaled logit. No online L2 decay, future-driven refit or parameter search. Before the natural trajectory, use a separate fit-only control with the exact <=88-update budget to demonstrate a typed-action crossing; record attainable logit-change bounds and starting margins for every real source. This diagnostic cannot retune the method. Failure limits interpretation to an update-budget null, not evidence that natural learning is impossible. Calibration-only uses the same clipping/step budget but updates its intercept.\n9. Index cached unissued predictions by actual active coefficients; reject duplicate/stale feedback IDs, preserve hard invariants, and use full recomputation when metadata is incomplete. Issued decisions never change after release. Missing source features imply escalation and no parameter update. Persist coefficients, pending issues, feedback IDs and index version before acknowledging a release.\n10. Use the frozen source order, delay8 and no cohort replacement. Kill owned children after durable updates at slots32/64, resume, and compare all semantic state and issued predictions against an uninterrupted run. Future-label mutation must not change earlier decisions; the sparse/dense paths must remain within1e-10 with identical typed decisions. Preserve out-of-support and global-invalidation rows.\n11. For each admitted change, record its source, basis support, coefficient delta and whether a LATER distinct source's probability/action changed. Produce shadow predictions on the retention32 features at windows0/32/64/96 without opening retention targets. Measure memory bytes and complete durable-update latency; learning benefit is reserved for Exp8339.\n12. Set trajectory_ready_score only on issue/release causality, exact restart, complete accounting and passed checks. Self-learning may qualify mechanically with zero decision gain. Store raw issued/update/checkpoint/retention events under the declared raw directory and write docs/research-notes/v719-learning-trajectory.md.\n13. Run relevant unit and consumer tests, scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>. Require 100 percent newly owned statement coverage including actual CLI, child, failure and recovery paths. Use pytest -n 0 -o addopts= with private scratch. Record exact argv, exit codes, timing and output hashes. Do not launch the full repository suite inside an experiment.\n14. Cold-replay primitive evidence in a fresh process. Test valid, negative and rehashed-tamper cases. Run unchanged primary_publication checks, scripts/adversarial_verify.py --json <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>. Keep every finding. Qualify the existing finding-consumer implementation within this task before using it; a raw nonzero exit never proves a clean result. Errors, unknown findings and unadjudicated warnings block readiness. Publish the terminal primary atomically after required checks. Failed owned checks disqualify. Unchanged external missingness is blocked, never partial. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. No generator-weight updates or external publication.\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date: principle: Identify the invocation and exact execution authority.\nhonest_verdict, verdict_class: principle: honest_verdict starts complete_; class is positive | circular_positive | null | blocked | disqualified | partial. Partial means retryable unfinished owned work only.\ngate_check_summary: principle: Each block names upstream, path/hash, exact field, operator, expected and observed values. Missing evidence differs from zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, historical_model_provenance: principle: Count only current model work and retain imported provenance separately.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, sample_size_budget: principle: Preserve every intended unit and condition; repetitions do not create independent sources.\nverifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score: principle: Constructed oracle success is circular_positive. Exposed development keeps both generalization scores zero.\nrequired_checks_passed, flagged_adversarial, acceptance_gates, validation_receipts, terminal_validation_sidecar_path, adversarial_findings: principle: Readiness requires complete byte-bound validation; it never requires a scientific win.\npreconditions_checked, duration_s, phase_spans, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes: principle: Bind each conclusion to actual work and replayable configuration.\ncited_upstream_artifacts, field_principles: principle: Record imported fields and hashes; explain the evidentiary purpose of every added field.\ncited_upstream_artifacts, field_principles: principle: Name imported fields and hashes and explain every added field's evidentiary purpose.\ntrajectory_ready_score, issued_prediction_rows, due_feedback_rows, update_rows, later_distinct_source_rows, retention_shadow_rows: principle: Parameter changes count as learning mechanics only; later decisions and retention establish utility.\nsparse_dense_error_max, crash_parity, future_label_invariance, hard_constraint_violations, learning_scope, hardware_path: principle: Local adaptation must preserve causal and durable semantics with a CPU/FPGA placement path.\nRun command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8336_v719_continuous_local_learning.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+    "requires_gpu": false,
+    "title": "Measure delayed local learning and seal every retention window",
+    "track": "self_learning"
+  }
+}

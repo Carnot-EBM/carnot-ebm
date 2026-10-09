@@ -1,0 +1,148 @@
+{
+  "conductor_gates": [],
+  "failures": [
+    {
+      "artifact_field": "qualified_current_evidence",
+      "expected": true,
+      "hash": "sha256:48eb3ad7bccb2d869d561c3e021b50348fed3339bddbce2d493442ce7108f73b",
+      "observed": {
+        "required_checks_passed": true,
+        "verdict_class": "blocked"
+      },
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8344_v719_gatemate_change_ledger.json",
+      "upstream": "exp8344-gatemate-change-ledger",
+      "upstream_id": "exp8344-gatemate-change-ledger"
+    },
+    {
+      "artifact_field": "gatemate_history",
+      "check": "gatemate_history",
+      "expected": "authenticated Exp8330 and V719 authority",
+      "hash": "sha256:6f79a6d2374c41baec7bf5ecb792b8534bc59b91e8b0c8cbe5720305d8545512",
+      "observed": "identity_or_configuration_drift",
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8330_v718_gatemate_change_ledger.json",
+      "upstream": "exp8344-gatemate-change-ledger"
+    },
+    {
+      "artifact_field": "physical_change_evidence.exists",
+      "check": "physical_change_evidence.exists",
+      "expected": true,
+      "hash": "sha256:6f79a6d2374c41baec7bf5ecb792b8534bc59b91e8b0c8cbe5720305d8545512",
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8330_v718_gatemate_change_ledger.json",
+      "upstream": "exp8344-gatemate-change-ledger"
+    }
+  ],
+  "memory": {
+    "after": {
+      "current_rss_mb": 351.375,
+      "peak_rss_mb": 439.28515625
+    },
+    "before": {
+      "current_rss_mb": 351.16796875,
+      "peak_rss_mb": 439.28515625
+    },
+    "growth_mb": 0.0,
+    "passed": true
+  },
+  "primitive_references": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8344_v719_gatemate_change_ledger/invocations/1791539332631287109/replay_inputs.json",
+      "sha256": "sha256:4cbf314cf2dab06395e0149a1f710a8556af6ed3e390b0886f6fd743e45089d4"
+    }
+  ],
+  "row": {
+    "arm": "task_disposition",
+    "censored": false,
+    "completed": true,
+    "condition": "terminal_accounting",
+    "denominator": 1,
+    "disposition": "producer_terminal",
+    "eligible": false,
+    "evidence_type": "producer_primary",
+    "excluded": true,
+    "experiment_id": 8344,
+    "failed": false,
+    "honest_verdict": "complete_blocked_gatemate_history",
+    "metric": "authenticated_disposition",
+    "missing": false,
+    "numerator": 1,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8344_v719_gatemate_change_ledger.json",
+    "producer_executed": true,
+    "sha256": "sha256:48eb3ad7bccb2d869d561c3e021b50348fed3339bddbce2d493442ce7108f73b",
+    "source_counts": {
+      "censored_count": 0,
+      "completed_count": 0,
+      "excluded_count": 1,
+      "failed_count": 0,
+      "intended_count": 1
+    },
+    "source_rows_reference": {
+      "artifact_field": "rows",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8345_v719_capstone/invocations/1791541678305454065/custody/47-48eb3ad7bccb2d869d561c3e021b50348fed3339bddbce2d493442ce7108f73b.bin",
+      "row_count": 1,
+      "sha256": "sha256:48eb3ad7bccb2d869d561c3e021b50348fed3339bddbce2d493442ce7108f73b"
+    },
+    "status": "completed",
+    "task_id": "exp8344-gatemate-change-ledger",
+    "unit_id": "exp8344-gatemate-change-ledger",
+    "verdict_class": "blocked"
+  },
+  "selected": {
+    "gatemate_obligation": {
+      "actual_substrate": "none",
+      "arm": "documentation_audit",
+      "blocked_idcode": null,
+      "board": "GateMate",
+      "censored": false,
+      "completed": false,
+      "condition": "unchanged_or_missing_receipt",
+      "current_hardware_execution": false,
+      "current_reachability": "not_probed",
+      "denominator": 1,
+      "device_hash_parity": null,
+      "excluded": true,
+      "exclusion_reason": "gatemate_history",
+      "execution_ready_score": 0,
+      "failed": false,
+      "flash_success": false,
+      "metric": "authenticated_new_physical_receipt",
+      "missing_status": "physical_receipt_absent",
+      "numerator": null,
+      "on_device_success": false,
+      "physical_change_recorded": false,
+      "reopen_contract_path": "docs/research-notes/v719-gatemate-obligation.md",
+      "required_next_evidence": [
+        "dated operator physical-change receipt",
+        "GM1Ax IDCODE 0x20000001",
+        "authenticated n16 bitstream flash",
+        "device tile/hash smoke parity"
+      ],
+      "source_cluster_id": "gatemate_physical_setup",
+      "started": false,
+      "status": "excluded",
+      "terminal_criterion_met": false,
+      "unit_id": "gatemate_obligation"
+    },
+    "historical_model_provenance": [],
+    "honest_verdict": "complete_blocked_gatemate_history",
+    "model_invocation_counts": {
+      "generation_calls_attempted": 0,
+      "generation_calls_cancelled": 0,
+      "generation_calls_completed": 0,
+      "generation_calls_failed": 0,
+      "generation_calls_in_flight": 0,
+      "model_loads_attempted": 0,
+      "model_loads_cancelled": 0,
+      "model_loads_completed": 0,
+      "model_loads_failed": 0,
+      "model_loads_in_flight": 0
+    },
+    "verdict_class": "blocked"
+  }
+}

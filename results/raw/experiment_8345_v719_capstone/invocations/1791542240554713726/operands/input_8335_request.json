@@ -1,0 +1,67 @@
+{
+  "item": {
+    "reference": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8335_v719_reserved_prediction_seal.json",
+      "role": "16",
+      "sha256": "sha256:e0a274e9da2053f4f4997d8d52ae53b13857c2c3e39719b530bc8c4ff9339da4",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8345_v719_capstone/invocations/1791542240554713726/custody/16-e0a274e9da2053f4f4997d8d52ae53b13857c2c3e39719b530bc8c4ff9339da4.bin",
+      "snapshot_sha256": "sha256:e0a274e9da2053f4f4997d8d52ae53b13857c2c3e39719b530bc8c4ff9339da4",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8335_v719_reserved_prediction_seal.json"
+    },
+    "sidecar": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8335_v719_reserved_prediction_seal/validators/e0a274e9da2053f4f4997d8d52ae53b13857c2c3e39719b530bc8c4ff9339da4.json",
+      "role": "18",
+      "sha256": "sha256:bb6863a17a262655881989df227f3d72d63bfc1a2d1dff8aec64816cf1f4f3b1",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8345_v719_capstone/invocations/1791542240554713726/custody/18-bb6863a17a262655881989df227f3d72d63bfc1a2d1dff8aec64816cf1f4f3b1.bin",
+      "snapshot_sha256": "sha256:bb6863a17a262655881989df227f3d72d63bfc1a2d1dff8aec64816cf1f4f3b1",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8335_v719_reserved_prediction_seal/validators/e0a274e9da2053f4f4997d8d52ae53b13857c2c3e39719b530bc8c4ff9339da4.json"
+    }
+  },
+  "task": {
+    "MODEL_SPECS": [],
+    "deliverable": "results/experiment_8335_v719_reserved_prediction_seal.json",
+    "estimated_wall_time_min": 60,
+    "gated_on": [
+      {
+        "artifact_field": "heads_ready_score",
+        "op": "==",
+        "upstream": "exp8334-sentence-spline-fit",
+        "value": 1
+      }
+    ],
+    "id": "exp8335-reserved-prediction-seal",
+    "inference_substrate_class": "no_model_load",
+    "max_turns": 30,
+    "milestone": "2026.10.719",
+    "model": "sonnet",
+    "per_unit_rows": true,
+    "phase": 2,
+    "prior_failures": [
+      {
+        "addressed_by": "Seal predictions from newly frozen sentence-spline heads without recapturing or tuning an already exposed reserved set. The task measures eligibility, not benefit.",
+        "experiment_id": "exp8238-margin-prediction-seal",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_margin_prediction_seal"
+      },
+      {
+        "addressed_by": "No producer existed after the upstream fit skip. A current qualified static head replaces that dead chain; no historical verdict is invented.",
+        "experiment_id": "exp8309-reserved-prediction-seal",
+        "retire_if_same_verdict": true,
+        "verdict": "GATE_BLOCK (producer absent)"
+      },
+      {
+        "addressed_by": "The producer was absent after Exp8320 retirement. Use the current directly qualified static head and preserve the original prediction-before-target protocol.",
+        "experiment_id": "exp8321-reserved-prediction-seal",
+        "retire_if_same_verdict": true,
+        "verdict": "GATE_BLOCK (producer absent)"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. V718 has five producer primaries, three conductor pre-gate receipts and six absent producer primaries. Nine science/runtime tasks did not execute. Exp8318 failed 100-percent coverage at v718_contract_replay.py:357; Exp8328 missed five executor branches; Exp8331 failed the unchanged memory-leak guard (+596MB) at test_actual_mixed_history teardown. Historical reduction drift was localized to gate_check_summary[15].hash. These are execution findings, not H1/H2 nulls. V719 preserves the frozen V717 scientific protocol and exposed-development scope, fixes named execution defects, and separates independent inputs from historical synthesis. Never recast missing observations as negative science.\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; openspec/change-proposals/v717-local-learning-protocol.json; python/carnot/verify/reserved_sentence_capture_8184.py; results/experiment_8184_v707_reserved_sentence_capture.json; python/carnot/verify/sentence_energy_8183.py; python/carnot/reporting/current_work_receipt.py\nTASK:\nSeal all reserved decisions under the unchanged source contract. Deliver results/experiment_8335_v719_reserved_prediction_seal.json. Create the thin runner scripts/experiments/experiment_8335_v719_reserved_prediction_seal.py. Store primitive evidence under results/raw/experiment_8335_v719_reserved_prediction_seal/. Read current producers by exact declared deliverables. Future output paths are dependencies, not existing inputs.\nCONCRETE STEPS:\n1. PRECONDITIONS: Emit a flushed start line. Authenticate source bytes, terminal sidecars and actual authority. Check private scratch, tools and resources before measurement. Record missing external operands as complete_blocked_<operand> with verdict_class=blocked and exact gate_check_summary. Never replace missing observations with fixtures.\n2. Emit a flushed progress line at every phase boundary. Emit one before and after every model load, generation, benchmark and subprocess. Print completed/pending counts inside long loops. Poll owned children with a heartbeat at least every 60 seconds. Keep every silence gap below 600 seconds. Use unbuffered output and bounded child deadlines. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between calls. No single huge tool call. Use bounded child deadlines and poll commands in intervals of at most 60 seconds. Do not pad elapsed time.\n3. Spec first: add relevant REQ-* and SCENARIO-* before implementation. Write focused failing tests first. Reuse qualified modules through small adapters. Preserve old tests, source evidence and validator enforcement. Freeze execution argv and timeouts separately from scientific parameters. Use /tmp for scratch and scripts/experiments/ for real runners. Do not modify research-roadmap.yaml.\n4. Reuse the ready current head and Exp8305 immutable reserved predictor shard. This task must not read evaluator targets. Gate static audit only after both this seal and the online trajectory seal exist, so evaluator access cannot influence later predictions.\n5. Use no_model_load, inference_substrate=verifier_ensemble_against_cached_candidates, MODEL_SPECS=[] and zero current LLM calls. Consume only the Exp8305 predictor shards authenticated by Exp8334 and frozen head manifest from Exp8334; enforce an allowlist of input fields.\n6. In a fresh child that receives no evaluator shard, score all128 original reserved slots with every fitted arm and the fixed comparator. Preserve97 historical usable feature rows and31 unavailable slots unless authenticated reconstruction explains a discrepancy. Emit missing rows as p=null, action=escalate and unavailable status, never zero probability.\n7. Write source ID, ordered slot, arm, probability, action, feature/head/protocol hash and issue timestamp for each intended row. Create one immutable seal manifest before any evaluator target is opened. Keep stream96 and retention32 in separate predictor-only files; the retention labels remain unavailable to online learning.\n8. Replay prediction bytes and exact sigmoid34 parity independently, then test label injection, changed head hash and changed source bytes. Set predictions_ready_score=1 only on all intended rows accounted for and passed checks. This is exposed-development prediction reconstruction, not a newly blinded external test.\n9. Run relevant unit and consumer tests, scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>. Require 100 percent newly owned statement coverage including actual CLI, child, failure and recovery paths. Use pytest -n 0 -o addopts= with private scratch. Record exact argv, exit codes, timing and output hashes. Do not launch the full repository suite inside an experiment.\n10. Cold-replay primitive evidence in a fresh process. Test valid, negative and rehashed-tamper cases. Run unchanged primary_publication checks, scripts/adversarial_verify.py --json <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>. Keep every finding. Qualify the existing finding-consumer implementation within this task before using it; a raw nonzero exit never proves a clean result. Errors, unknown findings and unadjudicated warnings block readiness. Publish the terminal primary atomically after required checks. Failed owned checks disqualify. Unchanged external missingness is blocked, never partial. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. No generator-weight updates or external publication.\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date: principle: Identify the invocation and exact execution authority.\nhonest_verdict, verdict_class: principle: honest_verdict starts complete_; class is positive | circular_positive | null | blocked | disqualified | partial. Partial means retryable unfinished owned work only.\ngate_check_summary: principle: Each block names upstream, path/hash, exact field, operator, expected and observed values. Missing evidence differs from zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, historical_model_provenance: principle: Count only current model work and retain imported provenance separately.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, sample_size_budget: principle: Preserve every intended unit and condition; repetitions do not create independent sources.\nverifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score: principle: Constructed oracle success is circular_positive. Exposed development keeps both generalization scores zero.\nrequired_checks_passed, flagged_adversarial, acceptance_gates, validation_receipts, terminal_validation_sidecar_path, adversarial_findings: principle: Readiness requires complete byte-bound validation; it never requires a scientific win.\npreconditions_checked, duration_s, phase_spans, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes: principle: Bind each conclusion to actual work and replayable configuration.\ncited_upstream_artifacts, field_principles: principle: Record imported fields and hashes; explain the evidentiary purpose of every added field.\npredictions_ready_score, prediction_manifest, prediction_rows, label_access_ledger, stream_predictor_path, retention_predictor_path: principle: Predictions must be fixed before evaluator use and every intended slot retained.\nsealed_head_hash, sealed_protocol_hash, input_allowlist: principle: Cached prediction reuse cannot silently revise the evaluated policy.\nRun command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8335_v719_reserved_prediction_seal.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+    "requires_gpu": false,
+    "title": "Seal all reserved decisions under the unchanged source contract",
+    "track": "calibrated_decision"
+  }
+}

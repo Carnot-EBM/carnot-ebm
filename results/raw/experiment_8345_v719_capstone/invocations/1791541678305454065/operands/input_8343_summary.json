@@ -1,0 +1,154 @@
+{
+  "conductor_gates": [],
+  "failures": [
+    {
+      "artifact_field": "qualified_current_evidence",
+      "expected": true,
+      "hash": "sha256:942bbad9d8c1cd21a400198433d1a7fadd8bb8ad27d261a6ed1766cf7ab67b63",
+      "observed": {
+        "required_checks_passed": false,
+        "verdict_class": "disqualified"
+      },
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8343_v719_kv260_workload_cost.json",
+      "upstream": "exp8343-kv260-workload-cost",
+      "upstream_id": "exp8343-kv260-workload-cost"
+    },
+    {
+      "artifact_field": "required_checks_passed",
+      "check": "required_checks_passed",
+      "expected": true,
+      "hash": "sha256:57c88cbefc2798a7a29fdd739f2d58189826bab166d9dc48b7141f0e124b50f0",
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8333_v719_local_evidence_qualification.json",
+      "upstream": "exp8343-kv260-workload-cost"
+    },
+    {
+      "artifact_field": "local_kernel_ready_score",
+      "check": "local_kernel_ready_score",
+      "expected": 1,
+      "hash": "sha256:57c88cbefc2798a7a29fdd739f2d58189826bab166d9dc48b7141f0e124b50f0",
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8333_v719_local_evidence_qualification.json",
+      "upstream": "exp8343-kv260-workload-cost"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "exists",
+      "expected": true,
+      "hash": null,
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8337_v719_bounded_feedback_capacity.json",
+      "upstream": "exp8343-kv260-workload-cost"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "exists",
+      "expected": true,
+      "hash": null,
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8336_v719_continuous_local_learning.json",
+      "upstream": "exp8343-kv260-workload-cost"
+    },
+    {
+      "artifact_field": "compatible_spline_kernel",
+      "check": "compatible_spline_kernel",
+      "expected": true,
+      "hash": "sha256:4f323ea2f301bbd72c9d7d89d03ed1d9e1af7adb326c1625ab832d3f5b550489",
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8315_v717_kv260_local_cost_boundary.json",
+      "upstream": "exp8343-kv260-workload-cost"
+    }
+  ],
+  "memory": {
+    "after": {
+      "current_rss_mb": 352.5,
+      "peak_rss_mb": 439.28515625
+    },
+    "before": {
+      "current_rss_mb": 351.40625,
+      "peak_rss_mb": 439.28515625
+    },
+    "growth_mb": 0.0,
+    "passed": true
+  },
+  "primitive_references": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8343_v719_kv260_workload_cost/invocations/1791537629511027708/measurement.json",
+      "sha256": "sha256:67e59e64b179f6ef62ed01c0e8586fb56f3880d1529acdc9dc38ce7e9f2cc354"
+    }
+  ],
+  "row": {
+    "arm": "task_disposition",
+    "censored": false,
+    "completed": true,
+    "condition": "terminal_accounting",
+    "denominator": 1,
+    "disposition": "authenticated_upstream_failure",
+    "eligible": false,
+    "evidence_type": "producer_primary",
+    "excluded": true,
+    "experiment_id": 8343,
+    "failed": true,
+    "honest_verdict": "complete_disqualified_owned_checks",
+    "metric": "authenticated_disposition",
+    "missing": false,
+    "numerator": 1,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8343_v719_kv260_workload_cost.json",
+    "producer_executed": true,
+    "sha256": "sha256:942bbad9d8c1cd21a400198433d1a7fadd8bb8ad27d261a6ed1766cf7ab67b63",
+    "source_counts": {
+      "censored_count": 6,
+      "completed_count": 256,
+      "excluded_count": 0,
+      "failed_count": 0,
+      "intended_count": 262
+    },
+    "source_rows_reference": {
+      "artifact_field": "rows",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8345_v719_capstone/invocations/1791541678305454065/custody/43-942bbad9d8c1cd21a400198433d1a7fadd8bb8ad27d261a6ed1766cf7ab67b63.bin",
+      "row_count": 262,
+      "sha256": "sha256:942bbad9d8c1cd21a400198433d1a7fadd8bb8ad27d261a6ed1766cf7ab67b63"
+    },
+    "status": "completed",
+    "task_id": "exp8343-kv260-workload-cost",
+    "unit_id": "exp8343-kv260-workload-cost",
+    "verdict_class": "disqualified"
+  },
+  "selected": {
+    "historical_model_provenance": [],
+    "honest_verdict": "complete_disqualified_owned_checks",
+    "model_invocation_counts": {
+      "generation_calls_attempted": 0,
+      "generation_calls_cancelled": 0,
+      "generation_calls_completed": 0,
+      "generation_calls_failed": 0,
+      "generation_calls_in_flight": 0,
+      "model_loads_attempted": 0,
+      "model_loads_cancelled": 0,
+      "model_loads_completed": 0,
+      "model_loads_failed": 0,
+      "model_loads_in_flight": 0
+    },
+    "polarfire_graduation": {
+      "dispatch_sha256": "sha256:81b5e66a7900896168558c536474c903e8166a1055d0ecf7ab1d713b48a850a4",
+      "fpga_fabric_acceleration": false,
+      "host_output_parity": true,
+      "output_sha256": "sha256:3f25005a394ad0ede4e0cd9761cd013bc45d697ae19179dcc2502c0d4b76e56a",
+      "polarfire_workload_validated": true,
+      "scope": "board_local_Linux_CPU_only"
+    },
+    "verdict_class": "disqualified"
+  }
+}

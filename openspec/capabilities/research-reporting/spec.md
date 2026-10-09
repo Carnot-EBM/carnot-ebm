@@ -96958,3 +96958,20 @@ frontier. Missing operands have exact gates and no readiness. New native receipt
 must satisfy the existing environment join and cell floors. A future live trial
 disables per-game adapters and declares live_agent_self_discovery. No solve claim
 or new arm is allowed. Cold replay rejects both claim and rehashed primitive edits.
+## REQ-REPORT-8345: Bounded fourteen-outcome V719 reconciliation
+
+Authenticate exactly Exp8332..Exp8345 under full V719 task authority and the
+unchanged V717 protocol. Reduce one bound primary at a time; retain compact
+references rather than nested historical payloads. Absent producers have no
+invented verdict. Historical disqualification is distinct from a failed current
+replay. H1/H2 retain all intended arms, sources and retention windows; missing
+sealed observations block science. Capacity controls remain outside H1/H2.
+Current model calls are zero. Preserve hardware obligations, imported provenance,
+exact prior failures and stable publication gates. The conductor owns ops and
+traceability reconciliation for this invocation.
+
+### SCENARIO-REPORT-8345-ACCOUNTING
+
+Missing, pre-gate, authenticated failure and terminal producer inputs each retain
+their exact disposition. Current owned failures disqualify. Execution readiness
+requires measured parent and worker bounds and complete byte-bound checks.

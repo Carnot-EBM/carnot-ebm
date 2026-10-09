@@ -52251,3 +52251,18 @@ Clean bound reports pass. Known informational reports require independent proof;
 false-zero, malformed, wrong hash, unknown severity, warning and process error
 reports fail. Require100 percent new statements including actual CLI, children,
 negative replay, timeout and publication recovery paths.
+## REQ-VERIFY-8345: Measured worker and immutable historical qualification
+
+Keep the existing 500 MB per-test memory guard and all V718 assertions enabled.
+Authenticate the isolated mixed-history test code before reuse. Measure worker
+peak/current RSS, parent RSS and retained compact bytes. Freeze argv/deadlines
+separately from science. Qualify finding consumption, private E2E-018/021, strict
+types, scoped lint, spec coverage and100 percent newly owned statements including
+CLI, child failure and recovery. Cold-replay after checks and after atomic
+publication. Unadjudicated findings and current execution errors block readiness.
+
+### SCENARIO-VERIFY-8345-REPLAY
+
+Fresh processes accept valid primitive evidence and reject missing bytes,
+rehashed self rows, validation dispositions and primitive summary changes.
+Failed owned checks retain receipts and publish honest disqualification.

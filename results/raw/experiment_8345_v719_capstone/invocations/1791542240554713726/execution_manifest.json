@@ -1,0 +1,184 @@
+{
+  "child_heartbeat_seconds": 20,
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/exp8304-owned-yon7as0s/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_v719_capstone_8345.py",
+        "--basetemp=/tmp/exp8304-owned-yon7as0s/owned-tests"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_v718_contract_replay_8318.py::test_finding_policy",
+        "tests/python/test_v717_capstone_8317.py::test_append_only_retirement",
+        "--basetemp=/tmp/exp8304-owned-yon7as0s/consumers"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E018_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/exp8304-owned-yon7as0s/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8345_v719_capstone.py",
+        "--historical-check",
+        "/tmp/exp8304-owned-yon7as0s/mixed_history.json"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "v718_mixed_history",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/exp8304-owned-yon7as0s/coverage.ini"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/exp8304-owned-yon7as0s/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/exp8304-owned-yon7as0s/coverage.ini",
+        "-o",
+        "/tmp/exp8304-owned-yon7as0s/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v719_capstone_evidence.py",
+        "python/carnot/reporting/v719_capstone_reduction.py",
+        "python/carnot/reporting/v719_capstone.py",
+        "scripts/experiments/experiment_8345_v719_capstone.py",
+        "tests/python/test_v719_capstone_8345.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v719_capstone_evidence.py",
+        "python/carnot/reporting/v719_capstone_reduction.py",
+        "python/carnot/reporting/v719_capstone.py",
+        "scripts/experiments/experiment_8345_v719_capstone.py",
+        "tests/python/test_v719_capstone_8345.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/reporting/v719_capstone_evidence.py",
+        "python/carnot/reporting/v719_capstone_reduction.py",
+        "python/carnot/reporting/v719_capstone.py",
+        "scripts/experiments/experiment_8345_v719_capstone.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_v719_capstone_8345.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_restricted_decision_audit_8210.py",
+        "--basetemp=/tmp/exp8304-owned-yon7as0s/e2e021"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E021",
+      "scope": "owned"
+    }
+  ],
+  "fixture": false,
+  "owned": [
+    "python/carnot/reporting/v719_capstone_evidence.py",
+    "python/carnot/reporting/v719_capstone_reduction.py",
+    "python/carnot/reporting/v719_capstone.py",
+    "scripts/experiments/experiment_8345_v719_capstone.py"
+  ],
+  "private_scratch": "/tmp/exp8304-owned-yon7as0s",
+  "terminal_deadline_seconds": 60
+}

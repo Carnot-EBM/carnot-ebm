@@ -1,0 +1,170 @@
+{
+  "conductor_gates": [],
+  "failures": [
+    {
+      "artifact_field": "qualified_current_evidence",
+      "expected": true,
+      "hash": "sha256:50889d14b946affdc8476a55fd851fa88faead1c3ad2fd62067dc0566ca06bd2",
+      "observed": {
+        "required_checks_passed": false,
+        "verdict_class": "disqualified"
+      },
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8340_v719_runtime_reader_qualification.json",
+      "upstream": "exp8340-runtime-reader-qualification",
+      "upstream_id": "exp8340-runtime-reader-qualification"
+    },
+    {
+      "expected": true,
+      "field": "required_checks_passed",
+      "hash": "sha256:50889d14b946affdc8476a55fd851fa88faead1c3ad2fd62067dc0566ca06bd2",
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8340_v719_runtime_reader_qualification/invocations/1791534132219156214/measurement.json",
+      "sha256": "sha256:3b1c3895e2fc1df19b447b65a3326eea04e7fa353770647054b03c72a29044f0",
+      "upstream": "exp8340-runtime-reader-qualification",
+      "upstream_id": "exp8340-runtime-reader-qualification"
+    }
+  ],
+  "memory": {
+    "after": {
+      "current_rss_mb": 351.5859375,
+      "peak_rss_mb": 440.5859375
+    },
+    "before": {
+      "current_rss_mb": 351.25390625,
+      "peak_rss_mb": 440.5859375
+    },
+    "growth_mb": 0.0,
+    "passed": true
+  },
+  "primitive_references": [],
+  "row": {
+    "arm": "task_disposition",
+    "censored": false,
+    "completed": true,
+    "condition": "terminal_accounting",
+    "denominator": 1,
+    "disposition": "authenticated_upstream_failure",
+    "eligible": false,
+    "evidence_type": "producer_primary",
+    "excluded": true,
+    "experiment_id": 8340,
+    "failed": true,
+    "honest_verdict": "complete_disqualified_owned_checks",
+    "metric": "authenticated_disposition",
+    "missing": false,
+    "numerator": 1,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8340_v719_runtime_reader_qualification.json",
+    "producer_executed": true,
+    "sha256": "sha256:50889d14b946affdc8476a55fd851fa88faead1c3ad2fd62067dc0566ca06bd2",
+    "source_counts": {
+      "censored_count": 0,
+      "completed_count": 7,
+      "excluded_count": 0,
+      "failed_count": 0,
+      "intended_count": 7
+    },
+    "source_rows_reference": {
+      "artifact_field": "rows",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8345_v719_capstone/invocations/1791542240554713726/custody/31-50889d14b946affdc8476a55fd851fa88faead1c3ad2fd62067dc0566ca06bd2.bin",
+      "row_count": 7,
+      "sha256": "sha256:50889d14b946affdc8476a55fd851fa88faead1c3ad2fd62067dc0566ca06bd2"
+    },
+    "status": "completed",
+    "task_id": "exp8340-runtime-reader-qualification",
+    "unit_id": "exp8340-runtime-reader-qualification",
+    "verdict_class": "disqualified"
+  },
+  "selected": {
+    "historical_model_provenance": {
+      "current_calls_imported": false,
+      "failure_layer": [
+        {
+          "binding": "inherited",
+          "error": null,
+          "failed_api": {
+            "cuInit": 101
+          },
+          "layer": "driver",
+          "native_stderr": null
+        },
+        {
+          "binding": "inherited",
+          "error": null,
+          "failed_api": {
+            "cudaGetDeviceCount": 101
+          },
+          "layer": "runtime",
+          "native_stderr": null
+        },
+        {
+          "binding": "inherited",
+          "error": null,
+          "failed_api": {},
+          "layer": "native",
+          "native_stderr": "0.00.003.924 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+        },
+        {
+          "binding": "explicit_uuid",
+          "error": null,
+          "failed_api": {
+            "cuInit": 101
+          },
+          "layer": "driver",
+          "native_stderr": null
+        },
+        {
+          "binding": "explicit_uuid",
+          "error": null,
+          "failed_api": {
+            "cudaGetDeviceCount": 101
+          },
+          "layer": "runtime",
+          "native_stderr": null
+        },
+        {
+          "binding": "explicit_uuid",
+          "error": null,
+          "failed_api": {},
+          "layer": "native",
+          "native_stderr": "0.00.003.361 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+        }
+      ],
+      "imported_from": "results/experiment_8307_v717_runtime_change_boundary.json",
+      "model_invocation_counts": {
+        "generation_calls_attempted": 0,
+        "generation_calls_cancelled": 0,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 0,
+        "model_loads_cancelled": 0,
+        "model_loads_completed": 0,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0
+      }
+    },
+    "honest_verdict": "complete_disqualified_owned_checks",
+    "model_invocation_counts": {
+      "generation_calls_attempted": 0,
+      "generation_calls_cancelled": 0,
+      "generation_calls_completed": 0,
+      "generation_calls_failed": 0,
+      "generation_calls_in_flight": 0,
+      "model_loads_attempted": 0,
+      "model_loads_cancelled": 0,
+      "model_loads_completed": 0,
+      "model_loads_failed": 0,
+      "model_loads_in_flight": 0
+    },
+    "runtime_reader_ready_score": 0,
+    "sample_size_budget": {
+      "independent_scientific_samples": 0,
+      "intended_operands": 7
+    },
+    "verdict_class": "disqualified"
+  }
+}

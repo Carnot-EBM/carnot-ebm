@@ -1,0 +1,88 @@
+{
+  "conductor_gates": [
+    {
+      "actual": 1,
+      "actual_type": "int",
+      "artifact_field": "heads_ready_score",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8334_v719_sentence_spline_fit.json",
+      "artifact_sha256": "sha256:a63db57cb7f735a1171ce16b87d09aa02abe69c7f7abb6fc6ca5fa6240d59208",
+      "expected": 1,
+      "expected_type": "int",
+      "op": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "upstream": "exp8334-sentence-spline-fit"
+    },
+    {
+      "actual": 0,
+      "actual_type": "int",
+      "artifact_field": "local_kernel_ready_score",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8333_v719_local_evidence_qualification.json",
+      "artifact_sha256": "sha256:57c88cbefc2798a7a29fdd739f2d58189826bab166d9dc48b7141f0e124b50f0",
+      "expected": 1,
+      "expected_type": "int",
+      "op": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "upstream": "exp8333-local-evidence-qualification"
+    }
+  ],
+  "failures": [
+    {
+      "artifact_field": "local_kernel_ready_score",
+      "expected": 1,
+      "hash": "sha256:57c88cbefc2798a7a29fdd739f2d58189826bab166d9dc48b7141f0e124b50f0",
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8333_v719_local_evidence_qualification.json",
+      "upstream": "exp8333-local-evidence-qualification",
+      "upstream_id": "exp8333-local-evidence-qualification"
+    }
+  ],
+  "memory": {
+    "after": {
+      "current_rss_mb": 350.8671875,
+      "peak_rss_mb": 440.5859375
+    },
+    "before": {
+      "current_rss_mb": 350.859375,
+      "peak_rss_mb": 440.5859375
+    },
+    "growth_mb": 0.0,
+    "passed": true
+  },
+  "primitive_references": [],
+  "row": {
+    "arm": "task_disposition",
+    "censored": false,
+    "completed": true,
+    "condition": "terminal_accounting",
+    "denominator": 1,
+    "disposition": "conductor_pre_gate",
+    "eligible": false,
+    "evidence_type": "bound_conductor_pre_gate_receipt",
+    "excluded": true,
+    "experiment_id": 8336,
+    "failed": false,
+    "honest_verdict": null,
+    "metric": "authenticated_disposition",
+    "missing": false,
+    "numerator": 1,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8336_continuous_local_learning.json",
+    "producer_executed": false,
+    "sha256": "sha256:83d9c066cef6ad162ac588775181402c0252752633d659ac2883d4f4a197210f",
+    "source_counts": {
+      "censored_count": null,
+      "completed_count": null,
+      "excluded_count": null,
+      "failed_count": null,
+      "intended_count": null
+    },
+    "status": "completed",
+    "task_id": "exp8336-continuous-local-learning",
+    "unit_id": "exp8336-continuous-local-learning",
+    "verdict_class": "blocked"
+  },
+  "selected": {}
+}
