@@ -19912,3 +19912,4 @@ code |
 | 2026-10-09 00:30 UTC | Qualify historical runtime readers before checking | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8318-contract-replay.history_reader_ready_score (actual=0 == expected=1) |
 | 2026-10-09 00:32 UTC | Run the bounded Qwen canary only after changed run | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8326-runtime-reader-qualification, exp8326-runtime-reader-qualification) |
 | 2026-10-09 00:55 UTC | Inspect new live supervisor outcomes with the qual | OK | 91 passed, 1 warning in 63.10s (0:01:03) |
+| 2026-10-09 01:24 UTC | Measure available update costs and preserve precis | OK | 91 passed, 1 warning in 61.57s (0:01:01) |
