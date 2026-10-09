@@ -52381,3 +52381,40 @@ Known wrong accept/reject costs1; correct costs0; escalation costs.5. Unknown
 labels cannot establish correctness. Coherent per-source bounds keep all slots.
 Frozen comparator selection never changes after audit results. Sigmoid parity
 precludes energy novelty. Cold replay rejects rehashed primitive tampering.
+
+## REQ-VERIFY-8351: Independently audit delayed utility and fixed retention
+
+Exp8351 SHALL reconstruct Exp8348 issues, admitted updates and checkpoints from
+byte-bound primitives, recompute a real scalar update, and prove future-label
+invariance, duplicate/stale rejection, source separation and restart parity.
+Authenticate Exp8346 original heads and Exp8335 prediction seals. Authenticate
+all four retention windows before evaluator target access. Exp8350 exposure is
+historical evaluator exposure and never a learner input. No current model loads.
+All five arms use the same later slots9..96, including missing-feature escalations.
+H2 uses intended-slot cost(frozen_spline)-cost(online_sparse),10000 moving-block
+resamples,length8,seed7178312,nominal one-sided97.5 percent lower bound. Exposed
+trajectory intervals are descriptive and establish no IID or conformal guarantee.
+Support requires64 later sources,8 per label,real admitted updates,exact-budget
+and typed-action controls,reachable action margins and positive oracle headroom.
+Unreachable actions yield complete_null_update_budget_no_headroom and retirement
+limited to the four-feature/fixed-knot/.01 update rule. Development signal requires
+mean gain>=.02,lower bound>0,final retention cost degradation<=.02 and Brier
+ degradation<=.01,with20 retention sources and4 per label. Report all32 retention
+slots and windows0/32/64/96; the23-source panel is exploratory,with9 missing slots.
+
+### SCENARIO-VERIFY-8351-REDUCE
+
+Missing targets retain joint action-cost bounds; all arms and windows share the
+same original roster. Calibration-only comparisons are descriptive. Parameter
+motion alone cannot establish benefit. No generalization or learned hard constraints.
+
+### SCENARIO-VERIFY-8351-CAUSAL
+
+A scalar reconstruction and checkpoint replay match sealed primitives; changed
+future labels leave prior issues invariant, duplicate/stale feedback is rejected,
+and before-update substitution isolates later distinct-source attribution.
+
+Implementation: `python/carnot/verify/learning_retention_audit_8351.py` reduces
+primitive issues and releases, checks scalar updates and action reachability,
+and preserves every retention window. Requirement-linked tests live in
+`tests/python/test_learning_retention_audit_8351.py`.

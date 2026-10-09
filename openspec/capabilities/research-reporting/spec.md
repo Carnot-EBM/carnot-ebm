@@ -97102,3 +97102,28 @@ The thin CLI emits flushed boundaries and supervises bounded children with
 heartbeats. Private missing-input runs and cold replay exercise the real CLI.
 Label access records follow completed seal authentication. Future outputs are
 dependencies. No generator weights, roadmap, validators or exemptions change.
+
+## REQ-REPORT-8351: Publish a byte-bound learning retention audit
+
+Exp8351 SHALL publish results/experiment_8351_v720_learning_retention_audit.json
+atomically through unchanged primary publication, adversarial and strict row
+validators after cold replay. Missing external operands are blocked; failed owned
+checks are disqualified. Valid scientific nulls retain learning_audit_ready_score=1.
+Freeze scoped validation argv before measurement, require100 percent newly owned
+statement coverage including real CLI children and failure paths,strict mypy,
+Ruff and explicit test spec coverage. Keep evidence below results/raw/experiment_
+8351_v720_learning_retention_audit/,private scratch under /tmp,zero current model
+calls and every intended source and window. Preserve historical outcomes. Ops and
+traceability reconciliation is conductor-owned for this invocation.
+
+### SCENARIO-REPORT-8351-CLI
+
+Valid,negative and self-consistently rehashed candidates run in fresh processes.
+Only independently recomputed informational findings with deliberate-error
+controls can resolve through the existing typed finding consumer. Other findings
+block readiness. External absent inputs publish a terminal blocked artifact.
+
+Implementation: `python/carnot/reporting/learning_retention_audit_8351.py` and
+`scripts/experiments/experiment_8351_v720_learning_retention_audit.py` reuse
+immutable byte custody, bounded child supervision, typed findings and atomic
+publication. The primary binds the executed validation receipts and coverage.
