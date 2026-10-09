@@ -96652,3 +96652,23 @@ Authenticate Exp8259 terminal/adversarial evidence, dispatch hash and output
 parity before retaining board-local Linux CPU graduation. Never infer FPGA work.
 Require empirical whole-service evidence for NFR-01; the 100x target is aspirational.
 The conductor owns ops/status, changelog and traceability reconciliation.
+## REQ-REPORT-8330: Retain the GateMate obligation without a physical retry
+
+Exp8330 binds activated V718 authority and the exact declared Exp8316 primary,
+its terminal sidecars and original transcript. Preserve the frozen V717 science
+and historical outcomes. Current work uses aggregation_from_upstream_artifacts,
+no_model_load, MODEL_SPECS=[] and zero model, board and JTAG calls. Keep one
+excluded obligation, actual evidence paths, unavailable observations, and zero
+execution and generalization scores. Missing external operands close as blocked.
+The conductor owns ops/status, changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8330-CLI
+
+Private real CLI and fresh-process replay accept valid evidence and reject
+negative and rehashed-tamper controls. Freeze execution argv and deadlines apart
+from scientific parameters. Run scoped unit/consumer/E2E-018 checks, Ruff check
+and format, strict mypy and explicit test spec coverage. Cover 100 percent of
+new statements including the CLI, children, failures and recovery. Preserve
+every unchanged verifier finding through the qualified Exp8318 consumer policy;
+errors, unknown findings and unresolved warnings block publication readiness.
+Publish only atomically validated bytes with byte-bound terminal receipts.

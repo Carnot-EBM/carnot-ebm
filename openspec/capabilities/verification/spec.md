@@ -52057,3 +52057,21 @@ Use unbuffered bounded children with <=60-second heartbeats and owned cleanup.
 Run private E2E-018/020, consumer and operation tests, scoped Ruff check/format,
 strict mypy and owned-test spec coverage. Cover 100 percent of new statements,
 including the actual CLI, without claiming coverage of pre-existing modules.
+## REQ-VERIFY-8330: Advance only the authenticated physical evidence frontier
+
+Authenticate Exp8316 before inspecting dated operator evidence after its end
+clock and previously seen receipt hashes. Reuse the qualified physical-change
+reader. Only cable, port, power or board changes qualify; new milestone dates,
+host rebuilds and restated instructions do not. Preserve the original
+0xffffffff transcript and its hash. No physical probe is authorized here.
+
+### SCENARIO-VERIFY-8330-FRONTIER
+
+Absent change produces complete_blocked_gatemate_physical_change once, with
+verdict_class=blocked and exact path/hash/field/operator/expected/observed gates.
+Authenticated ledger quality can earn obligation readiness; execution remains
+zero. Even new evidence only prepares a bounded next step: documented physical
+change, authenticated GM1Ax IDCODE 0x20000001, then n16 tile flash and device
+sample/hash smoke. Cold replay rebuilds frontier/parser/authority semantics and
+rejects stale sidecars, forged authorship, software-only changes and rehashed
+primitive tampering. Owned failures disqualify; external missingness is blocked.
