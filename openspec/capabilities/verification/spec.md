@@ -52075,3 +52075,22 @@ change, authenticated GM1Ax IDCODE 0x20000001, then n16 tile flash and device
 sample/hash smoke. Cold replay rebuilds frontier/parser/authority semantics and
 rejects stale sidecars, forged authorship, software-only changes and rehashed
 primitive tampering. Owned failures disqualify; external missingness is blocked.
+
+## REQ-VERIFY-8331: Stable capstone reduction and monitored atomic publication
+
+Freeze execution argv and deadlines separately from science before measurement.
+Use qualified bounded unbuffered children, <=60-second heartbeats, private
+scratch, unchanged primary publication checks and Exp8318 finding consumption.
+Unknown findings, errors and unresolved warnings block readiness; failed owned
+checks disqualify. Run private E2E-018/021, scoped consumers, Ruff check/format,
+strict mypy, owned-test spec coverage and 100 percent newly owned statements.
+Full repository health is a separate bounded command, never inside the runner.
+
+### SCENARIO-VERIFY-8331-CLI
+
+Real CLI and fresh-process primitive replay accept valid bytes, reject negative
+and rehashed tampering including self-row and validation dispositions, and
+retain exact command, exit, timing and output hashes. Replay the final candidate
+after all checks and the published primary again. Keep terminal checks outside
+the reduction to avoid self-reference. Atomic checked publication binds the
+final bytes to all terminal reports; recovery retains failed checks honestly.

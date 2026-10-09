@@ -96672,3 +96672,42 @@ new statements including the CLI, children, failures and recovery. Preserve
 every unchanged verifier finding through the qualified Exp8318 consumer policy;
 errors, unknown findings and unresolved warnings block publication readiness.
 Publish only atomically validated bytes with byte-bound terminal receipts.
+
+## REQ-REPORT-8331: Reconcile fourteen V718 outcomes from exact operands
+
+Exp8331 enumerates Exp8318 through Exp8331 once, authenticating complete task
+objects, visible order, canonical digest, activated authority, source bytes and
+terminal sidecars. Exact declared primaries or byte-bound conductor pre-gates
+are inputs; future output paths remain dependencies. Absent producer verdicts
+stay absent. Reuse Exp8318 deterministic historical reduction and finding policy,
+retaining V717 counts, informational parity, historical-authority failure and
+original reduction_drift. Current owned replay failure disqualifies; unchanged
+external missingness blocks. No model load, capture, board retry or weight update.
+
+### SCENARIO-REPORT-8331-ACCOUNTING
+
+Private mixed-history and absent-input cases retain all fourteen dispositions,
+complete prior_failures entries and separate historical failures from current
+reader failures. Compare actual verdicts before append-only exact-repeat
+retirement; preserve legacy rows without id and unmeasured hypotheses.
+
+### SCENARIO-REPORT-8331-SCIENCE
+
+Cold reduction uses sealed primitives under the unchanged V717 protocol.
+Unavailable H1/H2 science remains blocked with 128 reserved, 96 stream, 88 later
+and 32 retention slots at windows 0/32/64/96, every intended arm comparison and
+unavailable statistics. Constructed capacity memory and feedback controls stay
+outside H1/H2. Static readiness, durable correctness and later decision benefit
+remain distinct. Cached observations give zero generalization credit. Preserve
+ARC support, KV260 limits, GateMate obligations and PolarFire CPU-only scope.
+Write fourteen dispositions, three PRD gaps and falsifiable next conditions to
+`docs/research-notes/v718-outcomes.md`. The conductor owns ops and traceability.
+
+Implementation 2026-10-09: `v718_capstone_evidence`, `v718_capstone_reduction`
+and `v718_capstone` reuse qualified readers, deterministic historical primitive
+reduction and atomic publication. The direct Exp8331 runner contains no model
+load. Current exact inputs retain four primaries, three conductor pre-gates and
+six missing outputs, plus the capstone self slot. Current owned replay failures
+disqualify execution; unavailable H1/H2 remain unmeasured, with all
+intended arms and retention windows. Prior V717 outcomes and source bytes remain
+unchanged. The conductor owns ops and traceability reconciliation.
