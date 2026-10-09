@@ -96975,3 +96975,23 @@ traceability reconciliation for this invocation.
 Missing, pre-gate, authenticated failure and terminal producer inputs each retain
 their exact disposition. Current owned failures disqualify. Execution readiness
 requires measured parent and worker bounds and complete byte-bound checks.
+
+### REQ-REPORT-V720-PLAN: Reuse qualified predictions and isolate failed consumers
+
+The staged V720 roadmap must contain exactly fourteen tasks, Exp8346–Exp8359.
+The visible design table, full embedded task objects and YAML must agree.
+The plan must reuse qualified Exp8334/8335 heads and prediction seals.
+It must preserve the immutable V717 scientific protocol and reserved-label barriers.
+Local consumer, runtime authority, ARC typing and historical cost failures must
+have concrete changed mechanisms and complete prior-failure retirement entries.
+Lookup fidelity and feedback-capacity studies must remain separate from H1/H2.
+All comparative tasks require rows, verdict classes and exact gate operands.
+The active roadmap, conductor source and frozen protocols remain unchanged.
+
+### SCENARIO-REPORT-V720-PLAN: Validate a staged contract without activating it
+
+Given the staged V720 design and YAML, the existing schema and contract reader
+accept all fourteen complete task objects and the matching visible order.
+Deleting a task or changing its title fails contract comparison.
+Every gate resolves to an earlier task and an identically declared artifact field.
+The existing private authority-lifecycle E2E tests pass without publishing results.
