@@ -96855,3 +96855,24 @@ Private E2E-018, immutable runtime consumers, strict types, scoped Ruff, spec
 coverage and 100 percent new statement coverage precede byte-bound cold replay,
 unchanged adversarial/strict-row validators and atomic terminal publication.
 Failed owned checks publish a validated disqualification and retain recovery.
+## REQ-REPORT-8342: Qualify reused ARC readers before a new outcome delta
+
+Authenticate Exp8314 bytes, its terminal sidecars and unchanged reader code.
+Exp8328 remains failed execution evidence, never frontier authority. Bind active
+V719 tasks directly and preserve the V717 scientific protocol. Read the solve
+registry before measurement. Inspect only authenticated live supervisor receipts
+after the qualified frontier; retain game, run, PID and source hash identities.
+Never substitute fixtures for absent operands or count historical rereads.
+Current game calls and model calls are zero. Missing external operands block;
+failed owned checks disqualify. An authenticated empty delta is
+complete_null_no_supervisor_outcomes. Comparison requires three overlapping
+games and five firings per cell in two shared curated arms. Unknown propensity
+permits descriptive selection only. Both exposed-development scores stay zero.
+
+### SCENARIO-REPORT-8342-FRONTIER
+
+Valid current authority and unchanged authenticated sources retain the Exp8314
+frontier. Missing operands have exact gates and no readiness. New native receipts
+must satisfy the existing environment join and cell floors. A future live trial
+disables per-game adapters and declares live_agent_self_discovery. No solve claim
+or new arm is allowed. Cold replay rejects both claim and rehashed primitive edits.

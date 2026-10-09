@@ -1,0 +1,190 @@
+{
+  "MODEL_SPECS": [],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8342-p5fmtz9p/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_arc_supervisor_frontier_8342.py",
+        "--basetemp=/tmp/carnot-8342-p5fmtz9p/owned-tests"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "--basetemp=/tmp/carnot-8342-p5fmtz9p/consumers"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E018_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8342-p5fmtz9p/coverage.ini"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot-8342-p5fmtz9p/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8342-p5fmtz9p/coverage.ini",
+        "-o",
+        "/tmp/carnot-8342-p5fmtz9p/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/arc_supervisor_frontier_8342.py",
+        "scripts/experiments/experiment_8342_v719_arc_supervisor_frontier.py",
+        "python/carnot/reporting/arc_supervisor_frontier_8328.py",
+        "python/carnot/reporting/arc_supervisor_artifact_8328.py",
+        "python/carnot/reporting/arc_supervisor_execution_8328.py",
+        "tests/python/test_arc_supervisor_frontier_8342.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/arc_supervisor_frontier_8342.py",
+        "scripts/experiments/experiment_8342_v719_arc_supervisor_frontier.py",
+        "python/carnot/reporting/arc_supervisor_frontier_8328.py",
+        "python/carnot/reporting/arc_supervisor_artifact_8328.py",
+        "python/carnot/reporting/arc_supervisor_execution_8328.py",
+        "tests/python/test_arc_supervisor_frontier_8342.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/reporting/arc_supervisor_frontier_8342.py",
+        "scripts/experiments/experiment_8342_v719_arc_supervisor_frontier.py",
+        "python/carnot/reporting/arc_supervisor_frontier_8328.py",
+        "python/carnot/reporting/arc_supervisor_artifact_8328.py",
+        "python/carnot/reporting/arc_supervisor_execution_8328.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_arc_supervisor_frontier_8342.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_arc_supervisor_delta_7874.py",
+        "--basetemp=/tmp/carnot-8342-p5fmtz9p/private_E2E017"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "private_E2E017",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_arc_supervisor_frontier_8243.py",
+        "tests/python/test_arc_coverage_frontier_8314.py::test_cell_floor",
+        "tests/python/test_v718_contract_replay_8318.py::test_finding_policy",
+        "--basetemp=/tmp/carnot-8342-p5fmtz9p/qualified_consumers"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "qualified_consumers",
+      "scope": "owned"
+    }
+  ],
+  "heartbeat_s": 30,
+  "sample_size_budget": {
+    "current_game_runs": 0,
+    "current_model_runs": 0,
+    "independent_unit": "game",
+    "minimum_firings_per_game_arm": 5,
+    "minimum_overlapping_games": 3,
+    "minimum_shared_arms": 2
+  }
+}

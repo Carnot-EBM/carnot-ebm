@@ -52194,3 +52194,21 @@ one exclusive lease; enumeration alone never proves context/copy health.
 Fresh children reject negative and rehashed tampering. Qualified unchanged
 finding consumption rejects process errors, malformed reports, warnings and
 unknown findings. Require all new statements including CLI and recovery.
+## REQ-VERIFY-8342: Cover the preserved executor and qualify finding consumption
+
+Reuse the existing coverage executor and publisher. Bind historical ARC tests
+to authenticated preserved V718 authority without changing their assertions.
+Cover arc_supervisor_execution_8328.py statements 67, 95, 100, 131 and 198 with
+real children and publication failure controls. Freeze argv and deadlines apart
+from scientific parameters. Require 100 percent new owned statements, private
+E2E-017/018, consumer checks, scoped Ruff, strict mypy and spec references.
+Qualify the unchanged finding consumer before publication; malformed reports,
+process errors, unknown findings and unresolved warnings prevent readiness.
+Terminal publication stays atomic and byte-bound. Preserve every failed receipt.
+
+### SCENARIO-VERIFY-8342-EXECUTION
+
+Actual CLI children exercise valid, negative and rehashed replay, failed checks,
+publication rejection and recovery. The recorded-finding publication branch keeps
+all findings with zero readiness. Exact argv, exit codes, timing and stream hashes
+survive. The five named statements and all new code execute under child coverage.
