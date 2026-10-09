@@ -19883,3 +19883,29 @@ code |
 | 2026-10-08 23:39 UTC | Milestone 2026.10.718 activated | OK | 14 tasks queued |
 | 2026-10-09 00:20 UTC | Bind fourteen tasks and qualify deterministic hist | OK | 94 passed, 1 warning in 112.12s (0:01:52) |
 | 2026-10-09 00:23 UTC | Qualify exact local update evidence without suppre | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8318-contract-replay.history_reader_ready_score (actual=0 == expected=1) |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | harness_integrity_lint.py age-week 6: OPEN 42 days: SILENT_NON_FIRING on harness |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_emit_no_llm_by_name_warning age-week 4: OPEN 28 days: SI |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_path_tokens age-week 4: OPEN 28 days: SILENT_NON_F |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_evidence_scope age-week 4: OPEN 28 days: SILENT_NO |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_methodology_claims_live_inference age-week 4: OPEN 28 da |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_identity_claims_live_inference age-week 4: OPEN 28 days: |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_null_delta_descriptor age-week 3: OPEN 21 days: |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_novelty_proposal_ablation_overclaim age-week 2: OPE |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_proposal_filter_coverage_up age-week 2: OPEN 14 d |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_proposal_filter_heldout_rejection_overclaim age-wee |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_perception_overclaim age-week 2: OPEN 14 days: SILE |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_world_model_trust_pass age-week 2: OPEN 14 days:  |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_grid_changing_correct_evidence age-week 2: OPEN 14 days: |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_s2_schema_signal age-week 2: OPEN 14 days: SILENT_NO |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_engine_selection_game_rows age-week 2: OPEN 14 days: SIL |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_candidate_outcome_values age-week 2: OPEN 14 days: SILEN |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_count_effective_selection_games age-week 2: OPEN 14 days |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8276_v715_current_contract_readiness.json age-week 0: OPEN 1 days: CL |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8291_v716_dependency_scoped_admission.json age-week 0: OPEN 1 days: C |
+| 2026-10-09 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_10030_fover_headline_selection_denominator.json age-week 0: OPEN 1 da |
+| 2026-10-09 00:27 UTC | Fit the frozen local sentence energies with indepe | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8318-contract-replay.cached_support_ready_score (actual=0 == expected=1) |
+| 2026-10-09 00:29 UTC | Seal all reserved decisions under the unchanged so | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8320-sentence-spline-fit) |
+| 2026-10-09 00:29 UTC | Measure delayed local learning and seal every rete | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8320-sentence-spline-fit, exp8319-local-evidence-qualification) |
+| 2026-10-09 00:29 UTC | Test pending feedback capacity and delayed learnin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8319-local-evidence-qualification) |
+| 2026-10-09 00:29 UTC | Audit static decision benefit after all prediction | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8321-reserved-prediction-seal, exp8322-continuous-local-learning) |
+| 2026-10-09 00:29 UTC | Audit later learning utility and every fixed reten | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8321-reserved-prediction-seal, exp8322-continuous-local-learning) |

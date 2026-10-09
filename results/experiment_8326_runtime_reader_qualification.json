@@ -1,0 +1,51 @@
+{
+  "experiment": 8326,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-10-09",
+  "started_at": "2026-10-09T00:29:17.856912+00:00",
+  "finished_at": "2026-10-09T00:29:17.856912+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Qualify historical runtime readers before checking a real environment change",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp8318-contract-replay",
+  "failed_field": "history_reader_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8318_v718_contract_replay.json",
+  "failed_evidence_sha256": "sha256:db749c51bfde6ee6e13f63f0d1d0a2819e7ad4fd201e7ff6338d2750645c88da",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp8318-contract-replay",
+    "failed_field": "history_reader_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8318_v718_contract_replay.json",
+    "failed_evidence_sha256": "sha256:db749c51bfde6ee6e13f63f0d1d0a2819e7ad4fd201e7ff6338d2750645c88da"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8318-contract-replay.history_reader_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8318-contract-replay",
+      "artifact_field": "history_reader_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8318_v718_contract_replay.json",
+      "artifact_sha256": "sha256:db749c51bfde6ee6e13f63f0d1d0a2819e7ad4fd201e7ff6338d2750645c88da"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
