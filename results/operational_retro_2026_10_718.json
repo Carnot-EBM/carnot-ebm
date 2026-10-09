@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.10.718",
-  "generated_at": "2026-10-09T02:34:19Z",
+  "generated_at": "2026-10-09T03:52:27Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 16.8,
   "experiments_completed": 5,
@@ -36,25 +36,25 @@
   "gpu_idle_on_compute_bound_tasks": null,
   "reconstructed_from_disk_mtime": true,
   "timing_integrity_mismatch": false,
-  "summary": "Milestone 2026.10.718 completed 5 experiments (0 compute-bound, 5 synthesis-only) across 16.8 total wall-time minutes (averaging 3 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was driven entirely by synthesis tasks led by fourteen-outcome reconciliation (4.63 minutes), task binding and deterministic replay qualification (4.60 minutes), GateMate reopening condition retention (4.10 minutes), and ARC reader inspection (3.42 minutes). With zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null, the observed 0% utilization on the NVIDIA GeForce RTX 3090 reflects expected idle state for non-GPU synthesis workloads rather than an accelerator bottleneck.",
+  "summary": "Milestone 2026.10.718 completed 5 experiments (0 compute-bound, 5 synthesis-only) across 16.8 total wall-time minutes (averaging 3 minutes per experiment) reconstructed from disk-mtime fallback data. Execution time was dominated by synthesis-only workloads led by outcome reconciliation (4.63 minutes), task binding and replay qualification (4.6 minutes), GateMate condition retention (4.1 minutes), and ARC reader inspection (3.42 minutes), while board operation boundary measurement completed in 0.01 minutes. With compute_bound_experiments_count at 0 and gpu_idle_on_compute_bound_tasks recorded as null, the observed 0% utilization on the NVIDIA GeForce RTX 3090 represents expected idle behavior for non-GPU synthesis tasks rather than an accelerator bottleneck.",
   "bottlenecks_identified": [
-    "Synthesis-only tasks accounted for 100% of milestone execution time (all 5 completed experiments were synthesis-only, totaling 16.8 minutes of wall time), with the four slowest runs consuming 16.75 minutes: fourteen-outcome reconciliation (4.63 minutes), task binding and deterministic replay qualification (4.60 minutes), GateMate reopening condition retention (4.10 minutes), and ARC reader inspection (3.42 minutes).",
-    "Long-running synthesis qualification and outcome inspection tasks executed serially without incremental artifact caching or memoization of unchanged upstream evidence (e.g. static physical probe checks or supervisor records).",
-    "Lack of granular intra-task phase execution timing (parsing vs evaluation vs serialization) within multi-minute synthesis qualification tasks obscures internal latency contributors.",
-    "Milestone timing analysis relied on disk-mtime fallback reconstruction due to the live git-log path finding 0 commits in the milestone interval."
+    "Synthesis-only tasks accounted for the entirety of milestone execution time (all 5 completed experiments totaling 16.8 wall-time minutes), led by fourteen-outcome reconciliation (4.63 minutes), task binding and deterministic replay qualification (4.6 minutes), and GateMate condition retention (4.1 minutes).",
+    "Synthesis tasks ran serially across outcome reconciliation, task replay qualification, GateMate retention, and ARC reader inspection without incremental receipt caching or evidence memoization when upstream artifacts remained unchanged.",
+    "Individual experiment receipts lack granular intra-task sub-phase telemetry (such as receipt loading, contract validation, and check execution) to isolate specific execution overhead within 3-5 minute synthesis runs.",
+    "Milestone timing analysis relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits in the milestone interval."
   ],
   "improvements_suggested": [
-    "Implement incremental result memoization and receipt caching for synthesis qualification tasks (e.g. GateMate reopening condition checks, ARC reader supervisor inspections, and deterministic replay qualification) when upstream inputs remain unchanged.",
-    "Instrument multi-minute synthesis qualification workflows with granular intra-task phase timers (receipt loading, evaluation, serialization) to isolate execution hotspots.",
-    "Persist synchronous execution lifecycle timestamps (start time, completion time, duration) directly into experiment receipt JSON payloads to avoid dependency on disk-mtime fallback reconstruction.",
-    "Maintain continuous in-flight accelerator utilization and memory telemetry during future compute-bound runs rather than relying solely on post-run point-in-time GPU monitor polling.",
-    "Preserve DualGPURunner gating exclusively for concurrent multi-model pipelines, avoiding unnecessary overhead for single-model or synthesis-only workloads."
+    "Implement incremental receipt caching and evidence memoization for fourteen-outcome reconciliation, task replay qualification, GateMate condition retention, and ARC reader inspections when upstream dependencies are unchanged.",
+    "Instrument synthesis-only tasks with granular sub-phase execution timers (artifact parsing, boundary checking, schema validation) to diagnose intra-task latency.",
+    "Persist explicit synchronous start and end lifecycle timestamps directly into experiment receipt artifacts to prevent dependence on disk-mtime fallback reconstruction.",
+    "Maintain strict DualGPURunner dispatch criteria limited to concurrent multi-model pipelines, avoiding unnecessary invocation overhead for single-model or synthesis-only workloads.",
+    "Verify pre-flight failure ledger checks continue to fast-fail doomed reruns without incurring unnecessary multi-minute synthesis cycles."
   ],
   "top_3_highest_leverage_actions": [
-    "Deploy incremental result memoization and receipt caching for deterministic replay, ARC reader checks, and GateMate condition retention when upstream inputs are static.",
-    "Instrument multi-minute synthesis qualification tasks with granular intra-task phase timers to isolate verification versus serialization latency.",
-    "Persist synchronous start, end, and duration timestamps in experiment receipt metadata and maintain continuous in-flight GPU metric sampling during active runs."
+    "Deploy incremental receipt caching and evidence memoization for static artifact checks across outcome reconciliation, task replay qualification, and GateMate condition retention.",
+    "Instrument long-running synthesis tasks (outcome reconciliation, contract replay, and ARC supervisor inspections) with granular intra-task phase timers.",
+    "Persist explicit synchronous start and completion timestamps in experiment receipts to eliminate reliance on disk-mtime fallback reconstruction."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "Across 5 completed experiments and 16.8 minutes of milestone wall time, execution latency was entirely dominated by synthesis tasks led by outcome reconciliation (4.63 minutes), task binding and replay qualification (4.60 minutes), and GateMate condition retention (4.10 minutes). With zero compute-bound experiments executed, the 0% GPU utilization on the RTX 3090 was expected, and gpu_idle_on_compute_bound_tasks was correctly recorded as null. Future operational efficiency gains depend on implementing artifact caching for unchanged synthesis inputs and embedding granular intra-phase execution telemetry into qualification workflows."
+  "meta_reflection": "Across 5 completed experiments and 16.8 minutes of milestone wall time, execution latency was entirely driven by synthesis tasks averaging 3 minutes per experiment, with zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null. Observed 0% GPU utilization on the NVIDIA GeForce RTX 3090 reflected appropriate idle behavior for non-GPU workloads. Tooling improvements should focus on incremental receipt caching for unchanged upstream artifacts and intra-phase telemetry for multi-minute synthesis tasks, with estimated time savings conservatively held at 0% until measured."
 }
