@@ -19928,3 +19928,4 @@ code |
 | 2026-10-09 07:58 UTC | Audit later learning utility and every fixed reten | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8336-continuous-local-learning) |
 | 2026-10-09 08:32 UTC | Qualify versioned runtime evidence independently a | OK | 109 passed, 1 warning in 53.84s |
 | 2026-10-09 08:36 UTC | Run the bounded Qwen canary only after changed run | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8340-runtime-reader-qualification.runtime_changed_score (actual=0 == expected=1) |
+| 2026-10-09 09:02 UTC | Cover ARC reader failure branches and inspect only | OK | 97 passed, 1 warning in 144.78s (0:02:24) |
