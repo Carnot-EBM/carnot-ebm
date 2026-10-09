@@ -1,0 +1,237 @@
+.......EF.                                                               [100%]
+==================================== ERRORS ====================================
+_______ ERROR at teardown of test_measure_live_identity_and_changed_gate _______
+Memory leak: +546MB
+
+During handling of the above exception, another exception occurred:
+Memory leak: +546MB
+----------------------------- Captured stdout call -----------------------------
+[exp8340] phase=authority_and_source_before completed=0 pending=0
+[exp8340] phase=authority_and_source_after completed=0 pending=0
+[exp8340] phase=authority_and_source_before completed=0 pending=0
+[exp8340] phase=changed_leased_probe_before completed=0 pending=0
+[exp8340] phase=changed_leased_probe_after completed=0 pending=0
+[exp8340] phase=authority_and_source_after completed=0 pending=0
+[exp8340] phase=authority_and_source_before completed=0 pending=0
+[exp8340] phase=authority_and_source_after completed=0 pending=0
+=================================== FAILURES ===================================
+________________ test_manifest_live_driver_and_failure_recovery ________________
+
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'authenticated_change': False, 'cuda_context_ready': False, 'reader': False},...me_reader_qualification/terminal_candidate.json', 'deadline_s': 60, ...}], 'passed': False}], 'censored_count': 7, ...}
+output = PosixPath('/tmp/carnot8340-coverage/owned/test_manifest_live_driver_and_0/experiment_8340_v719_runtime_reader_qualification.json')
+raw = PosixPath('/tmp/carnot8340-coverage/owned/test_manifest_live_driver_and_0/raw/experiment_8340_v719_runtime_reader_qualification/invocations/1791533533927798502')
+
+    def publish(value: Json, output: Path, raw: Path) -> None:
+        """A failed owned terminal check clears readiness before failure publication."""
+        attempts: list[Json] = []
+    
+        def validate(candidate: Path) -> Json:
+            log = raw / "terminal_logs" / str(len(attempts))
+            cold = check(
+                dict(
+                    name="cold_replay",
+                    argv=[
+                        str(e.ROOT / ".venv/bin/python"),
+                        "-u",
+                        str(e.ROOT / e.CLI),
+                        "--cold-replay",
+                        str(candidate),
+                    ],
+                    deadline_s=60,
+                ),
+                log,
+            )
+            found = findings.audit(candidate, log, {})
+            rows = check(
+                dict(
+                    name="strict_row_lint",
+                    argv=[
+                        str(e.ROOT / ".venv/bin/python"),
+                        "scripts/verdict_row_consistency_lint.py",
+                        "--strict",
+                        str(candidate),
+                    ],
+                    deadline_s=60,
+                ),
+                log,
+            )
+            report = dict(
+                passed=all(r["passed"] for r in [cold, found["receipt"], rows]),
+                checks=[cold, found["receipt"], rows],
+                adversarial=found,
+            )
+            attempts.append(report)
+            return report
+    
+        try:
+>           publication = publish_primary(output, value, validate)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+python/carnot/reporting/sentence_spline_execution_8334.py:171: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/tmp/carnot8340-coverage/owned/test_manifest_live_driver_and_0/experiment_8340_v719_runtime_reader_qualification.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'authenticated_change': False, 'cuda_context_ready': False, 'reader': True}, ...cations/1791533533927798502/finding_controls/false_zero.json', 'deadline_s': 60, ...}, ...}], 'censored_count': 7, ...}
+validator = <function publish.<locals>.validate at 0x7f08080d1bc0>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot8340-coverage/owned/test_manifest_live_driver_and_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0807b20800>
+
+    with patch.object(
+        q, "authenticate", return_value=dict(terminal_validation_sidecar_path=str(terminal))
+    ):
+        assert (
+            q.measure(q.ROOT, tmp_path / "badterminal")["checks"][-2]["field"]
+            == "runtime_identity_custody"
+        )
+    
+    raw = tmp_path / "same"
+    stream = tmp_path / "validation.stdout"
+    stream.write_text("actual receipt")
+    receipt = dict(
+        passed=True,
+        stdout_path=str(stream),
+        stderr_path=str(stream),
+        stdout_sha256=sha256_file(stream),
+        stderr_sha256=sha256_file(stream),
+    )
+    
+    def candidate(work):
+        atomic_json(raw / "measurement.json", work)
+        path = tmp_path / (q.NAME + ".json")
+        atomic_json(path, q.build(work, raw, [receipt]))
+        return path
+    
+    assert q.replay(candidate(d))
+    for mutate in [
+        lambda w: w["previous"].update(driver="invented"),
+        lambda w: w["current"].update(driver="invented"),
+        lambda w: w["authority"]["tasks"][0].update(prompt="invented"),
+>   ]:
+       
+
+tests/python/test_runtime_reader_8340.py:192: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/verify/runtime_reader_execution_8340.py:266: in main
+    publish(q.build(work, raw, receipts), output, raw)
+python/carnot/verify/runtime_reader_execution_8340.py:168: in publish
+    qualified.publish(value, output, raw)
+python/carnot/reporting/sentence_spline_execution_8334.py:180: in publish
+    publication = publish_primary(output, value, validate)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/tmp/carnot8340-coverage/owned/test_manifest_live_driver_and_0/experiment_8340_v719_runtime_reader_qualification.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'authenticated_change': False, 'cuda_context_ready': False, 'reader': False},...me_reader_qualification/terminal_candidate.json', 'deadline_s': 60, ...}], 'passed': False}], 'censored_count': 7, ...}
+validator = <function publish.<locals>.validate at 0x7f08080d1bc0>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8340] phase=start_no_model_load completed=0 pending=0
+[exp8205] phase=validation_complete completed=0 pending=0
+[exp8340] phase=authority_and_source_before completed=0 pending=0
+[exp8340] phase=authority_and_source_after completed=0 pending=0
+[exp8340] phase=owned_validation_before completed=0 pending=0
+[exp8205] phase=validation_complete completed=0 pending=0
+[exp8340] phase=owned_validation_after completed=0 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=validation completed=0 pending=2
+[exp8205] phase=before_subprocess_negative_checksum completed=0 pending=1
+[exp8205] phase=after_subprocess_negative_checksum completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=1
+[exp8205] phase=before_subprocess_rehashed_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_rehashed_tamper completed=1 pending=0
+[exp8205] phase=validation_complete completed=2 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_row_lint completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_row_lint completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_row_lint completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_row_lint completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_runtime_reader_8340.py::test_manifest_live_driver_and_failure_recovery
+ERROR tests/python/test_runtime_reader_8340.py::test_measure_live_identity_and_changed_gate
+1 failed, 8 passed, 1 warning, 1 error in 194.90s (0:03:14)

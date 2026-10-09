@@ -1,0 +1,57 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________________________________ test_authority ________________________________
+
+tmp_path = PosixPath('/tmp/exp8340-original-7n2lffk1/cases/test_authority0')
+
+    def test_authority(tmp_path):
+        """SCENARIO-REPORT-8290-AUTHORITY: activation requires all fourteen full tasks."""
+>       root = authorities(tmp_path)
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_runtime_localization_8290.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_runtime_localization_8290.py:155: in authorities
+    tasks = q.parse_design((root / q.DESIGN).read_text(), milestone=q.MILESTONE)[1]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot research roadmap V719: Independent local evidence and continuous decision learning\n\n**Created:** 2026-10-0...remain blocked unless current sealed H1/H2 primitives qualify."\n    }\n  ]\n}\n```\n<!-- V719_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V716 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_runtime_localization_8290.py::test_authority - Value...
+1 failed, 1 warning in 3.16s

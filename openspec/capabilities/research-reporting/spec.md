@@ -96839,3 +96839,19 @@ The conductor owns ops/status, ops/changelog and traceability reconciliation.
 Byte-bound primitive replay, unchanged adversarial verification and strict row
 checks precede publication. Every gate names path/hash, exact field, operator,
 expected and observed operands. Retain every finding and validation receipt.
+## REQ-REPORT-8340: Independent runtime qualification primary
+
+Publish Exp8340 atomically with bound terminal reports, zero current model
+invocations, imported provenance, exact authority, source/primitive/config
+hashes and honest counts. Runtime reader, runtime change and CUDA health are
+separate scores. Future deliverables remain dependencies. Retain exact failed
+gates and findings; missing observations never imply negative science. Freeze
+execution argv/deadlines separately from the unchanged V717 science protocol.
+The conductor owns ops/status, ops/changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8340-PUBLISH
+
+Private E2E-018, immutable runtime consumers, strict types, scoped Ruff, spec
+coverage and 100 percent new statement coverage precede byte-bound cold replay,
+unchanged adversarial/strict-row validators and atomic terminal publication.
+Failed owned checks publish a validated disqualification and retain recovery.

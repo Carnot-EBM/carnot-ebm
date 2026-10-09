@@ -52167,3 +52167,30 @@ Real private child and cold replay pass valid evidence and reject negative and
 rehashed tamper cases. Preserve failure and publication recovery paths. Qualify
 the unchanged finding consumer against legitimate and false zero, malformed
 reports, warnings, unknown findings and process errors before use.
+## REQ-VERIFY-8340: Versioned runtime reader and changed CUDA evidence
+
+Authenticate V719 directly without Exp8332 readiness. Historical V716 consumers
+use preserved V716 design bytes. Qualify valid old/current authority, wrong
+milestone and corrupt full contract in bounded real children. Preserve every
+historical assertion and failed receipt. Reader correctness is separate from
+driver/library/device/lease changes and actual context/copy parity. Compare
+authenticated Exp8307 identity with read-only current inventory; clocks, paths
+and cached success cannot reopen CUDA. Unchanged CUDA is complete_blocked_cuda_environment_unchanged.
+Only an authenticated causal change permits the existing leased bounded probe.
+Missing operands block; owned failures disqualify. Preserve unproved root cause.
+
+### SCENARIO-VERIFY-8340-AUTHORITY
+
+Reproduce mutable-design consumer failure privately; preserved V716 and valid
+V719 pass real commands while wrong milestones and changed prompts fail.
+
+### SCENARIO-VERIFY-8340-BOUNDARY
+
+Unchanged or missing causal identity cannot invoke CUDA. Changed bytes admit
+one exclusive lease; enumeration alone never proves context/copy health.
+
+### SCENARIO-VERIFY-8340-REPLAY
+
+Fresh children reject negative and rehashed tampering. Qualified unchanged
+finding consumption rejects process errors, malformed reports, warnings and
+unknown findings. Require all new statements including CLI and recovery.

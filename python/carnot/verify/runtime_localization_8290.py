@@ -55,7 +55,7 @@ REUSED = (
     ]
 )
 DESIGN, ACTIVE, STAGED, PROTOCOL, PIN = (
-    prior.DESIGN,
+    "openspec/change-proposals/research-roadmap-v716-preserved-20261008.md",
     prior.ACTIVE,
     prior.STAGED,
     prior.PROTOCOL,
@@ -81,7 +81,17 @@ def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
 def bindings() -> Iterator[None]:
     """Supply current producer constants without editing the qualified readers."""
     with ExitStack() as stack:
-        for key in ["NAME", "TASK", "MILESTONE", "CLI", "TEST", "OWNED", "REUSED", "EXECUTION"]:
+        for key in [
+            "NAME",
+            "TASK",
+            "MILESTONE",
+            "CLI",
+            "TEST",
+            "OWNED",
+            "REUSED",
+            "EXECUTION",
+            "DESIGN",
+        ]:
             stack.enter_context(patch.object(prior, key, globals()[key]))
         stack.enter_context(patch.object(prior, "assess", assess))
         yield
