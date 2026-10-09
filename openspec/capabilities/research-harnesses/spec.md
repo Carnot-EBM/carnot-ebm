@@ -12166,8 +12166,17 @@ message SHALL contain the `agy` reason and the codex error, and the fallback SHA
 
 A literal `codex` command list in any of the six scripts SHALL fail the test suite.
 
+#### SCENARIO-OPS-AUDIT-REVIEWER-1-AGY
+
+Each of the six audits SHALL start `agy` with the no-tools note in front of the prompt. It
+SHALL run `agy` in an empty directory outside the repository. Headless `agy` cannot ask
+permission, so a tool call ends the run with empty output. Measured 2026-10-08 on the real
+claim-audit packet: 0 of 3 runs in the repository gave output, 4 of 4 runs with the note in an
+empty directory did.
+
 ### Implementation Status (REQ-OPS-AUDIT-REVIEWER-1)
 
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-OPS-AUDIT-REVIEWER-1 | Implemented 2026-10-08 (`scripts/audit_reviewer_cli.py`: `codex_bin`, `failure_text`, `chain_failure`; wired into the six audit scripts). Not covered: the two daily watch scripts, whose units already put `~/.local/bin` first on PATH. Not changed: the `agy` primary still returns empty output in headless mode, and its routing is an operator decision | `tests/python/test_audit_reviewer_cli.py` |
+| REQ-OPS-AUDIT-REVIEWER-1 (AGY scenario) | Implemented 2026-10-08 (`agy_command`, `agy_cwd` in `scripts/audit_reviewer_cli.py`, used by the six audits). Audit routing went back to codex the same day (systemd drop-in `98-audit-codex-20261008.conf`, outside the repo). Not covered: the conductor's own retro path, which still calls `agy` directly | `tests/python/test_audit_reviewer_cli.py` |

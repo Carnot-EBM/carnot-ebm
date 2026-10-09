@@ -148,3 +148,35 @@ Still open: options 3, 4 and 5. The agy primary still returns empty output in he
 
 The live checkout must contain the new commits before the conductor's next milestone-close
 audit, because the audit scripts run from that checkout's files.
+
+## Update 2026-10-08 (later): options 3 and 4 done
+
+Operator directive: switch audits back to codex, fix `agy`, fix the codex binary.
+
+**Routing (option 3).** Audits run on codex `gpt-6.1-sol` again. The change is the systemd
+drop-in `98-audit-codex-20261008.conf`. Retro stays on agy first.
+
+**agy fix.** The cause was the model trying a shell tool in headless mode, which cannot ask
+permission, so the run ended with empty output. Tested on the real `exp8248` packet:
+
+| Variant | Runs with output |
+|---|---|
+| as before, run inside the repo | 0 of 3 |
+| no-tools note only | 1 of 1 |
+| empty working directory only | 1 of 1 |
+| note and empty directory | 4 of 4 |
+| `--output-format json` | 0 (the flag swallows the prompt) |
+
+All six audits now use the note and the empty directory (`agy_command`, `agy_cwd`). The
+`--dangerously-skip-permissions` flag stays unused. Sample sizes are small, so treat 4 of 4 as
+"works in this test," not as a rate.
+
+**Codex binary (option 4).** The repo package `openai-codex` is 0.156.1 and nothing newer is
+available, so it cannot be upgraded with pacman. The service PATH now starts with
+`~/.carnot/bin`, which holds one symlink, `codex`, to the self-updating `~/.local/bin/codex`
+(0.159.1). Drop-in `99-path-current-codex-20261008.conf`. Only codex is exposed, because adding
+all of `~/.local/bin` would also shadow `/usr/bin/claude`.
+
+**Not done.** The drop-ins take effect only after a service restart; I did not restart the
+conductor. Option 5 (count unreviewed artifacts) is still open. The conductor's own retro path
+still calls `agy` without the fix.

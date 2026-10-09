@@ -48,9 +48,11 @@ class FakeRun:
     def __init__(self, results):
         self.results = list(results)
         self.cmds: list[list[str]] = []
+        self.kwargs: list[dict] = []
 
     def __call__(self, cmd, **kwargs):
         self.cmds.append([str(c) for c in cmd])
+        self.kwargs.append(kwargs)
         rc, out, err = self.results.pop(0)
         return subprocess.CompletedProcess(cmd, rc, stdout=out, stderr=err)
 
@@ -264,3 +266,38 @@ def test_failure_text_keeps_a_near_limit_message_whole():
     assert len(err) == 301
     text = arc.failure_text("agy", 0, err)
     assert "jetski: no output produced" in text
+
+
+# ---------------------------------------------------------------- agy runs without tools, outside the repo
+
+SIX_AGY = [
+    ("experiment_claim_audit", lambda m: m._call("agy", "gemini-x", "p", "b")),
+    ("artifact_convention_audit", lambda m: m._call("agy", "gemini-x", "p", "b")),
+] + FOUR_AGY
+
+
+@pytest.mark.parametrize("name,call", SIX_AGY, ids=[s[0] for s in SIX_AGY])
+def test_agy_gets_the_no_tools_note_and_an_empty_directory(name, call, monkeypatch):
+    """SCENARIO-OPS-AUDIT-REVIEWER-1-AGY: headless agy denied its own tool calls inside the repo.
+
+    On the real claim-audit packet, 0 of 3 runs in the repo gave output and 4 of 4 runs gave output
+    with this note, run from an empty directory. Each of the six audits must do both.
+    """
+    mod = importlib.import_module(name)
+    fake = FakeRun([(0, "## VERDICT\nOK\n", "")])
+    monkeypatch.setattr(mod.subprocess, "run", fake)
+    ok, _ = call(mod)
+    assert ok is True
+    cmd, kw = fake.cmds[0], fake.kwargs[0]
+    assert cmd[1:3] == ["--model", "gemini-x"] and cmd[3] == "--print"
+    assert cmd[4].startswith(arc.AGY_NO_TOOLS_NOTE)
+    cwd = Path(kw["cwd"])
+    assert cwd == Path(arc.agy_cwd())
+    assert cwd.is_dir() and list(cwd.iterdir()) == []
+    assert REPO not in cwd.parents and cwd != REPO
+
+
+def test_agy_cwd_is_private_and_stable():
+    first = Path(arc.agy_cwd())
+    assert arc.agy_cwd() == str(first)  # same path every call, no new directory per run
+    assert (first.stat().st_mode & 0o077) == 0  # not readable by other users

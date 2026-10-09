@@ -40,7 +40,7 @@ import time
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parent))  # find audit_reviewer_cli when imported
-from audit_reviewer_cli import chain_failure, codex_bin, failure_text  # noqa: E402
+from audit_reviewer_cli import agy_command, agy_cwd, chain_failure, codex_bin, failure_text  # noqa: E402
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REPORT_PATH = PROJECT_ROOT / "ops" / "arc_self_solve_audit_report.md"
@@ -118,12 +118,12 @@ def call_agy(prompt: str, body: str, model: str = "gemini-3.1-pro-high") -> tupl
     `call_gemini`). `--print` is agy's non-interactive flag; no `--yolo` equivalent is needed."""
     try:
         proc = subprocess.run(
-            [AGY_BIN, "--model", model, "--print", f"{prompt}\n\n---\n{body}"],
+            agy_command(AGY_BIN, model, f"{prompt}\n\n---\n{body}"),
             capture_output=True,
             text=True,
             timeout=600,
             check=False,
-            cwd=PROJECT_ROOT,
+            cwd=agy_cwd(),
         )
         ok = proc.returncode == 0 and bool(proc.stdout.strip())
         # agy can exit 0 with empty stdout (headless tool-permission denial); say so.
