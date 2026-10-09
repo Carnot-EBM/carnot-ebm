@@ -96823,3 +96823,19 @@ The conductor owns ops/status, ops/changelog and traceability reconciliation.
 
 The unchanged primary validator, adversarial verifier and strict row consumer
 validate byte-bound candidates. Preserve all findings and failed-check lineage.
+## REQ-REPORT-8335: Publish immutable exposed-development prediction custody
+
+Publish the checked Exp8335 primary atomically through unchanged validators.
+Declare no_model_load, cached verifier substrate, empty MODEL_SPECS and zero
+current calls; imported model provenance remains historical. Account for all128
+independent intended sources without counting arms as independent observations.
+Preserve zero generalization scores. A ready seal certifies prediction custody,
+not H1/H2 benefit. Static audit is a future dependency requiring both this seal
+and Exp8336 online trajectory; retention targets remain unavailable to learning.
+The conductor owns ops/status, ops/changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8335-PUBLISH
+
+Byte-bound primitive replay, unchanged adversarial verification and strict row
+checks precede publication. Every gate names path/hash, exact field, operator,
+expected and observed operands. Retain every finding and validation receipt.

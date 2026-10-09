@@ -52141,3 +52141,29 @@ tampering fails independent replay. Missing external sources produce exact gates
 
 Private children exercise valid, negative and tampered replay, failures and
 recovery. Exact argv, deadlines, exits, timings and output hashes survive.
+## REQ-VERIFY-8335: Seal predictor-only reserved decisions
+
+Authenticate the exact Exp8334 primary, bound terminal sidecars, its frozen head
+manifest, Exp8305 predictor-only reserved shard and unchanged V717 protocol.
+Bind active fourteen-task authority. A fresh child receives only allowlisted
+predictor fields, frozen heads and original source roster; no evaluator shard.
+Keep all128 slots,97 available feature rows and31 unavailable rows. Every fitted
+arm, frozen holistic control and exact sigmoid34 expression keeps unavailable
+probabilities null and actions escalate. Seal source, slot, arm, issue time and
+feature/head/protocol hashes into immutable stream96 and retention32 files.
+Require independent scalar replay, exact sigmoid parity and source/head/label
+injection rejection. Missing external evidence blocks; failed owned checks
+disqualify. Readiness requires100 percent new statements and actual CLI checks.
+
+### SCENARIO-VERIFY-8335-ISOLATION
+
+Reject label injection, changed source bytes, changed head hashes and altered
+rosters, including self-consistently rehashed candidate primitives. Prediction
+files and the seal manifest exist before any reserved evaluator access.
+
+### SCENARIO-VERIFY-8335-CLI
+
+Real private child and cold replay pass valid evidence and reject negative and
+rehashed tamper cases. Preserve failure and publication recovery paths. Qualify
+the unchanged finding consumer against legitimate and false zero, malformed
+reports, warnings, unknown findings and process errors before use.
