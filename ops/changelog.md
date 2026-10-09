@@ -21919,3 +21919,4 @@ Recorded 9 completed experiments in 41.7 minutes (0.7 hours), including 1 comput
 - 2026-10-09: Qualify historical runtime authority before checking changed CUDA evidence (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_checks; results/experiment_8353_v720_runtime_reader_qualification.json
 - 2026-10-09: Repair the ARC reader import boundary and inspect new cross-game outcomes (⚠️ Research Finding) — honest_verdict=complete_null_no_supervisor_outcomes; results/experiment_8355_v720_arc_supervisor_frontier.json
 - 2026-10-09: Qualify CPU operation costs and map spline tables to the KV260 boundary (⚠️ Blocked) — honest_verdict=complete_blocked_CPU_cost_and_KV260_boundary; results/experiment_8356_v720_kv260_workload_cost.json
+- 2026-10-09: Recover immutable GateMate history and preserve the physical reopening condition (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_history; results/experiment_8357_v720_gatemate_change_ledger.json
