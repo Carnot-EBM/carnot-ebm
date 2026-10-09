@@ -52212,3 +52212,20 @@ Actual CLI children exercise valid, negative and rehashed replay, failed checks,
 publication rejection and recovery. The recorded-finding publication branch keeps
 all findings with zero readiness. Exact argv, exit codes, timing and stream hashes
 survive. The five named statements and all new code execute under child coverage.
+# REQ-VERIFY-8343: Qualify arithmetic execution and finding consumption
+
+Write traced failing tests before implementation. Freeze bounded argv and
+timeouts apart from science. Require all newly owned statements, actual CLI,
+failure/recovery and child paths, scoped consumers, private E2E-018, Ruff,
+strict mypy and explicit spec coverage. E2E-020 applies only if durable recovery
+is exercised. Qualify unchanged finding consumption against clean and false
+zero reports, malformed data, nonzero process errors, warnings and unknown
+findings before using it. Preserve every finding; unresolved findings prevent
+readiness. Use no_model_load, MODEL_SPECS=[], private scratch and flushed phases.
+
+## SCENARIO-VERIFY-8343-EXECUTION
+
+Real bounded children exercise measurement and cold replay; receipt hashes,
+argv, exits and clocks survive. Failed checks clear all readiness. A published
+blocked artifact can retain qualified arithmetic CPU cost. Primitive mutations
+cannot pass merely by recalculating their hashes. Existing guards stay enabled.

@@ -1,0 +1,93 @@
+..................................F...F...F.                             [100%]
+=================================== FAILURES ===================================
+______________________ test_independent_branch_and_replay ______________________
+
+tmp_path = PosixPath('/tmp/carnot8329-validation-_a7pgjvh/consumers/test_independent_branch_and_re0')
+
+    def test_independent_branch_and_replay(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-8329-INDEPENDENT: missing natural input cannot suppress costs."""
+        root = private_root(tmp_path / "root")
+        source(root, "constructed")
+        work = e.measure(root, tmp_path / "raw")
+>       assert len(work["timing_rows"]) == 10
+E       assert 0 == 10
+E        +  where 0 = len([])
+
+tests/python/test_kv260_workload_cost_8329.py:66: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8329] phase=before_authority completed=0 pending=0
+[exp8329] phase=after_authority completed=0 pending=0
+[exp8329] phase=before_authenticate_constructed completed=0 pending=3
+[exp8329] phase=after_authenticate_constructed completed=1 pending=2
+[exp8329] phase=before_authenticate_capacity completed=1 pending=2
+[exp8329] phase=after_authenticate_capacity completed=2 pending=1
+[exp8329] phase=before_authenticate_natural completed=2 pending=1
+[exp8329] phase=after_authenticate_natural completed=3 pending=0
+[exp8329] phase=before_hardware_authentication completed=0 pending=0
+[exp8329] phase=after_hardware_authentication completed=0 pending=0
+_________________ test_natural_capacity_and_primitive_failures _________________
+
+tmp_path = PosixPath('/tmp/carnot8329-validation-_a7pgjvh/consumers/test_natural_capacity_and_prim0')
+
+    def test_natural_capacity_and_primitive_failures(tmp_path: Path) -> None:
+        """REQ-REPORT-8329: source counts survive missing peers and malformed primitives."""
+        root = private_root(tmp_path / "root")
+        source(root, "natural")
+        source(root, "capacity")
+        work = e.measure(root, tmp_path / "raw")
+        value = e.build(work, tmp_path / "raw", [dict(passed=True)])
+>       assert value["natural_cost_ready_score"] == 1 and value["independent_count"] == 1
+E       assert (0 == 1)
+
+tests/python/test_kv260_workload_cost_8329.py:155: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8329] phase=before_authority completed=0 pending=0
+[exp8329] phase=after_authority completed=0 pending=0
+[exp8329] phase=before_authenticate_constructed completed=0 pending=3
+[exp8329] phase=after_authenticate_constructed completed=1 pending=2
+[exp8329] phase=before_authenticate_capacity completed=1 pending=2
+[exp8329] phase=after_authenticate_capacity completed=2 pending=1
+[exp8329] phase=before_authenticate_natural completed=2 pending=1
+[exp8329] phase=after_authenticate_natural completed=3 pending=0
+[exp8329] phase=before_hardware_authentication completed=0 pending=0
+[exp8329] phase=after_hardware_authentication completed=0 pending=0
+_____________ test_owned_benchmark_failure_and_private_root_guard ______________
+
+tmp_path = PosixPath('/tmp/carnot8329-validation-_a7pgjvh/consumers/test_owned_benchmark_failure_a0')
+
+    def test_owned_benchmark_failure_and_private_root_guard(tmp_path: Path) -> None:
+        """REQ-VERIFY-8329: owned numerical failures cannot be external missingness."""
+        root = private_root(tmp_path / "root")
+        source(root, "constructed")
+        with patch.object(e.p, "transaction", side_effect=ValueError("owned_benchmark_failure")):
+            work = e.measure(root, tmp_path / "raw")
+        value = e.build(work, tmp_path / "raw", [dict(passed=True)])
+>       assert value["verdict_class"] == "disqualified" and value["failed_count"] == 2
+E       AssertionError: assert ('blocked' == 'disqualified'
+E         
+E         - disqualified
+E         + blocked)
+
+tests/python/test_kv260_workload_cost_8329.py:328: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8329] phase=before_authority completed=0 pending=0
+[exp8329] phase=after_authority completed=0 pending=0
+[exp8329] phase=before_authenticate_constructed completed=0 pending=3
+[exp8329] phase=after_authenticate_constructed completed=1 pending=2
+[exp8329] phase=before_authenticate_capacity completed=1 pending=2
+[exp8329] phase=after_authenticate_capacity completed=2 pending=1
+[exp8329] phase=before_authenticate_natural completed=2 pending=1
+[exp8329] phase=after_authenticate_natural completed=3 pending=0
+[exp8329] phase=before_hardware_authentication completed=0 pending=0
+[exp8329] phase=after_hardware_authentication completed=0 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_kv260_workload_cost_8329.py::test_independent_branch_and_replay
+FAILED tests/python/test_kv260_workload_cost_8329.py::test_natural_capacity_and_primitive_failures
+FAILED tests/python/test_kv260_workload_cost_8329.py::test_owned_benchmark_failure_and_private_root_guard
+3 failed, 41 passed, 1 warning in 109.71s (0:01:49)

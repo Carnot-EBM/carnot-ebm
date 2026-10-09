@@ -1,0 +1,212 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot8329-validation-_a7pgjvh/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_kv260_workload_cost_8343.py",
+        "--basetemp=/tmp/carnot8329-validation-_a7pgjvh/owned-tests"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_kv260_workload_cost_8329.py",
+        "--basetemp=/tmp/carnot8329-validation-_a7pgjvh/consumers"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E018_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot8329-validation-_a7pgjvh/coverage.ini"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot8329-validation-_a7pgjvh/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot8329-validation-_a7pgjvh/coverage.ini",
+        "-o",
+        "/tmp/carnot8329-validation-_a7pgjvh/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/kv260_workload_cost_8343.py",
+        "python/carnot/reporting/kv260_workload_artifact_8343.py",
+        "python/carnot/reporting/kv260_arithmetic_8343.py",
+        "python/carnot/reporting/kv260_workload_runner_8343.py",
+        "scripts/experiments/experiment_8343_v719_kv260_workload_cost.py",
+        "tests/python/test_kv260_workload_cost_8343.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/kv260_workload_cost_8343.py",
+        "python/carnot/reporting/kv260_workload_artifact_8343.py",
+        "python/carnot/reporting/kv260_arithmetic_8343.py",
+        "python/carnot/reporting/kv260_workload_runner_8343.py",
+        "scripts/experiments/experiment_8343_v719_kv260_workload_cost.py",
+        "tests/python/test_kv260_workload_cost_8343.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/reporting/kv260_workload_cost_8343.py",
+        "python/carnot/reporting/kv260_workload_artifact_8343.py",
+        "python/carnot/reporting/kv260_arithmetic_8343.py",
+        "python/carnot/reporting/kv260_workload_runner_8343.py",
+        "scripts/experiments/experiment_8343_v719_kv260_workload_cost.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_kv260_workload_cost_8343.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    }
+  ],
+  "finding_consumer_policy": {
+    "allowed_exit_codes": [
+      0,
+      1
+    ],
+    "allowed_info_kinds": [
+      "IMPLAUSIBLE_PERFECT"
+    ],
+    "blocked": [
+      "process_error",
+      "missing_report",
+      "unknown",
+      "warn",
+      "critical"
+    ],
+    "info_resolution": "independent primitives and deliberate error rejection",
+    "required_binding": [
+      "candidate_sha256",
+      "verifier_sha256"
+    ],
+    "version": "8318-v1"
+  },
+  "heartbeat_s": 20,
+  "science_parameters": {
+    "coordinate_bounds": [
+      -4,
+      4
+    ],
+    "decay": 0,
+    "degree": 3,
+    "frozen_intercept": 0,
+    "frozen_slope": 1,
+    "gradient_norm_cap": 1,
+    "holistic_input": 0,
+    "k_max": 5,
+    "knots": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "learning_rate": 0.01,
+    "model_load": false,
+    "repetitions": 5,
+    "targets": "(i-1)%2",
+    "temperature": 1,
+    "vectors": 128,
+    "warmups": 1
+  },
+  "worker_argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8343_v719_kv260_workload_cost.py",
+    "--root",
+    "/home/ianblenke/github.com/ianblenke/carnot",
+    "--worker-output",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8343_v719_kv260_workload_cost/invocations/1791537629511027708/measurement.json"
+  ],
+  "worker_deadline_s": 600
+}

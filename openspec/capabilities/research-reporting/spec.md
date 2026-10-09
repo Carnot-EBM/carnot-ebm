@@ -2,6 +2,45 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8343: Independent arithmetic cost with exact board boundaries
+
+Measure 128 constructed four-feature vectors `((17*i+13*j)%101)/100`,
+with i=1..128 and j=0..3, alternating targets starting at zero. Preserve V717
+cubic knots, degree3, rate0.01, norm cap1, coordinate bounds[-4,4], frozen
+holistic slope/intercept/temperature and zero decay. Qualify basis and gradient
+against SciPy and centered differences before one warmup and five paired
+timings with alternating arm order. Dense and active updates use identical
+arrays, probability tolerance1e-10 and identical typed actions. Separate basis,
+gradient, coefficient touches and wall cost; repetitions add no source units.
+Constructed arithmetic is circular evidence, never natural or complete service.
+Authenticate optional Exp8333/8337/8336 only at declared paths. Missing or failed
+external sources block their branch without suppressing valid arithmetic.
+Preserve KV260 quadratic Ising k_max<=5, SSH kria, unsupported spline/database
+operations, null service fractions and unproved acceleration. Authenticate
+Exp8259 terminal dispatch/parity before retaining board-local Linux CPU scope.
+
+### SCENARIO-REPORT-8343-INDEPENDENT
+
+Absent producers still permit arithmetic readiness after qualified own checks.
+Failed authority or numerical qualification prevents measurement; failed owned
+checks disqualify. Durable/natural scores stay separate. No service speedup or
+NFR-01/Tier1 claim follows from arithmetic timings.
+
+### SCENARIO-REPORT-8343-REPLAY
+
+Cold replay binds primitive bytes and independently reconstructs all numerical
+outputs and reduction fields. Valid evidence passes, negative and rehashed
+tampering fail. Terminal publication uses unchanged atomic primary checks.
+The conductor owns ops status, changelog and traceability reconciliation.
+
+Execution 2026-10-09: Exp8343 retains ten arithmetic timing rows for 128
+constructed vectors and authenticated PolarFire CPU dispatch. Eight owned tests
+passed with100 percent newly owned statement coverage. Three unchanged Exp8329
+compatibility assertions failed under current authority; the atomic terminal
+primary is disqualified and all cost readiness scores remain zero. This is an
+execution finding, not an H1/H2 null. The separate repository diagnostic
+collected77232 tests, reported failures and reached its600-second deadline.
+
 ## REQ-REPORT-8328: Reuse the qualified supervisor frontier
 
 Authenticate Exp8314 bytes, terminal reports, reader sources and its exact frontier.
