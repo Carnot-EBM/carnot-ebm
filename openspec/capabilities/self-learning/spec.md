@@ -30060,3 +30060,29 @@ independent generalization and generalized learning benefit remain zero.
 Across48 trajectories, issue before delay8 release and reject duplicate/stale
 feedback. Two owned cohort children die after every trajectory's durable issue
 at24/48. Every resumed semantic state matches uninterrupted indexed execution.
+
+## REQ-SELF-8348: Frozen delay8 sentence trajectory
+
+Exp8348 SHALL authenticate Exp8346.frozen_heads_ready_score and
+Exp8347.local_kernel_ready_score and reuse the original Exp8334 checkpoint.
+Five arms SHALL issue durably before each delay8 release. Local arms freeze
+slope, intercept, temperature and knots; one temperature-aware logistic step
+uses rate .01, norm cap1 and bounds[-4,4], without decay. The shuffle control
+samples with replacement only from released labels. Missing features escalate
+and skip updates. No model load, static refit, H1 gate or generator update is
+permitted. Independent generalization and learning benefit remain zero.
+
+### SCENARIO-SELF-8348-CAUSAL
+
+Changing unreleased labels leaves earlier decisions and states unchanged.
+Duplicate and stale feedback cannot update. Issued rows remain immutable.
+Sparse and dense states agree within1e-10 with identical typed actions.
+An exact-budget fit-only control and each source's reachable logit bound
+limit the interpretation of an update-budget null.
+
+### SCENARIO-SELF-8348-DURABLE
+
+Real worker exits after durable updates32/64 resume to identical semantic
+state. Retention32 predictions seal at0/32/64/96 without retention targets.
+Each update records support, delta, later distinct-source influence, full
+transaction latency, bytes and conservative cache invalidation.

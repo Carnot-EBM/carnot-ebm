@@ -52307,3 +52307,20 @@ Current retirement still blocks even when the historical closure authenticates.
 Fresh-process replay checks primitive hashes and independent arithmetic. Valid
 evidence passes; absent evidence and self-consistently rehashed tampering fail.
 All newly owned statements, real CLI and failure paths have measured coverage.
+
+## REQ-VERIFY-8348: Primitive trajectory replay
+
+Exp8348 SHALL freeze scoped validation before measurement, cover100 percent
+new statements including real CLI and exit paths, and cold-recompute causal
+primitives in a fresh process. Negative and self-consistently rehashed tamper
+controls SHALL fail. Existing validators and typed finding policy remain
+unchanged; only independently recomputed informational findings with deliberate
+error controls can resolve. Owned failures disqualify; missing external operands
+block and name path, hash, field, operator, expected and observed values.
+
+### SCENARIO-VERIFY-8348-REPLAY
+
+Valid primitive replay passes. Modified issue probabilities, checkpoint state,
+source hashes or readiness fail even with recomputed artifact hashes.
+Incomplete dependency metadata causes full invalidation; global intercept
+updates invalidate all unissued cached predictions and preserve hard bounds.

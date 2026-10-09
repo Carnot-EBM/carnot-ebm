@@ -97042,3 +97042,18 @@ The thin standalone runner emits flushed boundaries, supervises children with
 bounded deadlines and durable stream hashes, and cold-replays terminal bytes.
 Valid, missing-input and rehashed tamper controls execute in fresh processes.
 The conductor owns ops and traceability reconciliation.
+
+## REQ-REPORT-8348: Terminal continuous-learning receipt
+
+Exp8348 SHALL publish its exact authority-bound terminal primary atomically
+through unchanged primary_publication, after scoped unit, consumer, Ruff,
+strict mypy, spec coverage, private E2E020/021 and terminal validators. Preserve
+all96 intended sources, five arms, missingness and historical model provenance.
+Readiness is mechanical and cannot imply H1/H2 benefit. Primitive evidence stays
+under results/raw/experiment_8348_v720_continuous_local_learning/.
+
+### SCENARIO-REPORT-8348-CLI
+
+The real standalone CLI supports natural measurement, private external-block
+controls, workers and cold replay. Invalid dates and unsafe private output
+locations fail. Flushed phase counts and bounded child receipts remain auditable.
