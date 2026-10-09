@@ -135,3 +135,16 @@ for 8 days. An empty ledger looks like a quiet period, not a blind audit.
 5. **Count unreviewed artifacts.** Have the audit exit with a visible warning when more than a
    set share of verdicts are `CANNOT_DETERMINE`, so a 37 percent blind spot cannot pass as a
    clean run.
+
+## Update 2026-10-08: fixes 1 and 2 shipped
+
+Commit `0e7616be4c` (on main as `46653d6e37`) implements options 1 and 2. All six audits now
+start codex through `codex_bin()` in `scripts/audit_reviewer_cli.py`. Failure text keeps the end
+of stderr, the codex version, the binary path, and both reasons when the agy primary and the
+fallback fail. Requirement: REQ-OPS-AUDIT-REVIEWER-1. Tests: `tests/python/test_audit_reviewer_cli.py`.
+
+Still open: options 3, 4 and 5. The agy primary still returns empty output in headless mode.
+`/usr/bin/codex` is still stale. The CANNOT_DETERMINE share is still not counted.
+
+The live checkout must contain the new commits before the conductor's next milestone-close
+audit, because the audit scripts run from that checkout's files.
