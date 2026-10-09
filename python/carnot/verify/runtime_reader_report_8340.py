@@ -23,7 +23,7 @@ def build(work: Json, raw: Path, receipts: list[Json]) -> Json:
     )
     value = q.reduce(work, passed)
     value.update(
-        experiment_id=8340,
+        experiment_id=q.EXPERIMENT_ID,
         task_id=q.TASK,
         milestone=q.MILESTONE,
         run_date="20261009",
@@ -109,7 +109,7 @@ def replay(path: Path) -> bool:
         if value.get("reproducibility_checksum") != q.checksum(value):
             return False
         if [value.get(k) for k in ("experiment_id", "task_id", "milestone", "run_date")] != [
-            8340,
+            q.EXPERIMENT_ID,
             q.TASK,
             q.MILESTONE,
             "20261009",

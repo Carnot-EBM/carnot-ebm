@@ -52453,3 +52453,32 @@ update and after fresh-process restart. A deliberately omitted changed entry
 must fail. Record evaluation, update, refresh and serialization separately, with
 one warmup and five paired repetitions. These controls establish engineering
 fidelity only; their verdict is circular_positive and H1/H2 remain unmeasured.
+## REQ-VERIFY-8353: Historical runtime authority before changed CUDA evidence
+
+Exp8353 SHALL qualify preserved V717 task/design bytes and explicit V720
+authority using real children. Wrong milestones and corrupt full tasks fail.
+Retain the two original Exp8307 assertions. Authenticate complete historical
+source closure and terminal sidecars before read-only driver/library/device
+inventory. Reader readiness requires every owned check. Dates and renamed paths
+never admit CUDA probes. Unchanged causal operands yield zero probes and
+complete_blocked_cuda_environment_unchanged. Changed operands require the
+existing exclusive lease and actual context/allocation/copy parity. Root cause
+remains unproved. No model loads, current inference or generator changes occur.
+
+### SCENARIO-VERIFY-8353-AUTHORITY
+
+Private preserved V717 authority repairs both original consumer assertions.
+Four real CLI controls accept old/current authority and reject milestone/task
+corruption. The complete frozen Exp8340 consumer command runs in private scratch.
+
+### SCENARIO-VERIFY-8353-BOUNDARY
+
+Natural authenticated identities control probing independently of reader checks.
+Missing operands retain explicit missingness. Renaming libraries and advancing
+dates preserve zero changed/context scores. Leased context and copy parity are
+required after a real delta; fixture health never replaces natural observations.
+Implementation for REQ-VERIFY-8353: `python/carnot/verify/runtime_reader_8353.py`
+adapts the qualified reader and retains the historical runtime closure.
+`tests/python/test_runtime_reader_8353.py` checks versioned authority, source
+custody, probe ordering, missing evidence and real child failure paths.
+The original consumer assertions use private preserved V717 authority bytes.

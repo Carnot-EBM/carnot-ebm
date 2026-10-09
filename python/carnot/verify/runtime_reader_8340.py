@@ -39,6 +39,7 @@ OWNED = [
 ]
 UPSTREAM = "results/experiment_8307_v717_runtime_change_boundary.json"
 MODEL_SPECS: list[Json] = []
+EXPERIMENT_ID = 8340
 design = versioned.design
 
 
@@ -175,7 +176,7 @@ def reduce(data: Json, passed: bool) -> Json:
     return value
 
 
-def measure(root: Path, raw: Path) -> Json:
+def measure(root: Path, raw: Path, *, authorize_probe: bool = True) -> Json:
     """Authenticate failed source evidence before observing fresh read-only identities."""
     progress("authority_and_source_before")
     auth = authority(root, raw / "authority")
@@ -244,7 +245,7 @@ def measure(root: Path, raw: Path) -> Json:
             sha256_file(protocol) if protocol.is_file() else None,
         )
     )
-    if all(c.get("passed", False) for c in data["checks"]) and any(
+    if authorize_probe and all(c.get("passed", False) for c in data["checks"]) and any(
         r["changed"] for r in changes(data)
     ):
         progress("changed_leased_probe_before")

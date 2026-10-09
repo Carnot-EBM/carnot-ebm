@@ -97154,3 +97154,24 @@ Readiness does not require a passing candidate. Generalization scores remain
 zero. Board operations are a manifest only. Historical outcomes, generator
 weights and roadmap bytes remain unchanged. Ops and traceability reconciliation
 is conductor-owned for this invocation.
+## REQ-REPORT-8353: Byte-bound runtime reader qualification publication
+
+Exp8353 SHALL publish results/experiment_8353_v720_runtime_reader_qualification.json
+atomically through unchanged primary checks. Freeze commands before measurement.
+Retain primitive shards, argv/exit/timing/log hashes and historical source closure.
+Require scoped unit/consumer tests, Ruff, strict mypy, spec coverage and100 percent
+new statements including real CLI and failure paths. No full repository suite
+runs inside this experiment. Ops/status/traceability reconciliation is conductor-owned.
+
+### SCENARIO-REPORT-8353-REPLAY
+
+Fresh processes accept valid evidence and reject negative and self-consistently
+rehashed tampering. Imported failures retain their historical verdicts. Typed
+findings resolve only independently recomputed informational observations with
+deliberate-error controls. Owned failures disqualify; external blocks remain
+blocked. Empty model specs and zero calls separate aggregation from inference.
+Implementation for REQ-REPORT-8353: `runtime_reader_execution_8353.py` freezes
+owned commands and reuses bounded children, typed findings and atomic publication.
+The thin runner is `experiment_8353_v720_runtime_reader_qualification.py`.
+`docs/research-notes/v720-runtime-readiness.md` describes the separate gates.
+Ops, changelog and traceability reconciliation remain conductor-owned.

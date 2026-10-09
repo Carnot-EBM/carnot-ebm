@@ -8,11 +8,32 @@ import subprocess
 from unittest.mock import patch
 
 import pytest
+import yaml
 
 from carnot.verify import runtime_change_boundary_8307 as q
 from carnot.verify import runtime_change_execution_8307 as e
 from carnot.reporting.current_work_receipt import atomic_json, sha256_file
 from carnot.reporting.evidence_features_custody_7980 import reference
+
+
+@pytest.fixture
+def historical_authority(tmp_path):
+    """SCENARIO-VERIFY-8353-AUTHORITY: frozen tasks avoid mutable current activation."""
+    from carnot.reporting.roadmap_contract import parse_design
+
+    root = tmp_path / "historical_authority"
+    design = root / "openspec/change-proposals/research-roadmap-vNEXT.md"
+    design.parent.mkdir(parents=True)
+    design.write_bytes(
+        (
+            q.ROOT / "openspec/change-proposals/research-roadmap-v717-preserved-20261008.md"
+        ).read_bytes()
+    )
+    tasks = parse_design(design.read_text(), milestone="2026.10.717")[1]
+    (root / "research-roadmap.yaml").write_text(
+        yaml.safe_dump(dict(milestone="2026.10.717", tasks=tasks))
+    )
+    return root
 
 
 def fixture(tmp_path):
@@ -212,9 +233,9 @@ def test_failed_validation_and_recovery(tmp_path):
         e.replay(output)
 
 
-def test_authority_and_frozen_plan(tmp_path):
+def test_authority_and_frozen_plan(tmp_path, historical_authority):
     """REQ-REPORT-8307: activation and all exact validation paths freeze before measurement."""
-    auth = e.authority(q.ROOT, tmp_path / "authority")
+    auth = e.authority(historical_authority, tmp_path / "authority")
     assert auth["activated"] and auth["task"]["deliverable"] == "results/" + q.NAME + ".json"
     assert not e.authority(tmp_path, tmp_path / "missing")["activated"]
     commands = e.plan(tmp_path / "checks")
@@ -318,7 +339,7 @@ def test_operator_receipt_and_identity_replay(tmp_path):
         q.verify_primitives(data)
 
 
-def test_owned_main_receipts_coverage_and_rehashed_controls(tmp_path):
+def test_owned_main_receipts_coverage_and_rehashed_controls(tmp_path, historical_authority):
     """SCENARIO-REPORT-8307-REPLAY: real supervised checks and private custody survive cold replay."""
     data = fixture(tmp_path)
     data["current"]["kernel"] = "kernel-b"
@@ -344,7 +365,7 @@ def test_owned_main_receipts_coverage_and_rehashed_controls(tmp_path):
         patch.object(q, "load", return_value=data),
         patch.object(q, "probe_changed", return_value=data["diagnostic"]) as probe,
     ):
-        assert e.main(["--output", str(output)]) == 0
+        assert e.main(["--root", str(historical_authority), "--output", str(output)]) == 0
     assert probe.call_count == 1
     value = json.loads(output.read_bytes())
     assert value["validation_receipts"][0]["passed"]

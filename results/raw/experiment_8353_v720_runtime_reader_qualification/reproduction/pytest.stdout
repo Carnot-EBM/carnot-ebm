@@ -1,0 +1,87 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+________________________ test_authority_and_frozen_plan ________________________
+
+tmp_path = PosixPath('/tmp/carnot8353-reproduction/test_authority_and_frozen_plan0')
+
+    def test_authority_and_frozen_plan(tmp_path):
+        """REQ-REPORT-8307: activation and all exact validation paths freeze before measurement."""
+        auth = e.authority(q.ROOT, tmp_path / "authority")
+>       assert auth["activated"] and auth["task"]["deliverable"] == "results/" + q.NAME + ".json"
+E       assert (False)
+
+tests/python/test_runtime_change_boundary_8307.py:218: AssertionError
+___________ test_owned_main_receipts_coverage_and_rehashed_controls ____________
+
+tmp_path = PosixPath('/tmp/carnot8353-reproduction/test_owned_main_receipts_cover0')
+
+    def test_owned_main_receipts_coverage_and_rehashed_controls(tmp_path):
+        """SCENARIO-REPORT-8307-REPLAY: real supervised checks and private custody survive cold replay."""
+        data = fixture(tmp_path)
+        data["current"]["kernel"] = "kernel-b"
+        output = tmp_path / (q.NAME + ".json")
+        original_plan = e.plan
+    
+        def private_plan(private):
+            original_plan(private)
+            atomic_json(private / "coverage.json", dict(totals=dict(percent_covered=100), files={}))
+            (private / ".coverage.fixture").write_bytes(b"constructed private coverage custody control")
+            return [
+                dict(
+                    name="private_owned_child",
+                    argv=[str(q.ROOT / ".venv/bin/python"), "-c", "print('private owned child')"],
+                    deadline=15,
+                    expected=0,
+                    scope="private_control",
+                )
+            ]
+    
+        with (
+            patch.object(e, "plan", side_effect=private_plan),
+            patch.object(q, "load", return_value=data),
+            patch.object(q, "probe_changed", return_value=data["diagnostic"]) as probe,
+        ):
+            assert e.main(["--output", str(output)]) == 0
+>       assert probe.call_count == 1
+E       AssertionError: assert 0 == 1
+E        +  where 0 = <MagicMock name='probe_changed' id='140211455946208'>.call_count
+
+tests/python/test_runtime_change_boundary_8307.py:348: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8307] phase=start_no_model_load completed=0 pending=1
+[exp8205] phase=validation completed=0 pending=1
+[exp8205] phase=before_subprocess_private_owned_child completed=0 pending=1
+[exp8205] phase=after_subprocess_private_owned_child completed=1 pending=0
+[exp8205] phase=validation_complete completed=1 pending=0
+[exp8307] phase=preconditions_and_authority_before completed=0 pending=0
+[exp8307] phase=preconditions_and_authority_after completed=0 pending=0
+[exp8307] phase=validation_before completed=0 pending=0
+[exp8205] phase=validation_complete completed=0 pending=0
+[exp8205] phase=validation completed=0 pending=2
+[exp8205] phase=before_subprocess_negative_checksum completed=0 pending=1
+[exp8205] phase=after_subprocess_negative_checksum completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=1
+[exp8205] phase=before_subprocess_rehashed_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_rehashed_tamper completed=1 pending=0
+[exp8205] phase=validation_complete completed=2 pending=0
+[exp8205] phase=validation completed=0 pending=3
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=2
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=validation completed=2 pending=1
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=validation_complete completed=3 pending=0
+[exp8307] phase=published completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_runtime_change_boundary_8307.py::test_authority_and_frozen_plan
+FAILED tests/python/test_runtime_change_boundary_8307.py::test_owned_main_receipts_coverage_and_rehashed_controls
+2 failed, 1 warning in 9.52s

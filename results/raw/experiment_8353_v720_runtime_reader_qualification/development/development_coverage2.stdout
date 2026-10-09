@@ -1,0 +1,56 @@
+..F..                                                                    [100%]
+=================================== FAILURES ===================================
+__________________ test_measured_source_closure_and_boundary ___________________
+
+tmp_path = PosixPath('/tmp/carnot8353-coverage-tests/test_measured_source_closure_a0')
+
+    def test_measured_source_closure_and_boundary(tmp_path):
+        """SCENARIO-VERIFY-8353-BOUNDARY: immutable failures precede any natural probe."""
+        source = json.loads((q.ROOT / q.UPSTREAM).read_bytes())
+        identity = json.loads(Path(source["runtime_binding_path"]).read_bytes())
+        with (
+            patch.object(q.old, "inventory", return_value=(identity, [])),
+            patch.object(
+                q.old, "probe_changed", side_effect=AssertionError("unchanged probe forbidden")
+            ),
+        ):
+>           work = q.measure(q.ROOT, tmp_path / "raw")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_runtime_reader_8353.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/verify/runtime_reader_8353.py:173: in measure
+    retained = closure(root, raw)
+               ^^^^^^^^^^^^^^^^^^
+python/carnot/verify/runtime_reader_8353.py:152: in closure
+    walk(value)
+python/carnot/verify/runtime_reader_8353.py:138: in walk
+    walk(item)
+python/carnot/verify/runtime_reader_8353.py:141: in walk
+    walk(item)
+python/carnot/verify/runtime_reader_8353.py:125: in walk
+    retain(Path(value.get("snapshot_path") or value["path"]), value["sha256"])
+python/carnot/verify/runtime_reader_8353.py:115: in retain
+    require_reference(dict(ref, sha256=expected))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'exists': True, 'path': '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml', 'role': 'source', 'sha256': 'sha256:7f04ffd2db04125f5e1a5fbc0e7a458ab13c8472adf0af1f992e879c1b11f17e', ...}
+
+    def require_reference(ref: Json) -> None:
+        """A copied hash failure cannot become a successful replay through truth coercion."""
+        if not verify_reference(ref):
+>           raise ValueError("immutable_evidence_hash_drift:" + ref["path"])
+E           ValueError: immutable_evidence_hash_drift:/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml
+
+python/carnot/reporting/v710_contract_replay.py:69: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8353] phase=historical_closure_before completed=0 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_runtime_reader_8353.py::test_measured_source_closure_and_boundary
+1 failed, 4 passed, 1 warning in 72.04s (0:01:12)
