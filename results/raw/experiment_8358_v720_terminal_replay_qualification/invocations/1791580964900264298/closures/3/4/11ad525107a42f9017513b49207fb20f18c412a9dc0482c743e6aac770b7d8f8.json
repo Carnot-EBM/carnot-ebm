@@ -1,0 +1,102 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8330_v718_gatemate_change_ledger.json",
+  "primary_sha256": "sha256:6f79a6d2374c41baec7bf5ecb792b8534bc59b91e8b0c8cbe5720305d8545512",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit": 0,
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8330_v718_gatemate_change_ledger.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8330_v718_gatemate_change_ledger/terminal_candidate.json"
+        ],
+        "duration_s": 1.967462043,
+        "ended_monotonic_ns": 1171437515426076,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "name": "cold_replay",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "terminal",
+        "started_monotonic_ns": 1171435547964033,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8330_v718_gatemate_change_ledger/invocations/1791510278726791078/terminal-1791510527337050239/cold_replay.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8330_v718_gatemate_change_ledger/invocations/1791510278726791078/terminal-1791510527337050239/cold_replay.stdout",
+        "stdout_sha256": "sha256:6f9de3af501806d2bab38caa6d9e2a5053a4a8fdf6bb82d83c5ae6222331913b",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "adversarial_policy": {
+          "dispositions": [],
+          "findings": [],
+          "passed": true,
+          "report": {
+            "candidate_sha256": "sha256:6f79a6d2374c41baec7bf5ecb792b8534bc59b91e8b0c8cbe5720305d8545512",
+            "flagged_count": 0,
+            "reports": [
+              {
+                "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8330_v718_gatemate_change_ledger/terminal_candidate.json",
+                "exp_id": 8330,
+                "flag_count": 0,
+                "flags": [],
+                "gate_version": "38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e",
+                "honest_verdict": "complete_blocked_gatemate_physical_change",
+                "loaded": true,
+                "max_severity": -1,
+                "title": ""
+              }
+            ],
+            "verifier_sha256": "sha256:16ad1fa750f505182dd996fdd500663d0c777a55a4cd080f377db9ff18cec43c"
+          }
+        },
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8330_v718_gatemate_change_ledger/terminal_candidate.json"
+        ],
+        "duration_s": 0.765220231,
+        "ended_monotonic_ns": 1171438280803843,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "terminal",
+        "started_monotonic_ns": 1171437515583612,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8330_v718_gatemate_change_ledger/invocations/1791510278726791078/terminal-1791510527337050239/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8330_v718_gatemate_change_ledger/invocations/1791510278726791078/terminal-1791510527337050239/adversarial.stdout",
+        "stdout_sha256": "sha256:ec00dd18c2317e35467c64a7e6927a57f0e39e06db44490c240051997f7e43bc",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8330_v718_gatemate_change_ledger/terminal_candidate.json"
+        ],
+        "duration_s": 0.032131964,
+        "ended_monotonic_ns": 1171438313071772,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "name": "strict_rows",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "terminal",
+        "started_monotonic_ns": 1171438280939808,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8330_v718_gatemate_change_ledger/invocations/1791510278726791078/terminal-1791510527337050239/strict_rows.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8330_v718_gatemate_change_ledger/invocations/1791510278726791078/terminal-1791510527337050239/strict_rows.stdout",
+        "stdout_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "timed_out": false
+      }
+    ]
+  }
+}

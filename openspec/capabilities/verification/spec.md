@@ -52566,3 +52566,25 @@ recovers source/configuration custody without editing history, and cold-replays
 complete closure separately from physical change. Exact missing hashes remain
 terminal external blocks. Terminal membership and replay claims are independently
 checked; exposure and device/model execution counts remain explicit.
+## REQ-VERIFY-8358: Reject altered replay operands independently of their hashes
+
+Freeze producer source closures before replay and use existing parameterized
+readers in bounded private children. No arbitrary historical source execution
+is permitted. Authenticate captured code before using an adapter. Record parent
+and child RSS with the established 500 MB growth guard and keep the watchdog.
+Historical replay SHALL read frozen authority copies, with zero mutable-vNEXT
+access. Never repair old primary bytes, thresholds, assertions or validators.
+
+### SCENARIO-VERIFY-8358-CONTROLS
+
+Real child CLIs exercise valid, missing-source, changed-source, wrong-authority,
+changed-disposition and self-consistently rehashed tamper cases. Membership and
+meaning are recomputed from authenticated producer bytes, not reported hashes.
+
+### SCENARIO-VERIFY-8358-EXECUTION
+
+Freeze argv, exits and deadlines before measurement; preserve timing and log
+hashes. Require 100 percent newly owned statements including CLI and failures,
+consumer tests, private E2E-018/021, scoped Ruff, strict mypy and spec coverage.
+The typed finding consumer accepts only independently proven informational
+findings; errors, unknown severity, warnings and critical findings block readiness.

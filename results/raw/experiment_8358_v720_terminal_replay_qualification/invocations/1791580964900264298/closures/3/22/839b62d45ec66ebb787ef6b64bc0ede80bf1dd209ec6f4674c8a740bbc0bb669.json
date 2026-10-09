@@ -1,0 +1,986 @@
+{
+  "board": {
+    "acquisition_relevance": "defer: no measured board whole-service benefit",
+    "actual_substrate": "none",
+    "arm": "documentation_audit",
+    "blocked_idcode": "0xffffffff",
+    "blocker": "0xffffffff",
+    "board": "GateMate",
+    "censored": false,
+    "claim_class": "historical",
+    "compatible_sparse_kernel": false,
+    "compatible_update_kernel": false,
+    "completed": false,
+    "condition": "unchanged_or_missing_receipt",
+    "current_hardware_execution": false,
+    "current_reachability": "not_probed",
+    "custody_checked_date": "20261003",
+    "custody_date": "20260930",
+    "custody_status": "valid",
+    "custody_valid": true,
+    "denominator": 1,
+    "device_hash_parity": null,
+    "eligible": 0,
+    "evidence_status": "historical_authenticated",
+    "excluded": true,
+    "exclusion_reason": "gatemate_physical_change",
+    "execution_date_absence_reason": "Original execution timestamp absent or this receipt is read-only history",
+    "execution_ready_score": 0,
+    "expected_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+    "failed": false,
+    "family": "GateMate",
+    "flash_success": false,
+    "historical_verdict": "blocked_physical_change_0xffffffff",
+    "independent": 0,
+    "intended": 1,
+    "k_max": null,
+    "last_actual_execution_date": null,
+    "last_actual_execution_hash": null,
+    "last_authenticated_evidence_date": "20260915",
+    "measured_current_latency_ms": null,
+    "metric": "authenticated_new_physical_receipt",
+    "missing_status": "physical_receipt_absent",
+    "next_missing_prerequisite": "Dated operator cable, port, power, board or DirtyJTAG change, then valid GM1Ax IDCODE",
+    "next_operator_or_device_change": "Record a cable, power, port, board, or DirtyJTAG change; then read a valid GM1Ax IDCODE",
+    "numerator": null,
+    "on_device_success": false,
+    "original_observed_latest_receipt_date": "20260811",
+    "original_receipt_run_date": "20260823",
+    "physical_change_recorded": false,
+    "processor_class": "none",
+    "radial_mapping_implemented": false,
+    "raw_provenance": {
+      "history": "results/raw/experiment_7779_v676_hardware_evidence/rows.json",
+      "inventory": "results/raw/experiment_7751_v674_hardware_continuity/rows.json"
+    },
+    "receipt_date": "20260915",
+    "receipt_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+    "reopen_condition": "Dated physical/JTAG change resolving0xffffffff, then authenticated dispatch and complete timing.",
+    "reopen_contract_path": "docs/research-notes/v714-gatemate-physical-delta.md",
+    "required_next_evidence": [
+      "dated operator physical-change receipt",
+      "GM1Ax IDCODE 0x20000001",
+      "authenticated n16 bitstream flash",
+      "device tile/hash smoke parity"
+    ],
+    "scope": "no qualified execution; physical JTAG IDCODE blocked",
+    "seed": null,
+    "service_fraction": null,
+    "source_cluster_id": "gatemate_physical_setup",
+    "source_family": "GateMate",
+    "source_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+    "source_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+    "source_transcript": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6559_gatemate_changed_state_continuity.json",
+    "source_transcript_sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+    "started": false,
+    "state": "blocked_physical_change_0xffffffff",
+    "status": "excluded",
+    "terminal_criterion": "Valid GM1Ax IDCODE after a dated physical or JTAG change",
+    "terminal_criterion_met": false,
+    "timestamp": "20260823",
+    "timestamp_absence_reason": "original execution date unavailable",
+    "unit": "board_obligation",
+    "unit_id": "gatemate_obligation",
+    "venue": "none_read_only",
+    "workload": "no qualified execution; physical JTAG IDCODE blocked"
+  },
+  "candidate_rows": [],
+  "checks": [
+    {
+      "artifact_field": "sha256",
+      "check": "sha256",
+      "expected": "sha256:46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241",
+      "hash": "sha256:46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241",
+      "observed": "sha256:46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8274_v714_gatemate_physical_delta.json",
+      "upstream": "experiment_8274_v714_gatemate_physical_delta"
+    },
+    {
+      "artifact_field": "experiment_id",
+      "check": "experiment_id",
+      "expected": 8274,
+      "hash": "sha256:46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241",
+      "observed": 8274,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8274_v714_gatemate_physical_delta.json",
+      "upstream": "experiment_8274_v714_gatemate_physical_delta"
+    },
+    {
+      "artifact_field": "schema",
+      "check": "schema",
+      "expected": "carnot.gatemate_physical_delta.v714.v1",
+      "hash": "sha256:46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241",
+      "observed": "carnot.gatemate_physical_delta.v714.v1",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8274_v714_gatemate_physical_delta.json",
+      "upstream": "experiment_8274_v714_gatemate_physical_delta"
+    },
+    {
+      "artifact_field": "required_checks_passed",
+      "check": "required_checks_passed",
+      "expected": true,
+      "hash": "sha256:46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8274_v714_gatemate_physical_delta.json",
+      "upstream": "experiment_8274_v714_gatemate_physical_delta"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check": "flagged_adversarial",
+      "expected": false,
+      "hash": "sha256:46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8274_v714_gatemate_physical_delta.json",
+      "upstream": "experiment_8274_v714_gatemate_physical_delta"
+    },
+    {
+      "artifact_field": "fixture_mode",
+      "check": "fixture_mode",
+      "expected": false,
+      "hash": "sha256:46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8274_v714_gatemate_physical_delta.json",
+      "upstream": "experiment_8274_v714_gatemate_physical_delta"
+    },
+    {
+      "artifact_field": "report.passed",
+      "check": "report.passed",
+      "expected": true,
+      "hash": "sha256:9f7d652fb399b2de1799da42a7837ffe83080f5d4fcdc8accacfe016deb1fd8a",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/validators/46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241.json",
+      "upstream": "46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241"
+    },
+    {
+      "artifact_field": "named_input.exists",
+      "check": "named_input.exists",
+      "expected": true,
+      "hash": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "exclusion_manifest"
+    },
+    {
+      "artifact_field": "named_input.exists",
+      "check": "named_input.exists",
+      "expected": true,
+      "hash": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/hardware-bringup-prep.md",
+      "upstream": "hardware-bringup-prep"
+    },
+    {
+      "artifact_field": "named_input.exists",
+      "check": "named_input.exists",
+      "expected": true,
+      "hash": "sha256:1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/docs/jtag-wiring-gatemate-dirtyjtag.md",
+      "upstream": "jtag-wiring-gatemate-dirtyjtag"
+    },
+    {
+      "artifact_field": "named_input.exists",
+      "check": "named_input.exists",
+      "expected": true,
+      "hash": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-hardware-wishlist.md",
+      "upstream": "research-hardware-wishlist"
+    },
+    {
+      "artifact_field": "named_input.exists",
+      "check": "named_input.exists",
+      "expected": true,
+      "hash": "sha256:92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/known-issues.md",
+      "upstream": "known-issues"
+    },
+    {
+      "artifact_field": "named_input.exists",
+      "check": "named_input.exists",
+      "expected": true,
+      "hash": "sha256:fb6cb87fa2529a34044907f71046bd1b3c36b1c6d2cdae5b33e4fb7da6754d74",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+      "upstream": "research-roadmap-vNEXT"
+    },
+    {
+      "artifact_field": "named_input.exists",
+      "check": "named_input.exists",
+      "expected": true,
+      "hash": "sha256:1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v711-gatemate-reopen.md",
+      "upstream": "v711-gatemate-reopen"
+    },
+    {
+      "artifact_field": "named_input.exists",
+      "check": "named_input.exists",
+      "expected": true,
+      "hash": "sha256:de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v712-gatemate-change-ledger.md",
+      "upstream": "v712-gatemate-change-ledger"
+    },
+    {
+      "artifact_field": "named_input.exists",
+      "check": "named_input.exists",
+      "expected": true,
+      "hash": "sha256:4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v713-gatemate-physical-delta.md",
+      "upstream": "v713-gatemate-physical-delta"
+    },
+    {
+      "artifact_field": "named_input.exists",
+      "check": "named_input.exists",
+      "expected": true,
+      "hash": "sha256:806bee726a33a60a0c3c65166edc91f86fdbaedbc09cd2ea1b71cf1fdcb94a7a",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v714-gatemate-physical-delta.md",
+      "upstream": "v714-gatemate-physical-delta"
+    },
+    {
+      "artifact_field": "named_input.exists",
+      "check": "named_input.exists",
+      "expected": true,
+      "hash": "sha256:7ecba8793cff6df379e3b2be5c01435355987d34d22019b16b3a76588296888a",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v715-gatemate-physical-delta.md",
+      "upstream": "v715-gatemate-physical-delta"
+    },
+    {
+      "artifact_field": "named_input.exists",
+      "check": "named_input.exists",
+      "expected": true,
+      "hash": "sha256:52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/operator-followup.md",
+      "upstream": "operator-followup"
+    },
+    {
+      "artifact_field": "physical_change_evidence.exists",
+      "check": "physical_change_evidence.exists",
+      "expected": true,
+      "hash": "sha256:46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241",
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8274_v714_gatemate_physical_delta.json",
+      "upstream": "experiment_8274_v714_gatemate_physical_delta"
+    }
+  ],
+  "cited": [
+    {
+      "experiment_id": 8274,
+      "fields_imported": [
+        "gatemate_obligation",
+        "invocation",
+        "physical_change_frontier",
+        "replay_input_reference",
+        "source_artifact_hashes"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8274_v714_gatemate_physical_delta.json",
+      "sha256": "sha256:46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241"
+    }
+  ],
+  "document_rows": [
+    {
+      "current_sha256": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3",
+      "disposition": "unchanged",
+      "previous_sha256": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3",
+      "receipt_source": false,
+      "relative_path": "ops/exclusion_manifest.yaml",
+      "required": true,
+      "snapshot": {
+        "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+        "sha256": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3"
+      }
+    },
+    {
+      "current_sha256": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f",
+      "disposition": "unchanged",
+      "previous_sha256": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f",
+      "receipt_source": true,
+      "relative_path": "ops/hardware-bringup-prep.md",
+      "required": true,
+      "snapshot": {
+        "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/hardware-bringup-prep.md",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+        "sha256": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f"
+      }
+    },
+    {
+      "current_sha256": "sha256:1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159",
+      "disposition": "unchanged",
+      "previous_sha256": "sha256:1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159",
+      "receipt_source": false,
+      "relative_path": "docs/jtag-wiring-gatemate-dirtyjtag.md",
+      "required": true,
+      "snapshot": {
+        "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/jtag-wiring-gatemate-dirtyjtag.md",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+        "sha256": "sha256:1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159"
+      }
+    },
+    {
+      "current_sha256": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7",
+      "disposition": "unchanged",
+      "previous_sha256": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7",
+      "receipt_source": true,
+      "relative_path": "research-hardware-wishlist.md",
+      "required": true,
+      "snapshot": {
+        "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/research-hardware-wishlist.md",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+        "sha256": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7"
+      }
+    },
+    {
+      "current_sha256": "sha256:92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0",
+      "disposition": "unchanged",
+      "previous_sha256": "sha256:92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0",
+      "receipt_source": true,
+      "relative_path": "ops/known-issues.md",
+      "required": true,
+      "snapshot": {
+        "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/known-issues.md",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+        "sha256": "sha256:92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0"
+      }
+    },
+    {
+      "current_sha256": "sha256:fb6cb87fa2529a34044907f71046bd1b3c36b1c6d2cdae5b33e4fb7da6754d74",
+      "disposition": "changed",
+      "previous_sha256": "sha256:a5731650070ab682dd0cecad3523e3c3bef005386b183a9c37ac1ef38730484f",
+      "receipt_source": false,
+      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "required": true,
+      "snapshot": {
+        "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/fb6cb87fa2529a34044907f71046bd1b3c36b1c6d2cdae5b33e4fb7da6754d74.md",
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/fb6cb87fa2529a34044907f71046bd1b3c36b1c6d2cdae5b33e4fb7da6754d74.md",
+        "sha256": "sha256:fb6cb87fa2529a34044907f71046bd1b3c36b1c6d2cdae5b33e4fb7da6754d74"
+      }
+    },
+    {
+      "current_sha256": "sha256:1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3",
+      "disposition": "unchanged",
+      "previous_sha256": "sha256:1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3",
+      "receipt_source": false,
+      "relative_path": "docs/research-notes/v711-gatemate-reopen.md",
+      "required": true,
+      "snapshot": {
+        "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v711-gatemate-reopen.md",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+        "sha256": "sha256:1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3"
+      }
+    },
+    {
+      "current_sha256": "sha256:de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb",
+      "disposition": "unchanged",
+      "previous_sha256": "sha256:de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb",
+      "receipt_source": false,
+      "relative_path": "docs/research-notes/v712-gatemate-change-ledger.md",
+      "required": true,
+      "snapshot": {
+        "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb.md",
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v712-gatemate-change-ledger.md",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb.md",
+        "sha256": "sha256:de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb"
+      }
+    },
+    {
+      "current_sha256": "sha256:4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9",
+      "disposition": "unchanged",
+      "previous_sha256": "sha256:4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9",
+      "receipt_source": false,
+      "relative_path": "docs/research-notes/v713-gatemate-physical-delta.md",
+      "required": true,
+      "snapshot": {
+        "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9.md",
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v713-gatemate-physical-delta.md",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9.md",
+        "sha256": "sha256:4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9"
+      }
+    },
+    {
+      "current_sha256": "sha256:806bee726a33a60a0c3c65166edc91f86fdbaedbc09cd2ea1b71cf1fdcb94a7a",
+      "disposition": "unchanged",
+      "previous_sha256": "sha256:806bee726a33a60a0c3c65166edc91f86fdbaedbc09cd2ea1b71cf1fdcb94a7a",
+      "receipt_source": false,
+      "relative_path": "docs/research-notes/v714-gatemate-physical-delta.md",
+      "required": true,
+      "snapshot": {
+        "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/806bee726a33a60a0c3c65166edc91f86fdbaedbc09cd2ea1b71cf1fdcb94a7a.md",
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v714-gatemate-physical-delta.md",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/806bee726a33a60a0c3c65166edc91f86fdbaedbc09cd2ea1b71cf1fdcb94a7a.md",
+        "sha256": "sha256:806bee726a33a60a0c3c65166edc91f86fdbaedbc09cd2ea1b71cf1fdcb94a7a"
+      }
+    },
+    {
+      "current_sha256": "sha256:7ecba8793cff6df379e3b2be5c01435355987d34d22019b16b3a76588296888a",
+      "disposition": "changed",
+      "previous_sha256": null,
+      "receipt_source": false,
+      "relative_path": "docs/research-notes/v715-gatemate-physical-delta.md",
+      "required": true,
+      "snapshot": {
+        "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/7ecba8793cff6df379e3b2be5c01435355987d34d22019b16b3a76588296888a.md",
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v715-gatemate-physical-delta.md",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/7ecba8793cff6df379e3b2be5c01435355987d34d22019b16b3a76588296888a.md",
+        "sha256": "sha256:7ecba8793cff6df379e3b2be5c01435355987d34d22019b16b3a76588296888a"
+      }
+    },
+    {
+      "current_sha256": "sha256:52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c",
+      "disposition": "unchanged",
+      "previous_sha256": "sha256:52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c",
+      "receipt_source": true,
+      "relative_path": "ops/operator-followup.md",
+      "required": true,
+      "snapshot": {
+        "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/operator-followup.md",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+        "sha256": "sha256:52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c"
+      }
+    }
+  ],
+  "fixture": false,
+  "frontier": {
+    "cutoff_date": "20261008",
+    "cutoff_wall_ns": 1791436770217074717,
+    "documents": {
+      "docs/jtag-wiring-gatemate-dirtyjtag.md": "sha256:1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159",
+      "docs/research-notes/v711-gatemate-reopen.md": "sha256:1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3",
+      "docs/research-notes/v712-gatemate-change-ledger.md": "sha256:de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb",
+      "docs/research-notes/v713-gatemate-physical-delta.md": "sha256:4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9",
+      "docs/research-notes/v714-gatemate-physical-delta.md": "sha256:806bee726a33a60a0c3c65166edc91f86fdbaedbc09cd2ea1b71cf1fdcb94a7a",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:a5731650070ab682dd0cecad3523e3c3bef005386b183a9c37ac1ef38730484f",
+      "ops/exclusion_manifest.yaml": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3",
+      "ops/hardware-bringup-prep.md": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f",
+      "ops/known-issues.md": "sha256:92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0",
+      "ops/operator-followup.md": "sha256:52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c",
+      "research-hardware-wishlist.md": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7",
+      "results/experiment_8260_v713_gatemate_physical_delta.json": "sha256:a63182db829f9d8d66dd272f0f15040ca41a5146374ec1197f7ec53a117b8197",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md": "sha256:1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md": "sha256:1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/36af8d4ab2ef38a20b199b1befe81b055da22a366c826732fafb53dfc7c91a57.md": "sha256:36af8d4ab2ef38a20b199b1befe81b055da22a366c826732fafb53dfc7c91a57",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/3e350368f93f951d871c2d4fa1bda4a4a4853e73a780d09d7af838300d5e052f.json": "sha256:3e350368f93f951d871c2d4fa1bda4a4a4853e73a780d09d7af838300d5e052f",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/42534fcacbf54f8fc484ad89f3e064215b816f65029f7970b61f4b584f4fffdb.json": "sha256:42534fcacbf54f8fc484ad89f3e064215b816f65029f7970b61f4b584f4fffdb",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/4a88a3a571a602779a2b12840278627941a528bac8e7ff17bc0d703dc2ed0c7b.json": "sha256:4a88a3a571a602779a2b12840278627941a528bac8e7ff17bc0d703dc2ed0c7b",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9.md": "sha256:4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md": "sha256:52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66.json": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f.json": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/610c0e678f3a7b1175022025f9198fa0aef81bf03d6d2315c981926984fb74b3.md": "sha256:610c0e678f3a7b1175022025f9198fa0aef81bf03d6d2315c981926984fb74b3",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md": "sha256:92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/98ca103e2463b946976ab11919b38892b8b64e4a0702fc8d551b2f772cb0a935.json": "sha256:98ca103e2463b946976ab11919b38892b8b64e4a0702fc8d551b2f772cb0a935",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/9c3c78b15f70ae331ece85d3a1ca136c8ecb584608233612fa905a753c703bc8.json": "sha256:9c3c78b15f70ae331ece85d3a1ca136c8ecb584608233612fa905a753c703bc8",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/a2b74304818a8f1cfceea17772fc79977c22fae91580d5a992e09650ea0fef7a.json": "sha256:a2b74304818a8f1cfceea17772fc79977c22fae91580d5a992e09650ea0fef7a",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/b1cfab18a916244148f85d8037531bbbacb1accc14cd7544fadcdc9953a86b63.md": "sha256:b1cfab18a916244148f85d8037531bbbacb1accc14cd7544fadcdc9953a86b63",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb.md": "sha256:de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/inputs/f74888fb3cd4d6bcf585b7bbfe40d2977f8ecb9b8f2041383b9214466c351f4c.json": "sha256:f74888fb3cd4d6bcf585b7bbfe40d2977f8ecb9b8f2041383b9214466c351f4c",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/invocations/1791417830120614705/replay_inputs.json": "sha256:6bbb22de41b2de3449a7db3d5b1392dde4e7585d0a9d343d8b7d813ba98ab274",
+      "results/raw/experiment_8260_v713_gatemate_physical_delta/validators/a63182db829f9d8d66dd272f0f15040ca41a5146374ec1197f7ec53a117b8197.json": "sha256:5e4e9f0d91e336dac2112512cee6f8b9013493efefcdd0219d74ff28d129dd6b"
+    },
+    "observed_wall_ns": 1791451520233392840,
+    "seen_receipt_hashes": [
+      "sha256:1e9cfef6f0c7c79dfd77386524c4f836d6a329ad01bc71a6ea5846d67ddfa443",
+      "sha256:28ad18a2edc9cc7260b773de5dbc8a276b2ec8c44cbd2da5a6bfabf16fdc7bd9",
+      "sha256:2bf28241799fe10b40dc89e7388550ca6332635737803788390fce442db87014",
+      "sha256:2e0734d27ec67bda3327baf8e003df0f15c436889c2f74307499a3ef8034cac0",
+      "sha256:2f827a5c934f9f2660fac6971688b046fafc69278ed4272a18664a293ede2206",
+      "sha256:34836a14f17d6dee28b354e06ea057a203d6b65668adf2c241f82cdafdf25b1b",
+      "sha256:442a2cba4138dd7983098651254a116e0a0ac1af93255270b882bf59113c4366",
+      "sha256:4430a70a793a0a148a9bb7bff89594991b1d3ed8545eedccf82cbfb78f6b55ae",
+      "sha256:4b1862c99574a441a601aca84a2254eb59b71ec12fae01f9729432781e3cce3e",
+      "sha256:4fec1ea3bd59659ade56333b8f13def8d18c40f75c4d620cc63cd066849b3443",
+      "sha256:5137cd1313ca29eca4e7c99dd34c390346169e6a926546b99fb09230d884ad34",
+      "sha256:524227ab2ab1276ef72517effe56bac1afd9fad5fa7efc70acaed39c69da7995",
+      "sha256:64bedeecd19dcb2ccccc32f50bece65e14d176fb77d1f50404e0b6d631b4978f",
+      "sha256:6c50c587ce7189f0720e40cd81d99970a34e91bc6cba23135c940b3f4a43a3c0",
+      "sha256:6f511d2067c93687edf3305719f3bd71ce8873bfdbaae72130ce48aed842cb56",
+      "sha256:7744a6150b55d956b6a68afeb0a87264458039dc2745b461c92fcfc9e8c82200",
+      "sha256:77792293494f7dfb6ac3d081b8dcf4074f6cafe5b1f979913e3bc0bb670bc1f0",
+      "sha256:9108e71cc0cc400d902e8be4cf2a865a67e508e9f2c926c91a784a0301985146",
+      "sha256:99720ca8ebd67ea5b2fcad47ea9d832936af40ffd171aba4c470a60c3b2af222",
+      "sha256:9a703244107c0d8a4cd84a638f18b82e39ea6beaed3c4182102ad45651f3be7a",
+      "sha256:9cacfc8be3ffdd1f1c744b6252d88d29260a10c64dc9a3483d6b7628217dc3a9",
+      "sha256:a1007e2aea4849eadf45b4867f169c3f9a8d6ae0d276c745dcde3944a4d2af19",
+      "sha256:a38300e9c0c015be67a79983574409e495af03634855da1a40cc52ed8fca8393",
+      "sha256:a41fb8842dfd32a5612905494b24e4c37ff2ae20da386c1c5df2c61c42614f42",
+      "sha256:a84f521852938e3c47efdbfea6341139b610e4b26a479d1305c5c267b9fce170",
+      "sha256:b2d8208d9b698a7716576a5833fa0715d924d62e61e0ccf70724ecf9d9e5bcfe",
+      "sha256:b9971dd86bcf81d1866f5209c3669a3913431503ef0e5b81468f7580127cdbaa",
+      "sha256:bc685fc34a4678e3b450ba6f654f081fd18104de3a91020378c41067bf8f2509",
+      "sha256:bce2682a0d156dca878c2b15c6ce0c45e84c15c5abb168d2abf7cea5d8bae8a3",
+      "sha256:c30c6b837bc91d2cc787ec941d0e67f27f41394cfffaea4f84ce43c850e53783",
+      "sha256:caff64d2833768041a196c21b99e52bbd06848901cc184bd2e75c0ab56170d29",
+      "sha256:d8d34b53671d2ed8d033a6c1256e7f247a40446ded773b20937da9adea9f8164",
+      "sha256:dda1ed7ffa3a43b3556784794fc3cf7b8807a348736d47e75830d239c5493ddd",
+      "sha256:e3b14c2214bfde16f6f00fa289dd27920884efb4c2a19286cbb5ab21334bcc26",
+      "sha256:eab439ce0351852997659800d92fdc42d7a9d031101857e402a531fe258cb8d8",
+      "sha256:f2605c42901395de68690080768221336932563db709e114e23c300fd770d680"
+    ]
+  },
+  "history_ready": true,
+  "physical_change": {
+    "exists": false,
+    "reason": "no authenticated physical change since Exp8274"
+  },
+  "previous_reference": {
+    "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241.json",
+    "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8274_v714_gatemate_physical_delta.json",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241.json",
+    "sha256": "sha256:46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241"
+  },
+  "receipt_rows": [],
+  "references": [
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8274_v714_gatemate_physical_delta.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241.json",
+      "sha256": "sha256:46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/9f7d652fb399b2de1799da42a7837ffe83080f5d4fcdc8accacfe016deb1fd8a.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/validators/46e9174e6fe6949b1e88d991909a66e25477fa23225c44faa1c50e4bcfa0d241.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/9f7d652fb399b2de1799da42a7837ffe83080f5d4fcdc8accacfe016deb1fd8a.json",
+      "sha256": "sha256:9f7d652fb399b2de1799da42a7837ffe83080f5d4fcdc8accacfe016deb1fd8a"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/7fc1064390e33024f16674884ca7a5a68dc2d2dbdf83a8d4f45c5971c320b2b9.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/replay_inputs.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/7fc1064390e33024f16674884ca7a5a68dc2d2dbdf83a8d4f45c5971c320b2b9.json",
+      "sha256": "sha256:7fc1064390e33024f16674884ca7a5a68dc2d2dbdf83a8d4f45c5971c320b2b9"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/a63182db829f9d8d66dd272f0f15040ca41a5146374ec1197f7ec53a117b8197.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/a63182db829f9d8d66dd272f0f15040ca41a5146374ec1197f7ec53a117b8197.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/a63182db829f9d8d66dd272f0f15040ca41a5146374ec1197f7ec53a117b8197.json",
+      "sha256": "sha256:a63182db829f9d8d66dd272f0f15040ca41a5146374ec1197f7ec53a117b8197"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/5e4e9f0d91e336dac2112512cee6f8b9013493efefcdd0219d74ff28d129dd6b.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/5e4e9f0d91e336dac2112512cee6f8b9013493efefcdd0219d74ff28d129dd6b.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/5e4e9f0d91e336dac2112512cee6f8b9013493efefcdd0219d74ff28d129dd6b.json",
+      "sha256": "sha256:5e4e9f0d91e336dac2112512cee6f8b9013493efefcdd0219d74ff28d129dd6b"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/6bbb22de41b2de3449a7db3d5b1392dde4e7585d0a9d343d8b7d813ba98ab274.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/6bbb22de41b2de3449a7db3d5b1392dde4e7585d0a9d343d8b7d813ba98ab274.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/6bbb22de41b2de3449a7db3d5b1392dde4e7585d0a9d343d8b7d813ba98ab274.json",
+      "sha256": "sha256:6bbb22de41b2de3449a7db3d5b1392dde4e7585d0a9d343d8b7d813ba98ab274"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/f74888fb3cd4d6bcf585b7bbfe40d2977f8ecb9b8f2041383b9214466c351f4c.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/f74888fb3cd4d6bcf585b7bbfe40d2977f8ecb9b8f2041383b9214466c351f4c.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/f74888fb3cd4d6bcf585b7bbfe40d2977f8ecb9b8f2041383b9214466c351f4c.json",
+      "sha256": "sha256:f74888fb3cd4d6bcf585b7bbfe40d2977f8ecb9b8f2041383b9214466c351f4c"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4a88a3a571a602779a2b12840278627941a528bac8e7ff17bc0d703dc2ed0c7b.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/4a88a3a571a602779a2b12840278627941a528bac8e7ff17bc0d703dc2ed0c7b.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4a88a3a571a602779a2b12840278627941a528bac8e7ff17bc0d703dc2ed0c7b.json",
+      "sha256": "sha256:4a88a3a571a602779a2b12840278627941a528bac8e7ff17bc0d703dc2ed0c7b"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/98ca103e2463b946976ab11919b38892b8b64e4a0702fc8d551b2f772cb0a935.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/98ca103e2463b946976ab11919b38892b8b64e4a0702fc8d551b2f772cb0a935.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/98ca103e2463b946976ab11919b38892b8b64e4a0702fc8d551b2f772cb0a935.json",
+      "sha256": "sha256:98ca103e2463b946976ab11919b38892b8b64e4a0702fc8d551b2f772cb0a935"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/3e350368f93f951d871c2d4fa1bda4a4a4853e73a780d09d7af838300d5e052f.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/3e350368f93f951d871c2d4fa1bda4a4a4853e73a780d09d7af838300d5e052f.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/3e350368f93f951d871c2d4fa1bda4a4a4853e73a780d09d7af838300d5e052f.json",
+      "sha256": "sha256:3e350368f93f951d871c2d4fa1bda4a4a4853e73a780d09d7af838300d5e052f"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/a2b74304818a8f1cfceea17772fc79977c22fae91580d5a992e09650ea0fef7a.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/a2b74304818a8f1cfceea17772fc79977c22fae91580d5a992e09650ea0fef7a.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/a2b74304818a8f1cfceea17772fc79977c22fae91580d5a992e09650ea0fef7a.json",
+      "sha256": "sha256:a2b74304818a8f1cfceea17772fc79977c22fae91580d5a992e09650ea0fef7a"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/42534fcacbf54f8fc484ad89f3e064215b816f65029f7970b61f4b584f4fffdb.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/42534fcacbf54f8fc484ad89f3e064215b816f65029f7970b61f4b584f4fffdb.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/42534fcacbf54f8fc484ad89f3e064215b816f65029f7970b61f4b584f4fffdb.json",
+      "sha256": "sha256:42534fcacbf54f8fc484ad89f3e064215b816f65029f7970b61f4b584f4fffdb"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f.json",
+      "sha256": "sha256:5b31ca2cca90b76d47f7c1b9575264e352a3990ba303992c8083f97c0fff823f"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/9c3c78b15f70ae331ece85d3a1ca136c8ecb584608233612fa905a753c703bc8.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/9c3c78b15f70ae331ece85d3a1ca136c8ecb584608233612fa905a753c703bc8.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/9c3c78b15f70ae331ece85d3a1ca136c8ecb584608233612fa905a753c703bc8.json",
+      "sha256": "sha256:9c3c78b15f70ae331ece85d3a1ca136c8ecb584608233612fa905a753c703bc8"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66.json",
+      "sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66.json",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66.json",
+      "sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "sha256": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+      "sha256": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+      "sha256": "sha256:1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+      "sha256": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+      "sha256": "sha256:92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/b1cfab18a916244148f85d8037531bbbacb1accc14cd7544fadcdc9953a86b63.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/b1cfab18a916244148f85d8037531bbbacb1accc14cd7544fadcdc9953a86b63.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/b1cfab18a916244148f85d8037531bbbacb1accc14cd7544fadcdc9953a86b63.md",
+      "sha256": "sha256:b1cfab18a916244148f85d8037531bbbacb1accc14cd7544fadcdc9953a86b63"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+      "sha256": "sha256:1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+      "sha256": "sha256:52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "sha256": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+      "sha256": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+      "sha256": "sha256:1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+      "sha256": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+      "sha256": "sha256:92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/610c0e678f3a7b1175022025f9198fa0aef81bf03d6d2315c981926984fb74b3.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/610c0e678f3a7b1175022025f9198fa0aef81bf03d6d2315c981926984fb74b3.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/610c0e678f3a7b1175022025f9198fa0aef81bf03d6d2315c981926984fb74b3.md",
+      "sha256": "sha256:610c0e678f3a7b1175022025f9198fa0aef81bf03d6d2315c981926984fb74b3"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+      "sha256": "sha256:1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb.md",
+      "sha256": "sha256:de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+      "sha256": "sha256:52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "sha256": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+      "sha256": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+      "sha256": "sha256:1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+      "sha256": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+      "sha256": "sha256:92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/36af8d4ab2ef38a20b199b1befe81b055da22a366c826732fafb53dfc7c91a57.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/36af8d4ab2ef38a20b199b1befe81b055da22a366c826732fafb53dfc7c91a57.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/36af8d4ab2ef38a20b199b1befe81b055da22a366c826732fafb53dfc7c91a57.md",
+      "sha256": "sha256:36af8d4ab2ef38a20b199b1befe81b055da22a366c826732fafb53dfc7c91a57"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+      "sha256": "sha256:1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb.md",
+      "sha256": "sha256:de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9.md",
+      "sha256": "sha256:4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+      "sha256": "sha256:52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "sha256": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+      "sha256": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+      "sha256": "sha256:1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+      "sha256": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+      "sha256": "sha256:92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/a5731650070ab682dd0cecad3523e3c3bef005386b183a9c37ac1ef38730484f.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/a5731650070ab682dd0cecad3523e3c3bef005386b183a9c37ac1ef38730484f.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/a5731650070ab682dd0cecad3523e3c3bef005386b183a9c37ac1ef38730484f.md",
+      "sha256": "sha256:a5731650070ab682dd0cecad3523e3c3bef005386b183a9c37ac1ef38730484f"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+      "sha256": "sha256:1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb.md",
+      "sha256": "sha256:de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9.md",
+      "sha256": "sha256:4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/806bee726a33a60a0c3c65166edc91f86fdbaedbc09cd2ea1b71cf1fdcb94a7a.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/806bee726a33a60a0c3c65166edc91f86fdbaedbc09cd2ea1b71cf1fdcb94a7a.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/806bee726a33a60a0c3c65166edc91f86fdbaedbc09cd2ea1b71cf1fdcb94a7a.md",
+      "sha256": "sha256:806bee726a33a60a0c3c65166edc91f86fdbaedbc09cd2ea1b71cf1fdcb94a7a"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8274_v714_gatemate_physical_delta/invocations/1791436373871479256/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+      "sha256": "sha256:52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3.yaml",
+      "sha256": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/hardware-bringup-prep.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f.md",
+      "sha256": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/jtag-wiring-gatemate-dirtyjtag.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159.md",
+      "sha256": "sha256:1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/research-hardware-wishlist.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7.md",
+      "sha256": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/known-issues.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0.md",
+      "sha256": "sha256:92aec8c5445acdc5808294091eb6592b6e931567df8b7807eb75ba0deaf0f9d0"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/fb6cb87fa2529a34044907f71046bd1b3c36b1c6d2cdae5b33e4fb7da6754d74.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/fb6cb87fa2529a34044907f71046bd1b3c36b1c6d2cdae5b33e4fb7da6754d74.md",
+      "sha256": "sha256:fb6cb87fa2529a34044907f71046bd1b3c36b1c6d2cdae5b33e4fb7da6754d74"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v711-gatemate-reopen.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3.md",
+      "sha256": "sha256:1733f846754c3ee68eb5ccff5e30f9b8ba06e62b5e135150491108147e660ae3"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v712-gatemate-change-ledger.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb.md",
+      "sha256": "sha256:de4111c01e6a1ada8bac279e7cab65eabf8240a356155a15fc776308aae65afb"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v713-gatemate-physical-delta.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9.md",
+      "sha256": "sha256:4c2413e442ea1a1fb984223ea09c5e3577938caf0f9b3e9d20e0075a6f8d79f9"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/806bee726a33a60a0c3c65166edc91f86fdbaedbc09cd2ea1b71cf1fdcb94a7a.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v714-gatemate-physical-delta.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/806bee726a33a60a0c3c65166edc91f86fdbaedbc09cd2ea1b71cf1fdcb94a7a.md",
+      "sha256": "sha256:806bee726a33a60a0c3c65166edc91f86fdbaedbc09cd2ea1b71cf1fdcb94a7a"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/7ecba8793cff6df379e3b2be5c01435355987d34d22019b16b3a76588296888a.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v715-gatemate-physical-delta.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/7ecba8793cff6df379e3b2be5c01435355987d34d22019b16b3a76588296888a.md",
+      "sha256": "sha256:7ecba8793cff6df379e3b2be5c01435355987d34d22019b16b3a76588296888a"
+    },
+    {
+      "frozen_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/operator-followup.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8288_v715_gatemate_physical_delta/invocations/1791451520038682724/inputs/52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c.md",
+      "sha256": "sha256:52cc1c4cdd2eeb4c895a02c01ffe2760545e0e25fb876d5734bba53c1f28574c"
+    }
+  ],
+  "source_root": "/home/ianblenke/github.com/ianblenke/carnot"
+}

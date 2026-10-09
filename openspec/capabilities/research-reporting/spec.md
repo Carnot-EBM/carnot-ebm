@@ -97269,6 +97269,15 @@ owned failure and atomic publication rejection. Require 100 percent newly owned
 statements, relevant consumers, private E2E-018, Ruff, strict mypy and spec tracing.
 The conductor owns ops/status/changelog and BMAD reconciliation after this task.
 
+Implementation 2026-10-09: `v720_replay_closure.py` authenticates producer membership
+and captured reader source; `v720_terminal_replay.py` preserves original
+dispositions and independently reconstructs primitive outcomes;
+`v720_replay_execution.py` freezes scoped checks and uses the unchanged publisher.
+The Exp8358 thin runner dispatches private workers and cold replay. Requirement-
+linked tests exercise successful and disqualified private producers, natural
+history, changed authority, source loss and repaired-hash attacks. The research
+note records scientific limits. Terminal receipts remain the execution record.
+
 ### SCENARIO-REPORT-8357-REPLAY
 
 Cold replay authenticates original closure and primitive meaning in a fresh
@@ -97285,3 +97294,28 @@ mutations, CLI failures and self-consistently rehashed primitive controls are
 requirement-linked tests. Final byte-bound validation receipts and the terminal
 primary are the execution record. Unit tests run once under subprocess coverage
 in the frozen production plan; unrelated repository health runs once outside it.
+## REQ-REPORT-8358: Qualify replay against producer closures
+
+Exp8358 SHALL bind its exact V720 task and freeze validation commands before
+measurement. Authenticate original primaries, terminal sidecars, source,
+configuration and primitive seals. Preserve Exp8345's two failed branch argv,
+logs and first mismatched operands. Missing original bytes SHALL retain
+`authenticated-history-unavailable`; replayed failure SHALL NOT promote science.
+Current Exp8355/8357 SHALL be inspected without an upstream success gate.
+Missing producers are external blocked; owned schema or replay errors disqualify.
+Publish compact references atomically with no model load and zero current model
+calls. Exposed development earns zero independent generalization credit.
+
+### SCENARIO-REPORT-8358-DISPOSITIONS
+
+An authenticated disqualified producer keeps its original disposition. A
+successful private producer qualifies mechanics only. Source closure gaps name
+path, expected hash, observed hash and missingness without rewriting history.
+Fresh reconstruction must match primitive reductions and frozen authority.
+
+### SCENARIO-REPORT-8358-PUBLICATION
+
+The unchanged publisher and validators check private bytes before publication.
+Cold valid, negative and self-consistently rehashed controls use bounded real
+children. Every added field has a principle. H1/H2 remain unmeasured. The
+conductor owns ops/status/changelog and BMAD reconciliation after this task.

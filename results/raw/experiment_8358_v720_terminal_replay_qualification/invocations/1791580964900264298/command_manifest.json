@@ -1,0 +1,164 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot8358-private-20261009/exp8358-9xsk19kq/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_v720_terminal_replay_8358.py",
+        "--basetemp=/tmp/carnot8358-private-20261009/exp8358-9xsk19kq/unit"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot8358-private-20261009/exp8358-9xsk19kq/.coverage",
+        "/tmp/carnot8358-private-20261009/exp8358-9xsk19kq"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot8358-private-20261009/exp8358-9xsk19kq/.coverage",
+        "--include=*/python/carnot/reporting/v720_replay_closure.py,*/python/carnot/reporting/v720_terminal_replay.py,*/python/carnot/reporting/v720_replay_execution.py,*/scripts/experiments/experiment_8358_v720_terminal_replay_qualification.py",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot8358-private-20261009/exp8358-9xsk19kq/coverage.json"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "owned_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v720_replay_closure.py",
+        "python/carnot/reporting/v720_terminal_replay.py",
+        "python/carnot/reporting/v720_replay_execution.py",
+        "scripts/experiments/experiment_8358_v720_terminal_replay_qualification.py",
+        "tests/python/test_v720_terminal_replay_8358.py"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v720_replay_closure.py",
+        "python/carnot/reporting/v720_terminal_replay.py",
+        "python/carnot/reporting/v720_replay_execution.py",
+        "scripts/experiments/experiment_8358_v720_terminal_replay_qualification.py",
+        "tests/python/test_v720_terminal_replay_8358.py"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/v720_replay_closure.py",
+        "python/carnot/reporting/v720_terminal_replay.py",
+        "python/carnot/reporting/v720_replay_execution.py",
+        "scripts/experiments/experiment_8358_v720_terminal_replay_qualification.py"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_v720_terminal_replay_8358.py"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "--basetemp=/tmp/carnot8358-private-20261009/exp8358-9xsk19kq/private_E2E018"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "private_E2E018",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_restricted_decision_audit_8210.py",
+        "--basetemp=/tmp/carnot8358-private-20261009/exp8358-9xsk19kq/private_E2E021"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "private_E2E021",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_arc_supervisor_frontier_8355.py",
+        "tests/python/test_gatemate_change_ledger_8357.py",
+        "--basetemp=/tmp/carnot8358-private-20261009/exp8358-9xsk19kq/unchanged_consumers"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "unchanged_consumers",
+      "scope": "owned"
+    }
+  ],
+  "frozen_before_measurement_ns": 1241873196825449
+}
