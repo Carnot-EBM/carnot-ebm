@@ -19923,3 +19923,6 @@ code |
 | 2026-10-09 07:20 UTC | Train the frozen sentence decision heads on direct | OK | 88 passed, 1 warning in 40.88s |
 | 2026-10-09 07:49 UTC | Seal all reserved decisions under the unchanged so | OK | 87 passed, 1 warning in 44.91s |
 | 2026-10-09 07:52 UTC | Measure delayed local learning and seal every rete | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8333-local-evidence-qualification.local_kernel_ready_score (actual=0 == expected=1) |
+| 2026-10-09 07:56 UTC | Test pending feedback capacity and delayed learnin | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8333-local-evidence-qualification.local_kernel_ready_score (actual=0 == expected=1) |
+| 2026-10-09 07:58 UTC | Audit static decision benefit after all prediction | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8336-continuous-local-learning) |
+| 2026-10-09 07:58 UTC | Audit later learning utility and every fixed reten | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8336-continuous-local-learning) |
