@@ -19947,3 +19947,4 @@ code |
 | 2026-10-09 19:24 UTC | Repair the ARC reader import boundary and inspect  | OK | 100 passed, 1 warning in 172.78s (0:02:52) |
 | 2026-10-09 20:16 UTC | Qualify CPU operation costs and map spline tables  | OK | 105 passed, 1 warning in 257.73s (0:04:17) |
 | 2026-10-09 20:48 UTC | Recover immutable GateMate history and preserve th | OK | 93 passed, 1 warning in 76.05s (0:01:16) |
+| 2026-10-09 21:41 UTC | Qualify branch replay against immutable producer s | OK | 92 passed, 1 warning in 154.68s (0:02:34) |
