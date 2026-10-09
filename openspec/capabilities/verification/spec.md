@@ -52229,3 +52229,25 @@ Real bounded children exercise measurement and cold replay; receipt hashes,
 argv, exits and clocks survive. Failed checks clear all readiness. A published
 blocked artifact can retain qualified arithmetic CPU cost. Primitive mutations
 cannot pass merely by recalculating their hashes. Existing guards stay enabled.
+## REQ-VERIFY-8344: Authenticate physical continuity and finding consumption
+
+Bind historical Exp8330 synthesis separately from current V719 authority and
+the frozen V717 protocol. Preserve original evidence and validator enforcement.
+Reuse receipt parsing and frontier reduction through small adapters. Rehashed
+sidecars, authority, physical fields and primitive claims cannot grant readiness.
+Qualify unchanged finding consumption locally before use; process errors,
+malformed reports, unknown findings and unadjudicated warnings fail closed.
+Retain every finding. Failed owned checks disqualify; external absence blocks.
+
+### SCENARIO-VERIFY-8344-FRONTIER
+
+Accept only unseen dated cable, port, power or board changes after the actual
+historical end clock. Software updates and milestone dates fail. Authenticate
+source, terminal sidecar and original transcript bytes on both load and replay.
+
+### SCENARIO-VERIFY-8344-FINDINGS
+
+Clean bound reports pass. Known informational reports require independent proof;
+false-zero, malformed, wrong hash, unknown severity, warning and process error
+reports fail. Require100 percent new statements including actual CLI, children,
+negative replay, timeout and publication recovery paths.

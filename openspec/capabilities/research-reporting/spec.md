@@ -2,6 +2,49 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8344: Preserve GateMate's bounded physical reopening obligation
+
+Authenticate the exact declared Exp8330 primary, immutable sidecars, original
+0xffffffff transcript and directly activated fourteen-task V719 authority.
+Reuse the qualified physical reader and atomic publisher. Inspect only dated
+operator cable, port, power or board evidence after Exp8330's end-clock frontier.
+Dates, host rebuilds and restated instructions cannot reopen hardware. Use
+aggregation_from_upstream_artifacts, no_model_load, MODEL_SPECS=[] and zero
+model, JTAG and board calls. Retain one obligation; absence is blocked rather
+than negative science. Ledger quality and execution readiness remain separate.
+
+### SCENARIO-REPORT-8344-CLI
+
+Freeze scoped argv and deadlines before inspection. Private CLI and bounded
+children flush progress, preserve exact clocks, exits and output hashes, and
+exercise publication failure/recovery. Require unit/consumer/private E2E-018,
+Ruff check/format, strict mypy, spec references and100 percent newly owned
+statement coverage. Run repository health once outside the experiment.
+Terminal checks and fresh replay precede atomic publication. The conductor owns
+ops/status/changelog and BMAD reconciliation per the final task instruction.
+
+### SCENARIO-REPORT-8344-REPLAY
+
+Valid cold replay passes; negative claims and self-consistently rehashed
+primitive tampering fail. Missing external operands produce exact gate rows.
+Unchanged evidence emits complete_blocked_gatemate_physical_change once.
+Prepare only documented change, authenticated GM1Ax IDCODE0x20000001, then n16
+tile flash and device sample/hash smoke. No device operation occurs here.
+
+Implementation 2026-10-09: `gatemate_change_ledger_8344.py` and
+`gatemate_ledger_execution_8344.py` adapt the qualified reader and publisher;
+the thin runner binds V719 directly and retains immutable Exp8330 evidence.
+The first fourteen private tests passed with100 percent of183 statements covered,
+including real CLI children, tampering, timeout and publication recovery.
+Scoped Ruff, strict mypy and spec tracing passed. The separate full Python
+diagnostic collected77246 tests, showed failures and reached its180-second
+deadline; no repository-wide pass is claimed. The reopening note is
+`docs/research-notes/v719-gatemate-obligation.md`.
+Final production inspection exposed inherited executor globals during historical
+replay; the original attempt is retained as an owned execution finding under
+`failed_attempts/historical_binding/`. A fifteenth regression requires historical
+identity under the actual current binding before corrected publication.
+
 ## REQ-REPORT-8343: Independent arithmetic cost with exact board boundaries
 
 Measure 128 constructed four-feature vectors `((17*i+13*j)%101)/100`,
