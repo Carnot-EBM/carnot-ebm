@@ -52122,3 +52122,22 @@ dependencies and cache state. Duplicate and out-of-order feedback are exercised.
 Valid exact-zero info passes only with arithmetic and deliberate-error receipts.
 False-zero, unknown severity, wrong hashes and command errors fail closed.
 Retain all findings and require 100 percent newly owned statement coverage.
+## REQ-VERIFY-8334: Direct custody and fail-closed static qualification
+
+Authenticate Exp8305, its terminal sidecars, original source manifest, fit/tune
+predictor and evaluator shards and unchanged V717 protocol. Recount support
+without opening reserved labels. Bind active fourteen-task V719 authority.
+Cold replay must reject missing evidence and self-consistently rehashed changes.
+Qualify unchanged finding consumption, including false-zero and process errors.
+Require all owned checks and 100 percent new statements, including real CLI and
+publication recovery. External missingness blocks; owned errors disqualify.
+
+### SCENARIO-VERIFY-8334-CUSTODY
+
+Mutated labels and source IDs cannot enter prediction. Rehashed fitted-state
+tampering fails independent replay. Missing external sources produce exact gates.
+
+### SCENARIO-VERIFY-8334-CLI
+
+Private children exercise valid, negative and tampered replay, failures and
+recovery. Exact argv, deadlines, exits, timings and output hashes survive.

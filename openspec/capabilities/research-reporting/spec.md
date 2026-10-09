@@ -96809,3 +96809,17 @@ Actual private children preserve argv, clocks, exits and output hashes. Failed
 owned checks clear all readiness and publish a validated disqualification. Cold
 primitive replay and unchanged primary and strict-row checks precede atomic
 terminal publication. The conductor owns ops and traceability reconciliation.
+## REQ-REPORT-8334: Independent static-head evidence
+
+Publish one checked atomic primary for exp8334-sentence-spline-fit. Declare no
+model loads or current generator calls. Readiness requires finite heads, passed
+optimizer control, local numerics, custody and owned checks, without a natural
+score improvement. Freeze parameters, temperatures, comparator, role hashes and
+whole-model hash before reserved evaluation. Preserve exposed-development scope
+and zero generalization scores. Carry source manifest and protocol references.
+The conductor owns ops/status, ops/changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8334-PUBLISH
+
+The unchanged primary validator, adversarial verifier and strict row consumer
+validate byte-bound candidates. Preserve all findings and failed-check lineage.

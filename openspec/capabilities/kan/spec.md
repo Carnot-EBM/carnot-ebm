@@ -3801,3 +3801,19 @@ Intercept-changing stress events SHALL retain full cache invalidation costs.
 An independent scalar basis and finite differences verify gradients at endpoints,
 interior knots and overlapping supports. Probability ties .25/.75 escalate.
 Projection and zero-step events retain exact changed-coordinate accounting.
+## REQ-KAN-8334: Frozen static sentence heads
+
+Fit spline34, RBF34, linear6 and scalar2 with seed7178308, 400 full-batch
+logistic steps, rate .01 and L2 .001 on local coefficients and (a-1).
+Exclude the intercept from L2. Project slope to [0,2] and others to [-4,4].
+Use the direct local_update_isolation_8306 cubic kernel. Qualify against SciPy
+and finite differences. Select 32 label-blind RBF centers by farthest distance,
+starting at smallest source ID; ties use ID. Insufficient geometry blocks.
+Calibrate on first32 tune slots and select controls on next32, preserving missing
+slots as cost .5 escalations. Export a feature-only API and byte-bound checkpoint.
+
+### SCENARIO-KAN-8334-FIT
+
+Independent basis and objective derivatives agree. Exact-budget constructed
+controls decrease loss and change an action before natural fitting. Prediction
+rejects identity and label injection. Sigmoid34 exactly re-expresses spline34.
