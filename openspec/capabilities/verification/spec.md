@@ -52040,3 +52040,20 @@ across both capstone modules and its direct runner. Scoped Ruff check/format,
 strict mypy and spec-reference checks pass. Historical primaries remain intact.
 Documentation freshness passes; global reconciliation still reports the
 pre-existing 1,142 tests without spec references, outside this repair's scope.
+## REQ-VERIFY-8329: Primitive cost replay and atomic terminal publication
+
+Freeze checks before measurement. Use the unchanged primary publisher and
+Exp8318 finding-consumer policy. Errors, unknown findings and unresolved warnings
+block readiness. Preserve all verifier findings. Fresh-process valid replay
+passes; negative and rehashed tamper fail. Recompute transaction semantics and
+clock reductions, verify byte-bound sources, receipts and recovery state, and
+publish checked bytes atomically. Failed owned checks disqualify readiness.
+
+### SCENARIO-VERIFY-8329-CLI
+
+Private CLI, child timeout, failed checks and recovery paths retain exact argv,
+exit codes, clocks and output hashes. Flush each phase and benchmark boundary.
+Use unbuffered bounded children with <=60-second heartbeats and owned cleanup.
+Run private E2E-018/020, consumer and operation tests, scoped Ruff check/format,
+strict mypy and owned-test spec coverage. Cover 100 percent of new statements,
+including the actual CLI, without claiming coverage of pre-existing modules.

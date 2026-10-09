@@ -1,0 +1,185 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot8329-validation-vc_c4dl3/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_kv260_workload_cost_8329.py",
+        "--basetemp=/tmp/carnot8329-validation-vc_c4dl3/owned-tests"
+      ],
+      "deadline": 480,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_hard_exit_learning_qualification_8206.py",
+        "tests/python/test_kv260_local_cost_boundary_8315.py",
+        "--basetemp=/tmp/carnot8329-validation-vc_c4dl3/consumers"
+      ],
+      "deadline": 480,
+      "expected": 0,
+      "name": "private_E2E018_E2E020_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot8329-validation-vc_c4dl3/coverage.ini"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot8329-validation-vc_c4dl3/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot8329-validation-vc_c4dl3/coverage.ini",
+        "-o",
+        "/tmp/carnot8329-validation-vc_c4dl3/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/kv260_workload_cost_8329.py",
+        "python/carnot/reporting/kv260_workload_primitives_8329.py",
+        "python/carnot/reporting/kv260_workload_runner_8329.py",
+        "scripts/experiments/experiment_8329_v718_kv260_workload_cost.py",
+        "tests/python/test_kv260_workload_cost_8329.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/kv260_workload_cost_8329.py",
+        "python/carnot/reporting/kv260_workload_primitives_8329.py",
+        "python/carnot/reporting/kv260_workload_runner_8329.py",
+        "scripts/experiments/experiment_8329_v718_kv260_workload_cost.py",
+        "tests/python/test_kv260_workload_cost_8329.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/reporting/kv260_workload_cost_8329.py",
+        "python/carnot/reporting/kv260_workload_primitives_8329.py",
+        "python/carnot/reporting/kv260_workload_runner_8329.py",
+        "scripts/experiments/experiment_8329_v718_kv260_workload_cost.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_kv260_workload_cost_8329.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    }
+  ],
+  "finding_consumer_policy": {
+    "allowed_exit_codes": [
+      0,
+      1
+    ],
+    "allowed_info_kinds": [
+      "IMPLAUSIBLE_PERFECT"
+    ],
+    "blocked": [
+      "process_error",
+      "missing_report",
+      "unknown",
+      "warn",
+      "critical"
+    ],
+    "info_resolution": "independent primitives and deliberate error rejection",
+    "required_binding": [
+      "candidate_sha256",
+      "verifier_sha256"
+    ],
+    "version": "8318-v1"
+  },
+  "heartbeat_s": 20,
+  "science_parameters": {
+    "delay": 8,
+    "k_max": 5,
+    "model_load": false,
+    "online_decay": 0,
+    "online_slope_frozen": true,
+    "repetitions": 5,
+    "warmups": 1
+  },
+  "worker_argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8329_v718_kv260_workload_cost.py",
+    "--root",
+    "/home/ianblenke/github.com/ianblenke/carnot",
+    "--worker-output",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8329_v718_kv260_workload_cost/invocations/1791508359309128532/measurement.json"
+  ],
+  "worker_deadline_s": 600
+}

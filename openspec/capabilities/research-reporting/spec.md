@@ -96619,3 +96619,36 @@ A changed title and removed task shall each fail contract comparison. Run
 existing focused unit tests and private E2E-018 authority lifecycle checks.
 Run scoped lint and spec coverage. Record global health separately. No
 experiment, external publication, conductor edit or push is authorized by planning.
+## REQ-REPORT-8329: Independent update costs and precise hardware boundaries
+
+Exp8329 authenticates activated V718 authority and each exact declared producer
+deliverable independently. Missing Exp8319, Exp8323 or Exp8322 evidence remains
+blocked, with exact field gates and unavailable observations. A conductor pre-gate
+receipt cannot replace a producer. Never time disqualified Exp8306 evidence.
+Measure eligible constructed and natural update branches separately with one
+warmup and five repetitions. Count source workloads once. Include feature access,
+numerical update, invalidation, pending serialization, durable write, recovery
+and dispatch in complete CPU transactions. Use no_model_load, MODEL_SPECS=[]
+and cached_candidate_scoring without current model calls.
+
+### SCENARIO-REPORT-8329-INDEPENDENT
+
+Private authenticated constructed inputs run despite absent natural evidence.
+Absent or ineligible branches keep both intended sparse/dense rows. A missing
+qualified kernel blocks timing rather than substituting fixture evidence.
+Complete CPU readiness, natural readiness and board execution readiness differ.
+Failed owned checks disqualify all readiness; exposed development grants neither
+generalization score. Execution argv and deadlines are separate from science.
+
+### SCENARIO-REPORT-8329-OPERATIONS
+
+Map each timed operation to the current quadratic Ising overlay at k_max<=5.
+Spline basis evaluation, coefficient updates and persistence are unsupported.
+No compatible fraction means accelerator benefit is unproved. An Amdahl bound
+requires measured compatible service fractions and retains CPU and transfer
+costs. Existing compatible kernels require bounded ssh kria transcripts and
+identical input/output parity. Missing kernels retain a blocked board obligation.
+Authenticate Exp8259 terminal/adversarial evidence, dispatch hash and output
+parity before retaining board-local Linux CPU graduation. Never infer FPGA work.
+Require empirical whole-service evidence for NFR-01; the 100x target is aspirational.
+The conductor owns ops/status, changelog and traceability reconciliation.
