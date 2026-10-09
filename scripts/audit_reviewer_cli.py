@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import os
 import shutil
+import tempfile
+from pathlib import Path
 
 #: How much of the END of stderr a failure message keeps. CLIs print the real error last,
 #: after a banner and (for codex) an echo of the whole prompt.
@@ -23,6 +25,31 @@ TAIL_SLACK_CHARS = 100
 #: In a chain, the first (primary) reason is cut to this many characters so the fallback's
 #: error stays near the front of the combined message.
 CHAIN_FIRST_REASON_CHARS = 160
+
+
+#: Said to agy before the packet. Headless agy cannot ask permission, so any tool call it tries
+#: ends the run with empty output. A reviewer needs no tools: the packet is in the prompt.
+AGY_NO_TOOLS_NOTE = (
+    "You have no tools. Do not run commands or read files. "
+    "Everything you need is in this message. Answer in plain text only.\n\n"
+)
+
+
+def agy_command(binary: str, model: str, full: str) -> list[str]:
+    """Build the agy command for a one-shot review, with the no-tools note in front."""
+    return [binary, "--model", model, "--print", AGY_NO_TOOLS_NOTE + full]
+
+
+def agy_cwd() -> str:
+    """Return an empty directory to run agy in, creating it if needed.
+
+    In the repo, agy tried to explore files with shell commands and was denied (0 of 3 runs
+    gave output on the real claim-audit packet). From an empty directory, with the note
+    above, 4 of 4 did. See docs/research-notes/claim-audit-reviewer-failure-diagnosis-2026-10-08.md.
+    """
+    path = Path(tempfile.gettempdir()) / f"carnot-agy-empty-{os.getuid()}"
+    path.mkdir(mode=0o700, exist_ok=True)
+    return str(path)
 
 
 def codex_bin() -> str:

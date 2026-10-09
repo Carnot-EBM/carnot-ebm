@@ -60,7 +60,7 @@ import time
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parent))  # find audit_reviewer_cli when imported
-from audit_reviewer_cli import chain_failure, codex_bin, failure_text  # noqa: E402
+from audit_reviewer_cli import agy_command, agy_cwd, chain_failure, codex_bin, failure_text  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[1]
 REPORT = REPO / "ops" / "experiment_claim_audit_report.md"
@@ -170,11 +170,12 @@ def _call(agent: str, model: str, prompt: str, body: str) -> tuple[bool, str]:
     if agent == "agy":
         try:
             r = subprocess.run(
-                [AGY_BIN, "--model", model, "--print", full],
+                agy_command(AGY_BIN, model, full),
                 capture_output=True,
                 text=True,
                 timeout=420,
                 check=False,
+                cwd=agy_cwd(),
             )
             ok = r.returncode == 0 and bool(r.stdout.strip())
             # agy can exit 0 with empty stdout (headless tool-permission denial); say so.

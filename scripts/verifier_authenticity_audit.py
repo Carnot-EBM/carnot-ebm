@@ -50,7 +50,7 @@ import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parent))  # find audit_reviewer_cli when imported
-from audit_reviewer_cli import chain_failure, codex_bin, failure_text  # noqa: E402
+from audit_reviewer_cli import agy_command, agy_cwd, chain_failure, codex_bin, failure_text  # noqa: E402
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 VERIFY_DIR = PROJECT_ROOT / "python" / "carnot" / "verify"
@@ -176,12 +176,12 @@ def call_agy(prompt: str, body: str, model: str = "gemini-3.1-pro-high") -> tupl
     try:
         full = f"{prompt}\n\n---\nVERIFIER SOURCE:\n\n{body}"
         proc = subprocess.run(
-            [AGY_BIN, "--model", model, "--print", full],
+            agy_command(AGY_BIN, model, full),
             capture_output=True,
             text=True,
             timeout=300,
             check=False,
-            cwd=PROJECT_ROOT,
+            cwd=agy_cwd(),
         )
         ok = proc.returncode == 0 and bool(proc.stdout.strip())
         # agy can exit 0 with empty stdout (headless tool-permission denial); say so.
