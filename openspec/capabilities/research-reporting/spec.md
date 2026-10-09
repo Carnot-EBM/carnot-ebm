@@ -97127,3 +97127,30 @@ Implementation: `python/carnot/reporting/learning_retention_audit_8351.py` and
 `scripts/experiments/experiment_8351_v720_learning_retention_audit.py` reuse
 immutable byte custody, bounded child supervision, typed findings and atomic
 publication. The primary binds the executed validation receipts and coverage.
+## REQ-REPORT-8352: Byte-bound numerical engineering publication
+
+Implementation: `python/carnot/reporting/spline_table_fidelity_8352.py` and
+`python/carnot/reporting/spline_table_execution_8352.py` reuse existing publication
+and child supervision. The thin script is
+`scripts/experiments/experiment_8352_v720_spline_table_fidelity.py`.
+
+Exp8352 SHALL publish results/experiment_8352_v720_spline_table_fidelity.json
+through unchanged primary publication after cold replay, adversarial verification
+and strict row consistency. Freeze validation commands before measurement.
+Keep primitive evidence under its raw directory and private scratch under /tmp.
+Require100 percent newly owned statements, real CLI and failure paths, scoped
+Ruff, strict mypy, consumer tests and explicit spec coverage. No full repository
+suite runs inside this experiment. No current model loads or calls occur.
+
+### SCENARIO-REPORT-8352-TERMINAL
+
+Valid, negative and self-consistently rehashed tamper candidates run in fresh
+processes. Recompute numerical summaries and refreshed bytes from pinned inputs.
+Only independently recomputed informational findings with deliberate-error
+controls can resolve through the existing typed consumer. All other findings
+block readiness. Owned failures are disqualified; missing external operands
+are blocked with path/hash, field, operator, expected and observed values.
+Readiness does not require a passing candidate. Generalization scores remain
+zero. Board operations are a manifest only. Historical outcomes, generator
+weights and roadmap bytes remain unchanged. Ops and traceability reconciliation
+is conductor-owned for this invocation.

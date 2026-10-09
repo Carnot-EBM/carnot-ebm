@@ -1,0 +1,152 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/exp8352-owned-4d8zr2xf/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_spline_table_fidelity_8352.py",
+        "--basetemp=/tmp/exp8352-owned-4d8zr2xf/owned-tests"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "--basetemp=/tmp/exp8352-owned-4d8zr2xf/consumers",
+        "tests/python/test_local_update_isolation_8306.py"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "private_E2E018_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/exp8352-owned-4d8zr2xf/coverage.ini"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/exp8352-owned-4d8zr2xf/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/exp8352-owned-4d8zr2xf/coverage.ini",
+        "-o",
+        "/tmp/exp8352-owned-4d8zr2xf/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/spline_table_fidelity_8352.py",
+        "python/carnot/reporting/spline_table_fidelity_8352.py",
+        "python/carnot/reporting/spline_table_execution_8352.py",
+        "scripts/experiments/experiment_8352_v720_spline_table_fidelity.py",
+        "tests/python/test_spline_table_fidelity_8352.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/spline_table_fidelity_8352.py",
+        "python/carnot/reporting/spline_table_fidelity_8352.py",
+        "python/carnot/reporting/spline_table_execution_8352.py",
+        "scripts/experiments/experiment_8352_v720_spline_table_fidelity.py",
+        "tests/python/test_spline_table_fidelity_8352.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/verify/spline_table_fidelity_8352.py",
+        "python/carnot/reporting/spline_table_fidelity_8352.py",
+        "python/carnot/reporting/spline_table_execution_8352.py",
+        "scripts/experiments/experiment_8352_v720_spline_table_fidelity.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_spline_table_fidelity_8352.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    }
+  ],
+  "heartbeat_s": 20,
+  "no_full_repository_suite": true,
+  "owned": [
+    "python/carnot/verify/spline_table_fidelity_8352.py",
+    "python/carnot/reporting/spline_table_fidelity_8352.py",
+    "python/carnot/reporting/spline_table_execution_8352.py",
+    "scripts/experiments/experiment_8352_v720_spline_table_fidelity.py"
+  ],
+  "private_scratch": "/tmp/exp8352-owned-4d8zr2xf",
+  "scientific_protocol_sha256": "sha256:853709123024de763e96dd688e819f0430205ae6d97d6561a2b95cca23b81c6f"
+}

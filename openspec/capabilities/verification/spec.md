@@ -52418,3 +52418,38 @@ Implementation: `python/carnot/verify/learning_retention_audit_8351.py` reduces
 primitive issues and releases, checks scalar updates and action reachability,
 and preserves every retention window. Requirement-linked tests live in
 `tests/python/test_learning_retention_audit_8351.py`.
+## REQ-VERIFY-8352: Frozen local spline table fidelity and refresh
+
+Implementation: `python/carnot/verify/spline_table_fidelity_8352.py` supplies the
+numeric adapter. Requirement-linked tests are in
+`tests/python/test_spline_table_fidelity_8352.py`. The runner records coverage
+and all executed check receipts before terminal publication.
+
+Exp8352 SHALL authenticate the original Exp8334 checkpoint and V717 numeric
+protocol directly. It SHALL compare float64 direct arithmetic with independent
+SciPy splines and twelve table configurations: 65/257/1025 points, nearest/linear
+interpolation, float64/int16 values. Int16 uses 11 fractional bits, ties to even,
+and saturation to [-32768,32767]. Global slope, intercept, temperature and sigmoid
+remain float64. Direct parity must be <=1e-10. Candidate error must be <=.001,
+with zero flips at reference margins >=.002 from both action thresholds.
+
+### SCENARIO-VERIFY-8352-PANEL
+
+Freeze seed7208352 and4096 constructed four-feature vectors before measurement.
+Include every unique knot and clipped knot +/-1e-8 for each feature. Solve the
+holistic x[0] at probabilities .25/.75 and perturb by +/-1e-6; zero slope reports
+unavailable construction. No labels or reserved features enter the study.
+Retain every configuration and per-vector probability, error and action flip.
+Select by table bytes, then error, then fixed configuration order. Measurement
+readiness is separate from an actual passing table candidate.
+
+### SCENARIO-VERIFY-8352-REFRESH
+
+Apply64 constructed alternating targets using V717 gradient (p-y)/T, norm cap1,
+step.01, coordinate bounds[-4,4], no decay, and frozen global terms. Enumerate
+grid entries whose nonzero basis support intersects changed local coefficients.
+Full rebuild and scoped refresh must have identical encoded bytes after every
+update and after fresh-process restart. A deliberately omitted changed entry
+must fail. Record evaluation, update, refresh and serialization separately, with
+one warmup and five paired repetitions. These controls establish engineering
+fidelity only; their verdict is circular_positive and H1/H2 remain unmeasured.
