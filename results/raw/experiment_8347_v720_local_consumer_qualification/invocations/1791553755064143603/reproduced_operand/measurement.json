@@ -1,0 +1,552 @@
+{
+  "H2": {
+    "alpha": 0.025,
+    "blocks": [
+      16,
+      8,
+      32
+    ],
+    "comparison": "calibrated_error_center versus calibrated_fixed_center; seed means within source",
+    "draws": 10000,
+    "natural_outcomes_opened_in_8152": false,
+    "retention": {
+      "brier_increase": 0.01,
+      "complete": 48,
+      "cost_increase": 0.02,
+      "extra_false_accepts": 0,
+      "per_class": 8
+    },
+    "seed": 7048144,
+    "status": "registered_not_measured",
+    "support": {
+      "complete": 128,
+      "nonoverlapping_blocks": 8,
+      "per_class": 8
+    },
+    "valid_minimum": 9500
+  },
+  "acceptance_gates": {
+    "H1_resampling": "paired source bootstrap",
+    "H1_support": {
+      "complete": 96,
+      "per_class": 12
+    },
+    "H2_resampling": "average seeds per source, moving original-slot blocks with missing masks",
+    "H2_support": {
+      "complete": 128,
+      "nonoverlapping_blocks": 8,
+      "per_class": 8
+    },
+    "beneficial_sources_minimum": 5,
+    "brier_increase_maximum": 0.01,
+    "draws": 10000,
+    "extra_false_accepts_maximum": 0,
+    "gain_lower_bound_minimum": 0.02,
+    "hypotheses": [
+      "H1 radial versus additive on128 reserved evaluation slots",
+      "H2 error-center versus fixed-public-center on192 later stream slots"
+    ],
+    "multiplicity": "Bonferroni family alpha=.05 across exactly2 hypotheses: one-sided alpha=.025 each",
+    "one_sided_confidence": 0.975,
+    "other_control_cost_increase_maximum": 0.02,
+    "precision": "descriptive finite-source intervals; no rare-event or lifelong-safety claim",
+    "primary_block": 16,
+    "retention": {
+      "brier_increase": 0.01,
+      "complete": 48,
+      "cost_increase": 0.02,
+      "extra_false_accepts": 0,
+      "per_class": 8
+    },
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120
+    ],
+    "sensitivity_blocks": [
+      8,
+      32
+    ],
+    "unit": "original source_cluster; seeds and duplicates add zero independent units",
+    "valid_minimum": 9500
+  },
+  "cited_upstream_artifacts": [],
+  "code_config_hashes": {
+    "openspec/change-proposals/v707-calibrated-memory-protocol.json": "sha256:b6b1f522d511b19e2106a31c14d3acd2b992988b8042dd161800884ad1896202",
+    "python/carnot/reporting/calibrated_memory_execution_8180.py": "sha256:a3e36cbe3b73c12ddd4e1b1685e5377078fcef90cb82e0d23867946b04c02c93",
+    "python/carnot/reporting/hard_exit_learning_execution_8206.py": "sha256:e1ac5d647a0e6272b283d1fe4934ae986e96260d8314d8018d5a259716b4827e",
+    "python/carnot/verify/admission_horizon_methods_8152.py": "sha256:75d4e34be4c0ce37fc6f188f7397039362281d4271cadcbcb28236d676d90cbb",
+    "python/carnot/verify/calibrated_memory_methods_8180.py": "sha256:cb99f2d957c41a80cf56ee46909151f599215e40ec3d4f70dd365de003bd81a1",
+    "python/carnot/verify/hard_exit_learning_qualification_8206.py": "sha256:3bbd9fdd28a981de3667d7171f818f3381143ea03cf1fef072faabc87ac5b3dc",
+    "python/carnot/verify/learning_protocol_8138.py": "sha256:a963aac37875d67c6014df5ac83f48b19ef9340755b1f1d5c7d2700bc7c88783",
+    "python/carnot/verify/radial_memory_8085.py": "sha256:c795da5b8aa5a608e30f63099ded75c2c4cdc3702288f1da367d624e18103091",
+    "scripts/experiments/experiment_8180_v707_calibrated_memory_methods.py": "sha256:6b85c3c59ff77dd2520fb9820742df5407eb875d83f0200a3588650d587b40ef",
+    "scripts/experiments/experiment_8206_v709_hard_exit_learning_qualification.py": "sha256:e88b502d43b2b195e5d0e70b0ab4f53927ff3549151b27e80c3b33ed982449e9",
+    "tests/python/test_calibrated_memory_methods_8180.py": "sha256:d23e86a8d1e6d56c22a54ab70b706e3354fb1d979e65f4cb7b319ab0a7eefc95",
+    "tests/python/test_hard_exit_learning_qualification_8206.py": "sha256:e35a9bf809590b970f5062118cc7da637e44790aa13f56922412e147ec55c60b"
+  },
+  "coverage_patch_implementation": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/patch.py",
+    "sha256": "sha256:8ff2e34b1bdf499aedd619ecda2590a1d2a82b5970686740fcc4ddfc54886abf"
+  },
+  "diagnosis": {},
+  "duration_s": 0.2162313419394195,
+  "fixture_mode": true,
+  "fixture_rows": [],
+  "fixture_states": [],
+  "fixture_summaries": [],
+  "future_decision_fixture_score": 0,
+  "gate_check_summary": [
+    {
+      "artifact_field": "coverage_version",
+      "check": "coverage_version",
+      "expected": "7.14.1",
+      "hash": null,
+      "observed": "7.14.1",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "upstream": "exp8111-methods-and-stream-custody"
+    },
+    {
+      "artifact_field": "resource_exists",
+      "check": "resource_exists",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/patch.py",
+      "upstream": "exp8111-methods-and-stream-custody"
+    },
+    {
+      "artifact_field": "sha256",
+      "check": "sha256",
+      "expected": "sha256:8ff2e34b1bdf499aedd619ecda2590a1d2a82b5970686740fcc4ddfc54886abf",
+      "hash": null,
+      "observed": "sha256:8ff2e34b1bdf499aedd619ecda2590a1d2a82b5970686740fcc4ddfc54886abf",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/patch.py",
+      "upstream": "exp8111-methods-and-stream-custody"
+    },
+    {
+      "artifact_field": "runtime_python",
+      "check": "runtime_python",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "runtime_pytest",
+      "check": "runtime_pytest",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "runtime_coverage",
+      "check": "runtime_coverage",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "runtime_ruff",
+      "check": "runtime_ruff",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "runtime_mypy",
+      "check": "runtime_mypy",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "resource_exists",
+      "check": "resource_exists",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "sha256",
+      "check": "sha256",
+      "expected": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "hash": null,
+      "observed": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "experiment_id",
+      "check": "experiment_id",
+      "expected": 8172,
+      "hash": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "observed": 8172,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "learning_audit_ready_score",
+      "check": "learning_audit_ready_score",
+      "expected": 1,
+      "hash": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "required_checks_passed",
+      "check": "required_checks_passed",
+      "expected": true,
+      "hash": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check": "flagged_adversarial",
+      "expected": false,
+      "hash": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "observed": false,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "resource_exists",
+      "check": "resource_exists",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "sha256",
+      "check": "sha256",
+      "expected": "sha256:ac67e6f2655c5bf4c91dee806328a04d42792a633ff2beeccc119137d4f22788",
+      "hash": null,
+      "observed": "sha256:ac67e6f2655c5bf4c91dee806328a04d42792a633ff2beeccc119137d4f22788",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "experiment8180_not_retired",
+      "check": "experiment8180_not_retired",
+      "expected": true,
+      "hash": "sha256:ac67e6f2655c5bf4c91dee806328a04d42792a633ff2beeccc119137d4f22788",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "resource_exists",
+      "check": "resource_exists",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v707-calibrated-memory-protocol.json",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "sha256",
+      "check": "sha256",
+      "expected": "sha256:b6b1f522d511b19e2106a31c14d3acd2b992988b8042dd161800884ad1896202",
+      "hash": null,
+      "observed": "sha256:b6b1f522d511b19e2106a31c14d3acd2b992988b8042dd161800884ad1896202",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v707-calibrated-memory-protocol.json",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "resource_exists",
+      "check": "resource_exists",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v705-admission-horizon-protocol.json",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "sha256",
+      "check": "sha256",
+      "expected": "sha256:ff18d138210428fe9b13c256d17ab49762882e1e3fc80ee70aa6e53f42eb19fb",
+      "hash": null,
+      "observed": "sha256:ff18d138210428fe9b13c256d17ab49762882e1e3fc80ee70aa6e53f42eb19fb",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v705-admission-horizon-protocol.json",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "resource_exists",
+      "check": "resource_exists",
+      "expected": true,
+      "hash": null,
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v702-methods-and-stream-protocol.md",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "sha256",
+      "check": "sha256",
+      "expected": "sha256:3bfd25c6ab5b11ff18c6cd8cffa97a2200d3b77187669b80570f9e8864ee1f2a",
+      "hash": null,
+      "observed": "sha256:3bfd25c6ab5b11ff18c6cd8cffa97a2200d3b77187669b80570f9e8864ee1f2a",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v702-methods-and-stream-protocol.md",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "resource_exists",
+      "check": "resource_exists",
+      "expected": true,
+      "hash": "sha256:ff18d138210428fe9b13c256d17ab49762882e1e3fc80ee70aa6e53f42eb19fb",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v705-admission-horizon-protocol.json",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "sha256",
+      "check": "sha256",
+      "expected": "sha256:ff18d138210428fe9b13c256d17ab49762882e1e3fc80ee70aa6e53f42eb19fb",
+      "hash": "sha256:ff18d138210428fe9b13c256d17ab49762882e1e3fc80ee70aa6e53f42eb19fb",
+      "observed": "sha256:ff18d138210428fe9b13c256d17ab49762882e1e3fc80ee70aa6e53f42eb19fb",
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v705-admission-horizon-protocol.json",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "resource_exists",
+      "check": "resource_exists",
+      "expected": true,
+      "hash": "sha256:ac67e6f2655c5bf4c91dee806328a04d42792a633ff2beeccc119137d4f22788",
+      "observed": true,
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "exp8172-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "sha256",
+      "check": "sha256",
+      "expected": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3",
+      "hash": "sha256:ac67e6f2655c5bf4c91dee806328a04d42792a633ff2beeccc119137d4f22788",
+      "observed": "sha256:ac67e6f2655c5bf4c91dee806328a04d42792a633ff2beeccc119137d4f22788",
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "exp8172-learning-benefit-audit"
+    }
+  ],
+  "historical_model_provenance": {},
+  "historical_optimizer_rows": [],
+  "input_manifest": {},
+  "input_manifests": {},
+  "input_ready": 0,
+  "measured_child_coverage": {},
+  "method_map": [
+    {
+      "arxiv": "2604.23987",
+      "limit": "No generator tuning, task-specific conformal buffer or exchangeability claim",
+      "url": "https://arxiv.org/html/2604.23987v1",
+      "use": "Separate calibration-only control and retention of uncertainty"
+    },
+    {
+      "arxiv": "2602.02634",
+      "limit": "Convex reduction and drift regret bounds do not apply to nonlinear radial SGD",
+      "methods_section": "3,5",
+      "url": "https://arxiv.org/html/2602.02634v1",
+      "use": "Order issue and delayed observation events; measure remaining horizon"
+    },
+    {
+      "arxiv": "2606.11711",
+      "limit": "Oldest eviction is not the randomized importance-weighted scheduler; no regret guarantee",
+      "methods_section": "4 Algorithm1",
+      "url": "https://arxiv.org/html/2606.11711v1",
+      "use": "Finite tracked pending capacity with explicit permanent feedback loss"
+    },
+    {
+      "arxiv": "2503.21076",
+      "limit": "KAC channel-wise Gaussian classifier differs from multivariate Euclidean residual heads; no forgetting guarantee",
+      "methods_section": "3.3,3.4",
+      "url": "https://arxiv.org/html/2503.21076v1",
+      "use": "Gaussian local capacity with equal center budgets and independent retention"
+    },
+    {
+      "arxiv": "2605.03534",
+      "limit": "Binary historical labels are not three-way evidence sufficiency; no semantic verification claim",
+      "methods_section": "III,IV",
+      "url": "https://arxiv.org/html/2605.03534v1",
+      "use": "Separate source evidence, confidence and selective decision risk"
+    }
+  ],
+  "optimizer_fixture_rows": [],
+  "overflow_fixture": {
+    "passed": false
+  },
+  "phase_spans": [
+    {
+      "duration_s": 0.21623194310814142,
+      "name": "qualification"
+    }
+  ],
+  "preconditions_checked": {
+    "checks": 27,
+    "coverage_patch": "_exit",
+    "coverage_version": "7.14.1",
+    "model_loads": 0,
+    "natural_fitting": false,
+    "numerical_protocol_frozen_before_outcomes": true,
+    "private_writable_storage": true,
+    "runtime_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
+  },
+  "prior_8193_failure": {},
+  "prior_failure": {},
+  "protocol_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8347_v720_local_consumer_qualification/invocations/1791553755064143603/reproduced_operand/protocol.json",
+  "protocol_sha256": "sha256:b6b1f522d511b19e2106a31c14d3acd2b992988b8042dd161800884ad1896202",
+  "raw_shard_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8347_v720_local_consumer_qualification/invocations/1791553755064143603/reproduced_operand/numerical_protocol.json",
+      "sha256": "sha256:b6b1f522d511b19e2106a31c14d3acd2b992988b8042dd161800884ad1896202"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8347_v720_local_consumer_qualification/invocations/1791553755064143603/reproduced_operand/primitive_evidence.json",
+      "sha256": "sha256:3fabf22d52faa3b01243ec450487ed01b3f8b4d9b22c75580b96c26417f6bd7c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8347_v720_local_consumer_qualification/invocations/1791553755064143603/reproduced_operand/protocol.json",
+      "sha256": "sha256:b6b1f522d511b19e2106a31c14d3acd2b992988b8042dd161800884ad1896202"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8347_v720_local_consumer_qualification/invocations/1791553755064143603/reproduced_operand/restart_commands.json",
+      "sha256": "sha256:ac8c5660acbc8b235359f6b5dfb740860b9e232b1df5ae8fc334b9aa7e5deeba"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8347_v720_local_consumer_qualification/invocations/1791553755064143603/reproduced_operand/qualification_evidence.json",
+      "sha256": "sha256:2864f9267c99a34ff0d0df2942d06cf91a60b767c93d920b3a3822e167ed48a7"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8347_v720_local_consumer_qualification/invocations/1791553755064143603/reproduced_operand/numerical_protocol.json",
+      "sha256": "sha256:b6b1f522d511b19e2106a31c14d3acd2b992988b8042dd161800884ad1896202"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8347_v720_local_consumer_qualification/invocations/1791553755064143603/reproduced_operand/child_coverage/coverage.ini",
+      "sha256": "sha256:422ece0d8c632ae6624e4e02b7586ee073fcb732f8c72ae14084f8aa66421250"
+    }
+  ],
+  "restart_fixture": {
+    "passed": false
+  },
+  "restart_parity": {
+    "passed": false
+  },
+  "rows": [],
+  "saturation_rows": [],
+  "source_artifact_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/patch.py",
+      "sha256": "sha256:8ff2e34b1bdf499aedd619ecda2590a1d2a82b5970686740fcc4ddfc54886abf",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8347_v720_local_consumer_qualification/invocations/1791553755064143603/reproduced_operand/input-8ff2e34b1bdf499aedd619ecda2590a1d2a82b5970686740fcc4ddfc54886abf.bin"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8172_v706_learning_benefit_audit.json",
+      "sha256": "sha256:5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8347_v720_local_consumer_qualification/invocations/1791553755064143603/reproduced_operand/input-5cb110c748960181176793a2d46b18702a53f2e5e49bfed113b3c46c28c29028.bin"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "sha256": "sha256:ac67e6f2655c5bf4c91dee806328a04d42792a633ff2beeccc119137d4f22788",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8347_v720_local_consumer_qualification/invocations/1791553755064143603/reproduced_operand/input-ac67e6f2655c5bf4c91dee806328a04d42792a633ff2beeccc119137d4f22788.bin"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v707-calibrated-memory-protocol.json",
+      "sha256": "sha256:b6b1f522d511b19e2106a31c14d3acd2b992988b8042dd161800884ad1896202",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8347_v720_local_consumer_qualification/invocations/1791553755064143603/reproduced_operand/input-b6b1f522d511b19e2106a31c14d3acd2b992988b8042dd161800884ad1896202.bin"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v705-admission-horizon-protocol.json",
+      "sha256": "sha256:ff18d138210428fe9b13c256d17ab49762882e1e3fc80ee70aa6e53f42eb19fb",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8347_v720_local_consumer_qualification/invocations/1791553755064143603/reproduced_operand/input-ff18d138210428fe9b13c256d17ab49762882e1e3fc80ee70aa6e53f42eb19fb.bin"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v702-methods-and-stream-protocol.md",
+      "sha256": "sha256:3bfd25c6ab5b11ff18c6cd8cffa97a2200d3b77187669b80570f9e8864ee1f2a",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8347_v720_local_consumer_qualification/invocations/1791553755064143603/reproduced_operand/input-3bfd25c6ab5b11ff18c6cd8cffa97a2200d3b77187669b80570f9e8864ee1f2a.bin"
+    }
+  ],
+  "stream_custody_ready": 0
+}

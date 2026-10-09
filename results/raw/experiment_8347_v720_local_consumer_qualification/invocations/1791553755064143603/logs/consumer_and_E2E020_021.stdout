@@ -1,0 +1,1447 @@
+.FFFFEFFFF.......FFFFEFFEE..FFF.F                                        [100%]
+==================================== ERRORS ====================================
+_____________ ERROR at setup of test_replay_faults_and_paid_clocks _____________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests'), _trace=<pluggy._tracing.TagTrac...e090>, _basetemp=PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def primitive_work(tmp_path_factory):
+        """Keep one real private measurement for adversarial replay controls."""
+        from carnot.reporting import local_update_isolation_8306 as e
+    
+        directory = tmp_path_factory.mktemp("primitive8306")
+>       return e.measure(e.ROOT, directory / "raw", fixture=True), directory
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_local_update_isolation_8306.py:215: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/local_update_isolation_8306.py:180: in measure
+    atomic_json(raw / "protocol.json", protocol)
+python/carnot/reporting/current_work_receipt.py:64: in atomic_json
+    json.dump(value, stream, indent=2, sort_keys=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+obj = {'delay': 8, 'knots': [0.0, 0.0, 0.0, 0.0, 0.2, 0.4, ...], 'measurement_deadline_s': 600, 'online_decay': 0, ...}
+fp = <_io.TextIOWrapper name='/tmp/carnot-8347-ybk1ziuf/consumer-tests/primitive83060/raw/.protocol.json.tmp-1855778' mode='w' encoding='utf-8'>
+skipkeys = False, ensure_ascii = True, check_circular = True, allow_nan = True
+cls = <class 'json.encoder.JSONEncoder'>, indent = 2, separators = None
+default = None
+
+    def dump(obj, fp, *, skipkeys=False, ensure_ascii=True, check_circular=True,
+            allow_nan=True, cls=None, indent=None, separators=None,
+            default=None, sort_keys=False, **kw):
+        """Serialize ``obj`` as a JSON formatted stream to ``fp`` (a
+        ``.write()``-supporting file-like object).
+    
+        If ``skipkeys`` is true then ``dict`` keys that are not basic types
+        (``str``, ``int``, ``float``, ``bool``, ``None``) will be skipped
+        instead of raising a ``TypeError``.
+    
+        If ``ensure_ascii`` is false, then the strings written to ``fp`` can
+        contain non-ASCII characters if they appear in strings contained in
+        ``obj``. Otherwise, all such characters are escaped in JSON strings.
+    
+        If ``check_circular`` is false, then the circular reference check
+        for container types will be skipped and a circular reference will
+        result in an ``RecursionError`` (or worse).
+    
+        If ``allow_nan`` is false, then it will be a ``ValueError`` to
+        serialize out of range ``float`` values (``nan``, ``inf``, ``-inf``)
+        in strict compliance of the JSON specification, instead of using the
+        JavaScript equivalents (``NaN``, ``Infinity``, ``-Infinity``).
+    
+        If ``indent`` is a non-negative integer, then JSON array elements and
+        object members will be pretty-printed with that indent level. An indent
+        level of 0 will only insert newlines. ``None`` is the most compact
+        representation.
+    
+        If specified, ``separators`` should be an ``(item_separator, key_separator)``
+        tuple.  The default is ``(', ', ': ')`` if *indent* is ``None`` and
+        ``(',', ': ')`` otherwise.  To get the most compact JSON representation,
+        you should specify ``(',', ':')`` to eliminate whitespace.
+    
+        ``default(obj)`` is a function that should return a serializable version
+        of obj or raise TypeError. The default simply raises TypeError.
+    
+        If *sort_keys* is true (default: ``False``), then the output of
+        dictionaries will be sorted by key.
+    
+        To use a custom ``JSONEncoder`` subclass (e.g. one that overrides the
+        ``.default()`` method to serialize additional types), specify it with
+        the ``cls`` kwarg; otherwise ``JSONEncoder`` is used.
+    
+        """
+        # cached encoder
+        if (not skipkeys and ensure_ascii and
+            check_circular and allow_nan and
+            cls is None and indent is None and separators is None and
+            default is None and not sort_keys and not kw):
+            iterable = _default_encoder.iterencode(obj)
+        else:
+            if cls is None:
+                cls = JSONEncoder
+            iterable = cls(skipkeys=skipkeys, ensure_ascii=ensure_ascii,
+                check_circular=check_circular, allow_nan=allow_nan, indent=indent,
+                separators=separators,
+                default=default, sort_keys=sort_keys, **kw).iterencode(obj)
+        # could accelerate with writelines in some versions of Python, at
+        # a debuggability cost
+        for chunk in iterable:
+>           fp.write(chunk)
+E           OSError: [Errno 122] Disk quota exceeded
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py:180: OSError
+---------------------------- Captured stdout setup -----------------------------
+[exp8306] phase=before_authentication completed=0 pending=0
+[exp8306] phase=after_authentication completed=0 pending=0
+___________ ERROR at setup of test_readiness_and_failed_owned_check ____________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests'), _trace=<pluggy._tracing.TagTrac...e090>, _basetemp=PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+        """SCENARIO-VERIFY-8206-CUSTODY: private fixtures preserve old artifacts."""
+        raw = tmp_path_factory.mktemp("8206-evidence")
+        from carnot.reporting.local_consumer_qualification_8347 import (
+            freeze_historical,
+            historical_operands,
+        )
+    
+>       closure = freeze_historical(tmp_path_factory.mktemp("8206-historical-operands"))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_hard_exit_learning_qualification_8206.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/local_consumer_qualification_8347.py:71: in freeze_historical
+    saved.write_bytes(source.read_bytes())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/8206-historical-operands0/0.bin')
+data = b'# Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0\n# For details: https://github.com/c...process")\n    assert config.config_file is not None\n    os.environ["COVERAGE_PROCESS_CONFIG"] = config.serialize()\n'
+
+    def write_bytes(self, data):
+        """
+        Open the file in bytes mode, write to it, and close the file.
+        """
+        # type-check for the buffer interface before truncating the file
+        view = memoryview(data)
+        with self.open(mode='wb') as f:
+>           return f.write(view)
+                   ^^^^^^^^^^^^^
+E           OSError: [Errno 122] Disk quota exceeded
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1037: OSError
+_______ ERROR at setup of test_real_cli_replay_blocked_worker_and_guard ________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests'), _trace=<pluggy._tracing.TagTrac...e090>, _basetemp=PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+        """SCENARIO-VERIFY-8206-CUSTODY: private fixtures preserve old artifacts."""
+        raw = tmp_path_factory.mktemp("8206-evidence")
+        from carnot.reporting.local_consumer_qualification_8347 import (
+            freeze_historical,
+            historical_operands,
+        )
+    
+>       closure = freeze_historical(tmp_path_factory.mktemp("8206-historical-operands"))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_hard_exit_learning_qualification_8206.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/local_consumer_qualification_8347.py:71: in freeze_historical
+    saved.write_bytes(source.read_bytes())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/8206-historical-operands0/0.bin')
+data = b'# Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0\n# For details: https://github.com/c...process")\n    assert config.config_file is not None\n    os.environ["COVERAGE_PROCESS_CONFIG"] = config.serialize()\n'
+
+    def write_bytes(self, data):
+        """
+        Open the file in bytes mode, write to it, and close the file.
+        """
+        # type-check for the buffer interface before truncating the file
+        view = memoryview(data)
+        with self.open(mode='wb') as f:
+>           return f.write(view)
+                   ^^^^^^^^^^^^^
+E           OSError: [Errno 122] Disk quota exceeded
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1037: OSError
+_____________ ERROR at setup of test_coverage_summary_is_measured ______________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests'), _trace=<pluggy._tracing.TagTrac...e090>, _basetemp=PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+        """SCENARIO-VERIFY-8206-CUSTODY: private fixtures preserve old artifacts."""
+        raw = tmp_path_factory.mktemp("8206-evidence")
+        from carnot.reporting.local_consumer_qualification_8347 import (
+            freeze_historical,
+            historical_operands,
+        )
+    
+>       closure = freeze_historical(tmp_path_factory.mktemp("8206-historical-operands"))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_hard_exit_learning_qualification_8206.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/local_consumer_qualification_8347.py:71: in freeze_historical
+    saved.write_bytes(source.read_bytes())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/8206-historical-operands0/0.bin')
+data = b'# Licensed under the Apache License: http://www.apache.org/licenses/LICENSE-2.0\n# For details: https://github.com/c...process")\n    assert config.config_file is not None\n    os.environ["COVERAGE_PROCESS_CONFIG"] = config.serialize()\n'
+
+    def write_bytes(self, data):
+        """
+        Open the file in bytes mode, write to it, and close the file.
+        """
+        # type-check for the buffer interface before truncating the file
+        view = memoryview(data)
+        with self.open(mode='wb') as f:
+>           return f.write(view)
+                   ^^^^^^^^^^^^^
+E           OSError: [Errno 122] Disk quota exceeded
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1037: OSError
+=================================== FAILURES ===================================
+___________________ test_all_trajectories_and_cache_controls ___________________
+
+path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_all_trajectories_and_cach0/7171-0-0f')
+value = {'encoded_state': '{"applied":[],"arm":"full","cache":{"0":{"p":0.47454951305364557,"valid":true,"x":[0.0,0.0,0.0,0.0,...tale_cache_count":0,"version":0}', 'sha256': 'sha256:74593e92f50f84cb2260d58ded8c945a295679785293dddbcc62f4891b2d6a29'}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+        with temporary.open("w", encoding="utf-8") as stream:
+            json.dump(value, stream, indent=2, sort_keys=True)
+            stream.write("\n")
+>           stream.flush()
+E           OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:66: OSError
+
+During handling of the above exception, another exception occurred:
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 66, in atomic_json
+    stream.flush()
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_all_trajectories_and_cach0')
+
+    def test_all_trajectories_and_cache_controls(tmp_path):
+        """SCENARIO-VERIFY-8306-STATE: faults never authorize stale cache reads."""
+        for trajectory in k.manifest()["trajectories"]:
+>           full = k.execute(trajectory, "full", tmp_path / (trajectory["id"] + "f"))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_local_update_isolation_8306.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/verify/local_update_isolation_8306.py:364: in execute
+    save(path, state)
+python/carnot/verify/local_update_isolation_8306.py:346: in save
+    atomic_json(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_all_trajectories_and_cach0/7171-0-0f')
+value = {'encoded_state': '{"applied":[],"arm":"full","cache":{"0":{"p":0.47454951305364557,"valid":true,"x":[0.0,0.0,0.0,0.0,...tale_cache_count":0,"version":0}', 'sha256': 'sha256:74593e92f50f84cb2260d58ded8c945a295679785293dddbcc62f4891b2d6a29'}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+>       with temporary.open("w", encoding="utf-8") as stream:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:63: OSError
+_____________________ test_real_child_recovery_and_tamper ______________________
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_real_child_recovery_and_t0')
+
+    def test_real_child_recovery_and_tamper(tmp_path):
+        """SCENARIO-VERIFY-8306-RECOVERY: killed owned children resume pending issues."""
+        plan = tmp_path / "manifest.json"
+>       atomic_json(plan, k.manifest())
+
+tests/python/test_local_update_isolation_8306.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/current_work_receipt.py:64: in atomic_json
+    json.dump(value, stream, indent=2, sort_keys=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+obj = {'delay': 8, 'knots': [0.0, 0.0, 0.0, 0.0, 0.2, 0.4, ...], 'measurement_deadline_s': 600, 'online_decay': 0, ...}
+fp = <_io.TextIOWrapper name='/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_real_child_recovery_and_t0/.manifest.json.tmp-1855778' mode='w' encoding='utf-8'>
+skipkeys = False, ensure_ascii = True, check_circular = True, allow_nan = True
+cls = <class 'json.encoder.JSONEncoder'>, indent = 2, separators = None
+default = None
+
+    def dump(obj, fp, *, skipkeys=False, ensure_ascii=True, check_circular=True,
+            allow_nan=True, cls=None, indent=None, separators=None,
+            default=None, sort_keys=False, **kw):
+        """Serialize ``obj`` as a JSON formatted stream to ``fp`` (a
+        ``.write()``-supporting file-like object).
+    
+        If ``skipkeys`` is true then ``dict`` keys that are not basic types
+        (``str``, ``int``, ``float``, ``bool``, ``None``) will be skipped
+        instead of raising a ``TypeError``.
+    
+        If ``ensure_ascii`` is false, then the strings written to ``fp`` can
+        contain non-ASCII characters if they appear in strings contained in
+        ``obj``. Otherwise, all such characters are escaped in JSON strings.
+    
+        If ``check_circular`` is false, then the circular reference check
+        for container types will be skipped and a circular reference will
+        result in an ``RecursionError`` (or worse).
+    
+        If ``allow_nan`` is false, then it will be a ``ValueError`` to
+        serialize out of range ``float`` values (``nan``, ``inf``, ``-inf``)
+        in strict compliance of the JSON specification, instead of using the
+        JavaScript equivalents (``NaN``, ``Infinity``, ``-Infinity``).
+    
+        If ``indent`` is a non-negative integer, then JSON array elements and
+        object members will be pretty-printed with that indent level. An indent
+        level of 0 will only insert newlines. ``None`` is the most compact
+        representation.
+    
+        If specified, ``separators`` should be an ``(item_separator, key_separator)``
+        tuple.  The default is ``(', ', ': ')`` if *indent* is ``None`` and
+        ``(',', ': ')`` otherwise.  To get the most compact JSON representation,
+        you should specify ``(',', ':')`` to eliminate whitespace.
+    
+        ``default(obj)`` is a function that should return a serializable version
+        of obj or raise TypeError. The default simply raises TypeError.
+    
+        If *sort_keys* is true (default: ``False``), then the output of
+        dictionaries will be sorted by key.
+    
+        To use a custom ``JSONEncoder`` subclass (e.g. one that overrides the
+        ``.default()`` method to serialize additional types), specify it with
+        the ``cls`` kwarg; otherwise ``JSONEncoder`` is used.
+    
+        """
+        # cached encoder
+        if (not skipkeys and ensure_ascii and
+            check_circular and allow_nan and
+            cls is None and indent is None and separators is None and
+            default is None and not sort_keys and not kw):
+            iterable = _default_encoder.iterencode(obj)
+        else:
+            if cls is None:
+                cls = JSONEncoder
+            iterable = cls(skipkeys=skipkeys, ensure_ascii=ensure_ascii,
+                check_circular=check_circular, allow_nan=allow_nan, indent=indent,
+                separators=separators,
+                default=default, sort_keys=sort_keys, **kw).iterencode(obj)
+        # could accelerate with writelines in some versions of Python, at
+        # a debuggability cost
+        for chunk in iterable:
+>           fp.write(chunk)
+E           OSError: [Errno 122] Disk quota exceeded
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py:180: OSError
+___________________ test_reporting_blocks_reduction_and_cli ____________________
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_reporting_blocks_reductio0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2c6f13f8f0>
+
+    def test_reporting_blocks_reduction_and_cli(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8306-CLI: replay binds actual observations and byte receipts."""
+        from carnot.reporting import local_update_isolation_8306 as e
+    
+>       work = e.measure(e.ROOT, tmp_path / "raw", fixture=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_local_update_isolation_8306.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/local_update_isolation_8306.py:180: in measure
+    atomic_json(raw / "protocol.json", protocol)
+python/carnot/reporting/current_work_receipt.py:64: in atomic_json
+    json.dump(value, stream, indent=2, sort_keys=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+obj = {'delay': 8, 'knots': [0.0, 0.0, 0.0, 0.0, 0.2, 0.4, ...], 'measurement_deadline_s': 600, 'online_decay': 0, ...}
+fp = <_io.TextIOWrapper name='/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_reporting_blocks_reductio0/raw/.protocol.json.tmp-1855778' mode='w' encoding='utf-8'>
+skipkeys = False, ensure_ascii = True, check_circular = True, allow_nan = True
+cls = <class 'json.encoder.JSONEncoder'>, indent = 2, separators = None
+default = None
+
+    def dump(obj, fp, *, skipkeys=False, ensure_ascii=True, check_circular=True,
+            allow_nan=True, cls=None, indent=None, separators=None,
+            default=None, sort_keys=False, **kw):
+        """Serialize ``obj`` as a JSON formatted stream to ``fp`` (a
+        ``.write()``-supporting file-like object).
+    
+        If ``skipkeys`` is true then ``dict`` keys that are not basic types
+        (``str``, ``int``, ``float``, ``bool``, ``None``) will be skipped
+        instead of raising a ``TypeError``.
+    
+        If ``ensure_ascii`` is false, then the strings written to ``fp`` can
+        contain non-ASCII characters if they appear in strings contained in
+        ``obj``. Otherwise, all such characters are escaped in JSON strings.
+    
+        If ``check_circular`` is false, then the circular reference check
+        for container types will be skipped and a circular reference will
+        result in an ``RecursionError`` (or worse).
+    
+        If ``allow_nan`` is false, then it will be a ``ValueError`` to
+        serialize out of range ``float`` values (``nan``, ``inf``, ``-inf``)
+        in strict compliance of the JSON specification, instead of using the
+        JavaScript equivalents (``NaN``, ``Infinity``, ``-Infinity``).
+    
+        If ``indent`` is a non-negative integer, then JSON array elements and
+        object members will be pretty-printed with that indent level. An indent
+        level of 0 will only insert newlines. ``None`` is the most compact
+        representation.
+    
+        If specified, ``separators`` should be an ``(item_separator, key_separator)``
+        tuple.  The default is ``(', ', ': ')`` if *indent* is ``None`` and
+        ``(',', ': ')`` otherwise.  To get the most compact JSON representation,
+        you should specify ``(',', ':')`` to eliminate whitespace.
+    
+        ``default(obj)`` is a function that should return a serializable version
+        of obj or raise TypeError. The default simply raises TypeError.
+    
+        If *sort_keys* is true (default: ``False``), then the output of
+        dictionaries will be sorted by key.
+    
+        To use a custom ``JSONEncoder`` subclass (e.g. one that overrides the
+        ``.default()`` method to serialize additional types), specify it with
+        the ``cls`` kwarg; otherwise ``JSONEncoder`` is used.
+    
+        """
+        # cached encoder
+        if (not skipkeys and ensure_ascii and
+            check_circular and allow_nan and
+            cls is None and indent is None and separators is None and
+            default is None and not sort_keys and not kw):
+            iterable = _default_encoder.iterencode(obj)
+        else:
+            if cls is None:
+                cls = JSONEncoder
+            iterable = cls(skipkeys=skipkeys, ensure_ascii=ensure_ascii,
+                check_circular=check_circular, allow_nan=allow_nan, indent=indent,
+                separators=separators,
+                default=default, sort_keys=sort_keys, **kw).iterencode(obj)
+        # could accelerate with writelines in some versions of Python, at
+        # a debuggability cost
+        for chunk in iterable:
+>           fp.write(chunk)
+E           OSError: [Errno 122] Disk quota exceeded
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py:180: OSError
+----------------------------- Captured stdout call -----------------------------
+[exp8306] phase=before_authentication completed=0 pending=0
+[exp8306] phase=after_authentication completed=0 pending=0
+________________________ test_cohort_hard_exit_recovery ________________________
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_cohort_hard_exit_recovery0')
+
+    def test_cohort_hard_exit_recovery(tmp_path):
+        """SCENARIO-VERIFY-8306-RECOVERY: every intended trajectory survives both deaths."""
+        plan = k.manifest()
+        path = tmp_path / "protocol.json"
+>       atomic_json(path, plan)
+
+tests/python/test_local_update_isolation_8306.py:181: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/current_work_receipt.py:64: in atomic_json
+    json.dump(value, stream, indent=2, sort_keys=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+obj = {'delay': 8, 'knots': [0.0, 0.0, 0.0, 0.0, 0.2, 0.4, ...], 'measurement_deadline_s': 600, 'online_decay': 0, ...}
+fp = <_io.TextIOWrapper name='/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_cohort_hard_exit_recovery0/.protocol.json.tmp-1855778' mode='w' encoding='utf-8'>
+skipkeys = False, ensure_ascii = True, check_circular = True, allow_nan = True
+cls = <class 'json.encoder.JSONEncoder'>, indent = 2, separators = None
+default = None
+
+    def dump(obj, fp, *, skipkeys=False, ensure_ascii=True, check_circular=True,
+            allow_nan=True, cls=None, indent=None, separators=None,
+            default=None, sort_keys=False, **kw):
+        """Serialize ``obj`` as a JSON formatted stream to ``fp`` (a
+        ``.write()``-supporting file-like object).
+    
+        If ``skipkeys`` is true then ``dict`` keys that are not basic types
+        (``str``, ``int``, ``float``, ``bool``, ``None``) will be skipped
+        instead of raising a ``TypeError``.
+    
+        If ``ensure_ascii`` is false, then the strings written to ``fp`` can
+        contain non-ASCII characters if they appear in strings contained in
+        ``obj``. Otherwise, all such characters are escaped in JSON strings.
+    
+        If ``check_circular`` is false, then the circular reference check
+        for container types will be skipped and a circular reference will
+        result in an ``RecursionError`` (or worse).
+    
+        If ``allow_nan`` is false, then it will be a ``ValueError`` to
+        serialize out of range ``float`` values (``nan``, ``inf``, ``-inf``)
+        in strict compliance of the JSON specification, instead of using the
+        JavaScript equivalents (``NaN``, ``Infinity``, ``-Infinity``).
+    
+        If ``indent`` is a non-negative integer, then JSON array elements and
+        object members will be pretty-printed with that indent level. An indent
+        level of 0 will only insert newlines. ``None`` is the most compact
+        representation.
+    
+        If specified, ``separators`` should be an ``(item_separator, key_separator)``
+        tuple.  The default is ``(', ', ': ')`` if *indent* is ``None`` and
+        ``(',', ': ')`` otherwise.  To get the most compact JSON representation,
+        you should specify ``(',', ':')`` to eliminate whitespace.
+    
+        ``default(obj)`` is a function that should return a serializable version
+        of obj or raise TypeError. The default simply raises TypeError.
+    
+        If *sort_keys* is true (default: ``False``), then the output of
+        dictionaries will be sorted by key.
+    
+        To use a custom ``JSONEncoder`` subclass (e.g. one that overrides the
+        ``.default()`` method to serialize additional types), specify it with
+        the ``cls`` kwarg; otherwise ``JSONEncoder`` is used.
+    
+        """
+        # cached encoder
+        if (not skipkeys and ensure_ascii and
+            check_circular and allow_nan and
+            cls is None and indent is None and separators is None and
+            default is None and not sort_keys and not kw):
+            iterable = _default_encoder.iterencode(obj)
+        else:
+            if cls is None:
+                cls = JSONEncoder
+            iterable = cls(skipkeys=skipkeys, ensure_ascii=ensure_ascii,
+                check_circular=check_circular, allow_nan=allow_nan, indent=indent,
+                separators=separators,
+                default=default, sort_keys=sort_keys, **kw).iterencode(obj)
+        # could accelerate with writelines in some versions of Python, at
+        # a debuggability cost
+        for chunk in iterable:
+>           fp.write(chunk)
+E           OSError: [Errno 122] Disk quota exceeded
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py:180: OSError
+__________________ test_failure_boundaries_and_kill_dispatch ___________________
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_failure_boundaries_and_ki0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2cc25f5d60>
+
+    def test_failure_boundaries_and_kill_dispatch(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8306-RECOVERY: exercise errors without killing pytest."""
+        from carnot.reporting import local_update_isolation_8306 as e
+        from carnot.reporting import local_update_execution_8306 as runner
+    
+        trajectory = k.manifest()["trajectories"][0]
+        assert k.load(trajectory, tmp_path / "absent") == k.initial(trajectory)
+        path = tmp_path / "protocol.json"
+>       atomic_json(path, k.manifest())
+
+tests/python/test_local_update_isolation_8306.py:288: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/current_work_receipt.py:64: in atomic_json
+    json.dump(value, stream, indent=2, sort_keys=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+obj = {'delay': 8, 'knots': [0.0, 0.0, 0.0, 0.0, 0.2, 0.4, ...], 'measurement_deadline_s': 600, 'online_decay': 0, ...}
+fp = <_io.TextIOWrapper name='/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_failure_boundaries_and_ki0/.protocol.json.tmp-1855778' mode='w' encoding='utf-8'>
+skipkeys = False, ensure_ascii = True, check_circular = True, allow_nan = True
+cls = <class 'json.encoder.JSONEncoder'>, indent = 2, separators = None
+default = None
+
+    def dump(obj, fp, *, skipkeys=False, ensure_ascii=True, check_circular=True,
+            allow_nan=True, cls=None, indent=None, separators=None,
+            default=None, sort_keys=False, **kw):
+        """Serialize ``obj`` as a JSON formatted stream to ``fp`` (a
+        ``.write()``-supporting file-like object).
+    
+        If ``skipkeys`` is true then ``dict`` keys that are not basic types
+        (``str``, ``int``, ``float``, ``bool``, ``None``) will be skipped
+        instead of raising a ``TypeError``.
+    
+        If ``ensure_ascii`` is false, then the strings written to ``fp`` can
+        contain non-ASCII characters if they appear in strings contained in
+        ``obj``. Otherwise, all such characters are escaped in JSON strings.
+    
+        If ``check_circular`` is false, then the circular reference check
+        for container types will be skipped and a circular reference will
+        result in an ``RecursionError`` (or worse).
+    
+        If ``allow_nan`` is false, then it will be a ``ValueError`` to
+        serialize out of range ``float`` values (``nan``, ``inf``, ``-inf``)
+        in strict compliance of the JSON specification, instead of using the
+        JavaScript equivalents (``NaN``, ``Infinity``, ``-Infinity``).
+    
+        If ``indent`` is a non-negative integer, then JSON array elements and
+        object members will be pretty-printed with that indent level. An indent
+        level of 0 will only insert newlines. ``None`` is the most compact
+        representation.
+    
+        If specified, ``separators`` should be an ``(item_separator, key_separator)``
+        tuple.  The default is ``(', ', ': ')`` if *indent* is ``None`` and
+        ``(',', ': ')`` otherwise.  To get the most compact JSON representation,
+        you should specify ``(',', ':')`` to eliminate whitespace.
+    
+        ``default(obj)`` is a function that should return a serializable version
+        of obj or raise TypeError. The default simply raises TypeError.
+    
+        If *sort_keys* is true (default: ``False``), then the output of
+        dictionaries will be sorted by key.
+    
+        To use a custom ``JSONEncoder`` subclass (e.g. one that overrides the
+        ``.default()`` method to serialize additional types), specify it with
+        the ``cls`` kwarg; otherwise ``JSONEncoder`` is used.
+    
+        """
+        # cached encoder
+        if (not skipkeys and ensure_ascii and
+            check_circular and allow_nan and
+            cls is None and indent is None and separators is None and
+            default is None and not sort_keys and not kw):
+            iterable = _default_encoder.iterencode(obj)
+        else:
+            if cls is None:
+                cls = JSONEncoder
+            iterable = cls(skipkeys=skipkeys, ensure_ascii=ensure_ascii,
+                check_circular=check_circular, allow_nan=allow_nan, indent=indent,
+                separators=separators,
+                default=default, sort_keys=sort_keys, **kw).iterencode(obj)
+        # could accelerate with writelines in some versions of Python, at
+        # a debuggability cost
+        for chunk in iterable:
+>           fp.write(chunk)
+E           OSError: [Errno 122] Disk quota exceeded
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py:180: OSError
+__________________ test_measurement_deadline_and_plain_child ___________________
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_measurement_deadline_and_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2cc2ed1bb0>
+
+    def test_measurement_deadline_and_plain_child(tmp_path, monkeypatch):
+        """REQ-VERIFY-8306: measurement deadlines stop owned work instead of padding."""
+        from types import SimpleNamespace
+        import time
+        from carnot.reporting import local_update_isolation_8306 as e
+    
+        calls = []
+    
+        def clock():
+            calls.append(1)
+            return 0.0 if len(calls) == 1 else 601.0
+    
+        monkeypatch.delenv("COVERAGE_RCFILE", raising=False)
+        monkeypatch.setattr(e, "time", SimpleNamespace(monotonic=clock, monotonic_ns=time.monotonic_ns))
+        with pytest.raises(TimeoutError, match="measurement_deadline"):
+>           e.measure(e.ROOT, tmp_path / "deadline", fixture=True)
+
+tests/python/test_local_update_isolation_8306.py:331: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/local_update_isolation_8306.py:180: in measure
+    atomic_json(raw / "protocol.json", protocol)
+python/carnot/reporting/current_work_receipt.py:64: in atomic_json
+    json.dump(value, stream, indent=2, sort_keys=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+obj = {'delay': 8, 'knots': [0.0, 0.0, 0.0, 0.0, 0.2, 0.4, ...], 'measurement_deadline_s': 600, 'online_decay': 0, ...}
+fp = <_io.TextIOWrapper name='/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_measurement_deadline_and_0/deadline/.protocol.json.tmp-1855778' mode='w' encoding='utf-8'>
+skipkeys = False, ensure_ascii = True, check_circular = True, allow_nan = True
+cls = <class 'json.encoder.JSONEncoder'>, indent = 2, separators = None
+default = None
+
+    def dump(obj, fp, *, skipkeys=False, ensure_ascii=True, check_circular=True,
+            allow_nan=True, cls=None, indent=None, separators=None,
+            default=None, sort_keys=False, **kw):
+        """Serialize ``obj`` as a JSON formatted stream to ``fp`` (a
+        ``.write()``-supporting file-like object).
+    
+        If ``skipkeys`` is true then ``dict`` keys that are not basic types
+        (``str``, ``int``, ``float``, ``bool``, ``None``) will be skipped
+        instead of raising a ``TypeError``.
+    
+        If ``ensure_ascii`` is false, then the strings written to ``fp`` can
+        contain non-ASCII characters if they appear in strings contained in
+        ``obj``. Otherwise, all such characters are escaped in JSON strings.
+    
+        If ``check_circular`` is false, then the circular reference check
+        for container types will be skipped and a circular reference will
+        result in an ``RecursionError`` (or worse).
+    
+        If ``allow_nan`` is false, then it will be a ``ValueError`` to
+        serialize out of range ``float`` values (``nan``, ``inf``, ``-inf``)
+        in strict compliance of the JSON specification, instead of using the
+        JavaScript equivalents (``NaN``, ``Infinity``, ``-Infinity``).
+    
+        If ``indent`` is a non-negative integer, then JSON array elements and
+        object members will be pretty-printed with that indent level. An indent
+        level of 0 will only insert newlines. ``None`` is the most compact
+        representation.
+    
+        If specified, ``separators`` should be an ``(item_separator, key_separator)``
+        tuple.  The default is ``(', ', ': ')`` if *indent* is ``None`` and
+        ``(',', ': ')`` otherwise.  To get the most compact JSON representation,
+        you should specify ``(',', ':')`` to eliminate whitespace.
+    
+        ``default(obj)`` is a function that should return a serializable version
+        of obj or raise TypeError. The default simply raises TypeError.
+    
+        If *sort_keys* is true (default: ``False``), then the output of
+        dictionaries will be sorted by key.
+    
+        To use a custom ``JSONEncoder`` subclass (e.g. one that overrides the
+        ``.default()`` method to serialize additional types), specify it with
+        the ``cls`` kwarg; otherwise ``JSONEncoder`` is used.
+    
+        """
+        # cached encoder
+        if (not skipkeys and ensure_ascii and
+            check_circular and allow_nan and
+            cls is None and indent is None and separators is None and
+            default is None and not sort_keys and not kw):
+            iterable = _default_encoder.iterencode(obj)
+        else:
+            if cls is None:
+                cls = JSONEncoder
+            iterable = cls(skipkeys=skipkeys, ensure_ascii=ensure_ascii,
+                check_circular=check_circular, allow_nan=allow_nan, indent=indent,
+                separators=separators,
+                default=default, sort_keys=sort_keys, **kw).iterencode(obj)
+        # could accelerate with writelines in some versions of Python, at
+        # a debuggability cost
+        for chunk in iterable:
+>           fp.write(chunk)
+E           OSError: [Errno 122] Disk quota exceeded
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py:180: OSError
+----------------------------- Captured stdout call -----------------------------
+[exp8306] phase=before_authentication completed=0 pending=0
+[exp8306] phase=after_authentication completed=0 pending=0
+________________ test_nested_reports_and_terminal_revalidation _________________
+
+path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_nested_reports_and_termin0/raw/experiment_7928_fixture/terminal_candidate.json')
+value = {'artifact_resolution_ready_score': 1, 'experiment_id': 7928, 'flagged_adversarial': False, 'honest_verdict': 'complete_null_fixture', ...}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+        with temporary.open("w", encoding="utf-8") as stream:
+            json.dump(value, stream, indent=2, sort_keys=True)
+            stream.write("\n")
+>           stream.flush()
+E           OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:66: OSError
+
+During handling of the above exception, another exception occurred:
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 66, in atomic_json
+    stream.flush()
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_nested_reports_and_termin0')
+
+    def test_nested_reports_and_terminal_revalidation(tmp_path):
+        """SCENARIO-REPORT-7928-1: newer nested reports cannot shadow the primary."""
+        output = tmp_path / "experiment_7928_fixture.json"
+        observed = []
+    
+        def check(candidate):
+            observed.append(sha256_file(candidate))
+            return {"passed": True}
+    
+>       receipt = publish_primary(output, primary(), check)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_primary_publication_7928.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/primary_publication.py:69: in publish_primary
+    atomic_json(candidate, value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_nested_reports_and_termin0/raw/experiment_7928_fixture/terminal_candidate.json')
+value = {'artifact_resolution_ready_score': 1, 'experiment_id': 7928, 'flagged_adversarial': False, 'honest_verdict': 'complete_null_fixture', ...}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+>       with temporary.open("w", encoding="utf-8") as stream:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:63: OSError
+___________________ test_legacy_shadow_is_required_negative ____________________
+
+path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_legacy_shadow_is_required0/experiment_7928_fixture.json')
+value = {'artifact_resolution_ready_score': 1, 'experiment_id': 7928, 'flagged_adversarial': False, 'honest_verdict': 'complete_null_fixture', ...}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+        with temporary.open("w", encoding="utf-8") as stream:
+            json.dump(value, stream, indent=2, sort_keys=True)
+            stream.write("\n")
+>           stream.flush()
+E           OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:66: OSError
+
+During handling of the above exception, another exception occurred:
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 66, in atomic_json
+    stream.flush()
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_legacy_shadow_is_required0')
+
+    def test_legacy_shadow_is_required_negative(tmp_path):
+        """SCENARIO-REPORT-7928-1: retain the actual newest-top-level failure."""
+        output = tmp_path / "experiment_7928_fixture.json"
+>       atomic_json(output, primary())
+
+tests/python/test_primary_publication_7928.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_legacy_shadow_is_required0/experiment_7928_fixture.json')
+value = {'artifact_resolution_ready_score': 1, 'experiment_id': 7928, 'flagged_adversarial': False, 'honest_verdict': 'complete_null_fixture', ...}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+>       with temporary.open("w", encoding="utf-8") as stream:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:63: OSError
+________________ test_invalid_names_shapes_and_failed_validator ________________
+
+path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_invalid_names_shapes_and_0/raw/experiment_7928_fixture/terminal_candidate.json')
+value = {'artifact_resolution_ready_score': 1, 'experiment_id': 7928, 'flagged_adversarial': False, 'honest_verdict': 'complete_null_fixture', ...}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+        with temporary.open("w", encoding="utf-8") as stream:
+            json.dump(value, stream, indent=2, sort_keys=True)
+            stream.write("\n")
+>           stream.flush()
+E           OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:66: OSError
+
+During handling of the above exception, another exception occurred:
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 66, in atomic_json
+    stream.flush()
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_invalid_names_shapes_and_0')
+
+    def test_invalid_names_shapes_and_failed_validator(tmp_path):
+        """REQ-REPORT-7928: malformed identity and failed checks leave no primary."""
+        for name in ["other.json", "experiment_7928_x.json.validators.json"]:
+            with pytest.raises(ValueError, match="primary_name"):
+                validate_primary(primary(), tmp_path / name)
+        with pytest.raises(ValueError, match="primary_object"):
+            validate_primary([], tmp_path / "experiment_7928_fixture.json")
+        output = tmp_path / "experiment_7928_fixture.json"
+        with pytest.raises(ValueError, match="candidate_rejected"):
+>           publish_primary(output, primary(), lambda p: {"passed": False})
+
+tests/python/test_primary_publication_7928.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/primary_publication.py:69: in publish_primary
+    atomic_json(candidate, value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_invalid_names_shapes_and_0/raw/experiment_7928_fixture/terminal_candidate.json')
+value = {'artifact_resolution_ready_score': 1, 'experiment_id': 7928, 'flagged_adversarial': False, 'honest_verdict': 'complete_null_fixture', ...}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+>       with temporary.open("w", encoding="utf-8") as stream:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:63: OSError
+____________ test_conflicts_stale_hashes_and_concurrent_replacement ____________
+
+path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_conflicts_stale_hashes_an0/raw/experiment_7928_fixture/terminal_candidate.json')
+value = {'artifact_resolution_ready_score': 1, 'experiment_id': 7928, 'flagged_adversarial': False, 'honest_verdict': 'complete_null_fixture', ...}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+        with temporary.open("w", encoding="utf-8") as stream:
+            json.dump(value, stream, indent=2, sort_keys=True)
+            stream.write("\n")
+>           stream.flush()
+E           OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:66: OSError
+
+During handling of the above exception, another exception occurred:
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 66, in atomic_json
+    stream.flush()
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_conflicts_stale_hashes_an0')
+
+    def test_conflicts_stale_hashes_and_concurrent_replacement(tmp_path):
+        """SCENARIO-REPORT-7928-1: serialize replacements and reject stale bindings."""
+        output = tmp_path / "experiment_7928_fixture.json"
+    
+        def replace(index):
+            return publish_primary(output, {**primary(), "revision": index}, lambda p: {"passed": True})
+    
+        with ThreadPoolExecutor(max_workers=2) as pool:
+>           receipts = list(pool.map(replace, range(2)))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_primary_publication_7928.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py:619: in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py:317: in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/concurrent/futures/thread.py:59: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/python/test_primary_publication_7928.py:111: in replace
+    return publish_primary(output, {**primary(), "revision": index}, lambda p: {"passed": True})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/primary_publication.py:69: in publish_primary
+    atomic_json(candidate, value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_conflicts_stale_hashes_an0/raw/experiment_7928_fixture/terminal_candidate.json')
+value = {'artifact_resolution_ready_score': 1, 'experiment_id': 7928, 'flagged_adversarial': False, 'honest_verdict': 'complete_null_fixture', ...}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+>       with temporary.open("w", encoding="utf-8") as stream:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:63: OSError
+___________ test_real_readers_missing_malformed_disqualified_absent ____________
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_real_readers_missing_malf0')
+
+    def test_real_readers_missing_malformed_disqualified_absent(tmp_path):
+        """SCENARIO-REPORT-7928-1: record reader failures without changing APIs."""
+        task = "exp7928-primary-publication"
+        assert not reader_receipt(task, tmp_path)["passed"]
+        output = tmp_path / "experiment_7928_fixture.json"
+>       output.write_text("{")
+
+tests/python/test_primary_publication_7928.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_real_readers_missing_malf0/experiment_7928_fixture.json')
+data = '{', encoding = 'locale', errors = None, newline = None
+
+    def write_text(self, data, encoding=None, errors=None, newline=None):
+        """
+        Open the file in text mode, write to it, and close the file.
+        """
+        if not isinstance(data, str):
+            raise TypeError('data must be str, not %s' %
+                            data.__class__.__name__)
+        encoding = io.text_encoding(encoding)
+>       with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: [Errno 122] Disk quota exceeded
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1047: OSError
+___________________ test_real_child_two_crashes_and_no_crash ___________________
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_real_child_two_crashes_an0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2cc2e667b0>
+
+    def test_real_child_two_crashes_and_no_crash(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8206-CHILD: real exit73 retains all pending state."""
+        rows, labels = e.legacy.fixture("learnable")
+        from carnot.reporting import v709_execution
+    
+        monkeypatch.setattr(v709_execution, "ROOT", tmp_path)
+>       atomic_json(tmp_path / "restart-input.json", dict(rows=rows, labels=labels, seed=101))
+
+tests/python/test_hard_exit_learning_qualification_8206.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/current_work_receipt.py:64: in atomic_json
+    json.dump(value, stream, indent=2, sort_keys=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+obj = {'labels': [0, 0, 0, 1, 1, 1, ...], 'rows': [{'exclusion_reason': None, 'slot': 1, 'source_cluster_id': 'sha256:e97694...cccd801182f439b4f0fbeacc812fa4017dc1208a5fd69800edd0889df32abdde', 'source_id': 'private-6-0', ...}, ...], 'seed': 101}
+fp = <_io.TextIOWrapper name='/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_real_child_two_crashes_an0/.restart-input.json.tmp-1855778' mode='w' encoding='utf-8'>
+skipkeys = False, ensure_ascii = True, check_circular = True, allow_nan = True
+cls = <class 'json.encoder.JSONEncoder'>, indent = 2, separators = None
+default = None
+
+    def dump(obj, fp, *, skipkeys=False, ensure_ascii=True, check_circular=True,
+            allow_nan=True, cls=None, indent=None, separators=None,
+            default=None, sort_keys=False, **kw):
+        """Serialize ``obj`` as a JSON formatted stream to ``fp`` (a
+        ``.write()``-supporting file-like object).
+    
+        If ``skipkeys`` is true then ``dict`` keys that are not basic types
+        (``str``, ``int``, ``float``, ``bool``, ``None``) will be skipped
+        instead of raising a ``TypeError``.
+    
+        If ``ensure_ascii`` is false, then the strings written to ``fp`` can
+        contain non-ASCII characters if they appear in strings contained in
+        ``obj``. Otherwise, all such characters are escaped in JSON strings.
+    
+        If ``check_circular`` is false, then the circular reference check
+        for container types will be skipped and a circular reference will
+        result in an ``RecursionError`` (or worse).
+    
+        If ``allow_nan`` is false, then it will be a ``ValueError`` to
+        serialize out of range ``float`` values (``nan``, ``inf``, ``-inf``)
+        in strict compliance of the JSON specification, instead of using the
+        JavaScript equivalents (``NaN``, ``Infinity``, ``-Infinity``).
+    
+        If ``indent`` is a non-negative integer, then JSON array elements and
+        object members will be pretty-printed with that indent level. An indent
+        level of 0 will only insert newlines. ``None`` is the most compact
+        representation.
+    
+        If specified, ``separators`` should be an ``(item_separator, key_separator)``
+        tuple.  The default is ``(', ', ': ')`` if *indent* is ``None`` and
+        ``(',', ': ')`` otherwise.  To get the most compact JSON representation,
+        you should specify ``(',', ':')`` to eliminate whitespace.
+    
+        ``default(obj)`` is a function that should return a serializable version
+        of obj or raise TypeError. The default simply raises TypeError.
+    
+        If *sort_keys* is true (default: ``False``), then the output of
+        dictionaries will be sorted by key.
+    
+        To use a custom ``JSONEncoder`` subclass (e.g. one that overrides the
+        ``.default()`` method to serialize additional types), specify it with
+        the ``cls`` kwarg; otherwise ``JSONEncoder`` is used.
+    
+        """
+        # cached encoder
+        if (not skipkeys and ensure_ascii and
+            check_circular and allow_nan and
+            cls is None and indent is None and separators is None and
+            default is None and not sort_keys and not kw):
+            iterable = _default_encoder.iterencode(obj)
+        else:
+            if cls is None:
+                cls = JSONEncoder
+            iterable = cls(skipkeys=skipkeys, ensure_ascii=ensure_ascii,
+                check_circular=check_circular, allow_nan=allow_nan, indent=indent,
+                separators=separators,
+                default=default, sort_keys=sort_keys, **kw).iterencode(obj)
+        # could accelerate with writelines in some versions of Python, at
+        # a debuggability cost
+        for chunk in iterable:
+>           fp.write(chunk)
+E           OSError: [Errno 122] Disk quota exceeded
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py:180: OSError
+____________________ test_missing_operand_stops_measurement ____________________
+
+path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_missing_operand_stops_mea0/preflight.json')
+value = {'command': 'private input probe', 'exit_code': 0}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+        with temporary.open("w", encoding="utf-8") as stream:
+            json.dump(value, stream, indent=2, sort_keys=True)
+            stream.write("\n")
+>           stream.flush()
+E           OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:66: OSError
+
+During handling of the above exception, another exception occurred:
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 66, in atomic_json
+    stream.flush()
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_missing_operand_stops_mea0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2c650c76e0>
+
+    def test_missing_operand_stops_measurement(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8206-CUSTODY: absent external bytes do not become zero."""
+        preflight = tmp_path / "preflight.json"
+>       atomic_json(preflight, dict(command="private input probe", exit_code=0))
+
+tests/python/test_hard_exit_learning_qualification_8206.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_missing_operand_stops_mea0/preflight.json')
+value = {'command': 'private input probe', 'exit_code': 0}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+>       with temporary.open("w", encoding="utf-8") as stream:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:63: OSError
+____________________ test_manifest_frozen_and_static_paths _____________________
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_manifest_frozen_and_stati0')
+
+    def test_manifest_frozen_and_static_paths(tmp_path):
+        """REQ-REPORT-8206: static tools receive files and all owned/E2E routes."""
+        from carnot.reporting import hard_exit_learning_execution_8206 as runner
+    
+>       specs = runner.manifest(tmp_path, tmp_path / "candidate.json")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_hard_exit_learning_qualification_8206.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/hard_exit_learning_execution_8206.py:24: in manifest
+    specs = BASE_MANIFEST(private, candidate)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/methods_stream_execution_8111.py:32: in manifest
+    config.write_text(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_manifest_frozen_and_stati0/coverage.ini')
+data = '[run]\nparallel = true\ndata_file = /tmp/carnot-8347-ybk1ziuf/consumer-tests/test_manifest_frozen_and_stati0/.coverag...e/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8206_v709_hard_exit_learning_qualification.py\n'
+encoding = 'locale', errors = None, newline = None
+
+    def write_text(self, data, encoding=None, errors=None, newline=None):
+        """
+        Open the file in text mode, write to it, and close the file.
+        """
+        if not isinstance(data, str):
+            raise TypeError('data must be str, not %s' %
+                            data.__class__.__name__)
+        encoding = io.text_encoding(encoding)
+>       with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: [Errno 122] Disk quota exceeded
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1047: OSError
+___________________ test_private_cli_and_rehashed_mutations ____________________
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_private_cli_and_rehashed_0')
+
+    def test_private_cli_and_rehashed_mutations(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-8210-CLI: real success, block and four cold mutation failures."""
+        output = tmp_path / (e.NAME + ".json")
+        result = cli(tmp_path, "--date", "20261006", "--fixture-output", output)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8210] phase=start completed=0 pending=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py", line 13, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/restricted_decision_audit_8210.py", line 480, in main
+E             return int(execution.main(argv))
+E                        ^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/methods_stream_execution_8111.py", line 191, in main
+E             specs = manifest(private, candidate)
+E                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/restricted_decision_audit_8210.py", line 461, in manifest
+E             (candidate.parent / "frozen_coverage_config.ini").write_bytes(
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1036, in write_bytes
+E             with self.open(mode='wb') as f:
+E                  ^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 122] Disk quota exceeded
+E         Exception ignored in atexit callback: <bound method Coverage._atexit of <Coverage @0x7f5811d3b170 core=CTracer data_file='/tmp/carnot-8347-invocation-coverage/.coverage.icbfl1.pid1855975.XXldotox'>>
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 755, in _atexit
+E             self.save()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 855, in save
+E             data = self.get_data()
+E                    ^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 935, in get_data
+E             if self._collector.flush_data():
+E                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/collector.py", line 491, in flush_data
+E             self.covdata.add_lines(self.mapped_file_dict(line_data))
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 126, in _wrapped
+E             return method(self, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 524, in add_lines
+E             self._choose_lines_or_arcs(lines=True)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 600, in _choose_lines_or_arcs
+E             with self._connect() as con:
+E                  ^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 376, in _connect
+E             self._open_db()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 318, in _open_db
+E             self._read_db()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 328, in _read_db
+E             self._init_db(db)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 353, in _init_db
+E             db.executescript(SCHEMA)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqlitedb.py", line 221, in executescript
+E             self.con.executescript(script).close()
+E             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         sqlite3.OperationalError: disk I/O error
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...elf.con.executescript(script).close()\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsqlite3.OperationalError: disk I/O error\n').returncode
+
+tests/python/test_restricted_decision_audit_8210.py:110: AssertionError
+----------------------------- Captured stdout call -----------------------------
+before private8210 CLI
+{"event": "after_private8210_CLI", "argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-u", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py", "--date", "20261006", "--fixture-output", "/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_private_cli_and_rehashed_0/experiment_8210_v709_restricted_decision_audit.json"], "exit_code": 1, "started_monotonic_ns": 1215191969805490, "ended_monotonic_ns": 1215195372064055, "stdout": "[exp8210] phase=start completed=0 pending=0\n", "stderr": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py\", line 13, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/restricted_decision_audit_8210.py\", line 480, in main\n    return int(execution.main(argv))\n               ^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/methods_stream_execution_8111.py\", line 191, in main\n    specs = manifest(private, candidate)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/restricted_decision_audit_8210.py\", line 461, in manifest\n    (candidate.parent / \"frozen_coverage_config.ini\").write_bytes(\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py\", line 1036, in write_bytes\n    with self.open(mode='wb') as f:\n         ^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 122] Disk quota exceeded\nException ignored in atexit callback: <bound method Coverage._atexit of <Coverage @0x7f5811d3b170 core=CTracer data_file='/tmp/carnot-8347-invocation-coverage/.coverage.icbfl1.pid1855975.XXldotox'>>\nTraceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py\", line 755, in _atexit\n    self.save()\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py\", line 855, in save\n    data = self.get_data()\n           ^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py\", line 935, in get_data\n    if self._collector.flush_data():\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/collector.py\", line 491, in flush_data\n    self.covdata.add_lines(self.mapped_file_dict(line_data))\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py\", line 126, in _wrapped\n    return method(self, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py\", line 524, in add_lines\n    self._choose_lines_or_arcs(lines=True)\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py\", line 600, in _choose_lines_or_arcs\n    with self._connect() as con:\n         ^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py\", line 376, in _connect\n    self._open_db()\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py\", line 318, in _open_db\n    self._read_db()\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py\", line 328, in _read_db\n    self._init_db(db)\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py\", line 353, in _init_db\n    db.executescript(SCHEMA)\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqlitedb.py\", line 221, in executescript\n    self.con.executescript(script).close()\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsqlite3.OperationalError: disk I/O error\n", "stdout_sha256": "4469c1946ea833de0634f01e8493fab4d662cacfc42f23634ef26b9c1dd95668", "stderr_sha256": "be9335ea0bef961e73b8fffccfea6716578e653e7479ac9307ac4bc6cbc343b0"}
+____________________ test_natural_custody_and_owned_failure ____________________
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_natural_custody_and_owned0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2ce875c110>
+
+    def test_natural_custody_and_owned_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        """REQ-REPORT-8210: natural cached audit is ready; failed owned checks disqualify."""
+        private = tmp_path / "validation"
+        private.mkdir()
+>       plan = e.manifest(private, tmp_path / "candidate.json")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_restricted_decision_audit_8210.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/verify/restricted_decision_audit_8210.py:460: in manifest
+    specs = sealed.upstream.manifest(private, candidate)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/verify/restricted_energy_fit_8208.py:463: in manifest
+    specs = BASE_MANIFEST(private, candidate)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/methods_stream_execution_8111.py:32: in manifest
+    config.write_text(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_natural_custody_and_owned0/validation/coverage.ini')
+data = '[run]\nparallel = true\ndata_file = /tmp/carnot-8347-ybk1ziuf/consumer-tests/test_natural_custody_and_owned0/validati...   /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py\n'
+encoding = 'locale', errors = None, newline = None
+
+    def write_text(self, data, encoding=None, errors=None, newline=None):
+        """
+        Open the file in text mode, write to it, and close the file.
+        """
+        if not isinstance(data, str):
+            raise TypeError('data must be str, not %s' %
+                            data.__class__.__name__)
+        encoding = io.text_encoding(encoding)
+>       with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: [Errno 122] Disk quota exceeded
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1047: OSError
+__________________ test_failure_receipts_and_primitive_hashes __________________
+
+path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_failure_receipts_and_prim0/raw/measurement.json')
+value = {'checks': [{'artifact_field': 'input_structure', 'check': 'input_structure', 'expected': 'authenticated_original_evid...c192f5696d678fc877260ffbe6b077215d1993af6687768981ee7ca2b7d9eb'}, ...], 'duration_s': 0.000139532, 'evidence': {}, ...}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+        with temporary.open("w", encoding="utf-8") as stream:
+            json.dump(value, stream, indent=2, sort_keys=True)
+            stream.write("\n")
+>           stream.flush()
+E           OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:66: OSError
+
+During handling of the above exception, another exception occurred:
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 66, in atomic_json
+    stream.flush()
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_failure_receipts_and_prim0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2cf02a5040>
+
+    def test_failure_receipts_and_primitive_hashes(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """SCENARIO-REPORT-8210-CLI: changed bytes, logs and malformed inputs fail closed."""
+        raw = tmp_path / "raw"
+>       work = e.measure(e.ROOT, raw, fixture=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_restricted_decision_audit_8210.py:208: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/verify/restricted_decision_audit_8210.py:263: in measure
+    atomic_json(raw / "measurement.json", work)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_failure_receipts_and_prim0/raw/measurement.json')
+value = {'checks': [{'artifact_field': 'input_structure', 'check': 'input_structure', 'expected': 'authenticated_original_evid...c192f5696d678fc877260ffbe6b077215d1993af6687768981ee7ca2b7d9eb'}, ...], 'duration_s': 0.000139532, 'evidence': {}, ...}
+
+    def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+        """Publish complete JSON only after its bytes reach local storage."""
+    
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+>       with temporary.open("w", encoding="utf-8") as stream:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: [Errno 122] Disk quota exceeded
+
+python/carnot/reporting/current_work_receipt.py:63: OSError
+----------------------------- Captured stdout call -----------------------------
+[exp8210] phase=before_preconditions completed=0 pending=0
+[exp8210] phase=terminal_operand_or_owned_failure completed=1 pending=0
+_______________ test_standalone_manifest_frozen_replay_and_scope _______________
+OSError: [Errno 122] Disk quota exceeded
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_standalone_manifest_froze0')
+
+    def test_standalone_manifest_frozen_replay_and_scope(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-8210-MANIFEST: frozen commands run this audit in isolation."""
+        private = tmp_path / "validation"
+        private.mkdir()
+        output = tmp_path / "candidate.json"
+        upstream = e.sealed.upstream
+        before = (upstream.CLI, upstream.TEST, upstream.OWNED, e.execution.e, e.execution.OWNED)
+>       plan = e.manifest(private, output)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_restricted_decision_audit_8210.py:265: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/verify/restricted_decision_audit_8210.py:460: in manifest
+    specs = sealed.upstream.manifest(private, candidate)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/verify/restricted_energy_fit_8208.py:463: in manifest
+    specs = BASE_MANIFEST(private, candidate)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/methods_stream_execution_8111.py:32: in manifest
+    config.write_text(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/carnot-8347-ybk1ziuf/consumer-tests/test_standalone_manifest_froze0/validation/coverage.ini')
+data = '[run]\nparallel = true\ndata_file = /tmp/carnot-8347-ybk1ziuf/consumer-tests/test_standalone_manifest_froze0/validati...   /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py\n'
+encoding = 'locale', errors = None, newline = None
+
+    def write_text(self, data, encoding=None, errors=None, newline=None):
+        """
+        Open the file in text mode, write to it, and close the file.
+        """
+        if not isinstance(data, str):
+            raise TypeError('data must be str, not %s' %
+                            data.__class__.__name__)
+        encoding = io.text_encoding(encoding)
+>       with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: [Errno 122] Disk quota exceeded
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1047: OSError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_local_update_isolation_8306.py::test_all_trajectories_and_cache_controls
+FAILED tests/python/test_local_update_isolation_8306.py::test_real_child_recovery_and_tamper
+FAILED tests/python/test_local_update_isolation_8306.py::test_reporting_blocks_reduction_and_cli
+FAILED tests/python/test_local_update_isolation_8306.py::test_cohort_hard_exit_recovery
+FAILED tests/python/test_local_update_isolation_8306.py::test_failure_boundaries_and_kill_dispatch
+FAILED tests/python/test_local_update_isolation_8306.py::test_measurement_deadline_and_plain_child
+FAILED tests/python/test_primary_publication_7928.py::test_nested_reports_and_terminal_revalidation
+FAILED tests/python/test_primary_publication_7928.py::test_legacy_shadow_is_required_negative
+FAILED tests/python/test_primary_publication_7928.py::test_invalid_names_shapes_and_failed_validator
+FAILED tests/python/test_primary_publication_7928.py::test_conflicts_stale_hashes_and_concurrent_replacement
+FAILED tests/python/test_primary_publication_7928.py::test_real_readers_missing_malformed_disqualified_absent
+FAILED tests/python/test_hard_exit_learning_qualification_8206.py::test_real_child_two_crashes_and_no_crash
+FAILED tests/python/test_hard_exit_learning_qualification_8206.py::test_missing_operand_stops_measurement
+FAILED tests/python/test_hard_exit_learning_qualification_8206.py::test_manifest_frozen_and_static_paths
+FAILED tests/python/test_restricted_decision_audit_8210.py::test_private_cli_and_rehashed_mutations
+FAILED tests/python/test_restricted_decision_audit_8210.py::test_natural_custody_and_owned_failure
+FAILED tests/python/test_restricted_decision_audit_8210.py::test_failure_receipts_and_primitive_hashes
+FAILED tests/python/test_restricted_decision_audit_8210.py::test_standalone_manifest_frozen_replay_and_scope
+ERROR tests/python/test_local_update_isolation_8306.py::test_replay_faults_and_paid_clocks
+ERROR tests/python/test_hard_exit_learning_qualification_8206.py::test_readiness_and_failed_owned_check
+ERROR tests/python/test_hard_exit_learning_qualification_8206.py::test_real_cli_replay_blocked_worker_and_guard
+ERROR tests/python/test_hard_exit_learning_qualification_8206.py::test_coverage_summary_is_measured
+18 failed, 11 passed, 1 warning, 4 errors in 19.31s

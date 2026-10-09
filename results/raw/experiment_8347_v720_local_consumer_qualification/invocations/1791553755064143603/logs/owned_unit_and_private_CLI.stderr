@@ -1,0 +1,86 @@
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1043, in do_run
+    runner.run()
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py", line 213, in run
+    exec(code, main_mod.__dict__)
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pytest/__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+SystemExit: 1
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqlitedb.py", line 122, in _execute
+    return self.con.execute(sql, parameters)  # type: ignore[arg-type]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: coverage_schema
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqlitedb.py", line 127, in _execute
+    return self.con.execute(sql, parameters)  # type: ignore[arg-type]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: coverage_schema
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 324, in _read_db
+    row = db.execute_one("select version from coverage_schema")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqlitedb.py", line 181, in execute_one
+    with self.execute(sql, parameters) as cur:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqlitedb.py", line 144, in execute
+    cur = self._execute(sql, parameters)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqlitedb.py", line 132, in _execute
+    raise DataError(f"Couldn't use data file {self.filename!r}: {msg}") from exc
+coverage.exceptions.DataError: Couldn't use data file '/tmp/carnot-8347-ybk1ziuf/.coverage.icbfl1.pid1855552.XszpQL8x': no such table: coverage_schema
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1164, in main
+    status = CoverageScript().command_line(argv)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 853, in command_line
+    return self.do_run(options, args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1050, in do_run
+    self.coverage.save()
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 855, in save
+    data = self.get_data()
+           ^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 935, in get_data
+    if self._collector.flush_data():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/collector.py", line 491, in flush_data
+    self.covdata.add_lines(self.mapped_file_dict(line_data))
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 126, in _wrapped
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 524, in add_lines
+    self._choose_lines_or_arcs(lines=True)
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 600, in _choose_lines_or_arcs
+    with self._connect() as con:
+         ^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 376, in _connect
+    self._open_db()
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 318, in _open_db
+    self._read_db()
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 328, in _read_db
+    self._init_db(db)
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 353, in _init_db
+    db.executescript(SCHEMA)
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqlitedb.py", line 221, in executescript
+    self.con.executescript(script).close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: disk I/O error

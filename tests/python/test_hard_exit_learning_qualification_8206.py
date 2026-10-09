@@ -59,7 +59,15 @@ def test_real_child_two_crashes_and_no_crash(tmp_path, monkeypatch):
 def work(tmp_path_factory):
     """SCENARIO-VERIFY-8206-CUSTODY: private fixtures preserve old artifacts."""
     raw = tmp_path_factory.mktemp("8206-evidence")
-    return e.measure(e.ROOT, raw, fixture=True), raw
+    from carnot.reporting.local_consumer_qualification_8347 import (
+        freeze_historical,
+        historical_operands,
+    )
+
+    closure = freeze_historical(tmp_path_factory.mktemp("8206-historical-operands"))
+    with historical_operands(closure):
+        measured = e.measure(e.ROOT, raw, fixture=True)
+    return measured, raw
 
 
 def test_readiness_and_failed_owned_check(work):

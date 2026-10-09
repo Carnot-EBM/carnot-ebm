@@ -478,3 +478,11 @@ No attributable public ARC implementation or technique writeup was found. **Clas
 
   **POSSIBLE CARNOT LEVER:** Benchmark three-bit expert packing combined with layer-aware pruning to free GPU memory for more generator candidates or longer contexts.
 
+## 2026-10-09 13:40 UTC -- NEW
+
+**artificialagencylab.com — newly discovered context-revision memory.** Its earlier FACE-OF-AGI implementation uses a separate text-only “historizer” to summarize how goals, mechanics, policy, history, and other guidance evolved—including changes in confidence and replaced assumptions. An updater combines that summary with observed transitions to rewrite a context bounded to 12,000 characters. Model weights remain fixed. [Role architecture](https://github.com/ricsinaruto/artificial-agency/blob/main/doc/architecture/software/models/roles.md), [updater instructions](https://github.com/ricsinaruto/artificial-agency/blob/main/src/face_of_agi/models/updater/instructions/agent_game_context_updater_prompt.md).
+
+**Classification: (b), general-purpose.** The published Kaggle path uses gateway observations without game-source reading or per-game rules. This is June-submission lineage; use in the current scoring submission remains unverified. [Gateway implementation](https://github.com/ricsinaruto/artificial-agency/blob/main/src/face_of_agi/runtime/kaggle.py).
+
+**POSSIBLE CARNOT LEVER:** Test verifier-grounded summaries of belief revisions during compaction to preserve why earlier mechanic hypotheses were discarded.
+

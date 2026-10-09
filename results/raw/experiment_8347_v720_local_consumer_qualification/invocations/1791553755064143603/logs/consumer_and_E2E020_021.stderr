@@ -1,0 +1,32 @@
+Exception ignored in atexit callback: <bound method Coverage._atexit of <Coverage @0x7f2d87533890 core=CTracer data_file='/tmp/carnot-8347-invocation-coverage/.coverage.icbfl1.pid1855778.XtDOlGix'>>
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 755, in _atexit
+    self.save()
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 855, in save
+    data = self.get_data()
+           ^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 935, in get_data
+    if self._collector.flush_data():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/collector.py", line 491, in flush_data
+    self.covdata.add_lines(self.mapped_file_dict(line_data))
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 126, in _wrapped
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 524, in add_lines
+    self._choose_lines_or_arcs(lines=True)
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 600, in _choose_lines_or_arcs
+    with self._connect() as con:
+         ^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 376, in _connect
+    self._open_db()
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 318, in _open_db
+    self._read_db()
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 328, in _read_db
+    self._init_db(db)
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 353, in _init_db
+    db.executescript(SCHEMA)
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqlitedb.py", line 221, in executescript
+    self.con.executescript(script).close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: disk I/O error

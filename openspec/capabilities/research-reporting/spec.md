@@ -97025,3 +97025,20 @@ authority or failed historical audit leaves authentic input gates independent.
 Bind the V720 scan and complete primary methods for 2602.02056v4,
 2512.12850v3 and 2606.11711v1 with URLs, versions, hashes, assumptions and
 limits. Lookup fidelity and finite capacity are constructed studies outside H1/H2.
+## REQ-REPORT-8347: Qualify V720 local consumers without promoting old outcomes
+
+Freeze bounded validation commands before measurement. Record the reproduced
+first failed operand, historical closure manifest, current authority and exact
+consumer receipts. Preserve Exp8333's disqualified historical verdict and all
+informational findings. Readiness requires unchanged consumer and E2E-020/021
+assertions, independent numeric/recovery proof and 100 percent new statements.
+Owned failures disqualify; missing external operands block. Publish atomically
+through unchanged primary and typed informational-finding consumers. H1/H2
+remain unmeasured, exposed-development scores zero, and MODEL_SPECS empty.
+
+### SCENARIO-REPORT-8347-CLI
+
+The thin standalone runner emits flushed boundaries, supervises children with
+bounded deadlines and durable stream hashes, and cold-replays terminal bytes.
+Valid, missing-input and rehashed tamper controls execute in fresh processes.
+The conductor owns ops and traceability reconciliation.

@@ -52285,3 +52285,25 @@ authority and primitives even after hashes are updated. Byte-bound terminal
 cold, unchanged adversarial and strict-row checks precede atomic publication.
 Missing natural inputs publish blocked evidence; owned errors retain failed
 receipts and publish disqualification. Private controls never replace science.
+## REQ-VERIFY-8347: Separate historical consumer operands from current policy
+
+Exp8206 fixtures SHALL authenticate a complete explicit private operand closure
+from byte-bound historical Exp8206 evidence. Historical Exp8172 policy hashes
+SHALL resolve to saved historical bytes; current V720 retirement and task
+authority SHALL be checked separately. Preserve all consumer assertions,
+genuine exit73 children, coverage collection and missing-input controls.
+Reuse authenticated Exp8333 primitives for all 48 trajectories and 64 events;
+independently recompute dense parity <=1e-10, actions and complete durable state.
+No current model calls or natural generalization credit are permitted.
+
+### SCENARIO-VERIFY-8347-CLOSURE
+
+Historical manifest bytes pass their old digest without modifying live policy.
+Absent closure operands block readiness; changed bytes and unknown paths fail.
+Current retirement still blocks even when the historical closure authenticates.
+
+### SCENARIO-VERIFY-8347-REPLAY
+
+Fresh-process replay checks primitive hashes and independent arithmetic. Valid
+evidence passes; absent evidence and self-consistently rehashed tampering fail.
+All newly owned statements, real CLI and failure paths have measured coverage.
