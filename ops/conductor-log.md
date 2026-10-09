@@ -19939,3 +19939,4 @@ code |
 | 2026-10-09 14:27 UTC | Qualify local learning after isolating historical  | OK | 98 passed, 1 warning in 306.69s (0:05:06) |
 | 2026-10-09 15:34 UTC | Measure delayed local learning from the already qu | OK | 105 passed, 1 warning in 131.15s (0:02:11) |
 | 2026-10-09 16:20 UTC | Measure finite feedback tracking with persistent a | OK | 91 passed, 1 warning in 62.72s (0:01:02) |
+| 2026-10-09 16:51 UTC | Audit sealed static decisions while preserving eve | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 89 passed, 1 warning in 29.78s |
