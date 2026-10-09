@@ -97199,3 +97199,54 @@ Primitive evidence lives under results/raw/experiment_8355_v720_arc_supervisor_f
 Ops, changelog and traceability reconciliation is conductor-owned.
 
 Implementation for REQ-REPORT-8355: `python/carnot/reporting/arc_supervisor_frontier_8355.py` adapts the existing readers and executor. The thin runner is `scripts/experiments/experiment_8355_v720_arc_supervisor_frontier.py`; requirement-linked tests are in `tests/python/test_arc_supervisor_frontier_8355.py`. `docs/research-notes/v720-arc-outcomes.md` records the separate import and replay diagnoses. The conductor owns ops and traceability reconciliation.
+
+## REQ-REPORT-8356: Separate V720 arithmetic, tables, durable costs and fabric obligations
+
+Authenticate immutable V718 authority for historical consumer controls and exact V720
+full-task authority for current costs. Preserve the three original failed assertions.
+Measure the independent 128-vector V719 arithmetic panel after SciPy and finite-difference
+qualification, one warmup and five paired repetitions. Probability parity SHALL be
+<=1e-10 with identical actions. Authenticate optional Exp8352 tables and Exp8347/8348/8349
+traces separately. Missing branches SHALL NOT suppress independent arithmetic. Keep
+coefficient writes, evaluation, invalidation, refresh, persistence, recovery and dispatch
+separate. No model load, natural fixture replacement, new independent-source credit,
+Ising spline encoding, projected speedup or unmeasured complete-service Amdahl bound.
+Map operations to carnot_ising_v2_n64 with k_max<=5 and SSH via kria. Authenticate Exp8259
+terminal CPU dispatch without a repeated probe. Owned failures disqualify; external
+blocks remain blocked. Frozen V717 science and historical outcomes remain unchanged.
+
+### SCENARIO-REPORT-8356-AUTHORITY
+
+Private historical controls use byte-authenticated V718 snapshots; valid producers reach
+10 timing rows, natural readiness remains independent, and owned benchmark failure fails.
+Current work requires the exact V720 task, empty MODEL_SPECS and declared deliverable.
+
+### SCENARIO-REPORT-8356-BRANCHES
+
+Absent or altered table/durable operands name exact path/hash and expected/observed gate
+values while arithmetic still completes. Table clocks retain exact source configurations.
+Every intended condition survives missingness; repeated clocks grant no independent data.
+
+### SCENARIO-REPORT-8356-REPETITIONS
+
+Ten arithmetic clocks SHALL contain repetitions 0 through 4 for each arm before
+paired parity is computed. Duplicate or absent repeat IDs leave arithmetic readiness
+zero and parity unavailable without raising an indexing error. Table readiness SHALL
+require repetitions 0 through 4 for each of the twelve exact configurations, rather
+than sixty rows alone. Cold replay SHALL reject incomplete or duplicated table
+repetition manifests even when their measurement and aggregate hashes are repaired.
+
+Implementation for REQ-REPORT-8356: `python/carnot/reporting/kv260_workload_cost_8356.py`
+adapts the qualified arithmetic and terminal readers. `kv260_table_cost_8356.py`
+authenticates the table producer's hash-map schema and measures exact configurations.
+`tests/python/test_kv260_workload_cost_8356.py` exercises independent branches and
+rehashed primitive controls. The historical Exp8329 tests keep every assertion and
+use immutable published V718 authority. `docs/research-notes/v720-hardware-cost-boundary.md`
+records scope, missing components and the unsupported installed overlay. Ops and
+traceability reconciliation is conductor-owned.
+
+The 2026-10-09 repetition repair implements SCENARIO-REPORT-8356-REPETITIONS
+in the same two modules. Requirement-linked regression cases retain the original
+consumer assertions and cover incomplete arithmetic pairs, duplicated table IDs
+and warmup substitution. The repair is reconciled in `_bmad/traceability.md`,
+`ops/status.md` and `ops/changelog.md`.

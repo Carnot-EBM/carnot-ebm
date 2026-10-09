@@ -1,5 +1,25 @@
 # Carnot — Changelog
 
+## 2026-10-09 — Fix V720 CPU cost repetition validation
+
+- Guarded arithmetic parity with the reducer's complete paired-repeat result,
+  preventing a `KeyError` when ten rows contain duplicate repetition IDs.
+- Required five distinct measured repetitions for each exact table configuration
+  before granting readiness. Cold replay rejects incomplete manifests after
+  measurement and aggregate hashes are repaired.
+- Bound table clocks to their branch, configuration-derived arm and valid integer
+  repeat IDs. Added six regression cases that failed before the implementation
+  repair; retained every existing assertion and prior implementation change.
+- Reconciled REQ-REPORT-8356, REQ-VERIFY-8356, traceability and the hardware cost note.
+  No conductor source or published experimental evidence changed.
+
+Validation: 74 relevant tests pass, including private E2E-018/E2E-020 consumers
+and all 10 erasure-gate tests. Fresh unit/real-child coverage is 257/257 statements
+(100%) across the V720 reporting modules and direct CLI. Scoped Ruff, formatting,
+strict mypy and spec references pass. The full spec audit separately reports the
+existing 1,142 unreferenced tests; validation scratch is private and disk-backed.
+Documentation freshness passes; final reconciliation reports only that existing gap.
+
 ## 2026-10-09 — Operational retrospective for milestone 2026.10.719
 
 - Wrote `results/operational_retro_2026_10_719.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.719`. Authoritative disk-mtime fallback data records 9 experiments completed (1 compute-bound, 8 synthesis-only) across 41.7 total wall-time minutes (average 5 minutes per experiment).

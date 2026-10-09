@@ -52502,3 +52502,39 @@ controls; warnings, errors, unknown severity and critical findings block readine
 Use unchanged adversarial and strict row checks before atomic publication.
 
 Implementation for REQ-VERIFY-8355: `python/carnot/reporting/arc_supervisor_frontier_8355.py` adapts the existing readers and executor. The thin runner is `scripts/experiments/experiment_8355_v720_arc_supervisor_frontier.py`; requirement-linked tests are in `tests/python/test_arc_supervisor_frontier_8355.py`. `docs/research-notes/v720-arc-outcomes.md` records the separate import and replay diagnoses. The conductor owns ops and traceability reconciliation.
+
+## REQ-VERIFY-8356: Frozen scoped validation and primitive cold replay
+
+Freeze bounded validation commands before timing. Real CLI, child and owned failure paths
+SHALL have 100 percent newly owned statement coverage. Run private E2E-018/020 consumers,
+scoped Ruff, strict mypy and requirement coverage. Fresh processes SHALL accept valid
+primitive evidence and reject negative and self-consistently rehashed semantic tampering.
+Use unchanged primary_publication, adversarial and strict row validators. Retain all
+findings; only the existing typed informational finding consumer with independent
+recomputation and deliberate-error controls may resolve exit1. Atomic publication follows
+byte-bound terminal checks. No model calls, runtime padding or external publication.
+
+### SCENARIO-VERIFY-8356-CLI
+
+Exercise actual standalone CLI from private scratch, worker measurement, publication,
+replay, rejected dates, private-output guards, child timeout and disqualified owned checks.
+
+### SCENARIO-VERIFY-8356-TAMPER
+
+Changing arithmetic meaning, table refresh values, source bytes, logs or a rehashed
+readiness aggregate SHALL fail cold replay. Missing external operands remain explicit.
+Table clocks SHALL retain the table branch, the arm derived from the exact
+configuration and an integer repetition ID; only warmup -1 and repeats 0 through 4
+are valid transaction IDs. Warmups SHALL NOT replace a measured repetition.
+
+Implementation for REQ-VERIFY-8356: `python/carnot/reporting/kv260_workload_runner_8356.py`
+uses unchanged bounded child execution, typed finding consumption and atomic primary
+publication. `scripts/experiments/experiment_8356_v720_kv260_workload_cost.py` is the
+standalone entrypoint. Requirement-linked private tests cover CLI, owned failures,
+historical authority rejection and rehashed semantic tampering. Validation commands
+are frozen in the primitive invocation directory; no full repository suite is run.
+
+The 2026-10-09 clock identity and repetition repair retains real CLI execution
+and strengthens SCENARIO-VERIFY-8356-TAMPER. All 74 relevant scoped tests pass;
+fresh unit/child coverage for the three V720 reporting modules and direct CLI
+is 257/257 statements. Scoped Ruff, strict mypy and spec-reference checks pass.

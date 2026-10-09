@@ -19,12 +19,10 @@ from carnot.verify import local_update_isolation_8306 as k
 
 
 def private_root(root: Path) -> Path:
-    """Copy authority bytes so private measurements still check real task contracts."""
-    for name in [e.authority_module.DESIGN, e.authority_module.ACTIVE, e.authority_module.PROTOCOL]:
-        target = root / name
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes((e.ROOT / name).read_bytes())
-    return root
+    """SCENARIO-REPORT-8356-AUTHORITY: immutable old bytes retain real old gates."""
+    from carnot.reporting.kv260_workload_cost_8356 import historical_root
+
+    return historical_root(root)
 
 
 def source(root: Path, branch: str, **fields: object) -> Path:

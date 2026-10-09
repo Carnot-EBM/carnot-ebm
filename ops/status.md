@@ -1,5 +1,25 @@
 # Carnot — Operational Status
 
+## 2026-10-09 — V720 CPU cost repetition repair
+
+The cost reducer computes arithmetic parity only for complete five-repeat pairs.
+Duplicate IDs leave readiness zero and parity unavailable without a `KeyError`.
+Table readiness now requires five distinct measured repetitions for every exact
+configuration. Table clock identity and cold replay reject foreign arms, invalid
+IDs, duplicate repeats and warmup substitution, including rehashed evidence.
+
+All 74 relevant tests pass: 14 V720 tests, 10 historical cost consumers, 40 private
+E2E-018/E2E-020 and publication/receipt consumers, and 10 fix-erasure gate tests.
+Fresh unit/child coverage measures 257/257 statements across the three V720
+reporting modules and direct CLI. Scoped Ruff, format, strict mypy and spec
+references pass. Verification uses private disk-backed scratch after observing
+the per-user `/tmp` quota. All existing assertions and implementation changes
+remain; `scripts/research_conductor.py` and published evidence are unchanged.
+
+The repository-wide spec audit retains 1,142 pre-existing reference gaps.
+Documentation freshness passes; final reconciliation exits one solely for those gaps.
+This scoped repair does not establish full repository health.
+
 ## 2026-10-09 — V719 research plan staged
 
 Milestone `2026.10.719` proposes exactly fourteen tasks, Exp8332–Exp8345,

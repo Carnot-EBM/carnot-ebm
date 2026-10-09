@@ -1,5 +1,20 @@
 # Carnot — Traceability Matrix
 
+## V720 CPU cost repetition repair — 2026-10-09
+
+REQ-REPORT-8356 and SCENARIO-REPORT-8356-REPETITIONS map to the arithmetic
+parity guard in `python/carnot/reporting/kv260_workload_cost_8356.py` and the
+exact table repeat manifest in `python/carnot/reporting/kv260_table_cost_8356.py`.
+REQ-VERIFY-8356 and SCENARIO-VERIFY-8356-TAMPER map to table clock identity
+validation and cold rejection of duplicated or missing table repeats. Regression
+tests in `tests/python/test_kv260_workload_cost_8356.py` retain all existing
+assertions and add incomplete arithmetic pairs, foreign clock IDs, duplicate
+table repeats and warmup substitution controls. These are constructed private
+engineering checks, with no independent-source or device-readiness claim.
+Validation: all 74 relevant unit/private E2E-018/E2E-020/erasure-gate tests pass;
+fresh coverage for the three V720 reporting modules and direct CLI is 257/257
+statements. Scoped Ruff, strict mypy and requirement-reference checks pass.
+
 ## Planned V716 research mapping — 2026-10-08
 
 Milestone `2026.10.716` stages fourteen tasks, Exp8290–Exp8303, across four
