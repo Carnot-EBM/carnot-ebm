@@ -16,9 +16,11 @@ OK: all solver-like ARC modules are reachable from the live agent path (97 modul
 
 ## Hostile LLM review
 
-**TL;DR: No demonstrated SELF_DISCOVERY_ADVANCE.** Zero recent solve artifacts; passing reachability proves only that solver modules are reachable, not that the live agent discovered solutions.
+**TL;DR: Zero recent artifacts; zero demonstrated SELF_DISCOVERY_ADVANCE. The 97-module lint pass establishes static import reachability, not autonomous discovery.**
 
-Per-artifact review: none (`[]`, last 7 days). No verdicts to assign. Recommended action: require live-run traces tying each future claimed solve to the agent’s own attempts and runtime reverse-engineering.
+Per-artifact `{verdict, evidence, recommended action}`: **no entries**—the supplied inventory is `[]`. There are no solves to classify or credit.
 
-**Pattern watch:** This empty sample cannot establish outer-loop drift. Reject reachability as a substitute for discovery provenance. Classify unsupported solve claims as **UNCLEAR**; classify confirmed source-reading, offline ground-truth BFS, or hand-built per-game solutions as **OUTER_LOOP_RE**, even when wired into the live path.
+**Pattern watch:** [arc_loop_solve.py](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:1) explicitly describes per-game adapters and hand verifiers; [arc_competition_agent.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py:14) describes banked-solution replay. These are concrete provenance risks, though they do not establish a recent violation.
+
+Require each future claim to show the live entrypoint executing its own attempts, observations, runtime inference, and winning actions, plus a registry comparison. Source-derived models, offline ground-truth BFS, and handcrafted per-game adapters remain **OUTER_LOOP_RE** even when wired into a live path. Replaying an already registered level is **DUPLICATE**. Missing discovery provenance earns **UNCLEAR**, never credit.
 

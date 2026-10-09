@@ -96711,3 +96711,31 @@ six missing outputs, plus the capstone self slot. Current owned replay failures
 disqualify execution; unavailable H1/H2 remain unmeasured, with all
 intended arms and retention windows. Prior V717 outcomes and source bytes remain
 unchanged. The conductor owns ops and traceability reconciliation.
+
+### REQ-REPORT-V719-PLAN: Independent local science with qualified evidence boundaries
+
+The staged milestone 2026.10.719 shall contain exactly fourteen tasks,
+Exp8332 through Exp8345, in four phases. Its visible table, full JSON task
+objects and canonical digest shall agree with research-roadmap-next.yaml.
+The design shall preserve the V718 design and the frozen V717 science.
+
+Static fitting shall authenticate its cached inputs directly. Local update
+qualification and runtime evidence shall not depend on historical capstone
+success. Each task shall retain all relevant validation. Specific coverage
+and memory failures shall receive explicit tests before current readiness.
+The plan shall include calibrated decisions, continuous delayed learning,
+finite feedback capacity, ARC supervisor outcomes and attached-board duties.
+Any current LLM task shall use Qwen3.8-27B GGUF and declare its actual substrate.
+Every task shall require flushed progress, bounded calls, per-unit evidence,
+terminal verdict classes, precise gate fields and complete failure lineage.
+Planning shall not activate tasks or change the active roadmap or conductor.
+
+### SCENARIO-REPORT-V719-PLAN: Validate staged agreement and dependency isolation
+
+Given the complete staged design and YAML, the existing contract reader shall
+match all fourteen task rows. Changing a title or removing a task shall fail.
+Every structured gate shall name an earlier current producer and a declared
+artifact field. Static fitting, local numerical qualification and runtime
+reading shall have no historical-synthesis success gate. Existing schema,
+retirement, gate, harness-fit and ARC checks shall pass. Private E2E-018 tests
+shall exercise authority changes without publishing research evidence.

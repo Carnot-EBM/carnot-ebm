@@ -24,17 +24,19 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is an administrative replay and qualification receipt, not a claim of comparative benefit. Oracle agreement cannot establish added value, but this artifact grants no scientific benefit or generalization credit.
+Not applicable: this is an administrative contract replay recording disqualification and unmeasured hypotheses, without a comparative scientific claim.
 
 ## WAS THAT CHECKED
-No comparative scientific claim was tested; H1 and H2 remain unmeasured. Administrative failure had a real chance to occur and did: the artifact records a reduction mismatch and an unresolved false-zero finding. These failures are not presented as scientific success.
+No scientific benefit claim was tested: H1 and H2 remain unmeasured. Administrative checks had a real chance to fail and did, including a reduction mismatch and failed upstream qualification. Oracle agreement and exposed development receive no generalization credit.
 
 ## EVIDENCE
-- `acceptance_gates`: `scientific_benefit` is `false`.
-- `generalized_learning_benefit_score` is `0`.
-- Historical `H1` and `H2`: `status` is `blocked_unmeasured`; `statistics` is `null`.
-- `first_reduction_mismatch` identifies `gate_check_summary[15].hash`.
-- The second adversarial disposition has `recomputed` = `false`, `resolved` = `false`, and `passed` = `false`.
+- `H1`, `H2`: `status` = `blocked_unmeasured`; `statistics` = `null`.
+- `generalized_learning_benefit_score` = `0`.
+- `exposure_scope` = `exposed_cached_development`.
+- `first_reduction_mismatch`: `field` = `gate_check_summary[15].hash`.
+- `qualified_current_evidence`: `required_checks_passed` = `false`; `verdict_class` = `disqualified`.
+- `Bind this conclusion to byte-bound primitives; execution readiness never upgrades failed or unmeasured science.`
+- `Constructed oracle agreement and exposed development give no independent generalization credit.`
 
 ## RECOMMENDATION
 KEEP
@@ -50,18 +52,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-An observation showing substantive experimental results or demonstrating that the upstream gate check dependency was satisfied.
+Not applicable: this is a blocked-gate receipt, with no experimental success or comparative-value claim.
 
 ## WAS THAT CHECKED
-No. The artifact is a pre-execution gate failure receipt; the experiment never executed.
+Yes, the prerequisite gate was checked in gates_evaluated and failed: history_reader_ready_score was 0 against a required 1. The artifact reports that failure without claiming qualification succeeded.
 
 ## EVIDENCE
-`schema`: `blocked_gate_check_v1`
-`status`: `blocked`
-`duration_s`: `0.0`
-`honest_verdict`: `blocked_gate_check_failed`
-`blocked_at_layer`: `conductor_pre_gate`
-`gate_check_summary`: `gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8318-contract-replay.history_reader_ready_score (actual=0 == expected=1)`
+`blocked_gate_check_v1`; `blocked`; `blocked_gate_check_failed`; `failed_field`: `history_reader_ready_score`; `failed_expected`: `1`; `failed_observed`: `0`; `passed`: `false`; `conductor_pre_gate`.
 
 ## RECOMMENDATION
 KEEP
@@ -77,17 +74,20 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Any empirical claim regarding sentence spline fitting would require the experiment to execute; refuting the recorded receipt of gate failure would require observing that the upstream gate condition was actually satisfied (`"cached_support_ready_score"` equal to `1`).
+Not applicable: the title describes intended work; the artifact asserts no successful fit or advantage over static controls.
 
 ## WAS THAT CHECKED
-No; the experiment was aborted prior to execution at `"conductor_pre_gate"`.
+No fitting or comparative outcome was checked. The artifact records a prerequisite gate failure: readiness was expected to equal 1 but was observed as 0, blocking execution.
 
 ## EVIDENCE
-`"schema"`: `"blocked_gate_check_v1"`
-`"status"`: `"blocked"`
-`"honest_verdict"`: `"blocked_gate_check_failed"`
-`"duration_s"`: `0.0`
-`"blocked_at_layer"`: `"conductor_pre_gate"`
+- `schema`: `blocked_gate_check_v1`
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `failed_field`: `cached_support_ready_score`
+- `failed_expected`: `1`
+- `failed_observed`: `0`
+- `passed`: `false`
+- `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
@@ -103,21 +103,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative or scientific claim is made to refute; the artifact is a gate-check receipt recording that upstream qualification failed and blocked experiment execution before any trial took place. Within the scope of a gate receipt, observing that the upstream gate check actually satisfied the condition (`history_reader_ready_score` equal to 1 or `passed` being true) while being logged as blocked would refute the receipt's failure record.
+No scientific claim is asserted. This artifact records a blocked prerequisite check, not successful reader qualification or comparative value.
 
 ## WAS THAT CHECKED
-No comparative hypothesis or experimental condition was checked because the run halted at the conductor pre-gate layer; the artifact evaluated only the upstream readiness condition `exp8318-contract-replay.history_reader_ready_score == 1`, which failed.
+No qualification experiment was performed. In gates_evaluated, the readiness prerequisite was checked and failed: expected 1, observed 0.
 
 ## EVIDENCE
-`schema`: `blocked_gate_check_v1`
-`status`: `blocked`
-`honest_verdict`: `blocked_gate_check_failed`
-`blocked_at_layer`: `conductor_pre_gate`
-`duration_s`: `0.0`
-`failed_upstream`: `exp8318-contract-replay`
-`failed_field`: `history_reader_ready_score`
-`failed_expected`: `1`
-`failed_observed`: `0`
+`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `history_reader_ready_score`; `failed_expected`: `1`; `failed_observed`: `0`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`.
 
 ## RECOMMENDATION
 KEEP
@@ -133,13 +125,20 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no supervisor-benefit claim to falsify. An authenticated new supervisor outcome within the stated frontier would contradict the receipt’s zero-outcome record, but would not itself establish comparative benefit.
+Not applicable: this is a disqualified aggregation receipt making no claim of supervisor benefit, arm superiority, or generalization.
 
 ## WAS THAT CHECKED
-No comparative benefit test was conducted. The recorded phase authenticates and inspects upstream artifacts; current executions and outcome rows are empty. The artifact reports disqualification rather than a positive result or an evaluated null.
+No comparative refutation was tested here: current execution counts are zero and outcome and arm rows are empty. The artifact reports disqualification and makes no positive scientific claim.
 
 ## EVIDENCE
-`honest_verdict`: `complete_disqualified_supervisor_frontier`; `phase`: `authenticate_and_inspect`; `current_game_execution_count`: `0`; `current_model_invocation_count`: `0`; `new_outcome_count`: `0`; `rows`: `[]`; `selection_recommendations`: `[]`; `required_checks_passed`: `false`.
+
+- `honest_verdict`: `complete_disqualified_supervisor_frontier`
+- `inference_substrate`: `aggregation_from_upstream_artifacts`
+- `required_checks_passed`: `false`
+- `current_game_execution_count`: `0`; `current_model_invocation_count`: `0`
+- `rows`: `[]`; `per_game_arm_rows`: `[]`
+- `selection_recommendations`: `[]`; `solve_claims`: `[]`
+- `proposed_arm_change`: `null`; `proposed_generalization_change`: `null`
 
 ## RECOMMENDATION
 KEEP
@@ -155,21 +154,19 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative benefit is asserted. An eligible, completed source-arm measurement would contradict the reported absence of qualified measurements, but there is no performance headline to falsify.
+There is no comparative benefit claim to falsify. A completed eligible measurement or authenticated current device execution would contradict the receipt’s reported absence of those observations.
 
 ## WAS THAT CHECKED
-No comparative performance test occurred. All six full/indexed source-arm rows are censored and ineligible, with no completed measurements or timings. This is a blocked qualification receipt; it claims neither verifier added value nor independent generalization.
+No comparative test was completed: all six source-arm rows are censored, ineligible, and incomplete, with no timing results. This is a blocked receipt, not a measured null. Neither oracle checks nor exposed inputs are presented as establishing added value or generalization.
 
 ## EVIDENCE
 
 - `verdict_class`: `blocked`
 - `accelerator_benefit`: `unproved_no_compatible_operation`
-- `completed_count`: `0`
-- `censored_count`: `6`
-- `eligible`: `false`; `censored`: `true`
-- `timing_rows`: `[]`
-- `generalized_learning_benefit_score`: `0`
-- `independent_generalization_score`: `0`
+- `completed_count`: `0`; `censored_count`: `6`
+- `eligible`: `false`; `completed`: `false`; `evidence_status`: `unavailable_external_operand`
+- `timing_rows`: `[]`; `current_device_execution_count`: `0`
+- `independent_generalization_score`: `0`; `generalized_learning_benefit_score`: `0`
 
 ## RECOMMENDATION
 KEEP
@@ -185,22 +182,21 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-None; the artifact is an administrative evidence ledger and documentation audit recording that GateMate hardware remains blocked and unchanged, asserting no comparative or empirical performance claim.
+There is no comparative claim to falsify. A qualifying authenticated post-frontier physical-change receipt would contradict the ledger’s missing-evidence status; a current device-execution receipt would contradict its unexecuted status.
 
 ## WAS THAT CHECKED
-No; refutation checks do not apply to an administrative change ledger and receipt artifact with no comparative hypothesis.
+Yes at the documentary level, through the change ledger and physical-change receipt audit. No current hardware reachability check occurred. The artifact reports a blocked obligation and makes no claim of recovery, generalization, or measured benefit.
 
 ## EVIDENCE
-- `claim_scope`: `"Evidence ledger; future physical preflight remains unexecuted"`
-- `arm`: `"documentation_audit"`
-- `honest_verdict`: `"complete_blocked_gatemate_physical_change"`
-- `condition`: `"unchanged_or_missing_receipt"`
-- `scientific_benefit_score`: `0`
-- `generalized_learning_benefit_score`: `0`
-- `independent_generalization_score`: `0`
-- `model_invoked`: `false`
-- `current_model_calls`: `0`
+
+- `claim_scope`: `Evidence ledger; future physical preflight remains unexecuted`
+- `honest_verdict`: `complete_blocked_gatemate_physical_change`
+- `verdict_class`: `blocked`
+- `physical_change_receipt_rows`: `[]`
+- `current_reachability`: `not_probed`
 - `current_device_execution_count`: `0`
+- `scientific_benefit_score`: `0`
+- `execution_ready_score`: `Readiness certifies owned evidence checks and grants no scientific benefit.`
 
 ## RECOMMENDATION
 KEEP
@@ -216,22 +212,17 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-An observation refuting a claim would require an empirical claim of comparative superiority or performance effect to be asserted (such as non-null Brier degradation or cost gains for active arms over comparators); here, no substantive claim is asserted.
+Not applicable: the artifact asserts no comparative benefit or generalization result. Its unmeasured comparisons establish neither improvement nor an empirical null.
 
 ## WAS THAT CHECKED
-No; execution was blocked and unmeasured, with zero game executions, zero model invocations, and empty result rows.
+No comparative refutation was tested in the shown data. H1 and H2 remain unmeasured, and ARC contains no completed outcome rows or recommendations. The artifact reports disqualification.
 
 ## EVIDENCE
-`"status": "blocked_unmeasured"`
-`"support": null`
-`"statistics": null`
-`"completed_count": null`
-`"independent_science": false`
-`"owned_validation": false`
-`"required_checks_passed": false`
-`"honest_verdict": "complete_disqualified_supervisor_frontier"`
-`"solve_claims": []`
-`"rows": []`
+
+- `H1` and `H2`: `status` = `blocked_unmeasured`; `statistics` = `null`; `support` = `null`.
+- `acceptance_gates`: `independent_science` = `false`; `owned_validation` = `false`.
+- `arc_support`: `completed_count` = `0`; `rows` = `[]`; `selection_recommendations` = `[]`.
+- `arc_support`: `honest_verdict` = `complete_disqualified_supervisor_frontier`.
 
 ## RECOMMENDATION
 KEEP

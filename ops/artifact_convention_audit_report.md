@@ -9,8 +9,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| CANNOT_DETERMINE | 2 |
+| CHECKABLE | 5 |
+| CANNOT_DETERMINE | 3 |
 
 ## experiment_8318_v718_contract_replay.json
 
@@ -20,13 +20,13 @@ evidence the reviewer could not have read -- do NOT act on them.
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible portion records failed acceptance gates and replay checks, but no headline verdict is visible.
+The headline claim cannot be identified from the supplied, truncated artifact.
 
 ## WHAT IS MISSING
-The remainder of the artifact: it cuts off mid-value inside "cited_upstream_artifacts". "acceptance_gates" and "adversarial_findings" are present, but the final claim and any subsequent results or blocker summary are unavailable.
+The remainder of the artifact, including its final verdict and any "gate_check_summary"; the text ends mid-"snapshot_sha256" inside "cited_upstream_artifacts". The visible "acceptance_gates" are false, but "adversarial_findings" records specific failures, so missing blocker diagnostics cannot be inferred.
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact make a comparative claim without per-unit results?
+Does the artifact’s final verdict make a comparative claim or report a blocker without a diagnostic?
 
 ## experiment_8319_local_evidence_qualification.json
 
@@ -36,7 +36,7 @@ Does the complete artifact make a comparative claim without per-unit results?
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked at the conductor pre-gate because upstream gate check `history_reader_ready_score == 1` failed with an observed value of 0.
+Experiment 8319 was blocked because upstream "history_reader_ready_score" was 0, failing the required equality check against 1.
 
 ## WHAT IS MISSING
 nothing
@@ -52,7 +52,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The task was blocked at conductor pre-gate because upstream dependency `exp8318-contract-replay` had a `cached_support_ready_score` of 0 instead of the expected 1.
+The experiment was blocked because upstream `cached_support_ready_score` was 0 instead of the required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -68,7 +68,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked at the pre-gate check because upstream task exp8318-contract-replay recorded history_reader_ready_score=0 instead of the expected 1.
+Qualification was blocked because upstream `history_reader_ready_score` was 0, while the gate required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -87,10 +87,10 @@ CANNOT_DETERMINE
 no claim
 
 ## WHAT IS MISSING
-The remainder of the artifact: it ends mid-list inside "coverage_statement_counts". "acceptance_gates" records "owned_checks": false, but the artifact’s own final verdict is not visible.
+The artifact ends mid-entry in "coverage_statement_counts"; the remainder containing any final verdict, headline claim, or blocker diagnostic is unavailable. "acceptance_gates.owned_checks" is false and "arm_support_rows" is empty, but neither establishes a comparative claim or blocked verdict.
 
 ## THE CHECK A READER CANNOT DO
-Does the missing remainder declare a comparative result or a blocked verdict with a recorded diagnostic?
+Does the complete artifact report a comparative result, a block with a recorded reason, or neither?
 
 ## experiment_8329_v718_kv260_workload_cost.json
 
@@ -100,7 +100,7 @@ Does the missing remainder declare a comparative result or a blocked verdict wit
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-CPU cost qualification is blocked by three missing upstream artifacts, and accelerator benefit remains unproved because no compatible operation is available.
+Accelerator benefit remains unproved because no compatible operation is available, and CPU cost qualification is blocked by three missing upstream artifacts recorded in "gate_check_summary" with "expected": true and "observed": false.
 
 ## WHAT IS MISSING
 nothing
@@ -116,7 +116,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-GateMate remains blocked because a dated physical-change receipt is absent and the historical IDCODE is `0xffffffff`; no current hardware execution occurred.
+GateMate reopening remains blocked pending documented physical change, with historical IDCODE `0xffffffff` and no current hardware execution.
 
 ## WHAT IS MISSING
 nothing
@@ -126,16 +126,16 @@ none
 
 ## experiment_8331_v718_capstone.json
 
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
 ## VERDICT
-CHECKABLE
+CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-H1 and H2 are “blocked_unmeasured,” with “acceptance_gates” recording “independent_science” and “owned_validation” as false; no measured arm advantage is claimed.
+“H1.status” and “H2.status” report “blocked_unmeasured”; no comparative result is visible.
 
 ## WHAT IS MISSING
-nothing
+The artifact’s remainder: it stops mid-array inside “arc_support.coverage_statement_counts”. “acceptance_gates” already records “independent_science”: false and “owned_validation”: false, so blocker diagnostics are not wholly absent.
 
 ## THE CHECK A READER CANNOT DO
-none
+Does the omitted remainder assert a comparative result without per-unit supporting rows?

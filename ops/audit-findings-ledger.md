@@ -269,3 +269,5 @@ of truth, not this line.)
 | 2026-10-08 | experiment_claim_audit | experiment_8276_v715_current_contract_readiness.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-10-08 | experiment_claim_audit | experiment_8291_v716_dependency_scoped_admission.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-10-08 | experiment_claim_audit | experiment_10030_fover_headline_selection_denominator.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-10-09 | qa_layer_authenticity_audit | adversarial_verify.py::_has_positive_top_level_metric | SILENT_NON_FIRING | OPEN | |
+| 2026-10-09 | qa_layer_authenticity_audit | adversarial_verify.py::_has_positive_metric_pair | SILENT_NON_FIRING | OPEN | |

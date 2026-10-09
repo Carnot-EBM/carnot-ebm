@@ -1,5 +1,30 @@
 # Carnot — Operational Status
 
+## 2026-10-09 — V719 research plan staged
+
+Milestone `2026.10.719` proposes exactly fourteen tasks, Exp8332–Exp8345,
+in four phases. The matching design and execution file are
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. V718's full design is preserved separately.
+
+V718 produced five primary artifacts, three pre-gate receipts and six absent
+producer primaries. Its science remains unmeasured. The plan targets the
+specific replay/ARC coverage failures and the capstone memory-guard failure.
+Static training, local numerical qualification and runtime checks authenticate
+their own inputs. The frozen V717 H1/H2 protocol stays unchanged.
+
+The plan includes continuous delayed learning, finite feedback capacity,
+independent CPU operation costs, a gated bounded Qwen3.8-27B canary, ARC outcome
+inspection and explicit board obligations. All claims retain exposed-data,
+oracle, runtime and hardware limits. The dated literature scan preceded design.
+
+All fourteen complete task objects and the visible table agree. Ten gates,
+38 failure-lineage entries and 238 input paths pass staged checks. The 105
+focused unit/private E2E-018 tests pass, as do scoped lint/spec checks.
+Full validation is recorded in `docs/research-notes/v719-plan-validation.md`.
+Planning does not activate experiments or change the active roadmap/conductor.
+No implementation, historical result, generator weight or external site changed.
+
 ## 2026-10-08 — V717 capstone retirement compatibility repair
 
 Capstone reconciliation now accepts historical `retired_extras` entries without

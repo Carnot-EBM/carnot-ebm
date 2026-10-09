@@ -3847,3 +3847,4 @@ reader; 105 tests pass. Global spec-reference debt remains outside this plan.
 Documentation freshness and the test mutation gate pass. Repository-wide
 reconciliation retains the previously recorded 1,142 missing spec references;
 the scoped repair adds no untraced tests or repository-health claim.
+| REQ-REPORT-V719-PLAN / SCENARIO-REPORT-V719-PLAN | Exp8332–Exp8345 (planned) | Exact fourteen-task design/YAML; direct source custody, independent local qualification, frozen H1/H2, and staged-only validation in `docs/research-notes/v719-plan-validation.md` |

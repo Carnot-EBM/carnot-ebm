@@ -1,5 +1,27 @@
 # Carnot — Changelog
 
+## 2026-10-09 — Plan milestone 2026.10.719
+
+- Recorded a primary/secondary literature scan before experiment design.
+  Revalidated online KAN and delayed-capacity methods. Added sufficiency and
+  toolkit leads, with explicit retrieval and method limits.
+- Created matching fourteen-task design/YAML, Exp8332–Exp8345, in four phases.
+  Preserved V718's full design and the immutable V717 scientific protocol.
+- Removed unrelated historical-replay gates from independent static fitting,
+  numerical qualification and runtime reading. Targeted the exact uncovered
+  rejection/ARC branches and required measured parent/child memory qualification.
+- Retained frozen static/continuous utility tests, finite feedback capacity,
+  the bounded Qwen3.8-27B canary, ARC generalization evidence and board duties.
+  Added an independent CPU arithmetic cost branch with explicit service limits.
+- Reconciled the planning requirement, traceability and operational status.
+  No activation, active-roadmap/conductor edit, experiment execution or push.
+
+Validation: full task/table/digest equality, schema, ten gate references,
+38 complete failure-lineage entries, 238 input paths and protected hashes pass.
+Retirement, harness-fit, ARC and overdue-priority checks pass. All 105 focused
+unit/private E2E-018 checks and scoped Ruff/spec checks pass. The validation
+record documents repository-wide reconciliation separately.
+
 ## 2026-10-08 — Operational retrospective for milestone 2026.10.718
 
 - Wrote `results/operational_retro_2026_10_718.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.718`. Authoritative disk-mtime fallback data records 5 experiments completed (0 compute-bound, 5 synthesis-only) across 16.8 total wall-time minutes (average 3 minutes per experiment).
