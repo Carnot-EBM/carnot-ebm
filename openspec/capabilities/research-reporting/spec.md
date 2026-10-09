@@ -2,6 +2,35 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8328: Reuse the qualified supervisor frontier
+
+Authenticate Exp8314 bytes, terminal reports, reader sources and its exact frontier.
+Read the solve registry first. Reuse native receipt joins without compiling old authority.
+Inspect only later authenticated live-agent supervisor receipts. Keep every game and run hash.
+No current game or model calls are permitted. Missing external evidence closes as blocked.
+An empty authenticated delta closes as complete_null_no_supervisor_outcomes.
+Keep cached development generalization scores zero and solve_claims empty.
+
+### SCENARIO-REPORT-8328-DELTA
+
+Accept unchanged authority as an empty read. Reject missing, changed or stale qualification.
+Native joins exclude proxy solves and receipts before the frontier. Comparative descriptions
+require three overlapping games, two curated arms and five firings in every shared cell.
+Compare progress and action cost; missing propensity forbids causal conclusions.
+
+### SCENARIO-REPORT-8328-REPLAY
+
+Fresh-process replay binds primitives and source bytes. Valid evidence passes; negative
+claims and rehashed primitive tampering fail. Future trials disable per-game adapters
+and declare live_agent_self_discovery. The conductor owns ops and traceability updates.
+
+Implementation 2026-10-09: `arc_supervisor_frontier_8328` adapts the unchanged
+Exp8314 receipt consumer. `arc_supervisor_artifact_8328` binds primitive semantics,
+and `arc_supervisor_execution_8328` reuses private coverage and atomic publication.
+The direct runner inspects zero new firings and preserves the exact empty frontier.
+Historical failures and failed current qualification attempts remain raw evidence.
+The continuation condition lives in `docs/research-notes/v718-arc-outcomes.md`.
+
 ## REQ-REPORT-8288: Carry GateMate's authenticated physical obligation
 
 Authenticate the Exp8274 primary and qualified terminal sidecar before advancing

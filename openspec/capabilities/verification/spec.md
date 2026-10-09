@@ -2,6 +2,21 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8328: Check owned execution before atomic publication
+
+Freeze child argv and deadlines separately from science. Use private scratch, flushed
+phase boundaries and bounded unbuffered children with heartbeats at most sixty seconds.
+Require complete newly owned statement coverage, focused consumers, private E2E-017/018,
+scoped Ruff, strict mypy and spec references. Preserve all verifier findings and use
+only the independently qualified Exp8318 finding consumer. Failed owned checks disqualify.
+
+### SCENARIO-VERIFY-8328-CLI
+
+Exercise actual CLI, child failure, timeout and recovery paths. Bind exact exits,
+clocks and output hashes. Unchanged publisher, adversarial verifier and strict rows
+must validate candidate bytes. Unknown findings and unresolved warnings clear readiness.
+Preserve historical failures without re-opening old primaries or launching benchmarks.
+
 ## REQ-VERIFY-8288: Advance only the Exp8274 physical evidence frontier
 
 Preserve the original 0xffffffff transcript and hash. Read only changed established
