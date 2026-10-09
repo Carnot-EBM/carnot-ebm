@@ -11,93 +11,9 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 1 |
-| CLAIM_OVERSTATED | 1 |
-| NO_CLAIM | 2 |
-| CANNOT_DETERMINE | 4 |
+| NO_CLAIM | 8 |
 
-## experiment_8307_v717_runtime_change_boundary.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-CUDA runtime qualification remains disqualified from reopening because no authenticated causal changes occurred across the eight tracked runtime environment operands relative to upstream experiment exp8290.
-
-## WHAT WOULD REFUTE IT
-The headline claim would be refuted if any row in `rows` or `environment_delta_rows` showed `changed: true` (or `potentially_causal: true`) for driver version, kernel module, device inventory, environment masks, library hashes, device node permissions, permitted UUID, or a valid operator repair receipt, resulting in `runtime_changed_score > 0` and `acceptance_gates.authenticated_change: true`.
-
-## WAS THAT CHECKED
-Yes; checked across all 8 rows in `environment_delta_rows` and `rows` (auditing `driver`, `kernel`, `devices`, `masks`, `libraries`, `nodes`, `permitted_uuid`, and `operator_repair`), where all items were evaluated against upstream baseline receipts from `/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8290_v716_runtime_localization.json` and confirmed available, completed, and unchanged.
-
-## EVIDENCE
-- `"honest_verdict"`: `"complete_disqualified_cuda_runtime"`
-- `"verdict_class"`: `"disqualified"`
-- `"runtime_changed_score"`: `0`
-- `"completed_count"`: `8`
-- `"intended_count"`: `8`
-- `"excluded_count"`: `0`
-- `"failed_count"`: `0`
-- `"acceptance_gates"`: `"authenticated_change"`: `false`, `"cuda_context_ready"`: `false`, `"owned_checks"`: `false`
-- `"reopen_contract"`: `"eligible"`: `false`
-- `"rows"`:
-  - `"field"`: `"driver"`, `"changed"`: `false`, `"observed"`: `"615.71.09"`, `"previous"`: `"615.71.09"`
-  - `"field"`: `"kernel"`, `"changed"`: `false`
-  - `"field"`: `"devices"`, `"changed"`: `false`
-  - `"field"`: `"masks"`, `"changed"`: `false`
-  - `"field"`: `"libraries"`, `"changed"`: `false`
-  - `"field"`: `"nodes"`, `"changed"`: `false`
-  - `"field"`: `"permitted_uuid"`, `"changed"`: `false`, `"observed"`: `"GPU-7971baff-9583-eaa6-2292-393f930a28f9"`
-  - `"field"`: `"operator_repair"`, `"changed"`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_10030_fover_headline_selection_denominator.json
-
-**CLAIM_OVERSTATED**
-
-## VERDICT
-CLAIM_OVERSTATED
-
-## THE HEADLINE CLAIM
-A 4-verifier ensemble scoring formula incorporating session memory achieves ~0.913 AUROC on FoVer error detection, providing a ~0.018 learning contribution over base verifiers.
-
-## WHAT WOULD REFUTE IT
-The claim is refuted if:
-1. The base multi-verifier ensemble fails to outperform the cheapest single-verifier baseline (`tier0r_alone`), demonstrating that multi-verifier combination provides no measurable synergy.
-2. The claimed 4-verifier formula does not actually utilize four valid verifiers (e.g., components omitted or scoring at chance).
-3. The session memory "learning contribution" fails to achieve statistical significance (95% bootstrap confidence interval spanning zero) once label-contaminated memory rows are excluded on clean held-out data.
-
-## WAS THAT CHECKED
-Yes. All three refutations were directly checked within the artifact:
-1. In `ensemble_vs_best_single_component`, the base formula was evaluated against `tier0r_alone`.
-2. In `headline_text_vs_formula_discrepancy` and `per_component_auroc_full_corpus`, the verifier formula was checked against the north star specification.
-3. In `memory_effect` under `H1_never_sampled_and_not_memory_flagged`, the learning contribution was measured with a 95% bootstrap confidence interval on clean held-out rows.
-
-## EVIDENCE
-- `north_star_text`: `"4-verifier score (fr11_session_memory, tier0r_curry_howard, tier0s_arithmetic_gap, tier0u_logical_consistency)"`
-- `formula`: `"0.9*tier0r + 0.1*tier0u + FR11_MEMORY_BOOST(=1.0)*memory_score"`
-- `tier0s_in_formula`: `false`
-- `tier0s_scored_but_unused_full_corpus_auroc`: `0.3016179446373822`
-- `u`: `0.5098671461946712`
-- `tier0r_alone`: `0.9016862925104014`
-- `base`: `0.9015981044183999`
-- `base_formula_minus_tier0r_alone`: `-8.818809200150657e-05`
-- `reading`: `"On the full corpus the 0.9*tier0r + 0.1*tier0u base formula scores within 0.0001 of tier0r alone (slightly below it). The second component adds nothing measurable. All of condition A's lift over tier0r comes from the memory term."`
-- `published_learning_contribution`: `0.0184712`
-- `low`: `-0.0019785082174461704`
-- `high`: `0.026521631023843424`
-- `methodology_note`: `"The memory term is built from labels of earlier FoVer rows, so condition A contains label-derived information by design."`
-- `honest_verdict`: `"complete: headline_survives_held_out_but_learning_contribution_not_established_on_clean_rows"`
-- `gate1_survives_verdict`: `true`
-
-## RECOMMENDATION
-CORRECT_THE_RECORD
-
-## experiment_8308_sentence_spline_fit.json
+## experiment_8318_v718_contract_replay.json
 
 **NO_CLAIM**
 
@@ -108,22 +24,22 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-None. The artifact is an operational gate-check receipt reporting that experiment execution was halted by an unsatisfied upstream prerequisite; it makes no empirical or comparative claim.
+Not applicable: this is an administrative replay and qualification receipt, not a claim of comparative benefit. Oracle agreement cannot establish added value, but this artifact grants no scientific benefit or generalization credit.
 
 ## WAS THAT CHECKED
-No. No experimental hypotheses or comparative metrics were evaluated because execution was blocked at the pre-gate layer prior to running.
+No comparative scientific claim was tested; H1 and H2 remain unmeasured. Administrative failure had a real chance to occur and did: the artifact records a reduction mismatch and an unresolved false-zero finding. These failures are not presented as scientific success.
 
 ## EVIDENCE
-`schema` `blocked_gate_check_v1`
-`status` `blocked`
-`duration_s` `0.0`
-`honest_verdict` `blocked_gate_check_failed`
-`blocked_at_layer` `conductor_pre_gate`
+- `acceptance_gates`: `scientific_benefit` is `false`.
+- `generalized_learning_benefit_score` is `0`.
+- Historical `H1` and `H2`: `status` is `blocked_unmeasured`; `statistics` is `null`.
+- `first_reduction_mismatch` identifies `gate_check_summary[15].hash`.
+- The second adversarial disposition has `recomputed` = `false`, `resolved` = `false`, and `passed` = `false`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8313_changed_runtime_canary.json
+## experiment_8319_local_evidence_qualification.json
 
 **NO_CLAIM**
 
@@ -134,70 +50,188 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-None; the artifact is a gate check receipt recording an execution block rather than an experimental finding or comparative claim.
+An observation showing substantive experimental results or demonstrating that the upstream gate check dependency was satisfied.
 
 ## WAS THAT CHECKED
-No; execution was halted at `conductor_pre_gate` before any canary trial was executed.
+No. The artifact is a pre-execution gate failure receipt; the experiment never executed.
 
 ## EVIDENCE
-`schema`
-`blocked_gate_check_v1`
-`status`
-`blocked`
-`honest_verdict`
-`blocked_gate_check_failed`
-`blocked_reason`
-`actual=0 == expected=1`
-`blocked_at_layer`
-`conductor_pre_gate`
+`schema`: `blocked_gate_check_v1`
+`status`: `blocked`
+`duration_s`: `0.0`
+`honest_verdict`: `blocked_gate_check_failed`
+`blocked_at_layer`: `conductor_pre_gate`
+`gate_check_summary`: `gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8318-contract-replay.history_reader_ready_score (actual=0 == expected=1)`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8314_v717_arc_coverage_frontier.json
+## experiment_8320_sentence_spline_fit.json
 
-**CANNOT_DETERMINE**
+**NO_CLAIM**
 
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
+## VERDICT
+NO_CLAIM
 
-## experiment_8315_v717_kv260_local_cost_boundary.json
+## THE HEADLINE CLAIM
+no claim
 
-**CANNOT_DETERMINE**
+## WHAT WOULD REFUTE IT
+Any empirical claim regarding sentence spline fitting would require the experiment to execute; refuting the recorded receipt of gate failure would require observing that the upstream gate condition was actually satisfied (`"cached_support_ready_score"` equal to `1`).
 
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
+## WAS THAT CHECKED
+No; the experiment was aborted prior to execution at `"conductor_pre_gate"`.
 
-## experiment_8316_v717_gatemate_obligation.json
+## EVIDENCE
+`"schema"`: `"blocked_gate_check_v1"`
+`"status"`: `"blocked"`
+`"honest_verdict"`: `"blocked_gate_check_failed"`
+`"duration_s"`: `0.0`
+`"blocked_at_layer"`: `"conductor_pre_gate"`
 
-**CANNOT_DETERMINE**
+## RECOMMENDATION
+KEEP
 
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
+## experiment_8326_runtime_reader_qualification.json
 
-## experiment_8317_v717_capstone.json
+**NO_CLAIM**
 
-**CANNOT_DETERMINE**
+## VERDICT
+NO_CLAIM
 
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative or scientific claim is made to refute; the artifact is a gate-check receipt recording that upstream qualification failed and blocked experiment execution before any trial took place. Within the scope of a gate receipt, observing that the upstream gate check actually satisfied the condition (`history_reader_ready_score` equal to 1 or `passed` being true) while being logged as blocked would refute the receipt's failure record.
+
+## WAS THAT CHECKED
+No comparative hypothesis or experimental condition was checked because the run halted at the conductor pre-gate layer; the artifact evaluated only the upstream readiness condition `exp8318-contract-replay.history_reader_ready_score == 1`, which failed.
+
+## EVIDENCE
+`schema`: `blocked_gate_check_v1`
+`status`: `blocked`
+`honest_verdict`: `blocked_gate_check_failed`
+`blocked_at_layer`: `conductor_pre_gate`
+`duration_s`: `0.0`
+`failed_upstream`: `exp8318-contract-replay`
+`failed_field`: `history_reader_ready_score`
+`failed_expected`: `1`
+`failed_observed`: `0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8328_v718_arc_supervisor_frontier.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no supervisor-benefit claim to falsify. An authenticated new supervisor outcome within the stated frontier would contradict the receipt’s zero-outcome record, but would not itself establish comparative benefit.
+
+## WAS THAT CHECKED
+No comparative benefit test was conducted. The recorded phase authenticates and inspects upstream artifacts; current executions and outcome rows are empty. The artifact reports disqualification rather than a positive result or an evaluated null.
+
+## EVIDENCE
+`honest_verdict`: `complete_disqualified_supervisor_frontier`; `phase`: `authenticate_and_inspect`; `current_game_execution_count`: `0`; `current_model_invocation_count`: `0`; `new_outcome_count`: `0`; `rows`: `[]`; `selection_recommendations`: `[]`; `required_checks_passed`: `false`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8329_v718_kv260_workload_cost.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative benefit is asserted. An eligible, completed source-arm measurement would contradict the reported absence of qualified measurements, but there is no performance headline to falsify.
+
+## WAS THAT CHECKED
+No comparative performance test occurred. All six full/indexed source-arm rows are censored and ineligible, with no completed measurements or timings. This is a blocked qualification receipt; it claims neither verifier added value nor independent generalization.
+
+## EVIDENCE
+
+- `verdict_class`: `blocked`
+- `accelerator_benefit`: `unproved_no_compatible_operation`
+- `completed_count`: `0`
+- `censored_count`: `6`
+- `eligible`: `false`; `censored`: `true`
+- `timing_rows`: `[]`
+- `generalized_learning_benefit_score`: `0`
+- `independent_generalization_score`: `0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8330_v718_gatemate_change_ledger.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+None; the artifact is an administrative evidence ledger and documentation audit recording that GateMate hardware remains blocked and unchanged, asserting no comparative or empirical performance claim.
+
+## WAS THAT CHECKED
+No; refutation checks do not apply to an administrative change ledger and receipt artifact with no comparative hypothesis.
+
+## EVIDENCE
+- `claim_scope`: `"Evidence ledger; future physical preflight remains unexecuted"`
+- `arm`: `"documentation_audit"`
+- `honest_verdict`: `"complete_blocked_gatemate_physical_change"`
+- `condition`: `"unchanged_or_missing_receipt"`
+- `scientific_benefit_score`: `0`
+- `generalized_learning_benefit_score`: `0`
+- `independent_generalization_score`: `0`
+- `model_invoked`: `false`
+- `current_model_calls`: `0`
+- `current_device_execution_count`: `0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8331_v718_capstone.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+An observation refuting a claim would require an empirical claim of comparative superiority or performance effect to be asserted (such as non-null Brier degradation or cost gains for active arms over comparators); here, no substantive claim is asserted.
+
+## WAS THAT CHECKED
+No; execution was blocked and unmeasured, with zero game executions, zero model invocations, and empty result rows.
+
+## EVIDENCE
+`"status": "blocked_unmeasured"`
+`"support": null`
+`"statistics": null`
+`"completed_count": null`
+`"independent_science": false`
+`"owned_validation": false`
+`"required_checks_passed": false`
+`"honest_verdict": "complete_disqualified_supervisor_frontier"`
+`"solve_claims": []`
+`"rows": []`
+
+## RECOMMENDATION
+KEEP

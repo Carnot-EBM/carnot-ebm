@@ -9,38 +9,90 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 2 |
-| CANNOT_DETERMINE | 6 |
+| CHECKABLE | 6 |
+| CANNOT_DETERMINE | 2 |
 
-## experiment_8307_v717_runtime_change_boundary.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_10030_fover_headline_selection_denominator.json
+## experiment_8318_v718_contract_replay.json
 
 **CANNOT_DETERMINE**
 
-reviewer call failed
+## VERDICT
+CANNOT_DETERMINE
 
-## experiment_8308_sentence_spline_fit.json
+## WHAT THE CLAIM IS
+The visible portion records failed acceptance gates and replay checks, but no headline verdict is visible.
+
+## WHAT IS MISSING
+The remainder of the artifact: it cuts off mid-value inside "cited_upstream_artifacts". "acceptance_gates" and "adversarial_findings" are present, but the final claim and any subsequent results or blocker summary are unavailable.
+
+## THE CHECK A READER CANNOT DO
+Does the complete artifact make a comparative claim without per-unit results?
+
+## experiment_8319_local_evidence_qualification.json
 
 **CHECKABLE**
 
 ## VERDICT
 CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked at the conductor pre-gate because upstream gate check `history_reader_ready_score == 1` failed with an observed value of 0.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8320_sentence_spline_fit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The task was blocked at conductor pre-gate because upstream dependency `exp8318-contract-replay` had a `cached_support_ready_score` of 0 instead of the expected 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8326_runtime_reader_qualification.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked at the pre-gate check because upstream task exp8318-contract-replay recorded history_reader_ready_score=0 instead of the expected 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8328_v718_arc_supervisor_frontier.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
 no claim
 
 ## WHAT IS MISSING
-nothing
+The remainder of the artifact: it ends mid-list inside "coverage_statement_counts". "acceptance_gates" records "owned_checks": false, but the artifact’s own final verdict is not visible.
 
 ## THE CHECK A READER CANNOT DO
-none
+Does the missing remainder declare a comparative result or a blocked verdict with a recorded diagnostic?
 
-## experiment_8313_changed_runtime_canary.json
+## experiment_8329_v718_kv260_workload_cost.json
 
 **CHECKABLE**
 
@@ -48,7 +100,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked at the conductor pre-gate layer because upstream prerequisite checks for runtime change and CUDA context readiness failed (both evaluated to 0 instead of 1).
+CPU cost qualification is blocked by three missing upstream artifacts, and accelerator benefit remains unproved because no compatible operation is available.
 
 ## WHAT IS MISSING
 nothing
@@ -56,26 +108,34 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8314_v717_arc_coverage_frontier.json
+## experiment_8330_v718_gatemate_change_ledger.json
 
-**CANNOT_DETERMINE**
+**CHECKABLE**
 
-reviewer call failed
+## VERDICT
+CHECKABLE
 
-## experiment_8315_v717_kv260_local_cost_boundary.json
+## WHAT THE CLAIM IS
+GateMate remains blocked because a dated physical-change receipt is absent and the historical IDCODE is `0xffffffff`; no current hardware execution occurred.
 
-**CANNOT_DETERMINE**
+## WHAT IS MISSING
+nothing
 
-reviewer call failed
+## THE CHECK A READER CANNOT DO
+none
 
-## experiment_8316_v717_gatemate_obligation.json
+## experiment_8331_v718_capstone.json
 
-**CANNOT_DETERMINE**
+**CHECKABLE**
 
-reviewer call failed
+## VERDICT
+CHECKABLE
 
-## experiment_8317_v717_capstone.json
+## WHAT THE CLAIM IS
+H1 and H2 are “blocked_unmeasured,” with “acceptance_gates” recording “independent_science” and “owned_validation” as false; no measured arm advantage is claimed.
 
-**CANNOT_DETERMINE**
+## WHAT IS MISSING
+nothing
 
-reviewer call failed
+## THE CHECK A READER CANNOT DO
+none

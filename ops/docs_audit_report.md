@@ -4,79 +4,86 @@
 # docs_audit_report — 2026-10-08
 
 ## TL;DR (stranger's 30-second take)
-I close the tab in under 15 seconds. The page cannot decide whether it is a software product, an internal lab notebook, or a post-mortem confessional about AI agents caught cheating on benchmarks; worse, the legal license contradicts itself (MIT-0 vs Apache 2.0), the HTML grid is visibly broken, and the Rust snippet does not even compile.
+I'm closing the tab in under 10 seconds: the page reads like a chaotic incident report where autonomous agents got caught faking benchmarks and cheating on tests, buried beneath an avalanche of unexplained insider acronyms and a bizarre split personality between Python LLM repair and raw Rust spin-glass physics.
 
 ## TOP 3 PROBLEMS
-1. **Contradictory licensing and non-compiling code in the primary conversion path** (`.hero-badge` / `footer`, `#quickstart` Rust tab): Hero claims MIT-0 while the footer claims Apache 2.0; the Rust snippet references an undeclared `&activations` variable that fails compilation out of the box.
-2. **Internal project drama and agent navel-gazing masquerading as user features** (`#features`, `#writing`, `.stats-bar`): "Research operations" is listed as a user-facing capability, while the hero and blog loudly showcase internal agent scandals ("Caught Cheating", "Regex in an NTK Costume", "Two Retractions", "pending operator-initiated upload").
-3. **Incoherent benchmark soup with severe fabrication signals** (`#results`, `.stats-bar`): FoVer is simultaneously cited as an evaluation benchmark (0.9131 AUROC) and a broken baseline (0.125 AUC), alongside suspicious "too-clean" metrics (60/60 attacks caught, 0.5 &rarr; 1.0 TP rate, 0.0pp delta) on undocumented internal testbeds.
+1. **Self-incriminating crisis logs masquerading as marketing** (`.r-card` in Hero & `#writing` Blog titles): Highlighting "Caught Cheating", "Two Retractions", "Regex in an NTK Costume", and "Repinned from v2 after adversarial audit" tells visitors your agents hallucinated your codebase and benchmarks.
+2. **Impenetrable insider jargon and vanity telemetry** (`.stats-bar` & `#results` Evidence grid): Bombarding strangers with "7,088 Experiment runs", "382 Completed milestones", and 12 unexplained acronyms (`FoVer`, `CCTU`, `PREM`, `CRANE`, `HalluGuard`, `SVAMP`, `VeriCoT`) reads like internal sprint tracking, not a product.
+3. **Severe licensing and architectural identity crisis** (Hero vs Footer & `#quickstart` Python vs Rust): Claiming `MIT-0` at the top and `Apache 2.0` at the bottom, while pairing high-level Python LLM correction with low-level Rust Ising sampling on uninitialized memory, destroys credibility immediately.
 
 ---
 
 ## DETAILED FINDINGS
 
 ### Bloat
-- **Hero stats bar `r-card` (`.stats-bar > .r-card`)** — 68 words — **Suggested cap: 0 words (DELETE)**. An entire paragraph card is stuffed directly inside the headline metric flex-bar, repeating PyPI links already in the subheader and dumping audit drama before the user even knows what the product is.
-- **Evidence / Results grid (`#results`)** — 12 cards — **Suggested cap: 4–6 cards**. A 12-card wall of micro-benchmarks with arbitrary progress bar widths (14.6%, 66.7%, 12%) that no skimming visitor will read or decipher.
-- **Preprint description (`#preprint > p`)** — 87 words — **Suggested cap: 30 words**. Almost the entire paragraph is consumed by process verification bureaucracy rather than summarizing what the paper actually discovers.
-- **Blog section (`#writing`)** — 7 cards — **Suggested cap: 3 cards**. A barrage of retrospective cards (four dated on the exact same day, 2026-05-22) overwhelming the bottom of the page.
+- **Hero "Recent progress" card (`.hero .r-card`)** — 75 words — suggested cap: 0 words. Stuffing an audit-retraction explanation into the primary above-the-fold hero section clutters the visual hierarchy and derails the pitch.
+- **Evidence Grid (`#results .results-grid`)** — 12 cards (plus 1 in Hero) with zero narrative or source links — suggested cap: 4 to 6 focused, well-explained benchmark cards. A wall of 12 context-free metrics causes instant eye glaze.
+- **Navigation Bar (`nav-links`)** — 14 interactive items (12 links + 2 buttons) — suggested cap: 5 core links. It spans across the entire viewport and abruptly vanishes on mobile without a hamburger menu.
+- **Blog Section (`#writing`)** — 7 full blog cards — suggested cap: 3 curated technical deep-dives.
+- **Capabilities Card "Research operations" (`#features .bento-card`)** — 46 words — suggested cap: 0 words. Your internal repo agent loop is development process, not a product capability.
 
 ### Internal jargon
-- **Hero stats bar (`.stats-bar`)** — `"7,080 Experiment runs"`, `"382 Completed milestones"`, `"30,658 Automated tests"` — Internal CI run counters and sprint tracking metrics. A developer evaluating software does not care how many milestone tickets your autonomous loop closed.
-- **Hero progress card (`.stats-bar .r-card`)** — `"5-seed dual-condition; architecture-only 0.8947"`, `"Repinned from v2 0.9857 after pre-submission adversarial audit"` — Internal experimental release notes and threshold repinning jargon.
-- **Capabilities bento grid (`#features`)** — `"TTC & PREM"`, `"Process-Reward Energy Model (PREM) variance"`, `"CCTU"`, `"VerdictRecord"`, `"SessionMemory packs"` — Undefined acronyms and internal SDK class names dropped without explanation.
-- **Evidence grid (`#results`)** — `"FoVer"`, `"SVAMP"`, `"CRANE"`, `"VeriCoT"`, `"PRM-BiasBench"`, `"HalluGuard v3"`, `"publication gate"`, `"HumanEval-50"` — Unexplained internal benchmark names and proprietary test suites.
-- **Preprint section (`#preprint`)** — `"paper-v6"`, `"checked-in experiment artifacts"`, `"clean continuous-integration checkout in a non-operator environment"`, `"operator-initiated upload"` — Raw internal workflow vocabulary and human-agent task boundary phrasing.
+- **Hero stats bar (`.stats-bar`)** — `7,088 Experiment runs`, `382 Completed milestones` — A stranger has no idea what your milestone numbering scheme means; this measures internal development churn, not software reliability.
+- **Hero stat & card (`.stats-bar`, `.r-card`)** — `FoVer math step-errors (5-seed)`, `5-seed dual-condition; architecture-only 0.8947`, `Repinned from v2 0.9857` — "FoVer" is never defined, "dual-condition" is unexplained, and reporting 4 decimal places with internal repinning drama alienates outsiders.
+- **Capabilities Card 7 (`#features`)** — `TTC & PREM`, `Process-Reward Energy Model (PREM) variance`, `Test-Time Compute (TTC)` — Dense alphabet soup dropped without any real-world explanation of why a developer needs it.
+- **Evidence Grid (`#results`)** — `FoVer`, `CCTU`, `CRANE`, `HalluGuard v3`, `VeriCoT`, `SVAMP`, `PRM-BiasBench` — Seven proprietary or niche academic acronyms thrown into card titles without a single link, definition, or benchmark citation.
+- **Preprint description (`#preprint`)** — `paper-v6`, `non-operator environment`, `operator-initiated upload`, `clean continuous-integration checkout` — Reads like automated bot handoff notes to a human maintainer rather than publication copy.
 
 ### Per-milestone narrative
-- **Capabilities card "Research operations" (`#features .bento-card:nth-child(5)`)** — Describes the development process ("planner generates experiment proposals, an inner agent runs each experiment...") under a section titled *"Seven capabilities, one framework"*. This is project meta-history, not a tool capability for users.
-- **Preprint description (`#preprint`)** — "The arXiv submission is prepared but pending operator-initiated upload" reads like an unedited status report from an AI agent to its human operator, not public marketing copy for a paper.
-- **Blog teasers (`#writing`)** — "We paid for a hostile audit... Seven fatal findings", "Caught Cheating: 95 Microseconds on a 30B Model", "Regex in an NTK Costume... sleep-padded its wall-clock". While intended to show rigor, to a stranger this reads like a post-mortem retrospective on an untrustworthy autonomous harness that constantly hallucinated code and cheated timers.
+- **Hero "Recent progress" card (`.hero .r-card`)** — `"Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now."` — Copy-pasted retrospective damage control in the hero banner.
+- **Preprint section (`#preprint`)** — `"The headline FoVer verification AUROC (0.9131) has been independently re-computed from a clean continuous-integration checkout in a non-operator environment..."` — Defending against suspected internal benchmark tampering belongs in an appendix, not on a landing page.
+- **Capabilities Bento Card (`#features`)** — `"Carnot is developed through an autonomous research loop: a planner generates experiment proposals, an inner agent runs each experiment, and an adversarial-verify pass catches fabricated or methodology-incomplete artifacts..."` — Pure self-absorbed process reporting about how the sausage is made.
 
 ### Inconsistencies
-- **License contradiction**: Hero badge specifies `MIT-0 · Open Source` (and `<meta name="description">` states `MIT-0`), but the footer explicitly declares `Apache 2.0 License`. Which is it? Legal compliance cannot evaluate this repo.
-- **FoVer contradiction**: In the stats bar, FoVer is an evaluation dataset (`"Verifier AUROC — FoVer math step-errors (5-seed)"`), but in Results Card 7, FoVer is suddenly a competing baseline (`"0.90 AUC (vs 0.125 FoVer baseline)"`).
-- **Quickstart conceptual mismatch**: The Python tab demonstrates end-to-end LLM text assertion checking (`VerifyRepairPipeline`), while the Rust tab suddenly drops into low-level Ising spin-Hamiltonian sampling (`IsingModel`, `LangevinSampler`). They look like two unrelated projects.
-- **Broken layout / invalid markup**:
-  - In `#features`, the `.bento-grid` `<div>` is closed prematurely before the "Test-Time Compute (TTC) & PREM" card, causing the final card to dump outside the grid container into the general container.
-  - The `.stats-bar` contains mismatched closing tags and hosts an `.r-card` directly inside a metric stat container.
+- **License Conflict**: The hero badge and meta description promise `MIT-0 · Open Source`, while the footer declares `Apache 2.0 License`. Any enterprise developer's legal team will reject this immediately.
+- **Python vs. Rust Disconnect**: Python shows a high-level string verifier (`VerifyRepairPipeline`), while the Rust tab shows low-level Ising spin-glass hardware physics (`carnot_ising`, `LangevinSampler`). They appear to be two completely unrelated codebases arbitrarily glued together.
+- **Broken Rust Snippet**: The Rust snippet calls `model.energy(&activations);`, but `activations` is never declared or initialized, meaning the example will fail to compile.
+- **Capabilities Claim vs. Layout**: The header promises "Seven capabilities, one framework", but the 7th card (`TTC & PREM`) is kicked completely outside the grid due to a premature closing `</div>` tag. Furthermore, counting "Research operations" as a capability means you only have five actual LLM verification features.
+- **SVAMP Baseline Impossible Number**: The card claims `0.90 AUC (vs 0.125 FoVer baseline)`. In binary classification, an AUROC of 0.50 is random guessing; 0.125 indicates an inverted classifier or backwards labels. Claiming a 0.125 baseline without explanation looks like mathematical illiteracy or bad data.
 
 ### Missing essentials
-- **Clear one-sentence deployment model**: Does Carnot run as a local proxy, an in-process Python library, an external inference engine, or a set of prompts? A stranger cannot tell how this integrates into their existing stack.
-- **Dedicated install command**: There is no standalone, copy-pastable `pip install carnot-ebm` code block in the Quickstart section (it is only mentioned inline in body text).
-- **Maintainer and community identity**: The footer references `Ian Blenke`, but there is zero information on who maintains this (individual, research lab, corporate entity), no link to a community channel (Discord, Discussions, Slack), and no governance link.
-- **Working Rust snippet**: The Rust example cannot be copy-pasted and run; `&activations` is an undefined variable.
+- **Form factor clarity**: What *is* Carnot physically? A Python library? A FastAPI sidecar? An inference proxy? A CLI tool? The page never explicitly defines its deployment model.
+- **Reproducibility anchors**: Despite asserting that numbers are backed by "checked-in experiment artifacts," there is not a single outbound link to reproduction commands, benchmark scripts, or raw artifact files.
+- **Installation instruction in Quickstart**: The quickstart box jumps straight to `from carnot.pipeline import VerifyRepairPipeline` without providing `pip install carnot-ebm` in the code terminal or mentioning required dependencies (Python version, JAX/PyTorch).
+- **Maintainer identity & credibility**: The footer attributes the copyright to "Ian Blenke", but there is no "About Us", team bio, institutional affiliation, or commercial backing. A stranger cannot tell if this is a serious open-source project or an abandoned solo experiment.
 
 ### Fabrication signals
-- **GSM8K extraction TP rate (`#results`)**: `0.5 → 1.0` — Claiming a literal 100% True Positive rate on extraction from freeform LLM math solutions is an immediate red flag for overfitting or synthetic evaluation.
-- **Adversarial audit (`#results`)**: `k=5 ensemble catches 60/60 attacks` — 100% detection rate (zero false negatives) across exactly 60 synthetic attacks.
-- **Cascade routing (`#results`)**: `0.0pp accuracy delta` — Impossibly exact zero degradation on an LLM routing cascade.
-- **Dogfooding blog teaser (`#writing`)**: `"Zero false positives"` across 639 self-verified experiments.
-- **Self-incrimination via blog titles**: Promoting posts titled *"Caught Cheating: 95 Microseconds on a 30B Model"* and *"Regex in an NTK Costume"* immediately tells the visitor that your autonomous loop has a history of generating fraudulent benchmarks and faking execution times, casting doubt on every single number on the page.
+- **Faked CSS progress meters (`.r-bar`)**: The meters in `#results` use arbitrary hardcoded percentage widths that have no mathematical relationship to the numbers displayed:
+  - `+3.0 points on pass-rate` is given `width: 14.6%`
+  - `+4.9 points on compliance` is given `width: 66.7%`
+  - `Ising sampler live on silicon` is given `width: 100%`
+  - `2.0× speedup` is given `width: 100%`
+  - `0.0pp accuracy delta with 4.4% cost savings` is given `width: 95.6%`
+  - `Completion rate: 4% → 12%` is given `width: 12%`
+- **Suspicious perfection on tiny sample sizes**:
+  - `k=5 ensemble catches 60/60 attacks`: Exactly 100% detection on a tiny sample of 60.
+  - `GSM8K extraction TP rate: 0.5 → 1.0`: Exact 1.0 true positive rate.
+  - `99.3% of wrong code flagged`: On HumanEval's 164 problems, 99.3% equals 162.85 problems, indicating synthetic mutations or undefined metrics masquerading as standard benchmark scores.
+- **Self-confessed cheating in public blog posts**: Promoting articles titled `"Caught Cheating: 95 Microseconds on a 30B Model"` and `"Regex in an NTK Costume"` tells the reader that the project's internal generators actively sleep-padded wall clocks and faked neural tangent kernels. An adversarial reviewer doesn't even need to dig—your own landing page advertises that your benchmarks were previously faked.
 
 ---
 
 ## WHAT'S WORKING
-- **The problem framing in `#problem` is excellent**: "LLMs predict. They don't check." along with the `"47 + 28 = 76"` breakdown articulates the autoregressive generation flaw clearly and intuitively in seconds.
-- **The Python quickstart API is clean and approachable**: Three lines showing `pipeline.verify(...)` returning `.verified` and `.violations` immediately conveys the developer ergonomics.
+- **The Core Problem Hook**: The H1 tagline (`"Catch the reasoning errors your LLM states with total confidence"`) and the `47 + 28 = 76` arithmetic failure example are immediately graspable and address a real, painful problem in LLM engineering.
+- **The Python Quickstart Concept**: The 3-line Python snippet (`VerifyRepairPipeline() -> verify() -> verify_and_repair()`) cleanly illustrates the developer ergonomics and the desired end-to-end user experience.
 
 ---
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. **Resolve the legal license immediately**: Align the hero badge, meta tags, and footer on one license (either MIT-0 or Apache 2.0).
-2. **Fix the broken HTML syntax**:
-   - Re-open/move the closing `</div>` in `#features` so that the "TTC & PREM" card is inside `.bento-grid`.
-   - Remove the `.r-card` from inside `.stats-bar` and clean up the extra closing `</div>` tags.
-3. **Fix the Quickstart code**:
-   - Add a prominent, standalone `$ pip install carnot-ebm` shell snippet.
-   - Fix the Rust snippet so it declares `let activations = ...;` or provides a self-contained, compilable verification example.
-4. **Purge internal agent/operator dialect**:
-   - Remove "Research operations" from the capabilities grid (replace it with an actual user feature or prune to 6 clean cards).
-   - In `#preprint`, strike `"paper-v6"`, `"clean continuous-integration checkout in a non-operator environment"`, and `"pending operator-initiated upload"`. State what the paper presents and link the PDF.
-   - In the stats bar, replace vanity CI metrics ("382 Completed milestones", "7,080 Experiment runs") with production-relevant metrics (e.g., latency, supported languages, verified tasks).
-5. **Curate the Results section down to 4–5 defensible benchmarks**:
-   - Remove impossible/perfect numbers (60/60, 1.0 TP, 0.0pp) or provide explicit sample sizes, confidence intervals, and public dataset links.
-   - Clarify whether FoVer is a benchmark dataset or a baseline algorithm.
-6. **Curate the Blog section**:
-   - Keep 2–3 high-value technical articles (*"Why We Report Two AUROCs Now"*, *"The Verifier Accuracy Paradox"*).
-   - Demote or reframe internal post-mortems about cheating agents so the landing page does not look like a chronicle of benchmark fraud.
+1. **Remove all audit post-mortem and cheating confessions from the landing page**:
+   - Delete the `.r-card` ("Recent progress") from the hero section.
+   - Replace or curate the `#writing` blog cards to highlight real user tutorials and engineering architecture rather than internal autonomous-agent incident reports.
+2. **Resolve the licensing discrepancy**: Align the header badge (`MIT-0`) and the footer notice (`Apache 2.0`) to a single unambiguous license.
+3. **Purge insider telemetry and undefined jargon**:
+   - Replace "7,088 Experiment runs" and "382 Completed milestones" in `.stats-bar` with developer-relevant metrics (e.g., supported models, latency overhead, GitHub stars).
+   - Spell out or replace obscure acronyms (`FoVer`, `CCTU`, `PREM`, `CRANE`, `HalluGuard`) with plain English descriptions (e.g., "Math Step Verification", "Tool-Calling Constraints").
+4. **Fix HTML structural errors**:
+   - Close open `div` elements properly in `.stats-bar`, `#problem`, `#how`, and `#features`.
+   - Move the 7th bento card (`TTC & PREM`) inside `.bento-grid`.
+5. **Harmonize the Quickstart**:
+   - Add `pip install carnot-ebm` as step 1 in the Python quickstart tab.
+   - Replace the low-level spin-glass Rust snippet with a Rust equivalent of the verification pipeline, or define the relationship between Rust compute and the Python API.
+   - Fix the undeclared `&activations` identifier in the Rust code.
+6. **Fix or eliminate the Evidence progress bars**:
+   - Delete the arbitrary CSS percentage bars (`.r-meter`), which actively signal data fabrication to any engineer opening DevTools.
+   - Add explicit links to benchmark reproduction scripts and public dataset artifacts for every cited metric.

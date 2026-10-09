@@ -3,7 +3,9 @@
 
 # qa_layer_authenticity_audit_report — 2026-10-08
 
-Scanned 20 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 6 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 6 of 20 unit(s); rotation advances by 6 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
@@ -12,229 +14,455 @@ Scanned 20 of 20 selected unit(s) with agy as the hostile reviewer. Guards (21):
 | `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 0 |
+| `SILENT_NON_FIRING` | 6 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
-| `UNKNOWN` | 20 |
+| `UNKNOWN` | 0 |
+
+### MISSED INPUTS — a real input each guard does NOT catch
+The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
+- `adversarial_verify.py::_byte_identical_online_arm_reason` — An identical first-win result accompanied by a different solve-rate measurement: ```json { "frozen_first_win": 0.04, "online_scratch_first_win": 0.04, "online_warm_first_win": 0.04, "frozen_solve_rate": 0.08 } ``` Observed: None. Adding this fourth field to historical Experiment 4715 also removed its critical lever flag. An equivalent arm-role spelling is also missed: ```json { "arms": [ {"arm": "
+- `adversarial_verify.py::_has_positive_probe_exercise_evidence` — A declared run reporting `"probe_actions_taken": 0`, `"hypothesis_posterior_built": false`, and `"posterior_entropy_reduction": 0.0` alongside the successful positive control shown above.
+- `adversarial_verify.py::_declared_but_unrun_probe_reasons` — json {"experiment": "arc_active_probe", "active_probe": true, "probe_count": 0} ``` The repository already emits `probe_count` for ARC probing. This declaration with zero executed probes produces no reasons or flags.
+- `adversarial_verify.py::_has_nondegenerate_lever_evidence` — json "proposal_pool": { "principle": "Record the candidates actually generated.", "value": [] } ``` An empty generated pool using the project’s authorized annotation convention silently passes.
+- `adversarial_verify.py::_zero_lever_delta_reasons` — json {"coverage_delta": {"principle": "Change in coverage after exercising candidate generation.", "value": 0.0}} ``` Also omitted: `"solve_rate_delta": 0.0`, an existing generation-artifact metric.
+- `adversarial_verify.py::_lever_exercise_severity` — text complete: search_layer_solved_r11l_L4_real_env_confirmed ``` This is the actual headline in `results/experiment_4021_heuristic_search_over_verified_wm.json`. It receives warning severity; used with degenerate lever evidence, its explicit solve claim should trigger critical escalation.
+
+### FLAGGED — operator action recommended
+- `adversarial_verify.py::_byte_identical_online_arm_reason` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_positive_probe_exercise_evidence` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_declared_but_unrun_probe_reasons` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_nondegenerate_lever_evidence` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_zero_lever_delta_reasons` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_lever_exercise_severity` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_has_positive_goal_energy_baseline_win_evidence
+## adversarial_verify.py::_byte_identical_online_arm_reason
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+**Verdict:** `SILENT_NON_FIRING`
 
-## adversarial_verify.py::_claims_goal_energy_generation_win
+## VERDICT
+SILENT_NON_FIRING
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+## CLAIM
+Its name and returned message claim to detect `byte-identical online-driver arms to >{TAUTOLOGY_DIGITS} sig figs`.
 
-## adversarial_verify.py::_has_uniform_energy_ablation_evidence
+## FINDINGS
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+1. **A — Additional metrics suppress detection.** `first_value = items[0][1]` anchors every comparison to one value. The comparison over `items[1:]` mixes different metrics instead of comparing matching metrics across arms. Adding one different solve-rate measurement to historical Experiment 4715 removed its critical lever flag; its identical first-win measurements remained unchanged.
 
-## adversarial_verify.py::_claim_text
+2. **1 — Wrapped fields silently disappear.** This body contains no direct dict-field reads; extraction is delegated through `items = _online_arm_metric_items(d)`. Repository inspection confirms that helper requires bare numeric metric values and a bare list for arms, and stringifies arm labels without unwrapping. Wrapping Experiment 4715’s three measurements in principle/value dictionaries removed its lever flag.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+3. **2 — Substring collisions produce false positives.** `marker in labels` has no token boundaries. The honest scratchpad and warmup measurements below are incorrectly recognized as scratch and warm driver arms. Their equality produces a byte-identical-driver reason.
 
-## adversarial_verify.py::_field_name_text
+4. **Distinct arms are never established.** `len(items) < 3` counts measurements, while marker coverage scans concatenated labels. Three measurements need not represent three distinct arms; a single compound or comparison label can supply multiple required markers. Parse arm identities independently and require distinct roles.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+5. **B — Recognition is narrower than the concept.** `_LEVER_ONLINE_ARM_MARKERS` represents semantic driver-arm roles, but omits the project’s alternative name for training from random initialization. The inspected helper’s metric list represents first-win/solve outcomes, yet its nested-arm branch reads only first-win rates and misses solve rates that its top-level branch accepts.
 
-## adversarial_verify.py::_has_marker
+6. **4/5 — The wording overstates the measurement.** Exactly three items are accepted, so that count boundary is correct. However, `_significant_digits_match(first_value, value, TAUTOLOGY_DIGITS)` accepts unequal values: the precision example below agrees when rounded to five significant figures and differs at six, yet receives a message claiming byte identity beyond five figures.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+7. **C — Key guards lack independent tests.** All eight dedicated test bodies passed after independently deleting the minimum-item guard, deleting marker coverage, skipping the last metric comparison, or replacing tolerant comparison with exact equality. Removing the mismatch rejection or disabling the function did fail tests. These results establish gaps in the dedicated tests, not mutation survival across the entire repository suite.
 
-## adversarial_verify.py::_real_field_values
+8. **C — Two helper patterns are decorative.** The helper’s first_win_rate marker is already covered by first_win; live_solve_rate is already covered by solve_rate. Under substring matching, deleting either narrower marker cannot change recognition.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+9. **F — Unrecognized means indistinguishable from clean.** `return None` represents both unrecognized or unextractable arm evidence and recognized, differing measurements. The caller suppresses this arm reason in either case; it emits no indication that declared arms were never assessed.
 
-## adversarial_verify.py::_typed_field_values
+10. **3/D/E/G — No additional finding in these classes.** The supplied function scans no verdict or forbidden phrase, computes no filesystem path, writes no tracked state, and measures no duration or counter. The dedicated tests read historical artifacts rather than overwriting them.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+## COUNTEREXAMPLE
 
-## adversarial_verify.py::_iter_real_fields
+Honest measurements from a frozen baseline, scratchpad prompting, and warmup trials:
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+```json
+{
+  "frozen_first_win": 0.04,
+  "scratchpad_first_win": 0.04,
+  "warmup_first_win": 0.04
+}
+```
 
-## adversarial_verify.py::_path_has_marker
+Observed: a byte-identical online-driver reason, despite the absence of online-scratch and online-warm arms.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+Precision overstatement:
 
-## adversarial_verify.py::_is_arc_generation_or_exploration_artifact
+```json
+{
+  "frozen_first_win": 0.12345,
+  "online_scratch_first_win": 0.12345,
+  "online_warm_first_win": 0.123451
+}
+```
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+Observed: the same reason claiming “>5 sig figs,” although the values differ at six figures.
 
-## adversarial_verify.py::_max_positive_real_field
+## MISSED INPUT
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+An identical first-win result accompanied by a different solve-rate measurement:
 
-## adversarial_verify.py::_has_nontrivial_lever_run
+```json
+{
+  "frozen_first_win": 0.04,
+  "online_scratch_first_win": 0.04,
+  "online_warm_first_win": 0.04,
+  "frozen_solve_rate": 0.08
+}
+```
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+Observed: None. Adding this fourth field to historical Experiment 4715 also removed its critical lever flag.
 
-## adversarial_verify.py::_archive_zero_reasons
+An equivalent arm-role spelling is also missed:
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+```json
+{
+  "arms": [
+    {"arm": "frozen", "first_win_rate": 0.04},
+    {"arm": "online-from-random", "first_win_rate": 0.04},
+    {"arm": "online-warm", "first_win_rate": 0.04}
+  ]
+}
+```
 
-## adversarial_verify.py::_pool_degenerate_reasons
+Observed: None.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+## RECOMMENDATION
+NEEDS_REDESIGN
 
-## adversarial_verify.py::_shape_dims
+## RATIONALE
+Unwrap fields, identify distinct arm roles, and compare matching metrics across arms; report unrecognized declared-arm evidence as unverified. Routine additions and permitted wrappers currently erase a confirmed critical signal, while all eight dedicated tests remain green after deletion of key guards.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
 
-## adversarial_verify.py::_grid_shape_degenerate_reasons
+## adversarial_verify.py::_has_positive_probe_exercise_evidence
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+**Verdict:** `SILENT_NON_FIRING`
 
-## adversarial_verify.py::_scorer_diagnostics_error_reasons
+## VERDICT
+SILENT_NON_FIRING
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+## CLAIM
+`True when a declared active-probe path emitted real exercise evidence.`
 
-## adversarial_verify.py::_has_positive_online_training_evidence
+## FINDINGS
+1. **A — Silent bypass through unrelated runs.** `for value in _real_field_values(d, "probe_actions_taken")` and `for value in _real_field_values(d, "posterior_entropy_reduction")` independently search the entire artifact. A successful positive control suppresses detection of an explicitly unrun main probe. Reproduced: zero-action main probe alone produces a flag; adding positive control diagnostics makes the helper return true and the downstream exercise check emit no flags. Positives from different arms also satisfy the predicate even when neither arm contains both.
+2. **Field extraction — numeric metadata becomes evidence.** `for number in _numeric_leaf_values(value)` accepts every numeric descendant through the inspected helper. An annotated field with measured value zero and a positive numeric reference or control is accepted. Ordinary principle/value wrappers, lists, and None are handled; the defect is failure to distinguish authoritative measurements from other numbers.
+3. **Contradictory context is ignored.** `return probe_actions_positive and entropy_reduction_positive` ignores an explicit hypothesis_posterior_built=false determination. Reproduced: positive action and entropy numbers override that failure state, and the downstream exercise check emits no flags.
+4. **Docstring mismatch at zero information gain.** `float(number) > 0.0` requires an informative outcome as evidence of execution. The project’s actual controller can execute a probe, record its transition, and report one action with zero entropy reduction when hypotheses predict identical outcomes. Reproduced: this real execution returns false and receives an exercise-degeneracy warning. Strict exclusion of zero correctly implements positivity; the docstring’s execution claim is broader.
+5. **C — Entropy requirement lacks independent test protection.** Removing the entropy requirement from `return probe_actions_positive and entropy_reduction_positive` leaves all 13 directly invoked focused regression tests passing. Allowing zero in the entropy comparison also leaves them passing. Removing the action requirement fails one test. These results concern the two focused exercise/carveout test modules; the full suite was not mutation-tested.
+6. **B and remaining classes.** The two literal field selectors represent action count and observed entropy reduction; no documented omitted alias was established. The supplied function contains no free-text substring or negation matching, hardcoded absolute path, filesystem write, default-skip recognizer chain, or measurement evaluated before work. The inspected focused tests read historical artifacts without overwriting them.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+## COUNTEREXAMPLE
+```json
+{
+  "experiment": "arc_active_probe_disambiguation",
+  "honest_verdict": "complete: active_probe_mechanism_did_not_run",
+  "inference_substrate": "active-probe replay over cached ARC transitions",
+  "probe_actions_taken": 0,
+  "hypothesis_posterior_built": false,
+  "posterior_entropy_reduction": 0.0,
+  "positive_control_run": {
+    "probe_actions_taken": 3,
+    "hypothesis_posterior_built": true,
+    "posterior_entropy_reduction": 0.25
+  }
+}
+```
 
-## adversarial_verify.py::_online_arm_metric_items
+The helper returns true. The downstream exercise check emits no flags despite the declared main probe being unrun.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+## MISSED INPUT
+A declared run reporting `"probe_actions_taken": 0`, `"hypothesis_posterior_built": false`, and `"posterior_entropy_reduction": 0.0` alongside the successful positive control shown above.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The predicate establishes artifact-wide existence of two positive numbers without connecting them to the declared run. Scope evidence to that run, read authoritative annotated values, preserve explicit failure determinations, and independently test each requirement and control contamination.
+
+
+## adversarial_verify.py::_declared_but_unrun_probe_reasons
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_declared_but_unrun_probe_reasons` claims to identify declared probes that never ran; the supplied function has no docstring.
+
+## FINDINGS
+
+1. **A / field extraction — confirmed silent miss.** Nested principle-annotated zero/false diagnostics return no reasons. `if leaf == "probe_actions_taken" and _is_finite_number(value) and float(value) == 0.0:` requires a bare number; `elif leaf == "hypothesis_posterior_built" and value is False:` requires a bare bool; the entropy branch likewise requires a bare number. Traversing the wrapper changes the leaf name, so its enclosed scalar is never checked. The full verifier also misses nested wrappers; its top-level normalization does not fix them.
+
+2. **Field extraction / F — missing evidence passes silently.** Lists containing zeros or false values, null diagnostics, and a declared probe with empty diagnostics produce no reasons. `return reasons` returns an empty list even when declaration was recognized but execution evidence was never established. That output is indistinguishable from a genuine pass.
+
+3. **Scope blindness — control evidence suppresses live failures.** `if _has_positive_probe_exercise_evidence(d):` followed by `return []` exempts the entire artifact before inspecting failures. Reproduction confirmed that positive synthetic-control diagnostics suppress explicit zero/false live diagnostics. The helper can also combine a positive action count from one arm with positive entropy reduction from another.
+
+4. **B — names substitute for the concept.** `_LEVER_PROBE_DECLARATION_MARKERS` represents probe declarations, while the three exact leaf comparisons represent evidence of execution. The count-of-probes alias shown under MISSED INPUT belongs to that concept and already occurs in the repository, but none of these comparisons recognizes it. Adding declaration markers alone cannot repair the exact-name evidence checks.
+
+5. **C — deletion survives the focused tests.** In-memory mutation left all 13 focused tests passing after deleting the entropy branch, deleting the positive-evidence early return, or deleting `if not declared:`. Removing each declaration marker individually also preserved all 13 passes. Deleting the action-count or posterior-built branch each failed one test. The entropy rule lacks an independent regression assertion.
+
+6. **Context blindness — intentional ablations are flagged.** `leaf = path[-1].lower()` ignores whether the enclosing record describes a deliberately disabled baseline. The no-probe ablation below receives three failure reasons despite correctly reporting no probing. No verdict text is scanned. The substring declaration test operates on field paths; no independent unrelated-word collision was demonstrated.
+
+7. **Numeric boundaries — no off-by-one defect found.** Both `float(value) == 0.0` comparisons include exact zero, as the documented zero-evidence rule requires. The defect is skipped representations and lost context, not threshold equality.
+
+8. **D / E / G — absent from this function.** It contains no absolute filesystem target, artifact writes, or measurement computed before work. The focused tests inspected read historical artifacts without overwriting them.
+
+## COUNTEREXAMPLE
+
+False negative: nested annotations conceal an unrun probe. Both this function and the full verifier returned no flags/reasons.
+
+```json
+{
+  "experiment": "arc_active_probe",
+  "honest_verdict": "complete: active_probe_no_new_level_residual_budget_insufficient",
+  "active_probe_result": {
+    "active_probe": true,
+    "probe_actions_taken": {
+      "principle": "Count of live probe actions executed.",
+      "value": 0
+    },
+    "hypothesis_posterior_built": {
+      "principle": "Posterior must actually be built.",
+      "value": false
+    },
+    "posterior_entropy_reduction": {
+      "principle": "Measured information gained.",
+      "value": 0.0
+    }
+  }
+}
+```
+
+False positive: this intentional ablation produces a warning.
+
+```json
+{
+  "experiment": "arc_active_probe_ablation",
+  "honest_verdict": "complete: active_probe_disabled_for_no_probe_ablation",
+  "active_probe": false,
+  "no_probe_ablation_result": {
+    "probe_actions_taken": 0,
+    "hypothesis_posterior_built": false,
+    "posterior_entropy_reduction": 0.0
+  }
+}
+```
+
+## MISSED INPUT
+
+```json
+{"experiment": "arc_active_probe", "active_probe": true, "probe_count": 0}
+```
+
+The repository already emits `probe_count` for ARC probing. This declaration with zero executed probes produces no reasons or flags.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The check silently accepts unreadable or absent execution evidence, and unrelated control evidence can erase explicit live failures. Normalize nested fields, validate evidence within each declared mechanism, distinguish intentional ablations, and independently test every rule.
+
+
+## adversarial_verify.py::_has_nondegenerate_lever_evidence
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_has_nondegenerate_lever_evidence` claims to recognize nondegenerate evidence that a generation/exploration lever was exercised; it has no docstring.
+
+## FINDINGS
+
+1. **A — Empty annotated pools silently pass.** `if isinstance(value, (list, dict, str)) and len(value) > 0:` counts the annotation wrapper’s keys instead of examining its payload. An annotated empty pool returns true; the caller emits no degeneracy flag. Reproduced.
+
+2. **Field extraction — Annotated valid shapes falsely fail.** `dims = _shape_dims(value)` receives the wrapper, which the helper does not unwrap. The recursive walk subsequently visits its payload under the wrapper’s value key, losing the shape-field identity. A valid annotated 64×64 grid returns false and triggers the caller’s zero-delta flag. Reproduced. Numerical extraction handles wrapped numbers and lists; these pool and shape branches do not.
+
+3. **Boundaries and context — Metadata becomes evidence.** `any(marker in leaf for marker in _LEVER_POOL_KEY_MARKERS)` matches descriptive pool-status fields; every nonempty string then qualifies, including an explicit statement that generation was never attempted. Likewise, `if "shape" in leaf:` matches unrelated reshape metadata. Neither branch establishes that its value describes an exercised lever.
+
+4. **B — Recognition lists are narrower than their concepts.** The numerical tuple represents positive mechanism-exercise counters but omits rnd_updates, an actual field in experiment 4688. `_LEVER_POOL_KEY_MARKERS` represents candidate/proposal collections but omits the corpus’s candidate_set spelling. The shape branch represents valid grid geometry but omits grid_tensor, which the adjacent degeneracy detector recognizes. These omissions return false even for otherwise qualifying evidence.
+
+5. **Evidence is not associated with the relevant arm.** `if _max_positive_real_field(d, key) is not None:` accepts positive counts anywhere in the artifact. Positive baseline archive cells therefore suppress the catch-all warning for a treatment with zero coverage delta and no exercise evidence. Reproduced. The implementation recognizes artifact-wide existence, which is broader than evidence that the declared treatment exercised.
+
+6. **C — Most numerical rules lack independent protection.** All 13 relevant tests passed. In-memory deletion checks also passed after individually removing `actions_injected`, `archive_injections`, `prefixes_injected`, `stored_cells`, `heldout_programs_rejected`, `candidate_scores`, `observed_effects`, `augmented_candidates`, or `candidate_group_count`. Removing the `_has_positive_probe_exercise_evidence(d)` branch also passed: the positive-probe fixture never reaches a matching catch-all zero-delta rule. The candidate_generation_pool and generated_pool markers likewise survived removal. Deleting the distinct-arm branch, `archive_cells`, the pool branch, or the shape branch caused failures. This establishes gaps in those 13 tests, not a full-suite mutation result.
+
+7. **Remaining classes:** No demonstrated off-by-one error: the dimension comparisons explicitly exclude singleton axes. The terminal `return False` reports absent evidence; it does not itself disable the check. No baked-in absolute path, filesystem write, or prematurely computed measurement occurs in this function or its exercised evidence helpers; the relevant tests read historical artifacts without overwriting them.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "experiment": "arc_candidate_generation_coverage",
+  "honest_verdict": "complete: no_coverage_gain_null",
+  "inference_substrate": "candidate generation coverage replay",
+  "coverage_delta": 0.0,
+  "proposal_pool": {
+    "principle": "Record the candidates actually generated.",
+    "value": []
+  }
+}
+```
+
+Observed: the function returns `True`, and the caller emits no flag. Replacing the wrapped pool with a bare empty list produces the expected flag.
+
+Other reproduced fragments, replacing the pool field above:
+
+- `"grid_shape": {"principle": "Record the real ARC grid.", "value": [64, 64]}` — false flag.
+- `"candidate_pool_status": "not constructed; candidate generation was not attempted"` — returns true and suppresses the flag.
+- `"reshape_target": [64, 64]` — unrelated metadata suppresses the flag.
+- `"baseline": {"archive_cells": 4}` — baseline evidence suppresses the treatment warning.
+
+## MISSED INPUT
+
+```json
+"proposal_pool": {
+  "principle": "Record the candidates actually generated.",
+  "value": []
+}
+```
+
+An empty generated pool using the project’s authorized annotation convention silently passes.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The function treats wrapper contents, descriptive prose, and unrelated metadata as proof of exercise while rejecting equivalent honest annotated evidence. Unwrap fields consistently, validate their semantic role and arm association, and add independent regressions for each recognizer; extending the token lists alone will preserve the bypasses.
+
+
+## adversarial_verify.py::_zero_lever_delta_reasons
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_zero_lever_delta_reasons` claims to identify zero lever deltas and return diagnostic reasons.
+
+## FINDINGS
+
+1. **A / 1 — Annotated zeros silently escape.** `if _is_finite_number(value) and float(value) == 0.0:` requires a scalar number at the matching key. The actual field walker yields the annotation dictionary, then its nested value under a different leaf name. Neither triggers. Verified: the bare zero produces a reason and caller flag; its principle-wrapped equivalent produces neither.
+
+2. **1 — Containers lose their metric identity.** `leaf = path[-1].lower()` discards the enclosing metric name. Per-game dictionaries and lists containing zero measurements consequently return no reasons. Both failures were reproduced.
+
+3. **B / 5 / F — The enumeration is narrower than the concept.** `_LEVER_ZERO_DELTA_KEY_MARKERS` represents generation/exploration coverage and outcome deltas, but omits solve_rate_delta, a real field in results/experiment_4653_energy_fitness_qd_generation_live.json. `continue` silently excludes it; `return reasons` returns the same empty result as a genuine pass. This recognizes selected spellings, not zero lever deltas generally.
+
+4. **2 — Substring matching confuses auxiliary statistics with measurements.** `marker in leaf` also matches confidence-bound field names. A positive coverage delta accompanied by a zero lower confidence bound produces a degeneracy reason and caller flag. The bound does not establish a zero measured delta.
+
+5. **C — The dedicated tests do not protect individual rules.** All eight dedicated tests passed after independently deleting each marker: coverage_delta, candidate_generation_coverage, first_win_rate_delta, first_win_delta, online_warm_vs_frozen_delta, and best_online_delta. They also passed after independently removing the marker filter, `_is_finite_number(value)`, or `float(value) == 0.0`. Removing every marker finally failed one test; that tests existence of detection, not its individual rules. These results concern the dedicated suite, not the entire repository suite.
+
+6. **3 / 4 / D / E / G — No additional defect established.** There is no free-text phrase scan here. Exact equality to zero matches the function’s name, including negative zero. The helper has no baked absolute path, filesystem write, or measurement operation; the inspected dedicated tests read historical artifacts without overwriting them.
+
+## COUNTEREXAMPLE
+
+False negative, verified through the caller:
+
+```json
+{
+  "experiment": "arc_candidate_generation_coverage",
+  "honest_verdict": "complete: candidate_generation_coverage_no_gain",
+  "inference_substrate": "candidate generation coverage replay",
+  "duration_s": 1.0,
+  "coverage_delta": {
+    "principle": "Change in coverage after exercising candidate generation.",
+    "value": 0.0
+  }
+}
+```
+
+Actual result: no reason and no lever-exercise flag. Replacing the annotation with bare `0.0` produces both.
+
+False positive with the same surrounding fields:
+
+```json
+{
+  "coverage_delta": 0.1,
+  "coverage_delta_ci_lower": 0.0
+}
+```
+
+Actual result: flags the confidence bound as a zero lever delta despite the positive measurement.
+
+## MISSED INPUT
+
+```json
+{"coverage_delta": {"principle": "Change in coverage after exercising candidate generation.", "value": 0.0}}
+```
+
+Also omitted: `"solve_rate_delta": 0.0`, an existing generation-artifact metric.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Routine artifact annotation turns a detectable zero into an indistinguishable silent pass, while substring matching can quarantine a positive result because its uncertainty bound touches zero. Preserve metric identity through annotation and containers, distinguish measurements from auxiliary statistics, and independently test every recognition rule.
+
+
+## adversarial_verify.py::_lever_exercise_severity
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+No docstring is provided; `_lever_exercise_severity` assigns warning or critical severity to lever-exercise failures according to artifact flags and claimed outcomes.
+
+## FINDINGS
+
+1. **A/B/5 — Real solve headlines escape escalation.** The existing Experiment 4021 headline quoted under MISSED INPUT returns warning: all three predicates in `if _flips_gate(d) or _claims_arc_live_search_win(d) or _is_arc_solve_claim(d):` return false. The prefix tuple stands for positive outcome headlines but omits complete-prefixed explicit solve claims. This violates the standing requirement to escalate degenerate artifacts that headline a solve; indiscriminately adding completion prefixes would also escalate honest nulls.
+
+2. **1 — Every direct field read mishandles valid wrappers.**
+   - `verdict = str(d.get("honest_verdict", "")).lower()` converts a wrapped verdict into a dictionary representation, which cannot begin with a recognized success prefix. Lists and None also become strings without validation.
+   - `d.get("flagged_adversarial") is True` rejects a principle-wrapped true determination.
+   - `d.get("submitted_to_leaderboard") is True` rejects a principle-wrapped true submission.
+   
+   Each wrapped case independently returned warning in execution, despite its corresponding bare value returning critical. Lists and None are silently treated as non-triggering values.
+
+3. **2/3/5 — Prefix matching confuses success of a control with success of the lever.** `if verdict.startswith(("success:", "success_", "shipped:", "shipped_", "passed:", "passed_")):` examines no subsequent context. The secondary verdict under COUNTEREXAMPLE explicitly reports only a passed positive control and no generation gain, yet receives critical severity. The prefixes are anchored and delimiter-bound; the demonstrated defect is semantic context blindness, not matching inside an unrelated longer word.
+
+4. **C — Eight individual triggers lack protection in the focused tests.** Memory-only deletion of the submission predicate, `_claims_arc_live_search_win(d)`, `_is_arc_solve_claim(d)`, or any of `"success_"`, `"shipped:"`, `"shipped_"`, `"passed:"`, and `"passed_"` leaves all 13 focused tests passing. Deleting the adversarial predicate, gate predicate, or `"success:"` does cause failures. This establishes gaps in the two relevant test files; the full repository suite was not mutation-tested.
+
+5. **4/D/E/F/G — No additional defect established.** This function has no numeric thresholds, filesystem targets, writes, or measurements. The inspected focused tests read historical artifacts without overwriting them. `return "warn"` does not disable the caller’s check: it still emits a warning, but gives no indication that critical escalation was missed.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "experiment": "arc_synthetic_generation_lever",
+  "honest_verdict": {
+    "principle": "Report whether the generation lever succeeded.",
+    "value": "success: generation_lever_headline"
+  },
+  "proposal_pool": []
+}
+```
+
+Observed: warning for the empty proposal pool. Replacing the wrapped verdict with its identical bare value produces critical severity.
+
+Secondary context counterexample, with other escalation predicates false:
+
+```json
+{
+  "honest_verdict": "passed_positive_control_only_no_generation_gain"
+}
+```
+
+Observed: critical severity despite explicitly limiting the pass to the positive control.
+
+## MISSED INPUT
+
+```text
+complete: search_layer_solved_r11l_L4_real_env_confirmed
+```
+
+This is the actual headline in `results/experiment_4021_heuristic_search_over_verified_wm.json`. It receives warning severity; used with degenerate lever evidence, its explicit solve claim should trigger critical escalation.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Valid field wrappers suppress critical escalation, and an existing explicit solve headline falls outside the recognizers. A warning remains, so these findings establish missed escalation rather than complete disappearance of the check. Use typed field unwrapping and context-aware outcome recognition, with independent tests for every escalation trigger.
+

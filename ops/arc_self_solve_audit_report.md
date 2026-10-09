@@ -16,16 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (97 modul
 
 ## Hostile LLM review
 
-(LLM review unavailable: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-reasoning summaries: none
-session id: 01a11dbd-f6cd-7e50-bf62-2c07a6e7c3fc
---------
-user
-You are a HOSTILE revie)
+**TL;DR: No demonstrated SELF_DISCOVERY_ADVANCE.** Zero recent solve artifacts; passing reachability proves only that solver modules are reachable, not that the live agent discovered solutions.
+
+Per-artifact review: none (`[]`, last 7 days). No verdicts to assign. Recommended action: require live-run traces tying each future claimed solve to the agent’s own attempts and runtime reverse-engineering.
+
+**Pattern watch:** This empty sample cannot establish outer-loop drift. Reject reachability as a substitute for discovery provenance. Classify unsupported solve claims as **UNCLEAR**; classify confirmed source-reading, offline ground-truth BFS, or hand-built per-game solutions as **OUTER_LOOP_RE**, even when wired into the live path.
+
