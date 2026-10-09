@@ -39,6 +39,9 @@ import sys
 import time
 from pathlib import Path
 
+sys.path.append(str(Path(__file__).resolve().parent))  # find audit_reviewer_cli when imported
+from audit_reviewer_cli import chain_failure, codex_bin, failure_text  # noqa: E402
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REPORT_PATH = PROJECT_ROOT / "ops" / "arc_self_solve_audit_report.md"
 
@@ -123,16 +126,20 @@ def call_agy(prompt: str, body: str, model: str = "gemini-3.1-pro-high") -> tupl
             cwd=PROJECT_ROOT,
         )
         ok = proc.returncode == 0 and bool(proc.stdout.strip())
-        output = proc.stdout if ok else proc.stderr[:300]
+        # agy can exit 0 with empty stdout (headless tool-permission denial); say so.
+        output = (
+            proc.stdout if ok else failure_text("agy", proc.returncode, proc.stderr, binary=AGY_BIN)
+        )
     except Exception as exc:
-        ok, output = False, str(exc)
+        ok, output = False, f"agy launch error: {exc}"
     if ok:
         return True, output
-    return call_codex(
+    fb_ok, fb_out = call_codex(
         prompt,
         body,
         model=os.environ.get("AGY_FALLBACK_CODEX_MODEL", "gpt-6.1-sol"),
     )
+    return (True, fb_out) if fb_ok else (False, chain_failure(output, fb_out))
 
 
 def call_codex(prompt: str, body: str, model: str = "gpt-5.5") -> tuple[bool, str]:
@@ -141,7 +148,7 @@ def call_codex(prompt: str, body: str, model: str = "gpt-5.5") -> tuple[bool, st
     try:
         proc = subprocess.run(
             [
-                "codex",
+                codex_bin(),  # honors CODEX_BIN like the conductor (REQ-OPS-AUDIT-REVIEWER-1)
                 "exec",
                 "--dangerously-bypass-approvals-and-sandbox",
                 "--color",
@@ -160,7 +167,9 @@ def call_codex(prompt: str, body: str, model: str = "gpt-5.5") -> tuple[bool, st
             check=False,
             cwd=PROJECT_ROOT,
         )
-        return (proc.returncode == 0, proc.stdout if proc.returncode == 0 else proc.stderr[:300])
+        if proc.returncode == 0:
+            return True, proc.stdout
+        return False, failure_text("codex", proc.returncode, proc.stderr, binary=codex_bin())
     except Exception as exc:
         return False, str(exc)
 

@@ -134,6 +134,9 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
+sys.path.append(str(Path(__file__).resolve().parent))  # find audit_reviewer_cli when imported
+from audit_reviewer_cli import chain_failure, codex_bin, failure_text  # noqa: E402
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REPORT_PATH = PROJECT_ROOT / "ops" / "qa_layer_authenticity_audit_report.md"
 
@@ -932,16 +935,20 @@ def call_agy(prompt: str, body: str, model: str = "gemini-3.1-pro-high") -> tupl
             cwd=PROJECT_ROOT,
         )
         ok = proc.returncode == 0 and bool(proc.stdout.strip())
-        output = proc.stdout if ok else f"agy exit {proc.returncode}: {proc.stderr[:200]}"
+        # agy can exit 0 with empty stdout (headless tool-permission denial); say so.
+        output = (
+            proc.stdout if ok else failure_text("agy", proc.returncode, proc.stderr, binary=AGY_BIN)
+        )
     except Exception as exc:
-        ok, output = False, str(exc)
+        ok, output = False, f"agy launch error: {exc}"
     if ok:
         return True, output
-    return call_codex(
+    fb_ok, fb_out = call_codex(
         prompt,
         body,
         model=os.environ.get("AGY_FALLBACK_CODEX_MODEL", "gpt-5.6-sol"),
     )
+    return (True, fb_out) if fb_ok else (False, chain_failure(output, fb_out))
 
 
 def call_claude(prompt: str, body: str, model: str = "claude-opus-4-8") -> tuple[bool, str]:
@@ -968,7 +975,7 @@ def call_codex(prompt: str, body: str, model: str = "gpt-5.5") -> tuple[bool, st
         full = f"{prompt}\n\n---\nCODE:\n\n{body}"
         proc = subprocess.run(
             [
-                "codex",
+                codex_bin(),  # honors CODEX_BIN like the conductor (REQ-OPS-AUDIT-REVIEWER-1)
                 "exec",
                 "--dangerously-bypass-approvals-and-sandbox",
                 "--color",
@@ -988,7 +995,7 @@ def call_codex(prompt: str, body: str, model: str = "gpt-5.5") -> tuple[bool, st
             cwd=PROJECT_ROOT,
         )
         if proc.returncode != 0:
-            return False, f"codex exit {proc.returncode}: {proc.stderr[:200]}"
+            return False, failure_text("codex", proc.returncode, proc.stderr, binary=codex_bin())
         return True, proc.stdout
     except Exception as exc:
         return False, str(exc)
@@ -1184,7 +1191,7 @@ def _run_one(
     flagged_verdicts = FLAGGED_VERDICTS
     ok, report = call_model(args.model, args.model_name, prompt, body)
     if not ok:
-        out.append(f"## {label}\n\n(audit call failed: {report[:200]})\n")
+        out.append(f"## {label}\n\n(audit call failed: {report[:600]})\n")
         counts["UNKNOWN"] = counts.get("UNKNOWN", 0) + 1
         return
     verdict = parse_verdict(report)
