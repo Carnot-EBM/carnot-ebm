@@ -19943,3 +19943,4 @@ code |
 | 2026-10-09 17:44 UTC | Audit later decision utility and all fixed retenti | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 100 passed, 1 warning in 125.33s (0:02:05) |
 | 2026-10-09 18:23 UTC | Test lookup-table fidelity and refresh cost for fr | OK | 91 passed, 1 warning in 137.51s (0:02:17) |
 | 2026-10-09 18:56 UTC | Qualify historical runtime authority before checki | OK | 125 passed, 1 warning in 125.00s (0:02:05) |
+| 2026-10-09 19:00 UTC | Run a bounded Qwen evidence canary after changed r | GATE_BLOCK | gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp8353-runtime-reader-qualification.runtime_reader_ready_score (actual=0 == expected=1) |
