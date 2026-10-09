@@ -6509,6 +6509,15 @@ assumptions and adaptation limits. Use probability-only class-conditional LAC.
 Author energy code has different softplus signs in single/all-label paths;
 no external code is installed. No exchangeability or fresh-data guarantee is
 established. KAC capacity and KANtize precision remain separate future tests.
+## 2026-10-08 — Exp8318 V718 primary methods ingested
+
+Read full online KAN 2602.02056v4 Sections3–5/Appendix B and delayed-capacity
+OCO 2606.11711v1 Sections2–5/Algorithms1–2/Appendices B–F. Exact full-text bytes
+are bound by `openspec/change-proposals/v718-methods-manifest.json`. Separate
+paper assumptions, local adaptations and deferred ideas in
+`docs/research-notes/v718-method-ingestion.md`. The V717 scientific protocol
+is unchanged; constructed capacity traces inherit no DW-FTRL regret guarantee.
+
 ## 2026-10-08 — Exp8304 V717 focused primary methods ingested
 
 Ingested SURE-RAG 2605.03534v2 Sections IV.A–C/VI.G/VII; online KAN

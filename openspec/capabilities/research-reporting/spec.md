@@ -96519,6 +96519,48 @@ one appended retirement; its original repeat and rejected-append checks pass.
 
 ## V718 staged research contract (2026-10-08)
 
+### REQ-REPORT-8318: Bind current authority and retain authenticated historical failures
+
+Exp8318 shall compare all fourteen complete V718 task objects and the visible
+table with staged or conductor-consumed YAML and actual active authority. Freeze
+V716/V717 design bytes and the unchanged V717 protocol. Read producers only by
+declared deliverables; future paths are dependencies. Authenticate Exp8304/8305
+and reuse predictor/evaluator shards, recounting every manifest role before
+granting cached support. Keep current authority, history reader and support
+scores separate. Preserve eight V717 primaries, two pre-gates, four absent
+primaries and unmeasured H1/H2. No model load, recapture or generalization credit.
+
+### SCENARIO-REPORT-8318-AUTHORITY
+
+Private subprocess cases accept explicit current and historical milestones and
+reject changed prompts, missing primaries, stale pre-gates and rehashed claims.
+A V716 reader selects V716 bytes regardless of vNEXT. Missing external operands
+close as blocked with exact gates; authenticated disqualification stays failure.
+
+### SCENARIO-REPORT-8318-REPLAY
+
+Reproduce Exp8317 drift on immutable private bytes, retain the first mismatch,
+and reduce serialized historical maps in deterministic order. Freeze receipts
+before reduction and keep terminal checks outside the measured payload. Compare
+every reduced field, including self-slot accounting. Valid cold replay passes;
+negative and rehashed tampering fail. Unknown drift disqualifies readiness.
+
+### SCENARIO-REPORT-8318-METHODS
+
+Bind full methods of 2602.02056v4 and 2606.11711v1, the V718 scan, unchanged
+V717 science and a separate capacity protocol. Record paper assumptions, local
+adaptations and deferred ideas. The conductor owns ops and traceability updates.
+
+Implementation 2026-10-08: `v718_contract_replay`, `v718_replay_history` and
+`v718_replay_runner` reuse the qualified publisher, authority reader and child
+supervisor. The first original mismatch is `gate_check_summary[15].hash`:
+serializing the historical map changes its iteration order. A reversible map
+keeps every compared path field while copying the complete operand closure.
+Original V717 outcomes remain unchanged. Primitive and validation records live
+under `results/raw/experiment_8318_v718_contract_replay/`. The separate full
+repository command reported failures and hit its 600-second deadline; no claim
+that all repository tests pass follows from scoped execution qualification.
+
 ### REQ-REPORT-V718-PLAN: Finish qualified local measurements without changing the scientific question
 
 The V718 design and next-roadmap YAML shall contain exactly fourteen tasks,

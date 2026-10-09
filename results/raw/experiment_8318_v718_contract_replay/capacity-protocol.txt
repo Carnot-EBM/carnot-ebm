@@ -1,0 +1,30 @@
+
+Exp8323 studies a systems boundary absent from V717. It uses three constructed
+512-event streams. It never opens the natural reserved evaluator shard.
+For t=1..512 and j=0..3, local input j is `((17*t+13*j)%101)/100`.
+Store these inputs at x[12:16]; all other features are zero. Let
+`g=2*x[12]-x[13]+x[14]-2*x[15]+0.1`. The label is `1[s*g>=0]`, where s=1
+through slot256 and s=-1 afterward. These labels define a constructed control.
+
+Delay schedules are constant8, repeating1/8/32/64, and a burst with delay64
+at slots129..256 and delay8 elsewhere. A learner sees expiration only when due.
+Compare unlimited tracking and two bounded policies at C=4/16/64: first-admit
+without preemption, and retaining the C smallest independent random priorities
+among pending items plus each new issue. Dropped feedback is permanently lost
+to that learner. Seeds11/22/33 randomize admission. There are three constructed
+traces; seed repetitions are not independent natural sources.
+
+Issue and admit before processing due feedback. Thus capacity64 can still drop
+an item at a64-delay boundary; this is part of the declared ordering. Drain due
+feedback after512 without adding scored predictions. Reuse the frozen basis,
+step.01 and gradient cap1, with zero local coefficients/intercept, slope1 and T1.
+Compare dense and sparse updates on the same retained labels. Do not apply
+inverse-propensity weights or claim DW-FTRL regret bounds. Dynamic retention
+probabilities require theory beyond this bounded experiment.
+
+Measure per-event occupancy, lost labels, issued decisions, log loss, action
+cost, coefficient touches, memory and complete durable cost. Kill and resume
+at128/256 with identical admission RNG state. The acceptance gate requires
+capacity, causality and recovery invariants plus working deliberate-error tests.
+Random admission need not beat first-admit. Record every condition either way.
+

@@ -51978,6 +51978,31 @@ sidecars and forged receipt semantics. Original GateMate history authenticates;
 no new physical change qualifies and no model, device or JTAG call is made.
 ## REQ-VERIFY-8317: Bounded private capstone validation
 
+## REQ-VERIFY-8318: Evidence-bound finding consumption and bounded qualification
+
+Freeze finding policy before qualification. Adversarial exit1 means findings;
+require a parsed report bound to candidate hash and verifier source hash.
+Process errors, missing reports, unknown kinds/severities, warnings and critical
+findings fail closed. Resolve info only with independent primitive recomputation
+and a passing deliberate-error control; preserve the finding and disposition.
+Keep public verifier, exemptions and primary publisher unchanged. Use bounded
+unbuffered children, <=60-second heartbeats, scoped lint/strict typing/spec
+checks and 100 percent newly owned statement coverage including CLI/recovery.
+Run private E2E-018 and E2E-021. Publish only atomically checked terminal bytes.
+
+### SCENARIO-VERIFY-8318-FINDINGS
+
+The unchanged verifier reports both legitimate exact-zero and false-zero
+evidence. Independent arithmetic accepts only the legitimate case; corrupted
+coefficients, rehashed reports, process errors and unknown findings block.
+
+### SCENARIO-VERIFY-8318-CLI
+
+Real private CLI, child deadlines, failed owned validation and recovery retain
+exact argv/exits/clocks/output hashes. Cold replay checks source and primitive
+bytes plus semantic reductions, and cannot bless a disqualified historical
+primary. Terminal receipts cannot change the measured reduction retrospectively.
+
 Freeze private validation argv before measurement. Use unchanged publication
 checks, adversarial audit and strict row consistency before atomic publication.
 Keep child deadlines, process-group cleanup, flushed boundaries and heartbeats.
