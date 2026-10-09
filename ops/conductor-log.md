@@ -19945,3 +19945,4 @@ code |
 | 2026-10-09 18:56 UTC | Qualify historical runtime authority before checki | OK | 125 passed, 1 warning in 125.00s (0:02:05) |
 | 2026-10-09 19:00 UTC | Run a bounded Qwen evidence canary after changed r | GATE_BLOCK | gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp8353-runtime-reader-qualification.runtime_reader_ready_score (actual=0 == expected=1) |
 | 2026-10-09 19:24 UTC | Repair the ARC reader import boundary and inspect  | OK | 100 passed, 1 warning in 172.78s (0:02:52) |
+| 2026-10-09 20:16 UTC | Qualify CPU operation costs and map spline tables  | OK | 105 passed, 1 warning in 257.73s (0:04:17) |
