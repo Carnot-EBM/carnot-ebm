@@ -21833,3 +21833,4 @@ Recorded 6 completed experiments in 40.0 minutes (0.7 hours), including 1 comput
 - 2026-10-08: Reconcile fourteen outcomes and decide local-learning and runtime continuation (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8317_v717_capstone.json
 - 2026-10-09: Bind fourteen tasks and qualify deterministic historical replay (⚠️ Research Finding) — honest_verdict=complete_disqualified_contract_replay; results/experiment_8318_v718_contract_replay.json
 - 2026-10-09: Inspect new live supervisor outcomes with the qualified ARC reader (⚠️ Research Finding) — honest_verdict=complete_disqualified_supervisor_frontier; results/experiment_8328_v718_arc_supervisor_frontier.json
+- 2026-10-09: Measure available update costs and preserve precise board operation boundaries (⚠️ Blocked) — honest_verdict=complete_blocked_experiment_8319_v718_local_evidence_qualification; results/experiment_8329_v718_kv260_workload_cost.json
