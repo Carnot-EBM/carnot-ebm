@@ -52094,3 +52094,31 @@ retain exact command, exit, timing and output hashes. Replay the final candidate
 after all checks and the published primary again. Keep terminal checks outside
 the reduction to avoid self-reference. Atomic checked publication binds the
 final bytes to all terminal reports; recovery retains failed checks honestly.
+
+## REQ-VERIFY-8333: Independent arithmetic and durable recovery controls
+
+Recompute every dense and sparse release using a separate dense reference.
+Inspect coefficients, probabilities, active coordinates and cache invalidation.
+Check partition of unity, boundary knots, gradients and temperature derivative.
+Corrupted coefficients and a fabricated zero must fail. Preserve the original
+IMPLAUSIBLE_PERFECT finding. Resolve info only with independent primitive proof.
+Qualify the unchanged finding consumer locally before use; unknown severities,
+warnings, malformed reports and process errors keep readiness zero.
+
+### SCENARIO-VERIFY-8333-NUMERIC
+
+The frozen 48 trajectories pass independent release replay and probability
+parity <=1e-10, with identical typed actions and zero stale predictions.
+Deliberate corruption and false-zero claims fail despite self-consistent hashes.
+
+### SCENARIO-VERIFY-8333-RECOVERY
+
+Actual owned process kills at events32/64 preserve durable issued predictions.
+Recovery matches coefficients, pending feedback, consumed IDs, reverse
+dependencies and cache state. Duplicate and out-of-order feedback are exercised.
+
+### SCENARIO-VERIFY-8333-FINDINGS
+
+Valid exact-zero info passes only with arithmetic and deliberate-error receipts.
+False-zero, unknown severity, wrong hashes and command errors fail closed.
+Retain all findings and require 100 percent newly owned statement coverage.

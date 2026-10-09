@@ -1,0 +1,95 @@
+.....................F..FF.......                                        [100%]
+=================================== FAILURES ===================================
+____________________ test_readiness_and_failed_owned_check _____________________
+
+work = ({'H2': {'alpha': 0.025, 'blocks': [16, 8, 32], 'comparison': 'calibrated_error_center versus calibrated_fixed_center;...39362281d4271cadcbcb28236d676d90cbb', ...}, ...}, PosixPath('/tmp/carnot-8333-lhzbsq23/consumer-tests/8206-evidence0'))
+
+    def test_readiness_and_failed_owned_check(work):
+        """REQ-VERIFY-8206: stream authentication is independent of fit success."""
+        measured, raw = work
+        value = e.build(measured, raw, [dict(passed=True, normal_exit=True)], fixture=True)
+        assert value["experiment_id"] == 8206
+>       assert value["calibrated_memory_ready_score"] == value["stream_input_ready_score"] == 1
+E       assert 0 == 1
+
+tests/python/test_hard_exit_learning_qualification_8206.py:70: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp8206] phase=preconditions_start completed=0 pending=0
+[exp8206] phase=preconditions_start completed=0 pending=0
+[exp8206] phase=external_operand_blocked completed=27 pending=0
+[exp8206] phase=measurement_complete completed=0 pending=0
+[exp8206] phase=measurement_complete completed=0 pending=0
+________________ test_real_cli_replay_blocked_worker_and_guard _________________
+
+work = ({'H2': {'alpha': 0.025, 'blocks': [16, 8, 32], 'comparison': 'calibrated_error_center versus calibrated_fixed_center;...39362281d4271cadcbcb28236d676d90cbb', ...}, ...}, PosixPath('/tmp/carnot-8333-lhzbsq23/consumer-tests/8206-evidence0'))
+tmp_path = PosixPath('/tmp/carnot-8333-lhzbsq23/consumer-tests/test_real_cli_replay_blocked_w0')
+
+    def test_real_cli_replay_blocked_worker_and_guard(work, tmp_path):
+        """SCENARIO-REPORT-8206-CLI: direct paths work without ambient imports."""
+        measured, raw = work
+        value = e.build(measured, raw, [dict(passed=True)], fixture=True)
+        path = tmp_path / (e.NAME + ".json")
+        atomic_json(path, value)
+        cli = [
+            "/usr/bin/env",
+            "-u",
+            "PYTHONPATH",
+            str(e.ROOT / ".venv/bin/python"),
+            "-u",
+            str(e.ROOT / e.CLI),
+        ]
+        config = os.environ.get("COVERAGE_RCFILE")
+        if config:
+            cli.insert(3, "COVERAGE_PROCESS_START=" + config)
+    
+        def child(name, args, expected=0):
+            from carnot.reporting import v709_execution
+    
+            monkey = pytest.MonkeyPatch()
+            monkey.setattr(v709_execution, "ROOT", tmp_path)
+            receipt = e.run_check(
+                e.ROOT,
+                dict(name=name, argv=cli + args, expected_exit=expected, deadline_s=300),
+                tmp_path,
+                tmp_path / "logs",
+            )
+            monkey.undo()
+            assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+    
+        child("replay", ["--cold-replay", str(path)])
+        for operand in ["raw_shard_hashes", "child_exit_rows"]:
+            bad = deepcopy(value)
+            field = "sha256" if operand == "raw_shard_hashes" else "stderr_sha256"
+>           bad[operand][0][field] = "sha256:wrong"
+            ^^^^^^^^^^^^^^^
+E           IndexError: list index out of range
+
+tests/python/test_hard_exit_learning_qualification_8206.py:157: IndexError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_replay completed=1 pending=0
+[exp8206] phase=cold_replay_start completed=0 pending=0
+______________________ test_coverage_summary_is_measured _______________________
+
+work = ({'H2': {'alpha': 0.025, 'blocks': [16, 8, 32], 'comparison': 'calibrated_error_center versus calibrated_fixed_center;...39362281d4271cadcbcb28236d676d90cbb', ...}, ...}, PosixPath('/tmp/carnot-8333-lhzbsq23/consumer-tests/8206-evidence0'))
+tmp_path = PosixPath('/tmp/carnot-8333-lhzbsq23/consumer-tests/test_coverage_summary_is_measu0')
+
+    def test_coverage_summary_is_measured(work, tmp_path):
+        """REQ-VERIFY-8206: real coverage report bytes provide statement counts."""
+        measured, raw = work
+>       report = measured["measured_child_coverage"]["report_path"]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'report_path'
+
+tests/python/test_hard_exit_learning_qualification_8206.py:209: KeyError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_hard_exit_learning_qualification_8206.py::test_readiness_and_failed_owned_check
+FAILED tests/python/test_hard_exit_learning_qualification_8206.py::test_real_cli_replay_blocked_worker_and_guard
+FAILED tests/python/test_hard_exit_learning_qualification_8206.py::test_coverage_summary_is_measured
+3 failed, 30 passed, 1 warning in 142.14s (0:02:22)

@@ -87833,6 +87833,24 @@ A qualified empty audit may be ready but establishes no scientific benefit.
 An unchanged qualified null is retired as new evidence under retire_if_same_verdict.
 The conductor owns ops and traceability reconciliation.
 
+## REQ-REPORT-8333: Independently qualify V719 local mechanics
+
+Bind the current task through the existing roadmap reader and the frozen V717
+protocol. Read exact declared Exp8306 bytes and terminal sidecars as historical
+disqualified evidence. Exp8332 and historical synthesis are not success gates.
+Publish a new receipt with all 48 constructed trajectories and 64 events each.
+Missing external operands block; failed owned checks disqualify. No model loads
+or generator changes occur. Constructed success is circular_positive, with both
+generalization scores zero. Preserve every original adversarial finding.
+
+### SCENARIO-REPORT-8333-CLI
+
+Private CLI checks, real child recovery and fresh-process replay bind argv,
+deadlines, clocks and output hashes. Valid bytes pass; negative and rehashed
+aggregate or primitive tampering fail. Unchanged primary checks precede atomic
+publication. Cover all new statements, strict types, scoped Ruff and spec refs.
+Run private E2E-020/021. The conductor owns ops and traceability reconciliation.
+
 ## REQ-REPORT-8241: Publish a byte-bound delayed benefit audit
 
 Freeze current owned commands before measurement. Declare no_model_load, empty
