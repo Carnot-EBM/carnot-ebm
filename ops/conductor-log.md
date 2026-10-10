@@ -20016,3 +20016,4 @@ code |
 | 2026-10-10 20:44 UTC | Bind complete task authority and isolate historica | OK | 103 passed, 1 warning in 126.75s (0:02:06) |
 | 2026-10-10 21:18 UTC | Acquire the new human label release with question- | OK | 97 passed, 1 warning in 98.99s (0:01:38) |
 | 2026-10-10 22:26 UTC | Qualify the existing direct state under complete c | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 90 passed, 1 warning in 445.84s (0:07:25) |
+| 2026-10-10 22:53 UTC | Qualify native direct arithmetic with real coverag | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 91 passed, 1 warning in 96.66s (0:01:36) |
