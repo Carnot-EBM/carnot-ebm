@@ -19983,3 +19983,8 @@ code |
 | 2026-10-10 01:24 UTC | Bind fourteen tasks and freeze the decision-preser | OK | 102 passed, 1 warning in 86.01s (0:01:26) |
 | 2026-10-10 02:14 UTC | Qualify the two missed utility-audit rejection bra | OK | 96 passed, 1 warning in 204.68s (0:03:24) |
 | 2026-10-10 02:48 UTC | Bound table interpolation error and preserve direc | OK | 104 passed, 1 warning in 79.00s (0:01:19) |
+| 2026-10-10 02:52 UTC | Publish coefficients tables and error bounds as on | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8362-threshold-guard.guard_ready_score (actual=0 == expected=1) |
+| 2026-10-10 02:54 UTC | Run causal delayed learning through the guarded ta | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8363-atomic-table-state) |
+| 2026-10-10 02:54 UTC | Measure guarded inference refresh and durable comm | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8363-atomic-table-state) |
+| 2026-10-10 02:54 UTC | Implement the guarded table evaluator and update a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8363-atomic-table-state) |
+| 2026-10-10 02:54 UTC | Compare Python and Rust local transactions includi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8365-local-service-cost, exp8366-native-table-parity) |
