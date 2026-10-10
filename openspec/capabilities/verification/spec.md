@@ -52731,3 +52731,20 @@ Implementation 2026-10-10: `threshold_guard_8362.py` derives rational cell
 bounds and checks independent polynomial extrema. It retains all frozen vectors
 and adjacent-float controls. Unresolved sigmoid arithmetic forces direct
 fallback. An empirical candidate fraction grants no safety or usefulness score.
+## REQ-VERIFY-8370: Qualify the ARC delta through bounded private execution
+
+Freeze validation argv before measurement. Require all newly owned statements,
+including CLI and failure paths, scoped consumers, Ruff check/format, strict
+mypy and spec coverage. Use private disk-backed scratch and real bounded
+children with at most sixty-second polling under a 4800-second invocation cap.
+Run private E2E-018 and qualified ARC reader/CLI controls. Cold replay SHALL
+accept valid evidence and reject negative and self-consistently rehashed tampering.
+Use unchanged publication, adversarial and strict row validators. Keep findings.
+Owned failures disqualify; missing external operands block. Publish atomically.
+
+### SCENARIO-VERIFY-8370-EXECUTION
+
+Real private CLI, cold children, missing input, failed child and recovery paths
+retain exact argv, exits, timings and log hashes. Recomputed no-change meaning
+and new-outcome support must survive replay. Fixtures earn no live readiness.
+The conductor owns ops, changelog and BMAD reconciliation for this task.

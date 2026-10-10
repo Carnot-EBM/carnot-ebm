@@ -97513,3 +97513,32 @@ Implementation 2026-10-10: the thin threshold runner reuses bounded children,
 unchanged typed validators and atomic publication. Cold replay rechecks original
 operand pins and both authority copies before recomputing primitive evidence.
 Private controls cover altered vectors, repaired hashes and actual child failures.
+## REQ-REPORT-8370: Authenticate only the V721 supervisor outcome delta
+
+Exp8370 SHALL bind exact V721 task authority, the unchanged V717 protocol,
+and the qualified Exp8355 primary, reader bytes and terminal sidecars.
+Registry precheck SHALL precede outcome claims. Inspect only changed sources
+and outcome-bearing receipts after Exp8355's finished-at cutoff. Retain all
+intended events, censoring, exclusions, environment joins and solve provenance.
+An authenticated empty delta SHALL produce one no-change receipt. It SHALL
+make zero current game/model calls and no arm or live-policy change.
+MODEL_SPECS SHALL be empty. Exposed observations earn zero generalization scores.
+Descriptive leave-one-game-out analysis requires eight games with shared arms,
+twenty resolved events per compared arm, and the existing five-firing cell floor.
+Absent selection propensities SHALL be unknown. Comparisons are observational.
+This task SHALL claim no solve credit. Future outputs remain dependencies.
+
+### SCENARIO-REPORT-8370-DELTA
+
+Private receipts verify the exact cutoff, duplicates, non-outcomes, failed
+environment joins, censored events, provenance exclusions and unsupported arms.
+Insufficient support yields no proposal. Empty evidence keeps both frontiers equal.
+Missing authority or terminal bytes yield named blocked gates, distinct from zero.
+Preserve original primaries, assertions, thresholds and V717 protocol bytes.
+
+Implementation 2026-10-10: `arc_outcome_delta_8370.py` adapts the qualified
+reader and publisher. The thin runner is
+`scripts/experiments/experiment_8370_v721_arc_outcome_delta.py`.
+Requirement-linked tests are `tests/python/test_arc_outcome_delta_8370.py`.
+`docs/research-notes/v721-arc-outcome-delta.md` records the cutoff and limits.
+The conductor handles ops, changelog and BMAD reconciliation.
