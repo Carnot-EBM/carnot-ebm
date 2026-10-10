@@ -52748,3 +52748,26 @@ Real private CLI, cold children, missing input, failed child and recovery paths
 retain exact argv, exits, timings and log hashes. Recomputed no-change meaning
 and new-outcome support must survive replay. Fixtures earn no live readiness.
 The conductor owns ops, changelog and BMAD reconciliation for this task.
+
+## REQ-VERIFY-8371: Qualify the hardware map without fabricated execution
+
+Freeze scoped argv before aggregation. Run private E2E-018/020 consumers, scoped
+Ruff, strict mypy and spec tracing. Require 100 percent newly owned statements,
+including real CLI children and failure paths, in private disk scratch. Bound
+children with progress at most sixty seconds and a 4800-second task cap.
+Use unchanged primary publication, typed finding consumer, adversarial verification
+and strict row validation. Publish terminal bytes atomically only after checks.
+Unknown, warning and critical findings block readiness. Owned failures disqualify.
+No reflash, generator weight changes, external publication or board probe occurs
+without an authenticated compatible kernel and complete transfer protocol.
+
+### SCENARIO-VERIFY-8371-CLI
+
+Real private children accept valid cold replay and reject negative and
+self-consistently rehashed candidates. Missing tools and authority bytes remain
+explicit operands. Failed owned checks cannot be reported as external absence.
+
+Implementation 2026-10-10: the thin Exp8371 CLI and bounded runner reuse the
+existing child supervisor, typed finding consumer and atomic primary publisher.
+Seventeen private tests pass with all 275 newly owned statements covered,
+including real child failures and rehashed primitive rejection controls.

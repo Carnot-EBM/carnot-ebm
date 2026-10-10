@@ -1,0 +1,12 @@
+.................                                                        [100%]
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 1 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (1): ['ops/dogfood-memory.json']. This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.
+    res = hook_impl.function(*args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+17 passed, 2 warnings in 142.29s (0:02:22)

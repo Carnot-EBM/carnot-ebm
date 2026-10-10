@@ -97542,3 +97542,37 @@ reader and publisher. The thin runner is
 Requirement-linked tests are `tests/python/test_arc_outcome_delta_8370.py`.
 `docs/research-notes/v721-arc-outcome-delta.md` records the cutoff and limits.
 The conductor handles ops, changelog and BMAD reconciliation.
+
+## REQ-REPORT-8371: Map authenticated transactions to existing hardware
+
+Exp8371 SHALL bind exact activated V721 authority and immutable V717 bytes.
+Authenticate Exp8356 terminal history and PolarFire dispatch/output hashes.
+Preserve board-local Linux CPU graduation without new board execution.
+Read actual operation_level_workload_reference fields from Exp8364/8365/8367.
+Absent producers block only their branch; missing costs differ from measured zero.
+Map coefficient reads, int16 table reads, interpolation, derivative-bound refresh,
+direct fallback, persistence and transport to host CPU under the existing Ising
+k_max<=5 firmware. Compute compatible fraction only with every typed cost present.
+Do not infer full-service speedup, fabric acceleration or acquisition benefit.
+GateMate remains Exp8372's physical obligation. NPU and TSU stay unqualified.
+No current model loads or calls; exposed cached data earn zero generalization.
+The conductor owns ops and BMAD reconciliation after this task.
+
+### SCENARIO-REPORT-8371-BOUNDARY
+
+Authenticate historical board receipts without repeating timings. Private typed
+controls reject unknown operations, negative/nonfinite/bool costs and duplicate
+operations. Missing operation costs stay null. Retain five distinct timing
+repeats from the unchanged table consumer, never independent examples.
+
+### SCENARIO-REPORT-8371-REPLAY
+
+Cold replay reauthenticates immutable source copies and recomputes operation
+maps, PolarFire graduation and authority. Reject changed aggregates and rehashed
+primitive mutations against pinned source bytes. Preserve failed owned checks.
+
+Implementation 2026-10-10: `hardware_operation_boundary_8371.py` authenticates
+V721 task authority, V717 bytes and historical KV260/PolarFire terminals. Its
+operation map retains absent producer references and costs. The research note
+lists exact kernel and transport prerequisites. Original V720 outcomes remain
+unchanged. The conductor owns ops and BMAD reconciliation.
