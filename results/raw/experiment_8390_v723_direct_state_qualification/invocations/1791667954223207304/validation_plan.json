@@ -1,0 +1,165 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_direct_state_qualification_8390.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/owned-tests"
+      ],
+      "deadline": 600,
+      "deadline_s": 600,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/consumers"
+      ],
+      "deadline": 240,
+      "deadline_s": 240,
+      "expected": 0,
+      "name": "private_E2E018_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_hard_exit_learning_qualification_8206.py",
+        "tests/python/test_local_consumer_qualification_8347.py",
+        "tests/python/test_threshold_guard_8362.py",
+        "tests/python/test_direct_atomic_state_8376.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020"
+      ],
+      "deadline": 1200,
+      "deadline_s": 1200,
+      "expected": 0,
+      "name": "private_E2E020_direct_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/coverage.ini"
+      ],
+      "deadline": 30,
+      "deadline_s": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "deadline_s": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/coverage.ini",
+        "-o",
+        "/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/coverage.json"
+      ],
+      "deadline": 30,
+      "deadline_s": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/direct_state_qualification_8390.py",
+        "scripts/experiments/experiment_8390_v723_direct_state_qualification.py",
+        "tests/python/test_direct_state_qualification_8390.py"
+      ],
+      "deadline": 30,
+      "deadline_s": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/direct_state_qualification_8390.py",
+        "scripts/experiments/experiment_8390_v723_direct_state_qualification.py",
+        "tests/python/test_direct_state_qualification_8390.py"
+      ],
+      "deadline": 30,
+      "deadline_s": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/reporting/direct_state_qualification_8390.py",
+        "scripts/experiments/experiment_8390_v723_direct_state_qualification.py"
+      ],
+      "deadline": 60,
+      "deadline_s": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_direct_state_qualification_8390.py"
+      ],
+      "deadline": 30,
+      "deadline_s": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    }
+  ]
+}

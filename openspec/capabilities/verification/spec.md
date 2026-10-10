@@ -53154,3 +53154,23 @@ primary_publication, adversarial verifier and strict row consistency consumers.
 Retain findings; unknown, warning and critical findings prevent readiness.
 Publish only checked terminal bytes atomically. The conductor owns ops and BMAD
 reconciliation for this task.
+## REQ-VERIFY-8390: Measure complete direct state process recovery
+
+Reuse the shipped single writer and two pinned readers. Coefficients, issued
+predictions, pending IDs, feedback IDs, cursor and acknowledgments share one
+recoverable version. Test genuine SIGKILL at temporary write, file fsync, pointer
+publication, directory fsync and acknowledgment for seeds11/22/33. All measured
+mixed reads, duplicate updates, lost acknowledged updates, issued prediction
+mutations and recovery mismatches SHALL be zero. Process crash does not certify
+power loss. Preserve every original assertion and threshold; introduce no table
+and refit no head. Freeze commands before measurement, use private disk scratch,
+bounded children with at most60-second polling and a4800-second cap.
+
+### SCENARIO-VERIFY-8390-CONTROLS
+
+Fresh children accept valid state and reject stale feedback, conflicting duplicate
+feedback, invalid coefficients, missing operands and rehashed changes to pending,
+issued, feedback and cursor fields. Correct retries remain idempotent. Run scoped
+unit, direct consumer, private E2E-018/020, Ruff, strict mypy and spec checks.
+Require100 percent newly owned statement coverage, including real child paths.
+Record command, exit, duration and log hashes. Keep global health separate.

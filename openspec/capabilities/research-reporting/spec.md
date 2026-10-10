@@ -98122,3 +98122,20 @@ inventing design authority. All 24 preserved historical assertions pass privatel
 Current contract, direct input custody and historical replay qualify separately.
 The frozen protocol and primary-method note preserve closed H1/H2 and all
 original V717/V721/V722 protocol hashes. Future outputs remain dependencies.
+## REQ-REPORT-8390: Qualify direct state under complete current authority
+
+Exp8390 SHALL authenticate the complete V723 task contract independently of
+historical Exp8374 replay. Bind qualified direct kernel, frozen heads, ordinary
+and threshold fixtures, original Exp8376 controls and unchanged V717/V721/V722
+protocols. Future producer paths are dependencies. Load no model and make zero
+current LLM calls. Preserve closed H1=-0.00390625 and H2=0 findings.
+Readiness requires current authority, authenticated numeric inputs and all owned
+checks. Retain failures as rows. Owned failure disqualifies; external absence
+blocks. Both generalization scores remain zero. Publish checked bytes atomically.
+The conductor owns ops/status, ops/changelog and BMAD reconciliation.
+
+### SCENARIO-REPORT-8390-REPLAY
+
+Cold children accept valid primitives and reject missing inputs, deliberate
+errors and self-consistently rehashed aggregate or semantic state mutations.
+Unchanged adversarial and strict row validators retain every finding.
