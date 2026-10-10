@@ -52612,3 +52612,28 @@ Validation commands and their byte-bound receipts are frozen per invocation.
 Failed historical audits remain failed; cached diagnostic nulls do not confer
 science or generalization readiness. The terminal primary and sidecar record
 actual coverage, consumers, E2Es, lint, strict types and cold replay.
+
+## REQ-VERIFY-8360: Qualify exact bounded deployment-contract publication
+
+Freeze validation and input manifests before measurement. Use private disk-backed
+scratch, unbuffered phase counts, owned child deadlines and a 4800-second cap.
+Require 100 percent new statements including CLI, real children and failures,
+scoped tests, unchanged consumers, private E2E-018, Ruff, strict mypy and spec
+tracing. Cold-replay primitive meaning in fresh children with valid, negative
+and self-consistently rehashed controls. Use unchanged atomic publication and
+adversarial/row validators. Retain all typed findings. Owned failures disqualify;
+external blocks name upstream/path/hash/field/operator/expected/observed. The
+conductor owns ops and BMAD reconciliation after this invocation.
+
+### SCENARIO-VERIFY-8360-REPLAY
+
+Private CLI publishes checked valid, blocked and disqualified terminals. Missing
+inputs differ from zero. Altered authority, primitives and summaries fail cold
+replay. A real failed child clears owned readiness. Future outputs remain pending
+dependencies and cannot satisfy current gates.
+
+Implementation 2026-10-10: `v721_contract_runner.py` uses the existing child
+ownership and atomic publication pipeline. It selects private XFS scratch,
+freezes scoped commands, records disk receipts and enforces the task cap.
+Fresh-process controls recompute authority and reusable-input meaning. Terminal
+receipts determine qualification; the conductor handles ops and BMAD records.

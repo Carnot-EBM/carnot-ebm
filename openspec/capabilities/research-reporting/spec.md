@@ -97401,6 +97401,39 @@ conductor and frozen protocol retain their original hashes.
 
 Status: planning contract only; experimental implementation remains pending.
 
+## REQ-REPORT-8360: Bind V721 deployment methods and reusable inputs
+
+Exp8360 SHALL bind fourteen visible rows, full task objects, prompts and lineage
+to staged or consumed activated authority. Preserve V720 outcomes and V717 bytes.
+Authenticate original Exp8334 heads, Exp8335 seals, Exp8347 kernel and Exp8348
+trajectory independently. Historical failed audits SHALL NOT gate these inputs.
+Freeze a separate deployment protocol before measurement: spline34, temperature,
+knots, conservative actions, float64 and equivalent sigmoid, 65-point signed
+int16 tables with eleven fractional bits, label-free vectors and nextafter
+boundaries, seeds 11/22/33, stream96 with 22 missing slots, retention windows,
+later67, batch/update ratios, paired repeats and complete durable transactions.
+Record the dated scan and full versioned methods with hashes and adoption limits.
+No current LLM calls, generator updates, activation or future artifact reads.
+
+### SCENARIO-REPORT-8360-AUTHORITY
+
+Private matching authority passes. Prompt mutation, deletion and reorder fail.
+Missing activation blocks contract readiness while valid heads and trajectory
+retain readiness. All thirteen V720 primaries and the pre-gate receipt retain
+their original terminal outcomes. Constructed agreement grants no generalization.
+
+### SCENARIO-REPORT-8360-PROTOCOL
+
+Exact protocol and original successful input seals pass. Changed coefficients,
+scientific thresholds, transaction gates, method bytes or input manifests fail
+even when a candidate and its reported primitive hashes are recomputed.
+
+Implementation 2026-10-10: `v721_contract_methods.py` binds full authority and
+original reusable seals through existing readers. It preserves each V720
+disposition. The separate deployment protocol and method manifest freeze exact
+source hashes, label-free panels and transaction gates. Requirement-linked tests
+exercise authority, input readiness and primitive tampering independently.
+
 ### SCENARIO-REPORT-V721-REFUSAL: Repair the reported missing failure lineage
 
 Restore the quarantined V721 plan without changing its fourteen tasks or prompts.

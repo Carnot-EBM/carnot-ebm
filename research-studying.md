@@ -6549,3 +6549,7 @@ See docs/research-notes/v719-method-ingestion.md and the V719 methods manifest.
 The V717 scientific protocol is unchanged; capacity remains a separate
 constructed study. CURRENT cached support is bound to existing shards and
 activated tasks. Historical failures stay separate from science and support.
+
+## 2026-10-10 — V721 frozen deployment methods
+
+Read the 2026-10-09 scan and full KANELÉ v3 / online KAN v4 methods before implementation. Exact source URLs, versions, hashes, assumptions and adoption limits are in [v721-method-ingestion.md](docs/research-notes/v721-method-ingestion.md). Freeze threshold fallback and complete durable transactions as local adaptations. Preserve V717 bytes, exposed targets and all V720 outcomes. OpenHalDet stays deferred; no generator training or scheduler sweep.
