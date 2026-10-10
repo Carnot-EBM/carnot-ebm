@@ -7380,3 +7380,11 @@ Operational evidence addendum: this entry supersedes earlier operational asserti
 - theme: Operational efficiency across 8 completed experiments (1 compute-bound, 7 synthesis-only) in 51 minutes of milestone wall time.
 - key result: honest operational negative — 8 experiments completed in 51.2 wall-time minutes (averaging 6 minutes per experiment) led by fourteen-outcome reconciliation (11.19 min), utility-audit rejection branch qualification (10.87 min), compute-bound typed runtime reference qualification (8.88 min), table interpolation error bounding (6.21 min), and hardware transaction mapping (5.79 min); GPU utilization was 0% post-run with gpu_idle_on_compute_bound_tasks recorded as false, and available records lack intra-task sub-phase telemetry and continuous in-flight accelerator sampling.
 - acceptance: no data available this milestone
+
+### Milestone 2026.10.722
+
+- exp_range: no data available this milestone
+- theme: Operational efficiency across 9 completed experiments (1 compute-bound, 8 synthesis-only) in 144 minutes of milestone wall time.
+- key result: honest operational negative — 9 experiments completed in 143.7 wall-time minutes (averaging 16 minutes per experiment) led by fourteen-outcome reconciliation (26.97 min), compute-bound CUDA evidence inspection with the typed reader (18.91 min), ARC supervisor observation collection (18.82 min), KV260 hardware transaction mapping (18.25 min), and direct-service method freezing with task contracts (17.61 min); GPU utilization was 0% post-run with gpu_idle_on_compute_bound_tasks recorded as false, and available records lack intra-task sub-phase telemetry and continuous in-flight accelerator sampling.
+- acceptance: no data available this milestone
+

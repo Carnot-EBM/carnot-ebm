@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.722",
+  "generated_at": "2026-10-10T18:01:34Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 143.7,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Reconcile fourteen outcomes and decide each independent research continuation",
+      "duration_minutes": 26.97,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Inspect changed CUDA evidence with the already qualified typed reader",
+      "duration_minutes": 18.91,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Collect fresh adapter-withheld ARC supervisor observations on the live wrapper",
+      "duration_minutes": 18.82,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Map measured direct transactions to KV260 and preserve PolarFire scope",
+      "duration_minutes": 18.25,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Freeze direct-service methods and bind fourteen task contracts",
+      "duration_minutes": 17.61,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.722 completed 9 experiments (1 compute-bound, 8 synthesis-only) across 143.7 total wall-time minutes (averaging 16 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was led by synthesis-only tasks—reconciling fourteen outcomes and deciding research continuations (26.97 minutes), collecting fresh ARC supervisor observations (18.82 minutes), mapping direct transactions to KV260 (18.25 minutes), and freezing direct-service methods with fourteen task contracts (17.61 minutes)—alongside the sole compute-bound task inspecting CUDA evidence with the qualified typed reader (18.91 minutes). With gpu_idle_on_compute_bound_tasks recorded as false, the point-in-time monitor reading of 0% GPU utilization (2MB allocated) on the NVIDIA GeForce RTX 3090 reflects expected post-run idle state for non-GPU synthesis workloads, and single-model compute execution correctly avoided multi-model DualGPURunner dispatch.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks accounted for 8 of 9 completed experiments and four of the top five slowest runs totaling 81.65 minutes out of 143.7 total wall-time minutes, led by fourteen-outcome reconciliation (26.97 minutes), ARC supervisor observation collection (18.82 minutes), and KV260 hardware transaction mapping (18.25 minutes).",
+    "The sole compute-bound task ('Inspect changed CUDA evidence with the already qualified typed reader') required 18.91 minutes, but available experiment receipts lack intra-task phase telemetry (environment setup, evidence parsing, model execution, artifact serialization) to localize runtime latency.",
+    "Long-running synthesis tasks (fourteen-outcome reconciliation, adapter-withheld ARC observation collection, hardware transaction mapping, and contract freezing) executed serially without incremental receipt caching or evidence memoization when upstream artifacts were unchanged.",
+    "Milestone timing analysis relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits in the milestone interval."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and evidence memoization for multi-minute synthesis tasks (outcome reconciliation, ARC supervisor observation collection, hardware transaction mapping, and task contract freezing) when upstream inputs remain unchanged.",
+    "Instrument multi-minute synthesis and compute-bound tasks with granular intra-phase execution timers (setup, execution, verification, serialization) to pinpoint operational latency.",
+    "Persist explicit synchronous execution timestamps (start, completion, duration) directly into experiment receipts to eliminate dependence on disk-mtime fallback reconstruction.",
+    "Sample continuous in-flight accelerator utilization and memory telemetry during compute-bound execution intervals rather than relying solely on post-run point-in-time GPU monitor polling.",
+    "Maintain strict DualGPURunner dispatch boundaries restricted to concurrent multi-model pipelines, avoiding unnecessary invocation overhead for single-model or synthesis workloads."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and evidence memoization for long-running synthesis workflows (fourteen-outcome reconciliation, ARC observation collection, and hardware transaction mapping) when upstream artifacts are unchanged.",
+    "Instrument long-running synthesis tasks and compute-bound workloads with granular intra-task phase timers.",
+    "Persist explicit synchronous start and completion lifecycle timestamps in experiment receipts and capture continuous in-flight accelerator telemetry during active runs."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Across 9 completed experiments and 143.7 minutes of milestone wall time, execution was dominated by synthesis-only tasks averaging 16 minutes per experiment, with the sole compute-bound task finishing second overall at 18.91 minutes behind fourteen-outcome reconciliation (26.97 minutes). Point-in-time GPU monitoring showed 0% utilization on the RTX 3090 as expected for non-GPU synthesis workloads, with gpu_idle_on_compute_bound_tasks recorded as false. Operational improvements should target incremental receipt caching for unchanged upstream dependencies and granular intra-phase telemetry for multi-minute tasks, with estimated time savings conservatively held at 0% until empirically validated."
+}

@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-10 — Operational retrospective for milestone 2026.10.722
+
+- Wrote `results/operational_retro_2026_10_722.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.722`. Authoritative disk-mtime fallback data records 9 experiments completed (1 compute-bound, 8 synthesis-only) across 143.7 total wall-time minutes (average 16 minutes per experiment).
+- Execution wall time was led by synthesis tasks: 'Reconcile fourteen outcomes and decide each independent research continuation' (26.97 minutes), 'Collect fresh adapter-withheld ARC supervisor observations on the live wrapper' (18.82 minutes), 'Map measured direct transactions to KV260 and preserve PolarFire scope' (18.25 minutes), and 'Freeze direct-service methods and bind fourteen task contracts' (17.61 minutes), alongside the sole compute-bound task 'Inspect changed CUDA evidence with the already qualified typed reader' (18.91 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization on the RTX 3090 with 2MB allocated outside active runs; `gpu_idle_on_compute_bound_tasks` is false as no compute-bound idle anomalies or multi-model parallel dispatch requirements were present, and 0% GPU utilization is expected behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: implement incremental receipt caching and evidence memoization for fourteen-outcome reconciliation, ARC supervisor observation collection, hardware transaction mapping, and task contract freezing when upstream dependencies remain unchanged; instrument multi-minute synthesis and compute-bound tasks with granular intra-phase timers; and persist synchronous start and end lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-10 — Operational retrospective for milestone 2026.10.721
 
 - Wrote `results/operational_retro_2026_10_721.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.721`. Authoritative disk-mtime fallback data records 8 experiments completed (1 compute-bound, 7 synthesis-only) across 51.2 total wall-time minutes (average 6 minutes per experiment).
