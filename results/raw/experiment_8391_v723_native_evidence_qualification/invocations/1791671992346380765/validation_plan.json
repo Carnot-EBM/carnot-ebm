@@ -1,0 +1,176 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8391-private/invocation-4l3tpzwo/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_native_evidence_qualification_8391.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8391-private/invocation-4l3tpzwo/owned-tests"
+      ],
+      "deadline": 180,
+      "deadline_s": 600,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_native_direct_parity_8379.py",
+        "tests/python/test_v723_contract_methods_8388.py",
+        "-k",
+        "req_verify_8379 or historical_source_alias_rejected",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8391-private/invocation-4l3tpzwo/native-consumers"
+      ],
+      "deadline_s": 600,
+      "name": "private_E2E003_native_and_source_isolation",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8391-private/invocation-4l3tpzwo/consumers"
+      ],
+      "deadline": 240,
+      "deadline_s": 240,
+      "expected": 0,
+      "name": "private_E2E018_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8391_v723_native_evidence_qualification.py",
+        "--coverage-custody",
+        "/home/ianblenke/.cache/carnot-exp8391-private/invocation-4l3tpzwo"
+      ],
+      "deadline_s": 60,
+      "name": "coverage_custody",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--keep",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8391-private/invocation-4l3tpzwo/coverage.ini"
+      ],
+      "deadline": 30,
+      "deadline_s": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8391-private/invocation-4l3tpzwo/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "deadline_s": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8391-private/invocation-4l3tpzwo/coverage.ini",
+        "-o",
+        "/home/ianblenke/.cache/carnot-exp8391-private/invocation-4l3tpzwo/coverage.json"
+      ],
+      "deadline": 30,
+      "deadline_s": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/native_evidence_8391.py",
+        "scripts/experiments/experiment_8391_v723_native_evidence_qualification.py",
+        "tests/python/test_native_evidence_qualification_8391.py"
+      ],
+      "deadline": 30,
+      "deadline_s": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/native_evidence_8391.py",
+        "scripts/experiments/experiment_8391_v723_native_evidence_qualification.py",
+        "tests/python/test_native_evidence_qualification_8391.py"
+      ],
+      "deadline": 30,
+      "deadline_s": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/reporting/native_evidence_8391.py",
+        "scripts/experiments/experiment_8391_v723_native_evidence_qualification.py"
+      ],
+      "deadline": 60,
+      "deadline_s": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_native_evidence_qualification_8391.py"
+      ],
+      "deadline": 30,
+      "deadline_s": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    }
+  ]
+}

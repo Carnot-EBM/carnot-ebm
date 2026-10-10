@@ -53174,3 +53174,28 @@ issued, feedback and cursor fields. Correct retries remain idempotent. Run scope
 unit, direct consumer, private E2E-018/020, Ruff, strict mypy and spec checks.
 Require100 percent newly owned statement coverage, including real child paths.
 Record command, exit, duration and log hashes. Keep global health separate.
+## REQ-VERIFY-8391: Qualify real coverage shards and compiled finite parity
+
+Reproduce the original empty-combine failure with its merged-file topology.
+Measure parallel test and real CLI children using invocation-private disk scratch.
+Retain nonempty shards before combination and require 100 percent newly owned
+statements, including failures. Missing instrumentation cannot grant readiness.
+Build and import the shipped extension, record ABI/toolchain/binary hashes and
+actual call/copy counters, and retain all frozen boundary and coefficient rows.
+Use the unchanged 1e-12 tolerances. Run private E2E-003 and E2E-018 plus source
+isolation controls, bounded children and a 4800-second task cap. Global health
+is separate. Owned failures disqualify; external absence blocks.
+
+### SCENARIO-VERIFY-8391-COVERAGE
+
+Real unit and CLI shards combine successfully; empty data, absent reports,
+uncovered statements, missing owned files and failed consumer receipts clear
+native readiness. Never reinterpret an empty combine as a successful check.
+
+Implementation 2026-10-10: the original merged-file empty-combine failure is
+reproduced privately with exit 1. Real test and CLI shards are copied before
+Coverage.py 7.14.1 report commands remove originals, then combined and checked
+against the actual database. Both newly owned files pass 197/197 statements.
+Private E2E-003/source isolation passes 14 tests; E2E-018 passes 34 tests.
+Scoped Ruff, strict mypy and spec tracing pass. The existing 900-second global
+timeout is imported separately and is not reinterpreted as an owned pass.

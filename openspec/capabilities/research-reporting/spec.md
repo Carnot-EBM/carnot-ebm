@@ -98139,3 +98139,27 @@ The conductor owns ops/status, ops/changelog and BMAD reconciliation.
 Cold children accept valid primitives and reject missing inputs, deliberate
 errors and self-consistently rehashed aggregate or semantic state mutations.
 Unchanged adversarial and strict row validators retain every finding.
+## REQ-REPORT-8391: Bind native qualification to immutable current and historical operands
+
+Authenticate the complete V723 contract and exact native-evidence task before
+measurement. Preserve V717/V721/V722 protocol bytes and all intended finite rows.
+Reuse the actual Rust/PyO3 arithmetic and strict action policy. Current authority
+must remain separate from frozen historical consumers; absent historical design
+stays blocked. Declare no_model_load, empty MODEL_SPECS and zero current LLM calls.
+Retain all adversarial findings and publish only checked terminal bytes atomically.
+Both generalization scores remain zero. The conductor owns ops/BMAD reconciliation.
+
+### SCENARIO-REPORT-8391-REPLAY
+
+Fresh processes accept primitive replay and reject missing input, deliberate
+error and self-consistently rehashed aggregate and primitive mutations. Run
+unchanged publication, adversarial and strict row consumers. An unresolved
+informational finding cannot be hidden or silently resolved.
+
+Implementation 2026-10-10: the thin Exp8391 adapter authenticates the full V723
+task, reuses unchanged native arithmetic and primary publication, and seals
+current and historical operands separately. Frozen V722 replay retains its
+blocked verdict. All ten owned tests and fresh replay/tamper controls pass.
+The unchanged typed consumer cannot resolve the exact-zero coefficient finding;
+the terminal artifact retains it and keeps native readiness zero. Conductor-owned
+ops and BMAD reconciliation remain deferred as instructed.
