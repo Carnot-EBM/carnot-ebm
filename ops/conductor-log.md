@@ -20004,3 +20004,4 @@ code |
 | 2026-10-10 11:42 UTC | Measure every stage of a durable Python decision t | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8376-direct-atomic-state.direct_state_ready_score (actual=0 == expected=1) |
 | 2026-10-10 12:47 UTC | Qualify direct spline arithmetic through an actual | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 101 passed, 1 warning in 156.70s (0:02:36) |
 | 2026-10-10 12:49 UTC | Compare complete Python and native direct decision | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8378-python-transaction-cost) |
+| 2026-10-10 13:22 UTC | Test a separately versioned action certificate wit | OK | 89 passed, 2 warnings in 141.44s (0:02:21) |
