@@ -20022,3 +20022,4 @@ code |
 | 2026-10-10 23:05 UTC | Compare native and Python transactions with matche | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8393-python-transaction-cost) |
 | 2026-10-10 23:09 UTC | Measure factuality label errors while controlling  | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8389-human-label-custody.released_label_panel_ready_score (actual=0 == expected=1) |
 | 2026-10-10 23:34 UTC | Locate the CUDA initialization failure through bou | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 107 passed, 1 warning in 44.73s |
+| 2026-10-10 23:40 UTC | Run a bounded Qwen canary after causal CUDA qualif | GATE_BLOCK | gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp8396-cuda-failure-cause.runtime_reader_ready_score (actual=0 == expected=1) |
