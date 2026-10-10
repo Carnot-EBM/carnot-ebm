@@ -2,6 +2,26 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8372: Qualify the bounded missing-evidence ledger
+
+Freeze scoped validation argv before measurement. Use private disk-backed scratch and bounded children.
+Cover all new statements, including CLI and owned failure paths. Run private E2E-018 consumers.
+Cold replay frozen primitive evidence in a fresh process without full history replay.
+Accept valid evidence and reject negative and self-consistently rehashed tamper controls.
+Use unchanged publication, adversarial and strict row validators. Preserve all findings.
+Only the existing typed finding consumer may resolve proven informational findings.
+Publish the terminal primary atomically after validation; do not change historical outcomes.
+
+### SCENARIO-VERIFY-8372-CLI
+
+The real private CLI runs bounded children and publishes an authenticated obligation.
+An owned failed child disqualifies. A missing external receipt remains blocked.
+
+### SCENARIO-VERIFY-8372-REPLAY
+
+Frozen task authority, historical seals, raw evidence, commands and logs remain hash bound.
+Changed authority, source hashes, physical completion or rehashed readiness fails cold replay.
+
 ## REQ-VERIFY-8361: Reach both missed utility rejection statements with real evidence
 
 Authenticate the original coverage reports with missing statements 599 and 517.

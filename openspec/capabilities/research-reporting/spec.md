@@ -2,6 +2,29 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8372: Carry exact GateMate reopening evidence without retry
+
+Publish a read-only V721 ledger bound to activated full-task authority and V717 protocol bytes.
+Read the authenticated V720 history failure once. Preserve both exact missing source hashes.
+Record a content-addressed request with producer receipts and explicitly supplied external locations.
+Inspect only a newly supplied receipt or snapshot after the V720 frontier. Do not search unchanged history.
+Carry the original 0xffffffff transcript independently of missing source history.
+Require dated cable/port/power change, then future IDCODE0x20000001, n16 flash and sample/hash smoke.
+Queue new physical receipts for a future bounded hardware task. Run no JTAG or flash command.
+Obligation quality may score one. History authentication remains false and execution readiness stays zero.
+Missing external evidence is blocked; failed owned validation is disqualified. Both benefit scores stay zero.
+
+### SCENARIO-REPORT-8372-OBLIGATION
+
+Given authenticated V720 failure and no newly supplied receipt, preserve both missing hashes,
+record the full physical obligation, and publish complete_blocked_gatemate_missing_evidence.
+
+### SCENARIO-REPORT-8372-RECEIPTS
+
+Private valid, absent, stale and corrupt receipt consumers preserve every rejection reason.
+Only exact newly supplied source bytes qualify for future recovery. Equivalent regenerated text fails.
+New physical evidence is queued and does not grant current execution readiness.
+
 ## REQ-REPORT-8361: Qualify frozen utility audits without changing science
 
 Publish a separate Exp8361 terminal primary after scoped checks and cold replay.
