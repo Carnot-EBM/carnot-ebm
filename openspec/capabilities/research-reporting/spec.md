@@ -2,6 +2,34 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8361: Qualify frozen utility audits without changing science
+
+Publish a separate Exp8361 terminal primary after scoped checks and cold replay.
+Authenticate V721 task authority and explicit immutable V720 producer authority.
+Preserve the original Exp8350/8351 disqualified primaries and V717 protocol bytes.
+Recompute H1 and H2 from original predictions, targets and Exp8348 trajectories.
+Keep 128/97 H1 sources, 88/67 H2 sources and 32/23 sources in all four retention windows.
+Readiness measures audit execution; benefit scores use unchanged frozen thresholds.
+Use no_model_load, empty MODEL_SPECS and zero current model calls.
+Exposed development evidence has zero generalization scores.
+Keep primitive evidence, child logs, hashes and terminal sidecars under the Exp8361 raw directory.
+The conductor owns ops and traceability reconciliation for this invocation.
+
+### SCENARIO-REPORT-8361-CLI
+
+Real CLI children publish valid, blocked and disqualified private candidates.
+Fresh replay rejects negative candidates and self-consistently rehashed changes.
+Freeze scoped validation commands before measurement. Require all new statements covered.
+Unchanged publication, adversarial and strict row validators check candidate bytes.
+Qualified nulls retire only the informative frozen mechanism; budget-limited nulls retain their narrower boundary.
+
+Implementation: `python/carnot/reporting/utility_audit_qualification_8361.py`
+adapts the original audits and unchanged publisher. The thin standalone runner is
+`scripts/experiments/experiment_8361_v721_utility_audit_qualification.py`.
+Requirement-linked tests cover natural evidence, real CLI children, missing inputs,
+owned failures and repaired-hash controls. The research note is
+`docs/research-notes/v721-qualified-utility-audits.md`.
+
 ## REQ-REPORT-8344: Preserve GateMate's bounded physical reopening obligation
 
 Authenticate the exact declared Exp8330 primary, immutable sidecars, original

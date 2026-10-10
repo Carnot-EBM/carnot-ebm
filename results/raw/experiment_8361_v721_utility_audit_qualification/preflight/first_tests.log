@@ -1,0 +1,173 @@
+F....F...                                                                [100%]
+=================================== FAILURES ===================================
+___________________________ test_natural_reductions ____________________________
+
+natural = ({'audits': {'8350': {'candidate_reference': {'path': '/home/ianblenke/.cache/carnot-exp8361-private/first-tests/8361-...1, 12, 13, ...], ...}}, ...}, PosixPath('/home/ianblenke/.cache/carnot-exp8361-private/first-tests/8361-natural0/raw'))
+
+    def test_natural_reductions(natural: tuple[dict[str, Any], Path]) -> None:
+        """SCENARIO-VERIFY-8361-REDUCTION: nulls preserve support and frozen gates."""
+        work, raw = natural
+        value = e.build(work, raw, [dict(name="control", passed=True)])
+        assert value["verdict_class"] == "null"
+        assert value["static_audit_ready_score"] == value["learning_audit_ready_score"] == 1
+        assert value["H1"]["bootstrap_summary"]["all_intended"]["mean_gain"] == -0.00390625
+        assert value["H2"]["block_bootstrap_summary"]["mean_gain"] == 0
+        assert value["source_support"]["H1"]["complete_count"] == 97
+        assert value["source_support"]["H2"]["complete_count"] == 67
+        assert [r["window"] for r in value["retention_windows"]] == [0, 32, 64, 96]
+        assert all(
+            r["intended_count"] == 32 and r["qualified_count"] == 23 for r in value["retention_windows"]
+        )
+        assert value["h1_development_signal_score"] == value["h2_development_signal_score"] == 0
+        assert (
+            value["independent_generalization_score"]
+            == value["generalized_learning_benefit_score"]
+            == 0
+        )
+        assert value["MODEL_SPECS"] == [] and value["no_model_load"]
+        assert value["H1"]["optimizer_qualification"]["geometry_qualified"] is False
+        assert value["qualified_scope_decision"]["H1"] == "null_optimization_limited"
+>       assert value["qualified_scope_decision"]["H2"] == "null_update_budget_no_headroom"
+E       AssertionError: assert 'null_delayed...ision_benefit' == 'null_update_...t_no_headroom'
+E         
+E         - null_update_budget_no_headroom
+E         + null_delayed_decision_benefit
+
+tests/python/test_utility_audit_qualification_8361.py:49: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp8361] phase=before_preconditions completed=0 pending=0
+[exp8361] phase=after_preconditions completed=0 pending=0
+[exp8361] phase=before_benchmark_frozen_audit completed=0 pending=2
+[exp8350] phase=before_measurement completed=0 pending=0
+[exp8350] phase=before_authority completed=0 pending=0
+[exp8350] phase=after_authority completed=0 pending=0
+[exp8335] phase=scoring completed=32 pending=96
+[exp8335] phase=scoring completed=64 pending=64
+[exp8335] phase=scoring completed=96 pending=32
+[exp8335] phase=scoring completed=128 pending=0
+[exp8350] phase=before_benchmark_exact_optimizer_control completed=0 pending=0
+[exp8306] phase=static_fit completed=100 pending=300
+[exp8306] phase=static_fit completed=200 pending=200
+[exp8306] phase=static_fit completed=300 pending=100
+[exp8306] phase=static_fit completed=400 pending=0
+[exp8350] phase=after_benchmark_exact_optimizer_control completed=1 pending=0
+[exp8350] phase=before_retention_authentication completed=0 pending=0
+[exp8350] phase=retention_window_authenticated completed=1 pending=3
+[exp8350] phase=retention_window_authenticated completed=2 pending=2
+[exp8350] phase=retention_window_authenticated completed=3 pending=1
+[exp8350] phase=retention_window_authenticated completed=4 pending=0
+[exp8350] phase=after_retention_authentication completed=4 pending=0
+[exp8350] phase=before_evaluator_access completed=0 pending=0
+[exp8350] phase=before_benchmark_cluster_bootstrap completed=0 pending=10000
+[exp8350] phase=after_benchmark_cluster_bootstrap completed=10000 pending=0
+[exp8350] phase=before_benchmark_cluster_bootstrap completed=0 pending=10000
+[exp8350] phase=after_benchmark_cluster_bootstrap completed=10000 pending=0
+[exp8350] phase=after_evaluator_access completed=128 pending=0
+[exp8350] phase=after_measurement completed=1 pending=0
+[exp8350] phase=before_benchmark_cluster_bootstrap completed=0 pending=10000
+[exp8350] phase=after_benchmark_cluster_bootstrap completed=10000 pending=0
+[exp8350] phase=before_benchmark_cluster_bootstrap completed=0 pending=10000
+[exp8350] phase=after_benchmark_cluster_bootstrap completed=10000 pending=0
+[exp8361] phase=after_benchmark_frozen_audit completed=1 pending=1
+[exp8350] phase=before_benchmark_cluster_bootstrap completed=0 pending=10000
+[exp8350] phase=after_benchmark_cluster_bootstrap completed=10000 pending=0
+[exp8350] phase=before_benchmark_cluster_bootstrap completed=0 pending=10000
+[exp8350] phase=after_benchmark_cluster_bootstrap completed=10000 pending=0
+[exp8205] phase=before_subprocess_valid completed=0 pending=1
+[exp8205] phase=after_subprocess_valid completed=1 pending=0
+[exp8350] phase=before_benchmark_cluster_bootstrap completed=0 pending=10000
+[exp8350] phase=after_benchmark_cluster_bootstrap completed=10000 pending=0
+[exp8350] phase=before_benchmark_cluster_bootstrap completed=0 pending=10000
+[exp8350] phase=after_benchmark_cluster_bootstrap completed=10000 pending=0
+[exp8205] phase=before_subprocess_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_tamper completed=1 pending=0
+[exp8205] phase=before_subprocess_trace_json completed=0 pending=1
+[exp8205] phase=after_subprocess_trace_json completed=1 pending=0
+[exp8361] phase=before_benchmark_frozen_audit completed=1 pending=1
+[exp8351] phase=before_preconditions completed=0 pending=0
+[exp8351] phase=before_authority completed=0 pending=0
+[exp8351] phase=after_authority completed=0 pending=0
+[exp8335] phase=scoring completed=32 pending=96
+[exp8335] phase=scoring completed=64 pending=64
+[exp8335] phase=scoring completed=96 pending=32
+[exp8335] phase=scoring completed=128 pending=0
+[exp8351] phase=before_all_retention_seals completed=0 pending=0
+[exp8350] phase=retention_window_authenticated completed=1 pending=3
+[exp8350] phase=retention_window_authenticated completed=2 pending=2
+[exp8350] phase=retention_window_authenticated completed=3 pending=1
+[exp8350] phase=retention_window_authenticated completed=4 pending=0
+[exp8351] phase=after_all_retention_seals completed=4 pending=0
+[exp8351] phase=before_subprocess_upstream_cold_replay completed=0 pending=0
+[exp8205] phase=before_subprocess_upstream_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_upstream_cold completed=1 pending=0
+[exp8351] phase=after_subprocess_upstream_cold_replay completed=1 pending=0
+[exp8351] phase=before_benchmark_scalar_reconstruction completed=0 pending=0
+[exp8351] phase=scalar_reconstruction completed=32 pending=64
+[exp8351] phase=scalar_reconstruction completed=64 pending=32
+[exp8351] phase=scalar_reconstruction completed=96 pending=0
+[exp8351] phase=after_benchmark_scalar_reconstruction completed=96 pending=0
+[exp8351] phase=before_evaluator_target_access completed=0 pending=0
+[exp8351] phase=before_benchmark_moving_block_bootstrap completed=0 pending=10000
+[exp8351] phase=after_benchmark_moving_block_bootstrap completed=10000 pending=0
+[exp8351] phase=after_evaluator_target_access completed=128 pending=0
+[exp8351] phase=after_measurement completed=1 pending=0
+[exp8351] phase=before_benchmark_moving_block_bootstrap completed=0 pending=10000
+[exp8351] phase=after_benchmark_moving_block_bootstrap completed=10000 pending=0
+[exp8361] phase=after_benchmark_frozen_audit completed=2 pending=0
+[exp8351] phase=before_benchmark_moving_block_bootstrap completed=0 pending=10000
+[exp8351] phase=after_benchmark_moving_block_bootstrap completed=10000 pending=0
+[exp8205] phase=before_subprocess_valid completed=0 pending=1
+[exp8205] phase=after_subprocess_valid completed=1 pending=0
+[exp8351] phase=before_benchmark_moving_block_bootstrap completed=0 pending=10000
+[exp8351] phase=after_benchmark_moving_block_bootstrap completed=10000 pending=0
+[exp8205] phase=before_subprocess_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_tamper completed=1 pending=0
+[exp8205] phase=before_subprocess_trace_json completed=0 pending=1
+[exp8205] phase=after_subprocess_trace_json completed=1 pending=0
+[exp8361] phase=after_measurement completed=2 pending=0
+----------------------------- Captured stdout call -----------------------------
+[exp8350] phase=before_benchmark_cluster_bootstrap completed=0 pending=10000
+[exp8350] phase=after_benchmark_cluster_bootstrap completed=10000 pending=0
+[exp8350] phase=before_benchmark_cluster_bootstrap completed=0 pending=10000
+[exp8350] phase=after_benchmark_cluster_bootstrap completed=10000 pending=0
+[exp8351] phase=before_benchmark_moving_block_bootstrap completed=0 pending=10000
+[exp8351] phase=after_benchmark_moving_block_bootstrap completed=10000 pending=0
+_____________________ test_private_e2e018_frozen_authority _____________________
+
+tmp_path = PosixPath('/home/ianblenke/.cache/carnot-exp8361-private/first-tests/test_private_e2e018_frozen_aut0')
+
+    def test_private_e2e018_frozen_authority(tmp_path: Path) -> None:
+        """REQ-VERIFY-8361: E2E-018 reads immutable V720 authority rather than today's roadmap."""
+        original = sha256_file(e.ROOT / "research-roadmap.yaml")
+        authority = e.historical_authority(e.ROOT, tmp_path / "authority")
+        assert authority["activated"] and len(authority["tasks"]) == 14
+        assert any(t["id"] == static.TASK for t in authority["tasks"])
+        assert sha256_file(e.ROOT / "research-roadmap.yaml") == original
+        with pytest.raises(OSError):
+>           e.historical_authority(tmp_path / "missing", tmp_path / "absent")
+
+tests/python/test_utility_audit_qualification_8361.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/utility_audit_qualification_8361.py:65: in historical_authority
+    require_reference(dict(path=str(primary), sha256=PINS[8350]))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/.cache/carnot-exp8361-private/first-tests/test_private_e2e018_frozen_aut0/missing/results/ex...0_v720_static_benefit_audit.json', 'sha256': 'sha256:57d2803d86f74a2983db76633f0ff426457b1dcba409b653b12cecfcbde91a5d'}
+
+    def require_reference(ref: Json) -> None:
+        """A copied hash failure cannot become a successful replay through truth coercion."""
+        if not verify_reference(ref):
+>           raise ValueError("immutable_evidence_hash_drift:" + ref["path"])
+E           ValueError: immutable_evidence_hash_drift:/home/ianblenke/.cache/carnot-exp8361-private/first-tests/test_private_e2e018_frozen_aut0/missing/results/experiment_8350_v720_static_benefit_audit.json
+
+python/carnot/reporting/v710_contract_replay.py:69: ValueError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_utility_audit_qualification_8361.py::test_natural_reductions
+FAILED tests/python/test_utility_audit_qualification_8361.py::test_private_e2e018_frozen_authority
+2 failed, 7 passed, 1 warning in 198.27s (0:03:18)

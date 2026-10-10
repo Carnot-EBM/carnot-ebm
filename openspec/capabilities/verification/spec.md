@@ -2,6 +2,33 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8361: Reach both missed utility rejection statements with real evidence
+
+Authenticate the original coverage reports with missing statements 599 and 517.
+Use private copies of natural evidence and repair every affected hash.
+Static replay rejects disagreement between primitive evidence/configuration and work at line 599.
+Learning replay rejects disagreement with independently reconstructed gates/failures at line 517.
+Preserve every original assertion, comparator, support gate and correction budget.
+Independently reconstruct costs, class support, missing bounds, action headroom and budget reachability.
+Use explicit preserved historical authority in private E2E-018 and E2E-021 checks.
+
+### SCENARIO-VERIFY-8361-REJECTIONS
+
+Valid natural evidence passes before each deliberate mutation.
+Both targeted statements execute in real replay and reject rehashed private evidence.
+Current authority, sealed operands and historical outcomes remain unchanged.
+
+### SCENARIO-VERIFY-8361-REDUCTION
+
+Original sealed rows reproduce H1 gain -0.00390625 and H2 gain zero.
+All intended units and retention windows remain visible with their original missing slots.
+Null scope follows measured optimizer and action-reachability limits.
+
+Implementation: `tests/python/test_utility_audit_qualification_8361.py` exercises
+both historical guards through private real CLI replay and Coverage.py reports.
+Independent scalar reconstruction and original source reductions preserve all
+frozen support counts, bootstrap settings and retention windows.
+
 ## REQ-VERIFY-8328: Check owned execution before atomic publication
 
 Freeze child argv and deadlines separately from science. Use private scratch, flushed
