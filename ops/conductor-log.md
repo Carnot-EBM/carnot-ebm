@@ -20005,3 +20005,4 @@ code |
 | 2026-10-10 12:47 UTC | Qualify direct spline arithmetic through an actual | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 101 passed, 1 warning in 156.70s (0:02:36) |
 | 2026-10-10 12:49 UTC | Compare complete Python and native direct decision | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8378-python-transaction-cost) |
 | 2026-10-10 13:22 UTC | Test a separately versioned action certificate wit | OK | 89 passed, 2 warnings in 141.44s (0:02:21) |
+| 2026-10-10 14:12 UTC | Inspect changed CUDA evidence with the already qua | OK | 93 passed, 1 warning in 124.78s (0:02:04) |
