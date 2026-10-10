@@ -51895,3 +51895,24 @@ discovery. External results do not count as Carnot measurements.
 The research decision is to reuse qualified evidence, close the two exact
 audit coverage failures, and test deployment fidelity under continuous updates.
 No source authorizes changing exposed evaluation targets or generator weights.
+
+### V721 activation-refusal recheck — 2026-10-09
+
+The bounded recheck preserves the preceding research design. Searches covered
+EBM verification, neural constraints, Ising hardware, KANs, hallucination control
+and online learning. The [online KAN paper](https://arxiv.org/abs/2602.02056)
+and [delayed-capacity paper](https://arxiv.org/abs/2606.11711) still motivate the
+existing local-update and feedback contracts. Revisited
+[Token-Guard](https://arxiv.org/abs/2601.21969), already in this ledger, remains
+a future decoding lead; this correction adds no generation experiment.
+
+Secondary checks revisited OpenReview EBT search results, Hugging Face's
+[OpenHalDet page](https://huggingface.co/papers/2606.06959),
+[Extropic Writing](https://extropic.ai/writing), its
+[Z1T article](https://extropic.ai/writing/z1t/),
+[Kona](https://logicalintelligence.com/kona), and
+[GitHub Trending](https://github.com/trending/python?since=weekly).
+The GitHub snapshot was three weeks old. Both Semantic Scholar citation
+endpoints listed above again failed retrieval. No new method adoption,
+hardware-access claim or complete citation survey follows. The only task
+change is the missing Exp8367 failure-lineage declaration.

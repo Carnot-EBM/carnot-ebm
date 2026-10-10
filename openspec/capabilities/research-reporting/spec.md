@@ -97400,3 +97400,14 @@ Record repository-wide failures separately. Verify the active roadmap,
 conductor and frozen protocol retain their original hashes.
 
 Status: planning contract only; experimental implementation remains pending.
+
+### SCENARIO-REPORT-V721-REFUSAL: Repair the reported missing failure lineage
+
+Restore the quarantined V721 plan without changing its fourteen tasks or prompts.
+Exp8367 SHALL acknowledge all nine service-cost failures found by the unchanged
+activation matcher. Each entry SHALL contain its exact artifact-derived ID and
+verdict, a specific changed prerequisite or scope, and
+`retire_if_same_verdict: true`. The design's full task object and digest SHALL
+match the corrected YAML. Removing this block in a private copy SHALL reproduce
+the original refusal. The corrected copy SHALL pass the unchanged exclusion and
+ARC activation lints. No guard or exclusion-manifest change is authorized.

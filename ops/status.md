@@ -1,5 +1,28 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-10-09
+
+## 2026-10-09 — V721 activation-refusal correction
+
+The staged V721 plan retains fourteen tasks, Exp8360–Exp8373, in four phases.
+Only Exp8367's task metadata changes: nine artifact-derived prior failures now
+include exact verdicts, changed prerequisites or scope, and mandatory retirement
+on the same verdict. The design's complete task objects and digest match the YAML.
+The active roadmap, conductor, activation guards and exclusion manifest are unchanged.
+
+The corrected candidate passes exclusion, ARC and harness-fit lints, schema,
+eleven gate references and full contract checks. Private mutations reject missing
+lineage, missing subfields and changed, reordered or removed tasks. Scoped Ruff
+and spec references pass. Existing unit/private E2E-018 checks report 131 passes
+and one failure: `test_is_doomed_rerun_blocks_recurring_live_benchmark_chain`.
+Its matcher and test are unchanged from HEAD. Ruff lint passes, while format
+checking flags the unchanged exclusion linter and its test file. These separate
+baseline findings do not change the activation result. No experiment ran.
+
+Repository reconciliation also reports existing global spec-reference gaps.
+Its initial stale-date finding was corrected; the separate final documentation
+freshness check passes. Scoped spec references and whitespace checks pass.
+
 ## 2026-10-09 — V720 CPU cost repetition repair
 
 The cost reducer computes arithmetic parity only for complete five-repeat pairs.

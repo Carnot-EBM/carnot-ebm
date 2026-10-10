@@ -1,5 +1,22 @@
 # Carnot — Traceability Matrix
 
+**Last Updated:** 2026-10-09
+
+## V721 activation-refusal correction — 2026-10-09
+
+REQ-REPORT-V721-PLAN and SCENARIO-REPORT-V721-REFUSAL map to the corrected
+`research-roadmap-next.yaml` and `openspec/change-proposals/research-roadmap-vNEXT.md`.
+The fourteen complete task objects agree; Exp8367 is the sole changed task.
+Its nine lineage entries match historical artifact IDs and verdicts. All four
+subfields are present, including `retire_if_same_verdict: true`.
+
+The unchanged exclusion/ARC lints pass the corrected candidate. Schema, eleven
+gate references, full task digest and private negative controls pass. Existing
+unit/private E2E-018 checks report 131 passes and one unchanged live-benchmark
+matcher failure. Scoped Ruff lint and spec references pass. Formatting flags two
+unchanged guard files. This is planning evidence;
+it neither activates V721 nor qualifies any experiment's scientific result.
+
 ## V720 CPU cost repetition repair — 2026-10-09
 
 REQ-REPORT-8356 and SCENARIO-REPORT-8356-REPETITIONS map to the arithmetic

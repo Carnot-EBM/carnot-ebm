@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-10-09 — Correct V721 refused activation metadata
+
+- Restored the quarantined fourteen-task plan with nine complete `prior_failures`
+  entries for Exp8367. Exact IDs and verdicts come from the unchanged matcher and
+  producer/pre-gate artifacts. Each entry explains the changed path and sets
+  `retire_if_same_verdict: true`.
+- Matched the design's full task object and canonical digest to the corrected
+  YAML. Task IDs, order, prompts, gates and deliverables are unchanged.
+- Rechecked research references and reconciled the planning requirement and
+  traceability. No conductor, guard, exclusion-manifest or active-roadmap edits.
+
+Validation: exclusion/ARC/harness lints, schema, full contract, eleven gates,
+negative lineage controls, scoped Ruff and spec references pass. Unit/private
+E2E-018 checks: 131 passed, one existing live-benchmark matcher regression failed.
+Ruff formatting flags the unchanged exclusion linter and its test file; lint
+passes. All tested source and test files match HEAD. No experimental result or push.
+Repository reconciliation retains global spec-reference gaps. Its initial
+stale-date finding was corrected and final documentation freshness passes.
+
 ## 2026-10-09 — Operational retrospective for milestone 2026.10.720
 
 - Wrote `results/operational_retro_2026_10_720.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.720`. Authoritative disk-mtime fallback data records 13 experiments completed (1 compute-bound, 12 synthesis-only) across 96.6 total wall-time minutes (average 7 minutes per experiment).

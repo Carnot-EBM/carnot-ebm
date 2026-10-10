@@ -413,62 +413,6 @@ tasks:
     artifact_field: native_parity_ready_score
     op: ==
     value: 1
-  prior_failures:
-  - experiment_id: exp7711-whole-service-cost
-    verdict: blocked_gate_check_failed
-    addressed_by: Exp7710.native_record_ready_score was 0. Replace that blocked record-contract chain with
-      the new guarded spline extension; execute only after Exp8365.local_cost_ready_score=1 and Exp8366.native_parity_ready_score=1,
-      including actual PyO3 import and complete durable requests.
-    retire_if_same_verdict: true
-  - experiment_id: exp7724-complete-service-cost
-    verdict: blocked_gate_check_failed
-    addressed_by: Exp7723.native_service_ready_score was 0. The new Exp8366 must qualify actual Rust/PyO3
-      spline parity before this comparison; Exp8365 must separately qualify the shared Python transaction
-      harness. No failed native-service readiness is reused.
-    retire_if_same_verdict: true
-  - experiment_id: exp7737-set-service-cost
-    verdict: blocked_gate_check_failed
-    addressed_by: Exp7730.set_heads_ready_score was 0. Reuse the completed Exp8334 sentence heads through
-      Exp8360 custody and the new atomic table service, replacing the blocked evidence-set fit. Keep explicit
-      Exp8365 cost and Exp8366 parity gates.
-    retire_if_same_verdict: true
-  - experiment_id: exp7765-v675-service-cost
-    verdict: complete_blocked_missing_qualified_fit
-    addressed_by: Exp7757 supplied a pre-gate receipt instead of qualified fitted heads. Use the completed
-      Exp8334 heads and Exp8348 delayed trajectory through current custody; qualify guarded local transactions
-      in Exp8365 and native parity in Exp8366. Historical hardware-reference drift supplies no current readiness.
-    retire_if_same_verdict: true
-  - experiment_id: exp7900-service-cost
-    verdict: blocked_gate_check_failed
-    addressed_by: Exp7894.energy_fit_ready_score was 0. The current spline deployment reuses qualified Exp8334
-      heads instead of the failed fit chain, and requires current Exp8365 local-cost and Exp8366 native-parity
-      readiness before measuring complete requests.
-    retire_if_same_verdict: true
-  - experiment_id: exp7937-service-cost
-    verdict: blocked_gate_check_failed
-    addressed_by: Exp7930.energy_fit_ready_score was 0. Replace the unqualified energy-fit dependency with
-      completed Exp8334 sentence heads, atomic guarded updates and actual PyO3 parity; both current Exp8365
-      and Exp8366 readiness gates must pass.
-    retire_if_same_verdict: true
-  - experiment_id: exp7950-service-cost
-    verdict: blocked_gate_check_failed
-    addressed_by: Exp7943.energy_fit_ready_score was 0. Use completed Exp8334 heads and qualified current
-      table-service operands; require Exp8365.local_cost_ready_score=1 and Exp8366.native_parity_ready_score=1.
-      Measure binding, fallback, refresh and fsync in matched requests.
-    retire_if_same_verdict: true
-  - experiment_id: exp8106-v701-radial-service-cost
-    verdict: complete_blocked_changed_content_current_capture
-    addressed_by: Changed-content acquisition lacked qualified matching Exp8099 receipts and had a stale
-      primary hash. This task measures a new guarded spline local-selector transaction only; LLM acquisition
-      remains explicitly unmeasured. Require current Exp8365 cost and Exp8366 parity; do not reopen the
-      failed acquisition claim.
-    retire_if_same_verdict: true
-  - experiment_id: exp8201-observed-service-cost
-    verdict: blocked_gate_check_failed
-    addressed_by: Exp8200.request_trace_ready_score was 0. Replace that blocked census with the frozen Exp8365
-      local request grid and authenticated Exp8364 continuous-table trace. Require Exp8365 cost and Exp8366
-      parity; if the natural trace is absent, leave its NFR-01 claim unmeasured.
-    retire_if_same_verdict: true
   prompt: |-
     CONTEXT:
     Work in {project_root} on {date}. V720 completed thirteen producer tasks and one pre-gated canary. Exp8347 qualified local arithmetic and recovery; Exp8348 sealed a real delayed-learning trajectory. Exp8350/8351 each missed one replay rejection statement and remain disqualified; descriptive H1 gain is -0.00390625 and H2 gain is zero. Exp8352 qualified tables but its selected 65-int16-linear candidate flips three boundary actions. Exp8356 qualifies CPU arithmetic only. Runtime readers, GateMate history and final replay still fail. Preserve all original outcomes and V717 protocol bytes. Cached observations are exposed development, not current LLM inference.

@@ -7,6 +7,14 @@
 **Informed by:** actual V720 producer artifacts, conductor pre-gate receipts,
 V717 frozen methods, PRD FR-05/06/08/11/12 and NFR-01, and the dated V721 scan.
 
+**Activation-refusal correction:** Exp8367 now declares all nine prior failures
+matched by the unchanged guard. Each entry records the original verdict,
+the changed prerequisite or local transaction scope, and mandatory retirement
+on the same verdict. Seven predecessors were pre-gated; two lacked a qualified
+fit or current acquisition evidence. Exp8367 retains its qualified local-cost
+and native-parity gates. All fourteen IDs, prompts, gates and deliverables stay
+as proposed. The full task contract below includes the added lineage.
+
 ## What v720 proved
 
 Completion is a scheduling state, not a positive research finding. V720 has
@@ -324,7 +332,7 @@ The full-task digest includes every prompt, gate, model and failure entry.
 | 13 | `exp8372-gatemate-missing-evidence` | Carry exact missing GateMate source bytes and the physical reopening obligation | 4 | `results/experiment_8372_v721_gatemate_missing_evidence.json` |
 | 14 | `exp8373-capstone` | Reconcile fourteen outcomes and decide utility and deployment continuation | 4 | `results/experiment_8373_v721_capstone.json` |
 
-Canonical full-task SHA-256: `6615caf906448096e4afbdfb4a4490e7940c42cac4323b62776a4fc3d4b221f4`
+Canonical full-task SHA-256: `1aad6d956e5239e2466fb4f3eac2f0231dcf53cd02c592a633d5068dd5bd9ec0`
 
 <!-- V721_TASK_CONTRACT_START -->
 ```json
@@ -560,6 +568,62 @@ Canonical full-task SHA-256: `6615caf906448096e4afbdfb4a4490e7940c42cac4323b6277
           "artifact_field": "native_parity_ready_score",
           "op": "==",
           "value": 1
+        }
+      ],
+      "prior_failures": [
+        {
+          "experiment_id": "exp7711-whole-service-cost",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "Exp7710.native_record_ready_score was 0. Replace that blocked record-contract chain with the new guarded spline extension; execute only after Exp8365.local_cost_ready_score=1 and Exp8366.native_parity_ready_score=1, including actual PyO3 import and complete durable requests.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp7724-complete-service-cost",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "Exp7723.native_service_ready_score was 0. The new Exp8366 must qualify actual Rust/PyO3 spline parity before this comparison; Exp8365 must separately qualify the shared Python transaction harness. No failed native-service readiness is reused.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp7737-set-service-cost",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "Exp7730.set_heads_ready_score was 0. Reuse the completed Exp8334 sentence heads through Exp8360 custody and the new atomic table service, replacing the blocked evidence-set fit. Keep explicit Exp8365 cost and Exp8366 parity gates.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp7765-v675-service-cost",
+          "verdict": "complete_blocked_missing_qualified_fit",
+          "addressed_by": "Exp7757 supplied a pre-gate receipt instead of qualified fitted heads. Use the completed Exp8334 heads and Exp8348 delayed trajectory through current custody; qualify guarded local transactions in Exp8365 and native parity in Exp8366. Historical hardware-reference drift supplies no current readiness.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp7900-service-cost",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "Exp7894.energy_fit_ready_score was 0. The current spline deployment reuses qualified Exp8334 heads instead of the failed fit chain, and requires current Exp8365 local-cost and Exp8366 native-parity readiness before measuring complete requests.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp7937-service-cost",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "Exp7930.energy_fit_ready_score was 0. Replace the unqualified energy-fit dependency with completed Exp8334 sentence heads, atomic guarded updates and actual PyO3 parity; both current Exp8365 and Exp8366 readiness gates must pass.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp7950-service-cost",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "Exp7943.energy_fit_ready_score was 0. Use completed Exp8334 heads and qualified current table-service operands; require Exp8365.local_cost_ready_score=1 and Exp8366.native_parity_ready_score=1. Measure binding, fallback, refresh and fsync in matched requests.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp8106-v701-radial-service-cost",
+          "verdict": "complete_blocked_changed_content_current_capture",
+          "addressed_by": "Changed-content acquisition lacked qualified matching Exp8099 receipts and had a stale primary hash. This task measures a new guarded spline local-selector transaction only; LLM acquisition remains explicitly unmeasured. Require current Exp8365 cost and Exp8366 parity; do not reopen the failed acquisition claim.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp8201-observed-service-cost",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "Exp8200.request_trace_ready_score was 0. Replace that blocked census with the frozen Exp8365 local request grid and authenticated Exp8364 continuous-table trace. Require Exp8365 cost and Exp8366 parity; if the natural trace is absent, leave its NFR-01 claim unmeasured.",
+          "retire_if_same_verdict": true
         }
       ],
       "prompt": "CONTEXT:\nWork in {project_root} on {date}. V720 completed thirteen producer tasks and one pre-gated canary. Exp8347 qualified local arithmetic and recovery; Exp8348 sealed a real delayed-learning trajectory. Exp8350/8351 each missed one replay rejection statement and remain disqualified; descriptive H1 gain is -0.00390625 and H2 gain is zero. Exp8352 qualified tables but its selected 65-int16-linear candidate flips three boundary actions. Exp8356 qualifies CPU arithmetic only. Runtime readers, GateMate history and final replay still fail. Preserve all original outcomes and V717 protocol bytes. Cached observations are exposed development, not current LLM inference.\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; openspec/change-proposals/research-roadmap-v720-preserved-20261009.md; openspec/change-proposals/v717-local-learning-protocol.json; crates/carnot-python/src/lib.rs; crates/carnot-core/src/record_decision.rs; results/experiment_8356_v720_kv260_workload_cost.json; python/carnot/reporting/current_work_receipt.py\nTASK:\nCompare Python and Rust local transactions including bindings and persistence. Deliver results/experiment_8367_v721_native_service_cost.json. Create thin runner scripts/experiments/experiment_8367_v721_native_service_cost.py; keep primitive evidence in results/raw/experiment_8367_v721_native_service_cost/. Future task outputs are dependencies, not pre-existing files.\nCONCRETE STEPS:\n1. PRECONDITIONS: Emit a flushed start line. Authenticate authority, input hashes and terminal sidecars. Check private scratch, required tools and bounded resources. Record missing external inputs in gate_check_summary. Never replace natural evidence with fixtures.\n2. Emit a flushed progress line at every phase boundary and before and after each model load, generation, benchmark and subprocess. Emit completed/pending counts inside long loops; poll owned children at least every 60 seconds. Keep every silence gap below 600 seconds. Use unbuffered output and per-child deadlines inside a 4800-second task cap. Write any file over about 200 lines in several tool calls of at most about 150 lines, with a progress message between calls. Do not make one huge tool call or pad elapsed time.\n3. Spec first: add relevant REQ-* and SCENARIO-* before implementation. Write focused failing tests first. Preserve existing assertions, guard thresholds and historical artifacts. Use small adapters to existing modules. Keep throwaway probes in /tmp and experiment runners in scripts/experiments/. Do not modify research-roadmap.yaml. Freeze the validation command manifest before measurement.\n4. Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts for readers, or verifier_ensemble_against_cached_candidates for numeric cached-head work. Small numeric training is not an LLM load. Bind imported model provenance separately.\n5. Reuse the exact Exp8365 harness and configuration grid; substitute only the qualified Exp8366 extension. Keep the common transaction coordinator, file system, snapshot format, natural/constructed cohorts and all response work identical. Measure Python direct, Python guarded sparse and Rust guarded sparse; report Rust direct when implemented as the guard fallback. Revalidate parity before every timed repeat.\n6. Use the frozen one-warmup/five-paired-repeat schedule. Include bindings, array conversion/copies, validation, direct fallback, update, bound refresh and durable commit. Record cold extension import and initial table build separately and amortize only with an explicit measured request count. Never compare a batched native kernel with unbatched Python and call it language speedup.\n7. Report every paired configuration and process repeat, throughput, p50/p95 request latency, fallback counts and total bytes. Test stale extension hash, duplicate repeat and dropped fallback-time controls in private copies. Replay costs from raw clocks; benchmark noise and small repeat count limit precision.\n8. Evaluate NFR-01 on the declared local-selector scope: require>=10x complete paired throughput gain in every five-repeat pair of the predeclared batch1/eight-predictions-per-update natural condition, with unchanged decisions. If the natural condition is unavailable, report unmeasured rather than borrowing constructed timings. Other configurations remain descriptive; do not choose a winning condition after measurement.\n9. Report the Tier1<1 microsecond and100x hardware targets as measured met, unmet or unmeasured with scope. A native kernel result cannot establish full LLM service or FPGA performance. Run private E2E-003/004/018/020 and write docs/research-notes/v721-native-service-cost.md.\n10. Run relevant unit and consumer tests, scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>. Require 100 percent newly owned statements including CLI, real children and failure branches. Use pytest -n 0 -o addopts= with private disk-backed scratch. Record argv, exits, timings and log hashes. Run the applicable private E2E checks named above; do not run the full repository suite inside this experiment.\n11. Cold-replay primitive evidence in a fresh process. Run valid, negative and self-consistently rehashed tamper controls. Use unchanged primary_publication checks, scripts/adversarial_verify.py --json <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>. Keep every finding. Only the existing typed finding consumer may resolve independently recomputed informational findings with deliberate-error controls; unknown, warning and critical findings block readiness. Do not edit validators or exemptions. Publish a terminal primary atomically after checks. Owned failures are disqualified; unchanged external blocks are blocked, never partial. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. No generator weight updates or external publication.\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date: principle: Bind this invocation to exact task authority.\nhonest_verdict, verdict_class: principle: Use a complete_ terminal prefix. Class is positive | circular_positive | null | blocked | disqualified | partial. Partial means unfinished retryable owned work only.\ngate_check_summary: principle: Every block names upstream, path/hash, field, operator, expected and observed values; missing differs from zero, including every blocked_* verdict.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, historical_model_provenance: principle: Distinguish current model calls from imported observations.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, sample_size_budget: principle: Keep metrics for every intended unit and arm. Repeated timing rows are not independent examples.\nverifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score: principle: Reference-oracle positives use circular_positive. Both generalization scores stay zero on exposed or constructed data.\nrequired_checks_passed, flagged_adversarial, acceptance_gates, validation_receipts, terminal_validation_sidecar_path, adversarial_findings: principle: Qualification and scientific benefit are separate.\npreconditions_checked, duration_s, phase_spans, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes: principle: Bind every claim to replayable measured evidence.\ncited_upstream_artifacts, field_principles: principle: Identify imported fields and hashes; explain each added artifact field.\nnative_cost_ready_score, timing_rows, per_configuration_results, binding_cost_ns, durable_cost_ns, local_service_speedup: principle: Whole local requests include the language boundary and persistence.\nnfr01_local_scope_met, nfr01_status, tier1_latency_status, tier1_100x_status, acquisition_cost_measured: principle: Scope-specific targets never imply a full LLM-service or hardware result.\nRun command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8367_v721_native_service_cost.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py."
