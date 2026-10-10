@@ -22016,3 +22016,4 @@ Recorded 8 completed experiments in 51.2 minutes (0.9 hours), including 1 comput
 - 2026-10-10: Collect fresh adapter-withheld ARC supervisor observations on the live wrapper (⚠️ Blocked) — honest_verdict=complete_blocked_fresh_public_supervisor_panel; results/experiment_8384_v722_arc_supervisor_live_panel.json
 - 2026-10-10: Map measured direct transactions to KV260 and preserve PolarFire scope (⚠️ Blocked) — honest_verdict=complete_blocked_board_operation_evidence; results/experiment_8385_v722_board_operation_evidence.json
 - 2026-10-10: Retain GateMate source and physical reopening conditions through a bounded delta (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_obligation_delta; results/experiment_8386_v722_gatemate_obligation_delta.json
+- 2026-10-10: Reconcile fourteen outcomes and decide each independent research continuation (⚠️ Research Finding) — honest_verdict=complete_disqualified_v722_capstone; results/experiment_8387_v722_capstone.json
