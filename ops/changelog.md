@@ -22024,3 +22024,4 @@ Recorded 8 completed experiments in 51.2 minutes (0.9 hours), including 1 comput
 - 2026-10-10: Map measured direct transactions to KV260 and preserve PolarFire scope (⚠️ Blocked) — honest_verdict=complete_blocked_board_operation_evidence; results/experiment_8385_v722_board_operation_evidence.json
 - 2026-10-10: Retain GateMate source and physical reopening conditions through a bounded delta (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_obligation_delta; results/experiment_8386_v722_gatemate_obligation_delta.json
 - 2026-10-10: Reconcile fourteen outcomes and decide each independent research continuation (⚠️ Research Finding) — honest_verdict=complete_disqualified_v722_capstone; results/experiment_8387_v722_capstone.json
+- 2026-10-10: Bind complete task authority and isolate historical replay failures (⚠️ Blocked) — honest_verdict=complete_blocked_v723_contract_methods; results/experiment_8388_v723_contract_methods.json
