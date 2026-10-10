@@ -2,6 +2,42 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8386: Retain GateMate obligations through a bounded evidence delta
+
+Exp8386 SHALL authenticate its exact active task and sealed Exp8372 primary,
+terminal custody and original Exp6559 transcript. Preserve V717/V721 protocol
+bytes, both exact missing historical source hashes and original 0xffffffff
+observations. Read only explicitly supplied receipts received after Exp8372's
+terminal-check cutoff; finish this delta inspection within 300 seconds.
+Current source bytes cannot substitute for historical bytes. Future producers
+are dependencies. No source reconstruction, JTAG detection or board flash runs.
+Keep dated cable/port/power change, GM1Ax IDCODE 0x20000001, authenticated n16
+flash and device sample/hash smoke as four separately testable future conditions.
+Physical evidence and historical source custody cannot repair each other.
+Declare no_model_load, empty MODEL_SPECS, zero current LLM/device calls and zero
+generalization scores. No supplied change emits one complete_blocked terminal
+receipt. Owned validation failure emits complete_disqualified. The conductor
+owns ops/status/changelog/BMAD reconciliation after this task exits.
+
+### SCENARIO-REPORT-8386-DELTA
+
+No supplied receipt records null observed evidence for both historical hashes
+and all four physical obligations. Fresh authenticated physical receipts queue
+only their named future condition; stale, absent or corrupt receipts remain
+visible and cannot qualify history or hardware execution.
+
+### SCENARIO-REPORT-8386-CUSTODY
+
+Historical hashes and sealed verdicts remain unchanged. Missing or substituted
+Exp8372 inputs block authentication without inventing source or device evidence.
+
+Implementation 2026-10-10: `gatemate_obligation_delta_8386.py` seals the original
+blocked primary, terminal receipts and protocol operands. It reuses the Exp8372
+receipt reader and reduces seven separately visible continuity units. The thin
+CLI keeps device and current model calls at zero. Seven new tests and 36 private
+consumer/E2E-018 tests pass. Ops and BMAD reconciliation remain conductor-owned.
+
+
 ## REQ-REPORT-8381: Publish a separately versioned action certificate
 
 Bind this invocation, full active task hash, qualified historical inputs, code,

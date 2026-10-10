@@ -2,6 +2,30 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8386: Qualify the GateMate delta without repeating physical failure
+
+Freeze validation commands before measurement; check tools, disk-backed private
+scratch, memory and the 4800-second cap. Use real children with <=60-second
+heartbeats, deadlines and flushed phase counts. Require 100 percent newly owned
+statement coverage, unit/consumer tests, scoped Ruff/format, strict mypy, spec
+tracing and private E2E-018. Run global Python health once as a separate receipt.
+Cold replay recomputes rows from sealed inputs in a fresh process. Unchanged
+primary publication, adversarial and strict-row validators gate atomic bytes.
+Preserve every finding; only the existing typed consumer may resolve proven
+informational findings. Unknown, warning and critical findings block readiness.
+
+### SCENARIO-VERIFY-8386-CLI
+
+Real CLI controls exercise valid, missing-input, deliberate child failure and
+self-consistently rehashed tampering. Private controls stay outside the checkout.
+Owned failures disqualify; unchanged external absence remains blocked.
+
+Verification 2026-10-10: all 286 newly owned statements have measured coverage,
+including real CLI children, missing operands, deliberate child failures and
+rehashed claims. Seven unit tests, 36 private consumer/E2E-018 tests, scoped Ruff
+check/format, strict mypy and explicit spec coverage pass before natural publication.
+
+
 ## REQ-VERIFY-8381: Certify the isolated dyadic logit action contract
 
 The default-off dyadic_logit_v1 prototype SHALL compare exact rational spline
