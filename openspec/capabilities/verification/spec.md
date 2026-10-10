@@ -52880,4 +52880,36 @@ Missing evidence differs from an observed zero. Real CLI failure paths are teste
 
 Status: specified before tests; conductor owns ops and traceability reconciliation.
 
+## REQ-VERIFY-8376: Recover one complete direct decision state
+
+The direct service SHALL publish coefficients, immutable issued predictions,
+pending IDs, release cursor and applied feedback results in one hashed version.
+Readers SHALL pin one immutable version. A writer SHALL serialize commits,
+fsync the state file and directory, and atomically replace the durable pointer.
+Retry of committed feedback SHALL return its original result without another update.
+The qualified direct evaluator and frozen small-head optimizer SHALL be reused.
+Approximate tables and bound certificates SHALL be excluded from this state.
+Malformed, duplicate-conflicting, stale, drifted and missing state SHALL fail closed.
+State size and writer memory SHALL have explicit bounds. Cleanup SHALL preserve
+the pinned immutable versions, including after an interrupted cleanup.
+
+### SCENARIO-VERIFY-8376-CRASH
+
+Freeze constructed traces for seeds11/22/33 before execution. Compare uninterrupted,
+restart and concurrent two-reader arms at temporary-write, file-fsync,
+pointer-replace and acknowledgment barriers using genuine process kills.
+Keep every pre/post state, actual child exit and latency. Require exact final
+recovery, zero mixed reads, duplicate updates and issued-decision mutations.
+This establishes process recovery only; it does not certify power-loss recovery.
+
+### SCENARIO-VERIFY-8376-CONTROLS
+
+Exercise malformed inputs, duplicate and stale feedback, checksum drift, missing
+durable state and interrupted cleanup. New statements, real CLI and child failure
+paths SHALL reach100 percent statement coverage. Run private E2E-018/020 and
+unchanged publication, adversarial and strict row checks. Fresh replay SHALL reject
+missing inputs, deliberate errors and self-consistently rehashed semantic tampering.
+
+Status: specified before tests; conductor owns ops and traceability reconciliation.
+
 Implementation: the external manifest adapter and thin CLI retain checked terminal bytes.

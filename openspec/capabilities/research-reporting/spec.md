@@ -97773,8 +97773,39 @@ A32-per-lane feasibility sample cannot establish detector quality.
 
 Status: specified before tests; conductor owns ops and traceability reconciliation.
 
+Implementation for REQ-REPORT-8376: the thin experiment CLI uses a direct-only
+state store and bounded measurement runner. Sealed delayed event traces support
+actual kill, two-reader, restart and fresh replay controls. Issued records and
+feedback acknowledgments share immutable versions. Results retain construction
+scope, original protocol custody and the external independent-design absence.
+
 Implementation: `python/carnot/reporting/external_evidence_8375.py` provides
 the read-only manifest adapter and byte-bound reduction. The bounded runner,
 thin CLI and `tests/python/test_external_evidence_8375.py` exercise private
 authority, parser controls, real child failures and rehashed primitive tampering.
 The pinned release inventory keeps absent operands and independent truth separate.
+
+## REQ-REPORT-8376: Publish measured direct state recovery
+
+Exp8376 SHALL bind this invocation, active task and every imported input hash.
+Freeze validation commands and deterministic traces before measurement. Keep
+primitive crash evidence beneath results/raw/experiment_8376_v722_direct_atomic_state/.
+Use private disk-backed scratch, bounded children and flushed progress within a
+4800-second cap. Current model loads and LLM calls SHALL be zero; MODEL_SPECS=[].
+Readiness SHALL require all owned validation and exact recovery gates. Owned
+failures disqualify; unchanged external absence blocks. Preserve every intended
+seed/barrier/arm, actual exit, mismatch count, state hash and latency. Unknown,
+warning and critical findings SHALL block readiness. Global health stays separate.
+Frozen H1/H2 and V717/V721 protocol bytes SHALL remain unchanged. Table readiness
+stays zero. Both generalization scores SHALL be zero. No external publication.
+
+### SCENARIO-REPORT-8376-TERMINAL
+
+Cold replay recomputes all state transitions from sealed trace operands and
+rejects aggregate tampering even after hashes are repaired. Valid, missing,
+deliberate-error and rehashed-tamper CLI controls retain command receipts.
+Publish only terminal bytes checked by unchanged primary_publication validators.
+External authority absence is named with upstream, path/hash, field, operator,
+expected and observed values. Future producer paths are dependencies only.
+
+Status: specified before tests; conductor owns ops and traceability reconciliation.
