@@ -52861,3 +52861,23 @@ may resolve an independently recomputed informational finding.
 
 Run the real private CLI, invalid dates, blocked external inputs and a real failed child.
 Publish checked terminal bytes atomically. Verify100 percent newly owned statements.
+
+## REQ-VERIFY-8375: Byte-bound external manifest replay
+
+Exp8375 SHALL freeze validation commands before measurement. Private disk
+scratch, bounded children, and flushed progress SHALL support a4800-second cap.
+New module and CLI statements SHALL reach100 percent coverage. Private E2E-018
+SHALL test task authority. Fresh-process replay SHALL recompute primitive rows.
+Valid, missing-input, deliberate-error, and rehashed-tamper controls SHALL run.
+Unchanged publication, adversarial, and strict row validators SHALL check terminal
+bytes. Findings SHALL remain visible. Owned failure disqualifies; external
+absence blocks. Terminal publication SHALL use checked bytes atomically.
+
+### SCENARIO-VERIFY-8375-REPLAY
+
+A self-consistently rehashed fabricated reduction fails against release operands.
+Missing evidence differs from an observed zero. Real CLI failure paths are tested.
+
+Status: specified before tests; conductor owns ops and traceability reconciliation.
+
+Implementation: the external manifest adapter and thin CLI retain checked terminal bytes.

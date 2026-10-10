@@ -97744,3 +97744,37 @@ the qualified child/publication modules. The thin Exp8374 CLI and
 cold tamper controls, real children and exact protocol operands.
 The live truncated design is an external authority block. The methods protocol
 and original direct inputs can qualify independently. Historical utility stays closed.
+
+# REQ-REPORT-8375: Released external evidence feasibility
+
+Exp8375 SHALL inspect pinned author releases for OpenHalDet and Verification
+Without Sufficiency. Retrieval SHALL stay below 200 MiB and fifteen minutes.
+Metadata SHALL precede example reads. Exactly three lanes SHALL be inventoried:
+grounded QA, multi-hop QA, and executable code. At most32 released examples per
+lane SHALL follow a metadata-only hash order. Unavailable slots SHALL remain.
+Field presence SHALL describe structure only. Model judges SHALL remain weak
+labels. Gold decomposition SHALL remain oracle-only. Source licenses, overlap,
+model access, independent target authority, and acquisition stages SHALL differ.
+Readiness SHALL require80 disjoint independently labeled source clusters and
+eight per class. Unknown overlap, permissions, labels, or missing releases block.
+Both generalization scores and current model calls SHALL stay zero. Future
+producer paths SHALL remain dependencies. No other V722 task depends on this result.
+
+### SCENARIO-REPORT-8375-STRUCTURE
+
+Private positive, missing-field, contaminated-source, and wrong-authority
+controls exercise the read-only manifest adapter without importing their truth.
+Single and complete evidence availability compare only paired released fields.
+
+### SCENARIO-REPORT-8375-SUPPORT
+
+Metadata establishes the support floor without opening evaluation targets.
+A32-per-lane feasibility sample cannot establish detector quality.
+
+Status: specified before tests; conductor owns ops and traceability reconciliation.
+
+Implementation: `python/carnot/reporting/external_evidence_8375.py` provides
+the read-only manifest adapter and byte-bound reduction. The bounded runner,
+thin CLI and `tests/python/test_external_evidence_8375.py` exercise private
+authority, parser controls, real child failures and rehashed primitive tampering.
+The pinned release inventory keeps absent operands and independent truth separate.
