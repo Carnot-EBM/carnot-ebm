@@ -10023,11 +10023,23 @@ Given a sibling base younger than the pruning age threshold, cleanup SHALL NOT r
 whatever else it removes — a young base may belong to a live run, and collecting it is the
 exact incident this requirement exists to prevent.
 
+#### SCENARIO-HARNESS-5930-DISK-SCRATCH
+
+Given no explicit `--basetemp` or nonempty `TMPDIR`, `TEMP`, or `TMP`, the
+per-user isolated parent SHALL prefer writable `/var/tmp` when available.
+Quota-limited `/tmp` can reject fixture writes even while reporting free space;
+disk-backed fixture storage SHALL allow the original V721 failed-child CLI
+regression to execute its assertions. Explicit temp-directory settings SHALL
+retain tempfile's selection rules. If `/var/tmp` is absent or inaccessible,
+selection SHALL fall back to tempfile's platform default. User identity fallback,
+unique invocation paths, explicit basetemp respect and stale-only pruning remain
+unchanged. No failed test, owned failure receipt or coverage requirement is removed.
+
 ## Implementation Status (REQ-HARNESS-5930)
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-HARNESS-5930 and SCENARIO-HARNESS-5930-* | Implemented (`python/carnot/testing/pytest_basetemp_isolation.py`, wired in `tests/python/conftest.py:pytest_configure`) | Implemented (`tests/python/test_pytest_basetemp_isolation.py`, incl. an in-session worker-proof wiring assertion) |
+| REQ-HARNESS-5930 and SCENARIO-HARNESS-5930-* | Implemented (`python/carnot/testing/pytest_basetemp_isolation.py`, wired in `tests/python/conftest.py:pytest_configure`; default disk-backed scratch added 2026-10-10) | Implemented (`tests/python/test_pytest_basetemp_isolation.py`, incl. an in-session worker-proof wiring assertion; `tests/python/test_pytest_disk_scratch_5930.py` covers quota pressure, overrides, portable fallback, identity fallback and janitor errors; 18 tests and 52/52 statements) |
 
 ## REQ-HARNESS-5935: A Result Artifact Committed After The Debt Baseline SHALL Pass Its Own Lint
 

@@ -1,0 +1,156 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8371-private/invocation-of1jb2ts/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_hardware_operation_boundary_8371.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8371-private/invocation-of1jb2ts/owned-tests"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_hard_exit_learning_qualification_8206.py",
+        "tests/python/test_v721_contract_methods_8360.py::test_private_e2e018",
+        "tests/python/test_kv260_workload_cost_8356.py::test_table_operation_semantics",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8371-private/invocation-of1jb2ts/consumers"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "private_E2E018_E2E020_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8371-private/invocation-of1jb2ts/coverage.ini"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8371-private/invocation-of1jb2ts/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8371-private/invocation-of1jb2ts/coverage.ini",
+        "-o",
+        "/home/ianblenke/.cache/carnot-exp8371-private/invocation-of1jb2ts/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/hardware_operation_boundary_8371.py",
+        "python/carnot/reporting/hardware_operation_runner_8371.py",
+        "scripts/experiments/experiment_8371_v721_hardware_operation_boundary.py",
+        "tests/python/test_hardware_operation_boundary_8371.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/hardware_operation_boundary_8371.py",
+        "python/carnot/reporting/hardware_operation_runner_8371.py",
+        "scripts/experiments/experiment_8371_v721_hardware_operation_boundary.py",
+        "tests/python/test_hardware_operation_boundary_8371.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/reporting/hardware_operation_boundary_8371.py",
+        "python/carnot/reporting/hardware_operation_runner_8371.py",
+        "scripts/experiments/experiment_8371_v721_hardware_operation_boundary.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_hardware_operation_boundary_8371.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/usr/bin/df",
+        "-T",
+        "/home/ianblenke/.cache/carnot-exp8371-private/invocation-of1jb2ts"
+      ],
+      "deadline": 10,
+      "expected": 0,
+      "name": "private_disk_scratch",
+      "scope": "owned"
+    }
+  ],
+  "heartbeat_s": 30,
+  "no_model_load": true,
+  "private_scratch": "/home/ianblenke/.cache/carnot-exp8371-private/invocation-of1jb2ts",
+  "task_cap_s": 4800
+}

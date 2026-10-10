@@ -1,0 +1,169 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8362-private/exp8352-owned-dldx2fyj/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_threshold_guard_8362.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8362-private/exp8352-owned-dldx2fyj/owned-tests"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8362-private/exp8352-owned-dldx2fyj/consumers",
+        "tests/python/test_local_update_isolation_8306.py"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E018_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8362-private/exp8352-owned-dldx2fyj/coverage.ini"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8362-private/exp8352-owned-dldx2fyj/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8362-private/exp8352-owned-dldx2fyj/coverage.ini",
+        "-o",
+        "/home/ianblenke/.cache/carnot-exp8362-private/exp8352-owned-dldx2fyj/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/threshold_guard_8362.py",
+        "python/carnot/reporting/threshold_guard_8362.py",
+        "python/carnot/reporting/threshold_guard_execution_8362.py",
+        "scripts/experiments/experiment_8362_v721_threshold_guard.py",
+        "tests/python/test_threshold_guard_8362.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/threshold_guard_8362.py",
+        "python/carnot/reporting/threshold_guard_8362.py",
+        "python/carnot/reporting/threshold_guard_execution_8362.py",
+        "scripts/experiments/experiment_8362_v721_threshold_guard.py",
+        "tests/python/test_threshold_guard_8362.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/verify/threshold_guard_8362.py",
+        "python/carnot/reporting/threshold_guard_8362.py",
+        "python/carnot/reporting/threshold_guard_execution_8362.py",
+        "scripts/experiments/experiment_8362_v721_threshold_guard.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_threshold_guard_8362.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_threshold_guard_8362.py::test_private_e2e018",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8362-private/exp8352-owned-dldx2fyj/e2e018"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "name": "private_E2E018_guard",
+      "scope": "owned"
+    }
+  ],
+  "heartbeat_s": 20,
+  "no_full_repository_suite": true,
+  "owned": [
+    "python/carnot/verify/threshold_guard_8362.py",
+    "python/carnot/reporting/threshold_guard_8362.py",
+    "python/carnot/reporting/threshold_guard_execution_8362.py",
+    "scripts/experiments/experiment_8362_v721_threshold_guard.py"
+  ],
+  "private_scratch": "/home/ianblenke/.cache/carnot-exp8362-private/exp8352-owned-dldx2fyj",
+  "scientific_protocol_sha256": "sha256:853709123024de763e96dd688e819f0430205ae6d97d6561a2b95cca23b81c6f"
+}

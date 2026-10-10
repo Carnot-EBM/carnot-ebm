@@ -97599,3 +97599,83 @@ V721 task authority, V717 bytes and historical KV260/PolarFire terminals. Its
 operation map retains absent producer references and costs. The research note
 lists exact kernel and transport prerequisites. Original V720 outcomes remain
 unchanged. The conductor owns ops and BMAD reconciliation.
+
+## REQ-REPORT-8373: Reconcile fourteen V721 terminal slots without rewriting history
+
+The read-only capstone SHALL authenticate activated complete-task authority, unchanged
+V717 protocol bytes, actual primaries and conductor receipts. It SHALL preserve all
+fourteen ordered slots, distinguish execution, pre-gate and absence, and never retry
+terminal blocked branches. Only qualified Exp8361 supplies H1/H2; independent source
+reductions preserve exposed-development nulls and original Exp8350/8351 failures.
+Guard, recovery, actual training, native parity and full local service costs SHALL
+remain separate from semantic benefit and three open PRD gaps. Both generalization
+scores remain zero. ARC and all three board obligations remain explicit. Missing
+external core inputs imply blocked; owned validation failures imply disqualified.
+Retirement requires authenticated predecessor/current exact verdict equality and
+an explicit narrow reopening condition. Existing exclusion records stay intact.
+
+### SCENARIO-REPORT-8373-ACCOUNTING
+
+Real current evidence and a private absent-input root retain fourteen slots and
+precise operand gates. Absent deployment producers never become measured nulls.
+Qualified utility reductions preserve 128/97 H1, 88/67 H2 and all four retention windows.
+
+## REQ-VERIFY-8373: Freeze bounded capstone custody and terminal validation
+
+Freeze validation argv before measurement, use disk-backed private scratch, flushed
+phase boundaries, sixty-second child polling and a 4800-second cap. Cold-replay
+eligible producers against sealed authority/input roots with bounded streamed custody.
+Record parent and child peak RSS bounds and every blocked replay receipt. Preserve
+historical replay drift/source absence rather than executing patched history.
+Require all newly owned statements, real CLI and failed-child paths covered, scoped
+unit/consumer/private E2E-018/021, Ruff, strict mypy and spec tracing. Keep unchanged
+publication G1-G4 and validators, all findings and atomic terminal publication.
+The conductor owns ops/status/changelog and traceability reconciliation.
+
+### SCENARIO-VERIFY-8373-REPLAY
+
+Valid cold replay passes. Actual failed child, absent input, changed source, wrong
+authority, negative claims and self-consistently rehashed tampering remain rejected.
+No current model loads, generator updates or external publication occur.
+
+Declared custody references with `source_path` SHALL retain that alias when
+captured. Reconstructed input reads and writes SHALL use frozen bytes and private
+scratch for both source aliases and authority aliases. An append to the live
+exclusion manifest after an upstream publication SHALL not replace its sealed
+operand during historical utility replay or change the original verdict.
+Authenticated natural replay and repaired-hash rejection remain required.
+
+Embedded worker calls SHALL execute authentication in a fresh bounded child,
+so unrelated host-process lifetime memory peaks cannot disqualify valid inputs.
+The child SHALL still enforce the 1500 MiB absolute peak and 500 MiB growth
+limits, preserve its measured memory receipt, and return failure for rejected
+authentication or exceeded limits. CLI worker dispatch SHALL execute that
+child entry directly without recursively spawning workers.
+
+Worker repair implementation 2026-10-10: `worker` launches a bounded real CLI
+child; `worker_process` records and enforces the unchanged memory limits.
+`test_v721_capstone_worker_memory_8373.py` covers the observed unrelated host
+watermark, exact limits and independent excess peak/growth rejection. The
+host-watermark regression was red before implementation. All 175 relevant
+tests pass, including the unchanged original 107-test subset and private
+E2E-018/E2E-021/fix-erasure controls; unit and real CLI coverage is 521/521
+statements. Scoped Ruff, format, strict types and spec tracing pass. Original
+tests, previous fixes and conductor source are preserved. Reports live in
+`/var/tmp/carnot-8373-worker-fix/`.
+
+Repair implementation 2026-10-10: `v721_capstone_evidence.outcome` retains
+declared source aliases, and `frozen_inputs` redirects both source and authority
+aliases. `tests/python/test_v721_capstone_frozen_aliases_8373.py` verifies sealed
+manifest reads, private writes and authentic utility capture. All twelve original
+capstone tests remain byte-identical and pass. Together with scratch isolation,
+32 owned tests cover 517/517 statements including real CLI processes; 58 unchanged
+consumer, private E2E-018/E2E-021 and fix-erasure checks pass. Scoped Ruff, format,
+types and spec tracing pass. Published evidence and conductor source are unchanged.
+
+Implementation: `python/carnot/reporting/v721_capstone_evidence.py` and
+`python/carnot/reporting/v721_capstone.py` implement frozen branch custody and
+terminal reduction. The thin Exp8373 runner and requirement-linked
+`tests/python/test_v721_capstone_8373.py` exercise natural/private replay,
+real child failures, repaired hashes, exact retirement and terminal publication.
+The primary and bound sidecar retain qualification receipts; the conductor
+owns ops and BMAD reconciliation after this invocation.

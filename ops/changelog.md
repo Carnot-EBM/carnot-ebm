@@ -1,5 +1,44 @@
 # Carnot — Changelog
 
+## 2026-10-10 — Isolate capstone worker memory measurements
+
+- Embedded worker authentication runs in a fresh child, preventing unrelated
+  earlier pytest memory peaks from rejecting valid evidence. CLI worker
+  dispatch enters the measured child directly without recursive spawning.
+- Preserved the 1,500 MiB absolute peak and 500 MiB growth limits, authentication
+  failures, memory receipts and all original tampering assertions.
+- Added a regression for the observed 2,139 MiB host watermark, plus exact-limit,
+  excess-peak and excess-growth controls. The regression was red before the fix.
+
+Validation: 175 relevant tests pass, including the original 107-test subset
+and private E2E-018/E2E-021/fix-erasure controls. Unit and real CLI coverage
+is 521/521 statements (100 percent) in both capstone modules, direct CLI and
+scratch isolation. Scoped Ruff, format, strict types and spec tracing pass.
+Original tests, earlier fixes and conductor source remain intact. Reports are
+in `/var/tmp/carnot-8373-worker-fix/`; global spec tracing retains 1,142 existing gaps.
+
+## 2026-10-10 — Fix V721 fixture quota and frozen-source replay failures
+
+- Default pytest isolation prefers writable `/var/tmp`, preserving explicit
+  basetemp and tempfile environment overrides and portable fallback. This fixes
+  the real EDQUOT fixture failure before `test_actual_failed_child_and_cli_guards`.
+- Capstone custody retains `source_path` and redirects its reads and writes
+  alongside authority aliases. Later exclusion-manifest appends cannot replace
+  the original sealed operand during historical utility cold replay.
+- Added quota, override/fallback, identity, pruning and source-custody regressions.
+  Both new defect regressions were red before implementation. Original tests,
+  conductor source, published evidence, roadmaps and exclusion history remain intact.
+
+Validation: 90 affected tests pass; combined unit/CLI coverage is 517/517
+statements, including both capstone modules, direct CLI and scratch isolation.
+Private E2E-018/E2E-021 and fix-erasure controls pass, as do scoped Ruff,
+formatting, types and spec references. Reports are in
+`/var/tmp/carnot-8373-validation/`. Global spec tracing retains 1,142 existing gaps.
+The initial diagnostic's unattributed marker for the two intentional harness/spec
+edits was reviewed and retired without reverting code.
+Final reconciliation confirms documentation freshness and exits one solely for
+the existing global spec-reference gaps; the mutation gate passes.
+
 ## 2026-10-09 — Correct V721 refused activation metadata
 
 - Restored the quarantined fourteen-task plan with nine complete `prior_failures`

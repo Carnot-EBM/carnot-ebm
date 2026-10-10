@@ -1,6 +1,36 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-10-09
+**Last Updated:** 2026-10-10
+
+## V721 worker memory isolation repair — 2026-10-10
+
+| Requirement / Scenario | Implementation | Regression evidence |
+|---|---|---|
+| REQ-VERIFY-8373 / SCENARIO-VERIFY-8373-REPLAY | `v721_capstone_evidence.worker` launches a bounded fresh child; CLI dispatch calls `worker_process` directly; existing peak/growth gates remain unchanged | `test_v721_capstone_worker_memory_8373.py`: unrelated host watermark rejected before the fix and accepted afterward; exact limits pass, independent excess peak/growth controls fail |
+
+All 175 relevant tests pass, including the reported 107-test subset, four new
+worker controls, six original scratch-isolation tests and 58 unchanged consumer,
+private E2E-018/E2E-021 and fix-erasure checks. Combined unit and real CLI
+coverage is 521/521 statements with no excluded lines in the four affected
+modules/CLI. Scoped lint, formatting, strict types and spec references pass.
+Original tests, previous fixes and conductor source match task-start bytes.
+Reports: `/var/tmp/carnot-8373-worker-fix/`. Global spec tracing retains
+1,142 pre-existing gaps; no full-repository health claim is made.
+
+## V721 capstone scratch and frozen-source repair — 2026-10-10
+
+| Requirement / Scenario | Implementation | Regression evidence |
+|---|---|---|
+| REQ-HARNESS-5930 / SCENARIO-HARNESS-5930-DISK-SCRATCH | Default pytest bases prefer writable `/var/tmp`; explicit basetemp and tempfile environment choices retain precedence and portable fallback | Original isolation tests plus `test_pytest_disk_scratch_5930.py`: 18 pass, 52/52 statements; quota regression was red before implementation |
+| REQ-REPORT-8373 / REQ-VERIFY-8373 / SCENARIO-VERIFY-8373-REPLAY | Capture retains `source_path`; frozen reads and private writes preserve declared source and authority aliases | All 12 original capstone tests and two new alias controls pass; sealed-manifest regression was red before implementation; real failed-child, natural cold replay and repaired-hash rejection remain intact |
+
+The final default-scratch run passes 32 tests with 517/517 owned statements,
+including real CLI subprocesses. Another 58 unchanged consumer, private
+E2E-018/E2E-021 and fix-erasure checks pass. Scoped Ruff, format, types and spec
+references pass. Original tests and conductor source are byte-identical to task
+start. Validation reports live in `/var/tmp/carnot-8373-validation/`.
+Global reconciliation retains the existing 1,142 missing spec references; this
+repair makes no full-repository health or scientific readiness claim.
 
 ## V721 activation-refusal correction — 2026-10-09
 

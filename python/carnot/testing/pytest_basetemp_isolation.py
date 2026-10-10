@@ -20,6 +20,11 @@ respected untouched. Under pytest-xdist the controller assigns each worker a
 subdirectory of its own base before the worker configures, so workers see a
 basetemp already set and this module does nothing there.
 
+STORAGE (SCENARIO-HARNESS-5930-DISK-SCRATCH). Prefer writable /var/tmp for
+default fixture storage: /tmp may exhaust its user quota despite reporting
+free space. Explicit tempfile environment settings and platforms without
+/var/tmp retain tempfile's selection rules.
+
 CLEANUP. Unique bases accumulate where shared rotation used to prune them, so
 stale sibling bases are removed best-effort at configure time -- only bases
 older than MAX_AGE_S (a day; the full suite runs ~4h), and never the base just
@@ -43,12 +48,19 @@ MAX_AGE_S = 24 * 60 * 60
 
 
 def basetemp_parent() -> Path:
-    """The per-user directory all isolated bases live under."""
+    """Select per-user disk scratch while honoring explicit tempfile overrides."""
+    temporary = Path("/var/tmp")
+    if (
+        any(os.environ.get(key) for key in ("TMPDIR", "TEMP", "TMP"))
+        or not temporary.is_dir()
+        or not os.access(temporary, os.W_OK | os.X_OK)
+    ):
+        temporary = Path(gettempdir())
     try:
         user = getpass.getuser()
     except Exception:  # noqa: BLE001 - no passwd entry in some sandboxes
         user = f"uid{os.getuid()}" if hasattr(os, "getuid") else "unknown"
-    return Path(gettempdir()) / f"pytest-carnot-{user}"
+    return temporary / f"pytest-carnot-{user}"
 
 
 def new_isolated_basetemp(*, pid: int | None = None, now: float | None = None) -> Path:

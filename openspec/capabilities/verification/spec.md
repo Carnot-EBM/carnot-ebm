@@ -52791,3 +52791,52 @@ Implementation 2026-10-10: the thin Exp8371 CLI and bounded runner reuse the
 existing child supervisor, typed finding consumer and atomic primary publisher.
 Seventeen private tests pass with all 275 newly owned statements covered,
 including real child failures and rehashed primitive rejection controls.
+
+## REQ-VERIFY-8373: Authenticate bounded V721 reconciliation
+
+Require frozen full-task authority, protocol, terminal sidecars, immutable primitive
+inputs and source roots. Every current producer disposition remains original.
+Scoped tests and real CLI children SHALL cover100 percent newly owned statements.
+Private E2E-018/021, unchanged consumers, strict types, Ruff and spec tracing run
+before atomic publication. Preserve every validator finding and all publication gates.
+
+### SCENARIO-VERIFY-8373-REPLAY
+
+Fresh valid replay passes; missing inputs, actual failed child, changed source,
+wrong authority and repaired-hash mutations fail. Unchanged external absence is
+blocked, never partial. No repository-wide suite repeats inside this experiment.
+
+For default pytest invocations, SCENARIO-HARNESS-5930-DISK-SCRATCH places
+fixture storage on writable disk-backed scratch rather than quota-limited
+`/tmp`. The original failed-child and tampering assertions SHALL run unchanged,
+with all newly owned statements covered, including real CLI subprocesses.
+
+Frozen source references SHALL preserve their declared `source_path` aliases,
+including the exclusion-manifest operand. Later mutable appends SHALL not alter
+the sealed utility reduction; redirected reconstruction writes stay private.
+
+Embedded worker authentication SHALL use a fresh child process; the 1500 MiB
+peak and 500 MiB growth bounds SHALL measure that child's work and remain
+enforced even when the host has an unrelated earlier high memory watermark.
+The CLI worker entry SHALL avoid recursive spawning and retain real failure exits.
+
+Worker repair verification 2026-10-10: all 175 relevant tests pass, including
+the original 107-test subset, a red-before-fix host-watermark regression and
+independent peak/growth boundary controls. Combined unit and real CLI coverage
+is 521/521 statements with no excluded lines in both capstone modules, direct
+CLI and scratch isolation. Private E2E-018/E2E-021 and fix-erasure checks,
+scoped Ruff, formatting, strict types and spec tracing pass. Original tests
+and conductor source are unchanged; the global spec audit retains its 1,142
+pre-existing reference gaps. Reports: `/var/tmp/carnot-8373-worker-fix/`.
+
+Implementation: Exp8373's requirement-linked unit/CLI controls cover frozen
+natural producer replay, absent inputs, failed children, source/authority drift,
+repaired-hash tampering and atomic publication. Invocation-owned command and
+coverage receipts live beneath `results/raw/experiment_8373_v721_capstone/`.
+
+Repair verification 2026-10-10: all 32 capstone/source-alias/scratch tests pass
+with no temp-directory override. Combined unit/CLI coverage is 517/517 statements
+across both capstone modules, direct CLI and pytest scratch isolation. All 58
+consumer/private E2E-018/E2E-021/fix-erasure checks pass. Original failing tests
+and `scripts/research_conductor.py` are unchanged. Scoped lint, format, types and
+spec tracing pass; the global spec audit retains 1,142 existing reference gaps.

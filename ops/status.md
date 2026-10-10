@@ -1,6 +1,52 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-10-09
+**Last Updated:** 2026-10-10
+
+## 2026-10-10 — V721 worker memory isolation repair
+
+Embedded capstone worker calls now authenticate in a fresh bounded process.
+The failed receipt recorded a 2,139 MiB earlier pytest peak, 629 MiB current
+RSS and zero worker growth; that host watermark incorrectly failed the
+1,500 MiB worker limit. CLI dispatch executes the child entry directly.
+The 1,500 MiB peak and 500 MiB growth limits remain enforced.
+
+All 175 relevant tests pass: the reported 107-test subset, four new worker
+controls, six original scratch-isolation tests and 58 unchanged consumer,
+private E2E-018/E2E-021 and fix-erasure checks. Combined unit and real CLI
+coverage is 521/521 statements across both capstone modules, direct CLI and
+scratch isolation. Scoped Ruff, formatting, strict types and spec tracing pass.
+The new host-watermark regression failed before implementation; boundary
+controls independently reject excess peak and excess growth.
+
+Original tests, prior scratch/source-alias fixes, conductor source and published
+evidence were preserved. Reports are in `/var/tmp/carnot-8373-worker-fix/`.
+The global spec audit still reports 1,142 pre-existing traceability gaps;
+these scoped passing checks do not establish full repository health.
+
+## 2026-10-10 — V721 capstone test repair
+
+Default pytest fixture storage now prefers writable disk-backed `/var/tmp`,
+avoiding the reproduced `/tmp` EDQUOT failure during authority-file copying.
+Explicit basetemp and tempfile environment settings retain their behavior, with
+platform fallback when `/var/tmp` is unavailable. Frozen capstone custody also
+retains `source_path` aliases: historical utility replay reads its sealed
+exclusion manifest after later live appends and keeps reconstruction writes private.
+
+All 90 affected tests pass: 32 capstone/alias/scratch tests and 58 unchanged
+consumer/private E2E-018/E2E-021/fix-erasure checks. Combined unit and real CLI
+coverage measures 517/517 statements across both capstone modules, its direct
+CLI and scratch isolation. Scoped Ruff, format, types and spec references pass.
+The original failing tests and conductor source are unchanged. Published results,
+roadmaps and exclusion history were preserved. Validation reports are under
+`/var/tmp/carnot-8373-validation/`.
+
+The initial diagnostic overlapped the intentional harness/spec edits. Its
+unattributed mutation marker was reviewed against task-start copies and retired
+without reverting either edit. The global spec audit retains 1,142 existing
+reference gaps; this repair does not establish full repository health.
+
+Final reconciliation confirms fresh documentation and exits one solely for those
+existing global spec-reference gaps. Scoped spec coverage and the mutation gate pass.
 
 ## 2026-10-09 — V721 activation-refusal correction
 

@@ -1,0 +1,67 @@
+{
+  "branch_replay": {
+    "passed": false,
+    "status": "not_executed_pre_gate"
+  },
+  "checks": [
+    {
+      "artifact_field": "runtime_reader_ready_score",
+      "expected": 1,
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8368_v721_typed_runtime_closure.json",
+      "sha256": "sha256:8d5810e06735b445b4b1bb6602f7263dff6b1e56d456f7e9b76ba1f9449eb323",
+      "upstream": "exp8368-typed-runtime-closure"
+    },
+    {
+      "artifact_field": "runtime_changed_score",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8368_v721_typed_runtime_closure.json",
+      "sha256": "sha256:8d5810e06735b445b4b1bb6602f7263dff6b1e56d456f7e9b76ba1f9449eb323",
+      "upstream": "exp8368-typed-runtime-closure"
+    },
+    {
+      "artifact_field": "cuda_context_ready_score",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8368_v721_typed_runtime_closure.json",
+      "sha256": "sha256:8d5810e06735b445b4b1bb6602f7263dff6b1e56d456f7e9b76ba1f9449eb323",
+      "upstream": "exp8368-typed-runtime-closure"
+    }
+  ],
+  "closure": [
+    {
+      "exists": true,
+      "expected_sha256": null,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8369_changed_runtime_canary.json",
+      "sha256": "sha256:eb3b5bbe471ccdfe92116534d358d0fc67adab75571f3b6f1bb381cbd993f6ba",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8373_v721_capstone/invocations/1791610726705693972/custody/eb3b5bbe471ccdfe92116534d358d0fc67adab75571f3b6f1bb381cbd993f6ba.json"
+    }
+  ],
+  "disposition": "conductor_pre_gate",
+  "eligible": false,
+  "honest_verdict": "blocked_gate_check_failed",
+  "memory": {
+    "after": {
+      "current_rss_mb": 352.08984375,
+      "peak_rss_mb": 372.7265625
+    },
+    "before": {
+      "current_rss_mb": 352.078125,
+      "peak_rss_mb": 372.7265625
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 0.0,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "producer_executed": false,
+  "selected": {},
+  "verdict_class": "blocked"
+}
