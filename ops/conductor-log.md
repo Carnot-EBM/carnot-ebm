@@ -19993,3 +19993,4 @@ code |
 | 2026-10-10 03:42 UTC | Conductor re-exec: fresh committed source | OK | 4d9dffebf124 -> 8af429226e55; argv preserved |
 | 2026-10-10 04:08 UTC | Read only new live supervisor outcomes for cross-g | OK | cache hit: 96 passed, 1 warning in 54.82s |
 | 2026-10-10 04:37 UTC | Map measured local transactions to KV260 operation | OK | 98 passed, 1 warning in 92.89s (0:01:32) |
+| 2026-10-10 04:59 UTC | Carry exact missing GateMate source bytes and the  | OK | 87 passed, 1 warning in 38.83s |
