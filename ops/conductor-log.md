@@ -20010,3 +20010,4 @@ code |
 | 2026-10-10 15:13 UTC | Collect fresh adapter-withheld ARC supervisor obse | OK | 100 passed, 1 warning in 76.56s (0:01:16) |
 | 2026-10-10 15:52 UTC | Map measured direct transactions to KV260 and pres | OK | 96 passed, 1 warning in 74.01s (0:01:14) |
 | 2026-10-10 16:33 UTC | Retain GateMate source and physical reopening cond | OK | 88 passed, 1 warning in 60.28s (0:01:00) |
+| 2026-10-10 17:54 UTC | Reconcile fourteen outcomes and decide each indepe | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 87 passed, 1 warning in 147.78s (0:02:27) |
