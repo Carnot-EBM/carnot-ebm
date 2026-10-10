@@ -6553,3 +6553,12 @@ activated tasks. Historical failures stay separate from science and support.
 ## 2026-10-10 — V721 frozen deployment methods
 
 Read the 2026-10-09 scan and full KANELÉ v3 / online KAN v4 methods before implementation. Exact source URLs, versions, hashes, assumptions and adoption limits are in [v721-method-ingestion.md](docs/research-notes/v721-method-ingestion.md). Freeze threshold fallback and complete durable transactions as local adaptations. Preserve V717 bytes, exposed targets and all V720 outcomes. OpenHalDet stays deferred; no generator training or scheduler sweep.
+
+## 2026-10-10 — V722 direct service methods
+
+Read the V722 scan, full online KAN v4 and KANELÉ v3 methods, and Extropic's October1 research-agent update.
+[v722-method-ingestion.md](docs/research-notes/v722-method-ingestion.md) records URLs, versions, retrieved hashes, assumptions and adoption limits.
+Freeze direct SciPy serving independently of table certificates. Keep the dyadic-logit prototype as a separate policy.
+Preserve closed H1=-0.00390625 and H2=0, delay8 fidelity, all missing slots and V717/V721 protocol bytes.
+Execution correctness grants no semantic benefit. No generator training or vendor speedup is adopted.
+The activated YAML cannot replace the live design's absent table, JSON contract or digest.

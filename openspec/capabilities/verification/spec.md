@@ -52840,3 +52840,24 @@ across both capstone modules, direct CLI and pytest scratch isolation. All 58
 consumer/private E2E-018/E2E-021/fix-erasure checks pass. Original failing tests
 and `scripts/research_conductor.py` are unchanged. Scoped lint, format, types and
 spec tracing pass; the global spec audit retains 1,142 existing reference gaps.
+# REQ-VERIFY-8374: Qualify direct methods publication and failure paths
+
+Exp8374 SHALL freeze commands before aggregation and use private disk-backed scratch.
+Real children SHALL have bounded deadlines and flushed heartbeats within sixty seconds.
+New statements, the actual CLI and failure paths SHALL reach100 percent statement coverage.
+Cold replay SHALL recompute primitive meaning, including self-consistently rehashed tampering.
+Unchanged publication, adversarial and strict row validators SHALL check terminal bytes.
+Owned failures SHALL disqualify; absent external authority SHALL block, never become a null.
+Broader repository health SHALL remain separate. No validator or exemption SHALL change.
+
+## SCENARIO-VERIFY-8374-REPLAY
+
+Run fresh children for valid, missing, deliberate-error and rehashed-tamper controls.
+Retain command exits, durations, log hashes and every adversarial finding.
+Unknown, warning and critical findings block readiness. Only the existing typed consumer
+may resolve an independently recomputed informational finding.
+
+## SCENARIO-VERIFY-8374-CLI
+
+Run the real private CLI, invalid dates, blocked external inputs and a real failed child.
+Publish checked terminal bytes atomically. Verify100 percent newly owned statements.

@@ -97705,3 +97705,42 @@ and ARC/harness lints. Run relevant existing unit tests and private E2E-018.
 Record broader baseline failures separately. Confirm protected files are intact.
 
 Status: planning contract only; experiment implementation remains pending.
+
+## REQ-REPORT-8374: Freeze direct service methods and fourteen task operands
+
+Exp8374 SHALL freeze a separate V722 direct service protocol before aggregation.
+It SHALL authenticate the full visible, JSON, staged and activated task objects.
+Absent design sections SHALL block authority, even if activated YAML has fourteen tasks.
+Consumed staging SHALL be explicit; it SHALL never count as an observed staged file.
+Original qualified heads, direct kernel and delayed trajectory SHALL qualify separately.
+Future producer paths SHALL be dependencies, never current input observations.
+V717/V721 protocol bytes and historical utility outcomes SHALL remain unchanged.
+Both generalization scores SHALL be zero. Current model loads and LLM calls SHALL be zero.
+
+The protocol SHALL bind spline34, temperature, knots, strict SciPy .25/.75 actions,
+4096 label-free vectors, knots, witnesses, nextafter neighbors, seeds11/22/33,
+natural96 including22 missing slots, retention0/32/64/96, batches1/8/32 and ratios1/8/64.
+One warmup and five distinct repeats SHALL be frozen for future measurements.
+Batch1/ratio8 natural replay SHALL be the sole primary NFR-01 cost cell.
+All durable transaction stages SHALL be included; model acquisition SHALL be excluded.
+The separate prototype SHALL use binary64 +/-0x1.193ea7aad030bp+0, with no SciPy policy equivalence claim.
+
+### SCENARIO-REPORT-8374-AUTHORITY
+
+Private E2E-018 accepts fourteen matching full objects and rejects prompt, lineage,
+delete, reorder, digest and table changes. Missing original sections block readiness.
+
+### SCENARIO-REPORT-8374-METHODS
+
+Bind full online KAN v4, KANELÉ v3 and the October Extropic update by URL and hash.
+Preserve adoption assumptions, historical dispositions and independent input readiness.
+
+Status: specified before tests and implementation; conductor owns ops reconciliation.
+
+Implementation: `python/carnot/reporting/v722_contract_methods.py` authenticates
+separate authority and original direct inputs. `v722_contract_runner.py` adapts
+the qualified child/publication modules. The thin Exp8374 CLI and
+`tests/python/test_v722_contract_methods_8374.py` cover private authority,
+cold tamper controls, real children and exact protocol operands.
+The live truncated design is an external authority block. The methods protocol
+and original direct inputs can qualify independently. Historical utility stays closed.
