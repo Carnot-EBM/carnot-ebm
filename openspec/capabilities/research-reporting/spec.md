@@ -97473,6 +97473,27 @@ match the corrected YAML. Removing this block in a private copy SHALL reproduce
 the original refusal. The corrected copy SHALL pass the unchanged exclusion and
 ARC activation lints. No guard or exclusion-manifest change is authorized.
 
+## REQ-REPORT-8368: Separate typed reader readiness from CUDA execution
+
+Bind V721 authority, original failed source bytes and terminal sidecars.
+Publish complete terminal outcomes atomically through unchanged validators.
+Record typed references, historical dispositions, first failed operand,
+current binding and separate reader/change/context scores. External absence
+blocks; owned failures disqualify. Generalization scores and current LLM calls
+stay zero. The conductor owns ops and BMAD reconciliation.
+
+### SCENARIO-REPORT-8368-REPLAY
+
+Cold replay authenticates primitives and recomputes scores and dispositions.
+Changing a reference and rehashing its container cannot replace pinned source
+authority. Real child failures clear reader qualification. Missing future
+outputs remain dependencies, never required pre-existing files.
+
+Implementation 2026-10-10: `runtime_closure_8368.py` independently recomputes
+historical dispositions and runtime scores. Its thin runner reuses frozen
+bounded validation and unchanged atomic publication. Generalization and current
+model calls stay zero; the conductor owns ops and BMAD reconciliation.
+
 ## REQ-REPORT-8362: Publish qualified threshold evidence with proof limits
 
 Bind exact V721 task authority, original head, table, panel, V717 protocol and

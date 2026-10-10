@@ -52665,6 +52665,36 @@ freezes scoped commands, records disk receipts and enforces the task cap.
 Fresh-process controls recompute authority and reusable-input meaning. Terminal
 receipts determine qualification; the conductor handles ops and BMAD records.
 
+## REQ-VERIFY-8368: Qualify documented typed runtime evidence
+
+Readers SHALL parse only documented reference records and explicit provenance
+fields with string paths and SHA-256 digests. Annotation prose and arbitrary
+suffix pairs SHALL NOT create operands. Missing required bytes, malformed
+digests, rejected sidecars and reference substitution SHALL fail closed.
+Historical failures retain original source, authority and terminal custody.
+Reader qualification precedes causal runtime comparison. A reader code hash
+SHALL NOT reopen CUDA; unchanged substrate means zero device retries.
+
+### SCENARIO-VERIFY-8368-TYPED
+
+Test prose, arbitrary suffixes, malformed references, nested typed records,
+absent bytes, rejected terminals and self-consistently rehashed substitution.
+Reproduce the original Exp8353 consumer failure before qualifying its existing
+annotation exclusion and defining-module sidecar import. Preserve old assertions.
+
+### SCENARIO-VERIFY-8368-EXECUTION
+
+Freeze scoped commands before measurement. Require all owned and child
+statements, strict mypy, Ruff, spec coverage and private E2E-018. Use bounded
+children, private disk scratch and cold positive/negative/rehashed controls.
+No model load or calls. Preserve V717 protocol bytes and historical dispositions.
+
+Implementation 2026-10-10: `typed_runtime_8368.py` parses documented records and
+explicit pairs. The runtime closure adapter retains hash-exact original source
+and authority, qualifies the prior annotation exclusion and keeps the existing
+exclusive-lease probe boundary. Private controls preserve both former failing
+assertions and exercise semantic replay rejection in fresh children.
+
 ## REQ-VERIFY-8362: Bound interpolation and preserve exact typed actions
 
 Derive each signed-int16 table cell bound from exact binary-rational spline

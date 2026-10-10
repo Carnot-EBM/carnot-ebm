@@ -168,7 +168,7 @@ def test_closure_missing_and_rejected_terminal(tmp_path, monkeypatch):
     with pytest.raises(FileNotFoundError):
         q.closure(tmp_path, tmp_path / "raw")
     monkeypatch.setattr(
-        q.old, "read_bound_sidecar", lambda primary, sidecar: dict(report=dict(passed=False))
+        q.typed, "read_bound_sidecar", lambda primary, sidecar: dict(report=dict(passed=False))
     )
     with pytest.raises(ValueError, match="terminal_rejected"):
         q.closure(q.ROOT, tmp_path / "rejected")

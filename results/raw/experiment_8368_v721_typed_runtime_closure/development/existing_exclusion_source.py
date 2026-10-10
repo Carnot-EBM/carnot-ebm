@@ -14,10 +14,8 @@ from carnot.reporting import v718_contract_replay as contract
 from carnot.reporting import v718_replay_history as history
 from carnot.reporting.current_work_receipt import atomic_json, sha256_file
 from carnot.reporting.v710_contract_replay import snapshot, require_reference
-
 from carnot.verify import runtime_reader_8340 as legacy
 from carnot.verify import runtime_reader_report_8340 as report
-from carnot.verify import typed_runtime_8368 as typed
 
 Json = dict[str, Any]
 ROOT, UPSTREAM, old = legacy.ROOT, legacy.UPSTREAM, legacy.old
@@ -50,7 +48,7 @@ def design(root: Path, milestone: str) -> Path:
         / {
             "2026.10.716": history.OLD_DESIGN,
             "2026.10.717": history.PRIOR_DESIGN,
-            MILESTONE: "openspec/change-proposals/research-roadmap-v720-preserved-20261009.md",
+            MILESTONE: "openspec/change-proposals/research-roadmap-vNEXT.md",
         }[milestone]
     )
 
@@ -70,10 +68,6 @@ def private_authority(root: Path, milestone: str) -> Path:
 def authority(root: Path, raw: Path, milestone: str = MILESTONE) -> Json:
     """The existing full-task reader compares explicit versioned design bytes."""
     try:
-        if root == ROOT and milestone == MILESTONE:
-            from carnot.verify.typed_runtime_8368 import historical_authority
-
-            return historical_authority(raw)
         with patch.object(history, "design", design):
             return dict(contract.authority(root, raw, milestone))
     except (OSError, ValueError, KeyError, TypeError) as error:
@@ -108,15 +102,75 @@ def bindings() -> Iterator[None]:
 
 def closure(root: Path, raw: Path) -> list[Json]:
     """Retain the transitive source bytes so historical custody survives later edits."""
-    refs = typed.closure(
-        root,
-        raw,
-        [
-            UPSTREAM,
-            "results/experiment_8340_v719_runtime_reader_qualification.json",
-            "results/experiment_8326_runtime_reader_qualification.json",
-        ],
-    )
+    refs: list[Json] = []
+    seen: set[str] = set()
+
+    def retain(path: Path, expected: str | None = None) -> None:
+        key = str(path)
+        if key in seen:
+            return
+        if not path.is_file():
+            if expected is not None:
+                raise FileNotFoundError(key)
+            return
+        seen.add(key)
+        ref = snapshot(path, raw / "historical_closure", "source")
+        if expected is not None:
+            require_reference(dict(ref, sha256=expected))
+        refs.append(ref)
+
+    def walk(value: Any) -> None:
+        if isinstance(value, dict):
+            if (
+                value.get("sha256")
+                and (value.get("path") or value.get("snapshot_path"))
+                and not value.get("op")
+            ):
+                retain(Path(value.get("snapshot_path") or value["path"]), value["sha256"])
+            for key, item in value.items():
+                if key in {
+                    "code_config_hashes",
+                    "raw_shard_hashes",
+                    "historical",
+                    "prior_validation_attempts",
+                    "cited_upstream_artifacts",
+                    "field_principles",
+                }:
+                    continue
+                if key == "terminal_validation_sidecar_path" and isinstance(item, str):
+                    retain(Path(item))
+                if key.endswith("_path") and value.get(key[:-5] + "_sha256"):
+                    retain(Path(item), value[key[:-5] + "_sha256"])
+                walk(item)
+        elif isinstance(value, list):
+            for item in value:
+                walk(item)
+
+    for path in [
+        UPSTREAM,
+        "results/experiment_8340_v719_runtime_reader_qualification.json",
+        "results/experiment_8326_runtime_reader_qualification.json",
+    ]:
+        primary = root / path
+        retain(primary)
+        if primary.is_file():
+            value = json.loads(primary.read_bytes())
+            walk(value)
+            primitive = value.get("primitive_reference", {}).get("path")
+            if primitive and Path(primitive).is_file():
+                walk(json.loads(Path(primitive).read_bytes()))
+            sidecar = (
+                primary.parent
+                / "raw"
+                / primary.stem
+                / "validators"
+                / (sha256_file(primary)[7:] + ".json")
+            )
+            retain(sidecar)
+            if sidecar.is_file():
+                if not old.read_bound_sidecar(primary, sidecar)["report"]["passed"]:
+                    raise ValueError("historical_terminal_rejected:" + str(primary))
+                walk(json.loads(sidecar.read_bytes()))
     progress("historical_closure_retained", len(refs), 0)
     return refs
 
