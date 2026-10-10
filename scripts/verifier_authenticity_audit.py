@@ -42,11 +42,14 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import hashlib
+import json
 import os
 import re
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parent))  # find audit_reviewer_cli when imported
@@ -306,6 +309,49 @@ def verify_quoted_evidence(report: str, body: str) -> tuple[list[str], list[str]
     return high, missing
 
 
+ROTATION_STATE = PROJECT_ROOT / "ops" / ".verifier_audit_rotation.json"
+
+
+def _now() -> float:
+    """Monotonic clock behind the wall-clock budget, wrapped so tests can drive it."""
+    return time.monotonic()
+
+
+def files_signature(files: list[Path]) -> str:
+    """Fingerprint of the file LIST (count and names, not contents).
+
+    Editing a verifier must not reset rotation. Adding, removing or renaming one changes what
+    the saved index means, so it must.
+    """
+    names = "\n".join(f.name for f in files)
+    return f"{len(files)}:{hashlib.sha256(names.encode()).hexdigest()[:16]}"
+
+
+def resolve_rotation_offset(prior: object, signature: str) -> int:
+    """Where this run starts. A missing, malformed or mismatched state means 0 (audit more)."""
+    if not isinstance(prior, dict) or str(prior.get("units_signature", "")) != signature:
+        return 0
+    try:
+        return max(0, int(prior.get("offset", 0)))
+    except (TypeError, ValueError):
+        return 0
+
+
+def advance_for(results: list[bool]) -> int:
+    """How far the saved offset moves, given per-file success in run order.
+
+    Counts the unbroken run of reviewed files from the start, so a file whose reviewer call
+    failed is retried next time. If the very first file failed, move one anyway, so one bad file
+    cannot freeze the rotation. Failures stay visible as UNKNOWN in the report.
+    """
+    prefix = 0
+    for ok in results:
+        if not ok:
+            break
+        prefix += 1
+    return max(prefix, 1) if results else 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -325,6 +371,13 @@ def main() -> int:
         default=0,
         help="Stop after N files (for time-bounded sampling)",
     )
+    parser.add_argument(
+        "--budget-seconds",
+        type=float,
+        default=0.0,
+        help="Wall-clock budget. When it runs out the audit stops starting new files, writes a "
+        "PARTIAL report, and advances rotation only by the files reviewed. 0 means no budget.",
+    )
     args = parser.parse_args()
 
     if args.file:
@@ -332,7 +385,19 @@ def main() -> int:
     else:
         files = sorted(VERIFY_DIR.glob("*.py"))
 
-    if args.limit > 0:
+    pending_rotation: tuple[int, str, int] | None = None
+    if args.limit > 0 and not args.file and files:
+        # A fixed head slice would audit the same first N files at every milestone close and
+        # never reach the rest. Persist an offset instead; it is saved only after the report.
+        signature = files_signature(files)
+        try:
+            prior_state = json.loads(ROTATION_STATE.read_text())
+        except Exception:
+            prior_state = None
+        offset = resolve_rotation_offset(prior_state, signature) % len(files)
+        pending_rotation = (offset, signature, len(files))
+        files = (files[offset:] + files[:offset])[: args.limit]
+    elif args.limit > 0:
         files = files[: args.limit]
 
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -362,14 +427,26 @@ def main() -> int:
     # (file, original_verdict, missing_evidence[]) for flags voided by the integrity guard
     integrity_voids: list[tuple[str, str, list[str]]] = []
 
+    deadline = _now() + args.budget_seconds if args.budget_seconds > 0 else None
+    truncated = False
+    reviewed_ok: list[bool] = []  # one entry per file started, in run order
     for i, f in enumerate(files, 1):
+        if deadline is not None and _now() >= deadline:
+            truncated = True
+            print(
+                f"[budget] wall-clock budget exhausted after {len(reviewed_ok)}/{len(files)} file(s)",
+                file=sys.stderr,
+            )
+            break
         rel = f.relative_to(PROJECT_ROOT)
         try:
             body = f.read_text()
         except Exception:
+            reviewed_ok.append(False)
             continue
         if len(body) < 100:
             counts["AUTHENTIC"] += 1
+            reviewed_ok.append(True)
             continue
         print(f"[{i}/{len(files)}] {rel}", file=sys.stderr)
         if args.model == "agy":
@@ -399,7 +476,9 @@ def main() -> int:
         if not ok:
             out.append(f"## {rel}\n\n(audit call failed: {report[:600]})\n")
             counts["UNKNOWN"] += 1
+            reviewed_ok.append(False)
             continue
+        reviewed_ok.append(True)
         verdict = parse_verdict(report)
         guard_note = ""
         if verdict in flagged_verdicts:
@@ -468,11 +547,32 @@ def main() -> int:
     summary.append("")
     summary.append("---")
     summary.append("")
+    if truncated:
+        out[5] = (
+            f"Scanned {len(reviewed_ok)} of {len(files)} selected verifier file(s) with "
+            f"{args.model} as the hostile reviewer. **PARTIAL RUN** -- wall-clock budget "
+            f"{args.budget_seconds:.0f}s ran out; rotation advances by the files reviewed only."
+        )
     out = out[:5] + summary + out[5:]
 
     REPORT_PATH.write_text("\n".join(out))
+    # Rotation moves only AFTER the report exists, so a run killed before this line leaves the
+    # saved offset alone and the next run re-covers the same files.
+    if pending_rotation is not None:
+        offset, signature, total = pending_rotation
+        try:
+            ROTATION_STATE.write_text(
+                json.dumps(
+                    {
+                        "offset": (offset + advance_for(reviewed_ok)) % total,
+                        "units_signature": signature,
+                    }
+                )
+            )
+        except Exception:
+            pass
     print(f"audit complete — report at {REPORT_PATH.relative_to(PROJECT_ROOT)}")
-    print(f"  scanned: {len(files)} verifier(s)")
+    print(f"  scanned: {len(reviewed_ok)} of {len(files)} selected verifier(s)")
     print(f"  flagged: {len(flagged_files)}")
     for path, verdict in flagged_files:
         print(f"    {path}: {verdict}")

@@ -12174,9 +12174,19 @@ permission, so a tool call ends the run with empty output. Measured 2026-10-08 o
 claim-audit packet: 0 of 3 runs in the repository gave output, 4 of 4 runs with the note in an
 empty directory did.
 
+#### SCENARIO-OPS-AUDIT-REVIEWER-1-BUDGET
+
+The verifier-authenticity audit SHALL accept `--budget-seconds`. When the budget runs out it
+SHALL stop starting files, write a report marked PARTIAL RUN, and move its rotation offset by the
+unbroken run of reviewed files only (at least one, if any file ran). It SHALL write the offset
+after the report, and SHALL start each limited run where the last one stopped, not at the head
+of the list. The conductor SHALL pass a budget plus 300 seconds that is below its kill timeout.
+Incident 2026-10-09: 20 calls of 40 to 50 seconds under a 900 second kill produced no report.
+
 ### Implementation Status (REQ-OPS-AUDIT-REVIEWER-1)
 
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-OPS-AUDIT-REVIEWER-1 | Implemented 2026-10-08 (`scripts/audit_reviewer_cli.py`: `codex_bin`, `failure_text`, `chain_failure`; wired into the six audit scripts). Not covered: the two daily watch scripts, whose units already put `~/.local/bin` first on PATH. Not changed: the `agy` primary still returns empty output in headless mode, and its routing is an operator decision | `tests/python/test_audit_reviewer_cli.py` |
+| REQ-OPS-AUDIT-REVIEWER-1 (BUDGET scenario) | Implemented 2026-10-09 (`--budget-seconds`, rotation state `ops/.verifier_audit_rotation.json`, PARTIAL RUN marker in `scripts/verifier_authenticity_audit.py`; conductor passes budget 1140 s with kill timeout 1800 s). Real run: 100 s budget stopped after 2 files and moved the offset by 2 | `tests/python/test_verifier_audit_budget.py` |
 | REQ-OPS-AUDIT-REVIEWER-1 (AGY scenario) | Implemented 2026-10-08 (`agy_command`, `agy_cwd` in `scripts/audit_reviewer_cli.py`, used by the six audits). Audit routing went back to codex the same day (systemd drop-in `98-audit-codex-20261008.conf`, outside the repo). Not covered: the conductor's own retro path, which still calls `agy` directly | `tests/python/test_audit_reviewer_cli.py` |
