@@ -97932,3 +97932,36 @@ errors and private replay controls. Cached per-game action-effect memory is
 withheld through the existing loader's switch. The common small numeric head
 remains distinct from LLM calls. Missing independent V722 design authority keeps
 readiness blocked even when direct user-authorized observations are collected.
+
+## REQ-REPORT-8385: Map direct transactions without extending board scope
+
+Exp8385 SHALL authenticate this invocation's active task and immutable source
+closures. Preserve V717/V721 protocol bytes and Exp8371's disqualified result.
+Read qualified Exp8378/8380 operation references when present. Preserve every
+complete or partial branch and every absent cost. Map direct scoring, updates,
+serialization, transfers and fsync separately. Existing KV260 Ising k_max<=5
+supports none of these direct spline transactions. A complete positive measured
+cost denominator permits a supported fraction of zero; absence remains null.
+Authenticate original PolarFire terminal dispatch and output hashes directly.
+Retain graduation only in board-local Linux CPU scope. No new board dispatch,
+NPU/TSU qualification, fabric speed claim or unconditional purchase is implied.
+Vendor/software context grants no local substrate or semantic benefit.
+The conductor owns ops and BMAD reconciliation.
+
+### SCENARIO-REPORT-8385-CLOSURE
+
+A private real Exp8371 replay reaches its original source-hash rejection.
+An immutable closure with original_path/source_path aliases accepts unchanged
+historical bytes. Changed summaries and rehashed primitive rows fail cold replay.
+Missing costs remain distinct from zero, including pre-gate and partial producers.
+
+## REQ-REPORT-8385-TERMINAL: Publish only checked terminal bytes
+
+Retain all validation receipts and adversarial findings. Owned validation failure
+is disqualified; unchanged external absence is blocked. Scientific scores are zero.
+
+Implementation 2026-10-10: the Exp8385 adapter seals source operands and preserves
+complete, partial, pre-gate and absent dispositions. Fifteen private tests pass.
+Original Exp8371 source-hash rejection and immutable alias replay both execute.
+All newly owned statements, including direct CLI children, have measured coverage.
+The research note keeps direct costs and PolarFire CPU graduation separate.

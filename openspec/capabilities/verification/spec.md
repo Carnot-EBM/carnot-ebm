@@ -53047,3 +53047,23 @@ real CLI, child errors, private publication and negative replay. The frozen
 execution plan checks E2E-017/018 and wrapper consumers before measurement.
 New statements, Ruff, strict types and spec tracing qualify independently of
 repository-wide health. The terminal report preserves unchanged-validator findings.
+
+## REQ-VERIFY-8385: Qualify direct board evidence with private real children
+
+Freeze commands before aggregation. Require 100 percent newly owned statements,
+real CLI and failure controls, strict mypy, scoped Ruff and requirement tracing.
+Run private E2E-018/021 and original board-reader consumers. Keep repository health
+separate and run it once. Bound children inside 4800 seconds with flushed progress.
+Use unchanged atomic publication, adversarial verification and strict row checks.
+Unknown, warning and critical findings block readiness. Retain failure evidence.
+
+### SCENARIO-VERIFY-8385-CLI
+
+Real private CLI children exercise valid, missing, deliberate-error and rehashed
+controls. Sealed replay recomputes task authority, board receipts and operation
+rows independently. No model load or current LLM call occurs.
+
+Implementation 2026-10-10: thin Exp8385 adapters reuse the unchanged bounded child
+supervisor, typed finding consumer, primary publisher and row validator. Private
+CLI controls include owned exit-three failure and rehashed primitive mutations.
+Invocation-only coverage includes all added modules and the standalone CLI.
