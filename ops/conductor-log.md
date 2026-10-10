@@ -20020,3 +20020,4 @@ code |
 | 2026-10-10 22:58 UTC | Train calibrated decision heads through durable de | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8390-direct-state-qualification.direct_state_ready_score (actual=0 == expected=1) |
 | 2026-10-10 23:03 UTC | Measure complete Python decision transactions incl | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8390-direct-state-qualification.direct_state_ready_score (actual=0 == expected=1) |
 | 2026-10-10 23:05 UTC | Compare native and Python transactions with matche | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8393-python-transaction-cost) |
+| 2026-10-10 23:09 UTC | Measure factuality label errors while controlling  | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8389-human-label-custody.released_label_panel_ready_score (actual=0 == expected=1) |
