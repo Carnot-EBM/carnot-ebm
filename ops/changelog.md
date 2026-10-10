@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-10 — Operational retrospective for milestone 2026.10.721
+
+- Wrote `results/operational_retro_2026_10_721.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.721`. Authoritative disk-mtime fallback data records 8 experiments completed (1 compute-bound, 7 synthesis-only) across 51.2 total wall-time minutes (average 6 minutes per experiment).
+- Execution wall time was led by synthesis tasks: 'Reconcile fourteen outcomes and decide utility and deployment continuation' (11.19 minutes), 'Qualify the two missed utility-audit rejection branches without changing science' (10.87 minutes), compute-bound task 'Qualify typed runtime references without treating annotation prose as paths' (8.88 minutes), 'Bound table interpolation error and preserve direct typed decisions at threshold' (6.21 minutes), and 'Map measured local transactions to KV260 operations and preserve PolarFire gradu' (5.79 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization on the RTX 3090 with 2MB allocated outside active runs; `gpu_idle_on_compute_bound_tasks` is false as no compute-bound idle anomalies or multi-model parallel dispatch requirements were present, and 0% GPU utilization is expected behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: implement incremental receipt caching and evidence memoization for fourteen-outcome reconciliation, utility-audit qualification, threshold guard verification, and hardware transaction mapping when upstream dependencies remain unchanged; instrument multi-minute synthesis and compute-bound tasks with granular intra-phase timers; and persist synchronous start and end lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-10 — Isolate capstone worker memory measurements
 
 - Embedded worker authentication runs in a fresh child, preventing unrelated
@@ -21996,3 +22003,7 @@ Recorded 9 completed experiments in 41.7 minutes (0.7 hours), including 1 comput
 - 2026-10-10: Carry exact missing GateMate source bytes and the physical reopening obligation (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_missing_evidence; results/experiment_8372_v721_gatemate_missing_evidence.json
 - 2026-10-10: Reconcile fourteen outcomes and decide utility and deployment continuation (⚠️ Blocked) — honest_verdict=complete_blocked_v721_capstone; results/experiment_8373_v721_capstone.json
 - 2026-10-10: Exp8373 capstone evidence reconciliation (⚠️ Blocked) — honest_verdict=complete_blocked_v721_capstone; H1 qualified=97/128, H2 qualified=67/88, H2 mean_gain=0; generalized learning benefit=0, independent generalization=0; missing deployment operations remain unmeasured; results/experiment_8373_v721_capstone.json
+
+### Milestone 2026.10.721 — operational retrospective
+
+Recorded 8 completed experiments in 51.2 minutes (0.9 hours), including 1 compute-bound task. Reconcile fourteen outcomes and decide utility and deployment continuation (11.19 min), Qualify the two missed utility-audit rejection branches without changing science (10.87 min), Qualify typed runtime references without treating annotation prose as paths (8.88 min), Bound table interpolation error and preserve direct typed decisions at threshold (6.21 min), and Map measured local transactions to KV260 operations and preserve PolarFire gradu (5.79 min) led the listed timings. Proposed incremental receipt caching and evidence memoization for fourteen-outcome reconciliation, utility audit qualification, threshold guards, and hardware transaction mapping, granular intra-task phase timers for synthesis and compute-bound tasks, direct receipt timestamp logging, continuous in-flight accelerator telemetry, and strict DualGPURunner boundaries for concurrent multi-model pipelines. Locked artifact fields remain unchanged; GPU idle on compute-bound tasks is false, parallel-model dispatch had no data available this milestone, and estimated time savings remain 0%. Artifact: `results/operational_retro_2026_10_721.json`.
