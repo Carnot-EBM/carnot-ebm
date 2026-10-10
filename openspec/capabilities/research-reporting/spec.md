@@ -97679,3 +97679,29 @@ terminal reduction. The thin Exp8373 runner and requirement-linked
 real child failures, repaired hashes, exact retirement and terminal publication.
 The primary and bound sidecar retain qualification receipts; the conductor
 owns ops and BMAD reconciliation after this invocation.
+
+## REQ-REPORT-V722-PLAN: Stage a direct-service research contract
+
+The V722 planning artifacts SHALL define fourteen ordered tasks, Exp8374–Exp8387,
+in four phases. The visible table, complete JSON task objects and staged YAML
+SHALL agree. This includes prompts, lineage, gates, models and deliverables.
+Preserve the V721 design and V717/V721 frozen protocol bytes. Planning SHALL
+NOT activate the roadmap, change the conductor or run a proposed experiment.
+
+The plan SHALL retain V721's qualified utility nulls and incomplete table proof.
+Direct serving and continuous small-head training SHALL have independent gates.
+A new logit policy SHALL have a separate version and no automatic deployment.
+Independent evidence readiness SHALL distinguish released data from generator
+or judge requirements. Current LLM calls SHALL use the mandated Qwen3.8 GGUF.
+ARC generalization and each unfinished board obligation SHALL remain explicit.
+Every prompt SHALL require flushed progress and bounded file-writing calls.
+
+### SCENARIO-REPORT-V722-PLAN: Check staged tasks without activation
+
+Require exact task equality and digest agreement. Reject changed, removed and
+reordered tasks in private copies. Check all earlier-producer gates and required
+field declarations. Check failed-scope lineage, model classes, schema, exclusion
+and ARC/harness lints. Run relevant existing unit tests and private E2E-018.
+Record broader baseline failures separately. Confirm protected files are intact.
+
+Status: planning contract only; experiment implementation remains pending.

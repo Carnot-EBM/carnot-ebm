@@ -16,9 +16,11 @@ OK: all solver-like ARC modules are reachable from the live agent path (97 modul
 
 ## Hostile LLM review
 
-**TL;DR: No SELF_DISCOVERY_ADVANCE evidenced.** Zero recent artifacts means no solves to classify; the reachability pass does not establish autonomous discovery.
+**TL;DR:** No demonstrated **SELF_DISCOVERY_ADVANCE**. Zero recent solve artifacts; the reachability check passes but proves no autonomous discovery.
 
-Per-artifact review: none (`[]`, last 7 days).
+**Per-artifact:** None to classify (`[]`).
+- **Evidence:** The supplied seven-day report contains 0 artifacts.
+- **Recommended action:** Require the next solve claim to include the live agent’s attempt history, runtime reverse-engineering trace, executed entrypoint, and registry comparison.
 
-**Pattern watch:** No artifact-based drift can be assessed. The 97 reachable modules establish availability, not provenance. Reachable source-derived models, offline ground-truth BFS, or hand-built per-game adapters still qualify as **OUTER_LOOP_RE**. Require live-entrypoint traces connecting the agent’s own attempts and runtime reverse-engineering to each claimed solve; absent that evidence, classify **UNCLEAR**.
+**Pattern watch:** No drift can be established from an empty report. However, all 97 modules being reachable does not validate their provenance: a reachable source-derived, offline-BFS, or hand-built per-game solver still warrants **OUTER_LOOP_RE**. A solve claim without clear live-discovery evidence warrants **UNCLEAR**.
 
