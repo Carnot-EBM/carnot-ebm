@@ -22010,3 +22010,4 @@ Recorded 8 completed experiments in 51.2 minutes (0.9 hours), including 1 comput
 - 2026-10-10: Freeze direct-service methods and bind fourteen task contracts (⚠️ Blocked) — honest_verdict=complete_blocked_direct_contract_methods; results/experiment_8374_v722_contract_methods.json
 - 2026-10-10: Measure released evidence coverage before choosing a new semantic corpus (⚠️ Blocked) — honest_verdict=complete_blocked_external_evidence_readiness; results/experiment_8375_v722_external_evidence_readiness.json
 - 2026-10-10: Publish direct decision heads and feedback as recoverable atomic state (⚠️ Blocked) — honest_verdict=complete_blocked_direct_atomic_state; results/experiment_8376_v722_direct_atomic_state.json
+- 2026-10-10: Qualify direct spline arithmetic through an actual Rust and PyO3 extension (⚠️ Research Finding) — honest_verdict=complete_disqualified_finite_native_direct_parity; results/experiment_8379_v722_native_direct_parity.json
