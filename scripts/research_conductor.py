@@ -6735,6 +6735,11 @@ def research_step(
                         str(PROJECT_ROOT / "scripts" / "verifier_authenticity_audit.py"),
                         "--limit",
                         "20",
+                        # 2026-10-09: 20 calls at 40-50s each is 800-1000s against the old 900s
+                        # kill, and the report was written last, so one slow call lost everything.
+                        # Stop starting files at 1140s; the kill timeout keeps AUDIT_TIMEOUT_SLACK_S (600s) beyond the budget.
+                        "--budget-seconds",
+                        "1140",
                         # 2026-06-08: adversarial agent on Claude Opus 4.8 (was gemini); 2026-06-30:
                         # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
                         "--model",
@@ -6743,7 +6748,7 @@ def research_step(
                         AGENT_MODEL_AUDIT,
                     ],
                     receipt=PROJECT_ROOT / "ops" / "verifier_authenticity_audit_report.md",
-                    timeout=900,
+                    timeout=1800,
                 )
 
             # QA-layer authenticity audit (2026-07-03 operator question: "shouldn't
