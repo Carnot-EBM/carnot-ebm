@@ -19988,3 +19988,4 @@ code |
 | 2026-10-10 02:54 UTC | Measure guarded inference refresh and durable comm | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8363-atomic-table-state) |
 | 2026-10-10 02:54 UTC | Implement the guarded table evaluator and update a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8363-atomic-table-state) |
 | 2026-10-10 02:54 UTC | Compare Python and Rust local transactions includi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8365-local-service-cost, exp8366-native-table-parity) |
+| 2026-10-10 03:36 UTC | Qualify typed runtime references without treating  | OK | 122 passed, 1 warning in 185.82s (0:03:05) |
