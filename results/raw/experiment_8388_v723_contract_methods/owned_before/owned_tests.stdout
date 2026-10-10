@@ -1,0 +1,39 @@
+.................F..                                                     [100%]
+=================================== FAILURES ===================================
+___________________ test_complete_machine_and_empty_lineage ____________________
+
+tmp_path = PosixPath('/home/ianblenke/.cache/carnot-exp8388-private/coverage/owned-tests/test_complete_machine_and_empt0')
+
+    def test_complete_machine_and_empty_lineage(tmp_path):
+        """SCENARIO-REPORT-8388-AUTHORITY: every optional field is still digest-bound."""
+        text = (e.ROOT / e.DESIGN).read_text()
+        tasks = e.parse_design(text, milestone=e.MILESTONE)[1]
+        original = e.tasks_digest(tasks)
+        tasks[0].pop("prior_failures", None)
+        digest = e.tasks_digest(tasks)
+        prefix = text.split("<!-- V723_TASK_CONTRACT_START -->")[0]
+        text = (
+            prefix.replace(original, digest)
+            + "<!-- V723_TASK_CONTRACT_START -->\n```json\n"
+            + json.dumps(dict(milestone=e.MILESTONE, tasks=tasks))
+            + "\n```\n"
+        )
+        path = tmp_path / e.DESIGN
+        path.parent.mkdir(parents=True)
+        path.write_text(text)
+        plan = dict(milestone=e.MILESTONE, tasks=tasks)
+        for name in [e.ACTIVE, e.STAGED]:
+            (tmp_path / name).write_text(yaml.safe_dump(plan))
+>       assert e.authority(tmp_path, tmp_path / "good")["activated"]
+E       assert False
+
+tests/python/test_v723_contract_methods_8388.py:195: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v723_contract_methods_8388.py::test_complete_machine_and_empty_lineage
+1 failed, 19 passed, 1 warning in 227.28s (0:03:47)

@@ -98055,3 +98055,39 @@ separately. Confirm active roadmap, conductor, frozen protocols and old evidence
 remain intact. Planning SHALL NOT run a proposed experiment or activate a plan.
 
 Status: planning only; all fourteen experiments remain unexecuted.
+
+## REQ-REPORT-8388: Bind current authority without inventing historical design
+
+The V723 receipt SHALL compare fourteen visible rows, complete JSON objects,
+active YAML and canonical digest. A consumed staged file is valid only after
+matching active authority. Preserve incomplete V722 design bytes and protocols.
+Historical replay readiness SHALL remain separate from current authority and
+direct numerical input custody. No current model load or LLM call occurs.
+Future producer paths are dependencies, never existing measurement inputs.
+
+### SCENARIO-REPORT-8388-AUTHORITY
+
+Matching authority qualifies. Removed, reordered, edited, truncated, wrong-table
+and wrong-digest contracts fail. Missing operands remain explicit nulls.
+
+### SCENARIO-REPORT-8388-HISTORY
+
+Reproduce test_natural and test_missing_and_failure privately before repair.
+Record the first primitive difference. Repair only the historical adapter.
+Replay honest blocked receipts without granting missing historical authority.
+Reject changed source aliases and self-consistently rehashed primitive changes.
+Preserve H1=-0.00390625, H2=0 and the separate undeployed dyadic-logit policy.
+
+### SCENARIO-REPORT-8388-PROTOCOL
+
+Freeze spline34 coefficients, temperature, knots, strict .25/.75 decisions,
+delay eight, 96 slots with 22 missing, seeds 11/22/33 and retention windows.
+Freeze all 27 cost cells, paired order, one warmup and five measured repeats.
+Freeze question-clustered label criteria before opening human target operands.
+
+Implementation 2026-10-10: V723 binds fourteen complete current objects and their
+digest. The disk-scratch repair replays the original blocked V722 receipt without
+inventing design authority. All 24 preserved historical assertions pass privately.
+Current contract, direct input custody and historical replay qualify separately.
+The frozen protocol and primary-method note preserve closed H1/H2 and all
+original V717/V721/V722 protocol hashes. Future outputs remain dependencies.

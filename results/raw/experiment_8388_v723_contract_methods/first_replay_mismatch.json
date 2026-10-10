@@ -1,0 +1,69 @@
+{
+  "expected": [
+    {
+      "artifact_field": "independent_design_contract_available",
+      "artifact_hash": "sha256:2bf4aa445d6a69f36ff4667c7a7060759420dea5155a4820a486c44a0fa60cde",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+      "check": "independent_design_contract_available",
+      "expected": true,
+      "observed": null,
+      "op": "==",
+      "passed": false,
+      "upstream_id": "exp8374-contract-methods"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:081d0cb3f30a97c2afae61715d9c84de5254acae75eef050e31a3a221bdfc8a0",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "expected": "sha256:6fc24d96e777b7cb8246c07aaeadce2a5ddca3cb4cbcd7fae5ddea3635826be2",
+      "observed": "sha256:081d0cb3f30a97c2afae61715d9c84de5254acae75eef050e31a3a221bdfc8a0",
+      "op": "==",
+      "passed": false,
+      "upstream": "exclusion_manifest"
+    }
+  ],
+  "field": "input_failures",
+  "observed": [
+    {
+      "artifact_field": "independent_design_contract_available",
+      "artifact_hash": "sha256:2bf4aa445d6a69f36ff4667c7a7060759420dea5155a4820a486c44a0fa60cde",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+      "check": "independent_design_contract_available",
+      "expected": true,
+      "observed": null,
+      "op": "==",
+      "passed": false,
+      "upstream_id": "exp8374-contract-methods"
+    },
+    {
+      "artifact_field": "private_disk_memory_budget",
+      "artifact_hash": null,
+      "artifact_path": "/tmp/exp8374-cold-awiyonj8",
+      "check": "private_disk_memory_budget",
+      "expected": true,
+      "observed": {
+        "available_memory_bytes": 122857046016,
+        "filesystem": "tmpfs",
+        "llm_calls": 0,
+        "minimum_memory_bytes": 536870912,
+        "model_loads": 0,
+        "private_disk_backed_scratch": false,
+        "scratch_path": "/tmp/exp8374-cold-awiyonj8",
+        "task_cap_s": 4800
+      },
+      "op": "==",
+      "passed": false,
+      "upstream_id": "exp8374-contract-methods"
+    },
+    {
+      "artifact_field": "sha256",
+      "artifact_hash": "sha256:081d0cb3f30a97c2afae61715d9c84de5254acae75eef050e31a3a221bdfc8a0",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "expected": "sha256:6fc24d96e777b7cb8246c07aaeadce2a5ddca3cb4cbcd7fae5ddea3635826be2",
+      "observed": "sha256:081d0cb3f30a97c2afae61715d9c84de5254acae75eef050e31a3a221bdfc8a0",
+      "op": "==",
+      "passed": false,
+      "upstream": "exclusion_manifest"
+    }
+  ]
+}

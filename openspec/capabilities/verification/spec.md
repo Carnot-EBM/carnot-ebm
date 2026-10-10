@@ -53072,6 +53072,31 @@ execution plan checks E2E-017/018 and wrapper consumers before measurement.
 New statements, Ruff, strict types and spec tracing qualify independently of
 repository-wide health. The terminal report preserves unchanged-validator findings.
 
+## REQ-VERIFY-8388: Qualify replay with real private children
+
+Freeze scoped tests, strict types, Ruff, spec tracing and coverage before input
+aggregation. Require 100 percent newly owned statements, including CLI and
+failure paths. Keep global health separate. Run private E2E-018 and E2E-021.
+Use private disk scratch and bounded children within 4800 seconds. Poll within
+60 seconds and flush each phase. Retain every command, exit, duration and hash.
+Use unchanged primary publication, adversarial and strict row validators.
+Unknown, warning and critical findings block readiness. Failed owned validation
+disqualifies; unchanged external absence blocks. Generalization scores stay zero.
+
+### SCENARIO-VERIFY-8388-REPLAY
+
+Fresh processes accept sealed rows. Missing inputs, deliberate errors, changed
+aliases and rehashed tampering remain distinct. Honest blocked receipts replay.
+Atomic publication exposes only validated terminal bytes. Existing consumers
+must read the exact published identity. No historical artifact is overwritten.
+
+Implementation 2026-10-10: owned tests cover all 145 new statements plus the
+changed historical adapter statement. Scoped Ruff, strict mypy and spec tracing
+pass. A separate real check selects identical bytes through both live consumers
+and cold-replays from outside the checkout. Every failed historical harness
+attempt remains in raw evidence. Global health is separate from owned readiness.
+The conductor owns ops/status, ops/changelog and BMAD reconciliation.
+
 ## REQ-VERIFY-8387: Bound and authenticate terminal capstone replay
 
 Freeze validation commands before measurement. Reuse fresh workers, streamed

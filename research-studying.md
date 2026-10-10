@@ -6562,3 +6562,14 @@ Freeze direct SciPy serving independently of table certificates. Keep the dyadic
 Preserve closed H1=-0.00390625 and H2=0, delay8 fidelity, all missing slots and V717/V721 protocol bytes.
 Execution correctness grants no semantic benefit. No generator training or vendor speedup is adopted.
 The activated YAML cannot replace the live design's absent table, JSON contract or digest.
+
+## 2026-10-10 — V723 primary methods ingested
+
+Read full 2610.08026v1 methods and annotation/factorial appendices, online KAN
+2602.02056v4 methods and hardware assumptions, and delayed-capacity
+2606.11711v1 methods and scheduler assumptions. Exact versions, hashes and
+adoption limits are in [v723-method-ingestion.md](docs/research-notes/v723-method-ingestion.md)
+and the V723 methods manifest. Freeze label criteria before human target access.
+Keep question clusters, numerical fidelity and semantic utility separate.
+No paper FPGA speed or convex regret guarantee transfers to this service.
+Preserve closed exposed H1/H2 and the separate undeployed dyadic-logit policy.

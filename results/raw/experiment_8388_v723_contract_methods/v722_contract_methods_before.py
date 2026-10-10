@@ -355,9 +355,7 @@ def replay(path: Path) -> bool:
                 require_reference(
                     dict(path=receipt[stream + "_path"], sha256=receipt[stream + "_sha256"])
                 )
-        # Replay uses private disk storage, as measurement does. A memory mount
-        # would add a new resource failure to an otherwise honest blocked receipt.
-        with TemporaryDirectory(prefix="exp8374-cold-", dir="/var/tmp") as directory:
+        with TemporaryDirectory(prefix="exp8374-cold-") as directory:
             actual = measure(Path(work["root"]), Path(directory))
             for key in [
                 "contract",
