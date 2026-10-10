@@ -97373,3 +97373,30 @@ and the thin runner freeze private checks, use the existing typed finding
 consumer and publish exact checked bytes. Requirement-linked tests cover real
 CLI, child failures, full-task authority, sealed science, mixed provenance and
 rehashed tampering. Terminal receipts record the final validation outcome.
+## REQ-REPORT-V721-PLAN: Stage an exact deployment-research contract
+
+The V721 plan SHALL contain fourteen ordered tasks, Exp8360–Exp8373, in four
+phases. The visible design table, full JSON task objects and staged YAML SHALL
+agree, including prompts, gates, failure lineage, models and deliverables.
+The prior V720 design and frozen V717 scientific protocol SHALL remain intact.
+Planning SHALL NOT activate the roadmap or alter the conductor.
+
+V721 SHALL distinguish qualified local mechanics from the disqualified H1/H2
+audits. It SHALL preserve their original outcomes and target the exact missed
+replay branches. New deployment work SHALL test conservative threshold fallback,
+atomic table updates, continuous training, Rust parity and full local transaction
+cost. A CPU deployment result SHALL NOT imply semantic correctness, independent
+generalization, LLM speedup or FPGA execution. Runtime, ARC and board duties SHALL
+retain explicit evidence conditions. Every prompt SHALL require flushed progress,
+bounded tool calls, spec/test-first work and applicable private E2E checks.
+
+### SCENARIO-REPORT-V721-PLAN: Validate staged authority without activation
+
+Parse both files and require full task equality and the canonical SHA-256.
+Reject changed, removed or reordered tasks in private copies. Validate schema,
+gate order and upstream field declarations, retirement lineage and model
+substrates. Run relevant existing unit/lint/spec checks and private E2E-018.
+Record repository-wide failures separately. Verify the active roadmap,
+conductor and frozen protocol retain their original hashes.
+
+Status: planning contract only; experimental implementation remains pending.

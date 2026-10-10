@@ -3,151 +3,48 @@
 
 # qa_layer_authenticity_audit_report — 2026-10-09
 
-Scanned 8 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 9 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 8 of 20 unit(s); rotation advances by 8 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 9 of 20 unit(s); rotation advances by 9 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 4 |
+| `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 3 |
+| `SILENT_NON_FIRING` | 9 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
-| `UNKNOWN` | 1 |
+| `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_has_positive_multilevel_solve_rate` — json { "game": "sc25", "honest_verdict": "success: integrated_a1_hierarchical_subgoal_search_shipped_parity_green", "live_multi_level_solve_rate_integrated": 0.2 } ``` False negative: returns false; the full verifier emits no multilevel-harness flags despite missing harness evidence. This field name and positive value appear in test_experiment_4681_integration_gate.py.
-- `adversarial_verify.py::_harness_target_levels` — metric_harness_fixed.value.target_levels = 1` with `live_multi_level_solve_rate = 0.25` and a separate `baseline.target_levels = 2`, as shown above.
-- `adversarial_verify.py::_harness_break_at_first_win` — metric_harness_fixed.value.break_at_first_win = true` alongside `baseline_harness.break_at_first_win = false`, as shown above.
+- `adversarial_verify.py::_has_fixed_multilevel_metric_harness` — A positive sc25 multilevel claim with `"target_levels": {"sc25": 2, "lp85": 1}` and `"break_at_first_win": {"sc25": true, "lp85": false}`.
+- `adversarial_verify.py::_nontrivial_subgoal_decomposition` — json {"subgoal_decomposition": {"principle": "The subgoal sequence emitted by the proposer.", "value": []}} ``` An empty decomposition using the project’s annotation convention passes as nontrivial.
+- `adversarial_verify.py::_has_nontrivial_subgoal_decomposition` — json { "subgoal_decomposition": [ {"name": "final_goal", "reachable": true} ] } ``` A single global goal passes as a nontrivial decomposition.
+- `adversarial_verify.py::_real_field_all_true` — json {"per_subgoal_reachable": [true, null]} ``` The missing second determination disappears during extraction, leaving a successful check.
+- `adversarial_verify.py::check_subgoal_search_decomposition_overclaim` — residual_bridge_gap` on the positive subgoal-search artifact above, which lacks all five required evidence fields.
+- `adversarial_verify.py::_claims_generation_coverage_up` — Confirmed missed fragments: ```json {"game":"ar25","honest_verdict":"success: candidate_generation_coverage_up","coverage_delta":0.4,"residual_bridge_gap":null} ``` ```json {"game":"ar25","honest_verdict":"success: candidate_generation_coverage_up; unblocked evaluation finished","coverage_delta":0.4} ``` ```json {"game":"ar25","honest_verdict":"candidate generation coverage increased","candidate_g
+- `adversarial_verify.py::check_novelty_proposal_ablation_overclaim` — The real project field `null_methodology_note`, retained as null beside: ```text success: controllable_novelty_generic_agent_new_level_bp35_L2 ``` Also reproduced: the same claim without numerical level fields; an unsupported claim using `controllable-novelty`; novelty attribution supplied only through `policy_mode: "controllable_novelty"`; and a positive verdict ending with `offline reproduction 
+- `adversarial_verify.py::_claims_proposal_filter_coverage_up` — Each fragment below was reproduced returning False: ```json {"game":"bp35","honest_verdict":"success: program_synthesis_filter_coverage_up_heldout_firstwin_lift_bp35","coverage_delta":0.4,"residual_bridge_gap":null} ``` ```json {"game":"bp35","honest_verdict":"success: program_synthesis_filter_coverage_up_heldout_firstwin_lift_bp35"} ``` ```json {"game":"bp35","honest_verdict":"success: program_sy
+- `adversarial_verify.py::check_proposal_filter_heldout_rejection_overclaim` — json { "experiment": "experiment_4689_program_synthesis_action_effect_proposal_filter", "game": "bp35", "honest_verdict": "success: program_synthesis_filter_coverage_up_with_residual_transfer_gap", "candidate_generation_coverage_filter": 0.60, "coverage_delta": 0.40 } ``` Actual result: no flags, despite both required evidence fields being absent.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_has_positive_multilevel_solve_rate` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_harness_target_levels` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_harness_break_at_first_win` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_fixed_multilevel_metric_harness` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_nontrivial_subgoal_decomposition` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_nontrivial_subgoal_decomposition` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_real_field_all_true` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_subgoal_search_decomposition_overclaim` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claims_generation_coverage_up` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_novelty_proposal_ablation_overclaim` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claims_proposal_filter_coverage_up` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_proposal_filter_heldout_rejection_overclaim` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::check_value_routing_cost_control_overclaim
-
-(audit call failed: Command '['/home/ianblenke/.local/bin/codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-6.1-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed out after 600 seconds)
-
-## adversarial_verify.py::_numeric_leaf_values
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-The function has no docstring; its name indicates recursive extraction of numeric leaf values.
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-Wrapped fields, nested lists, None, and zero are handled correctly; metadata exclusion uses exact key membership. No concrete misclassification was established, and 28 relevant tests passed. Full-suite mutation coverage was not established.
-
-
-## adversarial_verify.py::_bool_leaf_values
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-
-CLEAN
-
-## CLAIM
-
-The name `_bool_leaf_values` indicates recursive extraction of boolean leaves from nested containers, excluding designated metadata.
-
-## FINDINGS
-
-none found
-
-## COUNTEREXAMPLE
-
-none constructed
-
-## MISSED INPUT
-
-none found
-
-## RECOMMENDATION
-
-KEEP
-
-## RATIONALE
-
-`isinstance(value, bool)` preserves both boolean values; dictionary and list recursion handles principle wrappers and nested collections without interpreting strings or numbers as booleans. The terminal `return []` means no boolean leaves were found, and the inspected callers require boolean evidence before accepting controls. Nine direct cases and 22 existing focused test functions passed; full-suite mutation coverage and exhaustive metadata-key coverage were not established.
-
-
-## adversarial_verify.py::_max_real_field_number
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-`_max_real_field_number` returns the maximum numeric leaf associated with the requested field, or `None` when none exists.
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The inspected helpers handle principle wrappers, nested dictionaries, and lists while rejecting booleans, nulls, and nonfinite numbers; nine focused tests and nine extraction probes passed. Zero and negative values survive correctly, and `None` represents missing numeric data; this function contains no recognition rules, acceptance decision, thresholds, writes, or timing measurements.
-
-
-## adversarial_verify.py::_real_field_has_true
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-The name implies detecting whether the requested real field contains at least one true boolean leaf; no docstring is supplied.
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The repository helpers handle principle wrappers, nested dictionaries, lists, and None; 30 focused tests passed. `leaf is True` correctly requires boolean truth, and an empty search correctly returns false for this existence predicate. The supplied function contains no substring matching, thresholds, pattern catalogues, paths, writes, or measurements.
-
-
-## adversarial_verify.py::_has_positive_multilevel_solve_rate
+## adversarial_verify.py::_has_fixed_multilevel_metric_harness
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -155,54 +52,114 @@ The repository helpers handle principle wrappers, nested dictionaries, lists, an
 SILENT_NON_FIRING
 
 ## CLAIM
-By its name, `_has_positive_multilevel_solve_rate` identifies whether an artifact reports a positive multilevel solve rate.
+By its name, `_has_fixed_multilevel_metric_harness` claims to identify a fixed multilevel metric harness; it has no docstring.
 
 ## FINDINGS
 
-1. **A/B/F — Real metric omitted; check silently bypassed.** `for key in _MULTI_LEVEL_RATE_KEYS:` recognizes only two exact field names. The list represents multilevel solve-rate measurements but omits the integrated metric shown under MISSED INPUT, which the project's integration tests actually produce. `return False` makes that positive, unrecognized measurement indistinguishable from an absent or zero rate; the caller skips the harness check. Reproduced through the full verifier.
+1. **A — Proven silent bypass:** `_harness_target_levels(value, d)` and `_harness_break_at_first_win(value, d)` discard the association between per-game controls. The actual helpers select the maximum depth and collect boolean leaves independently. Consequently, the predicate accepts the counterexample below even though **neither game has a valid harness**. Full artifact verification emitted zero flags.
 
-2. **Field semantics / claim mismatch — Unrelated numbers become positive rates.** `if any(number > 0.0 for number in _numeric_leaf_values(value)):` tests every numeric descendant, including attempt counts and first-win metrics. A real zero-rate record from experiment 4650 contains a positive first-win metric and attempt count; either makes this predicate true. The counterexample produces WARN and CRITICAL harness flags despite reporting zero multilevel solves. The implementation detects positive numbers inside metric containers, which is broader than its name claims.
+2. **Context blindness:** `harness_values = _real_field_values(d, "metric_harness_fixed")` recursively collects historical controls too. The first qualifying candidate triggers `return True`, even when the current harness explicitly targets one level and breaks at first win. A fixed historical run can therefore approve a degenerate current run; this was reproduced against the caller.
 
-3. **C — Untested alternative.** Removing the generic rate-name entry from `_MULTI_LEVEL_RATE_KEYS` leaves all 11 tests in test_adversarial_verify_hardening_4671.py passing. Baseline and mutation runs both passed; the mutation remained active throughout. This proves a gap in that regression file, not that the entire repository suite survives deletion.
-
-4. **Remaining checks — No additional defect established.** `for value in _real_field_values(d, key):` delegates extraction to helpers that handle wrapped dictionaries, lists, and None. `number > 0.0` correctly excludes exactly zero. This function has no docstring, free-text matching, negation scanning, absolute path, write operation, or measured operation; the inspected regression tests write their fixtures into temporary directories.
+3. **C — Independently unenforced conditions:** Deleting either `and target_levels >= 2.0` or `and any(flag is False for flag in break_values)` separately leaves all **20 focused tests green**. Each mutated predicate executed nine times. The invalid-harness fixture violates both conditions simultaneously, allowing the surviving condition to conceal deletion of the other. This establishes a gap in those focused tests, not the entire repository suite.
 
 ## COUNTEREXAMPLE
 
 ```json
 {
+  "experiment": "arc_multilevel_harness_audit",
+  "game": "sc25",
+  "honest_verdict": "success: live_multi_level_solve_rate_up",
+  "live_multi_level_solve_rate": {"sc25": 0.25},
+  "metric_harness_fixed": {
+    "target_levels": {"sc25": 2, "lp85": 1},
+    "break_at_first_win": {"sc25": true, "lp85": false}
+  }
+}
+```
+
+The predicate returns true and the caller emits no multilevel flags. sc25 breaks at its first win; lp85 targets only one level.
+
+## MISSED INPUT
+
+A positive sc25 multilevel claim with `"target_levels": {"sc25": 2, "lp85": 1}` and `"break_at_first_win": {"sc25": true, "lp85": false}`.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Bind both controls to the same game and run that produced the claimed metric, and test each invalid condition independently. The actual helpers handle principle wrappers, lists, and None; `target_levels >= 2.0` correctly includes equality, and `return False` causes the caller to flag invalid evidence. No free-text boundary pattern, demonstrable omitted token, absolute write target, tracked-state write, or premature measurement occurs in this predicate.
+
+
+## adversarial_verify.py::_nontrivial_subgoal_decomposition
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_nontrivial_subgoal_decomposition` claims to recognize a nontrivial subgoal decomposition; the function has no docstring.
+
+## FINDINGS
+
+1. **A — Confirmed silent non-firing; field-wrapper bug.** `for key, nested in value.items()` reads dictionary properties without unwrapping annotations. `if len(nested_values) >= 2:` counts the principle annotation and its empty value as two subgoals. The annotated empty decomposition below returns true; with the other evidence supplied, the caller emits no decomposition flag.
+
+2. **B — Metadata exclusion is narrower than its concept.** `key not in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS` attempts to exclude metadata from evidence. The repository’s set omits per-field principle annotations, allowing explanatory prose to contribute directly to the success threshold.
+
+3. **Container size is not decomposition evidence.** `meaningful = [item for item in value if item not in (None, "")]` retains empty containers and whitespace-only strings. Two empty containers therefore pass. Likewise, `if len(nested_values) >= 2:` accepts a dictionary describing one global-goal record with multiple properties. Both branches accept structure without establishing multiple meaningful subgoals.
+
+4. **String matching is context-blind and format-dependent.** `return value.count("->") >= 2` accepts a sentence explicitly denying decomposition when it quotes an example containing two arrows. The pattern stands for a textual subgoal sequence but excludes ordinary Unicode-arrow notation. The membership operations elsewhere are container membership, so there is no separate unrelated-word substring finding.
+
+5. **Representation-dependent threshold.** `if len(meaningful) >= 2:` accepts two listed subgoals, while `return value.count("->") >= 2` rejects those same two subgoals joined by one arrow. Both comparisons correctly include exact equality; the defect is the inconsistent unit being counted, not an established wrong comparison operator.
+
+6. **C — The focused tests do not enforce rejection.** All 10 existing tests in tests/python/test_adversarial_verify_hardening_4683.py passed when this helper was replaced in memory with unconditional success. They also passed after independently deleting the dictionary branch, string branch, either recursive fallback, either filter, or the dictionary’s immediate success condition. Removing the list’s immediate success condition failed two tests. Full-suite mutation survival was not evaluated.
+
+7. **D/E/F/G — No corresponding defect in this function.** It computes no paths, writes nothing, and measures no work. Its terminal `return False` rejects unsupported types; it does not disable checking through an unknown-input default. The inspected hardening tests write their artifact fixtures into temporary directories.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "experiment": "experiment_4683_hierarchical_subgoal_search_overclaim_fixture",
   "game": "lp85",
-  "honest_verdict": "complete: zero_or_inadmissible_multi_level_lift",
-  "live_multi_level_solve_rate": {
-    "live_multi_level_solve_rate": 0.0,
-    "first_win_rate_expansion": 1.0,
-    "live_attempt_count": 50
-  }
+  "headline": "generic agent reached L2 via hierarchical subgoal search",
+  "honest_verdict": "success: hierarchical_subgoal_generic_agent_new_level_lp85_L2",
+  "generic_agent_reached_level": {"lp85": 2},
+  "reproduced_levels": {"lp85": 1},
+  "subgoal_decomposition": {
+    "principle": "The subgoal sequence emitted by the proposer.",
+    "value": []
+  },
+  "per_subgoal_reachable": [true, true],
+  "no_subgoal_ablation_reached_level": {"lp85": 1},
+  "random_subgoal_ablation_reached_level": {"lp85": 0},
+  "offline_reproduced": {"lp85": true}
 }
 ```
 
-False positive: returns true and triggers WARN plus CRITICAL harness flags. The metric structure and values occur in results/experiment_4650_capstone_v428.json.
+Confirmed false negative: the helper returns true and the caller produces no decomposition flag despite an empty decomposition.
+
+Additional confirmed string cases:
+
+- `"unlock left portal -> enter target frame"` returns false; the equivalent two-item list returns true.
+- `"No decomposition was produced; start -> bridge -> goal is only the expected format."` returns true.
 
 ## MISSED INPUT
 
 ```json
-{
-  "game": "sc25",
-  "honest_verdict": "success: integrated_a1_hierarchical_subgoal_search_shipped_parity_green",
-  "live_multi_level_solve_rate_integrated": 0.2
-}
+{"subgoal_decomposition": {"principle": "The subgoal sequence emitted by the proposer.", "value": []}}
 ```
 
-False negative: returns false; the full verifier emits no multilevel-harness flags despite missing harness evidence. This field name and positive value appear in test_experiment_4681_integration_gate.py.
+An empty decomposition using the project’s annotation convention passes as nontrivial.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-Recognition must cover the project's actual multilevel metric fields, and extraction must distinguish rate values from supporting counts and other metrics. Both errors were reproduced through the full verifier, while deletion of one recognition alternative escaped all 11 focused regression tests.
+Container cardinality and punctuation counts are being accepted as evidence of a meaningful decomposition, allowing missing evidence to clear the gate. Unwrap annotations, validate actual subgoal entries, and add rejection tests that fail when the helper returns unconditional success.
 
 
-## adversarial_verify.py::_harness_target_levels
+## adversarial_verify.py::_has_nontrivial_subgoal_decomposition
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -210,49 +167,97 @@ Recognition must cover the project's actual multilevel metric fields, and extrac
 SILENT_NON_FIRING
 
 ## CLAIM
-The name `_harness_target_levels` implies extracting the supplied harness’s target-level count; the function has no docstring.
+The name `_has_nontrivial_subgoal_decomposition` claims to determine whether an artifact contains a nontrivial subgoal decomposition.
 
 ## FINDINGS
-1. **A — confirmed silent bypass through unrelated evidence.** `top_level = _max_real_field_number(d, "target_levels")` searches recursively across the artifact, despite naming its result “top_level.” A missing local target can therefore borrow a baseline’s target. Verified: a harness lacking its target returns 2 from a separate baseline, and the consuming multi-level guard emits no flags.
 
-2. **Field extraction changes meaning under annotation.** `candidates = _numeric_leaf_values(value.get("target_levels")) if isinstance(value, dict) else []` reads only the immediate field. Wrapping the harness itself moves that field beneath the annotation’s value, activating the global fallback. Verified on otherwise identical artifacts: the bare one-level harness returns 1 and triggers a critical flag; the wrapped harness returns the baseline’s 2 and triggers nothing. Numeric-field wrappers and lists are handled by the numeric helper; the defect is losing the enclosing harness’s scope.
-
-3. **C — extraction branches lack discriminating tests.** Independently removing local extraction, or removing fallback extraction, leaves all 20 tests in the focused hardening and typed-field suites passing. Local extraction is double-covered by recursive fallback on their fixtures; fallback behavior has no discriminating assertion there. This was tested with in-memory mutations; the complete suite was not assessed.
-
-4. **Remaining classes:** No free-text matching, negation scanning, numeric threshold comparison, baked-in absolute path, write operation, or premature measurement occurs here. No omitted schema alias is established for `"target_levels"`. Returning None when no number exists does cause the consuming guard to flag the artifact; it does not silently disable that guard.
+1. **A / field extraction:** `_nontrivial_subgoal_decomposition(value)` accepts an annotated empty decomposition. Repository execution confirmed that annotation prose plus an empty value returns true; with the other evidence valid, the caller emits no decomposition flag.
+2. **Semantic validation:** The same delegated check accepts a single final-goal descriptor containing two attributes. It counts dictionary attributes as decomposition evidence, allowing the exact global-goal-only case the guard should reject.
+3. **Evidence context:** `for value in _real_field_values(d, "subgoal_decomposition")` searches recursively, and `return any(` accepts whichever occurrence passes. An empty current decomposition passes when another arm contains two subgoals. Evidence from that arm does not establish the claimed run’s decomposition.
+4. **C / mutation coverage:** Replacing this entire predicate with unconditional true leaves all three relevant subgoal tests in test_adversarial_verify_hardening_4683.py green. Both baseline and mutant runs passed three tests. The negative fixtures fail other evidence requirements, concealing removal of this requirement.
+5. The supplied wrapper has no direct free-text matching, numeric thresholds, absolute paths, writes, measurements, or skip-default branch. Its literal field name identifies the documented required field; no missing alias was established.
 
 ## COUNTEREXAMPLE
+
 ```json
 {
-  "game": "sc25",
-  "live_multi_level_solve_rate": 0.25,
-  "metric_harness_fixed": {
-    "principle": "Measure depth beyond the first win.",
-    "value": {
-      "target_levels": 1,
-      "break_at_first_win": false
-    }
-  },
-  "baseline": {
-    "target_levels": 2,
-    "break_at_first_win": true
+  "subgoal_decomposition": {
+    "principle": "The subgoal sequence the proposer emitted for the target.",
+    "value": []
   }
 }
 ```
 
-False negative, reproduced: the function returns 2, and the multi-level guard emits no flags despite the measured harness declaring only one target level.
+Reproduced result: true despite zero subgoals. With otherwise valid win, reachability, ablation, and reproduction evidence, the caller emits no decomposition flag.
 
 ## MISSED INPUT
-`metric_harness_fixed.value.target_levels = 1` with `live_multi_level_solve_rate = 0.25` and a separate `baseline.target_levels = 2`, as shown above.
+
+```json
+{
+  "subgoal_decomposition": [
+    {"name": "final_goal", "reachable": true}
+  ]
+}
+```
+
+A single global goal passes as a nontrivial decomposition.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-A baseline’s target cannot certify the measured harness, and adding an annotation must not change whether a fabrication guard fires. Unwrap the supplied harness before extraction, restrict fallback to explicitly permitted artifact-root fields, and add regressions that distinguish local evidence from unrelated nested evidence.
+Repository execution confirmed all three invalid cases return true and suppress the caller’s decomposition flag when the remaining evidence passes. Unwrap annotations, validate actual subgoals rather than attribute counts, bind evidence to the claimed run, and add an isolated negative test that fails when this predicate is disabled.
 
 
-## adversarial_verify.py::_harness_break_at_first_win
+## adversarial_verify.py::_real_field_all_true
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_real_field_all_true` implies that every value of the requested field is true; the function has no docstring.
+
+## FINDINGS
+
+1. **A / 1 / 5 — Missing evidence silently passes.** The extraction line `leaf for value in _real_field_values(d, wanted_key) for leaf in _bool_leaf_values(value)` discards nonboolean values, including nulls and strings. Consequently, `bool(leaves)` establishes only that some boolean evidence exists. Confirmed against the repository helpers: mixed true-and-null reachability returns true, and the calling decomposition guard emits no flags when its other requirements are satisfied.
+
+2. **1 / 5 — Unrelated booleans become evidence.** The same extraction collects every nested boolean without distinguishing its meaning. Confirmed: an attempted-status boolean can satisfy missing reachability; a false timeout-status boolean can reject successful reachability. The predicate `all(leaf is True for leaf in leaves)` evaluates those unrelated booleans alongside actual evidence.
+
+3. **C — Both conditions lack independent regression protection.** In separate in-memory mutations, deleting `bool(leaves)` and deleting `all(leaf is True for leaf in leaves)` each left the focused hardening suite green: 10 tests passed for each mutation. Whole-repository mutation coverage was not measured.
+
+Principle wrappers and lists are traversed successfully. Empty evidence correctly returns false. The supplied function contains no direct dictionary reads, free-text matching, numeric thresholds, hardcoded token lists, paths, writes, recognizer defaults, or timing measurements; classes 2–4 and B/D/E/F/G add no findings.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "per_subgoal_reachable": [
+    {"name": "unlock left portal", "reachable": true},
+    {"name": "enter target frame", "reachable": null}
+  ]
+}
+```
+
+With wanted_key set to `"per_subgoal_reachable"`, the function returns true. The second subgoal has no reachability evidence: this is a false negative.
+
+## MISSED INPUT
+
+```json
+{"per_subgoal_reachable": [true, null]}
+```
+
+The missing second determination disappears during extraction, leaving a successful check.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Validate every required reachability entry before aggregation, and distinguish reachability from unrelated boolean metadata. The current function certifies surviving boolean leaves while silently discarding missing evidence; its focused tests do not independently protect either return condition.
+
+
+## adversarial_verify.py::check_subgoal_search_decomposition_overclaim
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -262,41 +267,48 @@ SILENT_NON_FIRING
 
 ## CLAIM
 
-The name `_harness_break_at_first_win` implies extraction of the selected harness’s stopping-policy booleans, with artifact fallback; no docstring is provided.
+`Flag subgoal-search wins missing decomposition and ablation evidence.`
 
 ## FINDINGS
 
-1. **A, field extraction, and scope failure:** `values = _bool_leaf_values(value.get("break_at_first_win")) if isinstance(value, dict) else []` handles an annotated boolean field, but does not unwrap an annotated harness container before looking up its field. It therefore falls through to `for candidate in _real_field_values(d, "break_at_first_win")`, which searches the entire artifact. A separate baseline’s false setting contaminates the selected harness’s true setting. Reproduced against the repository’s actual caller: the counterexample returns both booleans and emits **no flags**; removing the wrapper produces the expected critical flag.
+1. **A/F — confirmed silent bypass.** At `if not _claims_subgoal_search_new_level_win(d):`, the repository helper lets unrelated null-result markers override positive reached-level and reproduction counts. Adding the routine residual-gap field below suppresses both flags despite every required evidence field being absent.
 
-2. **C, surviving mutation:** Deleting the local extraction and `if values:` / `return values` block leaves all **20 tests in the two relevant test modules passing**. Their document-wide fallback supplies equivalent values, so these tests do not enforce local-harness precedence. This establishes a surviving mutation in those modules, not the entire repository suite.
+2. **Field extraction — annotation changes the verdict.** The same recognizer scans stringified wrapper dictionaries, including principle prose. A positive verdict wrapped with instructions mentioning the null-result terminal prefix silently bypasses the check. Annotation metadata must not determine whether a win occurred.
 
-3. **Remaining checks:** Boolean-field wrappers, lists, and None are handled by the inspected helper. The comprehension’s `in` clauses are container iteration; there are no free-text matches, negation checks, numeric thresholds, absolute paths, writes, or measurements in this function. No omitted field-name synonym was established. Empty extraction causes the inspected caller to flag missing evidence; the silent pass comes from unrelated evidence being substituted.
+3. **Substring/context blindness — both error directions.** The recognizer suppresses positive claims when blocking terminology appears in a negated statement. Conversely, an honest flat-search ablation explicitly saying subgoal search was disabled receives both flags because experiment context and disabled-method text still match.
+
+4. **B — vocabulary narrower than concept.** Claim recognition enumerates spellings of hierarchical subgoal search; it omits the ordinary hyphenated spelling of subgoal. Replaying that spelling with positive level counts produced no flags. `_SUBGOAL_SEARCH_REQUIRED_EVIDENCE_KEYS` itself contains all five controls explicitly required by the specification; no omission from that tuple was established.
+
+5. **False decomposition evidence.** `_has_nontrivial_subgoal_decomposition(d)` accepts a wrapped singleton global goal because annotation prose counts as another dictionary entry; the identical bare singleton is rejected. Duplicate copies of the global goal also pass, contradicting the stated concern about a subgoal that is `only the global goal.`
+
+6. **Incomplete and contradictory booleans pass.** `_real_field_all_true(d, "per_subgoal_reachable")` ignores missing/nonboolean entries: one true entry can satisfy a decomposition whose second subgoal has no reachability result. `_real_field_has_true(d, "offline_reproduced")` accepts another game's true result even when reproduction for the claimed game is explicitly false.
+
+7. **Ablations compared across different games.** `_subgoal_ablations_strictly_lower(d)` compares independent maxima rather than matching game identities. An ablation equaling the claimed game's reached level passes when another game raises the overall maximum. Single-game equality is correctly rejected; aggregation defeats that boundary.
+
+8. **Representation-dependent boundary.** `_has_nontrivial_subgoal_decomposition(d)` accepts two subgoals as a list but rejects the equivalent string joined by one arrow. The string branch requires two arrows, effectively demanding three entries.
+
+9. **C — core controls lack independent regression coverage.** In-memory deletion of `_has_nontrivial_subgoal_decomposition(d)`, `_real_field_all_true(d, "per_subgoal_reachable")`, or `_real_field_has_true(d, "offline_reproduced")`, individually, leaves all 10 tests in the dedicated regression module green. Deleting only the random-ablation inequality also leaves all 10 green. Deleting the entire ablation predicate fails two tests, confirming that neighbouring failures mask the other controls.
+
+10. **D/E/G — no finding.** This function computes no absolute filesystem target, writes no tracked artifact, and measures no duration or counter. The inspected regression tests use temporary artifact paths.
 
 ## COUNTEREXAMPLE
 
 ```json
 {
-  "game": "sc25",
-  "live_multi_level_solve_rate": 0.25,
-  "metric_harness_fixed": {
-    "principle": "Report the harness used for the claimed live metric.",
-    "value": {
-      "target_levels": 2,
-      "break_at_first_win": true
-    }
-  },
-  "baseline_harness": {
-    "target_levels": 2,
-    "break_at_first_win": false
-  }
+  "experiment": "experiment_4683_hierarchical_subgoal_search_live",
+  "game": "lp85",
+  "honest_verdict": "success: hierarchical_subgoal_generic_agent_new_level_lp85_L2",
+  "generic_agent_reached_level": {"lp85": 2},
+  "reproduced_levels": {"lp85": 1},
+  "residual_bridge_gap": "transfer to ar25 remains untested"
 }
 ```
 
-Confirmed false negative: extraction returns `[true, false]`, and the multi-level harness guard emits no flags despite the claimed metric using early stopping.
+Expected: omission warning and critical overclaim flag. Actual: no flags. Removing only `residual_bridge_gap` produces both flags.
 
 ## MISSED INPUT
 
-`metric_harness_fixed.value.break_at_first_win = true` alongside `baseline_harness.break_at_first_win = false`, as shown above.
+`residual_bridge_gap` on the positive subgoal-search artifact above, which lacks all five required evidence fields.
 
 ## RECOMMENDATION
 
@@ -304,5 +316,335 @@ NEEDS_REDESIGN
 
 ## RATIONALE
 
-Wrapping a field changes which harness supplies its evidence, allowing an unrelated baseline to clear the guard. Unwrap the selected container before extraction, restrict fallback to explicit artifact-level equivalents, and test conflicting harnesses in both wrapped and unwrapped forms.
+Repository-helper replays confirmed that unrelated field names and annotation prose can disable the gate before evidence is examined. Evidence validation also loses subgoal completeness and game identity, accepting unsupported wins. The dedicated regression module remains green after several core controls are deleted independently.
+
+
+## adversarial_verify.py::_claims_generation_coverage_up
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+The name `_claims_generation_coverage_up` claims to recognize artifacts asserting increased candidate-generation coverage; the function has no docstring.
+
+## FINDINGS
+
+1. **A — Positive measurements can be silently vetoed by an unrelated field name.** The line `if _has_marker(text, _GENERATION_COVERAGE_NULL_TEXT_MARKERS):` executes before the positive-metric loop. The text helper includes field names, so adding a residual-gap field—even with a null value—makes a positive coverage claim return false. Executing the downstream baseline guard then produces neither baseline flag.
+
+2. **Field extraction — Wrapped fields are not handled consistently.** There are no direct dict-field reads in the supplied body. However, `_has_generation_coverage_context(d)` delegates to an ARC recognizer that accepts a bare string game field but misses the equivalent principle-wrapped field when the other text lacks an ARC identifier. `text = _generation_coverage_text(d)` also incorporates the string representation of a wrapped verdict, allowing its principle explanation to veto its actual positive verdict.
+
+3. **Field extraction — Numeric containers admit unrelated numbers.** At `value = _max_real_field_number(d, key)`, the helper recursively takes the maximum numeric leaf rather than identifying the measurement. A metric dictionary containing a zero value and a sample count of 40 is interpreted as a positive delta. Lists and None are handled, but container support does not preserve measurement semantics.
+
+4. **Substring matching and negation — Both marker checks misclassify context.** `if _has_marker(text, _GENERATION_COVERAGE_NULL_TEXT_MARKERS):` matches blocked inside unblocked and treats a rejected null hypothesis as a null result, suppressing genuine gains. `if not _has_marker(text, _GENERATION_COVERAGE_WIN_MARKERS):` accepts improv inside improvised and does not distinguish improvement from an explicit denial of improvement. The negated diagnostic example below actually receives the critical baseline flag.
+
+5. **B — The lists are samples of their concepts.** `_GENERATION_COVERAGE_POSITIVE_METRIC_KEYS` represents positive coverage changes but omits filter-specific delta names. `_GENERATION_COVERAGE_VALUE_KEYS` represents measured candidate-generation coverage but omits filter and prior coverage fields already present in the corpus. `_GENERATION_COVERAGE_WIN_MARKERS` represents assertions of improvement but omits increased; `_GENERATION_COVERAGE_NULL_TEXT_MARKERS` represents assertions of no improvement but misses did not improve. The context helper also omits the fully hyphenated coverage spelling, and its selected text fields omit conclusion. Concrete omissions appear below.
+
+6. **F / Name mismatch — Unsupported claims become indistinguishable from no claim.** The final `return any(` requires a recognized positive numeric field even when the verdict explicitly claims coverage increased. A coverage-up verdict with missing measurements therefore returns false, and the caller skips its baseline requirement. The implementation is narrower than its name for missing or differently named evidence, and broader for negated or incidental improvement language.
+
+7. **C — Substantial logic survives deletion.** The focused pytest module passed all ten tests. In separate mutation runs of those same ten test functions, all 46 individual deletions across the six associated text, context, marker, and metric lists survived. Removing the context gate, null veto, positive-delta loop, or win-marker gate individually also preserved every assertion. Emptying the positive-metric, win-marker, value-key, or null-marker list individually likewise survived: the positive fixture exercises both recognition paths, while the null fixture has zero metrics and cannot establish that its null markers matter. The full repository suite was not mutation-tested.
+
+## COUNTEREXAMPLE
+
+False negative: an explicit positive coverage claim without the required baseline.
+
+```json
+{
+  "game": "ar25",
+  "honest_verdict": "success: candidate_generation_coverage_up",
+  "candidate_generation_coverage_factored": 0.6,
+  "coverage_delta": 0.4,
+  "residual_bridge_gap": null
+}
+```
+
+Actual result: false; downstream baseline flags: none. Removing only the residual field changes the result to true and emits both baseline flags.
+
+False positive: successful diagnostics explicitly reporting no improvement.
+
+```json
+{
+  "game": "ar25",
+  "honest_verdict": "success: diagnostic_tests_green; candidate generation coverage did not improve",
+  "candidate_generation_coverage": 0.6,
+  "coverage_delta": 0.0
+}
+```
+
+Actual result: true; downstream baseline guard emits warn and critical flags.
+
+## MISSED INPUT
+
+Confirmed missed fragments:
+
+```json
+{"game":"ar25","honest_verdict":"success: candidate_generation_coverage_up","coverage_delta":0.4,"residual_bridge_gap":null}
+```
+
+```json
+{"game":"ar25","honest_verdict":"success: candidate_generation_coverage_up; unblocked evaluation finished","coverage_delta":0.4}
+```
+
+```json
+{"game":"ar25","honest_verdict":"candidate generation coverage increased","candidate_generation_coverage":0.6}
+```
+
+```json
+{"game":"ar25","honest_verdict":"success: candidate_generation_coverage_filter_up","candidate_generation_coverage_filter":0.6}
+```
+
+The last metric name exists in results/experiment_4689_program_synthesis_action_effect_proposal_filter.json. Another omitted corpus metric is candidate_generation_coverage_with_prior, present in results/experiment_4701_amortized_exploration_prior_go_explore_live.json.
+
+Additional omitted names/spellings: generation_coverage_delta, candidate_generation_coverage_filter_delta, conclusion, candidate-generation-coverage.
+
+## RECOMMENDATION
+
+NEEDS_REDESIGN
+
+## RATIONALE
+
+The reproduced bypasses suppress the baseline check for explicit positive claims, while negated claims can trigger critical flags. Recognition must separate actual values from annotations, scope negation to the claim, and distinguish absent or unrecognized evidence from a negative determination. `value > 0.0` correctly excludes an exactly zero gain; the supplied predicate contains no absolute paths, writes, or timing measurements, and the focused fixture writes use temporary paths.
+
+
+## adversarial_verify.py::check_novelty_proposal_ablation_overclaim
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+`Flag controllable-novelty wins missing lower novelty ablations.`
+
+## FINDINGS
+
+1. **A/F—A real artifact field silently disables the check.** At `if not _claims_controllable_novelty_new_level_win(d):`, the inspected recognizer vetoes positive claims when null-result substrings occur anywhere in selected text or recursively collected field names. The counterexample retains a documented null-methodology field with an empty value: both novelty flags disappear. An unrelated word containing the blocked marker also suppresses enforcement. Reproduced through the real verifier, not merely by calling this function directly.
+
+2. **A/5/F—An explicit success claim can escape by omitting its measurements.** The same initial guard rejects a plainly stated new-level success when neither numerical reached-level nor reproduced-level evidence is present. Consequently, the function never checks the missing ablations. Its implementation detects a narrower subset of wins than its docstring claims; unrecognized and properly supported inputs both produce no flags.
+
+3. **1/5—Evidence from different games can approve an unsupported win.** At `if _novelty_ablations_strictly_lower(d) and _real_field_has_true(d, "offline_reproduced"):`, the helpers compare independent maxima across numeric leaves and accept any true reproduction leaf. They do not join evidence by game or trial. The multigame counterexample passes even though the claimed game has equal ablations and failed reproduction. Reproduced through the real verifier.
+
+4. **1—Empty evidence suppresses the omission warning.** The expression `key for key in _NOVELTY_PROPOSAL_REQUIRED_EVIDENCE_KEYS if not _real_field_values(d, key)` checks whether a matching key was collected, not whether it contains evidence. Present keys holding None, empty lists, or empty dictionaries therefore clear the omission warning. The critical flag still fires when the claim is recognized. Conventional annotated numeric and boolean fields are supported by the inspected helpers; a blanket scalar-only extraction accusation would be false.
+
+5. **B—Recognition lists underrepresent their concepts.** The claim-text allowlist represents claim-bearing descriptions but excludes methodology-note and policy-mode values. The novelty-context list represents controllable novelty but omits the hyphenated spelling used in the function’s own docstring; a positive claim using that spelling escapes when no other context marker exists. The win-marker list represents level advances and omits an underscore spelling, although neighbouring numeric and field-name recognition masks that omission in the existing fixtures. The null-marker list represents nonwins but treats incidental mentions as determinations. The required-evidence tuple matches the three fields prescribed by the relevant spec; no additional required field omission was established.
+
+6. **2/3—Mentioning an explicitly unused novelty mechanism falsely establishes novelty attribution.** The recognizer treats text describing a disabled novelty bonus and an unattempted controllability gate as novelty context. With positive level measurements, the flat-search counterexample receives both flags despite explicitly denying use of the mechanism. Recognition ignores attribution and negation.
+
+7. **C—Material requirements are deletable while the dedicated tests remain green.** All 10 tests in tests/python/test_adversarial_verify_hardening_4695.py passed after individually removing the reproduction requirement, the cosmetic-ablation comparison, the reproduced-level recognition branch, the entire null-text veto, and each individual required-evidence entry. Removing the no-novelty evidence entry survives because its name remains in the warning’s fixed reporting instructions, satisfying the test’s substring assertion. Replaying all 10 test functions also survived individual deletion of every claim-text key and every novelty context, win, and null marker. These results concern the dedicated tests, not the entire repository suite.
+
+8. **4/D/E/G—No defect established in these classes.** Equal ablation levels correctly receive a critical flag when recognition fires; there is no demonstrated off-by-one error. This function computes no absolute path, writes no artifact or curated document, and records no measurement. The inspected dedicated tests write generated fixtures into temporary directories and read historical fixtures.
+
+## COUNTEREXAMPLE
+
+This unsupported positive claim receives **no novelty flags** through the real verifier:
+
+```json
+{
+  "experiment": "experiment_4688_controllable_novelty_proposal_policy_live",
+  "game": "bp35",
+  "honest_verdict": "success: controllable_novelty_generic_agent_new_level_bp35_L2",
+  "generic_agent_reached_level": {"bp35": 2},
+  "reproduced_levels": {"bp35": 1},
+  "null_methodology_note": null
+}
+```
+
+Removing only `null_methodology_note` produces the expected warning and critical flag.
+
+Alternatively, remove that note and supply these fields. The same claim again receives no novelty flags, despite unsupported bp35 evidence:
+
+```json
+{
+  "generic_agent_reached_level": {"bp35": 2, "ls20": 3},
+  "no_novelty_ablation_reached_level": {"bp35": 2, "ls20": 1},
+  "cosmetic_novelty_ablation_reached_level": {"bp35": 2, "ls20": 1},
+  "offline_reproduced": {"bp35": false, "ls20": true}
+}
+```
+
+A false positive also occurs with positive level measurements and this explicitly non-novelty verdict:
+
+```text
+success: reached L2; novelty bonus disabled, controllability gate not attempted
+```
+
+## MISSED INPUT
+
+The real project field `null_methodology_note`, retained as null beside:
+
+```text
+success: controllable_novelty_generic_agent_new_level_bp35_L2
+```
+
+Also reproduced: the same claim without numerical level fields; an unsupported claim using `controllable-novelty`; novelty attribution supplied only through `policy_mode: "controllable_novelty"`; and a positive verdict ending with `offline reproduction unblocked`.
+
+## RECOMMENDATION
+
+NEEDS_REDESIGN
+
+## RATIONALE
+
+Unrelated metadata can disable enforcement, while evidence from another game can authorize the claimed win. Recognition needs attributable claim context and explicit handling of unverifiable claims; evidence validation needs matching game/trial scope and mutation-resistant tests.
+
+
+## adversarial_verify.py::_claims_proposal_filter_coverage_up
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_claims_proposal_filter_coverage_up` claims to recognize artifacts asserting increased coverage from a proposal filter; the supplied function has no docstring.
+
+## FINDINGS
+1. **A/F — Positive evidence can be silently vetoed.** `if _has_marker(text, _PROPOSAL_FILTER_NULL_TEXT_MARKERS):` executes before every numerical check. Using the repository’s actual helpers, the counterexample below returns False despite a positive coverage delta, and the calling guard emits neither missing-evidence flag. An unrelated residual field also suppresses detection, even when its value is None.
+
+2. **Field extraction — Annotation prose contaminates classification.** `text = _proposal_filter_text(d)` includes the Python representation of wrapped claim fields, so instructions describing alternative null outcomes override the actual positive verdict. There are no direct dictionary reads in this snippet. The numeric helper handles numeric wrappers, lists and None, but the context helper assumes the game identifier is a bare string; wrapping that identifier can disable detection.
+
+3. **Substring boundaries and negation — Both failure directions reproduce.** Neither `_has_marker(text, _PROPOSAL_FILTER_NULL_TEXT_MARKERS)` nor `_has_marker(text, _PROPOSAL_FILTER_WIN_MARKERS)` applies boundaries to these markers. Ordinary update wording falsely establishes a win; nullable-field wording falsely suppresses one. Explicitly rejecting a null hypothesis suppresses a positive claim, while explicitly denying improvement can establish one. Concrete strings appear below.
+
+4. **B — The vocabularies underdefine their concepts.** `_PROPOSAL_FILTER_POSITIVE_METRIC_KEYS` represents numerical coverage gains but omits the alternative gain field below. `_PROPOSAL_FILTER_WIN_MARKERS` represents statements of increased coverage but misses ordinary increase wording. `_PROPOSAL_FILTER_NULL_TEXT_MARKERS` represents statements denying coverage gains but misses ordinary denial wording. The context helper additionally misses ordinary hyphenated spelling. Each omission is demonstrated below.
+
+5. **Numeric extraction loses measurement identity.** `value = _max_real_field_number(d, key)` takes the maximum of all numerical leaves: a positive confidence-interval endpoint can turn a zero point estimate into a claimed gain. Independently maximizing the two coverage fields also compares different games: a genuine improvement on one game disappears when another game has the largest baseline.
+
+6. **Threshold operators are correct; the fallback contradicts their meaning.** `value > 0.0` and `filter_coverage > blind_baseline` correctly exclude zero gain and equality. But `filter_coverage > 0.0` combined with `_has_marker(text, _PROPOSAL_FILTER_WIN_MARKERS)` can subsequently classify equal coverage as increased coverage. Conversely, an explicit textual coverage-up claim without numerical fields returns False. The implementation is therefore both broader and narrower than its name.
+
+7. **C — Independent branch coverage is absent.** The ten tests in tests/python/test_adversarial_verify_hardening_4695.py passed unchanged after separately deleting the context gate, null veto, positive-metric loop, baseline comparison, and final textual-win branch. They also passed after removing the alternate positive-metric key or every win marker. These were in-memory mutations; repository implementation files were untouched. This establishes the gap in the dedicated suite, not the entire project suite.
+
+8. **D/E/G — None found in this function.** It contains no absolute-path construction, filesystem writes, or duration/counter measurement. The inspected dedicated tests write their fabricated input files to temporary directories.
+
+## COUNTEREXAMPLE
+```json
+{
+  "game": "bp35",
+  "honest_verdict": {
+    "principle": "terminal prefix; success: program_synthesis_filter_coverage_up_heldout_firstwin_lift_<game> OR complete: program_synthesis_filter_no_coverage_gain_residual_logged.",
+    "value": "success: program_synthesis_filter_coverage_up_heldout_firstwin_lift_bp35"
+  },
+  "candidate_generation_coverage_filter": 0.6,
+  "coverage_delta": 0.4
+}
+```
+
+**Observed:** False; neither proposal-filter evidence flag fires. The annotation’s alternative null outcome defeats the actual positive verdict.
+
+Additional reproduced cases, all with `"game": "bp35"`:
+
+| Input | Observed misclassification |
+|---|---|
+| Verdict `"program_synthesis_proposal_filter_updated"`, filter and baseline both 0.6 | True: the update word matches a win marker despite equal coverage. |
+| Verdict `"program_synthesis_proposal_filter: no improvement"`, filter and baseline both 0.6 | True despite explicit denial. |
+| Verdict `"success: program_synthesis_filter_coverage_up; nullable diagnostic fields validated"`, delta 0.4 | False because the unrelated word contains a null marker. |
+| Verdict `"success: program_synthesis_filter_coverage_up; null hypothesis rejected"`, delta 0.4 | False despite rejection of the null hypothesis. |
+| Verdict `"program_synthesis_filter evaluated"`, `"coverage_delta": {"value": 0.0, "ci95": [-0.2, 0.2]}` | True because the upper confidence bound becomes the measured delta. |
+
+## MISSED INPUT
+Each fragment below was reproduced returning False:
+
+```json
+{"game":"bp35","honest_verdict":"success: program_synthesis_filter_coverage_up_heldout_firstwin_lift_bp35","coverage_delta":0.4,"residual_bridge_gap":null}
+```
+
+```json
+{"game":"bp35","honest_verdict":"success: program_synthesis_filter_coverage_up_heldout_firstwin_lift_bp35"}
+```
+
+```json
+{"game":"bp35","honest_verdict":"success: program_synthesis_filter_coverage_up_heldout_firstwin_lift_bp35","coverage_lift":0.4}
+```
+
+```json
+{"game":"bp35","honest_verdict":"program_synthesis_filter_coverage_increased","candidate_generation_coverage_filter":0.6}
+```
+
+```json
+{"game":"bp35","honest_verdict":"program-synthesis proposal-filter coverage up","coverage_delta":0.4}
+```
+
+```json
+{"game":{"principle":"game identifier","value":"bp35"},"honest_verdict":"program_synthesis_filter_coverage_up","coverage_delta":0.4}
+```
+
+```json
+{"game":"bp35","honest_verdict":"program_synthesis_filter evaluated two games","candidate_generation_coverage_filter":{"bp35":0.6,"ls20":0.1},"candidate_generation_coverage_blind_baseline":{"bp35":0.2,"ls20":0.8}}
+```
+
+The last fragment improves coverage on bp35 but loses that improvement through comparison of unrelated maxima.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The predicate conflates verdict values, annotation instructions, unrelated field names, and numerical summaries. Extract actual claim values, resolve negation locally, compare corresponding measurements, and report recognized claims with insufficient evidence as unverified. Add independent branch tests: the dedicated suite currently tolerates deletion of every major decision branch.
+
+
+## adversarial_verify.py::check_proposal_filter_heldout_rejection_overclaim
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+`Flag program-synthesis coverage wins missing held-out rejection evidence.`
+
+## FINDINGS
+
+1. **A/F — Silent bypass, reproduced.** The artifact in MISSED INPUT claims positive coverage improvement and omits both required evidence fields, yet emits zero flags. At `if not _claims_proposal_filter_coverage_up(d):`, the inspected helper lets an unrelated residual-gap mention override positive numerical evidence. That early return is indistinguishable from a genuine pass.
+
+2. **1 — Wrapped-field failures in delegated extraction.** There are no direct dictionary-field reads in this function. However, its claim helpers stringify verdict wrappers, allowing principle prose to suppress the actual verdict; they also require a bare-string game identifier. Both failures were reproduced. Wrapped numerical evidence itself is accepted.
+
+3. **2/3 — Substring and negation blindness in delegated recognition.** A negative-state marker matches inside its positive antonym and suppresses a real win. Conversely, the explicitly negated coverage-lift claim in COUNTEREXAMPLE triggers both flags. The recognizer does not establish whether the artifact actually claims improvement.
+
+4. **B — Recognition patterns underspecify the concept.** The context markers represent program-synthesis proposal filtering but omit ordinary hyphenated spellings. A claim using those spellings, with positive coverage delta, silently escapes. Pure textual coverage-win claims also escape without recognized numerical metrics. The two required evidence names are explicitly prescribed by the repository spec; alternative names alone are not a demonstrated defect.
+
+5. **4/5 — Finite numbers are weaker than rejection evidence.** At `if evidence_ok:`, any finite numerical descendant found under each required key suffices. Reproduced bypasses include evidence belonging exclusively to another game and a null measured value accompanied by numerical metadata. Invalid rejection counts and explicit nonexecution also pass. The implementation checks numerical presence without establishing execution or a matched baseline. No local threshold comparison presents an off-by-one issue.
+
+6. **C — Two enforcement mutations survive.** All 10 tests in the dedicated regression file still pass after removing the blind-baseline requirement from `_PROPOSAL_FILTER_REQUIRED_EVIDENCE_KEYS`. They also pass after replacing `_has_finite_real_field_number` with mere field-presence validation. These were actual in-memory mutations; the full repository suite was not run.
+
+7. **D/E/G — No corresponding defect found here.** The supplied function contains no absolute filesystem target, filesystem write, or timing measurement. Reviewed regression tests write artifact fixtures to temporary directories, and the runs introduced no tracked changes.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "experiment": "experiment_4695_program_synthesis_filter_trial",
+  "game": "bp35",
+  "honest_verdict": "success: validated program_synthesis filter; no coverage lift claimed",
+  "candidate_generation_coverage_filter": 0.60,
+  "coverage_delta": 0.0
+}
+```
+
+Actual result: WARN and CRITICAL. False positive: the verdict explicitly denies claiming a coverage lift.
+
+## MISSED INPUT
+
+```json
+{
+  "experiment": "experiment_4689_program_synthesis_action_effect_proposal_filter",
+  "game": "bp35",
+  "honest_verdict": "success: program_synthesis_filter_coverage_up_with_residual_transfer_gap",
+  "candidate_generation_coverage_filter": 0.60,
+  "coverage_delta": 0.40
+}
+```
+
+Actual result: no flags, despite both required evidence fields being absent.
+
+## RECOMMENDATION
+
+NEEDS_REDESIGN
+
+## RATIONALE
+
+Direct execution confirmed silent bypasses and a false positive; the regression tests also survived removal of essential enforcement. Claim recognition needs annotation-aware, context-sensitive handling, and evidence validation must bind measurements to the claimed run. Baseline tests, targeted lint, and spec-reference checks passed, demonstrating that those checks currently miss these defects.
 

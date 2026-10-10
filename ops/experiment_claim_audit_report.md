@@ -11,31 +11,41 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| NO_CLAIM | 8 |
+| CLAIM_SUPPORTED | 2 |
+| NO_CLAIM | 6 |
 
-## experiment_8336_continuous_local_learning.json
+## experiment_8352_v720_spline_table_fidelity.json
 
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+The selected 65-point float64 linear table meets the frozen fidelity gates on the constructed controls and runs faster than the measured direct spline implementation.
 
 ## WHAT WOULD REFUTE IT
-Not applicable: the artifact asserts no learning, retention, or comparative result.
+The selected table exceeding maximum probability error 0.00015, producing any action flip where the direct top-two margin exceeds 0.0002, or taking at least as long as direct evaluation would refute the claim.
 
 ## WAS THAT CHECKED
-No learning or retention evaluation is reported. The prerequisite gates were checked; local-kernel readiness failed with observed 0 against required 1.
+Yes. The selected configuration reports error 0.0001302382749995834, zero far flips, and median evaluation times of 10720 versus 108885 nanoseconds. Rejected configurations demonstrate that fidelity failure could occur: the displayed nearest-neighbor configurations exceed the error gate and fail.
+
+The direct spline is the defining fidelity oracle and a substantive timing comparator. This supports the measured approximation claim; the artifact makes no verifier-added-value claim and assigns zero to generalization and learning benefit. Failed candidate gates are retained as configuration outcomes. The fields supporting the selected candidate exist in its displayed row.
 
 ## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `local_kernel_ready_score`; `blocked_reason`: `actual=0 == expected=1`; `blocked_at_layer`: `conductor_pre_gate`.
+- `selected_candidate`: `65-float64-linear`; `table_candidate_score`: `1`.
+- `Only a measured table meeting both frozen gates is a candidate.`
+- `65-float64-linear`: `candidate_passed` is `true`; `probability_error_max` is `0.0001302382749995834`; `far_flip_count` is `0`.
+- `direct_ns_per_vector_median`: `108885.0`; `table_ns_per_vector_median`: `10720.0`.
+- `65-float64-nearest`: `candidate_passed` is `false`; `probability_error_max` is `0.0027465688056047544`.
+- `verifier_is_oracle`: `true`.
+- `exposure_scope`: `constructed_controls_from_exposed_development_coefficients`.
+- `independent_generalization_score`: `0`; `generalized_learning_benefit_score`: `0`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8337_bounded_feedback_capacity.json
+## experiment_8353_v720_runtime_reader_qualification.json
 
 **NO_CLAIM**
 
@@ -46,45 +56,24 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no experimental outcome claim to falsify. The title describes an intended test; the artifact records that a prerequisite failure blocked it.
+There is no comparative claim to falsify. An authenticated difference between previous and observed runtime identities would contradict the narrower recorded no-change observation.
 
 ## WAS THAT CHECKED
-No capacity or delayed-learning hypothesis was checked. Only the prerequisite gate was evaluated: it required 1, observed 0, and failed.
-
-## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `blocked_at_layer`: `conductor_pre_gate`; `artifact_field`: `local_kernel_ready_score`; `expected`: `1`; `actual`: `0`; `passed`: `false`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8340_v719_runtime_reader_qualification.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-A successful-qualification claim would be refuted by a mandatory owned check failing. That failure appears here, and the artifact reports disqualification.
-
-## WAS THAT CHECKED
-Yes: the gate summary records failed required checks, and the false-zero control remains unresolved. This is a qualification receipt making no comparative benefit or generalization claim.
+Yes, for that descriptive observation: seven change-evidence rows compare previous and observed identities and report no change. Failed qualification checks remain failures in the final disposition. This is a disqualified execution receipt, with no asserted scientific benefit or generalization.
 
 ## EVIDENCE
 
 - `honest_verdict`: `complete_disqualified_owned_checks`
 - `required_checks_passed`: `false`
 - `acceptance_gates`: `authenticated_change`: `false`, `cuda_context_ready`: `false`, `reader`: `false`
-- False-zero disposition: `recomputed`: `false`, `resolved`: `false`
+- `change_evidence` rows: `available`: `true`, `changed`: `false`
+- `methodology_note`: `Read full versioned authority, authenticate failed historical execution and compare current causal identity bytes. No unchanged CUDA matrix or scientific measurement runs.`
 - `Retain exact invocation, byte custody and measured execution; no scientific benefit follows.`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8341_changed_runtime_canary.json
+## experiment_8354_changed_runtime_canary.json
 
 **NO_CLAIM**
 
@@ -95,18 +84,22 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked-run receipt, with no comparative or performance claim to falsify.
+There is no experimental claim to falsify: this artifact records a blocked prerequisite check, not a canary outcome.
 
 ## WAS THAT CHECKED
-No experimental claim was tested. Prerequisites were checked in `gates_evaluated`: both failed, and the artifact records blocking before the canary.
+No canary claim was tested. The prerequisite checks appear in `gates_evaluated`; all three failed, blocking execution before the experiment.
 
 ## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `runtime_changed_score` and `cuda_context_ready_score` each have `actual`: `0`, `expected`: `1`, and `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`.
+- `schema`: `blocked_gate_check_v1`
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `gates_evaluated`: each gate has `expected`: `1`, `actual`: `0`, and `passed`: `false`.
+- `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8342_v719_arc_supervisor_frontier.json
+## experiment_8355_v720_arc_supervisor_frontier.json
 
 **NO_CLAIM**
 
@@ -117,26 +110,26 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative claim is asserted. An authenticated new outcome omitted from the empty frontier would contradict its accounting, but there is no supervisor-benefit claim to falsify.
+No comparative claim is made. A qualifying authenticated new supervisor outcome in the inspected sources would contradict the reported no-outcome status.
 
 ## WAS THAT CHECKED
-No comparative test is reported: current executions and comparison rows are zero or empty. Authentication checks are reported; the artifact records disqualification.
+No comparative test was performed. The recorded phase authenticates and inspects sources; outcome and arm tables are empty. This is a frontier-status receipt, with no asserted supervisor advantage or generalization benefit.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_disqualified_supervisor_frontier`
+- `honest_verdict`: `complete_null_no_supervisor_outcomes`
 - `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `required_checks_passed`: `false`
-- `current_game_execution_count`: `0`
-- `current_model_invocation_count`: `0`
+- `phase`: `authenticate_and_inspect`
 - `new_outcome_count`: `0`
 - `rows`: `[]`
 - `per_game_arm_rows`: `[]`
 - `selection_recommendations`: `[]`
+- `arc_reader_ready_score`: `1`
+- `Qualified mechanics do not require scientific success.`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8343_v719_kv260_workload_cost.json
+## experiment_8356_v720_kv260_workload_cost.json
 
 **NO_CLAIM**
 
@@ -147,25 +140,25 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: the artifact reports disqualification and unproved benefit, without asserting superiority, generalization, or acceleration.
+No comparative benefit is asserted. If arithmetic superiority were claimed, the reported dense/active tie would refute it; constructed readiness alone establishes no added value.
 
 ## WAS THAT CHECKED
-No comparative benefit claim was established. The visible timing rows compare constructed CPU arms; service speedup remains unavailable. The validation receipts record a failed owned check, reflected in the disqualified verdict.
+Yes, arithmetic parity was checked and an exact tie reported. The artifact withholds accelerator and service-benefit conclusions and assigns zero generalization benefit. Oracle-defined correctness therefore is not promoted into a verifier-value claim.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_disqualified_owned_checks`
-- `verdict_class`: `disqualified`
+
 - `accelerator_benefit`: `unproved_no_compatible_operation`
-- `arithmetic_scientific_class`: `unqualified`
+- `cpu_cost_scope`: `constructed_spline_arithmetic`
+- `arithmetic_scientific_class`: `circular_positive`
+- `arithmetic_pair_parity`: `identical_actions`: `true`; `max_probability_delta`: `0.0`
 - `full_service_speedup`: `null`
+- `generalized_learning_benefit_score`: `0`
 - `current_device_execution_count`: `0`
-- `required_checks_passed`: `false`
-- `name`: `private_E2E018_consumers`; `passed`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8344_v719_gatemate_change_ledger.json
+## experiment_8357_v720_gatemate_change_ledger.json
 
 **NO_CLAIM**
 
@@ -176,25 +169,25 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative claim is asserted. An authenticated new physical-change receipt would contradict the reported receipt absence; recorded current device execution would contradict the unexecuted status.
+Not applicable: this is a blocked evidence ledger, making no comparative benefit, generalization, or current hardware-success claim.
 
 ## WAS THAT CHECKED
-Yes, at the documentation level: physical-change evidence is marked absent, receipt rows are empty, and current device executions total zero. The obligation remains excluded and incomplete. Physical preflight was not performed, so hardware capability remains untested.
+No comparative experiment was performed or claimed. Historical authentication was checked and its failure retained; the board obligation remains excluded, with zero current device executions. The future physical preflight remains unexecuted.
 
 ## EVIDENCE
 
 - `claim_scope`: `Evidence ledger; future physical preflight remains unexecuted`
 - `honest_verdict`: `complete_blocked_gatemate_history`
-- `physical_change_receipt_rows`: `[]`
+- `verdict_class`: `blocked`
+- `history_authentication` → `passed`: `false`
 - `current_device_execution_count`: `0`
-- `excluded`: `true`; `completed`: `false`
 - `scientific_benefit_score`: `0`
-- `independent_generalization_score`: `0`
+- `exclusion_reason`: `gatemate_history`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8345_v719_capstone.json
+## experiment_8358_v720_terminal_replay_qualification.json
 
 **NO_CLAIM**
 
@@ -205,17 +198,48 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative headline is asserted. A benefit claim would be refuted by valid sealed evaluation rows showing the method ties or loses to a serious comparator.
+There is no comparative claim to falsify. An operational contradiction would be granting replay readiness or scientific credit despite failed authentication or required checks.
 
 ## WAS THAT CHECKED
-No scientific comparison was completed here: H1/H2 comparison metrics, statistics, and support are null; evaluator access is zero. The artifact records blocked science and failed qualification gates. These are not measured null results.
+Yes, operationally. Row 8344 records failed replay and unavailable authenticated history; closure checks fail and the repository suite times out. The overall verdict remains blocked, with readiness and scientific-benefit scores zero. Successful worker execution does not erase these failures. The oracle supplies qualification checks without an added-value claim.
 
 ## EVIDENCE
-- `H1` and `H2`: `status` = `blocked_unmeasured`; `statistics` = `null`; `support` = `null`.
-- `paired_cost_gain` = `null`.
-- `evaluator_access_count` = `0`.
-- `independent_science` = `false`; `owned_validation` = `false`.
-- `continuation_decision` = `not_earned_unmeasured; require qualified sealed science operands`.
+- `Authenticate exact invocation and primitive bytes; mechanical replay preserves failed dispositions and grants no independent science credit.`
+- `honest_verdict`: `complete_blocked_terminal_replay_qualification`
+- `required_checks_passed`: `false`
+- `branch_replay_ready_score`: `0`
+- Row `8344`: `replay_passed`: `false`; `status`: `authenticated-history-unavailable`
+- `generalized_learning_benefit_score`: `0`
+- `independent_generalization_score`: `0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8359_v720_capstone.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The shown exposed-development comparisons demonstrate no decision-cost advantage for spline34 or online updates, while H1 remains unqualified for representation-level conclusions.
+
+## WHAT WOULD REFUTE IT
+A positive paired cost improvement for spline34 over RBF34, or online updates over the frozen and calibration-only baselines, with a positive lower bootstrap bound under the stated row accounting.
+
+## WAS THAT CHECKED
+Yes, in H1’s paired cost comparisons and H2’s arm comparisons and bootstrap summary. Costs depend on actions and outcomes, so improvement was possible independently of predicted probabilities. H1’s gain is negative; H2’s gain is zero despite probability updates.
+
+Serious inexpensive controls are present: linear6 ties spline34’s decision costs, RBF34 achieves lower costs, and calibration_only ties online updates. These support the reported null. Circular implementation controls are not promoted into a verifier-value claim. The measurements are explicitly scoped as exposed development, and qualification failures and unqualified-row cost bounds remain visible.
+
+## EVIDENCE
+
+- H1: `science_disposition`: `null_optimization_limited`; `procedure_null_informative`: `true`; `representation_null_informative`: `false`; `qualified`: `false`.
+- H1 complete-case bootstrap: `mean_gain`: `-0.005154639175257732`; `lower_one_sided_975`: `-0.02577319587628866`; `scope`: `descriptive_exposed_development_not_confirmatory`.
+- H1 complete-case `cost_mean`: spline34 `0.4381443298969072`; linear6 `0.4381443298969072`; RBF34 `0.4329896907216495`.
+- H2: `mean_gain`: `0.0`; online_sparse `probability_changes`: `66`; `action_changes`: `0`. Frozen, online, and calibration-only arms share `cost_mean`: `0.4431818181818182`.
+- H2 unqualified rows: `qualified`: `false`; `frozen_cost`: `0.5`; `online_cost`: `0.5`; `gain_lower`: `0.0`; `gain_upper`: `0.0`.
 
 ## RECOMMENDATION
 KEEP
