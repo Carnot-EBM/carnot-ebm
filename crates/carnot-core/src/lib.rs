@@ -40,6 +40,7 @@ use std::collections::HashMap;
 
 pub mod adaptive_state;
 pub mod benchmarks;
+pub mod direct_spline_8379;
 pub mod error;
 pub mod init;
 pub mod math;

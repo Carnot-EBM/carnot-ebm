@@ -11,6 +11,8 @@ use pyo3::prelude::*;
 use pyo3::types::{PyAny, PyDict};
 
 mod adaptive_state;
+#[cfg(feature = "direct-spline-8379")]
+mod direct_spline_8379;
 mod experiment_7256_archive_controller;
 mod fixed_cardinality;
 mod kv260;
@@ -493,6 +495,8 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     numerical_update_8027::register(m)?;
     radial_8105::register(m)?;
+    #[cfg(feature = "direct-spline-8379")]
+    direct_spline_8379::register(m)?;
 
     // Durable portable recalibration service
     portable_recalibration::register_portable_recalibration_module(m)?;

@@ -97809,3 +97809,34 @@ External authority absence is named with upstream, path/hash, field, operator,
 expected and observed values. Future producer paths are dependencies only.
 
 Status: specified before tests; conductor owns ops and traceability reconciliation.
+
+## REQ-REPORT-8379: Publish finite native parity with sealed primitive operands
+
+Exp8379 SHALL authenticate activated task authority and each direct input hash.
+No current LLM call is permitted. Freeze validation commands before measurement.
+Keep every intended row, arm, missing reason and primitive operand in raw evidence.
+Publish a complete terminal class after fresh-process replay and unchanged
+adversarial and strict row checks. Preserve all findings. Unknown, warning and
+critical findings SHALL block readiness. Owned failures disqualify; external
+absence blocks. Only checked terminal bytes SHALL be published atomically.
+Parity SHALL NOT imply semantic benefit or full transaction speedup. Both
+independent generalization scores SHALL remain zero. Preserve historical bytes.
+
+### SCENARIO-REPORT-8379-CLI
+
+Execute valid, missing-input, deliberate-error and self-consistently rehashed
+semantic-tamper controls in fresh processes using the actual built extension.
+The direct script SHALL run outside the checkout without ambient PYTHONPATH.
+Record private resource preconditions and each subprocess deadline and log hash.
+The terminal sidecar SHALL bind exact published bytes to unchanged validators.
+
+Status: specified before tests; conductor owns ops and traceability reconciliation.
+
+Implementation 2026-10-10: the thin direct runner seals operands, native calls,
+copy payloads and primitive rows. Cold replay uses the actual binary. Rehashed
+aggregate and primitive tampering fails. Unresolved exact-zero information from
+the unchanged typed finding consumer closes readiness. The failed coverage-combine
+attempt is retained; pytest-cov already combined the shards and the measured
+statement report passes100 percent. Global suite failures and its900-second
+termination remain separate from native numerical parity. Ops and traceability
+reconciliation remain assigned to the conductor, as directed by the task owner.

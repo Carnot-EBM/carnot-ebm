@@ -52913,3 +52913,38 @@ missing inputs, deliberate errors and self-consistently rehashed semantic tamper
 Status: specified before tests; conductor owns ops and traceability reconciliation.
 
 Implementation: the external manifest adapter and thin CLI retain checked terminal bytes.
+
+## REQ-VERIFY-8379: Execute direct spline arithmetic through Rust and PyO3
+
+An opt-in native extension SHALL implement only the frozen cubic basis, ordered
+logit arithmetic and local coefficient update. Both arms SHALL use the existing
+SciPy probability and action boundary. Python SHALL retain durable coordination.
+The build SHALL use private disk scratch without fast-math. Record loaded binary
+hashes, actual native invocations and payload copy/conversion bytes.
+
+### SCENARIO-VERIFY-8379-PARITY
+
+Authenticate direct operands without serving or cost producer dependencies.
+Compare 4096 frozen vectors, all knots, threshold witnesses and nextafter
+neighbors, seed11/22/33 update panels, and every available natural input.
+Require coefficient and probability errors <=1e-12 and zero action differences.
+Retain boundary failures without threshold changes or native-only fallback.
+Reject NaN, infinity, invalid shapes and out-of-domain features in both arms.
+Finite empirical parity SHALL NOT imply a universal floating-point theorem.
+
+### SCENARIO-VERIFY-8379-EXECUTION
+
+Tests SHALL execute the built extension and pure Rust arithmetic. Real direct
+CLI, child, failure and cold-replay paths SHALL reach100 percent owned statement
+coverage. Run scoped cargo fmt/check/test/clippy, private E2E-018 and unchanged
+publication and terminal validators. Record commands, exits, durations and hashes.
+
+Status: specified before tests; conductor owns ops and traceability reconciliation.
+
+Implementation 2026-10-10: `direct_spline_8379.rs` in carnot-core supplies
+binary64 basis, logit and coefficient arithmetic. The PyO3 registration is
+opt-in through `direct-spline-8379`. `native_direct_8379.py` reuses the unchanged
+Python durable coordinator and SciPy action boundary. Twenty focused tests pass.
+Owned Python statement coverage and Rust line/function coverage reach100 percent.
+Rust expression-region coverage remains below100 percent and is recorded separately.
+The finite tested domain does not establish a universal floating-point contract.
