@@ -20007,3 +20007,4 @@ code |
 | 2026-10-10 13:22 UTC | Test a separately versioned action certificate wit | OK | 89 passed, 2 warnings in 141.44s (0:02:21) |
 | 2026-10-10 14:12 UTC | Inspect changed CUDA evidence with the already qua | OK | 93 passed, 1 warning in 124.78s (0:02:04) |
 | 2026-10-10 14:16 UTC | Run a bounded Qwen evidence canary after a real ru | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp8382-runtime-evidence-delta.runtime_changed_score (actual=0 == expected=1) |
+| 2026-10-10 15:13 UTC | Collect fresh adapter-withheld ARC supervisor obse | OK | 100 passed, 1 warning in 76.56s (0:01:16) |
