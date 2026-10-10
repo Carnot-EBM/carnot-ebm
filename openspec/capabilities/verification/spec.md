@@ -52984,3 +52984,35 @@ Python durable coordinator and SciPy action boundary. Twenty focused tests pass.
 Owned Python statement coverage and Rust line/function coverage reach100 percent.
 Rust expression-region coverage remains below100 percent and is recorded separately.
 The finite tested domain does not establish a universal floating-point contract.
+# REQ-VERIFY-8382: Authenticate new CUDA receipts before one direct probe
+
+Implementation 2026-10-10: `runtime_evidence_delta_8382.py` binds historical
+aliases through the unchanged typed reader. It filters source maintenance from
+CUDA library deltas and gates one direct driver child on new sealed evidence.
+Private fixture, missing-input, child-error and rehashed substitution tests pass.
+New module and CLI statements have 100 percent coverage.
+
+Exp8382 SHALL reuse the qualified Exp8368 typed reader and pin its immutable
+primary, baseline and original source aliases before reading them. Only a
+new explicitly hash-bound environment receipt may admit a current inventory.
+Source edits, audit dates and inventory success alone SHALL NOT count as repair.
+Missing or unknown operands remain distinct. An unchanged environment is a
+tested terminal block with no context retries or model calls. A causal change
+requires one bounded direct driver enumeration, context and byte-copy probe.
+Reader, change and context scores SHALL be independent integers. Constructed
+controls SHALL NOT grant actual readiness. Keep V717/V721 protocol bytes intact.
+
+## SCENARIO-VERIFY-8382-DELTA
+
+Test missing receipts, annotation prose, immutable source aliases, unchanged
+terminal blocking and fixture-only changed states. Reject invalid hashes,
+stale receipts, missing paths and self-consistently rehashed substitutions.
+Preserve actual historical driver errors and device identities.
+
+## SCENARIO-VERIFY-8382-EXECUTION
+
+Freeze validation argv before inspection. Use private disk scratch, bounded
+children and fresh-process valid, missing, deliberate-error and tamper controls.
+Require 100 percent new statements including CLI and child failure paths,
+existing reader/consumer tests, private E2E-018, Ruff, strict mypy and spec tracing.
+Record repository health separately. Publish only atomically checked bytes.

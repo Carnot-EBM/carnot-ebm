@@ -97866,3 +97866,25 @@ attempt is retained; pytest-cov already combined the shards and the measured
 statement report passes100 percent. Global suite failures and its900-second
 termination remain separate from native numerical parity. Ops and traceability
 reconciliation remain assigned to the conductor, as directed by the task owner.
+# REQ-REPORT-8382: Report runtime evidence separately from semantic benefit
+
+Implementation 2026-10-10: the thin Exp8382 runner freezes scoped commands and
+keeps primitive rows, receipt logs and source copies below its raw directory.
+Reader qualification, authenticated change and current context/copy are separate
+scores. No model load, model call or generalization benefit follows from parity.
+Publication uses the unchanged primary publisher and terminal validators.
+
+Exp8382 SHALL emit a complete terminal artifact and primitive evidence for this
+exact V722 task. Missing external CUDA change is blocked, owned check failure
+is disqualified. Keep all seven causal operands and their missing reasons.
+Emit all three runtime scores, zero model calls, empty MODEL_SPECS and zero
+generalization scores. Preserve Exp8368 closure and historical errors. Future
+producer paths remain dependencies. Retain every terminal validator finding.
+
+## SCENARIO-REPORT-8382-REPLAY
+
+Cold replay SHALL authenticate pinned producer bytes, authority copies, source
+aliases, primitive rows, child receipts and independent score reductions.
+Rehashing changed headlines or substituted historical evidence SHALL fail.
+Private fixture publication and real CLI negative controls cannot set readiness.
+The unchanged primary publisher and terminal validators SHALL check publication.

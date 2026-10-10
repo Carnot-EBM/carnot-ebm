@@ -486,3 +486,12 @@ No attributable public ARC implementation or technique writeup was found. **Clas
 
 **POSSIBLE CARNOT LEVER:** Test verifier-grounded summaries of belief revisions during compaction to preserve why earlier mechanic hypotheses were discarded.
 
+## 2026-10-10 13:34 UTC -- NEW
+
+**artificialagencylab.com — newly discovered negative results** in its June-era [FACE-OF-AGI report, §§4.3.4–4.3.5](https://github.com/ricsinaruto/artificial-agency/blob/main/doc/public%20report.pdf). Linkage to its current submission remains unverified.
+
+- **Reusable specialist roles:** A supervisor created, revised, and deleted roles for navigation, color reasoning, object tracking, and failure detection, then reused them across games. The authors observed **no useful cross-game transfer** and abandoned the approach. **Classification: (b), general-purpose as described.**
+- **Separate exploration/exploitation agents:** A history module selected which agent should act based on recent behavior. This **did not clearly outperform a single agent** and was abandoned. **Classification: (b), general-purpose as described.**
+
+Neither described mechanism depends on game-source access or hardcoded per-game solutions.
+

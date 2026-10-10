@@ -1,0 +1,59 @@
+[
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-m",
+      "coverage",
+      "run",
+      "--rcfile",
+      "/home/ianblenke/.cache/carnot-exp8382-private/calibration2/coverage.ini",
+      "-m",
+      "pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "-q",
+      "tests/python/test_runtime_evidence_delta_8382.py",
+      "--basetemp=/home/ianblenke/.cache/carnot-exp8382-private/calibration2/owned"
+    ],
+    "deadline": 600,
+    "expected": 0,
+    "name": "owned_coverage",
+    "scope": "owned"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-m",
+      "coverage",
+      "combine",
+      "--rcfile",
+      "/home/ianblenke/.cache/carnot-exp8382-private/calibration2/coverage.ini",
+      "--keep"
+    ],
+    "deadline": 20,
+    "expected": 0,
+    "name": "coverage_combine",
+    "scope": "owned"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-m",
+      "coverage",
+      "json",
+      "--rcfile",
+      "/home/ianblenke/.cache/carnot-exp8382-private/calibration2/coverage.ini",
+      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/runtime_evidence_delta_8382.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/runtime_evidence_execution_8382.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8382_v722_runtime_evidence_delta.py",
+      "--fail-under=100",
+      "-o",
+      "/home/ianblenke/.cache/carnot-exp8382-private/calibration2/coverage.json"
+    ],
+    "deadline": 20,
+    "expected": 0,
+    "name": "coverage_json",
+    "scope": "owned"
+  }
+]
