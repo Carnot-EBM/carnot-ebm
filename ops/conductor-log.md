@@ -20000,3 +20000,4 @@ code |
 | 2026-10-10 09:24 UTC | Freeze direct-service methods and bind fourteen ta | OK | 105 passed, 1 warning in 66.65s (0:01:06) |
 | 2026-10-10 10:11 UTC | Measure released evidence coverage before choosing | OK | 89 passed, 1 warning in 42.93s |
 | 2026-10-10 11:34 UTC | Publish direct decision heads and feedback as reco | OK | 95 passed, 1 warning in 343.40s (0:05:43) |
+| 2026-10-10 11:38 UTC | Train the small decision head continuously through | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8376-direct-atomic-state.direct_state_ready_score (actual=0 == expected=1) |
